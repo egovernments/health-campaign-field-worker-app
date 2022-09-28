@@ -5,7 +5,7 @@ import 'package:health_campaigns_flutter/models/registration/registration_model.
 
 const _targetModel = '{"campaignId":"ID-1","noOfIndividuals":4,"address":{'
     '"address":"STAR GARAGE","id":"AD 01"},"clientReferenceId":"GUID",'
-    '"dateOfRegistration":"TIMESTAMP","location":{"latitude":18.22,'
+    '"dateOfRegistration": 1663654179,"location":{"latitude":18.22,'
     '"longitude":71,"accuracy":8},"administrativeUnit":"SOLIMBO",'
     '"individuals":[{"name":"John Doe","dateOfBirth":"YYYYMMDD",'
     '"gender":"MALE","isHead":true,"mode":"CREATE,UPDATE,DELETE",'
@@ -15,7 +15,7 @@ const _targetModel = '{"campaignId":"ID-1","noOfIndividuals":4,"address":{'
     '"version":2,"fields":[{"key":"height","value":"180"}]},"auditDetails":{},'
     '"tenantId":"tenantA"}';
 
-const _registrationModelKeys = [
+const _requiredProperties = [
   'campaignId',
   'tenantId',
   'noOfIndividuals',
@@ -27,16 +27,8 @@ const _registrationModelKeys = [
   'individuals',
 ];
 
-const _individualModelKeys = [
-  'name',
-  'dateOfBirth',
-  'gender',
-  'isHead',
-  'identifiers',
-];
-
 void main() {
-  group('Registration model tests:', () {
+  group('Registration model', () {
     RegistrationModel? parsedModel;
 
     setUpAll(() {
@@ -48,18 +40,18 @@ void main() {
       parsedModel = RegistrationModel.fromJson(parsed);
     });
 
-    test('Parsed successfully', () {
+    test('is parsed successfully', () {
       expect(parsedModel, isNot(null));
     });
 
-    group('Has required field:', () {
+    group('has required field', () {
       late Map<String, dynamic> jsonMap;
 
       setUpAll(() {
         jsonMap = parsedModel!.toJson();
       });
 
-      for (final key in _registrationModelKeys) {
+      for (final key in _requiredProperties) {
         test(key, () {
           expect(jsonMap.keys.contains(key), true);
         });

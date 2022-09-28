@@ -27,7 +27,7 @@ mixin _$RegistrationModel {
   AddressModel get address => throw _privateConstructorUsedError;
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
-  String get dateOfRegistration => throw _privateConstructorUsedError;
+  int get dateOfRegistration => throw _privateConstructorUsedError;
   LatLngModel? get location => throw _privateConstructorUsedError;
   String get administrativeUnit => throw _privateConstructorUsedError;
   List<IndividualModel> get individuals => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $RegistrationModelCopyWith<$Res> {
       String clientReferenceId,
       int noOfIndividuals,
       AddressModel address,
-      String dateOfRegistration,
+      int dateOfRegistration,
       LatLngModel? location,
       String administrativeUnit,
       List<IndividualModel> individuals,
@@ -108,7 +108,7 @@ class _$RegistrationModelCopyWithImpl<$Res>
       dateOfRegistration: dateOfRegistration == freezed
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       location: location == freezed
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -172,7 +172,7 @@ abstract class _$$_RegistrationModelCopyWith<$Res>
       String clientReferenceId,
       int noOfIndividuals,
       AddressModel address,
-      String dateOfRegistration,
+      int dateOfRegistration,
       LatLngModel? location,
       String administrativeUnit,
       List<IndividualModel> individuals,
@@ -234,7 +234,7 @@ class __$$_RegistrationModelCopyWithImpl<$Res>
       dateOfRegistration: dateOfRegistration == freezed
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       location: location == freezed
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -288,7 +288,7 @@ class _$_RegistrationModel implements _RegistrationModel {
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
   @override
-  final String dateOfRegistration;
+  final int dateOfRegistration;
   @override
   final LatLngModel? location;
   @override
@@ -368,7 +368,7 @@ abstract class _RegistrationModel implements RegistrationModel {
       required final String clientReferenceId,
       required final int noOfIndividuals,
       required final AddressModel address,
-      required final String dateOfRegistration,
+      required final int dateOfRegistration,
       final LatLngModel? location,
       required final String administrativeUnit,
       required final List<IndividualModel> individuals,
@@ -390,7 +390,7 @@ abstract class _RegistrationModel implements RegistrationModel {
   @override
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
-  String get dateOfRegistration;
+  int get dateOfRegistration;
   @override
   LatLngModel? get location;
   @override

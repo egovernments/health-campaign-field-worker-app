@@ -20,7 +20,7 @@ class RegistrationModel with _$RegistrationModel {
     required int noOfIndividuals,
     required AddressModel address,
     /// [dateOfRegistration] in millisecondsSinceEpoch
-    required String dateOfRegistration,
+    required int dateOfRegistration,
     LatLngModel? location,
     required String administrativeUnit,
     required List<IndividualModel> individuals,

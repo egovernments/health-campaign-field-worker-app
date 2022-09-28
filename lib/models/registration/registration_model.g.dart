@@ -13,7 +13,7 @@ _$_RegistrationModel _$$_RegistrationModelFromJson(Map<String, dynamic> json) =>
       clientReferenceId: json['clientReferenceId'] as String,
       noOfIndividuals: json['noOfIndividuals'] as int,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
-      dateOfRegistration: json['dateOfRegistration'] as String,
+      dateOfRegistration: json['dateOfRegistration'] as int,
       location: json['location'] == null
           ? null
           : LatLngModel.fromJson(json['location'] as Map<String, dynamic>),
