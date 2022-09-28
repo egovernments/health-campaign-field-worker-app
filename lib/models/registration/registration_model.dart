@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/models/address/address_model.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
+import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 
 import '../dynamic_forms/additional_fields/additional_fields_model.dart';
 
@@ -17,6 +18,7 @@ class RegistrationModel with _$RegistrationModel {
     required String campaignId,
     required String tenantId,
     required String clientReferenceId,
+    SyncOperationMode? mode,
     required int noOfIndividuals,
     required AddressModel address,
     /// [dateOfRegistration] in millisecondsSinceEpoch

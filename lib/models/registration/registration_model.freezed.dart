@@ -23,6 +23,7 @@ mixin _$RegistrationModel {
   String get campaignId => throw _privateConstructorUsedError;
   String get tenantId => throw _privateConstructorUsedError;
   String get clientReferenceId => throw _privateConstructorUsedError;
+  SyncOperationMode? get mode => throw _privateConstructorUsedError;
   int get noOfIndividuals => throw _privateConstructorUsedError;
   AddressModel get address => throw _privateConstructorUsedError;
 
@@ -49,6 +50,7 @@ abstract class $RegistrationModelCopyWith<$Res> {
       {String campaignId,
       String tenantId,
       String clientReferenceId,
+      SyncOperationMode? mode,
       int noOfIndividuals,
       AddressModel address,
       int dateOfRegistration,
@@ -76,6 +78,7 @@ class _$RegistrationModelCopyWithImpl<$Res>
     Object? campaignId = freezed,
     Object? tenantId = freezed,
     Object? clientReferenceId = freezed,
+    Object? mode = freezed,
     Object? noOfIndividuals = freezed,
     Object? address = freezed,
     Object? dateOfRegistration = freezed,
@@ -97,6 +100,10 @@ class _$RegistrationModelCopyWithImpl<$Res>
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as SyncOperationMode?,
       noOfIndividuals: noOfIndividuals == freezed
           ? _value.noOfIndividuals
           : noOfIndividuals // ignore: cast_nullable_to_non_nullable
@@ -170,6 +177,7 @@ abstract class _$$_RegistrationModelCopyWith<$Res>
       {String campaignId,
       String tenantId,
       String clientReferenceId,
+      SyncOperationMode? mode,
       int noOfIndividuals,
       AddressModel address,
       int dateOfRegistration,
@@ -202,6 +210,7 @@ class __$$_RegistrationModelCopyWithImpl<$Res>
     Object? campaignId = freezed,
     Object? tenantId = freezed,
     Object? clientReferenceId = freezed,
+    Object? mode = freezed,
     Object? noOfIndividuals = freezed,
     Object? address = freezed,
     Object? dateOfRegistration = freezed,
@@ -223,6 +232,10 @@ class __$$_RegistrationModelCopyWithImpl<$Res>
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as SyncOperationMode?,
       noOfIndividuals: noOfIndividuals == freezed
           ? _value.noOfIndividuals
           : noOfIndividuals // ignore: cast_nullable_to_non_nullable
@@ -263,6 +276,7 @@ class _$_RegistrationModel implements _RegistrationModel {
       {required this.campaignId,
       required this.tenantId,
       required this.clientReferenceId,
+      this.mode,
       required this.noOfIndividuals,
       required this.address,
       required this.dateOfRegistration,
@@ -281,6 +295,8 @@ class _$_RegistrationModel implements _RegistrationModel {
   final String tenantId;
   @override
   final String clientReferenceId;
+  @override
+  final SyncOperationMode? mode;
   @override
   final int noOfIndividuals;
   @override
@@ -305,7 +321,7 @@ class _$_RegistrationModel implements _RegistrationModel {
 
   @override
   String toString() {
-    return 'RegistrationModel(campaignId: $campaignId, tenantId: $tenantId, clientReferenceId: $clientReferenceId, noOfIndividuals: $noOfIndividuals, address: $address, dateOfRegistration: $dateOfRegistration, location: $location, administrativeUnit: $administrativeUnit, individuals: $individuals, additionalFields: $additionalFields)';
+    return 'RegistrationModel(campaignId: $campaignId, tenantId: $tenantId, clientReferenceId: $clientReferenceId, mode: $mode, noOfIndividuals: $noOfIndividuals, address: $address, dateOfRegistration: $dateOfRegistration, location: $location, administrativeUnit: $administrativeUnit, individuals: $individuals, additionalFields: $additionalFields)';
   }
 
   @override
@@ -318,6 +334,7 @@ class _$_RegistrationModel implements _RegistrationModel {
             const DeepCollectionEquality().equals(other.tenantId, tenantId) &&
             const DeepCollectionEquality()
                 .equals(other.clientReferenceId, clientReferenceId) &&
+            const DeepCollectionEquality().equals(other.mode, mode) &&
             const DeepCollectionEquality()
                 .equals(other.noOfIndividuals, noOfIndividuals) &&
             const DeepCollectionEquality().equals(other.address, address) &&
@@ -339,6 +356,7 @@ class _$_RegistrationModel implements _RegistrationModel {
       const DeepCollectionEquality().hash(campaignId),
       const DeepCollectionEquality().hash(tenantId),
       const DeepCollectionEquality().hash(clientReferenceId),
+      const DeepCollectionEquality().hash(mode),
       const DeepCollectionEquality().hash(noOfIndividuals),
       const DeepCollectionEquality().hash(address),
       const DeepCollectionEquality().hash(dateOfRegistration),
@@ -366,6 +384,7 @@ abstract class _RegistrationModel implements RegistrationModel {
       {required final String campaignId,
       required final String tenantId,
       required final String clientReferenceId,
+      final SyncOperationMode? mode,
       required final int noOfIndividuals,
       required final AddressModel address,
       required final int dateOfRegistration,
@@ -383,6 +402,8 @@ abstract class _RegistrationModel implements RegistrationModel {
   String get tenantId;
   @override
   String get clientReferenceId;
+  @override
+  SyncOperationMode? get mode;
   @override
   int get noOfIndividuals;
   @override

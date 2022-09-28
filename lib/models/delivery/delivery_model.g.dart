@@ -10,13 +10,14 @@ _$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
     _$_DeliveryModel(
       campaignId: json['campaignId'] as String,
       registrationId: json['registrationId'] as String,
+      mode: $enumDecodeNullable(_$SyncOperationModeEnumMap, json['mode']),
+      clientReferenceId: json['clientReferenceId'] as String,
       resources: (json['resources'] as List<dynamic>)
           .map((e) => DeliveryResourceModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       deliveryDate: json['deliveryDate'] as int,
       deliveredBy: json['deliveredBy'] as String,
       status: $enumDecode(_$DeliveryStatusEnumMap, json['status']),
-      clientReferenceId: json['clientReferenceId'] as String,
       tenantId: json['tenantId'] as String,
       additionalFields: json['additionalFields'] == null
           ? null
@@ -28,14 +29,21 @@ Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
     <String, dynamic>{
       'campaignId': instance.campaignId,
       'registrationId': instance.registrationId,
+      'mode': _$SyncOperationModeEnumMap[instance.mode],
+      'clientReferenceId': instance.clientReferenceId,
       'resources': instance.resources.map((e) => e.toJson()).toList(),
       'deliveryDate': instance.deliveryDate,
       'deliveredBy': instance.deliveredBy,
       'status': _$DeliveryStatusEnumMap[instance.status]!,
-      'clientReferenceId': instance.clientReferenceId,
       'tenantId': instance.tenantId,
       'additionalFields': instance.additionalFields?.toJson(),
     };
+
+const _$SyncOperationModeEnumMap = {
+  SyncOperationMode.create: 'CREATE',
+  SyncOperationMode.update: 'UPDATE',
+  SyncOperationMode.delete: 'DELETE',
+};
 
 const _$DeliveryStatusEnumMap = {
   DeliveryStatus.delivered: 'DELIVERED',

@@ -6,9 +6,6 @@ analyzer:
     - lib/**/*.g.dart
     - lib/**/*.gr.dart
     - lib/**/*.freezed.dart
-  language:
-    strict-casts: true
-    strict-raw-types: true
   plugins:
     - dart_code_metrics
 

@@ -3,6 +3,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/models/dynamic_forms/additional_fields/additional_fields_model.dart';
 
+import '../sync/sync_model.dart';
+
 part 'delivery_model.freezed.dart';
 part 'delivery_model.g.dart';
 
@@ -12,13 +14,14 @@ class DeliveryModel with _$DeliveryModel {
   const factory DeliveryModel({
     required String campaignId,
     required String registrationId,
+    SyncOperationMode? mode,
+    required String clientReferenceId,
     required List<DeliveryResourceModel> resources,
 
     /// [deliveryDate] in millisecondsSinceEpoch
     required int deliveryDate,
     required String deliveredBy,
     required DeliveryStatus status,
-    required String clientReferenceId,
     required String tenantId,
     AdditionalFieldsModel? additionalFields,
   }) = _DeliveryModel;

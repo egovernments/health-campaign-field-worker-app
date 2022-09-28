@@ -20,7 +20,7 @@ class LatLngModel with _$LatLngModel {
     required double latitude,
     required double longitude,
     @Default(0) num accuracy,
-}) = _LatLngModel;
+  }) = _LatLngModel;
 
   factory LatLngModel.fromJson(Map<String, dynamic> json) =>
       _$LatLngModelFromJson(json);

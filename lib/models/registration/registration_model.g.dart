@@ -11,6 +11,7 @@ _$_RegistrationModel _$$_RegistrationModelFromJson(Map<String, dynamic> json) =>
       campaignId: json['campaignId'] as String,
       tenantId: json['tenantId'] as String,
       clientReferenceId: json['clientReferenceId'] as String,
+      mode: $enumDecodeNullable(_$SyncOperationModeEnumMap, json['mode']),
       noOfIndividuals: json['noOfIndividuals'] as int,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
       dateOfRegistration: json['dateOfRegistration'] as int,
@@ -33,6 +34,7 @@ Map<String, dynamic> _$$_RegistrationModelToJson(
       'campaignId': instance.campaignId,
       'tenantId': instance.tenantId,
       'clientReferenceId': instance.clientReferenceId,
+      'mode': _$SyncOperationModeEnumMap[instance.mode],
       'noOfIndividuals': instance.noOfIndividuals,
       'address': instance.address.toJson(),
       'dateOfRegistration': instance.dateOfRegistration,
@@ -41,3 +43,9 @@ Map<String, dynamic> _$$_RegistrationModelToJson(
       'individuals': instance.individuals.map((e) => e.toJson()).toList(),
       'additionalFields': instance.additionalFields?.toJson(),
     };
+
+const _$SyncOperationModeEnumMap = {
+  SyncOperationMode.create: 'CREATE',
+  SyncOperationMode.update: 'UPDATE',
+  SyncOperationMode.delete: 'DELETE',
+};

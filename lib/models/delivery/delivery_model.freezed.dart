@@ -22,6 +22,8 @@ DeliveryModel _$DeliveryModelFromJson(Map<String, dynamic> json) {
 mixin _$DeliveryModel {
   String get campaignId => throw _privateConstructorUsedError;
   String get registrationId => throw _privateConstructorUsedError;
+  SyncOperationMode? get mode => throw _privateConstructorUsedError;
+  String get clientReferenceId => throw _privateConstructorUsedError;
   List<DeliveryResourceModel> get resources =>
       throw _privateConstructorUsedError;
 
@@ -29,7 +31,6 @@ mixin _$DeliveryModel {
   int get deliveryDate => throw _privateConstructorUsedError;
   String get deliveredBy => throw _privateConstructorUsedError;
   DeliveryStatus get status => throw _privateConstructorUsedError;
-  String get clientReferenceId => throw _privateConstructorUsedError;
   String get tenantId => throw _privateConstructorUsedError;
   AdditionalFieldsModel? get additionalFields =>
       throw _privateConstructorUsedError;
@@ -48,11 +49,12 @@ abstract class $DeliveryModelCopyWith<$Res> {
   $Res call(
       {String campaignId,
       String registrationId,
+      SyncOperationMode? mode,
+      String clientReferenceId,
       List<DeliveryResourceModel> resources,
       int deliveryDate,
       String deliveredBy,
       DeliveryStatus status,
-      String clientReferenceId,
       String tenantId,
       AdditionalFieldsModel? additionalFields});
 
@@ -72,11 +74,12 @@ class _$DeliveryModelCopyWithImpl<$Res>
   $Res call({
     Object? campaignId = freezed,
     Object? registrationId = freezed,
+    Object? mode = freezed,
+    Object? clientReferenceId = freezed,
     Object? resources = freezed,
     Object? deliveryDate = freezed,
     Object? deliveredBy = freezed,
     Object? status = freezed,
-    Object? clientReferenceId = freezed,
     Object? tenantId = freezed,
     Object? additionalFields = freezed,
   }) {
@@ -88,6 +91,14 @@ class _$DeliveryModelCopyWithImpl<$Res>
       registrationId: registrationId == freezed
           ? _value.registrationId
           : registrationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as SyncOperationMode?,
+      clientReferenceId: clientReferenceId == freezed
+          ? _value.clientReferenceId
+          : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
       resources: resources == freezed
           ? _value.resources
@@ -105,10 +116,6 @@ class _$DeliveryModelCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as DeliveryStatus,
-      clientReferenceId: clientReferenceId == freezed
-          ? _value.clientReferenceId
-          : clientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String,
       tenantId: tenantId == freezed
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -143,11 +150,12 @@ abstract class _$$_DeliveryModelCopyWith<$Res>
   $Res call(
       {String campaignId,
       String registrationId,
+      SyncOperationMode? mode,
+      String clientReferenceId,
       List<DeliveryResourceModel> resources,
       int deliveryDate,
       String deliveredBy,
       DeliveryStatus status,
-      String clientReferenceId,
       String tenantId,
       AdditionalFieldsModel? additionalFields});
 
@@ -170,11 +178,12 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
   $Res call({
     Object? campaignId = freezed,
     Object? registrationId = freezed,
+    Object? mode = freezed,
+    Object? clientReferenceId = freezed,
     Object? resources = freezed,
     Object? deliveryDate = freezed,
     Object? deliveredBy = freezed,
     Object? status = freezed,
-    Object? clientReferenceId = freezed,
     Object? tenantId = freezed,
     Object? additionalFields = freezed,
   }) {
@@ -186,6 +195,14 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
       registrationId: registrationId == freezed
           ? _value.registrationId
           : registrationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as SyncOperationMode?,
+      clientReferenceId: clientReferenceId == freezed
+          ? _value.clientReferenceId
+          : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
       resources: resources == freezed
           ? _value._resources
@@ -203,10 +220,6 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as DeliveryStatus,
-      clientReferenceId: clientReferenceId == freezed
-          ? _value.clientReferenceId
-          : clientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String,
       tenantId: tenantId == freezed
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -226,11 +239,12 @@ class _$_DeliveryModel implements _DeliveryModel {
   const _$_DeliveryModel(
       {required this.campaignId,
       required this.registrationId,
+      this.mode,
+      required this.clientReferenceId,
       required final List<DeliveryResourceModel> resources,
       required this.deliveryDate,
       required this.deliveredBy,
       required this.status,
-      required this.clientReferenceId,
       required this.tenantId,
       this.additionalFields})
       : _resources = resources;
@@ -242,6 +256,10 @@ class _$_DeliveryModel implements _DeliveryModel {
   final String campaignId;
   @override
   final String registrationId;
+  @override
+  final SyncOperationMode? mode;
+  @override
+  final String clientReferenceId;
   final List<DeliveryResourceModel> _resources;
   @override
   List<DeliveryResourceModel> get resources {
@@ -257,15 +275,13 @@ class _$_DeliveryModel implements _DeliveryModel {
   @override
   final DeliveryStatus status;
   @override
-  final String clientReferenceId;
-  @override
   final String tenantId;
   @override
   final AdditionalFieldsModel? additionalFields;
 
   @override
   String toString() {
-    return 'DeliveryModel(campaignId: $campaignId, registrationId: $registrationId, resources: $resources, deliveryDate: $deliveryDate, deliveredBy: $deliveredBy, status: $status, clientReferenceId: $clientReferenceId, tenantId: $tenantId, additionalFields: $additionalFields)';
+    return 'DeliveryModel(campaignId: $campaignId, registrationId: $registrationId, mode: $mode, clientReferenceId: $clientReferenceId, resources: $resources, deliveryDate: $deliveryDate, deliveredBy: $deliveredBy, status: $status, tenantId: $tenantId, additionalFields: $additionalFields)';
   }
 
   @override
@@ -277,6 +293,9 @@ class _$_DeliveryModel implements _DeliveryModel {
                 .equals(other.campaignId, campaignId) &&
             const DeepCollectionEquality()
                 .equals(other.registrationId, registrationId) &&
+            const DeepCollectionEquality().equals(other.mode, mode) &&
+            const DeepCollectionEquality()
+                .equals(other.clientReferenceId, clientReferenceId) &&
             const DeepCollectionEquality()
                 .equals(other._resources, _resources) &&
             const DeepCollectionEquality()
@@ -284,8 +303,6 @@ class _$_DeliveryModel implements _DeliveryModel {
             const DeepCollectionEquality()
                 .equals(other.deliveredBy, deliveredBy) &&
             const DeepCollectionEquality().equals(other.status, status) &&
-            const DeepCollectionEquality()
-                .equals(other.clientReferenceId, clientReferenceId) &&
             const DeepCollectionEquality().equals(other.tenantId, tenantId) &&
             const DeepCollectionEquality()
                 .equals(other.additionalFields, additionalFields));
@@ -297,11 +314,12 @@ class _$_DeliveryModel implements _DeliveryModel {
       runtimeType,
       const DeepCollectionEquality().hash(campaignId),
       const DeepCollectionEquality().hash(registrationId),
+      const DeepCollectionEquality().hash(mode),
+      const DeepCollectionEquality().hash(clientReferenceId),
       const DeepCollectionEquality().hash(_resources),
       const DeepCollectionEquality().hash(deliveryDate),
       const DeepCollectionEquality().hash(deliveredBy),
       const DeepCollectionEquality().hash(status),
-      const DeepCollectionEquality().hash(clientReferenceId),
       const DeepCollectionEquality().hash(tenantId),
       const DeepCollectionEquality().hash(additionalFields));
 
@@ -322,11 +340,12 @@ abstract class _DeliveryModel implements DeliveryModel {
   const factory _DeliveryModel(
       {required final String campaignId,
       required final String registrationId,
+      final SyncOperationMode? mode,
+      required final String clientReferenceId,
       required final List<DeliveryResourceModel> resources,
       required final int deliveryDate,
       required final String deliveredBy,
       required final DeliveryStatus status,
-      required final String clientReferenceId,
       required final String tenantId,
       final AdditionalFieldsModel? additionalFields}) = _$_DeliveryModel;
 
@@ -338,6 +357,10 @@ abstract class _DeliveryModel implements DeliveryModel {
   @override
   String get registrationId;
   @override
+  SyncOperationMode? get mode;
+  @override
+  String get clientReferenceId;
+  @override
   List<DeliveryResourceModel> get resources;
   @override
 
@@ -347,8 +370,6 @@ abstract class _DeliveryModel implements DeliveryModel {
   String get deliveredBy;
   @override
   DeliveryStatus get status;
-  @override
-  String get clientReferenceId;
   @override
   String get tenantId;
   @override
