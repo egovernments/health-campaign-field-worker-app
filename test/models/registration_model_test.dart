@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaigns_flutter/models/registration/registration_model.dart';
 
-const _targetModel = '''{
+const _targetModel = r'''{
   "campaignId": "ID-1",
-  "noOfIndividuals": 4,
+  "numberOfIndividuals": 4,
   "address": {
-    "address": "STAR GARAGE",
-    "id": "AD 01"
+    "addressText": "STAR GARAGE",
+    "addressId": "AD 01"
   },
   "clientReferenceId": "GUID",
   "dateOfRegistration": 1663654179,
@@ -31,36 +31,18 @@ const _targetModel = '''{
           "identifierId": "A-1212"
         }
       ],
-      "additionalFields": {
-        "schema": "INDIVIDUAL",
-        "version": 2,
-        "fields": [
-          {
-            "key": "height",
-            "value": "180"
-          }
-        ]
-      }
+      "additionalFields": "{\"schema\":\"INDIVIDUAL\",\"version\":2,\"fields\":[{\"key\":\"height\",\"value\":\"180\"}]}"
     }
   ],
-  "additionalFields": {
-    "schema": "HOUSEHOLD",
-    "version": 2,
-    "fields": [
-      {
-        "key": "height",
-        "value": "180"
-      }
-    ]
-  },
-  "auditDetails": {},
-  "tenantId": "tenantA"
+  "additionalFields": "{\"schema\":\"HOUSEHOLD\",\"version\":2,\"fields\":[{\"key\":\"height\",\"value\":\"180\"}]}",
+  "tenantId": "tenantA",
+  "type": "REGISTRATION"
 }''';
 
 const _requiredProperties = [
   'campaignId',
   'tenantId',
-  'noOfIndividuals',
+  'numberOfIndividuals',
   'address',
   'clientReferenceId',
   'dateOfRegistration',
@@ -71,7 +53,7 @@ const _requiredProperties = [
 
 void main() {
   group('Registration model', () {
-    RegistrationModel? parsedModel;
+    HouseholdRegistrationModel? parsedModel;
 
     setUpAll(() {
       final parsed = jsonDecode(_targetModel);
@@ -79,7 +61,7 @@ void main() {
         throw Exception('Expected model not found');
       }
 
-      parsedModel = RegistrationModel.fromJson(parsed);
+      parsedModel = HouseholdRegistrationModel.fromJson(parsed);
     });
 
     test('is parsed successfully', () {

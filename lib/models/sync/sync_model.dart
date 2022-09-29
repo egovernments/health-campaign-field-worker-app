@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaigns_flutter/models/serializer_model.dart';
 
 part 'sync_model.freezed.dart';
 part 'sync_model.g.dart';
@@ -8,7 +9,7 @@ part 'sync_model.g.dart';
 @freezed
 class SyncDataModel with _$SyncDataModel {
   const factory SyncDataModel({
-    required List<SyncObjectModel> data,
+    required List<SyncObjectModel> syncUpData,
   }) = _SyncDataModel;
 
   factory SyncDataModel.fromJson(Map<String, dynamic> json) =>
@@ -21,7 +22,6 @@ class SyncObjectModel<T> with _$SyncObjectModel<T> {
   const SyncObjectModel._();
 
   const factory SyncObjectModel({
-    required SyncObjectModelType type,
     required List<T> items,
   }) = _SyncObjectModel<T>;
 
@@ -42,7 +42,7 @@ enum SyncObjectModelType {
   @JsonValue('DELIVERY') delivery;
 }
 
-enum SyncOperationMode {
+enum ApiMode {
   @JsonValue('CREATE') create,
   @JsonValue('UPDATE') update,
   @JsonValue('DELETE') delete;

@@ -20,7 +20,7 @@ SyncDataModel _$SyncDataModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SyncDataModel {
-  List<SyncObjectModel> get data => throw _privateConstructorUsedError;
+  List<SyncObjectModel> get syncUpData => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +33,7 @@ abstract class $SyncDataModelCopyWith<$Res> {
   factory $SyncDataModelCopyWith(
           SyncDataModel value, $Res Function(SyncDataModel) then) =
       _$SyncDataModelCopyWithImpl<$Res>;
-  $Res call({List<SyncObjectModel> data});
+  $Res call({List<SyncObjectModel> syncUpData});
 }
 
 /// @nodoc
@@ -47,12 +47,12 @@ class _$SyncDataModelCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? data = freezed,
+    Object? syncUpData = freezed,
   }) {
     return _then(_value.copyWith(
-      data: data == freezed
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
+      syncUpData: syncUpData == freezed
+          ? _value.syncUpData
+          : syncUpData // ignore: cast_nullable_to_non_nullable
               as List<SyncObjectModel>,
     ));
   }
@@ -65,7 +65,7 @@ abstract class _$$_SyncDataModelCopyWith<$Res>
           _$_SyncDataModel value, $Res Function(_$_SyncDataModel) then) =
       __$$_SyncDataModelCopyWithImpl<$Res>;
   @override
-  $Res call({List<SyncObjectModel> data});
+  $Res call({List<SyncObjectModel> syncUpData});
 }
 
 /// @nodoc
@@ -81,12 +81,12 @@ class __$$_SyncDataModelCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? data = freezed,
+    Object? syncUpData = freezed,
   }) {
     return _then(_$_SyncDataModel(
-      data: data == freezed
-          ? _value._data
-          : data // ignore: cast_nullable_to_non_nullable
+      syncUpData: syncUpData == freezed
+          ? _value._syncUpData
+          : syncUpData // ignore: cast_nullable_to_non_nullable
               as List<SyncObjectModel>,
     ));
   }
@@ -95,22 +95,22 @@ class __$$_SyncDataModelCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_SyncDataModel implements _SyncDataModel {
-  const _$_SyncDataModel({required final List<SyncObjectModel> data})
-      : _data = data;
+  const _$_SyncDataModel({required final List<SyncObjectModel> syncUpData})
+      : _syncUpData = syncUpData;
 
   factory _$_SyncDataModel.fromJson(Map<String, dynamic> json) =>
       _$$_SyncDataModelFromJson(json);
 
-  final List<SyncObjectModel> _data;
+  final List<SyncObjectModel> _syncUpData;
   @override
-  List<SyncObjectModel> get data {
+  List<SyncObjectModel> get syncUpData {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_data);
+    return EqualUnmodifiableListView(_syncUpData);
   }
 
   @override
   String toString() {
-    return 'SyncDataModel(data: $data)';
+    return 'SyncDataModel(syncUpData: $syncUpData)';
   }
 
   @override
@@ -118,13 +118,14 @@ class _$_SyncDataModel implements _SyncDataModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SyncDataModel &&
-            const DeepCollectionEquality().equals(other._data, _data));
+            const DeepCollectionEquality()
+                .equals(other._syncUpData, _syncUpData));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_data));
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_syncUpData));
 
   @JsonKey(ignore: true)
   @override
@@ -140,14 +141,14 @@ class _$_SyncDataModel implements _SyncDataModel {
 }
 
 abstract class _SyncDataModel implements SyncDataModel {
-  const factory _SyncDataModel({required final List<SyncObjectModel> data}) =
-      _$_SyncDataModel;
+  const factory _SyncDataModel(
+      {required final List<SyncObjectModel> syncUpData}) = _$_SyncDataModel;
 
   factory _SyncDataModel.fromJson(Map<String, dynamic> json) =
       _$_SyncDataModel.fromJson;
 
   @override
-  List<SyncObjectModel> get data;
+  List<SyncObjectModel> get syncUpData;
   @override
   @JsonKey(ignore: true)
   _$$_SyncDataModelCopyWith<_$_SyncDataModel> get copyWith =>
@@ -156,7 +157,6 @@ abstract class _SyncDataModel implements SyncDataModel {
 
 /// @nodoc
 mixin _$SyncObjectModel<T> {
-  SyncObjectModelType get type => throw _privateConstructorUsedError;
   List<T> get items => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -169,7 +169,7 @@ abstract class $SyncObjectModelCopyWith<T, $Res> {
   factory $SyncObjectModelCopyWith(
           SyncObjectModel<T> value, $Res Function(SyncObjectModel<T>) then) =
       _$SyncObjectModelCopyWithImpl<T, $Res>;
-  $Res call({SyncObjectModelType type, List<T> items});
+  $Res call({List<T> items});
 }
 
 /// @nodoc
@@ -183,14 +183,9 @@ class _$SyncObjectModelCopyWithImpl<T, $Res>
 
   @override
   $Res call({
-    Object? type = freezed,
     Object? items = freezed,
   }) {
     return _then(_value.copyWith(
-      type: type == freezed
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as SyncObjectModelType,
       items: items == freezed
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
@@ -206,7 +201,7 @@ abstract class _$$_SyncObjectModelCopyWith<T, $Res>
           $Res Function(_$_SyncObjectModel<T>) then) =
       __$$_SyncObjectModelCopyWithImpl<T, $Res>;
   @override
-  $Res call({SyncObjectModelType type, List<T> items});
+  $Res call({List<T> items});
 }
 
 /// @nodoc
@@ -222,14 +217,9 @@ class __$$_SyncObjectModelCopyWithImpl<T, $Res>
 
   @override
   $Res call({
-    Object? type = freezed,
     Object? items = freezed,
   }) {
     return _then(_$_SyncObjectModel<T>(
-      type: type == freezed
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as SyncObjectModelType,
       items: items == freezed
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
@@ -241,12 +231,10 @@ class __$$_SyncObjectModelCopyWithImpl<T, $Res>
 /// @nodoc
 
 class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
-  const _$_SyncObjectModel({required this.type, required final List<T> items})
+  const _$_SyncObjectModel({required final List<T> items})
       : _items = items,
         super._();
 
-  @override
-  final SyncObjectModelType type;
   final List<T> _items;
   @override
   List<T> get items {
@@ -256,7 +244,7 @@ class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
 
   @override
   String toString() {
-    return 'SyncObjectModel<$T>(type: $type, items: $items)';
+    return 'SyncObjectModel<$T>(items: $items)';
   }
 
   @override
@@ -264,15 +252,12 @@ class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SyncObjectModel<T> &&
-            const DeepCollectionEquality().equals(other.type, type) &&
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(type),
-      const DeepCollectionEquality().hash(_items));
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_items));
 
   @JsonKey(ignore: true)
   @override
@@ -282,13 +267,10 @@ class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
 }
 
 abstract class _SyncObjectModel<T> extends SyncObjectModel<T> {
-  const factory _SyncObjectModel(
-      {required final SyncObjectModelType type,
-      required final List<T> items}) = _$_SyncObjectModel<T>;
+  const factory _SyncObjectModel({required final List<T> items}) =
+      _$_SyncObjectModel<T>;
   const _SyncObjectModel._() : super._();
 
-  @override
-  SyncObjectModelType get type;
   @override
   List<T> get items;
   @override

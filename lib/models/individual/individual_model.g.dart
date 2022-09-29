@@ -8,28 +8,34 @@ part of 'individual_model.dart';
 
 _$_IndividualModel _$$_IndividualModelFromJson(Map<String, dynamic> json) =>
     _$_IndividualModel(
-      name: json['name'] as String,
+      additionalFields: json['additionalFields'] as String?,
+      addressId: json['addressId'] as String?,
+      auditDetails: json['auditDetails'] == null
+          ? null
+          : AuditDetailsModel.fromJson(
+              json['auditDetails'] as Map<String, dynamic>),
       dateOfBirth: json['dateOfBirth'] as String,
       gender: $enumDecode(_$GenderEnumMap, json['gender']),
-      isHead: json['isHead'] as bool? ?? false,
       identifiers: (json['identifiers'] as List<dynamic>)
           .map((e) =>
               IndividualIdentifierModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      additionalFields: json['additionalFields'] == null
-          ? null
-          : AdditionalFieldsModel.fromJson(
-              json['additionalFields'] as Map<String, dynamic>),
+      individualId: json['individualId'] as String?,
+      isHead: json['isHead'] as bool? ?? false,
+      name: json['name'] as String,
     );
 
 Map<String, dynamic> _$$_IndividualModelToJson(_$_IndividualModel instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      'additionalFields': instance.additionalFields,
+      'addressId': instance.addressId,
+      'auditDetails': instance.auditDetails?.toJson(),
       'dateOfBirth': instance.dateOfBirth,
       'gender': _$GenderEnumMap[instance.gender]!,
-      'isHead': instance.isHead,
       'identifiers': instance.identifiers.map((e) => e.toJson()).toList(),
-      'additionalFields': instance.additionalFields?.toJson(),
+      'individualId': instance.individualId,
+      'isHead': instance.isHead,
+      'name': instance.name,
     };
 
 const _$GenderEnumMap = {

@@ -6,8 +6,8 @@ part 'address_model.g.dart';
 @freezed
 class AddressModel with _$AddressModel {
   const factory AddressModel({
-    required String id,
-    required String address,
+    String? addressId,
+    required String addressText,
   }) = _AddressModel;
 
   factory AddressModel.fromJson(Map<String, dynamic> json) =>
@@ -17,8 +17,8 @@ class AddressModel with _$AddressModel {
 @freezed
 class LatLngModel with _$LatLngModel {
   const factory LatLngModel({
-    required double latitude,
-    required double longitude,
+    required num latitude,
+    required num longitude,
     @Default(0) num accuracy,
   }) = _LatLngModel;
 

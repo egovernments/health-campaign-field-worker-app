@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaigns_flutter/models/audit_model.dart';
 
 import '../dynamic_forms/additional_fields/additional_fields_model.dart';
 
@@ -11,16 +12,19 @@ part 'individual_model.g.dart';
 class IndividualModel with _$IndividualModel {
   @JsonSerializable(explicitToJson: true)
   const factory IndividualModel({
-    required String name,
+    String? additionalFields,
+    String? addressId,
+    AuditDetailsModel? auditDetails,
 
-    /// Date of birth in YYYYMMDD format
+    /// [dateOfBirth] in yyyyMMDD format
     required String dateOfBirth,
     required Gender gender,
+    required List<IndividualIdentifierModel> identifiers,
+    String? individualId,
 
     /// [isHead] will be true if this individual is the head of a family
     @Default(false) bool isHead,
-    required List<IndividualIdentifierModel> identifiers,
-    AdditionalFieldsModel? additionalFields,
+    required String name,
   }) = _IndividualModel;
 
   factory IndividualModel.fromJson(Map<String, dynamic> json) =>

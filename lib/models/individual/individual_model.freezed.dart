@@ -20,18 +20,20 @@ IndividualModel _$IndividualModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$IndividualModel {
-  String get name => throw _privateConstructorUsedError;
+  String? get additionalFields => throw _privateConstructorUsedError;
+  String? get addressId => throw _privateConstructorUsedError;
+  AuditDetailsModel? get auditDetails => throw _privateConstructorUsedError;
 
-  /// Date of birth in YYYYMMDD format
+  /// [dateOfBirth] in yyyyMMDD format
   String get dateOfBirth => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
+  List<IndividualIdentifierModel> get identifiers =>
+      throw _privateConstructorUsedError;
+  String? get individualId => throw _privateConstructorUsedError;
 
   /// [isHead] will be true if this individual is the head of a family
   bool get isHead => throw _privateConstructorUsedError;
-  List<IndividualIdentifierModel> get identifiers =>
-      throw _privateConstructorUsedError;
-  AdditionalFieldsModel? get additionalFields =>
-      throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,14 +47,17 @@ abstract class $IndividualModelCopyWith<$Res> {
           IndividualModel value, $Res Function(IndividualModel) then) =
       _$IndividualModelCopyWithImpl<$Res>;
   $Res call(
-      {String name,
+      {String? additionalFields,
+      String? addressId,
+      AuditDetailsModel? auditDetails,
       String dateOfBirth,
       Gender gender,
-      bool isHead,
       List<IndividualIdentifierModel> identifiers,
-      AdditionalFieldsModel? additionalFields});
+      String? individualId,
+      bool isHead,
+      String name});
 
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails;
 }
 
 /// @nodoc
@@ -66,18 +71,29 @@ class _$IndividualModelCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? name = freezed,
+    Object? additionalFields = freezed,
+    Object? addressId = freezed,
+    Object? auditDetails = freezed,
     Object? dateOfBirth = freezed,
     Object? gender = freezed,
-    Object? isHead = freezed,
     Object? identifiers = freezed,
-    Object? additionalFields = freezed,
+    Object? individualId = freezed,
+    Object? isHead = freezed,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
+      addressId: addressId == freezed
+          ? _value.addressId
+          : addressId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      auditDetails: auditDetails == freezed
+          ? _value.auditDetails
+          : auditDetails // ignore: cast_nullable_to_non_nullable
+              as AuditDetailsModel?,
       dateOfBirth: dateOfBirth == freezed
           ? _value.dateOfBirth
           : dateOfBirth // ignore: cast_nullable_to_non_nullable
@@ -86,30 +102,33 @@ class _$IndividualModelCopyWithImpl<$Res>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      isHead: isHead == freezed
-          ? _value.isHead
-          : isHead // ignore: cast_nullable_to_non_nullable
-              as bool,
       identifiers: identifiers == freezed
           ? _value.identifiers
           : identifiers // ignore: cast_nullable_to_non_nullable
               as List<IndividualIdentifierModel>,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      individualId: individualId == freezed
+          ? _value.individualId
+          : individualId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isHead: isHead == freezed
+          ? _value.isHead
+          : isHead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 
   @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields {
-    if (_value.additionalFields == null) {
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails {
+    if (_value.auditDetails == null) {
       return null;
     }
 
-    return $AdditionalFieldsModelCopyWith<$Res>(_value.additionalFields!,
-        (value) {
-      return _then(_value.copyWith(additionalFields: value));
+    return $AuditDetailsModelCopyWith<$Res>(_value.auditDetails!, (value) {
+      return _then(_value.copyWith(auditDetails: value));
     });
   }
 }
@@ -122,15 +141,18 @@ abstract class _$$_IndividualModelCopyWith<$Res>
       __$$_IndividualModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String name,
+      {String? additionalFields,
+      String? addressId,
+      AuditDetailsModel? auditDetails,
       String dateOfBirth,
       Gender gender,
-      bool isHead,
       List<IndividualIdentifierModel> identifiers,
-      AdditionalFieldsModel? additionalFields});
+      String? individualId,
+      bool isHead,
+      String name});
 
   @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails;
 }
 
 /// @nodoc
@@ -146,18 +168,29 @@ class __$$_IndividualModelCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? name = freezed,
+    Object? additionalFields = freezed,
+    Object? addressId = freezed,
+    Object? auditDetails = freezed,
     Object? dateOfBirth = freezed,
     Object? gender = freezed,
-    Object? isHead = freezed,
     Object? identifiers = freezed,
-    Object? additionalFields = freezed,
+    Object? individualId = freezed,
+    Object? isHead = freezed,
+    Object? name = freezed,
   }) {
     return _then(_$_IndividualModel(
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
+      addressId: addressId == freezed
+          ? _value.addressId
+          : addressId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      auditDetails: auditDetails == freezed
+          ? _value.auditDetails
+          : auditDetails // ignore: cast_nullable_to_non_nullable
+              as AuditDetailsModel?,
       dateOfBirth: dateOfBirth == freezed
           ? _value.dateOfBirth
           : dateOfBirth // ignore: cast_nullable_to_non_nullable
@@ -166,18 +199,22 @@ class __$$_IndividualModelCopyWithImpl<$Res>
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      isHead: isHead == freezed
-          ? _value.isHead
-          : isHead // ignore: cast_nullable_to_non_nullable
-              as bool,
       identifiers: identifiers == freezed
           ? _value._identifiers
           : identifiers // ignore: cast_nullable_to_non_nullable
               as List<IndividualIdentifierModel>,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      individualId: individualId == freezed
+          ? _value.individualId
+          : individualId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isHead: isHead == freezed
+          ? _value.isHead
+          : isHead // ignore: cast_nullable_to_non_nullable
+              as bool,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -187,30 +224,32 @@ class __$$_IndividualModelCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_IndividualModel implements _IndividualModel {
   const _$_IndividualModel(
-      {required this.name,
+      {this.additionalFields,
+      this.addressId,
+      this.auditDetails,
       required this.dateOfBirth,
       required this.gender,
-      this.isHead = false,
       required final List<IndividualIdentifierModel> identifiers,
-      this.additionalFields})
+      this.individualId,
+      this.isHead = false,
+      required this.name})
       : _identifiers = identifiers;
 
   factory _$_IndividualModel.fromJson(Map<String, dynamic> json) =>
       _$$_IndividualModelFromJson(json);
 
   @override
-  final String name;
+  final String? additionalFields;
+  @override
+  final String? addressId;
+  @override
+  final AuditDetailsModel? auditDetails;
 
-  /// Date of birth in YYYYMMDD format
+  /// [dateOfBirth] in yyyyMMDD format
   @override
   final String dateOfBirth;
   @override
   final Gender gender;
-
-  /// [isHead] will be true if this individual is the head of a family
-  @override
-  @JsonKey()
-  final bool isHead;
   final List<IndividualIdentifierModel> _identifiers;
   @override
   List<IndividualIdentifierModel> get identifiers {
@@ -219,11 +258,18 @@ class _$_IndividualModel implements _IndividualModel {
   }
 
   @override
-  final AdditionalFieldsModel? additionalFields;
+  final String? individualId;
+
+  /// [isHead] will be true if this individual is the head of a family
+  @override
+  @JsonKey()
+  final bool isHead;
+  @override
+  final String name;
 
   @override
   String toString() {
-    return 'IndividualModel(name: $name, dateOfBirth: $dateOfBirth, gender: $gender, isHead: $isHead, identifiers: $identifiers, additionalFields: $additionalFields)';
+    return 'IndividualModel(additionalFields: $additionalFields, addressId: $addressId, auditDetails: $auditDetails, dateOfBirth: $dateOfBirth, gender: $gender, identifiers: $identifiers, individualId: $individualId, isHead: $isHead, name: $name)';
   }
 
   @override
@@ -231,27 +277,35 @@ class _$_IndividualModel implements _IndividualModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_IndividualModel &&
-            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality()
+                .equals(other.additionalFields, additionalFields) &&
+            const DeepCollectionEquality().equals(other.addressId, addressId) &&
+            const DeepCollectionEquality()
+                .equals(other.auditDetails, auditDetails) &&
             const DeepCollectionEquality()
                 .equals(other.dateOfBirth, dateOfBirth) &&
             const DeepCollectionEquality().equals(other.gender, gender) &&
-            const DeepCollectionEquality().equals(other.isHead, isHead) &&
             const DeepCollectionEquality()
                 .equals(other._identifiers, _identifiers) &&
             const DeepCollectionEquality()
-                .equals(other.additionalFields, additionalFields));
+                .equals(other.individualId, individualId) &&
+            const DeepCollectionEquality().equals(other.isHead, isHead) &&
+            const DeepCollectionEquality().equals(other.name, name));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(additionalFields),
+      const DeepCollectionEquality().hash(addressId),
+      const DeepCollectionEquality().hash(auditDetails),
       const DeepCollectionEquality().hash(dateOfBirth),
       const DeepCollectionEquality().hash(gender),
-      const DeepCollectionEquality().hash(isHead),
       const DeepCollectionEquality().hash(_identifiers),
-      const DeepCollectionEquality().hash(additionalFields));
+      const DeepCollectionEquality().hash(individualId),
+      const DeepCollectionEquality().hash(isHead),
+      const DeepCollectionEquality().hash(name));
 
   @JsonKey(ignore: true)
   @override
@@ -268,32 +322,41 @@ class _$_IndividualModel implements _IndividualModel {
 
 abstract class _IndividualModel implements IndividualModel {
   const factory _IndividualModel(
-      {required final String name,
+      {final String? additionalFields,
+      final String? addressId,
+      final AuditDetailsModel? auditDetails,
       required final String dateOfBirth,
       required final Gender gender,
-      final bool isHead,
       required final List<IndividualIdentifierModel> identifiers,
-      final AdditionalFieldsModel? additionalFields}) = _$_IndividualModel;
+      final String? individualId,
+      final bool isHead,
+      required final String name}) = _$_IndividualModel;
 
   factory _IndividualModel.fromJson(Map<String, dynamic> json) =
       _$_IndividualModel.fromJson;
 
   @override
-  String get name;
+  String? get additionalFields;
+  @override
+  String? get addressId;
+  @override
+  AuditDetailsModel? get auditDetails;
   @override
 
-  /// Date of birth in YYYYMMDD format
+  /// [dateOfBirth] in yyyyMMDD format
   String get dateOfBirth;
   @override
   Gender get gender;
+  @override
+  List<IndividualIdentifierModel> get identifiers;
+  @override
+  String? get individualId;
   @override
 
   /// [isHead] will be true if this individual is the head of a family
   bool get isHead;
   @override
-  List<IndividualIdentifierModel> get identifiers;
-  @override
-  AdditionalFieldsModel? get additionalFields;
+  String get name;
   @override
   @JsonKey(ignore: true)
   _$$_IndividualModelCopyWith<_$_IndividualModel> get copyWith =>

@@ -11,7 +11,6 @@ SyncObjectModel<T> _$SyncObjectModelFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     SyncObjectModel<T>(
-      type: $enumDecode(_$SyncObjectModelTypeEnumMap, json['type']),
       items: (json['items'] as List<dynamic>).map(fromJsonT).toList(),
     );
 
@@ -20,18 +19,12 @@ Map<String, dynamic> _$SyncObjectModelToJson<T>(
   Object? Function(T value) toJsonT,
 ) =>
     <String, dynamic>{
-      'type': _$SyncObjectModelTypeEnumMap[instance.type]!,
       'items': instance.items.map(toJsonT).toList(),
     };
 
-const _$SyncObjectModelTypeEnumMap = {
-  SyncObjectModelType.registration: 'REGISTRATION',
-  SyncObjectModelType.delivery: 'DELIVERY',
-};
-
 _$_SyncDataModel _$$_SyncDataModelFromJson(Map<String, dynamic> json) =>
     _$_SyncDataModel(
-      data: (json['data'] as List<dynamic>)
+      syncUpData: (json['syncUpData'] as List<dynamic>)
           .map((e) => SyncObjectModel<dynamic>.fromJson(
               e as Map<String, dynamic>, (value) => value))
           .toList(),
@@ -39,7 +32,7 @@ _$_SyncDataModel _$$_SyncDataModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_SyncDataModelToJson(_$_SyncDataModel instance) =>
     <String, dynamic>{
-      'data': instance.data
+      'syncUpData': instance.syncUpData
           .map((e) => e.toJson(
                 (value) => value,
               ))

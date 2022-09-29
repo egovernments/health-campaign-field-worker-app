@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:health_campaigns_flutter/models/delivery/delivery_model.dart';
 import 'package:health_campaigns_flutter/data/repositories/fake_store/fake_store.dart';
+import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 import 'package:uuid/uuid.dart';
 
 
@@ -17,6 +18,7 @@ class FakeDeliveryStore extends FakeDataStore<DeliveryModel> {
     final faker = Faker();
 
     return DeliveryModel(
+      type: SyncObjectModelType.delivery,
       campaignId: 'ID-1',
       registrationId: const Uuid().v1(),
       clientReferenceId: const Uuid().v1(),

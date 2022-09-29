@@ -20,8 +20,8 @@ AddressModel _$AddressModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AddressModel {
-  String get id => throw _privateConstructorUsedError;
-  String get address => throw _privateConstructorUsedError;
+  String? get addressId => throw _privateConstructorUsedError;
+  String get addressText => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $AddressModelCopyWith<$Res> {
   factory $AddressModelCopyWith(
           AddressModel value, $Res Function(AddressModel) then) =
       _$AddressModelCopyWithImpl<$Res>;
-  $Res call({String id, String address});
+  $Res call({String? addressId, String addressText});
 }
 
 /// @nodoc
@@ -47,17 +47,17 @@ class _$AddressModelCopyWithImpl<$Res> implements $AddressModelCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? id = freezed,
-    Object? address = freezed,
+    Object? addressId = freezed,
+    Object? addressText = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
+      addressId: addressId == freezed
+          ? _value.addressId
+          : addressId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      addressText: addressText == freezed
+          ? _value.addressText
+          : addressText // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -70,7 +70,7 @@ abstract class _$$_AddressModelCopyWith<$Res>
           _$_AddressModel value, $Res Function(_$_AddressModel) then) =
       __$$_AddressModelCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String address});
+  $Res call({String? addressId, String addressText});
 }
 
 /// @nodoc
@@ -86,17 +86,17 @@ class __$$_AddressModelCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? id = freezed,
-    Object? address = freezed,
+    Object? addressId = freezed,
+    Object? addressText = freezed,
   }) {
     return _then(_$_AddressModel(
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
+      addressId: addressId == freezed
+          ? _value.addressId
+          : addressId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      addressText: addressText == freezed
+          ? _value.addressText
+          : addressText // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -105,19 +105,19 @@ class __$$_AddressModelCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_AddressModel implements _AddressModel {
-  const _$_AddressModel({required this.id, required this.address});
+  const _$_AddressModel({this.addressId, required this.addressText});
 
   factory _$_AddressModel.fromJson(Map<String, dynamic> json) =>
       _$$_AddressModelFromJson(json);
 
   @override
-  final String id;
+  final String? addressId;
   @override
-  final String address;
+  final String addressText;
 
   @override
   String toString() {
-    return 'AddressModel(id: $id, address: $address)';
+    return 'AddressModel(addressId: $addressId, addressText: $addressText)';
   }
 
   @override
@@ -125,16 +125,17 @@ class _$_AddressModel implements _AddressModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_AddressModel &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.address, address));
+            const DeepCollectionEquality().equals(other.addressId, addressId) &&
+            const DeepCollectionEquality()
+                .equals(other.addressText, addressText));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(address));
+      const DeepCollectionEquality().hash(addressId),
+      const DeepCollectionEquality().hash(addressText));
 
   @JsonKey(ignore: true)
   @override
@@ -151,16 +152,16 @@ class _$_AddressModel implements _AddressModel {
 
 abstract class _AddressModel implements AddressModel {
   const factory _AddressModel(
-      {required final String id,
-      required final String address}) = _$_AddressModel;
+      {final String? addressId,
+      required final String addressText}) = _$_AddressModel;
 
   factory _AddressModel.fromJson(Map<String, dynamic> json) =
       _$_AddressModel.fromJson;
 
   @override
-  String get id;
+  String? get addressId;
   @override
-  String get address;
+  String get addressText;
   @override
   @JsonKey(ignore: true)
   _$$_AddressModelCopyWith<_$_AddressModel> get copyWith =>
@@ -173,8 +174,8 @@ LatLngModel _$LatLngModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LatLngModel {
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
+  num get latitude => throw _privateConstructorUsedError;
+  num get longitude => throw _privateConstructorUsedError;
   num get accuracy => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -188,7 +189,7 @@ abstract class $LatLngModelCopyWith<$Res> {
   factory $LatLngModelCopyWith(
           LatLngModel value, $Res Function(LatLngModel) then) =
       _$LatLngModelCopyWithImpl<$Res>;
-  $Res call({double latitude, double longitude, num accuracy});
+  $Res call({num latitude, num longitude, num accuracy});
 }
 
 /// @nodoc
@@ -209,11 +210,11 @@ class _$LatLngModelCopyWithImpl<$Res> implements $LatLngModelCopyWith<$Res> {
       latitude: latitude == freezed
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       longitude: longitude == freezed
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       accuracy: accuracy == freezed
           ? _value.accuracy
           : accuracy // ignore: cast_nullable_to_non_nullable
@@ -229,7 +230,7 @@ abstract class _$$_LatLngModelCopyWith<$Res>
           _$_LatLngModel value, $Res Function(_$_LatLngModel) then) =
       __$$_LatLngModelCopyWithImpl<$Res>;
   @override
-  $Res call({double latitude, double longitude, num accuracy});
+  $Res call({num latitude, num longitude, num accuracy});
 }
 
 /// @nodoc
@@ -252,11 +253,11 @@ class __$$_LatLngModelCopyWithImpl<$Res> extends _$LatLngModelCopyWithImpl<$Res>
       latitude: latitude == freezed
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       longitude: longitude == freezed
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as num,
       accuracy: accuracy == freezed
           ? _value.accuracy
           : accuracy // ignore: cast_nullable_to_non_nullable
@@ -275,9 +276,9 @@ class _$_LatLngModel implements _LatLngModel {
       _$$_LatLngModelFromJson(json);
 
   @override
-  final double latitude;
+  final num latitude;
   @override
-  final double longitude;
+  final num longitude;
   @override
   @JsonKey()
   final num accuracy;
@@ -320,17 +321,17 @@ class _$_LatLngModel implements _LatLngModel {
 
 abstract class _LatLngModel implements LatLngModel {
   const factory _LatLngModel(
-      {required final double latitude,
-      required final double longitude,
+      {required final num latitude,
+      required final num longitude,
       final num accuracy}) = _$_LatLngModel;
 
   factory _LatLngModel.fromJson(Map<String, dynamic> json) =
       _$_LatLngModel.fromJson;
 
   @override
-  double get latitude;
+  num get latitude;
   @override
-  double get longitude;
+  num get longitude;
   @override
   num get accuracy;
   @override

@@ -2,33 +2,38 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/models/address/address_model.dart';
+import 'package:health_campaigns_flutter/models/audit_model.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
+import 'package:health_campaigns_flutter/models/serializer_model.dart';
 import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 
-import '../dynamic_forms/additional_fields/additional_fields_model.dart';
 
 part 'registration_model.freezed.dart';
 part 'registration_model.g.dart';
 
 @freezed
-class RegistrationModel with _$RegistrationModel {
-
+class HouseholdRegistrationModel with _$HouseholdRegistrationModel {
   @JsonSerializable(explicitToJson: true)
-  const factory RegistrationModel({
-    required String campaignId,
-    required String tenantId,
-    required String clientReferenceId,
-    SyncOperationMode? mode,
-    required int noOfIndividuals,
+  @Implements<SerializerModel>()
+  const factory HouseholdRegistrationModel({
+    String? additionalFields,
     required AddressModel address,
+    required String administrativeUnit,
+    ApiMode? apiMode,
+    AuditDetailsModel? auditDetails,
+    required String campaignId,
+    required String clientReferenceId,
+
     /// [dateOfRegistration] in millisecondsSinceEpoch
     required int dateOfRegistration,
-    LatLngModel? location,
-    required String administrativeUnit,
+    String? householdId,
     required List<IndividualModel> individuals,
-    AdditionalFieldsModel? additionalFields,
-}) = _RegistrationModel;
+    LatLngModel? location,
+    required int numberOfIndividuals,
+    required String tenantId,
+    required SyncObjectModelType type,
+  }) = _HouseholdRegistrationModel;
 
-  factory RegistrationModel.fromJson(Map<String, dynamic> json) =>
-      _$RegistrationModelFromJson(json);
+  factory HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =>
+      _$HouseholdRegistrationModelFromJson(json);
 }

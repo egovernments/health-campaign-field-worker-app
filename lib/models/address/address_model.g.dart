@@ -8,20 +8,20 @@ part of 'address_model.dart';
 
 _$_AddressModel _$$_AddressModelFromJson(Map<String, dynamic> json) =>
     _$_AddressModel(
-      id: json['id'] as String,
-      address: json['address'] as String,
+      addressId: json['addressId'] as String?,
+      addressText: json['addressText'] as String,
     );
 
 Map<String, dynamic> _$$_AddressModelToJson(_$_AddressModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'address': instance.address,
+      'addressId': instance.addressId,
+      'addressText': instance.addressText,
     };
 
 _$_LatLngModel _$$_LatLngModelFromJson(Map<String, dynamic> json) =>
     _$_LatLngModel(
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      latitude: json['latitude'] as num,
+      longitude: json['longitude'] as num,
       accuracy: json['accuracy'] as num? ?? 0,
     );
 

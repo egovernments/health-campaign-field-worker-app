@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaigns_flutter/models/delivery/delivery_model.dart';
 
-const _targetModel = '''{
+const _targetModel = r'''{
     "campaignId": "ID-1",
     "registrationId": "R-ID-1",
     "resources": [
@@ -17,20 +17,11 @@ const _targetModel = '''{
     ],
     "deliveryDate": 1663654179,
     "deliveredBy": "UUID",
-    "auditDetails": {},
     "status":"DELIVERED",
     "clientReferenceId":"GUID",
     "tenantId":"tenantA",
-    "additionalFields": {
-        "schema": "DELIVERY",
-        "version": 2,
-        "fields": [
-            {
-                "key": "height",
-                "value": "180"
-            }
-        ]
-    }
+    "additionalFields": "{\"schema\":\"DELIVERY\",\"version\":2,\"fields\":[{\"key\":\"height\",\"value\":\"180\"}]}",
+    "type": "DELIVERY"
 }''';
 
 const _requiredProperties = [

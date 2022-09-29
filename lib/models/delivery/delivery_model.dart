@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:health_campaigns_flutter/models/dynamic_forms/additional_fields/additional_fields_model.dart';
 
 import '../sync/sync_model.dart';
 
@@ -12,18 +11,19 @@ part 'delivery_model.g.dart';
 class DeliveryModel with _$DeliveryModel {
   @JsonSerializable(explicitToJson: true)
   const factory DeliveryModel({
+    String? additionalFields,
     required String campaignId,
-    required String registrationId,
-    SyncOperationMode? mode,
     required String clientReferenceId,
-    required List<DeliveryResourceModel> resources,
 
     /// [deliveryDate] in millisecondsSinceEpoch
     required int deliveryDate,
     required String deliveredBy,
+    ApiMode? mode,
+    required String registrationId,
+    required List<DeliveryResourceModel> resources,
     required DeliveryStatus status,
     required String tenantId,
-    AdditionalFieldsModel? additionalFields,
+    required SyncObjectModelType type,
   }) = _DeliveryModel;
 
   factory DeliveryModel.fromJson(Map<String, dynamic> json) =>

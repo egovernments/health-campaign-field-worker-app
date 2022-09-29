@@ -20,20 +20,20 @@ DeliveryModel _$DeliveryModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DeliveryModel {
+  String? get additionalFields => throw _privateConstructorUsedError;
   String get campaignId => throw _privateConstructorUsedError;
-  String get registrationId => throw _privateConstructorUsedError;
-  SyncOperationMode? get mode => throw _privateConstructorUsedError;
   String get clientReferenceId => throw _privateConstructorUsedError;
-  List<DeliveryResourceModel> get resources =>
-      throw _privateConstructorUsedError;
 
   /// [deliveryDate] in millisecondsSinceEpoch
   int get deliveryDate => throw _privateConstructorUsedError;
   String get deliveredBy => throw _privateConstructorUsedError;
+  ApiMode? get mode => throw _privateConstructorUsedError;
+  String get registrationId => throw _privateConstructorUsedError;
+  List<DeliveryResourceModel> get resources =>
+      throw _privateConstructorUsedError;
   DeliveryStatus get status => throw _privateConstructorUsedError;
   String get tenantId => throw _privateConstructorUsedError;
-  AdditionalFieldsModel? get additionalFields =>
-      throw _privateConstructorUsedError;
+  SyncObjectModelType get type => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,18 +47,17 @@ abstract class $DeliveryModelCopyWith<$Res> {
           DeliveryModel value, $Res Function(DeliveryModel) then) =
       _$DeliveryModelCopyWithImpl<$Res>;
   $Res call(
-      {String campaignId,
-      String registrationId,
-      SyncOperationMode? mode,
+      {String? additionalFields,
+      String campaignId,
       String clientReferenceId,
-      List<DeliveryResourceModel> resources,
       int deliveryDate,
       String deliveredBy,
+      ApiMode? mode,
+      String registrationId,
+      List<DeliveryResourceModel> resources,
       DeliveryStatus status,
       String tenantId,
-      AdditionalFieldsModel? additionalFields});
-
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
+      SyncObjectModelType type});
 }
 
 /// @nodoc
@@ -72,38 +71,31 @@ class _$DeliveryModelCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? additionalFields = freezed,
     Object? campaignId = freezed,
-    Object? registrationId = freezed,
-    Object? mode = freezed,
     Object? clientReferenceId = freezed,
-    Object? resources = freezed,
     Object? deliveryDate = freezed,
     Object? deliveredBy = freezed,
+    Object? mode = freezed,
+    Object? registrationId = freezed,
+    Object? resources = freezed,
     Object? status = freezed,
     Object? tenantId = freezed,
-    Object? additionalFields = freezed,
+    Object? type = freezed,
   }) {
     return _then(_value.copyWith(
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
       campaignId: campaignId == freezed
           ? _value.campaignId
           : campaignId // ignore: cast_nullable_to_non_nullable
               as String,
-      registrationId: registrationId == freezed
-          ? _value.registrationId
-          : registrationId // ignore: cast_nullable_to_non_nullable
-              as String,
-      mode: mode == freezed
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as SyncOperationMode?,
       clientReferenceId: clientReferenceId == freezed
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
-      resources: resources == freezed
-          ? _value.resources
-          : resources // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryResourceModel>,
       deliveryDate: deliveryDate == freezed
           ? _value.deliveryDate
           : deliveryDate // ignore: cast_nullable_to_non_nullable
@@ -112,6 +104,18 @@ class _$DeliveryModelCopyWithImpl<$Res>
           ? _value.deliveredBy
           : deliveredBy // ignore: cast_nullable_to_non_nullable
               as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as ApiMode?,
+      registrationId: registrationId == freezed
+          ? _value.registrationId
+          : registrationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      resources: resources == freezed
+          ? _value.resources
+          : resources // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryResourceModel>,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -120,23 +124,11 @@ class _$DeliveryModelCopyWithImpl<$Res>
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as SyncObjectModelType,
     ));
-  }
-
-  @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields {
-    if (_value.additionalFields == null) {
-      return null;
-    }
-
-    return $AdditionalFieldsModelCopyWith<$Res>(_value.additionalFields!,
-        (value) {
-      return _then(_value.copyWith(additionalFields: value));
-    });
   }
 }
 
@@ -148,19 +140,17 @@ abstract class _$$_DeliveryModelCopyWith<$Res>
       __$$_DeliveryModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String campaignId,
-      String registrationId,
-      SyncOperationMode? mode,
+      {String? additionalFields,
+      String campaignId,
       String clientReferenceId,
-      List<DeliveryResourceModel> resources,
       int deliveryDate,
       String deliveredBy,
+      ApiMode? mode,
+      String registrationId,
+      List<DeliveryResourceModel> resources,
       DeliveryStatus status,
       String tenantId,
-      AdditionalFieldsModel? additionalFields});
-
-  @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
+      SyncObjectModelType type});
 }
 
 /// @nodoc
@@ -176,38 +166,31 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? additionalFields = freezed,
     Object? campaignId = freezed,
-    Object? registrationId = freezed,
-    Object? mode = freezed,
     Object? clientReferenceId = freezed,
-    Object? resources = freezed,
     Object? deliveryDate = freezed,
     Object? deliveredBy = freezed,
+    Object? mode = freezed,
+    Object? registrationId = freezed,
+    Object? resources = freezed,
     Object? status = freezed,
     Object? tenantId = freezed,
-    Object? additionalFields = freezed,
+    Object? type = freezed,
   }) {
     return _then(_$_DeliveryModel(
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
       campaignId: campaignId == freezed
           ? _value.campaignId
           : campaignId // ignore: cast_nullable_to_non_nullable
               as String,
-      registrationId: registrationId == freezed
-          ? _value.registrationId
-          : registrationId // ignore: cast_nullable_to_non_nullable
-              as String,
-      mode: mode == freezed
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as SyncOperationMode?,
       clientReferenceId: clientReferenceId == freezed
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
-      resources: resources == freezed
-          ? _value._resources
-          : resources // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryResourceModel>,
       deliveryDate: deliveryDate == freezed
           ? _value.deliveryDate
           : deliveryDate // ignore: cast_nullable_to_non_nullable
@@ -216,6 +199,18 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
           ? _value.deliveredBy
           : deliveredBy // ignore: cast_nullable_to_non_nullable
               as String,
+      mode: mode == freezed
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as ApiMode?,
+      registrationId: registrationId == freezed
+          ? _value.registrationId
+          : registrationId // ignore: cast_nullable_to_non_nullable
+              as String,
+      resources: resources == freezed
+          ? _value._resources
+          : resources // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryResourceModel>,
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -224,10 +219,10 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as SyncObjectModelType,
     ));
   }
 }
@@ -237,35 +232,28 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_DeliveryModel implements _DeliveryModel {
   const _$_DeliveryModel(
-      {required this.campaignId,
-      required this.registrationId,
-      this.mode,
+      {this.additionalFields,
+      required this.campaignId,
       required this.clientReferenceId,
-      required final List<DeliveryResourceModel> resources,
       required this.deliveryDate,
       required this.deliveredBy,
+      this.mode,
+      required this.registrationId,
+      required final List<DeliveryResourceModel> resources,
       required this.status,
       required this.tenantId,
-      this.additionalFields})
+      required this.type})
       : _resources = resources;
 
   factory _$_DeliveryModel.fromJson(Map<String, dynamic> json) =>
       _$$_DeliveryModelFromJson(json);
 
   @override
+  final String? additionalFields;
+  @override
   final String campaignId;
   @override
-  final String registrationId;
-  @override
-  final SyncOperationMode? mode;
-  @override
   final String clientReferenceId;
-  final List<DeliveryResourceModel> _resources;
-  @override
-  List<DeliveryResourceModel> get resources {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_resources);
-  }
 
   /// [deliveryDate] in millisecondsSinceEpoch
   @override
@@ -273,15 +261,26 @@ class _$_DeliveryModel implements _DeliveryModel {
   @override
   final String deliveredBy;
   @override
+  final ApiMode? mode;
+  @override
+  final String registrationId;
+  final List<DeliveryResourceModel> _resources;
+  @override
+  List<DeliveryResourceModel> get resources {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_resources);
+  }
+
+  @override
   final DeliveryStatus status;
   @override
   final String tenantId;
   @override
-  final AdditionalFieldsModel? additionalFields;
+  final SyncObjectModelType type;
 
   @override
   String toString() {
-    return 'DeliveryModel(campaignId: $campaignId, registrationId: $registrationId, mode: $mode, clientReferenceId: $clientReferenceId, resources: $resources, deliveryDate: $deliveryDate, deliveredBy: $deliveredBy, status: $status, tenantId: $tenantId, additionalFields: $additionalFields)';
+    return 'DeliveryModel(additionalFields: $additionalFields, campaignId: $campaignId, clientReferenceId: $clientReferenceId, deliveryDate: $deliveryDate, deliveredBy: $deliveredBy, mode: $mode, registrationId: $registrationId, resources: $resources, status: $status, tenantId: $tenantId, type: $type)';
   }
 
   @override
@@ -290,38 +289,40 @@ class _$_DeliveryModel implements _DeliveryModel {
         (other.runtimeType == runtimeType &&
             other is _$_DeliveryModel &&
             const DeepCollectionEquality()
+                .equals(other.additionalFields, additionalFields) &&
+            const DeepCollectionEquality()
                 .equals(other.campaignId, campaignId) &&
             const DeepCollectionEquality()
-                .equals(other.registrationId, registrationId) &&
-            const DeepCollectionEquality().equals(other.mode, mode) &&
-            const DeepCollectionEquality()
                 .equals(other.clientReferenceId, clientReferenceId) &&
-            const DeepCollectionEquality()
-                .equals(other._resources, _resources) &&
             const DeepCollectionEquality()
                 .equals(other.deliveryDate, deliveryDate) &&
             const DeepCollectionEquality()
                 .equals(other.deliveredBy, deliveredBy) &&
+            const DeepCollectionEquality().equals(other.mode, mode) &&
+            const DeepCollectionEquality()
+                .equals(other.registrationId, registrationId) &&
+            const DeepCollectionEquality()
+                .equals(other._resources, _resources) &&
             const DeepCollectionEquality().equals(other.status, status) &&
             const DeepCollectionEquality().equals(other.tenantId, tenantId) &&
-            const DeepCollectionEquality()
-                .equals(other.additionalFields, additionalFields));
+            const DeepCollectionEquality().equals(other.type, type));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(additionalFields),
       const DeepCollectionEquality().hash(campaignId),
-      const DeepCollectionEquality().hash(registrationId),
-      const DeepCollectionEquality().hash(mode),
       const DeepCollectionEquality().hash(clientReferenceId),
-      const DeepCollectionEquality().hash(_resources),
       const DeepCollectionEquality().hash(deliveryDate),
       const DeepCollectionEquality().hash(deliveredBy),
+      const DeepCollectionEquality().hash(mode),
+      const DeepCollectionEquality().hash(registrationId),
+      const DeepCollectionEquality().hash(_resources),
       const DeepCollectionEquality().hash(status),
       const DeepCollectionEquality().hash(tenantId),
-      const DeepCollectionEquality().hash(additionalFields));
+      const DeepCollectionEquality().hash(type));
 
   @JsonKey(ignore: true)
   @override
@@ -338,30 +339,27 @@ class _$_DeliveryModel implements _DeliveryModel {
 
 abstract class _DeliveryModel implements DeliveryModel {
   const factory _DeliveryModel(
-      {required final String campaignId,
-      required final String registrationId,
-      final SyncOperationMode? mode,
+      {final String? additionalFields,
+      required final String campaignId,
       required final String clientReferenceId,
-      required final List<DeliveryResourceModel> resources,
       required final int deliveryDate,
       required final String deliveredBy,
+      final ApiMode? mode,
+      required final String registrationId,
+      required final List<DeliveryResourceModel> resources,
       required final DeliveryStatus status,
       required final String tenantId,
-      final AdditionalFieldsModel? additionalFields}) = _$_DeliveryModel;
+      required final SyncObjectModelType type}) = _$_DeliveryModel;
 
   factory _DeliveryModel.fromJson(Map<String, dynamic> json) =
       _$_DeliveryModel.fromJson;
 
   @override
+  String? get additionalFields;
+  @override
   String get campaignId;
   @override
-  String get registrationId;
-  @override
-  SyncOperationMode? get mode;
-  @override
   String get clientReferenceId;
-  @override
-  List<DeliveryResourceModel> get resources;
   @override
 
   /// [deliveryDate] in millisecondsSinceEpoch
@@ -369,11 +367,17 @@ abstract class _DeliveryModel implements DeliveryModel {
   @override
   String get deliveredBy;
   @override
+  ApiMode? get mode;
+  @override
+  String get registrationId;
+  @override
+  List<DeliveryResourceModel> get resources;
+  @override
   DeliveryStatus get status;
   @override
   String get tenantId;
   @override
-  AdditionalFieldsModel? get additionalFields;
+  SyncObjectModelType get type;
   @override
   @JsonKey(ignore: true)
   _$$_DeliveryModelCopyWith<_$_DeliveryModel> get copyWith =>

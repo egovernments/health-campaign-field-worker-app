@@ -14,124 +14,145 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-RegistrationModel _$RegistrationModelFromJson(Map<String, dynamic> json) {
-  return _RegistrationModel.fromJson(json);
+HouseholdRegistrationModel _$HouseholdRegistrationModelFromJson(
+    Map<String, dynamic> json) {
+  return _HouseholdRegistrationModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$RegistrationModel {
-  String get campaignId => throw _privateConstructorUsedError;
-  String get tenantId => throw _privateConstructorUsedError;
-  String get clientReferenceId => throw _privateConstructorUsedError;
-  SyncOperationMode? get mode => throw _privateConstructorUsedError;
-  int get noOfIndividuals => throw _privateConstructorUsedError;
+mixin _$HouseholdRegistrationModel {
+  String? get additionalFields => throw _privateConstructorUsedError;
   AddressModel get address => throw _privateConstructorUsedError;
+  String get administrativeUnit => throw _privateConstructorUsedError;
+  ApiMode? get apiMode => throw _privateConstructorUsedError;
+  AuditDetailsModel? get auditDetails => throw _privateConstructorUsedError;
+  String get campaignId => throw _privateConstructorUsedError;
+  String get clientReferenceId => throw _privateConstructorUsedError;
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
   int get dateOfRegistration => throw _privateConstructorUsedError;
-  LatLngModel? get location => throw _privateConstructorUsedError;
-  String get administrativeUnit => throw _privateConstructorUsedError;
+  String? get householdId => throw _privateConstructorUsedError;
   List<IndividualModel> get individuals => throw _privateConstructorUsedError;
-  AdditionalFieldsModel? get additionalFields =>
-      throw _privateConstructorUsedError;
+  LatLngModel? get location => throw _privateConstructorUsedError;
+  int get numberOfIndividuals => throw _privateConstructorUsedError;
+  String get tenantId => throw _privateConstructorUsedError;
+  SyncObjectModelType get type => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $RegistrationModelCopyWith<RegistrationModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $HouseholdRegistrationModelCopyWith<HouseholdRegistrationModel>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $RegistrationModelCopyWith<$Res> {
-  factory $RegistrationModelCopyWith(
-          RegistrationModel value, $Res Function(RegistrationModel) then) =
-      _$RegistrationModelCopyWithImpl<$Res>;
+abstract class $HouseholdRegistrationModelCopyWith<$Res> {
+  factory $HouseholdRegistrationModelCopyWith(HouseholdRegistrationModel value,
+          $Res Function(HouseholdRegistrationModel) then) =
+      _$HouseholdRegistrationModelCopyWithImpl<$Res>;
   $Res call(
-      {String campaignId,
-      String tenantId,
-      String clientReferenceId,
-      SyncOperationMode? mode,
-      int noOfIndividuals,
+      {String? additionalFields,
       AddressModel address,
-      int dateOfRegistration,
-      LatLngModel? location,
       String administrativeUnit,
+      ApiMode? apiMode,
+      AuditDetailsModel? auditDetails,
+      String campaignId,
+      String clientReferenceId,
+      int dateOfRegistration,
+      String? householdId,
       List<IndividualModel> individuals,
-      AdditionalFieldsModel? additionalFields});
+      LatLngModel? location,
+      int numberOfIndividuals,
+      String tenantId,
+      SyncObjectModelType type});
 
   $AddressModelCopyWith<$Res> get address;
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails;
   $LatLngModelCopyWith<$Res>? get location;
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
 }
 
 /// @nodoc
-class _$RegistrationModelCopyWithImpl<$Res>
-    implements $RegistrationModelCopyWith<$Res> {
-  _$RegistrationModelCopyWithImpl(this._value, this._then);
+class _$HouseholdRegistrationModelCopyWithImpl<$Res>
+    implements $HouseholdRegistrationModelCopyWith<$Res> {
+  _$HouseholdRegistrationModelCopyWithImpl(this._value, this._then);
 
-  final RegistrationModel _value;
+  final HouseholdRegistrationModel _value;
   // ignore: unused_field
-  final $Res Function(RegistrationModel) _then;
+  final $Res Function(HouseholdRegistrationModel) _then;
 
   @override
   $Res call({
-    Object? campaignId = freezed,
-    Object? tenantId = freezed,
-    Object? clientReferenceId = freezed,
-    Object? mode = freezed,
-    Object? noOfIndividuals = freezed,
-    Object? address = freezed,
-    Object? dateOfRegistration = freezed,
-    Object? location = freezed,
-    Object? administrativeUnit = freezed,
-    Object? individuals = freezed,
     Object? additionalFields = freezed,
+    Object? address = freezed,
+    Object? administrativeUnit = freezed,
+    Object? apiMode = freezed,
+    Object? auditDetails = freezed,
+    Object? campaignId = freezed,
+    Object? clientReferenceId = freezed,
+    Object? dateOfRegistration = freezed,
+    Object? householdId = freezed,
+    Object? individuals = freezed,
+    Object? location = freezed,
+    Object? numberOfIndividuals = freezed,
+    Object? tenantId = freezed,
+    Object? type = freezed,
   }) {
     return _then(_value.copyWith(
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as AddressModel,
+      administrativeUnit: administrativeUnit == freezed
+          ? _value.administrativeUnit
+          : administrativeUnit // ignore: cast_nullable_to_non_nullable
+              as String,
+      apiMode: apiMode == freezed
+          ? _value.apiMode
+          : apiMode // ignore: cast_nullable_to_non_nullable
+              as ApiMode?,
+      auditDetails: auditDetails == freezed
+          ? _value.auditDetails
+          : auditDetails // ignore: cast_nullable_to_non_nullable
+              as AuditDetailsModel?,
       campaignId: campaignId == freezed
           ? _value.campaignId
           : campaignId // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: tenantId == freezed
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
       clientReferenceId: clientReferenceId == freezed
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
-      mode: mode == freezed
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as SyncOperationMode?,
-      noOfIndividuals: noOfIndividuals == freezed
-          ? _value.noOfIndividuals
-          : noOfIndividuals // ignore: cast_nullable_to_non_nullable
-              as int,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as AddressModel,
       dateOfRegistration: dateOfRegistration == freezed
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
               as int,
-      location: location == freezed
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as LatLngModel?,
-      administrativeUnit: administrativeUnit == freezed
-          ? _value.administrativeUnit
-          : administrativeUnit // ignore: cast_nullable_to_non_nullable
-              as String,
+      householdId: householdId == freezed
+          ? _value.householdId
+          : householdId // ignore: cast_nullable_to_non_nullable
+              as String?,
       individuals: individuals == freezed
           ? _value.individuals
           : individuals // ignore: cast_nullable_to_non_nullable
               as List<IndividualModel>,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      location: location == freezed
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as LatLngModel?,
+      numberOfIndividuals: numberOfIndividuals == freezed
+          ? _value.numberOfIndividuals
+          : numberOfIndividuals // ignore: cast_nullable_to_non_nullable
+              as int,
+      tenantId: tenantId == freezed
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as SyncObjectModelType,
     ));
   }
 
@@ -139,6 +160,17 @@ class _$RegistrationModelCopyWithImpl<$Res>
   $AddressModelCopyWith<$Res> get address {
     return $AddressModelCopyWith<$Res>(_value.address, (value) {
       return _then(_value.copyWith(address: value));
+    });
+  }
+
+  @override
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails {
+    if (_value.auditDetails == null) {
+      return null;
+    }
+
+    return $AuditDetailsModelCopyWith<$Res>(_value.auditDetails!, (value) {
+      return _then(_value.copyWith(auditDetails: value));
     });
   }
 
@@ -152,118 +184,127 @@ class _$RegistrationModelCopyWithImpl<$Res>
       return _then(_value.copyWith(location: value));
     });
   }
-
-  @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields {
-    if (_value.additionalFields == null) {
-      return null;
-    }
-
-    return $AdditionalFieldsModelCopyWith<$Res>(_value.additionalFields!,
-        (value) {
-      return _then(_value.copyWith(additionalFields: value));
-    });
-  }
 }
 
 /// @nodoc
-abstract class _$$_RegistrationModelCopyWith<$Res>
-    implements $RegistrationModelCopyWith<$Res> {
-  factory _$$_RegistrationModelCopyWith(_$_RegistrationModel value,
-          $Res Function(_$_RegistrationModel) then) =
-      __$$_RegistrationModelCopyWithImpl<$Res>;
+abstract class _$$_HouseholdRegistrationModelCopyWith<$Res>
+    implements $HouseholdRegistrationModelCopyWith<$Res> {
+  factory _$$_HouseholdRegistrationModelCopyWith(
+          _$_HouseholdRegistrationModel value,
+          $Res Function(_$_HouseholdRegistrationModel) then) =
+      __$$_HouseholdRegistrationModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String campaignId,
-      String tenantId,
-      String clientReferenceId,
-      SyncOperationMode? mode,
-      int noOfIndividuals,
+      {String? additionalFields,
       AddressModel address,
-      int dateOfRegistration,
-      LatLngModel? location,
       String administrativeUnit,
+      ApiMode? apiMode,
+      AuditDetailsModel? auditDetails,
+      String campaignId,
+      String clientReferenceId,
+      int dateOfRegistration,
+      String? householdId,
       List<IndividualModel> individuals,
-      AdditionalFieldsModel? additionalFields});
+      LatLngModel? location,
+      int numberOfIndividuals,
+      String tenantId,
+      SyncObjectModelType type});
 
   @override
   $AddressModelCopyWith<$Res> get address;
   @override
-  $LatLngModelCopyWith<$Res>? get location;
+  $AuditDetailsModelCopyWith<$Res>? get auditDetails;
   @override
-  $AdditionalFieldsModelCopyWith<$Res>? get additionalFields;
+  $LatLngModelCopyWith<$Res>? get location;
 }
 
 /// @nodoc
-class __$$_RegistrationModelCopyWithImpl<$Res>
-    extends _$RegistrationModelCopyWithImpl<$Res>
-    implements _$$_RegistrationModelCopyWith<$Res> {
-  __$$_RegistrationModelCopyWithImpl(
-      _$_RegistrationModel _value, $Res Function(_$_RegistrationModel) _then)
-      : super(_value, (v) => _then(v as _$_RegistrationModel));
+class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
+    extends _$HouseholdRegistrationModelCopyWithImpl<$Res>
+    implements _$$_HouseholdRegistrationModelCopyWith<$Res> {
+  __$$_HouseholdRegistrationModelCopyWithImpl(
+      _$_HouseholdRegistrationModel _value,
+      $Res Function(_$_HouseholdRegistrationModel) _then)
+      : super(_value, (v) => _then(v as _$_HouseholdRegistrationModel));
 
   @override
-  _$_RegistrationModel get _value => super._value as _$_RegistrationModel;
+  _$_HouseholdRegistrationModel get _value =>
+      super._value as _$_HouseholdRegistrationModel;
 
   @override
   $Res call({
-    Object? campaignId = freezed,
-    Object? tenantId = freezed,
-    Object? clientReferenceId = freezed,
-    Object? mode = freezed,
-    Object? noOfIndividuals = freezed,
-    Object? address = freezed,
-    Object? dateOfRegistration = freezed,
-    Object? location = freezed,
-    Object? administrativeUnit = freezed,
-    Object? individuals = freezed,
     Object? additionalFields = freezed,
+    Object? address = freezed,
+    Object? administrativeUnit = freezed,
+    Object? apiMode = freezed,
+    Object? auditDetails = freezed,
+    Object? campaignId = freezed,
+    Object? clientReferenceId = freezed,
+    Object? dateOfRegistration = freezed,
+    Object? householdId = freezed,
+    Object? individuals = freezed,
+    Object? location = freezed,
+    Object? numberOfIndividuals = freezed,
+    Object? tenantId = freezed,
+    Object? type = freezed,
   }) {
-    return _then(_$_RegistrationModel(
+    return _then(_$_HouseholdRegistrationModel(
+      additionalFields: additionalFields == freezed
+          ? _value.additionalFields
+          : additionalFields // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: address == freezed
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as AddressModel,
+      administrativeUnit: administrativeUnit == freezed
+          ? _value.administrativeUnit
+          : administrativeUnit // ignore: cast_nullable_to_non_nullable
+              as String,
+      apiMode: apiMode == freezed
+          ? _value.apiMode
+          : apiMode // ignore: cast_nullable_to_non_nullable
+              as ApiMode?,
+      auditDetails: auditDetails == freezed
+          ? _value.auditDetails
+          : auditDetails // ignore: cast_nullable_to_non_nullable
+              as AuditDetailsModel?,
       campaignId: campaignId == freezed
           ? _value.campaignId
           : campaignId // ignore: cast_nullable_to_non_nullable
-              as String,
-      tenantId: tenantId == freezed
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
       clientReferenceId: clientReferenceId == freezed
           ? _value.clientReferenceId
           : clientReferenceId // ignore: cast_nullable_to_non_nullable
               as String,
-      mode: mode == freezed
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as SyncOperationMode?,
-      noOfIndividuals: noOfIndividuals == freezed
-          ? _value.noOfIndividuals
-          : noOfIndividuals // ignore: cast_nullable_to_non_nullable
-              as int,
-      address: address == freezed
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as AddressModel,
       dateOfRegistration: dateOfRegistration == freezed
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
               as int,
-      location: location == freezed
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as LatLngModel?,
-      administrativeUnit: administrativeUnit == freezed
-          ? _value.administrativeUnit
-          : administrativeUnit // ignore: cast_nullable_to_non_nullable
-              as String,
+      householdId: householdId == freezed
+          ? _value.householdId
+          : householdId // ignore: cast_nullable_to_non_nullable
+              as String?,
       individuals: individuals == freezed
           ? _value._individuals
           : individuals // ignore: cast_nullable_to_non_nullable
               as List<IndividualModel>,
-      additionalFields: additionalFields == freezed
-          ? _value.additionalFields
-          : additionalFields // ignore: cast_nullable_to_non_nullable
-              as AdditionalFieldsModel?,
+      location: location == freezed
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as LatLngModel?,
+      numberOfIndividuals: numberOfIndividuals == freezed
+          ? _value.numberOfIndividuals
+          : numberOfIndividuals // ignore: cast_nullable_to_non_nullable
+              as int,
+      tenantId: tenantId == freezed
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as SyncObjectModelType,
     ));
   }
 }
@@ -271,44 +312,47 @@ class __$$_RegistrationModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_RegistrationModel implements _RegistrationModel {
-  const _$_RegistrationModel(
-      {required this.campaignId,
-      required this.tenantId,
-      required this.clientReferenceId,
-      this.mode,
-      required this.noOfIndividuals,
+class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
+  const _$_HouseholdRegistrationModel(
+      {this.additionalFields,
       required this.address,
-      required this.dateOfRegistration,
-      this.location,
       required this.administrativeUnit,
+      this.apiMode,
+      this.auditDetails,
+      required this.campaignId,
+      required this.clientReferenceId,
+      required this.dateOfRegistration,
+      this.householdId,
       required final List<IndividualModel> individuals,
-      this.additionalFields})
+      this.location,
+      required this.numberOfIndividuals,
+      required this.tenantId,
+      required this.type})
       : _individuals = individuals;
 
-  factory _$_RegistrationModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RegistrationModelFromJson(json);
+  factory _$_HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =>
+      _$$_HouseholdRegistrationModelFromJson(json);
 
+  @override
+  final String? additionalFields;
+  @override
+  final AddressModel address;
+  @override
+  final String administrativeUnit;
+  @override
+  final ApiMode? apiMode;
+  @override
+  final AuditDetailsModel? auditDetails;
   @override
   final String campaignId;
   @override
-  final String tenantId;
-  @override
   final String clientReferenceId;
-  @override
-  final SyncOperationMode? mode;
-  @override
-  final int noOfIndividuals;
-  @override
-  final AddressModel address;
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
   @override
   final int dateOfRegistration;
   @override
-  final LatLngModel? location;
-  @override
-  final String administrativeUnit;
+  final String? householdId;
   final List<IndividualModel> _individuals;
   @override
   List<IndividualModel> get individuals {
@@ -317,111 +361,135 @@ class _$_RegistrationModel implements _RegistrationModel {
   }
 
   @override
-  final AdditionalFieldsModel? additionalFields;
+  final LatLngModel? location;
+  @override
+  final int numberOfIndividuals;
+  @override
+  final String tenantId;
+  @override
+  final SyncObjectModelType type;
 
   @override
   String toString() {
-    return 'RegistrationModel(campaignId: $campaignId, tenantId: $tenantId, clientReferenceId: $clientReferenceId, mode: $mode, noOfIndividuals: $noOfIndividuals, address: $address, dateOfRegistration: $dateOfRegistration, location: $location, administrativeUnit: $administrativeUnit, individuals: $individuals, additionalFields: $additionalFields)';
+    return 'HouseholdRegistrationModel(additionalFields: $additionalFields, address: $address, administrativeUnit: $administrativeUnit, apiMode: $apiMode, auditDetails: $auditDetails, campaignId: $campaignId, clientReferenceId: $clientReferenceId, dateOfRegistration: $dateOfRegistration, householdId: $householdId, individuals: $individuals, location: $location, numberOfIndividuals: $numberOfIndividuals, tenantId: $tenantId, type: $type)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegistrationModel &&
+            other is _$_HouseholdRegistrationModel &&
             const DeepCollectionEquality()
-                .equals(other.campaignId, campaignId) &&
-            const DeepCollectionEquality().equals(other.tenantId, tenantId) &&
-            const DeepCollectionEquality()
-                .equals(other.clientReferenceId, clientReferenceId) &&
-            const DeepCollectionEquality().equals(other.mode, mode) &&
-            const DeepCollectionEquality()
-                .equals(other.noOfIndividuals, noOfIndividuals) &&
+                .equals(other.additionalFields, additionalFields) &&
             const DeepCollectionEquality().equals(other.address, address) &&
             const DeepCollectionEquality()
-                .equals(other.dateOfRegistration, dateOfRegistration) &&
-            const DeepCollectionEquality().equals(other.location, location) &&
-            const DeepCollectionEquality()
                 .equals(other.administrativeUnit, administrativeUnit) &&
+            const DeepCollectionEquality().equals(other.apiMode, apiMode) &&
+            const DeepCollectionEquality()
+                .equals(other.auditDetails, auditDetails) &&
+            const DeepCollectionEquality()
+                .equals(other.campaignId, campaignId) &&
+            const DeepCollectionEquality()
+                .equals(other.clientReferenceId, clientReferenceId) &&
+            const DeepCollectionEquality()
+                .equals(other.dateOfRegistration, dateOfRegistration) &&
+            const DeepCollectionEquality()
+                .equals(other.householdId, householdId) &&
             const DeepCollectionEquality()
                 .equals(other._individuals, _individuals) &&
+            const DeepCollectionEquality().equals(other.location, location) &&
             const DeepCollectionEquality()
-                .equals(other.additionalFields, additionalFields));
+                .equals(other.numberOfIndividuals, numberOfIndividuals) &&
+            const DeepCollectionEquality().equals(other.tenantId, tenantId) &&
+            const DeepCollectionEquality().equals(other.type, type));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(campaignId),
-      const DeepCollectionEquality().hash(tenantId),
-      const DeepCollectionEquality().hash(clientReferenceId),
-      const DeepCollectionEquality().hash(mode),
-      const DeepCollectionEquality().hash(noOfIndividuals),
+      const DeepCollectionEquality().hash(additionalFields),
       const DeepCollectionEquality().hash(address),
-      const DeepCollectionEquality().hash(dateOfRegistration),
-      const DeepCollectionEquality().hash(location),
       const DeepCollectionEquality().hash(administrativeUnit),
+      const DeepCollectionEquality().hash(apiMode),
+      const DeepCollectionEquality().hash(auditDetails),
+      const DeepCollectionEquality().hash(campaignId),
+      const DeepCollectionEquality().hash(clientReferenceId),
+      const DeepCollectionEquality().hash(dateOfRegistration),
+      const DeepCollectionEquality().hash(householdId),
       const DeepCollectionEquality().hash(_individuals),
-      const DeepCollectionEquality().hash(additionalFields));
+      const DeepCollectionEquality().hash(location),
+      const DeepCollectionEquality().hash(numberOfIndividuals),
+      const DeepCollectionEquality().hash(tenantId),
+      const DeepCollectionEquality().hash(type));
 
   @JsonKey(ignore: true)
   @override
-  _$$_RegistrationModelCopyWith<_$_RegistrationModel> get copyWith =>
-      __$$_RegistrationModelCopyWithImpl<_$_RegistrationModel>(
-          this, _$identity);
+  _$$_HouseholdRegistrationModelCopyWith<_$_HouseholdRegistrationModel>
+      get copyWith => __$$_HouseholdRegistrationModelCopyWithImpl<
+          _$_HouseholdRegistrationModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RegistrationModelToJson(
+    return _$$_HouseholdRegistrationModelToJson(
       this,
     );
   }
 }
 
-abstract class _RegistrationModel implements RegistrationModel {
-  const factory _RegistrationModel(
-      {required final String campaignId,
-      required final String tenantId,
-      required final String clientReferenceId,
-      final SyncOperationMode? mode,
-      required final int noOfIndividuals,
+abstract class _HouseholdRegistrationModel
+    implements HouseholdRegistrationModel, SerializerModel {
+  const factory _HouseholdRegistrationModel(
+      {final String? additionalFields,
       required final AddressModel address,
-      required final int dateOfRegistration,
-      final LatLngModel? location,
       required final String administrativeUnit,
+      final ApiMode? apiMode,
+      final AuditDetailsModel? auditDetails,
+      required final String campaignId,
+      required final String clientReferenceId,
+      required final int dateOfRegistration,
+      final String? householdId,
       required final List<IndividualModel> individuals,
-      final AdditionalFieldsModel? additionalFields}) = _$_RegistrationModel;
+      final LatLngModel? location,
+      required final int numberOfIndividuals,
+      required final String tenantId,
+      required final SyncObjectModelType type}) = _$_HouseholdRegistrationModel;
 
-  factory _RegistrationModel.fromJson(Map<String, dynamic> json) =
-      _$_RegistrationModel.fromJson;
+  factory _HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =
+      _$_HouseholdRegistrationModel.fromJson;
 
+  @override
+  String? get additionalFields;
+  @override
+  AddressModel get address;
+  @override
+  String get administrativeUnit;
+  @override
+  ApiMode? get apiMode;
+  @override
+  AuditDetailsModel? get auditDetails;
   @override
   String get campaignId;
   @override
-  String get tenantId;
-  @override
   String get clientReferenceId;
-  @override
-  SyncOperationMode? get mode;
-  @override
-  int get noOfIndividuals;
-  @override
-  AddressModel get address;
   @override
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
   int get dateOfRegistration;
   @override
-  LatLngModel? get location;
-  @override
-  String get administrativeUnit;
+  String? get householdId;
   @override
   List<IndividualModel> get individuals;
   @override
-  AdditionalFieldsModel? get additionalFields;
+  LatLngModel? get location;
+  @override
+  int get numberOfIndividuals;
+  @override
+  String get tenantId;
+  @override
+  SyncObjectModelType get type;
   @override
   @JsonKey(ignore: true)
-  _$$_RegistrationModelCopyWith<_$_RegistrationModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_HouseholdRegistrationModelCopyWith<_$_HouseholdRegistrationModel>
+      get copyWith => throw _privateConstructorUsedError;
 }
