@@ -18,6 +18,7 @@ class FakeDeliveryStore extends FakeDataStore<DeliveryModel> {
     final faker = Faker();
 
     return DeliveryModel(
+      apiMode: ApiMode.create,
       type: SyncObjectModelType.delivery,
       campaignId: 'ID-1',
       registrationId: const Uuid().v1(),

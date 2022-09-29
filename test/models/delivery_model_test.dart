@@ -21,7 +21,8 @@ const _targetModel = r'''{
     "clientReferenceId":"GUID",
     "tenantId":"tenantA",
     "additionalFields": "{\"schema\":\"DELIVERY\",\"version\":2,\"fields\":[{\"key\":\"height\",\"value\":\"180\"}]}",
-    "type": "DELIVERY"
+    "type": "DELIVERY",
+    "apiMode": "CREATE"
 }''';
 
 const _requiredProperties = [
@@ -33,6 +34,7 @@ const _requiredProperties = [
   'status',
   'clientReferenceId',
   'tenantId',
+  'apiMode',
 ];
 
 void main() {
