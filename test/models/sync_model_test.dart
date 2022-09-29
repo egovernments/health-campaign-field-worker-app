@@ -1,4 +1,3 @@
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaigns_flutter/models/delivery/delivery_model.dart';
 import 'package:health_campaigns_flutter/models/registration/registration_model.dart';
@@ -18,15 +17,31 @@ void main() {
       );
 
       final syncDelivery = SyncObjectModel<DeliveryModel>(
-        type: 'registration',
+        type: 'delivery',
         items: deliveryList,
       );
 
       final syncData = SyncDataModel(
         data: [syncDelivery, syncRegistration],
       );
-      
-      expect(syncData.data.length, 2);
+
+      final json = syncData.toJson();
+
+      List<RegistrationModel> parsedRegistration = <RegistrationModel>[];
+      List<DeliveryModel> parsedDelivery = <DeliveryModel>[];
+
+
+      final parsedData = SyncDataModel.fromJson(json);
+      for (final data in parsedData.data) {
+        for (final item in data.items) {
+          if (data.type == 'registration') {
+            parsedRegistration.add(item);
+          } else if (data.type == 'delivery') {
+            parsedDelivery.add(item);
+          }
+        }
+      }
+      expect(parsedRegistration, registrationList);
     });
   });
 }
