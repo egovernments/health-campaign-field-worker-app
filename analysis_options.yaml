@@ -3,9 +3,9 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - build/**
-    - lib/**/*.g.dart
-    - lib/**/*.gr.dart
-    - lib/**/*.freezed.dart
+    - "**/*.g.dart"
+    - "**/*.gr.dart"
+    - "**/*.freezed.dart"
   plugins:
     - dart_code_metrics
 
