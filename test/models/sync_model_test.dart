@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaigns_flutter/models/delivery/delivery_model.dart';
 import 'package:health_campaigns_flutter/models/registration/registration_model.dart';
 import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
-import 'package:health_campaigns_flutter/repositories/fake_store/delivery.dart';
-import 'package:health_campaigns_flutter/repositories/fake_store/registration.dart';
+import 'package:health_campaigns_flutter/data/repositories/fake_store/delivery.dart';
+import 'package:health_campaigns_flutter/data/repositories/fake_store/registration.dart';
 
 void main() {
   group('Sync Model', () {

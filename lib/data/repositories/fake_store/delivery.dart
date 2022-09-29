@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:health_campaigns_flutter/models/delivery/delivery_model.dart';
-import 'package:health_campaigns_flutter/repositories/fake_store/fake_store.dart';
+import 'package:health_campaigns_flutter/data/repositories/fake_store/fake_store.dart';
 import 'package:uuid/uuid.dart';
 
 

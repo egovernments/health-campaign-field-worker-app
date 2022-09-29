@@ -3,11 +3,10 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:health_campaigns_flutter/models/address/address_model.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
-import 'package:health_campaigns_flutter/repositories/fake_store/fake_store.dart';
+import 'package:health_campaigns_flutter/data/repositories/fake_store/fake_store.dart';
+import 'package:health_campaigns_flutter/models/registration/registration_model.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../models/registration/registration_model.dart';
 
 class FakeRegistrationStore extends FakeDataStore<RegistrationModel> {
   static FakeRegistrationStore get instance => _instance;
