@@ -13,7 +13,7 @@ _$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
       clientReferenceId: json['clientReferenceId'] as String,
       deliveryDate: json['deliveryDate'] as int,
       deliveredBy: json['deliveredBy'] as String,
-      mode: $enumDecodeNullable(_$ApiModeEnumMap, json['mode']),
+      mode: $enumDecode(_$ApiModeEnumMap, json['mode']),
       registrationId: json['registrationId'] as String,
       resources: (json['resources'] as List<dynamic>)
           .map((e) => DeliveryResourceModel.fromJson(e as Map<String, dynamic>))
@@ -30,7 +30,7 @@ Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
       'clientReferenceId': instance.clientReferenceId,
       'deliveryDate': instance.deliveryDate,
       'deliveredBy': instance.deliveredBy,
-      'mode': _$ApiModeEnumMap[instance.mode],
+      'mode': _$ApiModeEnumMap[instance.mode]!,
       'registrationId': instance.registrationId,
       'resources': instance.resources.map((e) => e.toJson()).toList(),
       'status': _$DeliveryStatusEnumMap[instance.status]!,

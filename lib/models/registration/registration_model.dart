@@ -19,7 +19,7 @@ class HouseholdRegistrationModel with _$HouseholdRegistrationModel {
     String? additionalFields,
     required AddressModel address,
     required String administrativeUnit,
-    ApiMode? apiMode,
+    required ApiMode apiMode,
     AuditDetailsModel? auditDetails,
     required String campaignId,
     required String clientReferenceId,

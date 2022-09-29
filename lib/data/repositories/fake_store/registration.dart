@@ -20,6 +20,7 @@ class FakeRegistrationStore extends FakeDataStore<HouseholdRegistrationModel> {
     final faker = Faker();
 
     return HouseholdRegistrationModel(
+      apiMode: ApiMode.create,
       type: SyncObjectModelType.registration,
       campaignId: 'ID-1',
       tenantId: 'TenantA',

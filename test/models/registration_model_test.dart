@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaigns_flutter/models/registration/registration_model.dart';
 
 const _targetModel = r'''{
+  "apiMode": "CREATE",
   "campaignId": "ID-1",
   "numberOfIndividuals": 4,
   "address": {
@@ -49,6 +50,7 @@ const _requiredProperties = [
   'location',
   'administrativeUnit',
   'individuals',
+  'apiMode',
 ];
 
 void main() {

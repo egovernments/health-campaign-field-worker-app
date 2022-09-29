@@ -24,7 +24,7 @@ mixin _$HouseholdRegistrationModel {
   String? get additionalFields => throw _privateConstructorUsedError;
   AddressModel get address => throw _privateConstructorUsedError;
   String get administrativeUnit => throw _privateConstructorUsedError;
-  ApiMode? get apiMode => throw _privateConstructorUsedError;
+  ApiMode get apiMode => throw _privateConstructorUsedError;
   AuditDetailsModel? get auditDetails => throw _privateConstructorUsedError;
   String get campaignId => throw _privateConstructorUsedError;
   String get clientReferenceId => throw _privateConstructorUsedError;
@@ -53,7 +53,7 @@ abstract class $HouseholdRegistrationModelCopyWith<$Res> {
       {String? additionalFields,
       AddressModel address,
       String administrativeUnit,
-      ApiMode? apiMode,
+      ApiMode apiMode,
       AuditDetailsModel? auditDetails,
       String campaignId,
       String clientReferenceId,
@@ -112,7 +112,7 @@ class _$HouseholdRegistrationModelCopyWithImpl<$Res>
       apiMode: apiMode == freezed
           ? _value.apiMode
           : apiMode // ignore: cast_nullable_to_non_nullable
-              as ApiMode?,
+              as ApiMode,
       auditDetails: auditDetails == freezed
           ? _value.auditDetails
           : auditDetails // ignore: cast_nullable_to_non_nullable
@@ -198,7 +198,7 @@ abstract class _$$_HouseholdRegistrationModelCopyWith<$Res>
       {String? additionalFields,
       AddressModel address,
       String administrativeUnit,
-      ApiMode? apiMode,
+      ApiMode apiMode,
       AuditDetailsModel? auditDetails,
       String campaignId,
       String clientReferenceId,
@@ -264,7 +264,7 @@ class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
       apiMode: apiMode == freezed
           ? _value.apiMode
           : apiMode // ignore: cast_nullable_to_non_nullable
-              as ApiMode?,
+              as ApiMode,
       auditDetails: auditDetails == freezed
           ? _value.auditDetails
           : auditDetails // ignore: cast_nullable_to_non_nullable
@@ -317,7 +317,7 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
       {this.additionalFields,
       required this.address,
       required this.administrativeUnit,
-      this.apiMode,
+      required this.apiMode,
       this.auditDetails,
       required this.campaignId,
       required this.clientReferenceId,
@@ -340,7 +340,7 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
   @override
   final String administrativeUnit;
   @override
-  final ApiMode? apiMode;
+  final ApiMode apiMode;
   @override
   final AuditDetailsModel? auditDetails;
   @override
@@ -443,7 +443,7 @@ abstract class _HouseholdRegistrationModel
       {final String? additionalFields,
       required final AddressModel address,
       required final String administrativeUnit,
-      final ApiMode? apiMode,
+      required final ApiMode apiMode,
       final AuditDetailsModel? auditDetails,
       required final String campaignId,
       required final String clientReferenceId,
@@ -465,7 +465,7 @@ abstract class _HouseholdRegistrationModel
   @override
   String get administrativeUnit;
   @override
-  ApiMode? get apiMode;
+  ApiMode get apiMode;
   @override
   AuditDetailsModel? get auditDetails;
   @override

@@ -18,7 +18,7 @@ class DeliveryModel with _$DeliveryModel {
     /// [deliveryDate] in millisecondsSinceEpoch
     required int deliveryDate,
     required String deliveredBy,
-    ApiMode? mode,
+    required ApiMode mode,
     required String registrationId,
     required List<DeliveryResourceModel> resources,
     required DeliveryStatus status,

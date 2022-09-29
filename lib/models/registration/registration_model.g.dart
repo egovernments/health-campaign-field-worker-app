@@ -12,7 +12,7 @@ _$_HouseholdRegistrationModel _$$_HouseholdRegistrationModelFromJson(
       additionalFields: json['additionalFields'] as String?,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
       administrativeUnit: json['administrativeUnit'] as String,
-      apiMode: $enumDecodeNullable(_$ApiModeEnumMap, json['apiMode']),
+      apiMode: $enumDecode(_$ApiModeEnumMap, json['apiMode']),
       auditDetails: json['auditDetails'] == null
           ? null
           : AuditDetailsModel.fromJson(
@@ -38,7 +38,7 @@ Map<String, dynamic> _$$_HouseholdRegistrationModelToJson(
       'additionalFields': instance.additionalFields,
       'address': instance.address.toJson(),
       'administrativeUnit': instance.administrativeUnit,
-      'apiMode': _$ApiModeEnumMap[instance.apiMode],
+      'apiMode': _$ApiModeEnumMap[instance.apiMode]!,
       'auditDetails': instance.auditDetails?.toJson(),
       'campaignId': instance.campaignId,
       'clientReferenceId': instance.clientReferenceId,

@@ -27,7 +27,7 @@ mixin _$DeliveryModel {
   /// [deliveryDate] in millisecondsSinceEpoch
   int get deliveryDate => throw _privateConstructorUsedError;
   String get deliveredBy => throw _privateConstructorUsedError;
-  ApiMode? get mode => throw _privateConstructorUsedError;
+  ApiMode get mode => throw _privateConstructorUsedError;
   String get registrationId => throw _privateConstructorUsedError;
   List<DeliveryResourceModel> get resources =>
       throw _privateConstructorUsedError;
@@ -52,7 +52,7 @@ abstract class $DeliveryModelCopyWith<$Res> {
       String clientReferenceId,
       int deliveryDate,
       String deliveredBy,
-      ApiMode? mode,
+      ApiMode mode,
       String registrationId,
       List<DeliveryResourceModel> resources,
       DeliveryStatus status,
@@ -107,7 +107,7 @@ class _$DeliveryModelCopyWithImpl<$Res>
       mode: mode == freezed
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
-              as ApiMode?,
+              as ApiMode,
       registrationId: registrationId == freezed
           ? _value.registrationId
           : registrationId // ignore: cast_nullable_to_non_nullable
@@ -145,7 +145,7 @@ abstract class _$$_DeliveryModelCopyWith<$Res>
       String clientReferenceId,
       int deliveryDate,
       String deliveredBy,
-      ApiMode? mode,
+      ApiMode mode,
       String registrationId,
       List<DeliveryResourceModel> resources,
       DeliveryStatus status,
@@ -202,7 +202,7 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
       mode: mode == freezed
           ? _value.mode
           : mode // ignore: cast_nullable_to_non_nullable
-              as ApiMode?,
+              as ApiMode,
       registrationId: registrationId == freezed
           ? _value.registrationId
           : registrationId // ignore: cast_nullable_to_non_nullable
@@ -237,7 +237,7 @@ class _$_DeliveryModel implements _DeliveryModel {
       required this.clientReferenceId,
       required this.deliveryDate,
       required this.deliveredBy,
-      this.mode,
+      required this.mode,
       required this.registrationId,
       required final List<DeliveryResourceModel> resources,
       required this.status,
@@ -261,7 +261,7 @@ class _$_DeliveryModel implements _DeliveryModel {
   @override
   final String deliveredBy;
   @override
-  final ApiMode? mode;
+  final ApiMode mode;
   @override
   final String registrationId;
   final List<DeliveryResourceModel> _resources;
@@ -344,7 +344,7 @@ abstract class _DeliveryModel implements DeliveryModel {
       required final String clientReferenceId,
       required final int deliveryDate,
       required final String deliveredBy,
-      final ApiMode? mode,
+      required final ApiMode mode,
       required final String registrationId,
       required final List<DeliveryResourceModel> resources,
       required final DeliveryStatus status,
@@ -367,7 +367,7 @@ abstract class _DeliveryModel implements DeliveryModel {
   @override
   String get deliveredBy;
   @override
-  ApiMode? get mode;
+  ApiMode get mode;
   @override
   String get registrationId;
   @override
