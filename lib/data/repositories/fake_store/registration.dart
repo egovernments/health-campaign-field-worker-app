@@ -37,7 +37,7 @@ class FakeRegistrationStore extends FakeDataStore<RegistrationModel> {
             faker.person.firstName(),
             faker.person.lastName(),
           ].join(' '),
-          dateOfBirth: DateFormat('YYYYMMdd').format(faker.date.dateTime(
+          dateOfBirth: DateFormat('yyyyMMdd').format(faker.date.dateTime(
             maxYear: 2022,
             minYear: 1940,
           )),

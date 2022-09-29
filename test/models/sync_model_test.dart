@@ -12,32 +12,31 @@ void main() {
       final deliveryList = FakeDeliveryStore.instance.getFakeDataList();
 
       final syncRegistration = SyncObjectModel<RegistrationModel>(
-        type: 'registration',
+        type: SyncObjectModelType.registration,
         items: registrationList,
       );
 
       final syncDelivery = SyncObjectModel<DeliveryModel>(
-        type: 'delivery',
+        type: SyncObjectModelType.delivery,
         items: deliveryList,
       );
 
-      final syncData = SyncDataModel(
-        data: [syncDelivery, syncRegistration],
-      );
-
+      final syncData = SyncDataModel(data: [syncDelivery, syncRegistration]);
       final json = syncData.toJson();
 
       List<RegistrationModel> parsedRegistration = <RegistrationModel>[];
       List<DeliveryModel> parsedDelivery = <DeliveryModel>[];
 
-
       final parsedData = SyncDataModel.fromJson(json);
       for (final data in parsedData.data) {
         for (final item in data.items) {
-          if (data.type == 'registration') {
-            parsedRegistration.add(item);
-          } else if (data.type == 'delivery') {
-            parsedDelivery.add(item);
+          switch (data.type) {
+            case SyncObjectModelType.registration:
+              parsedRegistration.add(item);
+              break;
+            case SyncObjectModelType.delivery:
+              parsedDelivery.add(item);
+              break;
           }
         }
       }

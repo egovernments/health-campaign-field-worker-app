@@ -21,7 +21,7 @@ class SyncObjectModel<T> with _$SyncObjectModel<T> {
   const SyncObjectModel._();
 
   const factory SyncObjectModel({
-    required String type,
+    required SyncObjectModelType type,
     required List<T> items,
   }) = _SyncObjectModel<T>;
 
@@ -35,6 +35,11 @@ class SyncObjectModel<T> with _$SyncObjectModel<T> {
   Map<String, dynamic> toJson(Object Function(T value) toJsonT) {
     return _$SyncObjectModelToJson(this, toJsonT);
   }
+}
+
+enum SyncObjectModelType {
+  @JsonValue('REGISTRATION') registration,
+  @JsonValue('DELIVERY') delivery;
 }
 
 enum SyncOperationMode {

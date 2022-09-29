@@ -156,7 +156,7 @@ abstract class _SyncDataModel implements SyncDataModel {
 
 /// @nodoc
 mixin _$SyncObjectModel<T> {
-  String get type => throw _privateConstructorUsedError;
+  SyncObjectModelType get type => throw _privateConstructorUsedError;
   List<T> get items => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -169,7 +169,7 @@ abstract class $SyncObjectModelCopyWith<T, $Res> {
   factory $SyncObjectModelCopyWith(
           SyncObjectModel<T> value, $Res Function(SyncObjectModel<T>) then) =
       _$SyncObjectModelCopyWithImpl<T, $Res>;
-  $Res call({String type, List<T> items});
+  $Res call({SyncObjectModelType type, List<T> items});
 }
 
 /// @nodoc
@@ -190,7 +190,7 @@ class _$SyncObjectModelCopyWithImpl<T, $Res>
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as SyncObjectModelType,
       items: items == freezed
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
@@ -206,7 +206,7 @@ abstract class _$$_SyncObjectModelCopyWith<T, $Res>
           $Res Function(_$_SyncObjectModel<T>) then) =
       __$$_SyncObjectModelCopyWithImpl<T, $Res>;
   @override
-  $Res call({String type, List<T> items});
+  $Res call({SyncObjectModelType type, List<T> items});
 }
 
 /// @nodoc
@@ -229,7 +229,7 @@ class __$$_SyncObjectModelCopyWithImpl<T, $Res>
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as SyncObjectModelType,
       items: items == freezed
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
@@ -246,7 +246,7 @@ class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
         super._();
 
   @override
-  final String type;
+  final SyncObjectModelType type;
   final List<T> _items;
   @override
   List<T> get items {
@@ -283,12 +283,12 @@ class _$_SyncObjectModel<T> extends _SyncObjectModel<T> {
 
 abstract class _SyncObjectModel<T> extends SyncObjectModel<T> {
   const factory _SyncObjectModel(
-      {required final String type,
+      {required final SyncObjectModelType type,
       required final List<T> items}) = _$_SyncObjectModel<T>;
   const _SyncObjectModel._() : super._();
 
   @override
-  String get type;
+  SyncObjectModelType get type;
   @override
   List<T> get items;
   @override
