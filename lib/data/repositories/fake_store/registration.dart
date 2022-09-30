@@ -36,10 +36,8 @@ class FakeRegistrationStore extends FakeDataStore<HouseholdRegistrationModel> {
       administrativeUnit: faker.address.city(),
       individuals: [
         IndividualModel(
-          name: [
-            faker.person.firstName(),
-            faker.person.lastName(),
-          ].join(' '),
+          givenName: faker.person.firstName(),
+          familyName: faker.person.lastName(),
           dateOfBirth: DateFormat('yyyyMMdd').format(faker.date.dateTime(
             maxYear: 2022,
             minYear: 1940,

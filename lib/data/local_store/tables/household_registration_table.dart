@@ -29,7 +29,10 @@ class IndividualTable extends Table {
         #clientReferenceId,
       )();
   BoolColumn get isHead => boolean().withDefault(const Constant(true))();
-  TextColumn get name => text()();
+  TextColumn get givenName => text()();
+  TextColumn get familyName => text().nullable()();
+  TextColumn get additionalName => text().nullable()();
+  BoolColumn get isDeleted => boolean()();
 }
 
 class IndividualIdentifierTable extends Table {
