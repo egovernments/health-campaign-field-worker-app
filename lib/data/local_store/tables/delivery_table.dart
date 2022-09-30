@@ -10,6 +10,12 @@ class DeliveryTable extends Table {
   TextColumn get registrationId => text().references(CampaignRegistrationTable, #clientReferenceId)();
   TextColumn get status => text()();
   TextColumn get tenantId => text()();
+  IntColumn get createdOn => integer()();
+  IntColumn get modifiedOn => integer().nullable()();
+  TextColumn get createdBy => text()();
+  TextColumn get modifiedBy => text().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  TextColumn get syncFileName => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {clientReferenceId};
@@ -21,5 +27,4 @@ class DeliveryResourceTable extends Table {
   IntColumn get quantityToBeDelivered => integer()();
   IntColumn get quantityDelivered => integer()();
   TextColumn get reasonIfNotDelivered => text().nullable()();
-
 }
