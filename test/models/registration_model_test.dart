@@ -21,7 +21,7 @@ const _targetModel = r'''{
   "administrativeUnit": "SOLIMBO",
   "individuals": [
     {
-      "name": "John Doe",
+      "givenName": "John",
       "dateOfBirth": "YYYYMMDD",
       "gender": "MALE",
       "isHead": true,
