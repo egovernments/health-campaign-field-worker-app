@@ -55,7 +55,7 @@ const _requiredProperties = [
 
 void main() {
   group('Registration model', () {
-    HouseholdRegistrationModel? parsedModel;
+    CampaignRegistrationModel? parsedModel;
 
     setUpAll(() {
       final parsed = jsonDecode(_targetModel);
@@ -63,7 +63,7 @@ void main() {
         throw Exception('Expected model not found');
       }
 
-      parsedModel = HouseholdRegistrationModel.fromJson(parsed);
+      parsedModel = CampaignRegistrationModel.fromJson(parsed);
     });
 
     test('is parsed successfully', () {
