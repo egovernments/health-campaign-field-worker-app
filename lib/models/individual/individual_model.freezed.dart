@@ -33,7 +33,9 @@ mixin _$IndividualModel {
 
   /// [isHead] will be true if this individual is the head of a family
   bool get isHead => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String get givenName => throw _privateConstructorUsedError;
+  String? get familyName => throw _privateConstructorUsedError;
+  String? get additionalName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +57,9 @@ abstract class $IndividualModelCopyWith<$Res> {
       List<IndividualIdentifierModel> identifiers,
       String? individualId,
       bool isHead,
-      String name});
+      String givenName,
+      String? familyName,
+      String? additionalName});
 
   $AuditDetailsModelCopyWith<$Res>? get auditDetails;
 }
@@ -79,7 +83,9 @@ class _$IndividualModelCopyWithImpl<$Res>
     Object? identifiers = freezed,
     Object? individualId = freezed,
     Object? isHead = freezed,
-    Object? name = freezed,
+    Object? givenName = freezed,
+    Object? familyName = freezed,
+    Object? additionalName = freezed,
   }) {
     return _then(_value.copyWith(
       additionalFields: additionalFields == freezed
@@ -114,10 +120,18 @@ class _$IndividualModelCopyWithImpl<$Res>
           ? _value.isHead
           : isHead // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      givenName: givenName == freezed
+          ? _value.givenName
+          : givenName // ignore: cast_nullable_to_non_nullable
               as String,
+      familyName: familyName == freezed
+          ? _value.familyName
+          : familyName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      additionalName: additionalName == freezed
+          ? _value.additionalName
+          : additionalName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 
@@ -149,7 +163,9 @@ abstract class _$$_IndividualModelCopyWith<$Res>
       List<IndividualIdentifierModel> identifiers,
       String? individualId,
       bool isHead,
-      String name});
+      String givenName,
+      String? familyName,
+      String? additionalName});
 
   @override
   $AuditDetailsModelCopyWith<$Res>? get auditDetails;
@@ -176,7 +192,9 @@ class __$$_IndividualModelCopyWithImpl<$Res>
     Object? identifiers = freezed,
     Object? individualId = freezed,
     Object? isHead = freezed,
-    Object? name = freezed,
+    Object? givenName = freezed,
+    Object? familyName = freezed,
+    Object? additionalName = freezed,
   }) {
     return _then(_$_IndividualModel(
       additionalFields: additionalFields == freezed
@@ -211,10 +229,18 @@ class __$$_IndividualModelCopyWithImpl<$Res>
           ? _value.isHead
           : isHead // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      givenName: givenName == freezed
+          ? _value.givenName
+          : givenName // ignore: cast_nullable_to_non_nullable
               as String,
+      familyName: familyName == freezed
+          ? _value.familyName
+          : familyName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      additionalName: additionalName == freezed
+          ? _value.additionalName
+          : additionalName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -232,7 +258,9 @@ class _$_IndividualModel implements _IndividualModel {
       required final List<IndividualIdentifierModel> identifiers,
       this.individualId,
       this.isHead = false,
-      required this.name})
+      required this.givenName,
+      this.familyName,
+      this.additionalName})
       : _identifiers = identifiers;
 
   factory _$_IndividualModel.fromJson(Map<String, dynamic> json) =>
@@ -265,11 +293,15 @@ class _$_IndividualModel implements _IndividualModel {
   @JsonKey()
   final bool isHead;
   @override
-  final String name;
+  final String givenName;
+  @override
+  final String? familyName;
+  @override
+  final String? additionalName;
 
   @override
   String toString() {
-    return 'IndividualModel(additionalFields: $additionalFields, addressId: $addressId, auditDetails: $auditDetails, dateOfBirth: $dateOfBirth, gender: $gender, identifiers: $identifiers, individualId: $individualId, isHead: $isHead, name: $name)';
+    return 'IndividualModel(additionalFields: $additionalFields, addressId: $addressId, auditDetails: $auditDetails, dateOfBirth: $dateOfBirth, gender: $gender, identifiers: $identifiers, individualId: $individualId, isHead: $isHead, givenName: $givenName, familyName: $familyName, additionalName: $additionalName)';
   }
 
   @override
@@ -290,7 +322,11 @@ class _$_IndividualModel implements _IndividualModel {
             const DeepCollectionEquality()
                 .equals(other.individualId, individualId) &&
             const DeepCollectionEquality().equals(other.isHead, isHead) &&
-            const DeepCollectionEquality().equals(other.name, name));
+            const DeepCollectionEquality().equals(other.givenName, givenName) &&
+            const DeepCollectionEquality()
+                .equals(other.familyName, familyName) &&
+            const DeepCollectionEquality()
+                .equals(other.additionalName, additionalName));
   }
 
   @JsonKey(ignore: true)
@@ -305,7 +341,9 @@ class _$_IndividualModel implements _IndividualModel {
       const DeepCollectionEquality().hash(_identifiers),
       const DeepCollectionEquality().hash(individualId),
       const DeepCollectionEquality().hash(isHead),
-      const DeepCollectionEquality().hash(name));
+      const DeepCollectionEquality().hash(givenName),
+      const DeepCollectionEquality().hash(familyName),
+      const DeepCollectionEquality().hash(additionalName));
 
   @JsonKey(ignore: true)
   @override
@@ -330,7 +368,9 @@ abstract class _IndividualModel implements IndividualModel {
       required final List<IndividualIdentifierModel> identifiers,
       final String? individualId,
       final bool isHead,
-      required final String name}) = _$_IndividualModel;
+      required final String givenName,
+      final String? familyName,
+      final String? additionalName}) = _$_IndividualModel;
 
   factory _IndividualModel.fromJson(Map<String, dynamic> json) =
       _$_IndividualModel.fromJson;
@@ -356,7 +396,11 @@ abstract class _IndividualModel implements IndividualModel {
   /// [isHead] will be true if this individual is the head of a family
   bool get isHead;
   @override
-  String get name;
+  String get givenName;
+  @override
+  String? get familyName;
+  @override
+  String? get additionalName;
   @override
   @JsonKey(ignore: true)
   _$$_IndividualModelCopyWith<_$_IndividualModel> get copyWith =>
