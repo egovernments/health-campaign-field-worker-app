@@ -23,7 +23,6 @@ class HouseholdTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get registrationId => text().references(CampaignRegistrationTable, #clientReferenceId)();
   IntColumn get numberOfMembers => integer()();
-  TextColumn get headOfHousehold => text().references(IndividualTable, #id)();
   BoolColumn get isDeleted => boolean()();
 }
 

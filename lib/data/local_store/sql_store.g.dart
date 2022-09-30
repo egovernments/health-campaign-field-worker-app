@@ -641,13 +641,11 @@ class HouseholdTableData extends DataClass
   final int id;
   final String registrationId;
   final int numberOfMembers;
-  final String headOfHousehold;
   final bool isDeleted;
   HouseholdTableData(
       {required this.id,
       required this.registrationId,
       required this.numberOfMembers,
-      required this.headOfHousehold,
       required this.isDeleted});
   factory HouseholdTableData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
@@ -659,8 +657,6 @@ class HouseholdTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}registration_id'])!,
       numberOfMembers: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}number_of_members'])!,
-      headOfHousehold: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}head_of_household'])!,
       isDeleted: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted'])!,
     );
@@ -671,7 +667,6 @@ class HouseholdTableData extends DataClass
     map['id'] = Variable<int>(id);
     map['registration_id'] = Variable<String>(registrationId);
     map['number_of_members'] = Variable<int>(numberOfMembers);
-    map['head_of_household'] = Variable<String>(headOfHousehold);
     map['is_deleted'] = Variable<bool>(isDeleted);
     return map;
   }
@@ -681,7 +676,6 @@ class HouseholdTableData extends DataClass
       id: Value(id),
       registrationId: Value(registrationId),
       numberOfMembers: Value(numberOfMembers),
-      headOfHousehold: Value(headOfHousehold),
       isDeleted: Value(isDeleted),
     );
   }
@@ -693,7 +687,6 @@ class HouseholdTableData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       registrationId: serializer.fromJson<String>(json['registrationId']),
       numberOfMembers: serializer.fromJson<int>(json['numberOfMembers']),
-      headOfHousehold: serializer.fromJson<String>(json['headOfHousehold']),
       isDeleted: serializer.fromJson<bool>(json['isDeleted']),
     );
   }
@@ -704,7 +697,6 @@ class HouseholdTableData extends DataClass
       'id': serializer.toJson<int>(id),
       'registrationId': serializer.toJson<String>(registrationId),
       'numberOfMembers': serializer.toJson<int>(numberOfMembers),
-      'headOfHousehold': serializer.toJson<String>(headOfHousehold),
       'isDeleted': serializer.toJson<bool>(isDeleted),
     };
   }
@@ -713,13 +705,11 @@ class HouseholdTableData extends DataClass
           {int? id,
           String? registrationId,
           int? numberOfMembers,
-          String? headOfHousehold,
           bool? isDeleted}) =>
       HouseholdTableData(
         id: id ?? this.id,
         registrationId: registrationId ?? this.registrationId,
         numberOfMembers: numberOfMembers ?? this.numberOfMembers,
-        headOfHousehold: headOfHousehold ?? this.headOfHousehold,
         isDeleted: isDeleted ?? this.isDeleted,
       );
   @override
@@ -728,15 +718,14 @@ class HouseholdTableData extends DataClass
           ..write('id: $id, ')
           ..write('registrationId: $registrationId, ')
           ..write('numberOfMembers: $numberOfMembers, ')
-          ..write('headOfHousehold: $headOfHousehold, ')
           ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, registrationId, numberOfMembers, headOfHousehold, isDeleted);
+  int get hashCode =>
+      Object.hash(id, registrationId, numberOfMembers, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -744,7 +733,6 @@ class HouseholdTableData extends DataClass
           other.id == this.id &&
           other.registrationId == this.registrationId &&
           other.numberOfMembers == this.numberOfMembers &&
-          other.headOfHousehold == this.headOfHousehold &&
           other.isDeleted == this.isDeleted);
 }
 
@@ -752,37 +740,31 @@ class HouseholdTableCompanion extends UpdateCompanion<HouseholdTableData> {
   final Value<int> id;
   final Value<String> registrationId;
   final Value<int> numberOfMembers;
-  final Value<String> headOfHousehold;
   final Value<bool> isDeleted;
   const HouseholdTableCompanion({
     this.id = const Value.absent(),
     this.registrationId = const Value.absent(),
     this.numberOfMembers = const Value.absent(),
-    this.headOfHousehold = const Value.absent(),
     this.isDeleted = const Value.absent(),
   });
   HouseholdTableCompanion.insert({
     this.id = const Value.absent(),
     required String registrationId,
     required int numberOfMembers,
-    required String headOfHousehold,
     required bool isDeleted,
   })  : registrationId = Value(registrationId),
         numberOfMembers = Value(numberOfMembers),
-        headOfHousehold = Value(headOfHousehold),
         isDeleted = Value(isDeleted);
   static Insertable<HouseholdTableData> custom({
     Expression<int>? id,
     Expression<String>? registrationId,
     Expression<int>? numberOfMembers,
-    Expression<String>? headOfHousehold,
     Expression<bool>? isDeleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (registrationId != null) 'registration_id': registrationId,
       if (numberOfMembers != null) 'number_of_members': numberOfMembers,
-      if (headOfHousehold != null) 'head_of_household': headOfHousehold,
       if (isDeleted != null) 'is_deleted': isDeleted,
     });
   }
@@ -791,13 +773,11 @@ class HouseholdTableCompanion extends UpdateCompanion<HouseholdTableData> {
       {Value<int>? id,
       Value<String>? registrationId,
       Value<int>? numberOfMembers,
-      Value<String>? headOfHousehold,
       Value<bool>? isDeleted}) {
     return HouseholdTableCompanion(
       id: id ?? this.id,
       registrationId: registrationId ?? this.registrationId,
       numberOfMembers: numberOfMembers ?? this.numberOfMembers,
-      headOfHousehold: headOfHousehold ?? this.headOfHousehold,
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
@@ -814,9 +794,6 @@ class HouseholdTableCompanion extends UpdateCompanion<HouseholdTableData> {
     if (numberOfMembers.present) {
       map['number_of_members'] = Variable<int>(numberOfMembers.value);
     }
-    if (headOfHousehold.present) {
-      map['head_of_household'] = Variable<String>(headOfHousehold.value);
-    }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool>(isDeleted.value);
     }
@@ -829,7 +806,6 @@ class HouseholdTableCompanion extends UpdateCompanion<HouseholdTableData> {
           ..write('id: $id, ')
           ..write('registrationId: $registrationId, ')
           ..write('numberOfMembers: $numberOfMembers, ')
-          ..write('headOfHousehold: $headOfHousehold, ')
           ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
@@ -864,14 +840,6 @@ class $HouseholdTableTable extends HouseholdTable
   late final GeneratedColumn<int?> numberOfMembers = GeneratedColumn<int?>(
       'number_of_members', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _headOfHouseholdMeta =
-      const VerificationMeta('headOfHousehold');
-  @override
-  late final GeneratedColumn<String?> headOfHousehold =
-      GeneratedColumn<String?>('head_of_household', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'REFERENCES individual_table (id)');
   final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
   @override
   late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
@@ -881,7 +849,7 @@ class $HouseholdTableTable extends HouseholdTable
       defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns =>
-      [id, registrationId, numberOfMembers, headOfHousehold, isDeleted];
+      [id, registrationId, numberOfMembers, isDeleted];
   @override
   String get aliasedName => _alias ?? 'household_table';
   @override
@@ -909,14 +877,6 @@ class $HouseholdTableTable extends HouseholdTable
               data['number_of_members']!, _numberOfMembersMeta));
     } else if (isInserting) {
       context.missing(_numberOfMembersMeta);
-    }
-    if (data.containsKey('head_of_household')) {
-      context.handle(
-          _headOfHouseholdMeta,
-          headOfHousehold.isAcceptableOrUnknown(
-              data['head_of_household']!, _headOfHouseholdMeta));
-    } else if (isInserting) {
-      context.missing(_headOfHouseholdMeta);
     }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
