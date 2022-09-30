@@ -7,59 +7,59 @@ part of 'sql_store.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
-class HouseholdRegistrationTableData extends DataClass
-    implements Insertable<HouseholdRegistrationTableData> {
-  final String? additionalFields;
-  final String administrativeUnit;
+class CampaignRegistrationTableData extends DataClass
+    implements Insertable<CampaignRegistrationTableData> {
   final String campaignId;
   final String clientReferenceId;
+  final String beneficiaryType;
+  final String boundaryId;
   final int dateOfRegistration;
-  final String? householdId;
-  final double? latitude;
-  final double? longitude;
-  final double? accuracy;
-  final int numberOfIndividuals;
+  final int createOn;
+  final int? modifiedOn;
+  final String createdBy;
+  final String? modifiedBy;
+  final String? additionalFields;
   final String tenantId;
   final bool isSynced;
   final String? syncFileName;
-  HouseholdRegistrationTableData(
-      {this.additionalFields,
-      required this.administrativeUnit,
-      required this.campaignId,
+  CampaignRegistrationTableData(
+      {required this.campaignId,
       required this.clientReferenceId,
+      required this.beneficiaryType,
+      required this.boundaryId,
       required this.dateOfRegistration,
-      this.householdId,
-      this.latitude,
-      this.longitude,
-      this.accuracy,
-      required this.numberOfIndividuals,
+      required this.createOn,
+      this.modifiedOn,
+      required this.createdBy,
+      this.modifiedBy,
+      this.additionalFields,
       required this.tenantId,
       required this.isSynced,
       this.syncFileName});
-  factory HouseholdRegistrationTableData.fromData(Map<String, dynamic> data,
+  factory CampaignRegistrationTableData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return HouseholdRegistrationTableData(
-      additionalFields: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
-      administrativeUnit: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}administrative_unit'])!,
+    return CampaignRegistrationTableData(
       campaignId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}campaign_id'])!,
       clientReferenceId: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_reference_id'])!,
+      beneficiaryType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}beneficiary_type'])!,
+      boundaryId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}boundary_id'])!,
       dateOfRegistration: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}date_of_registration'])!,
-      householdId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}household_id']),
-      latitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
-      longitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
-      accuracy: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}accuracy']),
-      numberOfIndividuals: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}number_of_individuals'])!,
+      createOn: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}create_on'])!,
+      modifiedOn: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified_on']),
+      createdBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_by'])!,
+      modifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified_by']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
       tenantId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id'])!,
       isSynced: const BoolType()
@@ -71,26 +71,22 @@ class HouseholdRegistrationTableData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['campaign_id'] = Variable<String>(campaignId);
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['beneficiary_type'] = Variable<String>(beneficiaryType);
+    map['boundary_id'] = Variable<String>(boundaryId);
+    map['date_of_registration'] = Variable<int>(dateOfRegistration);
+    map['create_on'] = Variable<int>(createOn);
+    if (!nullToAbsent || modifiedOn != null) {
+      map['modified_on'] = Variable<int?>(modifiedOn);
+    }
+    map['created_by'] = Variable<String>(createdBy);
+    if (!nullToAbsent || modifiedBy != null) {
+      map['modified_by'] = Variable<String?>(modifiedBy);
+    }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String?>(additionalFields);
     }
-    map['administrative_unit'] = Variable<String>(administrativeUnit);
-    map['campaign_id'] = Variable<String>(campaignId);
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
-    map['date_of_registration'] = Variable<int>(dateOfRegistration);
-    if (!nullToAbsent || householdId != null) {
-      map['household_id'] = Variable<String?>(householdId);
-    }
-    if (!nullToAbsent || latitude != null) {
-      map['latitude'] = Variable<double?>(latitude);
-    }
-    if (!nullToAbsent || longitude != null) {
-      map['longitude'] = Variable<double?>(longitude);
-    }
-    if (!nullToAbsent || accuracy != null) {
-      map['accuracy'] = Variable<double?>(accuracy);
-    }
-    map['number_of_individuals'] = Variable<int>(numberOfIndividuals);
     map['tenant_id'] = Variable<String>(tenantId);
     map['is_synced'] = Variable<bool>(isSynced);
     if (!nullToAbsent || syncFileName != null) {
@@ -99,28 +95,24 @@ class HouseholdRegistrationTableData extends DataClass
     return map;
   }
 
-  HouseholdRegistrationTableCompanion toCompanion(bool nullToAbsent) {
-    return HouseholdRegistrationTableCompanion(
+  CampaignRegistrationTableCompanion toCompanion(bool nullToAbsent) {
+    return CampaignRegistrationTableCompanion(
+      campaignId: Value(campaignId),
+      clientReferenceId: Value(clientReferenceId),
+      beneficiaryType: Value(beneficiaryType),
+      boundaryId: Value(boundaryId),
+      dateOfRegistration: Value(dateOfRegistration),
+      createOn: Value(createOn),
+      modifiedOn: modifiedOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modifiedOn),
+      createdBy: Value(createdBy),
+      modifiedBy: modifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modifiedBy),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
-      administrativeUnit: Value(administrativeUnit),
-      campaignId: Value(campaignId),
-      clientReferenceId: Value(clientReferenceId),
-      dateOfRegistration: Value(dateOfRegistration),
-      householdId: householdId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(householdId),
-      latitude: latitude == null && nullToAbsent
-          ? const Value.absent()
-          : Value(latitude),
-      longitude: longitude == null && nullToAbsent
-          ? const Value.absent()
-          : Value(longitude),
-      accuracy: accuracy == null && nullToAbsent
-          ? const Value.absent()
-          : Value(accuracy),
-      numberOfIndividuals: Value(numberOfIndividuals),
       tenantId: Value(tenantId),
       isSynced: Value(isSynced),
       syncFileName: syncFileName == null && nullToAbsent
@@ -129,22 +121,20 @@ class HouseholdRegistrationTableData extends DataClass
     );
   }
 
-  factory HouseholdRegistrationTableData.fromJson(Map<String, dynamic> json,
+  factory CampaignRegistrationTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return HouseholdRegistrationTableData(
-      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
-      administrativeUnit:
-          serializer.fromJson<String>(json['administrativeUnit']),
+    return CampaignRegistrationTableData(
       campaignId: serializer.fromJson<String>(json['campaignId']),
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      beneficiaryType: serializer.fromJson<String>(json['beneficiaryType']),
+      boundaryId: serializer.fromJson<String>(json['boundaryId']),
       dateOfRegistration: serializer.fromJson<int>(json['dateOfRegistration']),
-      householdId: serializer.fromJson<String?>(json['householdId']),
-      latitude: serializer.fromJson<double?>(json['latitude']),
-      longitude: serializer.fromJson<double?>(json['longitude']),
-      accuracy: serializer.fromJson<double?>(json['accuracy']),
-      numberOfIndividuals:
-          serializer.fromJson<int>(json['numberOfIndividuals']),
+      createOn: serializer.fromJson<int>(json['createOn']),
+      modifiedOn: serializer.fromJson<int?>(json['modifiedOn']),
+      createdBy: serializer.fromJson<String>(json['createdBy']),
+      modifiedBy: serializer.fromJson<String?>(json['modifiedBy']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
       tenantId: serializer.fromJson<String>(json['tenantId']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       syncFileName: serializer.fromJson<String?>(json['syncFileName']),
@@ -154,64 +144,64 @@ class HouseholdRegistrationTableData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'additionalFields': serializer.toJson<String?>(additionalFields),
-      'administrativeUnit': serializer.toJson<String>(administrativeUnit),
       'campaignId': serializer.toJson<String>(campaignId),
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'beneficiaryType': serializer.toJson<String>(beneficiaryType),
+      'boundaryId': serializer.toJson<String>(boundaryId),
       'dateOfRegistration': serializer.toJson<int>(dateOfRegistration),
-      'householdId': serializer.toJson<String?>(householdId),
-      'latitude': serializer.toJson<double?>(latitude),
-      'longitude': serializer.toJson<double?>(longitude),
-      'accuracy': serializer.toJson<double?>(accuracy),
-      'numberOfIndividuals': serializer.toJson<int>(numberOfIndividuals),
+      'createOn': serializer.toJson<int>(createOn),
+      'modifiedOn': serializer.toJson<int?>(modifiedOn),
+      'createdBy': serializer.toJson<String>(createdBy),
+      'modifiedBy': serializer.toJson<String?>(modifiedBy),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
       'tenantId': serializer.toJson<String>(tenantId),
       'isSynced': serializer.toJson<bool>(isSynced),
       'syncFileName': serializer.toJson<String?>(syncFileName),
     };
   }
 
-  HouseholdRegistrationTableData copyWith(
-          {String? additionalFields,
-          String? administrativeUnit,
-          String? campaignId,
+  CampaignRegistrationTableData copyWith(
+          {String? campaignId,
           String? clientReferenceId,
+          String? beneficiaryType,
+          String? boundaryId,
           int? dateOfRegistration,
-          String? householdId,
-          double? latitude,
-          double? longitude,
-          double? accuracy,
-          int? numberOfIndividuals,
+          int? createOn,
+          int? modifiedOn,
+          String? createdBy,
+          String? modifiedBy,
+          String? additionalFields,
           String? tenantId,
           bool? isSynced,
           String? syncFileName}) =>
-      HouseholdRegistrationTableData(
-        additionalFields: additionalFields ?? this.additionalFields,
-        administrativeUnit: administrativeUnit ?? this.administrativeUnit,
+      CampaignRegistrationTableData(
         campaignId: campaignId ?? this.campaignId,
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        beneficiaryType: beneficiaryType ?? this.beneficiaryType,
+        boundaryId: boundaryId ?? this.boundaryId,
         dateOfRegistration: dateOfRegistration ?? this.dateOfRegistration,
-        householdId: householdId ?? this.householdId,
-        latitude: latitude ?? this.latitude,
-        longitude: longitude ?? this.longitude,
-        accuracy: accuracy ?? this.accuracy,
-        numberOfIndividuals: numberOfIndividuals ?? this.numberOfIndividuals,
+        createOn: createOn ?? this.createOn,
+        modifiedOn: modifiedOn ?? this.modifiedOn,
+        createdBy: createdBy ?? this.createdBy,
+        modifiedBy: modifiedBy ?? this.modifiedBy,
+        additionalFields: additionalFields ?? this.additionalFields,
         tenantId: tenantId ?? this.tenantId,
         isSynced: isSynced ?? this.isSynced,
         syncFileName: syncFileName ?? this.syncFileName,
       );
   @override
   String toString() {
-    return (StringBuffer('HouseholdRegistrationTableData(')
-          ..write('additionalFields: $additionalFields, ')
-          ..write('administrativeUnit: $administrativeUnit, ')
+    return (StringBuffer('CampaignRegistrationTableData(')
           ..write('campaignId: $campaignId, ')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('beneficiaryType: $beneficiaryType, ')
+          ..write('boundaryId: $boundaryId, ')
           ..write('dateOfRegistration: $dateOfRegistration, ')
-          ..write('householdId: $householdId, ')
-          ..write('latitude: $latitude, ')
-          ..write('longitude: $longitude, ')
-          ..write('accuracy: $accuracy, ')
-          ..write('numberOfIndividuals: $numberOfIndividuals, ')
+          ..write('createOn: $createOn, ')
+          ..write('modifiedOn: $modifiedOn, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('modifiedBy: $modifiedBy, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('tenantId: $tenantId, ')
           ..write('isSynced: $isSynced, ')
           ..write('syncFileName: $syncFileName')
@@ -221,147 +211,148 @@ class HouseholdRegistrationTableData extends DataClass
 
   @override
   int get hashCode => Object.hash(
-      additionalFields,
-      administrativeUnit,
       campaignId,
       clientReferenceId,
+      beneficiaryType,
+      boundaryId,
       dateOfRegistration,
-      householdId,
-      latitude,
-      longitude,
-      accuracy,
-      numberOfIndividuals,
+      createOn,
+      modifiedOn,
+      createdBy,
+      modifiedBy,
+      additionalFields,
       tenantId,
       isSynced,
       syncFileName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is HouseholdRegistrationTableData &&
-          other.additionalFields == this.additionalFields &&
-          other.administrativeUnit == this.administrativeUnit &&
+      (other is CampaignRegistrationTableData &&
           other.campaignId == this.campaignId &&
           other.clientReferenceId == this.clientReferenceId &&
+          other.beneficiaryType == this.beneficiaryType &&
+          other.boundaryId == this.boundaryId &&
           other.dateOfRegistration == this.dateOfRegistration &&
-          other.householdId == this.householdId &&
-          other.latitude == this.latitude &&
-          other.longitude == this.longitude &&
-          other.accuracy == this.accuracy &&
-          other.numberOfIndividuals == this.numberOfIndividuals &&
+          other.createOn == this.createOn &&
+          other.modifiedOn == this.modifiedOn &&
+          other.createdBy == this.createdBy &&
+          other.modifiedBy == this.modifiedBy &&
+          other.additionalFields == this.additionalFields &&
           other.tenantId == this.tenantId &&
           other.isSynced == this.isSynced &&
           other.syncFileName == this.syncFileName);
 }
 
-class HouseholdRegistrationTableCompanion
-    extends UpdateCompanion<HouseholdRegistrationTableData> {
-  final Value<String?> additionalFields;
-  final Value<String> administrativeUnit;
+class CampaignRegistrationTableCompanion
+    extends UpdateCompanion<CampaignRegistrationTableData> {
   final Value<String> campaignId;
   final Value<String> clientReferenceId;
+  final Value<String> beneficiaryType;
+  final Value<String> boundaryId;
   final Value<int> dateOfRegistration;
-  final Value<String?> householdId;
-  final Value<double?> latitude;
-  final Value<double?> longitude;
-  final Value<double?> accuracy;
-  final Value<int> numberOfIndividuals;
+  final Value<int> createOn;
+  final Value<int?> modifiedOn;
+  final Value<String> createdBy;
+  final Value<String?> modifiedBy;
+  final Value<String?> additionalFields;
   final Value<String> tenantId;
   final Value<bool> isSynced;
   final Value<String?> syncFileName;
-  const HouseholdRegistrationTableCompanion({
-    this.additionalFields = const Value.absent(),
-    this.administrativeUnit = const Value.absent(),
+  const CampaignRegistrationTableCompanion({
     this.campaignId = const Value.absent(),
     this.clientReferenceId = const Value.absent(),
+    this.beneficiaryType = const Value.absent(),
+    this.boundaryId = const Value.absent(),
     this.dateOfRegistration = const Value.absent(),
-    this.householdId = const Value.absent(),
-    this.latitude = const Value.absent(),
-    this.longitude = const Value.absent(),
-    this.accuracy = const Value.absent(),
-    this.numberOfIndividuals = const Value.absent(),
+    this.createOn = const Value.absent(),
+    this.modifiedOn = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.modifiedBy = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.tenantId = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.syncFileName = const Value.absent(),
   });
-  HouseholdRegistrationTableCompanion.insert({
-    this.additionalFields = const Value.absent(),
-    required String administrativeUnit,
+  CampaignRegistrationTableCompanion.insert({
     required String campaignId,
     required String clientReferenceId,
+    required String beneficiaryType,
+    required String boundaryId,
     required int dateOfRegistration,
-    this.householdId = const Value.absent(),
-    this.latitude = const Value.absent(),
-    this.longitude = const Value.absent(),
-    this.accuracy = const Value.absent(),
-    required int numberOfIndividuals,
+    required int createOn,
+    this.modifiedOn = const Value.absent(),
+    required String createdBy,
+    this.modifiedBy = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     required String tenantId,
     this.isSynced = const Value.absent(),
     this.syncFileName = const Value.absent(),
-  })  : administrativeUnit = Value(administrativeUnit),
-        campaignId = Value(campaignId),
+  })  : campaignId = Value(campaignId),
         clientReferenceId = Value(clientReferenceId),
+        beneficiaryType = Value(beneficiaryType),
+        boundaryId = Value(boundaryId),
         dateOfRegistration = Value(dateOfRegistration),
-        numberOfIndividuals = Value(numberOfIndividuals),
+        createOn = Value(createOn),
+        createdBy = Value(createdBy),
         tenantId = Value(tenantId);
-  static Insertable<HouseholdRegistrationTableData> custom({
-    Expression<String?>? additionalFields,
-    Expression<String>? administrativeUnit,
+  static Insertable<CampaignRegistrationTableData> custom({
     Expression<String>? campaignId,
     Expression<String>? clientReferenceId,
+    Expression<String>? beneficiaryType,
+    Expression<String>? boundaryId,
     Expression<int>? dateOfRegistration,
-    Expression<String?>? householdId,
-    Expression<double?>? latitude,
-    Expression<double?>? longitude,
-    Expression<double?>? accuracy,
-    Expression<int>? numberOfIndividuals,
+    Expression<int>? createOn,
+    Expression<int?>? modifiedOn,
+    Expression<String>? createdBy,
+    Expression<String?>? modifiedBy,
+    Expression<String?>? additionalFields,
     Expression<String>? tenantId,
     Expression<bool>? isSynced,
     Expression<String?>? syncFileName,
   }) {
     return RawValuesInsertable({
-      if (additionalFields != null) 'additional_fields': additionalFields,
-      if (administrativeUnit != null) 'administrative_unit': administrativeUnit,
       if (campaignId != null) 'campaign_id': campaignId,
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (beneficiaryType != null) 'beneficiary_type': beneficiaryType,
+      if (boundaryId != null) 'boundary_id': boundaryId,
       if (dateOfRegistration != null)
         'date_of_registration': dateOfRegistration,
-      if (householdId != null) 'household_id': householdId,
-      if (latitude != null) 'latitude': latitude,
-      if (longitude != null) 'longitude': longitude,
-      if (accuracy != null) 'accuracy': accuracy,
-      if (numberOfIndividuals != null)
-        'number_of_individuals': numberOfIndividuals,
+      if (createOn != null) 'create_on': createOn,
+      if (modifiedOn != null) 'modified_on': modifiedOn,
+      if (createdBy != null) 'created_by': createdBy,
+      if (modifiedBy != null) 'modified_by': modifiedBy,
+      if (additionalFields != null) 'additional_fields': additionalFields,
       if (tenantId != null) 'tenant_id': tenantId,
       if (isSynced != null) 'is_synced': isSynced,
       if (syncFileName != null) 'sync_file_name': syncFileName,
     });
   }
 
-  HouseholdRegistrationTableCompanion copyWith(
-      {Value<String?>? additionalFields,
-      Value<String>? administrativeUnit,
-      Value<String>? campaignId,
+  CampaignRegistrationTableCompanion copyWith(
+      {Value<String>? campaignId,
       Value<String>? clientReferenceId,
+      Value<String>? beneficiaryType,
+      Value<String>? boundaryId,
       Value<int>? dateOfRegistration,
-      Value<String?>? householdId,
-      Value<double?>? latitude,
-      Value<double?>? longitude,
-      Value<double?>? accuracy,
-      Value<int>? numberOfIndividuals,
+      Value<int>? createOn,
+      Value<int?>? modifiedOn,
+      Value<String>? createdBy,
+      Value<String?>? modifiedBy,
+      Value<String?>? additionalFields,
       Value<String>? tenantId,
       Value<bool>? isSynced,
       Value<String?>? syncFileName}) {
-    return HouseholdRegistrationTableCompanion(
-      additionalFields: additionalFields ?? this.additionalFields,
-      administrativeUnit: administrativeUnit ?? this.administrativeUnit,
+    return CampaignRegistrationTableCompanion(
       campaignId: campaignId ?? this.campaignId,
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      beneficiaryType: beneficiaryType ?? this.beneficiaryType,
+      boundaryId: boundaryId ?? this.boundaryId,
       dateOfRegistration: dateOfRegistration ?? this.dateOfRegistration,
-      householdId: householdId ?? this.householdId,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      accuracy: accuracy ?? this.accuracy,
-      numberOfIndividuals: numberOfIndividuals ?? this.numberOfIndividuals,
+      createOn: createOn ?? this.createOn,
+      modifiedOn: modifiedOn ?? this.modifiedOn,
+      createdBy: createdBy ?? this.createdBy,
+      modifiedBy: modifiedBy ?? this.modifiedBy,
+      additionalFields: additionalFields ?? this.additionalFields,
       tenantId: tenantId ?? this.tenantId,
       isSynced: isSynced ?? this.isSynced,
       syncFileName: syncFileName ?? this.syncFileName,
@@ -371,35 +362,35 @@ class HouseholdRegistrationTableCompanion
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (additionalFields.present) {
-      map['additional_fields'] = Variable<String?>(additionalFields.value);
-    }
-    if (administrativeUnit.present) {
-      map['administrative_unit'] = Variable<String>(administrativeUnit.value);
-    }
     if (campaignId.present) {
       map['campaign_id'] = Variable<String>(campaignId.value);
     }
     if (clientReferenceId.present) {
       map['client_reference_id'] = Variable<String>(clientReferenceId.value);
     }
+    if (beneficiaryType.present) {
+      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
+    }
+    if (boundaryId.present) {
+      map['boundary_id'] = Variable<String>(boundaryId.value);
+    }
     if (dateOfRegistration.present) {
       map['date_of_registration'] = Variable<int>(dateOfRegistration.value);
     }
-    if (householdId.present) {
-      map['household_id'] = Variable<String?>(householdId.value);
+    if (createOn.present) {
+      map['create_on'] = Variable<int>(createOn.value);
     }
-    if (latitude.present) {
-      map['latitude'] = Variable<double?>(latitude.value);
+    if (modifiedOn.present) {
+      map['modified_on'] = Variable<int?>(modifiedOn.value);
     }
-    if (longitude.present) {
-      map['longitude'] = Variable<double?>(longitude.value);
+    if (createdBy.present) {
+      map['created_by'] = Variable<String>(createdBy.value);
     }
-    if (accuracy.present) {
-      map['accuracy'] = Variable<double?>(accuracy.value);
+    if (modifiedBy.present) {
+      map['modified_by'] = Variable<String?>(modifiedBy.value);
     }
-    if (numberOfIndividuals.present) {
-      map['number_of_individuals'] = Variable<int>(numberOfIndividuals.value);
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
     }
     if (tenantId.present) {
       map['tenant_id'] = Variable<String>(tenantId.value);
@@ -415,17 +406,17 @@ class HouseholdRegistrationTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('HouseholdRegistrationTableCompanion(')
-          ..write('additionalFields: $additionalFields, ')
-          ..write('administrativeUnit: $administrativeUnit, ')
+    return (StringBuffer('CampaignRegistrationTableCompanion(')
           ..write('campaignId: $campaignId, ')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('beneficiaryType: $beneficiaryType, ')
+          ..write('boundaryId: $boundaryId, ')
           ..write('dateOfRegistration: $dateOfRegistration, ')
-          ..write('householdId: $householdId, ')
-          ..write('latitude: $latitude, ')
-          ..write('longitude: $longitude, ')
-          ..write('accuracy: $accuracy, ')
-          ..write('numberOfIndividuals: $numberOfIndividuals, ')
+          ..write('createOn: $createOn, ')
+          ..write('modifiedOn: $modifiedOn, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('modifiedBy: $modifiedBy, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('tenantId: $tenantId, ')
           ..write('isSynced: $isSynced, ')
           ..write('syncFileName: $syncFileName')
@@ -434,26 +425,14 @@ class HouseholdRegistrationTableCompanion
   }
 }
 
-class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
+class $CampaignRegistrationTableTable extends CampaignRegistrationTable
     with
-        TableInfo<$HouseholdRegistrationTableTable,
-            HouseholdRegistrationTableData> {
+        TableInfo<$CampaignRegistrationTableTable,
+            CampaignRegistrationTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $HouseholdRegistrationTableTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _additionalFieldsMeta =
-      const VerificationMeta('additionalFields');
-  @override
-  late final GeneratedColumn<String?> additionalFields =
-      GeneratedColumn<String?>('additional_fields', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _administrativeUnitMeta =
-      const VerificationMeta('administrativeUnit');
-  @override
-  late final GeneratedColumn<String?> administrativeUnit =
-      GeneratedColumn<String?>('administrative_unit', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  $CampaignRegistrationTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _campaignIdMeta = const VerificationMeta('campaignId');
   @override
   late final GeneratedColumn<String?> campaignId = GeneratedColumn<String?>(
@@ -465,39 +444,49 @@ class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
   late final GeneratedColumn<String?> clientReferenceId =
       GeneratedColumn<String?>('client_reference_id', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _beneficiaryTypeMeta =
+      const VerificationMeta('beneficiaryType');
+  @override
+  late final GeneratedColumn<String?> beneficiaryType =
+      GeneratedColumn<String?>('beneficiary_type', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _boundaryIdMeta = const VerificationMeta('boundaryId');
+  @override
+  late final GeneratedColumn<String?> boundaryId = GeneratedColumn<String?>(
+      'boundary_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _dateOfRegistrationMeta =
       const VerificationMeta('dateOfRegistration');
   @override
   late final GeneratedColumn<int?> dateOfRegistration = GeneratedColumn<int?>(
       'date_of_registration', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _householdIdMeta =
-      const VerificationMeta('householdId');
+  final VerificationMeta _createOnMeta = const VerificationMeta('createOn');
   @override
-  late final GeneratedColumn<String?> householdId = GeneratedColumn<String?>(
-      'household_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
-  @override
-  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
-      'latitude', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
-  @override
-  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
-      'longitude', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _accuracyMeta = const VerificationMeta('accuracy');
-  @override
-  late final GeneratedColumn<double?> accuracy = GeneratedColumn<double?>(
-      'accuracy', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _numberOfIndividualsMeta =
-      const VerificationMeta('numberOfIndividuals');
-  @override
-  late final GeneratedColumn<int?> numberOfIndividuals = GeneratedColumn<int?>(
-      'number_of_individuals', aliasedName, false,
+  late final GeneratedColumn<int?> createOn = GeneratedColumn<int?>(
+      'create_on', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _modifiedOnMeta = const VerificationMeta('modifiedOn');
+  @override
+  late final GeneratedColumn<int?> modifiedOn = GeneratedColumn<int?>(
+      'modified_on', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _createdByMeta = const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<String?> createdBy = GeneratedColumn<String?>(
+      'created_by', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _modifiedByMeta = const VerificationMeta('modifiedBy');
+  @override
+  late final GeneratedColumn<String?> modifiedBy = GeneratedColumn<String?>(
+      'modified_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
   @override
   late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
@@ -519,44 +508,30 @@ class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
       type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
-        additionalFields,
-        administrativeUnit,
         campaignId,
         clientReferenceId,
+        beneficiaryType,
+        boundaryId,
         dateOfRegistration,
-        householdId,
-        latitude,
-        longitude,
-        accuracy,
-        numberOfIndividuals,
+        createOn,
+        modifiedOn,
+        createdBy,
+        modifiedBy,
+        additionalFields,
         tenantId,
         isSynced,
         syncFileName
       ];
   @override
-  String get aliasedName => _alias ?? 'household_registration_table';
+  String get aliasedName => _alias ?? 'campaign_registration_table';
   @override
-  String get actualTableName => 'household_registration_table';
+  String get actualTableName => 'campaign_registration_table';
   @override
   VerificationContext validateIntegrity(
-      Insertable<HouseholdRegistrationTableData> instance,
+      Insertable<CampaignRegistrationTableData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('additional_fields')) {
-      context.handle(
-          _additionalFieldsMeta,
-          additionalFields.isAcceptableOrUnknown(
-              data['additional_fields']!, _additionalFieldsMeta));
-    }
-    if (data.containsKey('administrative_unit')) {
-      context.handle(
-          _administrativeUnitMeta,
-          administrativeUnit.isAcceptableOrUnknown(
-              data['administrative_unit']!, _administrativeUnitMeta));
-    } else if (isInserting) {
-      context.missing(_administrativeUnitMeta);
-    }
     if (data.containsKey('campaign_id')) {
       context.handle(
           _campaignIdMeta,
@@ -573,6 +548,22 @@ class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
     } else if (isInserting) {
       context.missing(_clientReferenceIdMeta);
     }
+    if (data.containsKey('beneficiary_type')) {
+      context.handle(
+          _beneficiaryTypeMeta,
+          beneficiaryType.isAcceptableOrUnknown(
+              data['beneficiary_type']!, _beneficiaryTypeMeta));
+    } else if (isInserting) {
+      context.missing(_beneficiaryTypeMeta);
+    }
+    if (data.containsKey('boundary_id')) {
+      context.handle(
+          _boundaryIdMeta,
+          boundaryId.isAcceptableOrUnknown(
+              data['boundary_id']!, _boundaryIdMeta));
+    } else if (isInserting) {
+      context.missing(_boundaryIdMeta);
+    }
     if (data.containsKey('date_of_registration')) {
       context.handle(
           _dateOfRegistrationMeta,
@@ -581,31 +572,35 @@ class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
     } else if (isInserting) {
       context.missing(_dateOfRegistrationMeta);
     }
-    if (data.containsKey('household_id')) {
-      context.handle(
-          _householdIdMeta,
-          householdId.isAcceptableOrUnknown(
-              data['household_id']!, _householdIdMeta));
-    }
-    if (data.containsKey('latitude')) {
-      context.handle(_latitudeMeta,
-          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
-    }
-    if (data.containsKey('longitude')) {
-      context.handle(_longitudeMeta,
-          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
-    }
-    if (data.containsKey('accuracy')) {
-      context.handle(_accuracyMeta,
-          accuracy.isAcceptableOrUnknown(data['accuracy']!, _accuracyMeta));
-    }
-    if (data.containsKey('number_of_individuals')) {
-      context.handle(
-          _numberOfIndividualsMeta,
-          numberOfIndividuals.isAcceptableOrUnknown(
-              data['number_of_individuals']!, _numberOfIndividualsMeta));
+    if (data.containsKey('create_on')) {
+      context.handle(_createOnMeta,
+          createOn.isAcceptableOrUnknown(data['create_on']!, _createOnMeta));
     } else if (isInserting) {
-      context.missing(_numberOfIndividualsMeta);
+      context.missing(_createOnMeta);
+    }
+    if (data.containsKey('modified_on')) {
+      context.handle(
+          _modifiedOnMeta,
+          modifiedOn.isAcceptableOrUnknown(
+              data['modified_on']!, _modifiedOnMeta));
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    } else if (isInserting) {
+      context.missing(_createdByMeta);
+    }
+    if (data.containsKey('modified_by')) {
+      context.handle(
+          _modifiedByMeta,
+          modifiedBy.isAcceptableOrUnknown(
+              data['modified_by']!, _modifiedByMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
     }
     if (data.containsKey('tenant_id')) {
       context.handle(_tenantIdMeta,
@@ -629,15 +624,320 @@ class $HouseholdRegistrationTableTable extends HouseholdRegistrationTable
   @override
   Set<GeneratedColumn> get $primaryKey => {clientReferenceId};
   @override
-  HouseholdRegistrationTableData map(Map<String, dynamic> data,
+  CampaignRegistrationTableData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
-    return HouseholdRegistrationTableData.fromData(data,
+    return CampaignRegistrationTableData.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $HouseholdRegistrationTableTable createAlias(String alias) {
-    return $HouseholdRegistrationTableTable(attachedDatabase, alias);
+  $CampaignRegistrationTableTable createAlias(String alias) {
+    return $CampaignRegistrationTableTable(attachedDatabase, alias);
+  }
+}
+
+class HouseholdTableData extends DataClass
+    implements Insertable<HouseholdTableData> {
+  final int id;
+  final String registrationId;
+  final int numberOfMembers;
+  final String headOfHousehold;
+  final bool isDeleted;
+  HouseholdTableData(
+      {required this.id,
+      required this.registrationId,
+      required this.numberOfMembers,
+      required this.headOfHousehold,
+      required this.isDeleted});
+  factory HouseholdTableData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return HouseholdTableData(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      registrationId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}registration_id'])!,
+      numberOfMembers: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}number_of_members'])!,
+      headOfHousehold: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}head_of_household'])!,
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['registration_id'] = Variable<String>(registrationId);
+    map['number_of_members'] = Variable<int>(numberOfMembers);
+    map['head_of_household'] = Variable<String>(headOfHousehold);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    return map;
+  }
+
+  HouseholdTableCompanion toCompanion(bool nullToAbsent) {
+    return HouseholdTableCompanion(
+      id: Value(id),
+      registrationId: Value(registrationId),
+      numberOfMembers: Value(numberOfMembers),
+      headOfHousehold: Value(headOfHousehold),
+      isDeleted: Value(isDeleted),
+    );
+  }
+
+  factory HouseholdTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HouseholdTableData(
+      id: serializer.fromJson<int>(json['id']),
+      registrationId: serializer.fromJson<String>(json['registrationId']),
+      numberOfMembers: serializer.fromJson<int>(json['numberOfMembers']),
+      headOfHousehold: serializer.fromJson<String>(json['headOfHousehold']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'registrationId': serializer.toJson<String>(registrationId),
+      'numberOfMembers': serializer.toJson<int>(numberOfMembers),
+      'headOfHousehold': serializer.toJson<String>(headOfHousehold),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
+    };
+  }
+
+  HouseholdTableData copyWith(
+          {int? id,
+          String? registrationId,
+          int? numberOfMembers,
+          String? headOfHousehold,
+          bool? isDeleted}) =>
+      HouseholdTableData(
+        id: id ?? this.id,
+        registrationId: registrationId ?? this.registrationId,
+        numberOfMembers: numberOfMembers ?? this.numberOfMembers,
+        headOfHousehold: headOfHousehold ?? this.headOfHousehold,
+        isDeleted: isDeleted ?? this.isDeleted,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdTableData(')
+          ..write('id: $id, ')
+          ..write('registrationId: $registrationId, ')
+          ..write('numberOfMembers: $numberOfMembers, ')
+          ..write('headOfHousehold: $headOfHousehold, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, registrationId, numberOfMembers, headOfHousehold, isDeleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HouseholdTableData &&
+          other.id == this.id &&
+          other.registrationId == this.registrationId &&
+          other.numberOfMembers == this.numberOfMembers &&
+          other.headOfHousehold == this.headOfHousehold &&
+          other.isDeleted == this.isDeleted);
+}
+
+class HouseholdTableCompanion extends UpdateCompanion<HouseholdTableData> {
+  final Value<int> id;
+  final Value<String> registrationId;
+  final Value<int> numberOfMembers;
+  final Value<String> headOfHousehold;
+  final Value<bool> isDeleted;
+  const HouseholdTableCompanion({
+    this.id = const Value.absent(),
+    this.registrationId = const Value.absent(),
+    this.numberOfMembers = const Value.absent(),
+    this.headOfHousehold = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+  });
+  HouseholdTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String registrationId,
+    required int numberOfMembers,
+    required String headOfHousehold,
+    required bool isDeleted,
+  })  : registrationId = Value(registrationId),
+        numberOfMembers = Value(numberOfMembers),
+        headOfHousehold = Value(headOfHousehold),
+        isDeleted = Value(isDeleted);
+  static Insertable<HouseholdTableData> custom({
+    Expression<int>? id,
+    Expression<String>? registrationId,
+    Expression<int>? numberOfMembers,
+    Expression<String>? headOfHousehold,
+    Expression<bool>? isDeleted,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (registrationId != null) 'registration_id': registrationId,
+      if (numberOfMembers != null) 'number_of_members': numberOfMembers,
+      if (headOfHousehold != null) 'head_of_household': headOfHousehold,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+    });
+  }
+
+  HouseholdTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? registrationId,
+      Value<int>? numberOfMembers,
+      Value<String>? headOfHousehold,
+      Value<bool>? isDeleted}) {
+    return HouseholdTableCompanion(
+      id: id ?? this.id,
+      registrationId: registrationId ?? this.registrationId,
+      numberOfMembers: numberOfMembers ?? this.numberOfMembers,
+      headOfHousehold: headOfHousehold ?? this.headOfHousehold,
+      isDeleted: isDeleted ?? this.isDeleted,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (registrationId.present) {
+      map['registration_id'] = Variable<String>(registrationId.value);
+    }
+    if (numberOfMembers.present) {
+      map['number_of_members'] = Variable<int>(numberOfMembers.value);
+    }
+    if (headOfHousehold.present) {
+      map['head_of_household'] = Variable<String>(headOfHousehold.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdTableCompanion(')
+          ..write('id: $id, ')
+          ..write('registrationId: $registrationId, ')
+          ..write('numberOfMembers: $numberOfMembers, ')
+          ..write('headOfHousehold: $headOfHousehold, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HouseholdTableTable extends HouseholdTable
+    with TableInfo<$HouseholdTableTable, HouseholdTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HouseholdTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _registrationIdMeta =
+      const VerificationMeta('registrationId');
+  @override
+  late final GeneratedColumn<String?> registrationId = GeneratedColumn<String?>(
+      'registration_id', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: true,
+      defaultConstraints:
+          'REFERENCES campaign_registration_table (client_reference_id)');
+  final VerificationMeta _numberOfMembersMeta =
+      const VerificationMeta('numberOfMembers');
+  @override
+  late final GeneratedColumn<int?> numberOfMembers = GeneratedColumn<int?>(
+      'number_of_members', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _headOfHouseholdMeta =
+      const VerificationMeta('headOfHousehold');
+  @override
+  late final GeneratedColumn<String?> headOfHousehold =
+      GeneratedColumn<String?>('head_of_household', aliasedName, false,
+          type: const StringType(),
+          requiredDuringInsert: true,
+          defaultConstraints: 'REFERENCES individual_table (id)');
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, registrationId, numberOfMembers, headOfHousehold, isDeleted];
+  @override
+  String get aliasedName => _alias ?? 'household_table';
+  @override
+  String get actualTableName => 'household_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<HouseholdTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('registration_id')) {
+      context.handle(
+          _registrationIdMeta,
+          registrationId.isAcceptableOrUnknown(
+              data['registration_id']!, _registrationIdMeta));
+    } else if (isInserting) {
+      context.missing(_registrationIdMeta);
+    }
+    if (data.containsKey('number_of_members')) {
+      context.handle(
+          _numberOfMembersMeta,
+          numberOfMembers.isAcceptableOrUnknown(
+              data['number_of_members']!, _numberOfMembersMeta));
+    } else if (isInserting) {
+      context.missing(_numberOfMembersMeta);
+    }
+    if (data.containsKey('head_of_household')) {
+      context.handle(
+          _headOfHouseholdMeta,
+          headOfHousehold.isAcceptableOrUnknown(
+              data['head_of_household']!, _headOfHouseholdMeta));
+    } else if (isInserting) {
+      context.missing(_headOfHouseholdMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    } else if (isInserting) {
+      context.missing(_isDeletedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HouseholdTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return HouseholdTableData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $HouseholdTableTable createAlias(String alias) {
+    return $HouseholdTableTable(attachedDatabase, alias);
   }
 }
 
@@ -650,6 +950,7 @@ class IndividualTableData extends DataClass
   final int householdId;
   final bool isHead;
   final String name;
+  final bool isDeleted;
   IndividualTableData(
       {this.additionalFields,
       required this.id,
@@ -657,7 +958,8 @@ class IndividualTableData extends DataClass
       required this.gender,
       required this.householdId,
       required this.isHead,
-      required this.name});
+      required this.name,
+      required this.isDeleted});
   factory IndividualTableData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -676,6 +978,8 @@ class IndividualTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}is_head'])!,
       name: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted'])!,
     );
   }
   @override
@@ -690,6 +994,7 @@ class IndividualTableData extends DataClass
     map['household_id'] = Variable<int>(householdId);
     map['is_head'] = Variable<bool>(isHead);
     map['name'] = Variable<String>(name);
+    map['is_deleted'] = Variable<bool>(isDeleted);
     return map;
   }
 
@@ -704,6 +1009,7 @@ class IndividualTableData extends DataClass
       householdId: Value(householdId),
       isHead: Value(isHead),
       name: Value(name),
+      isDeleted: Value(isDeleted),
     );
   }
 
@@ -718,6 +1024,7 @@ class IndividualTableData extends DataClass
       householdId: serializer.fromJson<int>(json['householdId']),
       isHead: serializer.fromJson<bool>(json['isHead']),
       name: serializer.fromJson<String>(json['name']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
     );
   }
   @override
@@ -731,6 +1038,7 @@ class IndividualTableData extends DataClass
       'householdId': serializer.toJson<int>(householdId),
       'isHead': serializer.toJson<bool>(isHead),
       'name': serializer.toJson<String>(name),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
     };
   }
 
@@ -741,7 +1049,8 @@ class IndividualTableData extends DataClass
           String? gender,
           int? householdId,
           bool? isHead,
-          String? name}) =>
+          String? name,
+          bool? isDeleted}) =>
       IndividualTableData(
         additionalFields: additionalFields ?? this.additionalFields,
         id: id ?? this.id,
@@ -750,6 +1059,7 @@ class IndividualTableData extends DataClass
         householdId: householdId ?? this.householdId,
         isHead: isHead ?? this.isHead,
         name: name ?? this.name,
+        isDeleted: isDeleted ?? this.isDeleted,
       );
   @override
   String toString() {
@@ -760,14 +1070,15 @@ class IndividualTableData extends DataClass
           ..write('gender: $gender, ')
           ..write('householdId: $householdId, ')
           ..write('isHead: $isHead, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      additionalFields, id, dateOfBirth, gender, householdId, isHead, name);
+  int get hashCode => Object.hash(additionalFields, id, dateOfBirth, gender,
+      householdId, isHead, name, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -778,7 +1089,8 @@ class IndividualTableData extends DataClass
           other.gender == this.gender &&
           other.householdId == this.householdId &&
           other.isHead == this.isHead &&
-          other.name == this.name);
+          other.name == this.name &&
+          other.isDeleted == this.isDeleted);
 }
 
 class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
@@ -789,6 +1101,7 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
   final Value<int> householdId;
   final Value<bool> isHead;
   final Value<String> name;
+  final Value<bool> isDeleted;
   const IndividualTableCompanion({
     this.additionalFields = const Value.absent(),
     this.id = const Value.absent(),
@@ -797,6 +1110,7 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
     this.householdId = const Value.absent(),
     this.isHead = const Value.absent(),
     this.name = const Value.absent(),
+    this.isDeleted = const Value.absent(),
   });
   IndividualTableCompanion.insert({
     this.additionalFields = const Value.absent(),
@@ -806,10 +1120,12 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
     required int householdId,
     this.isHead = const Value.absent(),
     required String name,
+    required bool isDeleted,
   })  : dateOfBirth = Value(dateOfBirth),
         gender = Value(gender),
         householdId = Value(householdId),
-        name = Value(name);
+        name = Value(name),
+        isDeleted = Value(isDeleted);
   static Insertable<IndividualTableData> custom({
     Expression<String?>? additionalFields,
     Expression<int>? id,
@@ -818,6 +1134,7 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
     Expression<int>? householdId,
     Expression<bool>? isHead,
     Expression<String>? name,
+    Expression<bool>? isDeleted,
   }) {
     return RawValuesInsertable({
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -827,6 +1144,7 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
       if (householdId != null) 'household_id': householdId,
       if (isHead != null) 'is_head': isHead,
       if (name != null) 'name': name,
+      if (isDeleted != null) 'is_deleted': isDeleted,
     });
   }
 
@@ -837,7 +1155,8 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
       Value<String>? gender,
       Value<int>? householdId,
       Value<bool>? isHead,
-      Value<String>? name}) {
+      Value<String>? name,
+      Value<bool>? isDeleted}) {
     return IndividualTableCompanion(
       additionalFields: additionalFields ?? this.additionalFields,
       id: id ?? this.id,
@@ -846,6 +1165,7 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
       householdId: householdId ?? this.householdId,
       isHead: isHead ?? this.isHead,
       name: name ?? this.name,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 
@@ -873,6 +1193,9 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
     return map;
   }
 
@@ -885,7 +1208,8 @@ class IndividualTableCompanion extends UpdateCompanion<IndividualTableData> {
           ..write('gender: $gender, ')
           ..write('householdId: $householdId, ')
           ..write('isHead: $isHead, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
@@ -928,8 +1252,7 @@ class $IndividualTableTable extends IndividualTable
       'household_id', aliasedName, false,
       type: const IntType(),
       requiredDuringInsert: true,
-      defaultConstraints:
-          'REFERENCES household_registration_table (client_reference_id)');
+      defaultConstraints: 'REFERENCES household_table (id)');
   final VerificationMeta _isHeadMeta = const VerificationMeta('isHead');
   @override
   late final GeneratedColumn<bool?> isHead = GeneratedColumn<bool?>(
@@ -943,9 +1266,24 @@ class $IndividualTableTable extends IndividualTable
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
       'name', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
   @override
-  List<GeneratedColumn> get $columns =>
-      [additionalFields, id, dateOfBirth, gender, householdId, isHead, name];
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
+  @override
+  List<GeneratedColumn> get $columns => [
+        additionalFields,
+        id,
+        dateOfBirth,
+        gender,
+        householdId,
+        isHead,
+        name,
+        isDeleted
+      ];
   @override
   String get aliasedName => _alias ?? 'individual_table';
   @override
@@ -996,6 +1334,12 @@ class $IndividualTableTable extends IndividualTable
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    } else if (isInserting) {
+      context.missing(_isDeletedMeta);
     }
     return context;
   }
@@ -1574,7 +1918,7 @@ class $DeliveryTableTable extends DeliveryTable
       type: const StringType(),
       requiredDuringInsert: true,
       defaultConstraints:
-          'REFERENCES household_registration_table (client_reference_id)');
+          'REFERENCES campaign_registration_table (client_reference_id)');
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
@@ -2000,8 +2344,9 @@ class $DeliveryResourceTableTable extends DeliveryResourceTable
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
-  late final $HouseholdRegistrationTableTable householdRegistrationTable =
-      $HouseholdRegistrationTableTable(this);
+  late final $CampaignRegistrationTableTable campaignRegistrationTable =
+      $CampaignRegistrationTableTable(this);
+  late final $HouseholdTableTable householdTable = $HouseholdTableTable(this);
   late final $IndividualTableTable individualTable =
       $IndividualTableTable(this);
   late final $IndividualIdentifierTableTable individualIdentifierTable =
@@ -2013,7 +2358,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-        householdRegistrationTable,
+        campaignRegistrationTable,
+        householdTable,
         individualTable,
         individualIdentifierTable,
         deliveryTable,

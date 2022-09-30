@@ -6,9 +6,9 @@ part of 'registration_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_HouseholdRegistrationModel _$$_HouseholdRegistrationModelFromJson(
+_$_CampaignRegistrationModel _$$_CampaignRegistrationModelFromJson(
         Map<String, dynamic> json) =>
-    _$_HouseholdRegistrationModel(
+    _$_CampaignRegistrationModel(
       additionalFields: json['additionalFields'] as String?,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
       administrativeUnit: json['administrativeUnit'] as String,
@@ -20,7 +20,8 @@ _$_HouseholdRegistrationModel _$$_HouseholdRegistrationModelFromJson(
       campaignId: json['campaignId'] as String,
       clientReferenceId: json['clientReferenceId'] as String,
       dateOfRegistration: json['dateOfRegistration'] as int,
-      householdId: json['householdId'] as String?,
+      beneficiaryId: json['beneficiaryId'] as String?,
+      beneficiaryType: json['beneficiaryType'] as String?,
       individuals: (json['individuals'] as List<dynamic>)
           .map((e) => IndividualModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -32,8 +33,8 @@ _$_HouseholdRegistrationModel _$$_HouseholdRegistrationModelFromJson(
       type: $enumDecode(_$SyncObjectModelTypeEnumMap, json['type']),
     );
 
-Map<String, dynamic> _$$_HouseholdRegistrationModelToJson(
-        _$_HouseholdRegistrationModel instance) =>
+Map<String, dynamic> _$$_CampaignRegistrationModelToJson(
+        _$_CampaignRegistrationModel instance) =>
     <String, dynamic>{
       'additionalFields': instance.additionalFields,
       'address': instance.address.toJson(),
@@ -43,7 +44,8 @@ Map<String, dynamic> _$$_HouseholdRegistrationModelToJson(
       'campaignId': instance.campaignId,
       'clientReferenceId': instance.clientReferenceId,
       'dateOfRegistration': instance.dateOfRegistration,
-      'householdId': instance.householdId,
+      'beneficiaryId': instance.beneficiaryId,
+      'beneficiaryType': instance.beneficiaryType,
       'individuals': instance.individuals.map((e) => e.toJson()).toList(),
       'location': instance.location?.toJson(),
       'numberOfIndividuals': instance.numberOfIndividuals,
