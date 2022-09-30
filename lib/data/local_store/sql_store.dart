@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:health_campaigns_flutter/data/local_store/tables/delivery_table.dart';
-import 'package:health_campaigns_flutter/data/local_store/tables/household_registration_table.dart';
+import 'package:health_campaigns_flutter/data/local_store/tables/campaign_registration_table.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
@@ -11,7 +11,8 @@ import 'package:path/path.dart' as p;
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
-  HouseholdRegistrationTable,
+  CampaignRegistrationTable,
+  HouseholdTable,
   IndividualTable,
   IndividualIdentifierTable,
   DeliveryTable,

@@ -9,17 +9,17 @@ import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-class FakeRegistrationStore extends FakeDataStore<HouseholdRegistrationModel> {
+class FakeRegistrationStore extends FakeDataStore<CampaignRegistrationModel> {
   static FakeRegistrationStore get instance => _instance;
   static final FakeRegistrationStore _instance = FakeRegistrationStore._();
 
   FakeRegistrationStore._();
 
   @override
-  HouseholdRegistrationModel get fake {
+  CampaignRegistrationModel get fake {
     final faker = Faker();
 
-    return HouseholdRegistrationModel(
+    return CampaignRegistrationModel(
       apiMode: ApiMode.create,
       type: SyncObjectModelType.registration,
       campaignId: 'ID-1',

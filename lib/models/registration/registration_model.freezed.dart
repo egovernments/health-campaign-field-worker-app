@@ -14,13 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-HouseholdRegistrationModel _$HouseholdRegistrationModelFromJson(
+CampaignRegistrationModel _$CampaignRegistrationModelFromJson(
     Map<String, dynamic> json) {
-  return _HouseholdRegistrationModel.fromJson(json);
+  return _CampaignRegistrationModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$HouseholdRegistrationModel {
+mixin _$CampaignRegistrationModel {
   String? get additionalFields => throw _privateConstructorUsedError;
   AddressModel get address => throw _privateConstructorUsedError;
   String get administrativeUnit => throw _privateConstructorUsedError;
@@ -31,7 +31,8 @@ mixin _$HouseholdRegistrationModel {
 
   /// [dateOfRegistration] in millisecondsSinceEpoch
   int get dateOfRegistration => throw _privateConstructorUsedError;
-  String? get householdId => throw _privateConstructorUsedError;
+  String? get beneficiaryId => throw _privateConstructorUsedError;
+  String? get beneficiaryType => throw _privateConstructorUsedError;
   List<IndividualModel> get individuals => throw _privateConstructorUsedError;
   LatLngModel? get location => throw _privateConstructorUsedError;
   int get numberOfIndividuals => throw _privateConstructorUsedError;
@@ -40,15 +41,15 @@ mixin _$HouseholdRegistrationModel {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $HouseholdRegistrationModelCopyWith<HouseholdRegistrationModel>
-      get copyWith => throw _privateConstructorUsedError;
+  $CampaignRegistrationModelCopyWith<CampaignRegistrationModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $HouseholdRegistrationModelCopyWith<$Res> {
-  factory $HouseholdRegistrationModelCopyWith(HouseholdRegistrationModel value,
-          $Res Function(HouseholdRegistrationModel) then) =
-      _$HouseholdRegistrationModelCopyWithImpl<$Res>;
+abstract class $CampaignRegistrationModelCopyWith<$Res> {
+  factory $CampaignRegistrationModelCopyWith(CampaignRegistrationModel value,
+          $Res Function(CampaignRegistrationModel) then) =
+      _$CampaignRegistrationModelCopyWithImpl<$Res>;
   $Res call(
       {String? additionalFields,
       AddressModel address,
@@ -58,7 +59,8 @@ abstract class $HouseholdRegistrationModelCopyWith<$Res> {
       String campaignId,
       String clientReferenceId,
       int dateOfRegistration,
-      String? householdId,
+      String? beneficiaryId,
+      String? beneficiaryType,
       List<IndividualModel> individuals,
       LatLngModel? location,
       int numberOfIndividuals,
@@ -71,13 +73,13 @@ abstract class $HouseholdRegistrationModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$HouseholdRegistrationModelCopyWithImpl<$Res>
-    implements $HouseholdRegistrationModelCopyWith<$Res> {
-  _$HouseholdRegistrationModelCopyWithImpl(this._value, this._then);
+class _$CampaignRegistrationModelCopyWithImpl<$Res>
+    implements $CampaignRegistrationModelCopyWith<$Res> {
+  _$CampaignRegistrationModelCopyWithImpl(this._value, this._then);
 
-  final HouseholdRegistrationModel _value;
+  final CampaignRegistrationModel _value;
   // ignore: unused_field
-  final $Res Function(HouseholdRegistrationModel) _then;
+  final $Res Function(CampaignRegistrationModel) _then;
 
   @override
   $Res call({
@@ -89,7 +91,8 @@ class _$HouseholdRegistrationModelCopyWithImpl<$Res>
     Object? campaignId = freezed,
     Object? clientReferenceId = freezed,
     Object? dateOfRegistration = freezed,
-    Object? householdId = freezed,
+    Object? beneficiaryId = freezed,
+    Object? beneficiaryType = freezed,
     Object? individuals = freezed,
     Object? location = freezed,
     Object? numberOfIndividuals = freezed,
@@ -129,9 +132,13 @@ class _$HouseholdRegistrationModelCopyWithImpl<$Res>
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
               as int,
-      householdId: householdId == freezed
-          ? _value.householdId
-          : householdId // ignore: cast_nullable_to_non_nullable
+      beneficiaryId: beneficiaryId == freezed
+          ? _value.beneficiaryId
+          : beneficiaryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      beneficiaryType: beneficiaryType == freezed
+          ? _value.beneficiaryType
+          : beneficiaryType // ignore: cast_nullable_to_non_nullable
               as String?,
       individuals: individuals == freezed
           ? _value.individuals
@@ -187,12 +194,12 @@ class _$HouseholdRegistrationModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$$_HouseholdRegistrationModelCopyWith<$Res>
-    implements $HouseholdRegistrationModelCopyWith<$Res> {
-  factory _$$_HouseholdRegistrationModelCopyWith(
-          _$_HouseholdRegistrationModel value,
-          $Res Function(_$_HouseholdRegistrationModel) then) =
-      __$$_HouseholdRegistrationModelCopyWithImpl<$Res>;
+abstract class _$$_CampaignRegistrationModelCopyWith<$Res>
+    implements $CampaignRegistrationModelCopyWith<$Res> {
+  factory _$$_CampaignRegistrationModelCopyWith(
+          _$_CampaignRegistrationModel value,
+          $Res Function(_$_CampaignRegistrationModel) then) =
+      __$$_CampaignRegistrationModelCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? additionalFields,
@@ -203,7 +210,8 @@ abstract class _$$_HouseholdRegistrationModelCopyWith<$Res>
       String campaignId,
       String clientReferenceId,
       int dateOfRegistration,
-      String? householdId,
+      String? beneficiaryId,
+      String? beneficiaryType,
       List<IndividualModel> individuals,
       LatLngModel? location,
       int numberOfIndividuals,
@@ -219,17 +227,17 @@ abstract class _$$_HouseholdRegistrationModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
-    extends _$HouseholdRegistrationModelCopyWithImpl<$Res>
-    implements _$$_HouseholdRegistrationModelCopyWith<$Res> {
-  __$$_HouseholdRegistrationModelCopyWithImpl(
-      _$_HouseholdRegistrationModel _value,
-      $Res Function(_$_HouseholdRegistrationModel) _then)
-      : super(_value, (v) => _then(v as _$_HouseholdRegistrationModel));
+class __$$_CampaignRegistrationModelCopyWithImpl<$Res>
+    extends _$CampaignRegistrationModelCopyWithImpl<$Res>
+    implements _$$_CampaignRegistrationModelCopyWith<$Res> {
+  __$$_CampaignRegistrationModelCopyWithImpl(
+      _$_CampaignRegistrationModel _value,
+      $Res Function(_$_CampaignRegistrationModel) _then)
+      : super(_value, (v) => _then(v as _$_CampaignRegistrationModel));
 
   @override
-  _$_HouseholdRegistrationModel get _value =>
-      super._value as _$_HouseholdRegistrationModel;
+  _$_CampaignRegistrationModel get _value =>
+      super._value as _$_CampaignRegistrationModel;
 
   @override
   $Res call({
@@ -241,14 +249,15 @@ class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
     Object? campaignId = freezed,
     Object? clientReferenceId = freezed,
     Object? dateOfRegistration = freezed,
-    Object? householdId = freezed,
+    Object? beneficiaryId = freezed,
+    Object? beneficiaryType = freezed,
     Object? individuals = freezed,
     Object? location = freezed,
     Object? numberOfIndividuals = freezed,
     Object? tenantId = freezed,
     Object? type = freezed,
   }) {
-    return _then(_$_HouseholdRegistrationModel(
+    return _then(_$_CampaignRegistrationModel(
       additionalFields: additionalFields == freezed
           ? _value.additionalFields
           : additionalFields // ignore: cast_nullable_to_non_nullable
@@ -281,9 +290,13 @@ class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
           ? _value.dateOfRegistration
           : dateOfRegistration // ignore: cast_nullable_to_non_nullable
               as int,
-      householdId: householdId == freezed
-          ? _value.householdId
-          : householdId // ignore: cast_nullable_to_non_nullable
+      beneficiaryId: beneficiaryId == freezed
+          ? _value.beneficiaryId
+          : beneficiaryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      beneficiaryType: beneficiaryType == freezed
+          ? _value.beneficiaryType
+          : beneficiaryType // ignore: cast_nullable_to_non_nullable
               as String?,
       individuals: individuals == freezed
           ? _value._individuals
@@ -312,8 +325,8 @@ class __$$_HouseholdRegistrationModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
-  const _$_HouseholdRegistrationModel(
+class _$_CampaignRegistrationModel implements _CampaignRegistrationModel {
+  const _$_CampaignRegistrationModel(
       {this.additionalFields,
       required this.address,
       required this.administrativeUnit,
@@ -322,7 +335,8 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
       required this.campaignId,
       required this.clientReferenceId,
       required this.dateOfRegistration,
-      this.householdId,
+      this.beneficiaryId,
+      this.beneficiaryType,
       required final List<IndividualModel> individuals,
       this.location,
       required this.numberOfIndividuals,
@@ -330,8 +344,8 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
       required this.type})
       : _individuals = individuals;
 
-  factory _$_HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =>
-      _$$_HouseholdRegistrationModelFromJson(json);
+  factory _$_CampaignRegistrationModel.fromJson(Map<String, dynamic> json) =>
+      _$$_CampaignRegistrationModelFromJson(json);
 
   @override
   final String? additionalFields;
@@ -352,7 +366,9 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
   @override
   final int dateOfRegistration;
   @override
-  final String? householdId;
+  final String? beneficiaryId;
+  @override
+  final String? beneficiaryType;
   final List<IndividualModel> _individuals;
   @override
   List<IndividualModel> get individuals {
@@ -371,14 +387,14 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
 
   @override
   String toString() {
-    return 'HouseholdRegistrationModel(additionalFields: $additionalFields, address: $address, administrativeUnit: $administrativeUnit, apiMode: $apiMode, auditDetails: $auditDetails, campaignId: $campaignId, clientReferenceId: $clientReferenceId, dateOfRegistration: $dateOfRegistration, householdId: $householdId, individuals: $individuals, location: $location, numberOfIndividuals: $numberOfIndividuals, tenantId: $tenantId, type: $type)';
+    return 'CampaignRegistrationModel(additionalFields: $additionalFields, address: $address, administrativeUnit: $administrativeUnit, apiMode: $apiMode, auditDetails: $auditDetails, campaignId: $campaignId, clientReferenceId: $clientReferenceId, dateOfRegistration: $dateOfRegistration, beneficiaryId: $beneficiaryId, beneficiaryType: $beneficiaryType, individuals: $individuals, location: $location, numberOfIndividuals: $numberOfIndividuals, tenantId: $tenantId, type: $type)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HouseholdRegistrationModel &&
+            other is _$_CampaignRegistrationModel &&
             const DeepCollectionEquality()
                 .equals(other.additionalFields, additionalFields) &&
             const DeepCollectionEquality().equals(other.address, address) &&
@@ -394,7 +410,9 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
             const DeepCollectionEquality()
                 .equals(other.dateOfRegistration, dateOfRegistration) &&
             const DeepCollectionEquality()
-                .equals(other.householdId, householdId) &&
+                .equals(other.beneficiaryId, beneficiaryId) &&
+            const DeepCollectionEquality()
+                .equals(other.beneficiaryType, beneficiaryType) &&
             const DeepCollectionEquality()
                 .equals(other._individuals, _individuals) &&
             const DeepCollectionEquality().equals(other.location, location) &&
@@ -416,7 +434,8 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
       const DeepCollectionEquality().hash(campaignId),
       const DeepCollectionEquality().hash(clientReferenceId),
       const DeepCollectionEquality().hash(dateOfRegistration),
-      const DeepCollectionEquality().hash(householdId),
+      const DeepCollectionEquality().hash(beneficiaryId),
+      const DeepCollectionEquality().hash(beneficiaryType),
       const DeepCollectionEquality().hash(_individuals),
       const DeepCollectionEquality().hash(location),
       const DeepCollectionEquality().hash(numberOfIndividuals),
@@ -425,21 +444,21 @@ class _$_HouseholdRegistrationModel implements _HouseholdRegistrationModel {
 
   @JsonKey(ignore: true)
   @override
-  _$$_HouseholdRegistrationModelCopyWith<_$_HouseholdRegistrationModel>
-      get copyWith => __$$_HouseholdRegistrationModelCopyWithImpl<
-          _$_HouseholdRegistrationModel>(this, _$identity);
+  _$$_CampaignRegistrationModelCopyWith<_$_CampaignRegistrationModel>
+      get copyWith => __$$_CampaignRegistrationModelCopyWithImpl<
+          _$_CampaignRegistrationModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_HouseholdRegistrationModelToJson(
+    return _$$_CampaignRegistrationModelToJson(
       this,
     );
   }
 }
 
-abstract class _HouseholdRegistrationModel
-    implements HouseholdRegistrationModel, SerializerModel {
-  const factory _HouseholdRegistrationModel(
+abstract class _CampaignRegistrationModel
+    implements CampaignRegistrationModel, SerializerModel {
+  const factory _CampaignRegistrationModel(
       {final String? additionalFields,
       required final AddressModel address,
       required final String administrativeUnit,
@@ -448,15 +467,16 @@ abstract class _HouseholdRegistrationModel
       required final String campaignId,
       required final String clientReferenceId,
       required final int dateOfRegistration,
-      final String? householdId,
+      final String? beneficiaryId,
+      final String? beneficiaryType,
       required final List<IndividualModel> individuals,
       final LatLngModel? location,
       required final int numberOfIndividuals,
       required final String tenantId,
-      required final SyncObjectModelType type}) = _$_HouseholdRegistrationModel;
+      required final SyncObjectModelType type}) = _$_CampaignRegistrationModel;
 
-  factory _HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =
-      _$_HouseholdRegistrationModel.fromJson;
+  factory _CampaignRegistrationModel.fromJson(Map<String, dynamic> json) =
+      _$_CampaignRegistrationModel.fromJson;
 
   @override
   String? get additionalFields;
@@ -477,7 +497,9 @@ abstract class _HouseholdRegistrationModel
   /// [dateOfRegistration] in millisecondsSinceEpoch
   int get dateOfRegistration;
   @override
-  String? get householdId;
+  String? get beneficiaryId;
+  @override
+  String? get beneficiaryType;
   @override
   List<IndividualModel> get individuals;
   @override
@@ -490,6 +512,6 @@ abstract class _HouseholdRegistrationModel
   SyncObjectModelType get type;
   @override
   @JsonKey(ignore: true)
-  _$$_HouseholdRegistrationModelCopyWith<_$_HouseholdRegistrationModel>
+  _$$_CampaignRegistrationModelCopyWith<_$_CampaignRegistrationModel>
       get copyWith => throw _privateConstructorUsedError;
 }
