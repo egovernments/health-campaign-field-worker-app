@@ -12,10 +12,10 @@ part 'registration_model.freezed.dart';
 part 'registration_model.g.dart';
 
 @freezed
-class HouseholdRegistrationModel with _$HouseholdRegistrationModel {
+class CampaignRegistrationModel with _$CampaignRegistrationModel {
   @JsonSerializable(explicitToJson: true)
   @Implements<SerializerModel>()
-  const factory HouseholdRegistrationModel({
+  const factory CampaignRegistrationModel({
     String? additionalFields,
     required AddressModel address,
     required String administrativeUnit,
@@ -26,14 +26,15 @@ class HouseholdRegistrationModel with _$HouseholdRegistrationModel {
 
     /// [dateOfRegistration] in millisecondsSinceEpoch
     required int dateOfRegistration,
-    String? householdId,
+    String? beneficiaryId,
+    String? beneficiaryType,
     required List<IndividualModel> individuals,
     LatLngModel? location,
     required int numberOfIndividuals,
     required String tenantId,
     required SyncObjectModelType type,
-  }) = _HouseholdRegistrationModel;
+  }) = _CampaignRegistrationModel;
 
-  factory HouseholdRegistrationModel.fromJson(Map<String, dynamic> json) =>
-      _$HouseholdRegistrationModelFromJson(json);
+  factory CampaignRegistrationModel.fromJson(Map<String, dynamic> json) =>
+      _$CampaignRegistrationModelFromJson(json);
 }

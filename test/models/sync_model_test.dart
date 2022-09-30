@@ -11,7 +11,7 @@ void main() {
       final registrationList = FakeRegistrationStore.instance.getFakeDataList();
       final deliveryList = FakeDeliveryStore.instance.getFakeDataList();
 
-      final syncRegistration = SyncObjectModel<HouseholdRegistrationModel>(
+      final syncRegistration = SyncObjectModel<CampaignRegistrationModel>(
         items: registrationList,
       );
 
@@ -22,8 +22,8 @@ void main() {
       );
       final json = syncData.toJson();
 
-      List<HouseholdRegistrationModel> parsedRegistration =
-          <HouseholdRegistrationModel>[];
+      List<CampaignRegistrationModel> parsedRegistration =
+          <CampaignRegistrationModel>[];
       List<DeliveryModel> parsedDelivery = <DeliveryModel>[];
 
       final parsedData = SyncDataModel.fromJson(json);
