@@ -14,7 +14,7 @@ class CampaignRegistrationTableData extends DataClass
   final String beneficiaryType;
   final String boundaryId;
   final int dateOfRegistration;
-  final int createOn;
+  final int createdOn;
   final int? modifiedOn;
   final String createdBy;
   final String? modifiedBy;
@@ -28,7 +28,7 @@ class CampaignRegistrationTableData extends DataClass
       required this.beneficiaryType,
       required this.boundaryId,
       required this.dateOfRegistration,
-      required this.createOn,
+      required this.createdOn,
       this.modifiedOn,
       required this.createdBy,
       this.modifiedBy,
@@ -50,8 +50,8 @@ class CampaignRegistrationTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}boundary_id'])!,
       dateOfRegistration: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}date_of_registration'])!,
-      createOn: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}create_on'])!,
+      createdOn: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_on'])!,
       modifiedOn: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}modified_on']),
       createdBy: const StringType()
@@ -76,7 +76,7 @@ class CampaignRegistrationTableData extends DataClass
     map['beneficiary_type'] = Variable<String>(beneficiaryType);
     map['boundary_id'] = Variable<String>(boundaryId);
     map['date_of_registration'] = Variable<int>(dateOfRegistration);
-    map['create_on'] = Variable<int>(createOn);
+    map['created_on'] = Variable<int>(createdOn);
     if (!nullToAbsent || modifiedOn != null) {
       map['modified_on'] = Variable<int?>(modifiedOn);
     }
@@ -102,7 +102,7 @@ class CampaignRegistrationTableData extends DataClass
       beneficiaryType: Value(beneficiaryType),
       boundaryId: Value(boundaryId),
       dateOfRegistration: Value(dateOfRegistration),
-      createOn: Value(createOn),
+      createdOn: Value(createdOn),
       modifiedOn: modifiedOn == null && nullToAbsent
           ? const Value.absent()
           : Value(modifiedOn),
@@ -130,7 +130,7 @@ class CampaignRegistrationTableData extends DataClass
       beneficiaryType: serializer.fromJson<String>(json['beneficiaryType']),
       boundaryId: serializer.fromJson<String>(json['boundaryId']),
       dateOfRegistration: serializer.fromJson<int>(json['dateOfRegistration']),
-      createOn: serializer.fromJson<int>(json['createOn']),
+      createdOn: serializer.fromJson<int>(json['createdOn']),
       modifiedOn: serializer.fromJson<int?>(json['modifiedOn']),
       createdBy: serializer.fromJson<String>(json['createdBy']),
       modifiedBy: serializer.fromJson<String?>(json['modifiedBy']),
@@ -149,7 +149,7 @@ class CampaignRegistrationTableData extends DataClass
       'beneficiaryType': serializer.toJson<String>(beneficiaryType),
       'boundaryId': serializer.toJson<String>(boundaryId),
       'dateOfRegistration': serializer.toJson<int>(dateOfRegistration),
-      'createOn': serializer.toJson<int>(createOn),
+      'createdOn': serializer.toJson<int>(createdOn),
       'modifiedOn': serializer.toJson<int?>(modifiedOn),
       'createdBy': serializer.toJson<String>(createdBy),
       'modifiedBy': serializer.toJson<String?>(modifiedBy),
@@ -166,7 +166,7 @@ class CampaignRegistrationTableData extends DataClass
           String? beneficiaryType,
           String? boundaryId,
           int? dateOfRegistration,
-          int? createOn,
+          int? createdOn,
           int? modifiedOn,
           String? createdBy,
           String? modifiedBy,
@@ -180,7 +180,7 @@ class CampaignRegistrationTableData extends DataClass
         beneficiaryType: beneficiaryType ?? this.beneficiaryType,
         boundaryId: boundaryId ?? this.boundaryId,
         dateOfRegistration: dateOfRegistration ?? this.dateOfRegistration,
-        createOn: createOn ?? this.createOn,
+        createdOn: createdOn ?? this.createdOn,
         modifiedOn: modifiedOn ?? this.modifiedOn,
         createdBy: createdBy ?? this.createdBy,
         modifiedBy: modifiedBy ?? this.modifiedBy,
@@ -197,7 +197,7 @@ class CampaignRegistrationTableData extends DataClass
           ..write('beneficiaryType: $beneficiaryType, ')
           ..write('boundaryId: $boundaryId, ')
           ..write('dateOfRegistration: $dateOfRegistration, ')
-          ..write('createOn: $createOn, ')
+          ..write('createdOn: $createdOn, ')
           ..write('modifiedOn: $modifiedOn, ')
           ..write('createdBy: $createdBy, ')
           ..write('modifiedBy: $modifiedBy, ')
@@ -216,7 +216,7 @@ class CampaignRegistrationTableData extends DataClass
       beneficiaryType,
       boundaryId,
       dateOfRegistration,
-      createOn,
+      createdOn,
       modifiedOn,
       createdBy,
       modifiedBy,
@@ -233,7 +233,7 @@ class CampaignRegistrationTableData extends DataClass
           other.beneficiaryType == this.beneficiaryType &&
           other.boundaryId == this.boundaryId &&
           other.dateOfRegistration == this.dateOfRegistration &&
-          other.createOn == this.createOn &&
+          other.createdOn == this.createdOn &&
           other.modifiedOn == this.modifiedOn &&
           other.createdBy == this.createdBy &&
           other.modifiedBy == this.modifiedBy &&
@@ -250,7 +250,7 @@ class CampaignRegistrationTableCompanion
   final Value<String> beneficiaryType;
   final Value<String> boundaryId;
   final Value<int> dateOfRegistration;
-  final Value<int> createOn;
+  final Value<int> createdOn;
   final Value<int?> modifiedOn;
   final Value<String> createdBy;
   final Value<String?> modifiedBy;
@@ -264,7 +264,7 @@ class CampaignRegistrationTableCompanion
     this.beneficiaryType = const Value.absent(),
     this.boundaryId = const Value.absent(),
     this.dateOfRegistration = const Value.absent(),
-    this.createOn = const Value.absent(),
+    this.createdOn = const Value.absent(),
     this.modifiedOn = const Value.absent(),
     this.createdBy = const Value.absent(),
     this.modifiedBy = const Value.absent(),
@@ -279,7 +279,7 @@ class CampaignRegistrationTableCompanion
     required String beneficiaryType,
     required String boundaryId,
     required int dateOfRegistration,
-    required int createOn,
+    required int createdOn,
     this.modifiedOn = const Value.absent(),
     required String createdBy,
     this.modifiedBy = const Value.absent(),
@@ -292,7 +292,7 @@ class CampaignRegistrationTableCompanion
         beneficiaryType = Value(beneficiaryType),
         boundaryId = Value(boundaryId),
         dateOfRegistration = Value(dateOfRegistration),
-        createOn = Value(createOn),
+        createdOn = Value(createdOn),
         createdBy = Value(createdBy),
         tenantId = Value(tenantId);
   static Insertable<CampaignRegistrationTableData> custom({
@@ -301,7 +301,7 @@ class CampaignRegistrationTableCompanion
     Expression<String>? beneficiaryType,
     Expression<String>? boundaryId,
     Expression<int>? dateOfRegistration,
-    Expression<int>? createOn,
+    Expression<int>? createdOn,
     Expression<int?>? modifiedOn,
     Expression<String>? createdBy,
     Expression<String?>? modifiedBy,
@@ -317,7 +317,7 @@ class CampaignRegistrationTableCompanion
       if (boundaryId != null) 'boundary_id': boundaryId,
       if (dateOfRegistration != null)
         'date_of_registration': dateOfRegistration,
-      if (createOn != null) 'create_on': createOn,
+      if (createdOn != null) 'created_on': createdOn,
       if (modifiedOn != null) 'modified_on': modifiedOn,
       if (createdBy != null) 'created_by': createdBy,
       if (modifiedBy != null) 'modified_by': modifiedBy,
@@ -334,7 +334,7 @@ class CampaignRegistrationTableCompanion
       Value<String>? beneficiaryType,
       Value<String>? boundaryId,
       Value<int>? dateOfRegistration,
-      Value<int>? createOn,
+      Value<int>? createdOn,
       Value<int?>? modifiedOn,
       Value<String>? createdBy,
       Value<String?>? modifiedBy,
@@ -348,7 +348,7 @@ class CampaignRegistrationTableCompanion
       beneficiaryType: beneficiaryType ?? this.beneficiaryType,
       boundaryId: boundaryId ?? this.boundaryId,
       dateOfRegistration: dateOfRegistration ?? this.dateOfRegistration,
-      createOn: createOn ?? this.createOn,
+      createdOn: createdOn ?? this.createdOn,
       modifiedOn: modifiedOn ?? this.modifiedOn,
       createdBy: createdBy ?? this.createdBy,
       modifiedBy: modifiedBy ?? this.modifiedBy,
@@ -377,8 +377,8 @@ class CampaignRegistrationTableCompanion
     if (dateOfRegistration.present) {
       map['date_of_registration'] = Variable<int>(dateOfRegistration.value);
     }
-    if (createOn.present) {
-      map['create_on'] = Variable<int>(createOn.value);
+    if (createdOn.present) {
+      map['created_on'] = Variable<int>(createdOn.value);
     }
     if (modifiedOn.present) {
       map['modified_on'] = Variable<int?>(modifiedOn.value);
@@ -412,7 +412,7 @@ class CampaignRegistrationTableCompanion
           ..write('beneficiaryType: $beneficiaryType, ')
           ..write('boundaryId: $boundaryId, ')
           ..write('dateOfRegistration: $dateOfRegistration, ')
-          ..write('createOn: $createOn, ')
+          ..write('createdOn: $createdOn, ')
           ..write('modifiedOn: $modifiedOn, ')
           ..write('createdBy: $createdBy, ')
           ..write('modifiedBy: $modifiedBy, ')
@@ -461,10 +461,10 @@ class $CampaignRegistrationTableTable extends CampaignRegistrationTable
   late final GeneratedColumn<int?> dateOfRegistration = GeneratedColumn<int?>(
       'date_of_registration', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _createOnMeta = const VerificationMeta('createOn');
+  final VerificationMeta _createdOnMeta = const VerificationMeta('createdOn');
   @override
-  late final GeneratedColumn<int?> createOn = GeneratedColumn<int?>(
-      'create_on', aliasedName, false,
+  late final GeneratedColumn<int?> createdOn = GeneratedColumn<int?>(
+      'created_on', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _modifiedOnMeta = const VerificationMeta('modifiedOn');
   @override
@@ -513,7 +513,7 @@ class $CampaignRegistrationTableTable extends CampaignRegistrationTable
         beneficiaryType,
         boundaryId,
         dateOfRegistration,
-        createOn,
+        createdOn,
         modifiedOn,
         createdBy,
         modifiedBy,
@@ -572,11 +572,11 @@ class $CampaignRegistrationTableTable extends CampaignRegistrationTable
     } else if (isInserting) {
       context.missing(_dateOfRegistrationMeta);
     }
-    if (data.containsKey('create_on')) {
-      context.handle(_createOnMeta,
-          createOn.isAcceptableOrUnknown(data['create_on']!, _createOnMeta));
+    if (data.containsKey('created_on')) {
+      context.handle(_createdOnMeta,
+          createdOn.isAcceptableOrUnknown(data['created_on']!, _createdOnMeta));
     } else if (isInserting) {
-      context.missing(_createOnMeta);
+      context.missing(_createdOnMeta);
     }
     if (data.containsKey('modified_on')) {
       context.handle(
@@ -1602,6 +1602,12 @@ class DeliveryTableData extends DataClass
   final String registrationId;
   final String status;
   final String tenantId;
+  final int createdOn;
+  final int? modifiedOn;
+  final String createdBy;
+  final String? modifiedBy;
+  final bool isSynced;
+  final String? syncFileName;
   DeliveryTableData(
       {this.additionalFields,
       required this.campaignId,
@@ -1610,7 +1616,13 @@ class DeliveryTableData extends DataClass
       required this.deliveredBy,
       required this.registrationId,
       required this.status,
-      required this.tenantId});
+      required this.tenantId,
+      required this.createdOn,
+      this.modifiedOn,
+      required this.createdBy,
+      this.modifiedBy,
+      required this.isSynced,
+      this.syncFileName});
   factory DeliveryTableData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1631,6 +1643,18 @@ class DeliveryTableData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
       tenantId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id'])!,
+      createdOn: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_on'])!,
+      modifiedOn: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified_on']),
+      createdBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_by'])!,
+      modifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified_by']),
+      isSynced: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_synced'])!,
+      syncFileName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sync_file_name']),
     );
   }
   @override
@@ -1646,6 +1670,18 @@ class DeliveryTableData extends DataClass
     map['registration_id'] = Variable<String>(registrationId);
     map['status'] = Variable<String>(status);
     map['tenant_id'] = Variable<String>(tenantId);
+    map['created_on'] = Variable<int>(createdOn);
+    if (!nullToAbsent || modifiedOn != null) {
+      map['modified_on'] = Variable<int?>(modifiedOn);
+    }
+    map['created_by'] = Variable<String>(createdBy);
+    if (!nullToAbsent || modifiedBy != null) {
+      map['modified_by'] = Variable<String?>(modifiedBy);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || syncFileName != null) {
+      map['sync_file_name'] = Variable<String?>(syncFileName);
+    }
     return map;
   }
 
@@ -1661,6 +1697,18 @@ class DeliveryTableData extends DataClass
       registrationId: Value(registrationId),
       status: Value(status),
       tenantId: Value(tenantId),
+      createdOn: Value(createdOn),
+      modifiedOn: modifiedOn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modifiedOn),
+      createdBy: Value(createdBy),
+      modifiedBy: modifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modifiedBy),
+      isSynced: Value(isSynced),
+      syncFileName: syncFileName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncFileName),
     );
   }
 
@@ -1676,6 +1724,12 @@ class DeliveryTableData extends DataClass
       registrationId: serializer.fromJson<String>(json['registrationId']),
       status: serializer.fromJson<String>(json['status']),
       tenantId: serializer.fromJson<String>(json['tenantId']),
+      createdOn: serializer.fromJson<int>(json['createdOn']),
+      modifiedOn: serializer.fromJson<int?>(json['modifiedOn']),
+      createdBy: serializer.fromJson<String>(json['createdBy']),
+      modifiedBy: serializer.fromJson<String?>(json['modifiedBy']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      syncFileName: serializer.fromJson<String?>(json['syncFileName']),
     );
   }
   @override
@@ -1690,6 +1744,12 @@ class DeliveryTableData extends DataClass
       'registrationId': serializer.toJson<String>(registrationId),
       'status': serializer.toJson<String>(status),
       'tenantId': serializer.toJson<String>(tenantId),
+      'createdOn': serializer.toJson<int>(createdOn),
+      'modifiedOn': serializer.toJson<int?>(modifiedOn),
+      'createdBy': serializer.toJson<String>(createdBy),
+      'modifiedBy': serializer.toJson<String?>(modifiedBy),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'syncFileName': serializer.toJson<String?>(syncFileName),
     };
   }
 
@@ -1701,7 +1761,13 @@ class DeliveryTableData extends DataClass
           String? deliveredBy,
           String? registrationId,
           String? status,
-          String? tenantId}) =>
+          String? tenantId,
+          int? createdOn,
+          int? modifiedOn,
+          String? createdBy,
+          String? modifiedBy,
+          bool? isSynced,
+          String? syncFileName}) =>
       DeliveryTableData(
         additionalFields: additionalFields ?? this.additionalFields,
         campaignId: campaignId ?? this.campaignId,
@@ -1711,6 +1777,12 @@ class DeliveryTableData extends DataClass
         registrationId: registrationId ?? this.registrationId,
         status: status ?? this.status,
         tenantId: tenantId ?? this.tenantId,
+        createdOn: createdOn ?? this.createdOn,
+        modifiedOn: modifiedOn ?? this.modifiedOn,
+        createdBy: createdBy ?? this.createdBy,
+        modifiedBy: modifiedBy ?? this.modifiedBy,
+        isSynced: isSynced ?? this.isSynced,
+        syncFileName: syncFileName ?? this.syncFileName,
       );
   @override
   String toString() {
@@ -1722,7 +1794,13 @@ class DeliveryTableData extends DataClass
           ..write('deliveredBy: $deliveredBy, ')
           ..write('registrationId: $registrationId, ')
           ..write('status: $status, ')
-          ..write('tenantId: $tenantId')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdOn: $createdOn, ')
+          ..write('modifiedOn: $modifiedOn, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('modifiedBy: $modifiedBy, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('syncFileName: $syncFileName')
           ..write(')'))
         .toString();
   }
@@ -1736,7 +1814,13 @@ class DeliveryTableData extends DataClass
       deliveredBy,
       registrationId,
       status,
-      tenantId);
+      tenantId,
+      createdOn,
+      modifiedOn,
+      createdBy,
+      modifiedBy,
+      isSynced,
+      syncFileName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1748,7 +1832,13 @@ class DeliveryTableData extends DataClass
           other.deliveredBy == this.deliveredBy &&
           other.registrationId == this.registrationId &&
           other.status == this.status &&
-          other.tenantId == this.tenantId);
+          other.tenantId == this.tenantId &&
+          other.createdOn == this.createdOn &&
+          other.modifiedOn == this.modifiedOn &&
+          other.createdBy == this.createdBy &&
+          other.modifiedBy == this.modifiedBy &&
+          other.isSynced == this.isSynced &&
+          other.syncFileName == this.syncFileName);
 }
 
 class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
@@ -1760,6 +1850,12 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
   final Value<String> registrationId;
   final Value<String> status;
   final Value<String> tenantId;
+  final Value<int> createdOn;
+  final Value<int?> modifiedOn;
+  final Value<String> createdBy;
+  final Value<String?> modifiedBy;
+  final Value<bool> isSynced;
+  final Value<String?> syncFileName;
   const DeliveryTableCompanion({
     this.additionalFields = const Value.absent(),
     this.campaignId = const Value.absent(),
@@ -1769,6 +1865,12 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
     this.registrationId = const Value.absent(),
     this.status = const Value.absent(),
     this.tenantId = const Value.absent(),
+    this.createdOn = const Value.absent(),
+    this.modifiedOn = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.modifiedBy = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.syncFileName = const Value.absent(),
   });
   DeliveryTableCompanion.insert({
     this.additionalFields = const Value.absent(),
@@ -1779,13 +1881,21 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
     required String registrationId,
     required String status,
     required String tenantId,
+    required int createdOn,
+    this.modifiedOn = const Value.absent(),
+    required String createdBy,
+    this.modifiedBy = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.syncFileName = const Value.absent(),
   })  : campaignId = Value(campaignId),
         clientReferenceId = Value(clientReferenceId),
         deliveryDate = Value(deliveryDate),
         deliveredBy = Value(deliveredBy),
         registrationId = Value(registrationId),
         status = Value(status),
-        tenantId = Value(tenantId);
+        tenantId = Value(tenantId),
+        createdOn = Value(createdOn),
+        createdBy = Value(createdBy);
   static Insertable<DeliveryTableData> custom({
     Expression<String?>? additionalFields,
     Expression<String>? campaignId,
@@ -1795,6 +1905,12 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
     Expression<String>? registrationId,
     Expression<String>? status,
     Expression<String>? tenantId,
+    Expression<int>? createdOn,
+    Expression<int?>? modifiedOn,
+    Expression<String>? createdBy,
+    Expression<String?>? modifiedBy,
+    Expression<bool>? isSynced,
+    Expression<String?>? syncFileName,
   }) {
     return RawValuesInsertable({
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -1805,6 +1921,12 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
       if (registrationId != null) 'registration_id': registrationId,
       if (status != null) 'status': status,
       if (tenantId != null) 'tenant_id': tenantId,
+      if (createdOn != null) 'created_on': createdOn,
+      if (modifiedOn != null) 'modified_on': modifiedOn,
+      if (createdBy != null) 'created_by': createdBy,
+      if (modifiedBy != null) 'modified_by': modifiedBy,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (syncFileName != null) 'sync_file_name': syncFileName,
     });
   }
 
@@ -1816,7 +1938,13 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
       Value<String>? deliveredBy,
       Value<String>? registrationId,
       Value<String>? status,
-      Value<String>? tenantId}) {
+      Value<String>? tenantId,
+      Value<int>? createdOn,
+      Value<int?>? modifiedOn,
+      Value<String>? createdBy,
+      Value<String?>? modifiedBy,
+      Value<bool>? isSynced,
+      Value<String?>? syncFileName}) {
     return DeliveryTableCompanion(
       additionalFields: additionalFields ?? this.additionalFields,
       campaignId: campaignId ?? this.campaignId,
@@ -1826,6 +1954,12 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
       registrationId: registrationId ?? this.registrationId,
       status: status ?? this.status,
       tenantId: tenantId ?? this.tenantId,
+      createdOn: createdOn ?? this.createdOn,
+      modifiedOn: modifiedOn ?? this.modifiedOn,
+      createdBy: createdBy ?? this.createdBy,
+      modifiedBy: modifiedBy ?? this.modifiedBy,
+      isSynced: isSynced ?? this.isSynced,
+      syncFileName: syncFileName ?? this.syncFileName,
     );
   }
 
@@ -1856,6 +1990,24 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
     if (tenantId.present) {
       map['tenant_id'] = Variable<String>(tenantId.value);
     }
+    if (createdOn.present) {
+      map['created_on'] = Variable<int>(createdOn.value);
+    }
+    if (modifiedOn.present) {
+      map['modified_on'] = Variable<int?>(modifiedOn.value);
+    }
+    if (createdBy.present) {
+      map['created_by'] = Variable<String>(createdBy.value);
+    }
+    if (modifiedBy.present) {
+      map['modified_by'] = Variable<String?>(modifiedBy.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (syncFileName.present) {
+      map['sync_file_name'] = Variable<String?>(syncFileName.value);
+    }
     return map;
   }
 
@@ -1869,7 +2021,13 @@ class DeliveryTableCompanion extends UpdateCompanion<DeliveryTableData> {
           ..write('deliveredBy: $deliveredBy, ')
           ..write('registrationId: $registrationId, ')
           ..write('status: $status, ')
-          ..write('tenantId: $tenantId')
+          ..write('tenantId: $tenantId, ')
+          ..write('createdOn: $createdOn, ')
+          ..write('modifiedOn: $modifiedOn, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('modifiedBy: $modifiedBy, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('syncFileName: $syncFileName')
           ..write(')'))
         .toString();
   }
@@ -1929,6 +2087,40 @@ class $DeliveryTableTable extends DeliveryTable
   late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
       'tenant_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _createdOnMeta = const VerificationMeta('createdOn');
+  @override
+  late final GeneratedColumn<int?> createdOn = GeneratedColumn<int?>(
+      'created_on', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _modifiedOnMeta = const VerificationMeta('modifiedOn');
+  @override
+  late final GeneratedColumn<int?> modifiedOn = GeneratedColumn<int?>(
+      'modified_on', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _createdByMeta = const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<String?> createdBy = GeneratedColumn<String?>(
+      'created_by', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _modifiedByMeta = const VerificationMeta('modifiedBy');
+  @override
+  late final GeneratedColumn<String?> modifiedBy = GeneratedColumn<String?>(
+      'modified_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isSyncedMeta = const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool?> isSynced = GeneratedColumn<bool?>(
+      'is_synced', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_synced IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _syncFileNameMeta =
+      const VerificationMeta('syncFileName');
+  @override
+  late final GeneratedColumn<String?> syncFileName = GeneratedColumn<String?>(
+      'sync_file_name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         additionalFields,
@@ -1938,7 +2130,13 @@ class $DeliveryTableTable extends DeliveryTable
         deliveredBy,
         registrationId,
         status,
-        tenantId
+        tenantId,
+        createdOn,
+        modifiedOn,
+        createdBy,
+        modifiedBy,
+        isSynced,
+        syncFileName
       ];
   @override
   String get aliasedName => _alias ?? 'delivery_table';
@@ -2006,6 +2204,40 @@ class $DeliveryTableTable extends DeliveryTable
           tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
     } else if (isInserting) {
       context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('created_on')) {
+      context.handle(_createdOnMeta,
+          createdOn.isAcceptableOrUnknown(data['created_on']!, _createdOnMeta));
+    } else if (isInserting) {
+      context.missing(_createdOnMeta);
+    }
+    if (data.containsKey('modified_on')) {
+      context.handle(
+          _modifiedOnMeta,
+          modifiedOn.isAcceptableOrUnknown(
+              data['modified_on']!, _modifiedOnMeta));
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    } else if (isInserting) {
+      context.missing(_createdByMeta);
+    }
+    if (data.containsKey('modified_by')) {
+      context.handle(
+          _modifiedByMeta,
+          modifiedBy.isAcceptableOrUnknown(
+              data['modified_by']!, _modifiedByMeta));
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    if (data.containsKey('sync_file_name')) {
+      context.handle(
+          _syncFileNameMeta,
+          syncFileName.isAcceptableOrUnknown(
+              data['sync_file_name']!, _syncFileNameMeta));
     }
     return context;
   }

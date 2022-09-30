@@ -6,7 +6,7 @@ class CampaignRegistrationTable extends Table {
   TextColumn get beneficiaryType => text()();
   TextColumn get boundaryId => text()();
   IntColumn get dateOfRegistration => integer()();
-  IntColumn get createOn => integer()();
+  IntColumn get createdOn => integer()();
   IntColumn get modifiedOn => integer().nullable()();
   TextColumn get createdBy => text()();
   TextColumn get modifiedBy => text().nullable()();
