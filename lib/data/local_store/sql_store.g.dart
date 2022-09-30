@@ -1680,6 +1680,323 @@ class $DeliveryTableTable extends DeliveryTable
   }
 }
 
+class DeliveryResourceTableData extends DataClass
+    implements Insertable<DeliveryResourceTableData> {
+  final int id;
+  final String resourceId;
+  final int quantityToBeDelivered;
+  final int quantityDelivered;
+  final String? reasonIfNotDelivered;
+  DeliveryResourceTableData(
+      {required this.id,
+      required this.resourceId,
+      required this.quantityToBeDelivered,
+      required this.quantityDelivered,
+      this.reasonIfNotDelivered});
+  factory DeliveryResourceTableData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return DeliveryResourceTableData(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      resourceId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}resource_id'])!,
+      quantityToBeDelivered: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}quantity_to_be_delivered'])!,
+      quantityDelivered: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}quantity_delivered'])!,
+      reasonIfNotDelivered: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}reason_if_not_delivered']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['resource_id'] = Variable<String>(resourceId);
+    map['quantity_to_be_delivered'] = Variable<int>(quantityToBeDelivered);
+    map['quantity_delivered'] = Variable<int>(quantityDelivered);
+    if (!nullToAbsent || reasonIfNotDelivered != null) {
+      map['reason_if_not_delivered'] = Variable<String?>(reasonIfNotDelivered);
+    }
+    return map;
+  }
+
+  DeliveryResourceTableCompanion toCompanion(bool nullToAbsent) {
+    return DeliveryResourceTableCompanion(
+      id: Value(id),
+      resourceId: Value(resourceId),
+      quantityToBeDelivered: Value(quantityToBeDelivered),
+      quantityDelivered: Value(quantityDelivered),
+      reasonIfNotDelivered: reasonIfNotDelivered == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reasonIfNotDelivered),
+    );
+  }
+
+  factory DeliveryResourceTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DeliveryResourceTableData(
+      id: serializer.fromJson<int>(json['id']),
+      resourceId: serializer.fromJson<String>(json['resourceId']),
+      quantityToBeDelivered:
+          serializer.fromJson<int>(json['quantityToBeDelivered']),
+      quantityDelivered: serializer.fromJson<int>(json['quantityDelivered']),
+      reasonIfNotDelivered:
+          serializer.fromJson<String?>(json['reasonIfNotDelivered']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'resourceId': serializer.toJson<String>(resourceId),
+      'quantityToBeDelivered': serializer.toJson<int>(quantityToBeDelivered),
+      'quantityDelivered': serializer.toJson<int>(quantityDelivered),
+      'reasonIfNotDelivered': serializer.toJson<String?>(reasonIfNotDelivered),
+    };
+  }
+
+  DeliveryResourceTableData copyWith(
+          {int? id,
+          String? resourceId,
+          int? quantityToBeDelivered,
+          int? quantityDelivered,
+          String? reasonIfNotDelivered}) =>
+      DeliveryResourceTableData(
+        id: id ?? this.id,
+        resourceId: resourceId ?? this.resourceId,
+        quantityToBeDelivered:
+            quantityToBeDelivered ?? this.quantityToBeDelivered,
+        quantityDelivered: quantityDelivered ?? this.quantityDelivered,
+        reasonIfNotDelivered: reasonIfNotDelivered ?? this.reasonIfNotDelivered,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('DeliveryResourceTableData(')
+          ..write('id: $id, ')
+          ..write('resourceId: $resourceId, ')
+          ..write('quantityToBeDelivered: $quantityToBeDelivered, ')
+          ..write('quantityDelivered: $quantityDelivered, ')
+          ..write('reasonIfNotDelivered: $reasonIfNotDelivered')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, resourceId, quantityToBeDelivered,
+      quantityDelivered, reasonIfNotDelivered);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DeliveryResourceTableData &&
+          other.id == this.id &&
+          other.resourceId == this.resourceId &&
+          other.quantityToBeDelivered == this.quantityToBeDelivered &&
+          other.quantityDelivered == this.quantityDelivered &&
+          other.reasonIfNotDelivered == this.reasonIfNotDelivered);
+}
+
+class DeliveryResourceTableCompanion
+    extends UpdateCompanion<DeliveryResourceTableData> {
+  final Value<int> id;
+  final Value<String> resourceId;
+  final Value<int> quantityToBeDelivered;
+  final Value<int> quantityDelivered;
+  final Value<String?> reasonIfNotDelivered;
+  const DeliveryResourceTableCompanion({
+    this.id = const Value.absent(),
+    this.resourceId = const Value.absent(),
+    this.quantityToBeDelivered = const Value.absent(),
+    this.quantityDelivered = const Value.absent(),
+    this.reasonIfNotDelivered = const Value.absent(),
+  });
+  DeliveryResourceTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String resourceId,
+    required int quantityToBeDelivered,
+    required int quantityDelivered,
+    this.reasonIfNotDelivered = const Value.absent(),
+  })  : resourceId = Value(resourceId),
+        quantityToBeDelivered = Value(quantityToBeDelivered),
+        quantityDelivered = Value(quantityDelivered);
+  static Insertable<DeliveryResourceTableData> custom({
+    Expression<int>? id,
+    Expression<String>? resourceId,
+    Expression<int>? quantityToBeDelivered,
+    Expression<int>? quantityDelivered,
+    Expression<String?>? reasonIfNotDelivered,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (resourceId != null) 'resource_id': resourceId,
+      if (quantityToBeDelivered != null)
+        'quantity_to_be_delivered': quantityToBeDelivered,
+      if (quantityDelivered != null) 'quantity_delivered': quantityDelivered,
+      if (reasonIfNotDelivered != null)
+        'reason_if_not_delivered': reasonIfNotDelivered,
+    });
+  }
+
+  DeliveryResourceTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? resourceId,
+      Value<int>? quantityToBeDelivered,
+      Value<int>? quantityDelivered,
+      Value<String?>? reasonIfNotDelivered}) {
+    return DeliveryResourceTableCompanion(
+      id: id ?? this.id,
+      resourceId: resourceId ?? this.resourceId,
+      quantityToBeDelivered:
+          quantityToBeDelivered ?? this.quantityToBeDelivered,
+      quantityDelivered: quantityDelivered ?? this.quantityDelivered,
+      reasonIfNotDelivered: reasonIfNotDelivered ?? this.reasonIfNotDelivered,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (resourceId.present) {
+      map['resource_id'] = Variable<String>(resourceId.value);
+    }
+    if (quantityToBeDelivered.present) {
+      map['quantity_to_be_delivered'] =
+          Variable<int>(quantityToBeDelivered.value);
+    }
+    if (quantityDelivered.present) {
+      map['quantity_delivered'] = Variable<int>(quantityDelivered.value);
+    }
+    if (reasonIfNotDelivered.present) {
+      map['reason_if_not_delivered'] =
+          Variable<String?>(reasonIfNotDelivered.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeliveryResourceTableCompanion(')
+          ..write('id: $id, ')
+          ..write('resourceId: $resourceId, ')
+          ..write('quantityToBeDelivered: $quantityToBeDelivered, ')
+          ..write('quantityDelivered: $quantityDelivered, ')
+          ..write('reasonIfNotDelivered: $reasonIfNotDelivered')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DeliveryResourceTableTable extends DeliveryResourceTable
+    with TableInfo<$DeliveryResourceTableTable, DeliveryResourceTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DeliveryResourceTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _resourceIdMeta = const VerificationMeta('resourceId');
+  @override
+  late final GeneratedColumn<String?> resourceId = GeneratedColumn<String?>(
+      'resource_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _quantityToBeDeliveredMeta =
+      const VerificationMeta('quantityToBeDelivered');
+  @override
+  late final GeneratedColumn<int?> quantityToBeDelivered =
+      GeneratedColumn<int?>('quantity_to_be_delivered', aliasedName, false,
+          type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _quantityDeliveredMeta =
+      const VerificationMeta('quantityDelivered');
+  @override
+  late final GeneratedColumn<int?> quantityDelivered = GeneratedColumn<int?>(
+      'quantity_delivered', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _reasonIfNotDeliveredMeta =
+      const VerificationMeta('reasonIfNotDelivered');
+  @override
+  late final GeneratedColumn<String?> reasonIfNotDelivered =
+      GeneratedColumn<String?>('reason_if_not_delivered', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        resourceId,
+        quantityToBeDelivered,
+        quantityDelivered,
+        reasonIfNotDelivered
+      ];
+  @override
+  String get aliasedName => _alias ?? 'delivery_resource_table';
+  @override
+  String get actualTableName => 'delivery_resource_table';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<DeliveryResourceTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('resource_id')) {
+      context.handle(
+          _resourceIdMeta,
+          resourceId.isAcceptableOrUnknown(
+              data['resource_id']!, _resourceIdMeta));
+    } else if (isInserting) {
+      context.missing(_resourceIdMeta);
+    }
+    if (data.containsKey('quantity_to_be_delivered')) {
+      context.handle(
+          _quantityToBeDeliveredMeta,
+          quantityToBeDelivered.isAcceptableOrUnknown(
+              data['quantity_to_be_delivered']!, _quantityToBeDeliveredMeta));
+    } else if (isInserting) {
+      context.missing(_quantityToBeDeliveredMeta);
+    }
+    if (data.containsKey('quantity_delivered')) {
+      context.handle(
+          _quantityDeliveredMeta,
+          quantityDelivered.isAcceptableOrUnknown(
+              data['quantity_delivered']!, _quantityDeliveredMeta));
+    } else if (isInserting) {
+      context.missing(_quantityDeliveredMeta);
+    }
+    if (data.containsKey('reason_if_not_delivered')) {
+      context.handle(
+          _reasonIfNotDeliveredMeta,
+          reasonIfNotDelivered.isAcceptableOrUnknown(
+              data['reason_if_not_delivered']!, _reasonIfNotDeliveredMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DeliveryResourceTableData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    return DeliveryResourceTableData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $DeliveryResourceTableTable createAlias(String alias) {
+    return $DeliveryResourceTableTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
@@ -1690,6 +2007,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $IndividualIdentifierTableTable individualIdentifierTable =
       $IndividualIdentifierTableTable(this);
   late final $DeliveryTableTable deliveryTable = $DeliveryTableTable(this);
+  late final $DeliveryResourceTableTable deliveryResourceTable =
+      $DeliveryResourceTableTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -1697,6 +2016,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         householdRegistrationTable,
         individualTable,
         individualIdentifierTable,
-        deliveryTable
+        deliveryTable,
+        deliveryResourceTable
       ];
 }

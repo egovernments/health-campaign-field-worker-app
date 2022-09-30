@@ -17,3 +17,12 @@ class DeliveryTable extends Table {
   @override
   Set<Column> get primaryKey => {clientReferenceId};
 }
+
+class DeliveryResourceTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get resourceId => text()();
+  IntColumn get quantityToBeDelivered => integer()();
+  IntColumn get quantityDelivered => integer()();
+  TextColumn get reasonIfNotDelivered => text().nullable()();
+
+}

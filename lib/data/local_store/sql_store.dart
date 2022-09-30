@@ -15,6 +15,7 @@ part 'sql_store.g.dart';
   IndividualTable,
   IndividualIdentifierTable,
   DeliveryTable,
+  DeliveryResourceTable,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
