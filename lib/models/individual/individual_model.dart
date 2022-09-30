@@ -24,7 +24,9 @@ class IndividualModel with _$IndividualModel {
 
     /// [isHead] will be true if this individual is the head of a family
     @Default(false) bool isHead,
-    required String name,
+    required String givenName,
+    String? familyName,
+    String? additionalName,
   }) = _IndividualModel;
 
   factory IndividualModel.fromJson(Map<String, dynamic> json) =>

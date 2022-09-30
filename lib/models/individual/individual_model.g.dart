@@ -22,7 +22,9 @@ _$_IndividualModel _$$_IndividualModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       individualId: json['individualId'] as String?,
       isHead: json['isHead'] as bool? ?? false,
-      name: json['name'] as String,
+      givenName: json['givenName'] as String,
+      familyName: json['familyName'] as String?,
+      additionalName: json['additionalName'] as String?,
     );
 
 Map<String, dynamic> _$$_IndividualModelToJson(_$_IndividualModel instance) =>
@@ -35,7 +37,9 @@ Map<String, dynamic> _$$_IndividualModelToJson(_$_IndividualModel instance) =>
       'identifiers': instance.identifiers.map((e) => e.toJson()).toList(),
       'individualId': instance.individualId,
       'isHead': instance.isHead,
-      'name': instance.name,
+      'givenName': instance.givenName,
+      'familyName': instance.familyName,
+      'additionalName': instance.additionalName,
     };
 
 const _$GenderEnumMap = {

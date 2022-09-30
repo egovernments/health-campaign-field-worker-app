@@ -23,7 +23,6 @@ class HouseholdTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get registrationId => text().references(CampaignRegistrationTable, #clientReferenceId)();
   IntColumn get numberOfMembers => integer()();
-  TextColumn get headOfHousehold => text().references(IndividualTable, #id)();
   BoolColumn get isDeleted => boolean()();
 }
 
@@ -34,7 +33,9 @@ class IndividualTable extends Table {
   TextColumn get gender => text()();
   IntColumn get householdId => integer().references(HouseholdTable, #id)();
   BoolColumn get isHead => boolean().withDefault(const Constant(true))();
-  TextColumn get name => text()();
+  TextColumn get givenName => text()();
+  TextColumn get familyName => text().nullable()();
+  TextColumn get additionalName => text().nullable()();
   BoolColumn get isDeleted => boolean()();
 }
 
