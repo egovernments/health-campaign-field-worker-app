@@ -19,6 +19,8 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
+  forms_engine:
+    path: ./packages/forms_engine
 
 dev_dependencies:
   flutter_test:
