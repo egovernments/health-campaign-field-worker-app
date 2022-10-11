@@ -6,7 +6,6 @@ import 'package:health_campaigns_flutter/models/audit/audit_model.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
 import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 
-
 part 'registration_model.freezed.dart';
 part 'registration_model.g.dart';
 

@@ -29,6 +29,7 @@ void main() {
       final parsedData = SyncDataModel.fromJson(json);
       for (final syncData in parsedData.syncUpData) {
         for (final item in syncData.items) {
+          // ignore: avoid_dynamic_calls
           switch (item.type) {
             case SyncObjectModelType.registration:
               parsedRegistration.add(item);

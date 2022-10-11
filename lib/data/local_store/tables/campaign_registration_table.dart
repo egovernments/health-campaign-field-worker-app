@@ -21,7 +21,8 @@ class CampaignRegistrationTable extends Table {
 
 class HouseholdTable extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get registrationId => text().references(CampaignRegistrationTable, #clientReferenceId)();
+  TextColumn get registrationId =>
+      text().references(CampaignRegistrationTable, #clientReferenceId)();
   IntColumn get numberOfMembers => integer()();
   BoolColumn get isDeleted => boolean()();
 }
