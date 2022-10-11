@@ -32,6 +32,9 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 **/build/
+**/*.g.dart
+**/*.freezed.dart
+**/*.gr.dart
 coverage/lcov.info
 Test Results - **.html
 

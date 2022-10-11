@@ -2,9 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/models/address/address_model.dart';
-import 'package:health_campaigns_flutter/models/audit_model.dart';
+import 'package:health_campaigns_flutter/models/audit/audit_model.dart';
 import 'package:health_campaigns_flutter/models/individual/individual_model.dart';
-import 'package:health_campaigns_flutter/models/serializer_model.dart';
 import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 
 
@@ -14,7 +13,6 @@ part 'registration_model.g.dart';
 @freezed
 class CampaignRegistrationModel with _$CampaignRegistrationModel {
   @JsonSerializable(explicitToJson: true)
-  @Implements<SerializerModel>()
   const factory CampaignRegistrationModel({
     String? additionalFields,
     required AddressModel address,
