@@ -456,8 +456,7 @@ class _$_CampaignRegistrationModel implements _CampaignRegistrationModel {
   }
 }
 
-abstract class _CampaignRegistrationModel
-    implements CampaignRegistrationModel, SerializerModel {
+abstract class _CampaignRegistrationModel implements CampaignRegistrationModel {
   const factory _CampaignRegistrationModel(
       {final String? additionalFields,
       required final AddressModel address,
