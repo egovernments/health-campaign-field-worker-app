@@ -37,12 +37,17 @@ class SyncObjectModel<T> with _$SyncObjectModel<T> {
 }
 
 enum SyncObjectModelType {
-  @JsonValue('REGISTRATION') registration,
-  @JsonValue('DELIVERY') delivery;
+  @JsonValue('REGISTRATION')
+  registration,
+  @JsonValue('DELIVERY')
+  delivery;
 }
 
 enum ApiMode {
-  @JsonValue('CREATE') create,
-  @JsonValue('UPDATE') update,
-  @JsonValue('DELETE') delete;
+  @JsonValue('CREATE')
+  create,
+  @JsonValue('UPDATE')
+  update,
+  @JsonValue('DELETE')
+  delete;
 }
