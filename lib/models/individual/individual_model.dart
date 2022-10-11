@@ -1,9 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:health_campaigns_flutter/models/audit_model.dart';
+import 'package:health_campaigns_flutter/models/audit/audit_model.dart';
 
-import '../dynamic_forms/additional_fields/additional_fields_model.dart';
 
 part 'individual_model.freezed.dart';
 part 'individual_model.g.dart';
