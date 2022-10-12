@@ -90,9 +90,9 @@ class DigitMobileTypography extends DigitTypography {
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
-      labelLarge: _light.copyWith(
-        fontSize: 18,
-        fontWeight: FontWeight.w400,
+      labelLarge: _normal.copyWith(
+        fontSize: 19,
+        fontWeight: FontWeight.w500,
       ),
       labelMedium: _light.copyWith(
         fontSize: 18,

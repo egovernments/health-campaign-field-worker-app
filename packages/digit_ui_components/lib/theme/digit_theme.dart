@@ -21,6 +21,53 @@ class DigitTheme {
   const DigitTheme._internal();
 
   ThemeData get mobileTheme {
-    return ThemeData(textTheme: mobileTypography.textTheme);
+    const Border(top: BorderSide());
+
+    return ThemeData(
+      colorScheme: colorScheme,
+      textTheme: mobileTypography.textTheme,
+      appBarTheme: const AppBarTheme(elevation: 0),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          shape: buttonBorder,
+          padding: buttonPadding,
+          foregroundColor: colorScheme.secondary,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: buttonBorder,
+          padding: buttonPadding,
+          backgroundColor: colorScheme.secondary,
+          foregroundColor: colorScheme.onSecondary,
+          disabledBackgroundColor: colorScheme.secondary.withOpacity(0.5),
+          disabledForegroundColor: colorScheme.onSecondary,
+          elevation: 0,
+        ),
+      ),
+    );
   }
+
+  EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 24,
+      );
+
+  OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      );
+
+  ColorScheme get colorScheme => ColorScheme(
+        brightness: Brightness.light,
+        primary: colors.regalBlue,
+        onPrimary: colors.white,
+        secondary: colors.burningOrange,
+        onSecondary: colors.white,
+        error: colors.lavaRed,
+        onError: colors.white,
+        background: colors.seaShellGray,
+        onBackground: colors.woodsmokeBlack,
+        surface: colors.alabasterWhite,
+        onSurface: colors.woodsmokeBlack,
+      );
 }

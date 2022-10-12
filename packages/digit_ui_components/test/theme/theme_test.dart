@@ -72,9 +72,9 @@ void main() {
         ),
         _DesignSpecification(
           title: 'Caption XL',
-          fontSize: 18,
-          color: light,
-          fontWeight: FontWeight.w400,
+          fontSize: 19,
+          color: normal,
+          fontWeight: FontWeight.w500,
         ),
         _DesignSpecification(
           title: 'Caption L',
@@ -117,7 +117,7 @@ void main() {
             expect(textWidget.style?.fontSize, element.fontSize);
           });
 
-          testWidgets('matches font family', (tester) async {
+          testWidgets('matches font weight', (tester) async {
             await tester.pumpWidget(widget);
             final child = find.text(element.title);
             final textWidget = tester.firstWidget(child) as Text;
