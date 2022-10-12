@@ -11,26 +11,6 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Builder(
-            builder: (context) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Normal Font'),
-                  const Text('Roboto Font'),
-                  ElevatedButton(
-                    onPressed: () => showLicensePage(context: context),
-                    child: const Text('Show licenses'),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
+    return const MaterialApp();
   }
 }

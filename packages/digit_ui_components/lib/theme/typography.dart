@@ -1,36 +1,107 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class DigitMobileTypography {
+abstract class DigitTypography {
   final Color? _textColorNormal;
   final Color? _textColorLight;
+  final TextStyle _normalBase;
+  final TextStyle _displayBase;
 
-  const DigitMobileTypography({Color? normal, Color? light})
-      : _textColorLight = light,
+  const DigitTypography({
+    required TextStyle normalBase,
+    required TextStyle displayBase,
+    Color? normal,
+    Color? light,
+  })  : _normalBase = normalBase,
+        _displayBase = displayBase,
+        _textColorLight = light,
         _textColorNormal = normal;
 
-  TextStyle get roboto {
-    return GoogleFonts.roboto(color: _textColorNormal);
-  }
+  TextStyle get _normal => _normalBase.copyWith(color: _textColorNormal);
+  TextStyle get _light => _normalBase.copyWith(color: _textColorLight);
+  TextStyle get _big => _displayBase.copyWith(color: _textColorNormal);
 
-  TextStyle get robotoLight {
-    return GoogleFonts.roboto(color: _textColorLight);
-  }
+  /// Follows Digit Typography standards
+  ///
+  /// <https://design-egov.github.io/ui-docs/foundations/typography>
+  TextTheme get textTheme;
 
-  TextStyle get robotoCondensed {
-    return GoogleFonts.robotoCondensed(color: _textColorNormal);
-  }
+  /// Heading styles
+  TextStyle get headingXl => textTheme.displayMedium!;
+  TextStyle get headingL => textTheme.headlineLarge!;
+  TextStyle get headingM => textTheme.headlineMedium!;
+  TextStyle get headingS => textTheme.headlineSmall!;
 
-  TextStyle get robotoCondensedLight {
-    return GoogleFonts.robotoCondensed(color: _textColorLight);
-  }
+  /// Caption styles
+  TextStyle get captionXL => textTheme.labelLarge!;
+  TextStyle get captionL => textTheme.labelMedium!;
+  TextStyle get captionM => textTheme.labelSmall!;
 
+  /// Body styles
+  TextStyle get bodyL => textTheme.bodyLarge!;
+  TextStyle get bodyM => textTheme.bodyMedium!;
+  TextStyle get bodyS => textTheme.bodySmall!;
+
+  /// Miscellaneous styles
+  TextStyle get label => textTheme.bodyLarge!;
+  TextStyle get link => textTheme.bodyLarge!;
+}
+
+class DigitMobileTypography extends DigitTypography {
+  const DigitMobileTypography({
+    required TextStyle normalBase,
+    required TextStyle displayBase,
+    Color? normal,
+    Color? light,
+  }) : super(
+          normal: normal,
+          light: light,
+          displayBase: displayBase,
+          normalBase: normalBase,
+        );
+
+  @override
   TextTheme get textTheme {
     return TextTheme(
-      headlineLarge: roboto.copyWith(fontSize: 24, fontWeight: FontWeight.w700),
-      headlineMedium:
-          roboto.copyWith(fontSize: 18, fontWeight: FontWeight.w700),
-      headlineSmall: roboto.copyWith(fontSize: 16, fontWeight: FontWeight.w700),
+      displayMedium: _big.copyWith(
+        fontSize: 32,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineLarge: _normal.copyWith(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineMedium: _normal.copyWith(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineSmall: _normal.copyWith(
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+      ),
+      bodyLarge: _normal.copyWith(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
+      bodyMedium: _normal.copyWith(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+      bodySmall: _normal.copyWith(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+      ),
+      labelLarge: _light.copyWith(
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
+      ),
+      labelMedium: _light.copyWith(
+        fontSize: 18,
+        fontWeight: FontWeight.w400,
+      ),
+      labelSmall: _light.copyWith(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+      ),
     );
   }
 }

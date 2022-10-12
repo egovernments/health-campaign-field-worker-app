@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 class DigitColors {
+  const DigitColors();
+
   Color get burningOrange => const Color(0xFFF47738);
   Color get regalBlue => const Color(0xFF0B4B66);
   Color get woodsmokeBlack => const Color(0xFF0B0C0C);
