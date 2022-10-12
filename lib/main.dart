@@ -1,4 +1,5 @@
 import 'package:digit_ui_components/digit_ui_components.dart';
+import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,6 +12,8 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp();
+    return MaterialApp(
+      theme: DigitTheme.instance.mobileTheme,
+    );
   }
 }
