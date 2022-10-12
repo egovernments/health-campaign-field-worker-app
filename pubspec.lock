@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
+  digit_ui_components:
+    dependency: "direct main"
+    description:
+      path: "packages/digit_ui_components"
+      relative: true
+    source: path
+    version: "0.0.1"
   drift:
     dependency: "direct main"
     description:
@@ -298,6 +305,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  google_fonts:
+    dependency: transitive
+    description:
+      name: google_fonts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   graphs:
     dependency: transitive
     description:
@@ -312,6 +326,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.5"
   http_multi_server:
     dependency: transitive
     description:
