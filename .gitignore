@@ -35,7 +35,7 @@ migrate_working_dir/
 **/*.g.dart
 **/*.freezed.dart
 **/*.gr.dart
-coverage/lcov.info
+coverage/
 Test Results - **.html
 
 # Symbolication related
