@@ -22,9 +22,12 @@ class PropertySchema with _$PropertySchema {
     DateFormatValue? lastDate,
     int? minLength,
     int? maxLength,
+    num? maximum,
+    num? minimum,
     String? hint,
     String? label,
     dynamic value,
+    DisplayBehavior? displayBehavior,
   }) = _PropertySchema;
 
   factory PropertySchema.fromJson(Map<String, dynamic> json) =>
@@ -52,10 +55,24 @@ class DateFormatValue with _$DateFormatValue {
   DateTime get dateValue => DateFormat(format).parse(value);
 }
 
+@freezed
+class DisplayBehavior with _$DisplayBehavior {
+  const factory DisplayBehavior({
+    required FormulaBehavior behavior,
+    List<String>? oneOf,
+    List<String>? allOf,
+  }) = _DisplayBehavior;
+
+  factory DisplayBehavior.fromJson(Map<String, dynamic> json) =>
+      _$DisplayBehaviorFromJson(json);
+}
+
+enum FormulaBehavior { show, hide }
+
 enum PropertySchemaFormat {
   date,
   dateTime,
   incrementer;
 }
 
-enum PropertySchemaType { object, string }
+enum PropertySchemaType { object, string, integer, boolean, numeric }

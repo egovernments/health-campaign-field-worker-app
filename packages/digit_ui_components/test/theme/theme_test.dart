@@ -1,11 +1,10 @@
 import 'package:digit_ui_components/digit_ui_components.dart';
-import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  DigitUiComponent.instance.initThemeComponents();
+  DigitUi.instance.initThemeComponents();
 
   group('Digit theme', () {
     group('Typography', () {
