@@ -25,37 +25,15 @@ class DigitTheme {
 
     return ThemeData(
       colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.background,
       textTheme: mobileTypography.textTheme,
       appBarTheme: const AppBarTheme(elevation: 0),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          shape: buttonBorder,
-          padding: buttonPadding,
-          foregroundColor: colorScheme.secondary,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: buttonBorder,
-          padding: buttonPadding,
-          backgroundColor: colorScheme.secondary,
-          foregroundColor: colorScheme.onSecondary,
-          disabledBackgroundColor: colorScheme.secondary.withOpacity(0.5),
-          disabledForegroundColor: colorScheme.onSecondary,
-          elevation: 0,
-        ),
-      ),
+      textButtonTheme: textButtonTheme,
+      elevatedButtonTheme: elevatedButtonTheme,
+      cardTheme: cardTheme,
+      inputDecorationTheme: inputDecorationTheme,
     );
   }
-
-  EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 24,
-      );
-
-  OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.zero),
-      );
 
   ColorScheme get colorScheme => ColorScheme(
         brightness: Brightness.light,
@@ -69,5 +47,58 @@ class DigitTheme {
         onBackground: colors.woodsmokeBlack,
         surface: colors.alabasterWhite,
         onSurface: colors.woodsmokeBlack,
+      );
+
+  EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 24,
+      );
+
+  OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      );
+
+  ElevatedButtonThemeData get elevatedButtonTheme => ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: buttonBorder,
+          padding: buttonPadding,
+          backgroundColor: colorScheme.secondary,
+          foregroundColor: colorScheme.onSecondary,
+          disabledBackgroundColor: colorScheme.secondary.withOpacity(0.5),
+          disabledForegroundColor: colorScheme.onSecondary,
+          elevation: 0,
+        ),
+      );
+
+  TextButtonThemeData get textButtonTheme => TextButtonThemeData(
+        style: TextButton.styleFrom(
+          shape: buttonBorder,
+          padding: buttonPadding,
+          textStyle: const TextStyle(fontSize: 16),
+          foregroundColor: colorScheme.secondary,
+        ),
+      );
+
+  CardTheme get cardTheme => const CardTheme(
+        margin: EdgeInsets.fromLTRB(8, 16, 8, 0),
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+      );
+
+  InputDecorationTheme get inputDecorationTheme => InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(0)),
+          borderSide: BorderSide(color: colors.davyGray),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(0)),
+          borderSide: BorderSide(color: colors.davyGray, width: 2),
+        ),
+        contentPadding: const EdgeInsets.all(12),
+        isDense: true,
+        isCollapsed: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
       );
 }
