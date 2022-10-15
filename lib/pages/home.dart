@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           footer: const PoweredByDigit(),
-          children: _getitems(context)
+          children: _getItems(context)
               .slices(3)
               .map(
                 (e) => IntrinsicHeight(
@@ -34,40 +34,49 @@ class HomePage extends StatelessWidget {
         ),
       );
 
-  List<HomeItemCard> _getitems(BuildContext context) => [
-        HomeItemCard(
-          icon: Icons.add_business_rounded,
-          label: 'Register',
-          onPressed: () => context.router.push(
-            FormsPageRoute(index: 0),
-          ),
-        ),
-        const HomeItemCard(
-          icon: Icons.all_inbox,
-          label: 'View Beneficiaries',
-          onPressed: null,
-        ),
-        const HomeItemCard(
-          icon: Icons.menu_book,
-          label: 'View Reports',
-          onPressed: null,
-        ),
-        HomeItemCard(
-          icon: Icons.sync_alt,
-          label: 'Sync Data',
-          onPressed: () => context.read<FormsBloc>().add(
-                const FormsLoadEvent(''),
-              ),
-        ),
-        const HomeItemCard(
-          icon: Icons.call,
-          label: 'Call Supervisor',
-          onPressed: null,
-        ),
-        const HomeItemCard(
-          icon: Icons.announcement,
-          label: 'File Complaint',
-          onPressed: null,
-        ),
-      ];
+  List<HomeItemCard> _getItems(BuildContext context) {
+    final pageName =
+        context.watch<FormsBloc>().state.schema?.pages.entries.first.key;
+
+    return [
+      HomeItemCard(
+        icon: Icons.add_business_rounded,
+        label: 'Register',
+        onPressed: pageName == null
+            ? null
+            : () => context.router.push(
+                  FormsPageRoute(
+                    pageName: pageName,
+                  ),
+                ),
+      ),
+      const HomeItemCard(
+        icon: Icons.all_inbox,
+        label: 'View Beneficiaries',
+        onPressed: null,
+      ),
+      const HomeItemCard(
+        icon: Icons.menu_book,
+        label: 'View Reports',
+        onPressed: null,
+      ),
+      HomeItemCard(
+        icon: Icons.sync_alt,
+        label: 'Sync Data',
+        onPressed: () => context.read<FormsBloc>().add(
+              const FormsLoadEvent(),
+            ),
+      ),
+      const HomeItemCard(
+        icon: Icons.call,
+        label: 'Call Supervisor',
+        onPressed: null,
+      ),
+      const HomeItemCard(
+        icon: Icons.announcement,
+        label: 'File Complaint',
+        onPressed: null,
+      ),
+    ];
+  }
 }

@@ -23,7 +23,7 @@ class MainApplication extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => FormsBloc()..add(const FormsLoadEvent('')),
+          create: (context) => FormsBloc()..add(const FormsLoadEvent()),
         ),
         BlocProvider(
           create: (context) => AuthBloc(const AuthState()),

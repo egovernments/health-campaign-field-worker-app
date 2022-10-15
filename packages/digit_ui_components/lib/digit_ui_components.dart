@@ -2,11 +2,8 @@ library digit_ui_components;
 
 import 'package:google_fonts/google_fonts.dart';
 
-export 'theme/digit_theme.dart';
-
-export 'widgets/powered_by_digit.dart';
-export 'widgets/digit_card.dart';
-export 'widgets/scrollable_content.dart';
+export 'theme/theme.dart';
+export 'widgets/widgets.dart';
 
 class DigitUi {
   static const DigitUi _instance = DigitUi._internal();
