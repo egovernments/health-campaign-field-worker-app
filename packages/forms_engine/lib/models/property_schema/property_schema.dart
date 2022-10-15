@@ -14,6 +14,8 @@ class PropertySchema with _$PropertySchema {
   )
   const factory PropertySchema({
     @JsonKey(name: 'type') required PropertySchemaType type,
+    bool? readonly,
+    bool? displayOnly,
     Map<String, PropertySchema>? properties,
     List<String>? required,
     List<String>? enums,
