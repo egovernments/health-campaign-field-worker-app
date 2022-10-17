@@ -5,6 +5,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
 
   const JsonSchemaDropdownBuilder({
     required super.formControlName,
+    required super.form,
     required this.enums,
     super.key,
     super.value,

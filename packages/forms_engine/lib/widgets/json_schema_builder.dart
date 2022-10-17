@@ -14,6 +14,7 @@ part 'string_builder.dart';
 part 'json_form_builder.dart';
 
 abstract class JsonSchemaBuilder<T> extends StatelessWidget {
+  final FormGroup form;
   final String formControlName;
   final String? hint;
   final T? value;
@@ -21,6 +22,7 @@ abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   const JsonSchemaBuilder({
     Key? key,
     required this.formControlName,
+    required this.form,
     this.hint,
     this.value,
   }) : super(key: key);

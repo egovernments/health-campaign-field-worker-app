@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
         onPressed: pageName == null
             ? null
             : () => context.router.push(
-                  FormsPageRoute(
+                  FormsRoute(
                     pageName: pageName,
                   ),
                 ),

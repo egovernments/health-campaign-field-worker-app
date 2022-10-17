@@ -6,6 +6,7 @@ class JsonSchemaDatePickerBuilder extends JsonSchemaBuilder<String> {
 
   const JsonSchemaDatePickerBuilder({
     required super.formControlName,
+    required super.form,
     super.key,
     super.value,
     super.hint,

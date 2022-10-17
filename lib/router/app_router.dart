@@ -10,6 +10,7 @@ export 'package:auto_route/auto_route.dart';
 part 'app_router.gr.dart';
 
 @MaterialAutoRouter(
+  replaceInRouteName: 'Page,Route',
   routes: [
     AutoRoute(page: LoginPage, path: '/login'),
     AutoRoute(
