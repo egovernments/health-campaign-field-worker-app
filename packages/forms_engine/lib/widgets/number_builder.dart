@@ -6,6 +6,7 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<num> {
 
   const JsonSchemaNumberBuilder({
     required super.formControlName,
+    required super.form,
     super.key,
     super.value,
     super.hint,

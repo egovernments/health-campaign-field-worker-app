@@ -8,6 +8,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
+    required super.form,
     super.key,
     super.value,
     super.hint,
