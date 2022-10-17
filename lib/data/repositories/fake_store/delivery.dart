@@ -6,7 +6,6 @@ import 'package:health_campaigns_flutter/data/repositories/fake_store/fake_store
 import 'package:health_campaigns_flutter/models/sync/sync_model.dart';
 import 'package:uuid/uuid.dart';
 
-
 class FakeDeliveryStore extends FakeDataStore<DeliveryModel> {
   static FakeDeliveryStore get instance => _instance;
   static final FakeDeliveryStore _instance = FakeDeliveryStore._();
