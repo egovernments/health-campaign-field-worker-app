@@ -221,7 +221,7 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "packages/digit_ui_components"
+      path: "packages/digit_components"
       relative: true
     source: path
     version: "0.0.1"
