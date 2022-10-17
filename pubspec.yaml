@@ -21,7 +21,7 @@ dependencies:
   path: ^1.8.2
   forms_engine:
     path: ./packages/forms_engine
-  digit_ui_components:
+  digit_components:
     path: ./packages/digit_ui_components
   auto_route: ^5.0.2
   flutter_bloc: ^8.1.1

@@ -17,7 +17,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   reactive_forms: ^14.1.0
-  digit_ui_components:
+  digit_components:
     path: ../digit_ui_components
 
 dev_dependencies:
