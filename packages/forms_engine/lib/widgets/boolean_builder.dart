@@ -3,6 +3,7 @@ part of 'json_schema_builder.dart';
 class JsonSchemaBooleanBuilder extends JsonSchemaBuilder<bool> {
   const JsonSchemaBooleanBuilder({
     required super.formControlName,
+    required super.form,
     super.key,
     super.value,
     super.hint,

@@ -16,9 +16,9 @@ class JsonFormBuilder extends StatelessWidget {
     Widget? child;
 
     final display = schema.displayBehavior;
-    final form = ReactiveForm.of(context);
+    final form = ReactiveForm.of(context) as FormGroup;
 
-    if (display != null && form != null && form is FormGroup) {
+    if (display != null) {
       final oneOf = display.oneOf;
       final allOf = display.allOf;
 
@@ -56,6 +56,7 @@ class JsonFormBuilder extends StatelessWidget {
           child = LabeledField(
             label: schema.label ?? '',
             child: JsonSchemaDropdownBuilder(
+              form: form,
               formControlName: formControlName,
               value: schema.value as String?,
               enums: schema.enums!,
@@ -67,6 +68,7 @@ class JsonFormBuilder extends StatelessWidget {
           child = LabeledField(
             label: schema.label ?? '',
             child: JsonSchemaDatePickerBuilder(
+              form: form,
               formControlName: formControlName,
               hint: schema.hint,
               value: schema.value,
@@ -79,6 +81,7 @@ class JsonFormBuilder extends StatelessWidget {
         child = LabeledField(
           label: schema.label ?? '',
           child: JsonSchemaStringBuilder(
+            form: form,
             formControlName: formControlName,
             value: schema.value as String?,
             maxLength: schema.maxLength,
@@ -91,8 +94,10 @@ class JsonFormBuilder extends StatelessWidget {
         child = LabeledField(
           label: schema.label ?? '',
           child: JsonSchemaIntegerBuilder(
+            form: form,
             formControlName: formControlName,
             value: schema.value as int?,
+            incrementer: schema.format == PropertySchemaFormat.incrementer,
             maximum: schema.maximum?.toInt(),
             minimum: schema.minimum?.toInt(),
             hint: schema.hint,
@@ -103,6 +108,7 @@ class JsonFormBuilder extends StatelessWidget {
         child = LabeledField(
           label: schema.label ?? '',
           child: JsonSchemaNumberBuilder(
+            form: form,
             formControlName: formControlName,
             value: schema.value as num?,
             maximum: schema.maximum,
@@ -113,6 +119,7 @@ class JsonFormBuilder extends StatelessWidget {
         break;
       case PropertySchemaType.boolean:
         child = JsonSchemaBooleanBuilder(
+          form: form,
           formControlName: formControlName,
           value: schema.value as bool?,
           hint: schema.label,
