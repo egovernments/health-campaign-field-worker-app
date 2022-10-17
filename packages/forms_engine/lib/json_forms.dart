@@ -62,7 +62,9 @@ class JsonForms extends StatelessWidget {
       switch (type) {
         case PropertySchemaType.integer:
           control = FormControl<int>(
-            value: schema.value,
+            value: schema.format == PropertySchemaFormat.incrementer
+                ? schema.value ?? 0
+                : schema.value,
             validators: requiredValidators,
           );
           break;

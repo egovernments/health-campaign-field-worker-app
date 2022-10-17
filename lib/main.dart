@@ -37,9 +37,9 @@ class MainApplication extends StatelessWidget {
             appRouter,
             routes: (handler) => [
               if (state.isAuthenticated)
-                const AuthenticatedPageWrapperRoute()
+                const AuthenticatedRouteWrapper()
               else
-                const LoginPageRoute(),
+                const LoginRoute(),
             ],
           ),
         );

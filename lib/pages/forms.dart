@@ -82,7 +82,7 @@ class FormsPage extends StatelessWidget {
                                 );
 
                             if ((index) < schemaObject.pages.length - 1) {
-                              context.router.push(FormsPageRoute(
+                              context.router.push(FormsRoute(
                                 pageName: schemaObject.pages.entries
                                     .elementAt(index + 1)
                                     .key,
