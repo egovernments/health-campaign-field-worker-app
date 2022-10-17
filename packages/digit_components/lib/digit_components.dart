@@ -1,4 +1,4 @@
-library digit_ui_components;
+library digit_components;
 
 import 'package:google_fonts/google_fonts.dart';
 

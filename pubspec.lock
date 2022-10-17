@@ -218,10 +218,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
-  digit_ui_components:
+  digit_components:
     dependency: "direct main"
     description:
-      path: "packages/digit_ui_components"
+      path: "packages/digit_components"
       relative: true
     source: path
     version: "0.0.1"
