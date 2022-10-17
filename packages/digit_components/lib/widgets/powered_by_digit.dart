@@ -20,7 +20,7 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
             alignment: Alignment.center,
             child: Image.asset(
               'assets/images/powered_by_digit.png',
-              package: 'digit_ui_components',
+              package: 'digit_components',
               fit: BoxFit.contain,
             ),
           ),

@@ -1,4 +1,4 @@
-import 'package:digit_ui_components/digit_ui_components.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaigns_flutter/router/app_router.dart';
 import 'package:health_campaigns_flutter/widgets/header/back_navigation_help_header.dart';

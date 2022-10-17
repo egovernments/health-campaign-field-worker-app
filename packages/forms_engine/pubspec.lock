@@ -155,10 +155,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.4"
-  digit_ui_components:
+  digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_ui_components"
+      path: "../digit_components"
       relative: true
     source: path
     version: "0.0.1"

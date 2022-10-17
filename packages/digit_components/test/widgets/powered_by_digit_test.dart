@@ -1,4 +1,4 @@
-import 'package:digit_ui_components/digit_ui_components.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +14,7 @@ void main() {
           PoweredByDigit,
           const AssetImage(
             'assets/images/powered_by_digit.png',
-            package: 'digit_ui_components',
+            package: 'digit_components',
           ),
         ),
         findsOneWidget,
