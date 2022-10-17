@@ -10,7 +10,7 @@ class AuditDetailsModel with _$AuditDetailsModel {
     required int createdTime,
     String? lastModifiedBy,
     String? lastModifiedTime,
-}) = _AuditDetailsModel;
+  }) = _AuditDetailsModel;
 
   factory AuditDetailsModel.fromJson(Map<String, dynamic> json) =>
       _$AuditDetailsModelFromJson(json);

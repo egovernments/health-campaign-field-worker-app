@@ -7,7 +7,8 @@ class DeliveryTable extends Table {
   TextColumn get clientReferenceId => text()();
   IntColumn get deliveryDate => integer()();
   TextColumn get deliveredBy => text()();
-  TextColumn get registrationId => text().references(CampaignRegistrationTable, #clientReferenceId)();
+  TextColumn get registrationId =>
+      text().references(CampaignRegistrationTable, #clientReferenceId)();
   TextColumn get status => text()();
   TextColumn get tenantId => text()();
   IntColumn get createdOn => integer()();

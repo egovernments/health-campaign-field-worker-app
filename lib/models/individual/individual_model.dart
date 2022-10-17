@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/models/audit/audit_model.dart';
 
-
 part 'individual_model.freezed.dart';
 part 'individual_model.g.dart';
 

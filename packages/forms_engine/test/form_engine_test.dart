@@ -19,7 +19,7 @@ void main() {
   group('Property schema', () {
     final schemaObject = json.decode(schema);
     final parsedObject = SchemaObject.fromJson(schemaObject);
-    final propertySchema = parsedObject.schema;
+    final propertySchema = parsedObject.pages['dummy']!;
 
     test('contains property schema map if type is object', () {
       if (propertySchema.type == PropertySchemaType.object) {
@@ -40,8 +40,6 @@ void main() {
         });
 
         switch (type) {
-          case PropertySchemaType.object:
-            break;
           case PropertySchemaType.string:
             final dateRange = <DateFormatValue?>[
               property.value.firstDate,
@@ -58,6 +56,8 @@ void main() {
                 );
               }
             }
+            break;
+          default:
             break;
         }
       }
