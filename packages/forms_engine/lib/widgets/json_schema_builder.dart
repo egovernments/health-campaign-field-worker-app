@@ -1,6 +1,6 @@
 library json_schema_builder;
 
-import 'package:digit_ui_components/digit_ui_components.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:reactive_forms/reactive_forms.dart';
