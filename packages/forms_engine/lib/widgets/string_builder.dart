@@ -9,6 +9,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   const JsonSchemaStringBuilder({
     required super.formControlName,
     required super.form,
+    super.readOnly,
     super.key,
     super.value,
     super.hint,
@@ -21,6 +22,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField(
+      readOnly: readOnly,
       formControlName: formControlName,
       decoration: InputDecoration(labelText: hint),
     );
