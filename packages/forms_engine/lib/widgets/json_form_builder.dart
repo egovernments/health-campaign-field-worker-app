@@ -78,14 +78,24 @@ class JsonFormBuilder extends StatelessWidget {
           );
           break;
         } else if (schema.format == PropertySchemaFormat.latLng) {
-          child = LabeledField(
-            label: schema.label ?? '',
-            child: JsonSchemaStringBuilder(
-              form: form,
-              formControlName: formControlName,
-              value: schema.value as String?,
-              hint: schema.hint,
-            ),
+          child = BlocConsumer<LocationBloc, LocationState>(
+            listener: (context, state) {
+              form.control(formControlName).value = state.latLngString;
+            },
+            builder: (context, state) {
+              return LabeledField(
+                label: schema.label ?? '',
+                child: JsonSchemaStringBuilder(
+                  form: form,
+                  formControlName: formControlName,
+                  hint: schema.hint,
+                  readOnly: true,
+                  onTap: () => context.read<LocationBloc>().add(
+                        const LoadLocationEvent(),
+                      ),
+                ),
+              );
+            },
           );
         } else {
           child = LabeledField(
