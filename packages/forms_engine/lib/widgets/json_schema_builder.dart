@@ -18,11 +18,13 @@ abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final String formControlName;
   final String? hint;
   final T? value;
+  final bool readOnly;
 
   const JsonSchemaBuilder({
     Key? key,
     required this.formControlName,
     required this.form,
+    this.readOnly = false,
     this.hint,
     this.value,
   }) : super(key: key);

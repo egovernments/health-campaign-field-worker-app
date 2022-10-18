@@ -77,18 +77,29 @@ class JsonFormBuilder extends StatelessWidget {
             ),
           );
           break;
+        } else if (schema.format == PropertySchemaFormat.latLng) {
+          child = LabeledField(
+            label: schema.label ?? '',
+            child: JsonSchemaStringBuilder(
+              form: form,
+              formControlName: formControlName,
+              value: schema.value as String?,
+              hint: schema.hint,
+            ),
+          );
+        } else {
+          child = LabeledField(
+            label: schema.label ?? '',
+            child: JsonSchemaStringBuilder(
+              form: form,
+              formControlName: formControlName,
+              value: schema.value as String?,
+              maxLength: schema.maxLength,
+              minLength: schema.minLength,
+              hint: schema.hint,
+            ),
+          );
         }
-        child = LabeledField(
-          label: schema.label ?? '',
-          child: JsonSchemaStringBuilder(
-            form: form,
-            formControlName: formControlName,
-            value: schema.value as String?,
-            maxLength: schema.maxLength,
-            minLength: schema.minLength,
-            hint: schema.hint,
-          ),
-        );
         break;
       case PropertySchemaType.integer:
         child = LabeledField(
