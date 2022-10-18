@@ -10,6 +10,7 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
     required super.formControlName,
     required super.form,
     super.readOnly,
+    super.onTap,
     super.key,
     super.value,
     super.hint,

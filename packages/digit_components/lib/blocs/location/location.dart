@@ -46,10 +46,17 @@ class LocationEvent with _$LocationEvent {
 
 @freezed
 class LocationState with _$LocationState {
+  const LocationState._();
+
   const factory LocationState({
     double? latitude,
     double? longitude,
     double? accuracy,
     @Default(false) bool loading,
   }) = _LocationState;
+
+  String? get latLngString {
+    if (latitude == null || longitude == null) return null;
+    return [latitude, longitude].join(', ');
+  }
 }
