@@ -35,7 +35,10 @@ void main() {
 
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitRowCard(
-              list: languageList, onPressed: (data) => onPressed(data))));
+        list: languageList,
+        onPressed: (data) => onPressed(data),
+        width: 90,
+      )));
 
       expect(
         find.widgetWithText(DigitRowCard, 'ENGLISH'),
@@ -54,6 +57,7 @@ void main() {
           child: DigitRowCard(
         list: languageList,
         onPressed: (data) => onPressed(data),
+        width: 90,
       )));
 
       await widgetTester.pumpAndSettle();

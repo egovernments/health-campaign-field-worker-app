@@ -7,4 +7,7 @@ export './powered_by_digit.dart';
 export './labeled_field.dart';
 export './digit_dialog.dart';
 export '../models/digit_row_card/digit_row_card_model.dart';
+export 'molecules/digit_language_card.dart';
 export 'molecules/digit_row_card.dart';
+export './digit_banner.dart';
+export './digit_icon_tile.dart';

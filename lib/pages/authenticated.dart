@@ -16,21 +16,55 @@ class AuthenticatedPageWrapper extends StatelessWidget {
     final List list = json.decode(fakeLanguageSchema);
     List<DigitRowCardModel> languageList =
         list.map((e) => DigitRowCardModel.fromJson(e)).toList();
-
+    AppBar appBar = AppBar();
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(),
-      drawer: Drawer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DigitRowCard(
-              onPressed: (data) {},
-              list: languageList,
+      appBar: appBar,
+      drawer: Container(
+          margin: const EdgeInsets.only(top: kToolbarHeight * 2),
+          child: Drawer(
+            child: ScrollableContent(
+              footer: const PoweredByDigit(),
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Carlos',
+                        style: theme.textTheme.displayMedium,
+                      ),
+                      Text(
+                        '+258 6387387',
+                        style: theme.textTheme.labelSmall,
+                      )
+                    ],
+                  ),
+                ),
+                DigitIconTile(
+                  title: 'Home',
+                  icon: Icons.home,
+                  onPressed: () {},
+                ),
+                DigitIconTile(
+                  title: 'Language',
+                  icon: Icons.menu_book,
+                  content: DigitRowCard(
+                    onPressed: (data) {},
+                    list: languageList,
+                    width: 100,
+                  ),
+                  onPressed: () {},
+                ),
+                DigitIconTile(
+                  title: 'Logout',
+                  icon: Icons.logout,
+                  onPressed: () {},
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          )),
       body: MultiBlocProvider(
         providers: [
           BlocProvider(

@@ -14,9 +14,53 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: ScrollableContent(
           header: Column(
-            children: const [
-              BackNavigationHelpHeaderWidget(),
-              Card(child: Placeholder(fallbackHeight: 120)),
+            children: [
+              const BackNavigationHelpHeaderWidget(),
+              DigitCard(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        'Just 125 more to go',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(18),
+                          child: Column(
+                            children: [
+                              const LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color.fromARGB(255, 19, 120, 22)),
+                                value: 0.8,
+                                minHeight: 7.0,
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 12),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Yay! 75 completed',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Text(
+                                        '200',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ))
+                            ],
+                          )),
+                    ]),
+              )
             ],
           ),
           footer: const PoweredByDigit(),
