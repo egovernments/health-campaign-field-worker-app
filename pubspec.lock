@@ -444,47 +444,26 @@ packages:
     source: hosted
     version: "2.0.0"
   location:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: location
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-dev.8"
-  location_android:
-    dependency: transitive
-    description:
-      name: location_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.0-dev.3"
-  location_ios:
-    dependency: transitive
-    description:
-      name: location_ios
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.0-dev.4"
-  location_macos:
-    dependency: transitive
-    description:
-      name: location_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.0-dev.3"
+    version: "4.4.0"
   location_platform_interface:
     dependency: transitive
     description:
       name: location_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-dev.3"
+    version: "2.3.0"
   location_web:
     dependency: transitive
     description:
       name: location_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-dev.3"
+    version: "3.1.1"
   logging:
     dependency: transitive
     description:
