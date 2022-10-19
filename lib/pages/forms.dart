@@ -87,6 +87,10 @@ class FormsPage extends StatelessWidget {
                                     .elementAt(index + 1)
                                     .key,
                               ));
+                            } else {
+                              context.read<FormsBloc>().add(
+                                    const FormsCreateMappingEvent(),
+                                  );
                             }
                           },
                     child: Text(
