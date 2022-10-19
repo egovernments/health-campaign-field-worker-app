@@ -7,4 +7,4 @@ export './powered_by_digit.dart';
 export './labeled_field.dart';
 export './digit_dialog.dart';
 export './digit_card_walkthrough.dart';
-export './digit_lcon_card.dart';
+export 'digit_icon_card.dart';

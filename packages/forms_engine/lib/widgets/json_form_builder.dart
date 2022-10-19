@@ -5,13 +5,15 @@ class JsonFormBuilder extends StatelessWidget {
   final PropertySchema schema;
 
   const JsonFormBuilder({
-    Key? key,
+    GlobalKey? key,
     required this.formControlName,
     required this.schema,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("schema.global key");
+    print(formControlName);
     final type = schema.type;
     Widget? child;
 
@@ -49,7 +51,6 @@ class JsonFormBuilder extends StatelessWidget {
         return const Offstage();
       }
     }
-
     switch (type) {
       case PropertySchemaType.string:
         if (schema.enums?.isNotEmpty ?? false) {
@@ -87,6 +88,7 @@ class JsonFormBuilder extends StatelessWidget {
                 label: schema.label ?? '',
                 child: JsonSchemaStringBuilder(
                   form: form,
+                  indexkey: GlobalObjectKey(schema.label!),
                   formControlName: formControlName,
                   hint: schema.hint,
                   readOnly: true,
@@ -114,6 +116,7 @@ class JsonFormBuilder extends StatelessWidget {
             label: schema.label ?? '',
             child: JsonSchemaStringBuilder(
               form: form,
+              indexkey: GlobalObjectKey(schema.label!),
               formControlName: formControlName,
               value: schema.value as String?,
               maxLength: schema.maxLength,
@@ -163,15 +166,17 @@ class JsonFormBuilder extends StatelessWidget {
           children: schema.properties?.entries.map<Widget>((e) {
                 final subSchema = e.value;
                 final subName = e.key;
-
-                return JsonFormBuilder(
-                  formControlName: subName,
-                  schema: subSchema,
-                );
+                return Container(
+                    key: GlobalObjectKey(subName),
+                    child: JsonFormBuilder(
+                      formControlName: subName,
+                      schema: subSchema,
+                    ));
               }).toList() ??
               [const Text('No schema')],
         );
     }
+
     return child;
   }
 }

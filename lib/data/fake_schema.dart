@@ -8,11 +8,15 @@ const fakeSchema = """
       "properties": {
         "administrativeArea": {
           "type": "string",
-          "label": "Administrative Area *"
+          "label": "Administrative Jojo *"
         },
         "houseNumber": {
           "type": "string",
           "label": "House Number"
+        },
+               "houseNumber Label": {
+          "type": "string",
+          "label": "House Number Label"
         },
         "locality": {
           "type": "string",

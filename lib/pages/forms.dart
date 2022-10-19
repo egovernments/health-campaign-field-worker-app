@@ -11,6 +11,10 @@ class FormsPage extends StatelessWidget {
 
   const FormsPage({super.key, @PathParam() required this.pageName});
 
+  incrementcard(int increment) {
+    return increment + 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +52,6 @@ class FormsPage extends StatelessWidget {
                               formGroup,
                               schema,
                             );
-
                             final updatedPropertySchema = schema.copyWith(
                               properties: Map.fromEntries(
                                 schema.properties?.entries.map(
