@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class DigitDialog extends StatelessWidget {
@@ -25,22 +26,38 @@ class DigitDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Expanded(
-        child: Text(
-          title!,
-          style: theme.textTheme.bodyLarge,
-        ),
+      titlePadding: const EdgeInsets.all(8),
+      title: Text(
+        title!,
+        style: theme.textTheme.headlineLarge,
+        textAlign: TextAlign.left,
       ),
       content: child,
+      contentPadding: const EdgeInsets.all(8),
       actions: <Widget>[
-        TextButton(
-          onPressed: () => onCancel,
-          child: Text(cancelText ?? ''),
-        ),
-        TextButton(
-          onPressed: () => onSubmit,
-          child: Text(submitText ?? ''),
-        ),
+        (submitText == null || cancelText == null)
+            ? DigitElevatedButton(
+                onPressed: submitText != null ? onSubmit : onCancel,
+                child: Center(
+                  child: Text(
+                    submitText!,
+                  ),
+                ))
+            : Row(
+                children: [
+                  TextButton(
+                    onPressed: () => onCancel,
+                    child: Text(cancelText ?? ''),
+                  ),
+                  TextButton(
+                    onPressed: () => onSubmit,
+                    child: Text(
+                      submitText ?? '',
+                    ),
+                  ),
+                ],
+              ),
+        const SizedBox(height: 8)
       ],
     );
   }
