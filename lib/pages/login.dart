@@ -40,9 +40,24 @@ class LoginPage extends StatelessWidget {
                   child: Text('Login'),
                 ),
               ),
-              const TextButton(
-                onPressed: null,
-                child: Center(
+              TextButton(
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DigitDialog(
+                        title: 'Forgot Password?',
+                        submitText: 'ok',
+                        onSubmit: (() {}),
+                        child: Text(
+                          'Please contact the administrator if you have forgotten your password',
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: const Center(
                   child: Text('Forgot Password?'),
                 ),
               ),
