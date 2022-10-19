@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
                     builder: (context) {
                       return DigitDialog(
                         title: 'Forgot Password?',
-                        submitText: 'ok',
+                        submitText: 'OK',
                         onSubmit: (() {}),
                         child: Text(
                           'Please contact the administrator if you have forgotten your password',
