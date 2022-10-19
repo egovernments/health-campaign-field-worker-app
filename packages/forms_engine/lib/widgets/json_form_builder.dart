@@ -90,9 +90,21 @@ class JsonFormBuilder extends StatelessWidget {
                   formControlName: formControlName,
                   hint: schema.hint,
                   readOnly: true,
-                  onTap: () => context.read<LocationBloc>().add(
-                        const LoadLocationEvent(),
-                      ),
+                  suffix: Container(
+                    padding: const EdgeInsets.only(right: 8),
+                    height: 18,
+                    child: state.loading
+                        ? const AspectRatio(
+                            aspectRatio: 1,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                  ),
+                  onTap: state.loading
+                      ? null
+                      : () => context.read<LocationBloc>().add(
+                            const LoadLocationEvent(),
+                          ),
                 ),
               );
             },
