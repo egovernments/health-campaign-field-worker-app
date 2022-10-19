@@ -27,12 +27,7 @@ class DigitDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      titlePadding: const EdgeInsets.only(
-        top: 16,
-        bottom: 8,
-        left: 8,
-        right: 8,
-      ),
+      titlePadding: theme.dialogTheme.actionsPadding,
       title: Text(
         title,
         style: theme.textTheme.headlineLarge,
