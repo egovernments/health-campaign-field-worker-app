@@ -9,7 +9,7 @@ part 'registration_delivery.g.dart';
 class RegistrationDeliveryMapperModel with _$RegistrationDeliveryMapperModel {
   const RegistrationDeliveryMapperModel._();
 
-  @JsonSerializable(explicitToJson: true)
+  @JsonSerializable(explicitToJson: true, includeIfNull: false)
   const factory RegistrationDeliveryMapperModel({
     String? administrativeArea,
     String? houseNumber,
