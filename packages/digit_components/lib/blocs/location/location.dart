@@ -15,8 +15,61 @@ typedef LocationStateEmitter = Emitter<LocationState>;
 /// iOS - <https://docs.page/Lyokone/flutterlocation/installation/ios>
 /// macOS - <https://docs.page/Lyokone/flutterlocation/installation/macos>
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
-  LocationBloc() : super(const LocationState()) {
+  final Location location;
+  LocationBloc({required this.location}) : super(const LocationState()) {
     on<LoadLocationEvent>(_handleLoadLocation);
+    on<RequestLocationPermissionEvent>(_handleRequestPermission);
+    on<RequestLocationServiceEvent>(_handleRequestService);
+  }
+
+  FutureOr<void> _handleRequestPermission(
+    RequestLocationPermissionEvent event,
+    LocationStateEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      final permissions = await location.hasPermission();
+      final hasPermissions = [
+        PermissionStatus.granted,
+        PermissionStatus.grantedLimited,
+      ].contains(permissions);
+      emit(state.copyWith(hasPermissions: hasPermissions));
+      if (!hasPermissions) {
+        if (event.retry > 0) {
+          await location.requestPermission();
+          add(RequestLocationPermissionEvent(retry: event.retry - 1));
+        } else {
+          throw Exception('Location permission request rejected');
+        }
+      }
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
+
+  FutureOr<void> _handleRequestService(
+    RequestLocationServiceEvent event,
+    LocationStateEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      final serviceEnabled = await location.serviceEnabled();
+      emit(state.copyWith(serviceEnabled: serviceEnabled));
+      if (!serviceEnabled) {
+        if (event.retry > 0) {
+          await location.requestService();
+          add(RequestLocationServiceEvent(retry: event.retry - 1));
+        } else {
+          throw Exception('Location service request rejected');
+        }
+      }
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
   }
 
   FutureOr<void> _handleLoadLocation(
@@ -25,20 +78,40 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      final location = await getLocation(
-        settings: LocationSettings(
-          maxWaitTime: 1,
-          ignoreLastKnownPosition: true,
-          accuracy: LocationAccuracy.high,
-          fallbackToGPS: true,
-        ),
-      );
+      final permissions = await location.hasPermission();
+
+      if (![
+        PermissionStatus.granted,
+        PermissionStatus.grantedLimited,
+      ].contains(permissions)) {
+        emit(state.copyWith(hasPermissions: false));
+        throw Exception('Location permission is required');
+      } else {
+        emit(state.copyWith(hasPermissions: true));
+      }
+
+      final serviceEnabled = await location.serviceEnabled();
+      emit(state.copyWith(serviceEnabled: serviceEnabled));
+
+      if (!serviceEnabled) {
+        throw Exception('Location services are not enabled');
+      }
+
+      final locationData = await location.getLocation();
+      if ([
+        locationData.latitude,
+        locationData.longitude,
+      ].any((element) => element == null)) {
+        throw Exception('Could not fetch location data');
+      }
+
       emit(state.copyWith(
-        latitude: location.latitude,
-        longitude: location.longitude,
-        accuracy: location.accuracy,
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        accuracy: locationData.accuracy,
       ));
     } catch (error) {
+      emit(state.copyWith(latitude: null, longitude: null, accuracy: null));
       rethrow;
     } finally {
       emit(state.copyWith(loading: false));
@@ -49,6 +122,14 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
 @freezed
 class LocationEvent with _$LocationEvent {
   const factory LocationEvent.load() = LoadLocationEvent;
+
+  const factory LocationEvent.requestService({
+    @Default(3) int retry,
+  }) = RequestLocationServiceEvent;
+
+  const factory LocationEvent.requestPermission({
+    @Default(3) int retry,
+  }) = RequestLocationPermissionEvent;
 }
 
 @freezed
@@ -59,6 +140,8 @@ class LocationState with _$LocationState {
     double? latitude,
     double? longitude,
     double? accuracy,
+    @Default(false) hasPermissions,
+    @Default(false) bool serviceEnabled,
     @Default(false) bool loading,
   }) = _LocationState;
 
