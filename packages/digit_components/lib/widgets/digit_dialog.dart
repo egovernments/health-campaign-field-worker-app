@@ -5,31 +5,36 @@ class DigitDialog extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
-  final String? title;
+  final String title;
   final String? submitText;
   final String? cancelText;
   final VoidCallback? onSubmit;
   final VoidCallback? onCancel;
 
-  const DigitDialog(
-      {super.key,
-      required this.child,
-      this.padding,
-      this.margin,
-      required this.title,
-      this.cancelText,
-      this.onSubmit,
-      this.submitText,
-      this.onCancel});
+  const DigitDialog({
+    super.key,
+    required this.child,
+    this.padding,
+    this.margin,
+    required this.title,
+    this.cancelText,
+    this.onSubmit,
+    this.submitText,
+    this.onCancel,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      titlePadding:
-          const EdgeInsets.only(top: 16, bottom: 8, left: 8, right: 8),
+      titlePadding: const EdgeInsets.only(
+        top: 16,
+        bottom: 8,
+        left: 8,
+        right: 8,
+      ),
       title: Text(
-        title!,
+        title,
         style: theme.textTheme.headlineLarge,
         textAlign: TextAlign.left,
       ),
@@ -40,9 +45,9 @@ class DigitDialog extends StatelessWidget {
             ? DigitElevatedButton(
                 onPressed: submitText != null ? onSubmit : onCancel,
                 child: Center(
-                  child: Text(
-                    submitText!,
-                  ),
+                  child: submitText == null
+                      ? Text(cancelText!)
+                      : Text(submitText!),
                 ))
             : Row(
                 children: [
