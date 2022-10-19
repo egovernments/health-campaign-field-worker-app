@@ -85,6 +85,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         PermissionStatus.grantedLimited,
       ].contains(permissions)) {
         emit(state.copyWith(hasPermissions: false));
+        add(const RequestLocationPermissionEvent());
         throw Exception('Location permission is required');
       } else {
         emit(state.copyWith(hasPermissions: true));
@@ -94,6 +95,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       emit(state.copyWith(serviceEnabled: serviceEnabled));
 
       if (!serviceEnabled) {
+        add(const RequestLocationServiceEvent());
         throw Exception('Location services are not enabled');
       }
 
@@ -124,11 +126,11 @@ class LocationEvent with _$LocationEvent {
   const factory LocationEvent.load() = LoadLocationEvent;
 
   const factory LocationEvent.requestService({
-    @Default(3) int retry,
+    @Default(1) int retry,
   }) = RequestLocationServiceEvent;
 
   const factory LocationEvent.requestPermission({
-    @Default(3) int retry,
+    @Default(1) int retry,
   }) = RequestLocationPermissionEvent;
 }
 

@@ -79,7 +79,7 @@ class JsonFormBuilder extends StatelessWidget {
           break;
         } else if (schema.format == PropertySchemaFormat.latLng) {
           child = BlocConsumer<LocationBloc, LocationState>(
-            listener: (context, state) {
+            listener: (_, state) {
               form.control(formControlName).value = state.latLngString;
             },
             builder: (context, state) {

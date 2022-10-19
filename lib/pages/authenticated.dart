@@ -14,9 +14,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       appBar: AppBar(),
       drawer: const Drawer(),
       body: BlocProvider(
-        create: (_) => LocationBloc(
-          location: Location(),
-        )..add(const LoadLocationEvent()),
+        create: (_) => LocationBloc(location: Location())
+          ..add(
+            const LoadLocationEvent(),
+          ),
         child: const AutoRouter(),
       ),
     );
