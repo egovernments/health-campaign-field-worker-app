@@ -19,7 +19,11 @@ void main() {
       build: () => LocationBloc(),
       setUp: () {
         final mock = MockLocationPlatform();
-        when(mock.getLocation).thenAnswer(
+        when(
+          () => mock.getLocation(
+            settings: any(named: 'settings'),
+          ),
+        ).thenAnswer(
           (invocation) async => LocationData(
             latitude: mockLat,
             longitude: mockLng,

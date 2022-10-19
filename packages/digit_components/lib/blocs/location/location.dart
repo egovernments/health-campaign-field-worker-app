@@ -25,7 +25,14 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      final location = await getLocation();
+      final location = await getLocation(
+        settings: LocationSettings(
+          maxWaitTime: 1,
+          ignoreLastKnownPosition: true,
+          accuracy: LocationAccuracy.high,
+          fallbackToGPS: true,
+        ),
+      );
       emit(state.copyWith(
         latitude: location.latitude,
         longitude: location.longitude,
@@ -55,8 +62,8 @@ class LocationState with _$LocationState {
     @Default(false) bool loading,
   }) = _LocationState;
 
-  String? get latLngString {
-    if (latitude == null || longitude == null) return null;
+  String get latLngString {
+    if (latitude == null || longitude == null) return 'Undefined';
     return [latitude, longitude].join(', ');
   }
 }
