@@ -32,6 +32,7 @@ class DigitTheme {
       elevatedButtonTheme: elevatedButtonTheme,
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
+      dialogTheme: dialogTheme,
     );
   }
 
@@ -100,5 +101,14 @@ class DigitTheme {
         isDense: true,
         isCollapsed: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
+      );
+
+  DialogTheme get dialogTheme => const DialogTheme(
+        actionsPadding: EdgeInsets.only(
+          top: 16,
+          bottom: 8,
+          left: 8,
+          right: 8,
+        ),
       );
 }
