@@ -6,10 +6,10 @@ class DigitDialog extends StatelessWidget {
   final EdgeInsets? padding;
   final EdgeInsets? margin;
   final String title;
-  final String? submitText;
-  final String? cancelText;
-  final VoidCallback? onSubmit;
-  final VoidCallback? onCancel;
+  final String primaryText;
+  final String? secondaryText;
+  final VoidCallback primaryCallback;
+  final VoidCallback? secondaryCallback;
 
   const DigitDialog({
     super.key,
@@ -17,10 +17,10 @@ class DigitDialog extends StatelessWidget {
     this.padding,
     this.margin,
     required this.title,
-    this.cancelText,
-    this.onSubmit,
-    this.submitText,
-    this.onCancel,
+    required this.primaryText,
+    this.secondaryText,
+    required this.primaryCallback,
+    this.secondaryCallback,
   });
 
   @override
@@ -41,24 +41,22 @@ class DigitDialog extends StatelessWidget {
       content: child,
       contentPadding: const EdgeInsets.all(8),
       actions: <Widget>[
-        (submitText == null || cancelText == null)
+        (secondaryCallback == null)
             ? DigitElevatedButton(
-                onPressed: submitText != null ? onSubmit : onCancel,
+                onPressed: primaryCallback,
                 child: Center(
-                  child: submitText == null
-                      ? Text(cancelText!)
-                      : Text(submitText!),
+                  child: Text(primaryText),
                 ))
             : Row(
                 children: [
                   TextButton(
-                    onPressed: () => onCancel,
-                    child: Text(cancelText ?? ''),
+                    onPressed: () => secondaryCallback,
+                    child: Text(secondaryText ?? ''),
                   ),
                   TextButton(
-                    onPressed: () => onSubmit,
+                    onPressed: () => primaryCallback,
                     child: Text(
-                      submitText ?? '',
+                      primaryText,
                     ),
                   ),
                 ],
