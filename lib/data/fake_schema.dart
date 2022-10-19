@@ -64,7 +64,7 @@ const fakeSchema = """
           "type": "string",
           "label": "ID Number"
         },
-        "dob": {
+        "dateOfBirth": {
           "type": "string",
           "format": "date",
           "label": "Date of Birth"

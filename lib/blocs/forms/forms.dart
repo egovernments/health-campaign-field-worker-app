@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forms_engine/forms_engine.dart';
 import 'package:forms_engine/models/schema_object/schema_object.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:health_campaigns_flutter/data/fake_schema.dart';
@@ -35,8 +37,12 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
   ) {
     final propertiesMap = state.schema?.pages.entries
         .map((e) => e.value)
-        .map((e) => e.toJson())
-        .expand((element) => element.entries);
+        .map((e) => e.properties)
+        .whereNotNull()
+        .expand(
+          (element) =>
+              element.entries.map((e) => MapEntry(e.key, e.value.value)),
+        );
 
     if (propertiesMap == null) {
       throw AppException('Invalid schema output. Data should not be empty');
@@ -44,7 +50,7 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
 
     final dataMap = Map.fromEntries(propertiesMap);
     final mapperModel = RegistrationDeliveryMapperModel.fromJson(dataMap);
-    debugPrint('print: $mapperModel');
+    debugPrint('print: ${mapperModel.toJson()}');
   }
 }
 
