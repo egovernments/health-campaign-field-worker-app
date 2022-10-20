@@ -19,6 +19,7 @@ dependencies:
   reactive_forms: ^14.1.0
   digit_components:
     path: ../digit_components
+  flutter_bloc: ^8.1.1
 
 dev_dependencies:
   flutter_test:

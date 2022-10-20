@@ -2,6 +2,7 @@ library json_schema_builder;
 
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/models/property_schema/property_schema.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -17,12 +18,16 @@ abstract class JsonSchemaBuilder<T> extends StatelessWidget {
   final FormGroup form;
   final String formControlName;
   final String? hint;
+  final VoidCallback? onTap;
   final T? value;
+  final bool readOnly;
 
   const JsonSchemaBuilder({
     Key? key,
     required this.formControlName,
     required this.form,
+    this.readOnly = false,
+    this.onTap,
     this.hint,
     this.value,
   }) : super(key: key);
