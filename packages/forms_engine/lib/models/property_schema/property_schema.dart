@@ -74,6 +74,7 @@ enum FormulaBehavior { show, hide }
 enum PropertySchemaFormat {
   date,
   dateTime,
+  latLng,
   incrementer;
 }
 

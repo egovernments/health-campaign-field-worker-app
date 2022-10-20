@@ -24,7 +24,9 @@ const fakeSchema = """
         },
         "latlng": {
           "type": "string",
-          "label": "Lat/Long *"
+          "label": "Lat/Long *",
+          "format": "latLng",
+          "hint": "Pick location"
         }
       },
       "label": "Beneficiary Location"
