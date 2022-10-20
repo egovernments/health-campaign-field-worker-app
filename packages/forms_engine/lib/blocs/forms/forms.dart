@@ -2,29 +2,27 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/forms_engine.dart';
 import 'package:forms_engine/models/schema_object/schema_object.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:health_campaigns_flutter/data/fake_schema.dart';
-import 'package:health_campaigns_flutter/models/registration_delivery/registration_delivery.dart';
-import 'package:health_campaigns_flutter/utils/utils.dart';
 
 part 'forms.freezed.dart';
 
 typedef FormsStateEmitter = Emitter<FormsState>;
 
 class FormsBloc extends Bloc<FormsEvent, FormsState> {
-  FormsBloc() : super(const FormsState()) {
+  final String schema;
+
+  FormsBloc(this.schema) : super(const FormsState()) {
     on<FormsLoadEvent>(_handleLoadForm);
     on<FormsUpdateEvent>(_handleUpdateForm);
     on<FormsCreateMappingEvent>(_handleCreateMapping);
   }
 
   FutureOr<void> _handleLoadForm(FormsLoadEvent event, FormsStateEmitter emit) {
-    final schema = SchemaObject.fromJson(json.decode(fakeSchema));
-    emit(state.copyWith(schema: schema));
+    final schemaObject = SchemaObject.fromJson(json.decode(schema));
+    emit(state.copyWith(schema: schemaObject));
   }
 
   void _handleUpdateForm(FormsUpdateEvent event, FormsStateEmitter emit) {
@@ -44,13 +42,12 @@ class FormsBloc extends Bloc<FormsEvent, FormsState> {
               element.entries.map((e) => MapEntry(e.key, e.value.value)),
         );
 
-    if (propertiesMap == null) {
-      throw AppException('Invalid schema output. Data should not be empty');
+    if (propertiesMap == null || propertiesMap.isEmpty) {
+      throw Exception('Invalid schema output. Data should not be empty');
     }
 
     final dataMap = Map.fromEntries(propertiesMap);
-    final mapperModel = RegistrationDeliveryMapperModel.fromJson(dataMap);
-    debugPrint('print: ${mapperModel.toJson()}');
+    emit(state.copyWith(savedProperties: dataMap));
   }
 }
 
@@ -65,5 +62,8 @@ class FormsEvent with _$FormsEvent {
 
 @freezed
 class FormsState with _$FormsState {
-  const factory FormsState({SchemaObject? schema}) = _FormsState;
+  const factory FormsState({
+    SchemaObject? schema,
+    Map<String, dynamic>? savedProperties,
+  }) = _FormsState;
 }
