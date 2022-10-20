@@ -1,4 +1,4 @@
-./get_dependencies.sh
+./tools/get_dependencies.sh
 flutter packages run build_runner build --delete-conflicting-outputs
 
 cd ./packages/digit_components || exit
