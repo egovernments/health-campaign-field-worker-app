@@ -19,7 +19,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
   @override
   Widget build(BuildContext context) {
     if (!incrementer) {
-      ReactiveTextField(
+      return ReactiveTextField(
         formControlName: formControlName,
         decoration: InputDecoration(labelText: hint),
         keyboardType: TextInputType.number,

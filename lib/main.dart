@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaigns_flutter/blocs/app_bloc_observer.dart';
 import 'package:health_campaigns_flutter/blocs/auth/auth.dart';
-import 'package:health_campaigns_flutter/blocs/forms/forms.dart';
 import 'package:health_campaigns_flutter/router/app_navigator_observer.dart';
 import 'package:health_campaigns_flutter/router/app_router.dart';
 
@@ -25,12 +24,7 @@ class MainApplication extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => FormsBloc()..add(const FormsLoadEvent()),
-        ),
-        BlocProvider(
-          create: (context) => AuthBloc(const AuthState()),
-        ),
+        BlocProvider(create: (context) => AuthBloc(const AuthState())),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(
