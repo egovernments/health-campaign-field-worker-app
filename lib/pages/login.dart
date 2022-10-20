@@ -47,8 +47,8 @@ class LoginPage extends StatelessWidget {
                     builder: (context) {
                       return DigitDialog(
                         title: 'Forgot Password?',
-                        primaryText: 'OK',
-                        primaryCallback: (() {}),
+                        primaryActionLabel: 'OK',
+                        primaryAction: (() {}),
                         child: Text(
                           'Please contact the administrator if you have forgotten your password',
                           style: theme.textTheme.bodyLarge,
