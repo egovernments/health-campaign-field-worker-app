@@ -28,5 +28,6 @@ dev_dependencies:
   freezed: ^2.1.1
   build_runner: ^2.2.1
   json_serializable: ^6.4.1
+  bloc_test: ^9.1.0
 
 flutter:
