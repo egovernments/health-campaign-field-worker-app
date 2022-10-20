@@ -2,97 +2,154 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:mocktail/mocktail.dart';
+
+import 'widget_app.dart';
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class FakeRoute extends Fake implements Route {}
+
+class FakeDialogRoute<T> extends Fake implements DialogRoute<T> {}
 
 void main() {
-  group('Dialog Digit widget', () {
-    testWidgets('Widget Display without errors', (widgetTester) async {
-      bool primaryAction = false;
+  group('Digit Dialog', () {
+    const testButton = 'Test Button';
+    const alertTitle = 'Test title';
+    const content = 'Dialog content';
+    const primaryActionLabel = 'Primary';
+    const secondaryActionLabel = 'Secondary';
 
-      primaryCallback() {
-        primaryAction = true;
-      }
-
-      await widgetTester.pumpWidget(MaterialApp(
-          home: Material(child: Builder(builder: (BuildContext context) {
-        return TextButton(
-          onPressed: () async {
-            await showDialog(
+    Future<void> buildTester(
+      WidgetTester widgetTester, {
+      MockNavigatorObserver? mockObserver,
+      VoidCallback? primaryAction,
+      VoidCallback? secondaryAction,
+    }) async {
+      await widgetTester.pumpWidget(
+        WidgetApp(
+          navigatorObserver: mockObserver,
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              child: const Text(testButton),
+              onPressed: () => showDialog(
                 context: context,
-                builder: (context) {
-                  return DigitDialog(
-                      primaryActionLabel: 'Dialog Action Text',
-                      title: 'Dialog Title',
-                      primaryAction: () => primaryCallback(),
-                      child: const Text('Digit Dialog'));
-                });
-          },
-          child: const Text('OK'),
-        );
-      }))));
-      // Tap to Enable Dialog
-      await widgetTester.tap(find.text('OK'));
-      await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+                builder: (_) => DigitDialog(
+                  title: const Text(alertTitle),
+                  content: const Text(content),
+                  primaryAction: primaryAction,
+                  primaryActionLabel: primaryActionLabel,
+                  secondaryAction: secondaryAction,
+                  secondaryActionLabel: secondaryActionLabel,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
 
-      expect(find.widgetWithText(DigitDialog, 'Dialog Title'), findsOneWidget);
-      expect(find.text('Dialog Action Text'), findsOneWidget);
-      expect(find.text('Dialog Title'), findsOneWidget);
-      expect(find.text('Digit Dialog'), findsOneWidget);
-      expect(primaryAction, false);
+      await widgetTester.tap(find.widgetWithText(ElevatedButton, testButton));
+      await widgetTester.pumpAndSettle();
+    }
 
-      await widgetTester.tap(find.text('Dialog Action Text'));
-      expect(primaryAction, true);
+    setUpAll(() {
+      registerFallbackValue(FakeRoute());
+      registerFallbackValue(FakeDialogRoute());
+      registerFallbackValue(FakeDialogRoute<bool>());
     });
 
-    testWidgets(
-        'Widget Primary and secondary actions and labels without errors',
-        (widgetTester) async {
-      bool primaryAction = false;
+    testWidgets('is pushed on router', (widgetTester) async {
+      final mockObserver = MockNavigatorObserver();
 
-      primaryCallback() {
-        primaryAction = true;
-      }
+      await buildTester(widgetTester, mockObserver: mockObserver);
 
-      bool secondaryAction = false;
-      secondaryCallback() {
-        secondaryAction = true;
-      }
+      verify(() => mockObserver.didPush(any<DialogRoute>(), any()));
+    });
 
-      await widgetTester.pumpWidget(MaterialApp(
-          home: Material(child: Builder(builder: (BuildContext context) {
-        return TextButton(
-          onPressed: () async {
-            await showDialog(
-                context: context,
-                builder: (context) {
-                  return DigitDialog(
-                      primaryActionLabel: 'Primary Action Text',
-                      secondaryActionLabel: 'Secondary Action Text',
-                      title: 'Dialog Title',
-                      primaryAction: () => primaryCallback(),
-                      secondaryAction: () => secondaryCallback(),
-                      child: const Text('Digit Dialog'));
-                });
-          },
-          child: const Text('OK'),
-        );
-      }))));
-      // Tap to Enable Dialog
-      await widgetTester.tap(find.text('OK'));
-      await widgetTester.pump();
+    testWidgets('executes primary action', (widgetTester) async {
+      bool primary = false;
 
-      expect(find.widgetWithText(DigitDialog, 'Dialog Title'), findsOneWidget);
-      expect(find.text('Primary Action Text'), findsOneWidget);
-      expect(find.text('Secondary Action Text'), findsOneWidget);
-      expect(find.text('Dialog Title'), findsOneWidget);
-      expect(find.text('Digit Dialog'), findsOneWidget);
-      expect(primaryAction, false);
+      await buildTester(
+        widgetTester,
+        primaryAction: () => primary = !primary,
+      );
 
-      await widgetTester.tap(find.text('Primary Action Text'));
-      expect(primaryAction, true);
-      expect(secondaryAction, false);
+      await widgetTester.tap(
+        find.widgetWithText(DigitElevatedButton, primaryActionLabel),
+      );
 
-      await widgetTester.tap(find.text('Secondary Action Text'));
-      expect(secondaryAction, true);
+      expect(primary, true);
+    });
+
+    testWidgets('executes secondary action', (widgetTester) async {
+      bool secondary = false;
+
+      await buildTester(
+        widgetTester,
+        secondaryAction: () => secondary = !secondary,
+      );
+
+      await widgetTester.tap(
+        find.widgetWithText(TextButton, secondaryActionLabel),
+      );
+
+      expect(secondary, true);
+    });
+
+    testWidgets('has UI components', (widgetTester) async {
+      await buildTester(
+        widgetTester,
+        primaryAction: () {},
+        secondaryAction: () {},
+      );
+
+      expect(find.text(alertTitle), findsOneWidget);
+      expect(find.text(content), findsOneWidget);
+
+      expect(
+        find.widgetWithText(DigitElevatedButton, primaryActionLabel),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(TextButton, secondaryActionLabel),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('context builder renders dialog', (widgetTester) async {
+      final mockObserver = MockNavigatorObserver();
+      bool primary = false;
+
+      await widgetTester.pumpWidget(
+        WidgetApp(
+          navigatorObserver: mockObserver,
+          child: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () => DigitDialog.show<bool>(
+                context,
+                title: alertTitle,
+                content: content,
+                primaryActionLabel: primaryActionLabel,
+                primaryAction: () => Navigator.of(context).pop(!primary),
+              ).then((value) {
+                if (value == null) return;
+                primary = value;
+              }),
+              child: const Text(testButton),
+            ),
+          ),
+        ),
+      );
+
+      await widgetTester.tap(find.widgetWithText(ElevatedButton, testButton));
+      await widgetTester.pumpAndSettle();
+
+      verify(() => mockObserver.didPush(any<DialogRoute<bool>>(), any()));
+
+      await widgetTester.tap(
+        find.widgetWithText(DigitElevatedButton, primaryActionLabel),
+      );
+      expect(primary, true);
     });
   });
 }

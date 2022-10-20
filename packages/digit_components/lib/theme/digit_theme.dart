@@ -103,12 +103,12 @@ class DigitTheme {
         floatingLabelBehavior: FloatingLabelBehavior.never,
       );
 
-  DialogTheme get dialogTheme => const DialogTheme(
-        actionsPadding: EdgeInsets.only(
-          top: 16,
-          bottom: 8,
-          left: 8,
-          right: 8,
+  DialogTheme get dialogTheme => DialogTheme(
+        titleTextStyle: mobileTypography.headingL,
+        contentTextStyle: mobileTypography.bodyL,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
+        actionsPadding: const EdgeInsets.all(8),
       );
 }

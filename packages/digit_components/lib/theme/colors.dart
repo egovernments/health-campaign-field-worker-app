@@ -6,6 +6,7 @@ class DigitColors {
   Color get burningOrange => const Color(0xFFF47738);
   Color get regalBlue => const Color(0xFF0B4B66);
   Color get woodsmokeBlack => const Color(0xFF0B0C0C);
+  Color get black => const Color(0xFF000000);
   Color get davyGray => const Color(0xFF505A5F);
   Color get cloudGray => const Color(0xFFB1B4B6);
   Color get seaShellGray => const Color(0xFFEEEEEE);

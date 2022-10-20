@@ -2,63 +2,66 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class DigitDialog extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final String title;
+  final Widget title;
+  final Widget? content;
+  final EdgeInsets titlePadding;
+  final EdgeInsets contentPadding;
   final String primaryActionLabel;
+  final VoidCallback? primaryAction;
   final String? secondaryActionLabel;
-  final VoidCallback primaryAction;
   final VoidCallback? secondaryAction;
 
   const DigitDialog({
     super.key,
-    required this.child,
-    this.padding,
-    this.margin,
+    this.content,
     required this.title,
     required this.primaryActionLabel,
+    this.primaryAction,
+    this.titlePadding = const EdgeInsets.fromLTRB(8, 16, 8, 8),
+    this.contentPadding = const EdgeInsets.fromLTRB(8, 8, 8, 8),
     this.secondaryActionLabel,
-    required this.primaryAction,
     this.secondaryAction,
   });
 
+  static Future<T?> show<T>(
+    BuildContext context, {
+    required String title,
+    required String content,
+    required String primaryActionLabel,
+    String? secondaryActionLabel,
+    VoidCallback? primaryAction,
+    VoidCallback? secondaryAction,
+  }) =>
+      showDialog<T>(
+        context: context,
+        barrierColor: DigitTheme.instance.colors.black.withOpacity(0.7),
+        builder: (context) => DigitDialog(
+          title: Text(title, textAlign: TextAlign.left),
+          content: Text(content, textAlign: TextAlign.left),
+          primaryActionLabel: primaryActionLabel,
+          primaryAction: primaryAction,
+          secondaryActionLabel: secondaryActionLabel,
+          secondaryAction: secondaryAction,
+        ),
+      );
+
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AlertDialog(
-      titlePadding: theme.dialogTheme.actionsPadding,
-      title: Text(
-        title,
-        style: theme.textTheme.headlineLarge,
-        textAlign: TextAlign.left,
-      ),
-      content: child,
-      contentPadding: const EdgeInsets.all(8),
-      actions: <Widget>[
-        (secondaryAction == null)
-            ? DigitElevatedButton(
-                onPressed: primaryAction,
-                child: Center(
-                  child: Text(primaryActionLabel),
-                ))
-            : Row(
-                children: [
-                  TextButton(
-                    onPressed: secondaryAction,
-                    child: Text(secondaryActionLabel ?? ''),
-                  ),
-                  TextButton(
-                    onPressed: primaryAction,
-                    child: Text(
-                      key: const Key('primary_callback_key'),
-                      primaryActionLabel,
-                    ),
-                  ),
-                ],
-              ),
-        const SizedBox(height: 8)
-      ],
-    );
-  }
+  Widget build(BuildContext context) => AlertDialog(
+        title: title,
+        content: content,
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: <Widget>[
+          DigitElevatedButton(
+            onPressed: primaryAction,
+            child: Center(child: Text(primaryActionLabel)),
+          ),
+          if (secondaryActionLabel != null)
+            TextButton(
+              onPressed: secondaryAction,
+              child: Center(child: Text(secondaryActionLabel!)),
+            ),
+        ],
+        titlePadding: titlePadding,
+        contentPadding: contentPadding,
+      );
 }
