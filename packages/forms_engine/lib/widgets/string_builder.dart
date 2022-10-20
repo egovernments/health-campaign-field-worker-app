@@ -5,13 +5,17 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final int? maxLength;
   final List<String>? enums;
   final String? format;
+  final Widget? suffix;
 
   const JsonSchemaStringBuilder({
     required super.formControlName,
     required super.form,
+    super.readOnly,
+    super.onTap,
     super.key,
     super.value,
     super.hint,
+    this.suffix,
     this.enums,
     this.format,
     this.minLength,
@@ -21,8 +25,21 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField(
+      readOnly: readOnly,
       formControlName: formControlName,
-      decoration: InputDecoration(labelText: hint),
+      decoration: InputDecoration(
+        labelText: hint,
+        suffixIconConstraints: const BoxConstraints(
+          maxHeight: 48,
+          maxWidth: 48,
+        ),
+        suffixIcon: suffix == null
+            ? null
+            : InkWell(
+                onTap: onTap,
+                child: suffix,
+              ),
+      ),
     );
   }
 }
