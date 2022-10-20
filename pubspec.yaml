@@ -27,6 +27,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
   reactive_forms: ^14.1.0
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,7 @@ dev_dependencies:
   json_serializable: ^6.4.0
   drift_dev: ^1.7.0
   auto_route_generator: ^5.0.2
+  bloc_test: ^9.1.0
 
 flutter:
   uses-material-design: true
