@@ -9,15 +9,24 @@ import 'models/property_schema/property_schema.dart';
 class JsonForms extends StatelessWidget {
   final PropertySchema propertySchema;
 
-  const JsonForms({super.key, required this.propertySchema});
+  const JsonForms({
+    super.key,
+    required this.propertySchema,
+  });
 
   static Map<String, FormControl> getFormControls(
-    PropertySchema propertySchema,
-  ) {
+    PropertySchema propertySchema, {
+    String? defaultLatlng,
+  }) {
     assert(propertySchema.properties != null);
     final controls = Map.fromEntries(
       propertySchema.properties!.entries
-          .map((e) => _getControls(e.key, e.value, propertySchema))
+          .map((e) => _getControls(
+                e.key,
+                e.value,
+                propertySchema,
+                defaultLatlng: defaultLatlng,
+              ))
           .expand((element) => element),
     );
     return controls;
@@ -37,8 +46,9 @@ class JsonForms extends StatelessWidget {
   static List<MapEntry<String, FormControl>> _getControls(
     String name,
     PropertySchema schema,
-    PropertySchema parentSchema,
-  ) {
+    PropertySchema parentSchema, {
+    String? defaultLatlng,
+  }) {
     final List<MapEntry<String, FormControl>> entries = [];
     final type = schema.type;
 
@@ -86,6 +96,8 @@ class JsonForms extends StatelessWidget {
               value: schema.value,
               validators: requiredValidators,
             );
+          } else if (schema.format == PropertySchemaFormat.latLng) {
+            control = FormControl<String>(value: defaultLatlng);
           } else {
             control = FormControl<String>(
               value: schema.value,

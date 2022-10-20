@@ -77,18 +77,51 @@ class JsonFormBuilder extends StatelessWidget {
             ),
           );
           break;
+        } else if (schema.format == PropertySchemaFormat.latLng) {
+          child = BlocConsumer<LocationBloc, LocationState>(
+            listener: (_, state) {
+              form.control(formControlName).value = state.latLngString;
+            },
+            builder: (context, state) {
+              return LabeledField(
+                label: schema.label ?? '',
+                child: JsonSchemaStringBuilder(
+                  form: form,
+                  formControlName: formControlName,
+                  hint: schema.hint,
+                  readOnly: true,
+                  suffix: Container(
+                    padding: const EdgeInsets.only(right: 8),
+                    height: 18,
+                    child: state.loading
+                        ? const AspectRatio(
+                            aspectRatio: 1,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                  ),
+                  onTap: state.loading
+                      ? null
+                      : () => context.read<LocationBloc>().add(
+                            const LoadLocationEvent(),
+                          ),
+                ),
+              );
+            },
+          );
+        } else {
+          child = LabeledField(
+            label: schema.label ?? '',
+            child: JsonSchemaStringBuilder(
+              form: form,
+              formControlName: formControlName,
+              value: schema.value as String?,
+              maxLength: schema.maxLength,
+              minLength: schema.minLength,
+              hint: schema.hint,
+            ),
+          );
         }
-        child = LabeledField(
-          label: schema.label ?? '',
-          child: JsonSchemaStringBuilder(
-            form: form,
-            formControlName: formControlName,
-            value: schema.value as String?,
-            maxLength: schema.maxLength,
-            minLength: schema.minLength,
-            hint: schema.hint,
-          ),
-        );
         break;
       case PropertySchemaType.integer:
         child = LabeledField(
