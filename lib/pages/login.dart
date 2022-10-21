@@ -12,43 +12,52 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(),
-      body: DigitCard(
-        child: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Login',
-                style: theme.textTheme.displayMedium,
-              ),
-              const DigitTextField(label: 'User ID'),
-              const DigitTextField(label: 'Password'),
-              const SizedBox(height: 16),
-              DigitElevatedButton(
-                onPressed: state.loading
-                    ? null
-                    : () {
-                        context.read<AuthBloc>().add(
-                              const AuthLoginEvent(
-                                userId: '',
-                                password: '',
-                              ),
-                            );
-                      },
-                child: const Center(
-                  child: Text('Login'),
+      body: ScrollableContent(
+        children: [
+          DigitCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Login',
+                  style: theme.textTheme.displayMedium,
                 ),
-              ),
-              const TextButton(
-                onPressed: null,
-                child: Center(
-                  child: Text('Forgot Password?'),
+                const DigitTextField(label: 'User ID'),
+                const DigitTextField(label: 'Password'),
+                const SizedBox(height: 16),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) => DigitElevatedButton(
+                    onPressed: state.loading
+                        ? null
+                        : () {
+                            context.read<AuthBloc>().add(
+                                  const AuthLoginEvent(
+                                    userId: '',
+                                    password: '',
+                                  ),
+                                );
+                          },
+                    child: const Center(
+                      child: Text('Login'),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                TextButton(
+                  onPressed: () => DigitDialog.show(
+                    context,
+                    title: 'Forgot Password?',
+                    content:
+                        'Please contact the administrator if you have forgotten your password',
+                    primaryActionLabel: 'OK',
+                    primaryAction: () => Navigator.pop(context),
+                  ),
+                  child: const Center(child: Text('Forgot Password?')),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
