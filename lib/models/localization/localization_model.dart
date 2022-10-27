@@ -9,7 +9,7 @@ part 'localization_model.g.dart';
 class LocalizationModel with _$LocalizationModel {
   @JsonSerializable(explicitToJson: true)
   const factory LocalizationModel({
-    @Default([]) List<MessagesModel> messages,
+    @Default([]) List<LocalizationMessageModel> messages,
   }) = _LocalizationModel;
 
   factory LocalizationModel.fromJson(Map<String, dynamic> json) =>
@@ -17,15 +17,15 @@ class LocalizationModel with _$LocalizationModel {
 }
 
 @freezed
-class MessagesModel with _$MessagesModel {
+class LocalizationMessageModel with _$LocalizationMessageModel {
   @JsonSerializable(explicitToJson: true, includeIfNull: false)
-  const factory MessagesModel({
+  const factory LocalizationMessageModel({
     required String code,
     required String message,
     required String module,
     required String locale,
-  }) = _MessagesModel;
+  }) = _LocalizationMessageModel;
 
-  factory MessagesModel.fromJson(Map<String, dynamic> json) =>
-      _$MessagesModelFromJson(json);
+  factory LocalizationMessageModel.fromJson(Map<String, dynamic> json) =>
+      _$LocalizationMessageModelFromJson(json);
 }

@@ -53,15 +53,15 @@ void main() {
     );
 
     for (var element in ['messages']) {
-      test('Roles wrapper contains $element', () {
+      test('LocalizationModel contains $element', () {
         expect(parsedModel.toJson().keys.contains(element), true);
       });
     }
 
-    final rolesModel = parsedModel.messages;
-    for (var b in rolesModel) {
+    final localizationMessageModel = parsedModel.messages;
+    for (var b in localizationMessageModel) {
       for (var element in ['code', 'message', 'module', 'locale']) {
-        test('Roles model contains $element', () {
+        test('localizationMessageModel contains $element', () {
           expect(b.toJson().keys.contains(element), true);
         });
       }
