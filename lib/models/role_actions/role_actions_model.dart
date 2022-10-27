@@ -10,7 +10,9 @@ class RoleActionsWrapperModel with _$RoleActionsWrapperModel {
   const factory RoleActionsWrapperModel({
     required String tenantId,
     required String moduleName,
-    @Default([]) List<RoleActionsModel> roleactions,
+    @JsonKey(name: 'roleactions')
+    @Default([])
+        List<RoleActionsModel> roleActions,
   }) = _RoleActionsWrapperModel;
 
   factory RoleActionsWrapperModel.fromJson(Map<String, dynamic> json) =>
@@ -21,12 +23,17 @@ class RoleActionsWrapperModel with _$RoleActionsWrapperModel {
 class RoleActionsModel with _$RoleActionsModel {
   @JsonSerializable(explicitToJson: true)
   const factory RoleActionsModel({
-    required String rolecode,
-    required String actioncode,
-    required int actionid,
+    @JsonKey(name: 'rolecode') required RoleCode roleCode,
+    @JsonKey(name: 'actioncode') required String actionCode,
+    @JsonKey(name: 'actionid') required int actionId,
     required String tenantId,
   }) = _RoleActionsModel;
 
   factory RoleActionsModel.fromJson(Map<String, dynamic> json) =>
       _$RoleActionsModelFromJson(json);
+}
+
+enum RoleCode {
+  @JsonValue('EMPLOYEE')
+  employee,
 }
