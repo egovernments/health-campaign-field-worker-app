@@ -48,7 +48,7 @@ void main() {
       });
     }
 
-    final roleactionsModel = parsedModel.roleactions;
+    final roleactionsModel = parsedModel.roleActions;
     for (var b in roleactionsModel) {
       for (var element in ['rolecode', 'actionid', 'actioncode', 'tenantId']) {
         test('RoleActions model contains $element', () {
