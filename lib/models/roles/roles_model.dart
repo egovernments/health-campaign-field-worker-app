@@ -21,11 +21,16 @@ class RolesWrapperModel with _$RolesWrapperModel {
 class RolesModel with _$RolesModel {
   @JsonSerializable(explicitToJson: true)
   const factory RolesModel({
-    required String code,
+    required Code code,
     required String name,
     String? description,
   }) = _RolesModel;
 
   factory RolesModel.fromJson(Map<String, dynamic> json) =>
       _$RolesModelFromJson(json);
+}
+
+enum Code {
+  @JsonValue('EMPLOYEE')
+  employee,
 }
