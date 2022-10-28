@@ -11,7 +11,7 @@ class FakeLocalization extends Fake implements LocalizationModel {}
 void main() {
   group('get localization messages', () {
     MockLocalizationClient localizationClient = MockLocalizationClient();
-    test('should perform a GET request on /search', () async {
+    test('should perform a Post request on /search', () async {
       when(() => localizationClient.search('egov-common', 'pn_IN', 'mz'))
           .thenAnswer((invocation) async => LocalizationModel.fromJson({
                 "messages": [
