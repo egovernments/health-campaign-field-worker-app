@@ -12,7 +12,7 @@ abstract class LocalizationClient {
   factory LocalizationClient(Dio dio, {String baseUrl}) = _LocalizationClient;
 
   @POST('/_search')
-  Future<LocalizationModel> search(
+  Future<LocalizationModel?> search(
     @Query("module") String module,
     @Query("local") String local,
     @Query("tenantId") String tenantId,
