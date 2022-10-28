@@ -12,29 +12,28 @@ void main() {
   group('get localization messages', () {
     MockLocalizationClient localizationClient = MockLocalizationClient();
     test('should perform a GET request on /search', () async {
-      when(() => localizationClient.search('mgramseva-common', 'pn_IN', 'mz'))
+      when(() => localizationClient.search('egov-common', 'pn_IN', 'mz'))
           .thenAnswer((invocation) async => LocalizationModel.fromJson({
                 "messages": [
                   {
                     "code": " as ",
                     "message": " ਜਿਵੇਂ ",
-                    "module": "mgramseva-common",
+                    "module": "egov-common",
                     "locale": "pn_IN",
                   },
                 ],
               }));
-      final res =
-          await localizationClient.search('mgramseva-common', 'pn_IN', 'mz');
+      final res = await localizationClient.search('egov-common', 'pn_IN', 'mz');
       expect(res, isA<LocalizationModel>());
     });
 
     test('test fetchData throws Exception', () {
-      when(() => localizationClient.search('mgramseva-common', 'pn_IN', 'mz'))
+      when(() => localizationClient.search('egov-common', 'pn_IN', 'mz'))
           .thenAnswer((_) async {
         throw Exception();
       });
 
-      final res = localizationClient.search('mgramseva-common', 'pn_IN', 'mz');
+      final res = localizationClient.search('egov-common', 'pn_IN', 'mz');
       expect(res, throwsException);
     });
   });
