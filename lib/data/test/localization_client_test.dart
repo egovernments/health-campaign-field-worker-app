@@ -31,18 +31,16 @@ void main() {
           '/_search?',
           (request) => request.reply(
             200,
-            LocalizationModel.fromJson(
-              {
-                "messages": [
-                  {
-                    "code": " as ",
-                    "message": " ਜਿਵੇਂ ",
-                    "module": "egov-common",
-                    "locale": "pn_IN",
-                  },
-                ],
-              },
-            ),
+            {
+              "messages": [
+                {
+                  "code": " as ",
+                  "message": " ਜਿਵੇਂ ",
+                  "module": "egov-common",
+                  "locale": "pn_IN",
+                },
+              ],
+            },
           ),
           queryParameters: {
             'module': 'egov-common',
