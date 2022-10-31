@@ -34,7 +34,9 @@ class FormsPage extends StatelessWidget {
               JsonForms.getFormControls(schema),
             ),
             builder: (context, formGroup, child) => ScrollableContent(
-              header: const BackNavigationHelpHeaderWidget(),
+              header: BackNavigationHelpHeaderWidget(
+                helpCallBack: () => DigitCardWalkthrough.show(context),
+              ),
               footer: DigitCard(
                 margin: EdgeInsets.zero,
                 child: ReactiveFormConsumer(

@@ -1,12 +1,12 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-class HomeItemCard extends StatelessWidget {
+class DigitIconCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
 
-  const HomeItemCard({
+  const DigitIconCard({
     required this.icon,
     required this.label,
     required this.onPressed,
@@ -16,7 +16,6 @@ class HomeItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return DigitCard(
       onPressed: onPressed,
       padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),

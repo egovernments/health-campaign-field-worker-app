@@ -5,18 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/forms_engine.dart';
 import 'package:health_campaigns_flutter/router/app_router.dart';
 import 'package:health_campaigns_flutter/widgets/header/back_navigation_help_header.dart';
-import 'package:health_campaigns_flutter/widgets/home/home_item_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) => Scaffold(
         body: ScrollableContent(
           header: Column(
-            children: const [
-              BackNavigationHelpHeaderWidget(),
-              Card(child: Placeholder(fallbackHeight: 120)),
+            children: [
+              BackNavigationHelpHeaderWidget(
+                helpCallBack: () => DigitCardWalkthrough.show(context),
+              ),
+              const Card(child: Placeholder(fallbackHeight: 120)),
             ],
           ),
           footer: const PoweredByDigit(),
@@ -34,12 +34,17 @@ class HomePage extends StatelessWidget {
         ),
       );
 
-  List<HomeItemCard> _getItems(BuildContext context) {
+  incrementcard(int increment) {
+    return increment + 1;
+  }
+
+  List<DigitIconCard> _getItems(BuildContext context) {
     final pageName =
         context.watch<FormsBloc>().state.schema?.pages.entries.first.key;
 
     return [
-      HomeItemCard(
+      DigitIconCard(
+        key: const GlobalObjectKey('1'),
         icon: Icons.add_business_rounded,
         label: 'Register',
         onPressed: pageName == null
@@ -50,29 +55,34 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
       ),
-      const HomeItemCard(
+      const DigitIconCard(
+        key: GlobalObjectKey('2'),
         icon: Icons.all_inbox,
         label: 'View Beneficiaries',
         onPressed: null,
       ),
-      const HomeItemCard(
+      const DigitIconCard(
+        key: GlobalObjectKey('3'),
         icon: Icons.menu_book,
         label: 'View Reports',
         onPressed: null,
       ),
-      HomeItemCard(
+      DigitIconCard(
+        key: const GlobalObjectKey('4'),
         icon: Icons.sync_alt,
         label: 'Sync Data',
         onPressed: () => context.read<FormsBloc>().add(
               const FormsLoadEvent(),
             ),
       ),
-      const HomeItemCard(
+      const DigitIconCard(
+        key: GlobalObjectKey('5'),
         icon: Icons.call,
         label: 'Call Supervisor',
         onPressed: null,
       ),
-      const HomeItemCard(
+      const DigitIconCard(
+        key: GlobalObjectKey('6'),
         icon: Icons.announcement,
         label: 'File Complaint',
         onPressed: null,
