@@ -1,14 +1,9 @@
 // ignore_for_file: depend_on_referenced_packages,
 import 'package:health_campaigns_flutter/data/remote/localization_client.dart';
 import 'package:health_campaigns_flutter/models/localization/localization_model.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-
-class MockLocalizationClient extends Mock implements LocalizationClient {}
-
-class FakeLocalization extends Fake implements LocalizationModel {}
 
 // ignore: long-method
 void main() {
@@ -69,8 +64,4 @@ void main() {
       },
     );
   });
-}
-
-Future<LocalizationModel> async() async {
-  return FakeLocalization();
 }
