@@ -12,8 +12,6 @@ class JsonFormBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("schema.global key");
-    print(formControlName);
     final type = schema.type;
     Widget? child;
 
