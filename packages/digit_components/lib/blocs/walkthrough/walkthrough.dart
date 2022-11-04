@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:digit_components/models/walkthrough/walkthrough_model.dart';
+
+import 'package:digit_components/models/digiticoncard/digit_icon_card_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'walkthrough.freezed.dart';
@@ -42,7 +43,7 @@ class WalkthroughEvent with _$WalkthroughEvent {
   }) = RequestWalkthroughNextEvent;
 
   const factory WalkthroughEvent.loadWalkthrough(
-          {required WalkthrougWrapperModel walkthroughData}) =
+          {required DigitIconCardWrapperModel walkthroughData}) =
       RequestWalkthroughLoadEvent;
 
   const factory WalkthroughEvent.handleReset() = RequestWalkthroughResetEvent;
@@ -53,7 +54,7 @@ class WalkthroughState with _$WalkthroughState {
   const WalkthroughState._();
 
   const factory WalkthroughState({
-    required WalkthrougWrapperModel walkthroughData,
+    required DigitIconCardWrapperModel walkthroughData,
     @Default(0) int walkthroughIndex,
   }) = _WalkthroughState;
 }

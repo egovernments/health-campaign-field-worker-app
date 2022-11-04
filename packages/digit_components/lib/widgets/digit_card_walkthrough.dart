@@ -31,7 +31,7 @@ class DigitCardWalkthrough extends StatelessWidget {
     return BlocBuilder<WalkthroughBloc, WalkthroughState>(
         builder: (context, state) {
       var walkthroughdata =
-          state.walkthroughData.walkthrough[state.walkthroughIndex];
+          state.walkthroughData.digiticoncards[state.walkthroughIndex];
       RenderBox? box = ((GlobalObjectKey(walkthroughdata.widgetKey))
           .currentContext
           ?.findRenderObject() as RenderBox?);
@@ -114,7 +114,7 @@ class DigitCardWalkthrough extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     state.walkthroughIndex !=
-                                            state.walkthroughData.walkthrough
+                                            state.walkthroughData.digiticoncards
                                                     .length -
                                                 1
                                         ? context.read<WalkthroughBloc>().add(
@@ -125,7 +125,7 @@ class DigitCardWalkthrough extends StatelessWidget {
                                   },
                                   child: Text(
                                     state.walkthroughIndex !=
-                                            state.walkthroughData.walkthrough
+                                            state.walkthroughData.digiticoncards
                                                     .length -
                                                 1
                                         ? 'Next'

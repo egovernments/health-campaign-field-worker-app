@@ -1,5 +1,4 @@
-import 'package:digit_components/blocs/walkthrough/walkthrough.dart';
-import 'package:digit_components/models/walkthrough/walkthrough_model.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/forms_engine.dart';
@@ -10,8 +9,8 @@ mixin StaticData {
   // ignore: long-method
   void loadStaticData(BuildContext context, pageName) {
     context.read<WalkthroughBloc>().add(WalkthroughEvent.loadWalkthrough(
-          walkthroughData: WalkthrougWrapperModel.fromJson({
-            'walkthrough': [
+          walkthroughData: DigitIconCardWrapperModel.fromJson({
+            'digiticoncards': [
               {
                 'title': 'Registration',
                 'subtitle': 'Register Households by filling forms',

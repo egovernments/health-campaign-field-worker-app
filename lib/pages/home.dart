@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget with StaticData {
 }
 
 List<DigitIconCard> _getItems(BuildContext context, WalkthroughState state) {
-  return state.walkthroughData.walkthrough
+  return state.walkthroughData.digiticoncards
       .map((e) => DigitIconCard(
             key: GlobalObjectKey(e.widgetKey),
             icon: IconData(e.icon, fontFamily: 'MaterialIcons'),

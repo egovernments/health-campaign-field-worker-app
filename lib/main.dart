@@ -1,5 +1,5 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/walkthrough/walkthrough_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_campaigns_flutter/blocs/app_bloc_observer.dart';
@@ -29,7 +29,7 @@ class MainApplication extends StatelessWidget {
         BlocProvider<WalkthroughBloc>(
           create: (BuildContext context) => WalkthroughBloc(
             const WalkthroughState(
-              walkthroughData: WalkthrougWrapperModel(),
+              walkthroughData: DigitIconCardWrapperModel(),
             ),
           ),
         ),

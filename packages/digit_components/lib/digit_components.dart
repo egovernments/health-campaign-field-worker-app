@@ -5,6 +5,7 @@ export 'blocs/walkthrough/walkthrough.dart';
 export 'blocs/location/location.dart';
 export 'theme/theme.dart';
 export 'widgets/widgets.dart';
+export 'models/digiticoncard/digit_icon_card_model.dart';
 export 'utils/app_logger.dart';
 
 class DigitUi {
