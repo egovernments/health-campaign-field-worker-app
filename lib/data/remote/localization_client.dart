@@ -1,4 +1,3 @@
-// ignore: depend_on_referenced_packages
 import 'package:dio/dio.dart';
 import 'package:health_campaigns_flutter/models/localization/localization_model.dart';
 import 'package:health_campaigns_flutter/utils/env.dart';
@@ -15,7 +14,7 @@ abstract class LocalizationClient {
   @POST('/_search?')
   Future<LocalizationModel?> search(
     @Query("module") String module,
-    @Query("local") String local,
+    @Query("locale") String locale,
     @Query("tenantId") String tenantId,
   );
 }

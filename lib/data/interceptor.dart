@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 
