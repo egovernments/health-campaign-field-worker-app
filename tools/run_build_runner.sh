@@ -1,8 +1,8 @@
 ./tools/get_dependencies.sh
-flutter packages run build_runner build --delete-conflicting-outputs
 
-cd ./packages/digit_components || exit
-flutter packages run build_runner build --delete-conflicting-outputs
+dir=$(PWD)
 
-cd ../forms_engine || exit
-flutter packages run build_runner build --delete-conflicting-outputs
+for i in / /packages/forms_engine/ /packages/digit_components/; do
+  cd "$dir$i" || exit
+  flutter packages run build_runner build --delete-conflicting-outputs
+done
