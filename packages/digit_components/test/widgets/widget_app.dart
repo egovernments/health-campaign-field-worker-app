@@ -1,4 +1,7 @@
+import 'package:digit_components/blocs/walkthrough/walkthrough.dart';
+import 'package:digit_components/models/digiticoncard/digit_icon_card_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WidgetApp extends StatelessWidget {
   final Widget child;
@@ -11,8 +14,66 @@ class WidgetApp extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        navigatorObservers: [if (navigatorObserver != null) navigatorObserver!],
-        home: Scaffold(body: child),
-      );
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<WalkthroughBloc>(
+            create: (BuildContext context) => WalkthroughBloc(
+              const WalkthroughState(
+                walkthroughData: DigitIconCardWrapperModel(
+                    digiticoncards: <DigitIconCardModel>[
+                      DigitIconCardModel(
+                        title: 'Registration',
+                        callback: null,
+                        icon: 0xe44a,
+                        subtitle: 'Register Households by filling forms',
+                        widgetKey: 'REGISTRATION_ICON_KEY',
+                      ),
+                      DigitIconCardModel(
+                        title: 'View Beneficiaries',
+                        callback: null,
+                        icon: 0xe07d,
+                        subtitle: 'View Reports on this Screen',
+                        widgetKey: 'BENEFICIARIES_ICON_KEY',
+                      ),
+                      DigitIconCardModel(
+                        title: 'View Reports',
+                        callback: null,
+                        icon: 0xe3dd,
+                        subtitle: 'View Reports on this Screen',
+                        widgetKey: 'REPORTS_ICON_KEY',
+                      ),
+                      DigitIconCardModel(
+                        title: 'Sync Data',
+                        callback: null,
+                        icon: 0xe630,
+                        subtitle: 'View sync Data on this Screen',
+                        widgetKey: 'SYNC_ICON_KEY',
+                      ),
+                      DigitIconCardModel(
+                        title: 'Call Supervisor',
+                        callback: null,
+                        icon: 0xe052,
+                        subtitle: 'call to Supervisor  by clicking',
+                        widgetKey: 'CALL_SUP_ICON_KEY',
+                      ),
+                      DigitIconCardModel(
+                        title: 'File Complaint',
+                        callback: null,
+                        icon: 0xe087,
+                        subtitle: 'File a Complaint by clicking',
+                        widgetKey: 'FILE_COMPLAINT_ICON_KEY',
+                      ),
+                    ]),
+              ),
+            ),
+          )
+        ],
+        child: MaterialApp(
+          navigatorObservers: [
+            if (navigatorObserver != null) navigatorObserver!
+          ],
+          home: Scaffold(body: child),
+        ));
+  }
 }
