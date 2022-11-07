@@ -10,7 +10,6 @@ class FormsPage extends StatelessWidget {
   final String pageName;
 
   const FormsPage({super.key, @PathParam() required this.pageName});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

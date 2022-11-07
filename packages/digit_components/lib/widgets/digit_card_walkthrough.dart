@@ -71,72 +71,77 @@ class DigitCardWalkthrough extends StatelessWidget {
                 ? position.dx - MediaQuery.of(context).size.width / 4
                 : position.dx,
             top: box.size.height + position.dy,
-            child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10, bottom: 20),
-                          child: Text(
-                            walkthroughdata.subtitle,
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width / 1.8,
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(
-                                height: 30, //height of button
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text(
-                                    'Skip',
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                )),
-                            SizedBox(
-                                height: 30, //height of button
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 3, //elevation of button
-                                    shape: RoundedRectangleBorder(
-                                        //to set border radius to button
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    //content padding inside button
-                                  ),
-                                  onPressed: () {
-                                    state.walkthroughIndex !=
-                                            state.walkthroughData.digiticoncards
-                                                    .length -
-                                                1
-                                        ? context.read<WalkthroughBloc>().add(
-                                            RequestWalkthroughNextEvent(
-                                                walkthroughIndex:
-                                                    state.walkthroughIndex))
-                                        : Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    state.walkthroughIndex !=
-                                            state.walkthroughData.digiticoncards
-                                                    .length -
-                                                1
-                                        ? 'Next'
-                                        : 'End',
-                                    style: const TextStyle(fontSize: 10),
-                                  ),
-                                ))
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                walkthroughdata.subtitle,
+                                textAlign: TextAlign.start,
+                                maxLines: 2,
+                                style: const TextStyle(height: 1.5),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                    height: 30, //height of button
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        'Skip',
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                    )),
+                                SizedBox(
+                                    height: 30, //height of button
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 3, //elevation of button
+                                        shape: RoundedRectangleBorder(
+                                            //to set border radius to button
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        //content padding inside button
+                                      ),
+                                      onPressed: () {
+                                        state.walkthroughIndex !=
+                                                state.walkthroughData
+                                                        .digiticoncards.length -
+                                                    1
+                                            ? context
+                                                .read<WalkthroughBloc>()
+                                                .add(
+                                                    RequestWalkthroughNextEvent(
+                                                        walkthroughIndex: state
+                                                            .walkthroughIndex))
+                                            : Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        state.walkthroughIndex !=
+                                                state.walkthroughData
+                                                        .digiticoncards.length -
+                                                    1
+                                            ? 'Next'
+                                            : 'End',
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                    ))
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    )))),
+                        ))))),
       ]);
     });
   }
