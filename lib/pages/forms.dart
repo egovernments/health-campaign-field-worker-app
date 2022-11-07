@@ -11,10 +11,6 @@ class FormsPage extends StatelessWidget {
 
   const FormsPage({super.key, @PathParam() required this.pageName});
 
-  incrementcard(int increment) {
-    return increment + 1;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
