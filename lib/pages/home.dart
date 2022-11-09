@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
           header: Column(
             children: [
               BackNavigationHelpHeaderWidget(
-                helpCallBack: () {},
+                onPressed: () {},
               ),
               const Card(child: Placeholder(fallbackHeight: 120)),
             ],

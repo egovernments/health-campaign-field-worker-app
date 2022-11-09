@@ -35,7 +35,7 @@ class FormsPage extends StatelessWidget {
             ),
             builder: (context, formGroup, child) => ScrollableContent(
               header: BackNavigationHelpHeaderWidget(
-                helpCallBack: () {
+                onPressed: () {
                   FormWalkthrough.show(context, schema);
                 },
               ),
