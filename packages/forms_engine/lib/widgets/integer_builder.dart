@@ -5,16 +5,15 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
   final int? maximum;
   final bool incrementer;
 
-  const JsonSchemaIntegerBuilder({
-    required super.formControlName,
-    required super.form,
-    super.key,
-    super.value,
-    super.hint,
-    this.incrementer = false,
-    this.minimum,
-    this.maximum,
-  });
+  const JsonSchemaIntegerBuilder(
+      {required super.formControlName,
+      required super.form,
+      super.key,
+      super.value,
+      super.hint,
+      this.incrementer = false,
+      this.minimum,
+      this.maximum});
 
   @override
   Widget build(BuildContext context) {

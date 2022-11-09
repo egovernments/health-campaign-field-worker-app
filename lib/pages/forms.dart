@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:forms_engine/blocs/walkthrough/walkthrough.dart';
 import 'package:forms_engine/forms_engine.dart';
 import 'package:health_campaigns_flutter/router/app_router.dart';
 import 'package:health_campaigns_flutter/widgets/header/back_navigation_help_header.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FormsPage extends StatelessWidget {
   final String pageName;
-
   const FormsPage({super.key, @PathParam() required this.pageName});
 
   @override
@@ -34,7 +34,11 @@ class FormsPage extends StatelessWidget {
               JsonForms.getFormControls(schema),
             ),
             builder: (context, formGroup, child) => ScrollableContent(
-              header: const BackNavigationHelpHeaderWidget(),
+              header: BackNavigationHelpHeaderWidget(
+                helpCallBack: () {
+                  FormWalkthrough.show(context, schema);
+                },
+              ),
               footer: DigitCard(
                 margin: EdgeInsets.zero,
                 child: ReactiveFormConsumer(
@@ -81,6 +85,9 @@ class FormsPage extends StatelessWidget {
                                 );
 
                             if ((index) < schemaObject.pages.length - 1) {
+                              context.read<WalkthroughBloc>().add(
+                                    const RequestWalkthroughResetEvent(),
+                                  );
                               context.router.push(FormsRoute(
                                 pageName: schemaObject.pages.entries
                                     .elementAt(index + 1)

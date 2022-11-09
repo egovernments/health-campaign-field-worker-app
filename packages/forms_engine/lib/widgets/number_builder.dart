@@ -4,15 +4,14 @@ class JsonSchemaNumberBuilder extends JsonSchemaBuilder<num> {
   final num? minimum;
   final num? maximum;
 
-  const JsonSchemaNumberBuilder({
-    required super.formControlName,
-    required super.form,
-    super.key,
-    super.value,
-    super.hint,
-    this.maximum,
-    this.minimum,
-  });
+  const JsonSchemaNumberBuilder(
+      {required super.formControlName,
+      required super.form,
+      super.key,
+      super.value,
+      super.hint,
+      this.maximum,
+      this.minimum});
 
   @override
   Widget build(BuildContext context) {

@@ -16,6 +16,7 @@ class PropertySchema with _$PropertySchema {
     @JsonKey(name: 'type') required PropertySchemaType type,
     bool? readonly,
     bool? displayOnly,
+    String? indexKey,
     Map<String, PropertySchema>? properties,
     List<String>? required,
     List<String>? enums,
@@ -28,6 +29,7 @@ class PropertySchema with _$PropertySchema {
     num? minimum,
     String? hint,
     String? label,
+    String? infoText,
     dynamic value,
     DisplayBehavior? displayBehavior,
   }) = _PropertySchema;

@@ -14,9 +14,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: ScrollableContent(
           header: Column(
-            children: const [
-              BackNavigationHelpHeaderWidget(),
-              Card(child: Placeholder(fallbackHeight: 120)),
+            children: [
+              BackNavigationHelpHeaderWidget(
+                helpCallBack: () {},
+              ),
+              const Card(child: Placeholder(fallbackHeight: 120)),
             ],
           ),
           footer: const PoweredByDigit(),

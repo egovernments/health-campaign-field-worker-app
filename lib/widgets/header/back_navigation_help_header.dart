@@ -4,11 +4,13 @@ import 'package:health_campaigns_flutter/router/app_router.dart';
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
   final bool showBackNavigation;
+  final VoidCallback helpCallBack;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
     this.showHelp = true,
     this.showBackNavigation = true,
+    required this.helpCallBack,
   });
 
   @override
@@ -37,7 +39,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
         if (showHelp) ...[
           TextButton(
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
-            onPressed: null,
+            onPressed: () => helpCallBack(),
             child: Row(
               children: const [
                 Text('Help'),

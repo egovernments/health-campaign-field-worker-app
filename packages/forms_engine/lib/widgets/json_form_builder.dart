@@ -3,12 +3,14 @@ part of 'json_schema_builder.dart';
 class JsonFormBuilder extends StatelessWidget {
   final String formControlName;
   final PropertySchema schema;
+  final String indexKey;
 
-  const JsonFormBuilder({
-    Key? key,
-    required this.formControlName,
-    required this.schema,
-  }) : super(key: key);
+  const JsonFormBuilder(
+      {Key? key,
+      required this.formControlName,
+      required this.schema,
+      required this.indexKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +51,11 @@ class JsonFormBuilder extends StatelessWidget {
         return const Offstage();
       }
     }
-
     switch (type) {
       case PropertySchemaType.string:
         if (schema.enums?.isNotEmpty ?? false) {
           child = LabeledField(
+            key: GlobalObjectKey(indexKey),
             label: schema.label ?? '',
             child: JsonSchemaDropdownBuilder(
               form: form,
@@ -66,6 +68,7 @@ class JsonFormBuilder extends StatelessWidget {
           break;
         } else if (schema.format == PropertySchemaFormat.date) {
           child = LabeledField(
+            key: GlobalObjectKey(indexKey),
             label: schema.label ?? '',
             child: JsonSchemaDatePickerBuilder(
               form: form,
@@ -84,6 +87,7 @@ class JsonFormBuilder extends StatelessWidget {
             },
             builder: (context, state) {
               return LabeledField(
+                key: GlobalObjectKey(indexKey),
                 label: schema.label ?? '',
                 child: JsonSchemaStringBuilder(
                   form: form,
@@ -111,6 +115,7 @@ class JsonFormBuilder extends StatelessWidget {
           );
         } else {
           child = LabeledField(
+            key: GlobalObjectKey(indexKey),
             label: schema.label ?? '',
             child: JsonSchemaStringBuilder(
               form: form,
@@ -126,6 +131,7 @@ class JsonFormBuilder extends StatelessWidget {
       case PropertySchemaType.integer:
         child = LabeledField(
           label: schema.label ?? '',
+          key: GlobalObjectKey(indexKey),
           child: JsonSchemaIntegerBuilder(
             form: form,
             formControlName: formControlName,
@@ -140,6 +146,7 @@ class JsonFormBuilder extends StatelessWidget {
       case PropertySchemaType.numeric:
         child = LabeledField(
           label: schema.label ?? '',
+          key: GlobalObjectKey(indexKey),
           child: JsonSchemaNumberBuilder(
             form: form,
             formControlName: formControlName,
@@ -152,6 +159,7 @@ class JsonFormBuilder extends StatelessWidget {
         break;
       case PropertySchemaType.boolean:
         child = JsonSchemaBooleanBuilder(
+          key: GlobalObjectKey(indexKey),
           form: form,
           formControlName: formControlName,
           value: schema.value as bool?,
@@ -163,11 +171,10 @@ class JsonFormBuilder extends StatelessWidget {
           children: schema.properties?.entries.map<Widget>((e) {
                 final subSchema = e.value;
                 final subName = e.key;
-
                 return JsonFormBuilder(
-                  formControlName: subName,
-                  schema: subSchema,
-                );
+                    formControlName: subName,
+                    schema: subSchema,
+                    indexKey: subSchema.indexKey!);
               }).toList() ??
               [const Text('No schema')],
         );

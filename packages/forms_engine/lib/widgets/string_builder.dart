@@ -7,20 +7,19 @@ class JsonSchemaStringBuilder extends JsonSchemaBuilder<String> {
   final String? format;
   final Widget? suffix;
 
-  const JsonSchemaStringBuilder({
-    required super.formControlName,
-    required super.form,
-    super.readOnly,
-    super.onTap,
-    super.key,
-    super.value,
-    super.hint,
-    this.suffix,
-    this.enums,
-    this.format,
-    this.minLength,
-    this.maxLength,
-  });
+  const JsonSchemaStringBuilder(
+      {required super.formControlName,
+      required super.form,
+      super.readOnly,
+      super.onTap,
+      super.key,
+      super.value,
+      super.hint,
+      this.suffix,
+      this.enums,
+      this.format,
+      this.minLength,
+      this.maxLength});
 
   @override
   Widget build(BuildContext context) {
