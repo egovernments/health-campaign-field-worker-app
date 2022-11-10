@@ -24,7 +24,7 @@ void main() {
                   key: GlobalObjectKey(e.widgetKey),
                   icon: IconData(e.icon, fontFamily: 'MaterialIcons'),
                   label: e.title,
-                  onPressed: e.callback,
+                  onPressed: e.onPressed,
                 ))
             .toList();
       }

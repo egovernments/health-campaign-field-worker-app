@@ -12,7 +12,7 @@ mixin StaticData {
               DigitIconCardWrapperModel(digitIconCards: <DigitIconCardModel>[
             DigitIconCardModel(
               title: 'Registration',
-              callback: pageName == null
+              onPressed: pageName == null
                   ? null
                   : () => context.router.push(
                         FormsRoute(
@@ -25,21 +25,21 @@ mixin StaticData {
             ),
             const DigitIconCardModel(
               title: 'View Beneficiaries',
-              callback: null,
+              onPressed: null,
               icon: 0xe07d,
               subtitle: 'View Reports on this Screen',
               widgetKey: 'BENEFICIARIES_ICON_KEY',
             ),
             const DigitIconCardModel(
               title: 'View Reports',
-              callback: null,
+              onPressed: null,
               icon: 0xe3dd,
               subtitle: 'View Reports on this Screen',
               widgetKey: 'REPORTS_ICON_KEY',
             ),
             DigitIconCardModel(
               title: 'Sync Data',
-              callback: () =>
+              onPressed: () =>
                   context.read<FormsBloc>().add(const FormsLoadEvent()),
               icon: 0xe630,
               subtitle: 'View sync Data on this Screen',
@@ -47,14 +47,14 @@ mixin StaticData {
             ),
             const DigitIconCardModel(
               title: 'Call Supervisor',
-              callback: null,
+              onPressed: null,
               icon: 0xe052,
               subtitle: 'call to Supervisor  by clicking',
               widgetKey: 'CALL_SUP_ICON_KEY',
             ),
             const DigitIconCardModel(
               title: 'File Complaint',
-              callback: null,
+              onPressed: null,
               icon: 0xe087,
               subtitle: 'File a Complaint by clicking',
               widgetKey: 'FILE_COMPLAINT_ICON_KEY',

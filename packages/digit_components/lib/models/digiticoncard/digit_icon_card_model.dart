@@ -17,7 +17,7 @@ class DigitIconCardModel with _$DigitIconCardModel {
     required String title,
     required String subtitle,
     required String widgetKey,
-    VoidCallback? callback,
+    VoidCallback? onPressed,
     required int icon,
   }) = _DigitIconCardModel;
 }

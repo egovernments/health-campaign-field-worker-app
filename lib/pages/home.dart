@@ -55,7 +55,7 @@ List<DigitIconCard> _getItems(BuildContext context, WalkthroughState state) {
             key: GlobalObjectKey(e.widgetKey),
             icon: IconData(e.icon, fontFamily: 'MaterialIcons'),
             label: e.title,
-            onPressed: e.callback,
+            onPressed: e.onPressed,
           ))
       .toList();
 }
