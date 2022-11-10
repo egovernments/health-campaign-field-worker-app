@@ -1,4 +1,3 @@
-import 'package:digit_components/widgets/digit_pointer.dart';
 import 'package:flutter/material.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +30,7 @@ class DigitCardWalkthrough extends StatelessWidget {
     return BlocBuilder<WalkthroughBloc, WalkthroughState>(
         builder: (context, state) {
       var walkthroughdata =
-          state.walkthroughData.digiticoncards[state.walkthroughIndex];
+          state.walkthroughData.digitIconCards[state.walkthroughIndex];
       RenderBox? box = ((GlobalObjectKey(walkthroughdata.widgetKey))
           .currentContext
           ?.findRenderObject() as RenderBox?);
@@ -56,11 +55,7 @@ class DigitCardWalkthrough extends StatelessWidget {
             left: position.dx + 40,
             top: position.dy + box.size.height,
             child: CustomPaint(
-              painter: TrianglePainter(
-                strokeColor: Colors.white,
-                strokeWidth: 5,
-                paintingStyle: PaintingStyle.fill,
-              ),
+              painter: DigitTheme.instance.customPainterTheme,
               child: const SizedBox(
                 height: 30,
                 width: 50,
@@ -118,7 +113,7 @@ class DigitCardWalkthrough extends StatelessWidget {
                                       onPressed: () {
                                         state.walkthroughIndex !=
                                                 state.walkthroughData
-                                                        .digiticoncards.length -
+                                                        .digitIconCards.length -
                                                     1
                                             ? context
                                                 .read<WalkthroughBloc>()
@@ -131,7 +126,7 @@ class DigitCardWalkthrough extends StatelessWidget {
                                       child: Text(
                                         state.walkthroughIndex !=
                                                 state.walkthroughData
-                                                        .digiticoncards.length -
+                                                        .digitIconCards.length -
                                                     1
                                             ? 'Next'
                                             : 'End',

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class TrianglePainter extends CustomPainter {
+class DigitTrianglePainter extends CustomPainter {
   final Color strokeColor;
   final PaintingStyle paintingStyle;
   final double strokeWidth;
 
-  TrianglePainter(
+  DigitTrianglePainter(
       {this.strokeColor = Colors.black,
       this.strokeWidth = 3,
       this.paintingStyle = PaintingStyle.stroke});
@@ -29,7 +29,7 @@ class TrianglePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(TrianglePainter oldDelegate) {
+  bool shouldRepaint(DigitTrianglePainter oldDelegate) {
     return oldDelegate.strokeColor != strokeColor ||
         oldDelegate.paintingStyle != paintingStyle ||
         oldDelegate.strokeWidth != strokeWidth;

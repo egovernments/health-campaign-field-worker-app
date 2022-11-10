@@ -7,7 +7,7 @@ part 'digit_icon_card_model.freezed.dart';
 @freezed
 class DigitIconCardWrapperModel with _$DigitIconCardWrapperModel {
   const factory DigitIconCardWrapperModel({
-    @Default([]) List<DigitIconCardModel> digiticoncards,
+    @Default([]) List<DigitIconCardModel> digitIconCards,
   }) = _DigitIconCardWrapperModel;
 }
 

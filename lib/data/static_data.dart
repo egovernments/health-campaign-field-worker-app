@@ -9,7 +9,7 @@ mixin StaticData {
   void loadStaticData(BuildContext context, pageName) {
     context.read<WalkthroughBloc>().add(WalkthroughEvent.loadWalkthrough(
           walkthroughData:
-              DigitIconCardWrapperModel(digiticoncards: <DigitIconCardModel>[
+              DigitIconCardWrapperModel(digitIconCards: <DigitIconCardModel>[
             DigitIconCardModel(
               title: 'Registration',
               callback: pageName == null

@@ -1,5 +1,6 @@
 library digit_theme;
 
+import 'package:digit_components/electrons/digit_triangle_painter.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/typography.dart';
 import 'package:flutter/material.dart';
@@ -110,5 +111,11 @@ class DigitTheme {
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
         actionsPadding: const EdgeInsets.all(8),
+      );
+
+  DigitTrianglePainter get customPainterTheme => DigitTrianglePainter(
+        strokeColor: Colors.white,
+        strokeWidth: 5,
+        paintingStyle: PaintingStyle.fill,
       );
 }

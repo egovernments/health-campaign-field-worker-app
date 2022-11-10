@@ -19,7 +19,7 @@ void main() {
 
       List<DigitIconCard> getItems(
           BuildContext context, WalkthroughState state) {
-        return state.walkthroughData.digiticoncards
+        return state.walkthroughData.digitIconCards
             .map((e) => DigitIconCard(
                   key: GlobalObjectKey(e.widgetKey),
                   icon: IconData(e.icon, fontFamily: 'MaterialIcons'),

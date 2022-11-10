@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget with StaticData {
             header: Column(
               children: [
                 BackNavigationHelpHeaderWidget(
-                  helpCallBack: () {
+                  onPressed: () {
                     DigitCardWalkthrough.show(context);
                   },
                 ),
@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget with StaticData {
 }
 
 List<DigitIconCard> _getItems(BuildContext context, WalkthroughState state) {
-  return state.walkthroughData.digiticoncards
+  return state.walkthroughData.digitIconCards
       .map((e) => DigitIconCard(
             key: GlobalObjectKey(e.widgetKey),
             icon: IconData(e.icon, fontFamily: 'MaterialIcons'),

@@ -34,7 +34,7 @@ class FormsPage extends StatelessWidget {
             ),
             builder: (context, formGroup, child) => ScrollableContent(
               header: BackNavigationHelpHeaderWidget(
-                helpCallBack: () => DigitCardWalkthrough.show(context),
+                onPressed: () => DigitCardWalkthrough.show(context),
               ),
               footer: DigitCard(
                 margin: EdgeInsets.zero,
