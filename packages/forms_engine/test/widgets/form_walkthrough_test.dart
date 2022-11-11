@@ -26,6 +26,7 @@ void main() {
       expect(find.text('WALKTHROUGH_BTN'), findsOneWidget);
       await tester.tap(find.text('WALKTHROUGH_BTN'));
       await tester.pump();
+      expect(find.text('Administration Area Detail'), findsOneWidget);
     });
   });
 }
