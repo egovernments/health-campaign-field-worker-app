@@ -29,6 +29,7 @@ dependencies:
   reactive_forms: ^14.1.0
   location: ^4.4.0
   dart_mappable: ^1.2.0
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
