@@ -1,40 +1,43 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
+import 'package:health_campaigns_flutter/data/data_repository.dart';
 
 import 'package:health_campaigns_flutter/models/data_model.dart';
 
-abstract class DataAccessInterface<D extends DataModel, R extends DataModel> {
-  FutureOr<List<D>> search(R query);
-
-  String create(D entity);
-
-  String update(D entity);
-}
-
-abstract class RemoteDataAccess<D extends DataModel, R extends DataModel>
-    extends DataAccessInterface<D, R> {
-  final Dio dio;
-
-  RemoteDataAccess(this.dio);
-}
-
-abstract class LocalDataAccess<D extends DataModel, R extends DataModel>
-    extends DataAccessInterface<D, R> {
-  // TODO(ajil): Add local store
-}
-
 abstract class DataManager<D extends DataModel, R extends DataModel> {
-  final PersistenceConfiguration persistenceConfiguration;
+  final RemoteRepository<D, R> remoteRepository;
+  final LocalRepository<D, R> localRepository;
 
-  DataManager({
-    this.persistenceConfiguration = PersistenceConfiguration.offline,
+  const DataManager({
+    required this.localRepository,
+    required this.remoteRepository,
   });
 
-  FutureOr<List<D>> search(R query);
+  DataRepository<D, R> _getRepository(PersistenceConfiguration configuration) {
+    switch (configuration) {
+      case PersistenceConfiguration.offline:
+        return localRepository;
+      case PersistenceConfiguration.online:
+        return remoteRepository;
+    }
+  }
 
-  String create(D entity);
+  FutureOr<List<D>> search(
+    R query, {
+    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
+  }) =>
+      _getRepository(configuration).search(query);
 
-  String update(D entity);
+  FutureOr<String> create(
+    D entity, {
+    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
+  }) =>
+      _getRepository(configuration).create(entity);
+
+  FutureOr<String> update(
+    D entity, {
+    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
+  }) =>
+      _getRepository(configuration).update(entity);
 }
 
 enum PersistenceConfiguration { offline, online }
