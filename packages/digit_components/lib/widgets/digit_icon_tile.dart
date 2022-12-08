@@ -24,12 +24,10 @@ class DigitIconTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                title,
-                textAlign: TextAlign.start,
-              )),
+          Text(
+            title,
+            textAlign: TextAlign.start,
+          ),
           content ??
               const SizedBox(
                 width: 0,

@@ -24,7 +24,6 @@ class DigitRowCard extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => onPressed(ele),
                   child: Container(
-                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: ele.isSelected
