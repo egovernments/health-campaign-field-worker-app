@@ -31,9 +31,9 @@ class HomePage extends StatelessWidget {
                       padding: const EdgeInsets.all(18),
                       child: Column(
                         children: [
-                          const LinearProgressIndicator(
+                          LinearProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Color.fromARGB(255, 19, 120, 22),
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                             ),
                             value: 0.8,
                             minHeight: 7.0,

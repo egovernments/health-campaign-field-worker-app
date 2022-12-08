@@ -48,6 +48,7 @@ class DigitTheme {
       onBackground: colors.woodsmokeBlack,
       surface: colors.alabasterWhite,
       onSurface: colors.woodsmokeBlack,
+      onPrimaryContainer: colors.darkSpringGreen,
       inversePrimary: colors.paleLeafGreen);
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
