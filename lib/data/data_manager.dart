@@ -3,7 +3,7 @@ import 'package:health_campaigns_flutter/data/data_repository.dart';
 
 import 'package:health_campaigns_flutter/models/data_model.dart';
 
-abstract class DataManager<D extends DataModel, R extends DataModel> {
+class DataManager<D extends DataModel, R extends DataModel> {
   final RemoteRepository<D, R> remoteRepository;
   final LocalRepository<D, R> localRepository;
 

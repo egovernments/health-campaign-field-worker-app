@@ -6,9 +6,9 @@ import 'package:health_campaigns_flutter/models/data_model.dart';
 abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<List<D>> search(R query);
 
-  String create(D entity);
+  FutureOr<String> create(D entity);
 
-  String update(D entity);
+  FutureOr<String> update(D entity);
 }
 
 abstract class RemoteRepository<D extends DataModel, R extends DataModel>
