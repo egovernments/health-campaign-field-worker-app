@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'widget_app.dart';
+import '../widget_app.dart';
 
 const _target = """
  [
