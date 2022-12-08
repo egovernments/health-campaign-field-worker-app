@@ -5,14 +5,12 @@ class DigitLanguageCard extends StatelessWidget {
   final List<DigitRowCardModel> list;
   final Function onPressedicon;
   final VoidCallback onPressedButton;
-  final double width;
   final String actionlabel;
   const DigitLanguageCard({
     super.key,
     required this.list,
     required this.onPressedicon,
     required this.onPressedButton,
-    required this.width,
     required this.actionlabel,
   });
 

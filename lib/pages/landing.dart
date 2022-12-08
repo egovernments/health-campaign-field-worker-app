@@ -26,16 +26,13 @@ class LandingPage extends StatelessWidget {
                 list: languageList,
                 onPressedButton: () =>
                     Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => LoginPage(),
+                  builder: (context) => const LoginPage(),
                 )),
-                width: MediaQuery.of(context).size.width / 2,
-                onPressedicon: (data) {
-                  print(data);
-                },
+                onPressedicon: (data) {},
                 actionlabel: 'Continue',
               ),
             ),
-          )
+          ),
         ],
       ),
     );

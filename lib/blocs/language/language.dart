@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,18 +30,14 @@ class LanguageSelectorBloc
     LanguageSelectorEmitter emit,
   ) async {
     List<LanguagesModel> list = state.languageSelectors;
-    print("Language Selector");
 
-    print(event.languageSelectors);
-    print(list);
-    print(list.indexOf(event.languageSelectors));
-    // if (event.languageSelectors.isSelected) return;
+    if (event.languageSelectors.isSelected) return;
 
-    // list[list.indexOf(event.languageSelectors)] = state.languageSelectors[
-    //         state.languageSelectors.indexOf(event.languageSelectors)]
-    //     .copyWith(isSelected: true);
+    list[list.indexOf(event.languageSelectors)] = state.languageSelectors[
+            state.languageSelectors.indexOf(event.languageSelectors)]
+        .copyWith(isSelected: true);
 
-    // emit(state.copyWith(languageSelectors: list));
+    emit(state.copyWith(languageSelectors: list));
   }
 }
 

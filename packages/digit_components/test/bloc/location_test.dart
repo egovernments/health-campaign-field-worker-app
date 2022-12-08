@@ -1,3 +1,5 @@
+// ignore_for_file: unused_result
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:digit_components/blocs/location/location.dart';

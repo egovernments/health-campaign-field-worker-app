@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 part 'state_info_model.freezed.dart';
 part 'state_info_model.g.dart';
 
@@ -18,7 +17,7 @@ class StateInfoModel with _$StateInfoModel {
     String? selectedCode,
     required bool hasLocalisation,
     required bool enableWhatsApp,
-    required List<LanguagesModel> languases,
+    required List<LanguagesModel> languages,
   }) = _StateInfoModel;
 
   factory StateInfoModel.fromJson(Map<String, dynamic> json) =>
