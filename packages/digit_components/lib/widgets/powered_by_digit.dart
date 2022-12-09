@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class PoweredByDigit extends StatefulWidget {
   final Size? size;
   final EdgeInsets? padding;
-
   const PoweredByDigit({super.key, this.size, this.padding});
 
   @override
