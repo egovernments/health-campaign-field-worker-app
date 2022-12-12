@@ -225,6 +225,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.19.2"
+  dart_mappable:
+    dependency: "direct main"
+    description:
+      name: dart_mappable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
+  dart_mappable_builder:
+    dependency: "direct dev"
+    description:
+      name: dart_mappable_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   dart_style:
     dependency: transitive
     description:
@@ -246,6 +260,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.6"
   drift:
     dependency: "direct main"
     description:
@@ -805,6 +826,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  type_plus:
+    dependency: transitive
+    description:
+      name: type_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.3"
   typed_data:
     dependency: transitive
     description:

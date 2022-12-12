@@ -1,10 +1,10 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/blocs/app_bloc_observer.dart';
-import 'package:health_campaign_field_worker_app/blocs/auth/auth.dart';
-import 'package:health_campaign_field_worker_app/router/app_navigator_observer.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import 'blocs/app_bloc_observer.dart';
+import 'blocs/auth/auth.dart';
+import 'router/app_navigator_observer.dart';
+import 'router/app_router.dart';
 
 void main() {
   Bloc.observer = AppBlocObserver();

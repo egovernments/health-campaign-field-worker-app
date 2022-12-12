@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
+import '../../router/app_router.dart';
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;

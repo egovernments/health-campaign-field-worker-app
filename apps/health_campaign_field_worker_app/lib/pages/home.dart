@@ -3,9 +3,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forms_engine/forms_engine.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
-import 'package:health_campaign_field_worker_app/widgets/header/back_navigation_help_header.dart';
-import 'package:health_campaign_field_worker_app/widgets/home/home_item_card.dart';
+import '../router/app_router.dart';
+import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/home/home_item_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
