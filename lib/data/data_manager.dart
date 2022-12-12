@@ -27,13 +27,13 @@ class DataManager<D extends DataModel, R extends DataModel> {
   }) =>
       _getRepository(configuration).search(query);
 
-  FutureOr<String> create(
+  FutureOr<dynamic> create(
     D entity, {
     PersistenceConfiguration configuration = PersistenceConfiguration.offline,
   }) =>
       _getRepository(configuration).create(entity);
 
-  FutureOr<String> update(
+  FutureOr<dynamic> update(
     D entity, {
     PersistenceConfiguration configuration = PersistenceConfiguration.offline,
   }) =>
