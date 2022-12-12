@@ -16,8 +16,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   reactive_forms: ^14.1.0
-  digit_components:
-    path: ../digit_components
+  digit_components: ^0.0.1
   flutter_bloc: ^8.1.1
 
 dev_dependencies:
