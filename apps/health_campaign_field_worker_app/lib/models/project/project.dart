@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:health_campaigns_flutter/models/address/address_model.dart';
-import 'package:health_campaigns_flutter/models/data_model.dart';
+import '../address/address_model.dart';
+import '../data_model.dart';
 
 @MappableClass()
 class ProjectRequestModel extends DataModel {

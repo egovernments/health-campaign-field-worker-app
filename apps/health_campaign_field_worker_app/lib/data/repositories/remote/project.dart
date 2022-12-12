@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:health_campaigns_flutter/data/data_repository.dart';
-import 'package:health_campaigns_flutter/models/data_model.dart';
+import '../../data_repository.dart';
+import '../../../models/data_model.dart';
 
 class ProjectRepository
     extends RemoteRepository<ProjectModel, ProjectRequestModel> {

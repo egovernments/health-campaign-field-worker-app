@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:health_campaigns_flutter/data/data_repository.dart';
+import 'data_repository.dart';
 
-import 'package:health_campaigns_flutter/models/data_model.dart';
+import '../models/data_model.dart';
 
 class DataManager<D extends DataModel, R extends DataModel> {
   final RemoteRepository<D, R> remoteRepository;

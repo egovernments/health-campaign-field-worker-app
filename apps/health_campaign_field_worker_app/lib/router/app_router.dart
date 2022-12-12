@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:health_campaign_field_worker_app/pages/authenticated.dart';
-import 'package:health_campaign_field_worker_app/pages/forms.dart';
-import 'package:health_campaign_field_worker_app/pages/home.dart';
-import 'package:health_campaign_field_worker_app/pages/login.dart';
+import '../pages/authenticated.dart';
+import '../pages/forms.dart';
+import '../pages/home.dart';
+import '../pages/login.dart';
 
 export 'package:auto_route/auto_route.dart';
 

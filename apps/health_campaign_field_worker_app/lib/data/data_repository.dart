@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:health_campaigns_flutter/data/local_store/sql_store.dart';
-import 'package:health_campaigns_flutter/models/data_model.dart';
+import 'local_store/sql_store.dart';
+import '../models/data_model.dart';
 
 abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<List<D>> search(R query);
