@@ -5,8 +5,11 @@ packages:
   - packages/*
   - apps/*
 
-scripts:
+command:
+  bootstrap:
+    usePubspecOverrides: true
 
+scripts:
   postbootstrap: melos run build_runner --no-select
 
   build_runner:

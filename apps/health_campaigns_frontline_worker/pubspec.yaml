@@ -19,10 +19,8 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  forms_engine:
-    path: ../../packages/forms_engine
-  digit_components:
-    path: ../../packages/digit_components
+  forms_engine: ^0.0.1
+  digit_components: ^0.0.1
   auto_route: ^5.0.2
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
