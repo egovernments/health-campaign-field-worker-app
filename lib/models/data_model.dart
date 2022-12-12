@@ -3,6 +3,7 @@ library models;
 import 'package:dart_mappable/dart_mappable.dart';
 
 export 'project/project.dart';
+export 'oplog/oplog_entry.dart';
 export 'data_model.mapper.g.dart';
 
 @MappableClass()
