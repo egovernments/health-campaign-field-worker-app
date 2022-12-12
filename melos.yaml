@@ -1,5 +1,6 @@
-name: digit_flutter
+name: Digit Flutter
+repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 packages:
-  - packages/**
-  - apps/**
+  - packages/*
+  - apps/*
