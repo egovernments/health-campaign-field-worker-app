@@ -29,3 +29,5 @@ class AuditDetails {
   })  : lastModifiedBy = lastModifiedBy ?? createdBy,
         lastModifiedTime = lastModifiedTime ?? createdTime;
 }
+
+enum DataModelType { project }
