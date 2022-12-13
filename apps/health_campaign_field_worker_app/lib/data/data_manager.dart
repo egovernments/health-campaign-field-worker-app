@@ -6,10 +6,12 @@ import '../models/data_model.dart';
 class DataManager<D extends DataModel, R extends DataModel> {
   final RemoteRepository<D, R> remoteRepository;
   final LocalRepository<D, R> localRepository;
+  final PersistenceConfiguration configuration;
 
   const DataManager({
     required this.localRepository,
     required this.remoteRepository,
+    required this.configuration,
   });
 
   DataRepository<D, R> _getRepository(PersistenceConfiguration configuration) {
@@ -21,22 +23,13 @@ class DataManager<D extends DataModel, R extends DataModel> {
     }
   }
 
-  FutureOr<List<D>> search(
-    R query, {
-    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
-  }) =>
+  FutureOr<List<D>> search(R query) =>
       _getRepository(configuration).search(query);
 
-  FutureOr<dynamic> create(
-    D entity, {
-    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
-  }) =>
+  FutureOr<dynamic> create(D entity) =>
       _getRepository(configuration).create(entity);
 
-  FutureOr<dynamic> update(
-    D entity, {
-    PersistenceConfiguration configuration = PersistenceConfiguration.offline,
-  }) =>
+  FutureOr<dynamic> update(D entity) =>
       _getRepository(configuration).update(entity);
 }
 
