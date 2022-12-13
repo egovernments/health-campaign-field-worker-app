@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:isar/isar.dart';
 import 'local_store/sql_store.dart';
 import '../models/data_model.dart';
 
@@ -28,8 +29,9 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
 abstract class LocalRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
   final LocalSqlDataStore sqlDataStore;
+  final Isar isar;
 
-  LocalRepository(this.sqlDataStore);
+  LocalRepository(this.sqlDataStore, this.isar);
 
   @override
   FutureOr<int> create(D entity);
