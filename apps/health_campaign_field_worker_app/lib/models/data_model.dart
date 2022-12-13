@@ -9,8 +9,9 @@ export 'data_model.mapper.g.dart';
 @MappableClass()
 abstract class DataModel {
   final AuditDetails? auditDetails;
+  final bool isDeleted;
 
-  const DataModel({this.auditDetails});
+  const DataModel({this.auditDetails, this.isDeleted = false});
 }
 
 @MappableClass()
