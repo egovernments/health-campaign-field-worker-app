@@ -32,7 +32,7 @@ scripts:
     description: Combine coverage report of all packages
 
   generate:coverage-report:
-    run: melos exec -- melos run combine-coverage && genhtml coverage_report/lcov.info -o coverage_report/html
+    run: melos exec -- genhtml \$MELOS_ROOT_PATH/coverage_report/lcov.info -o \$MELOS_ROOT_PATH/coverage_report/html
     description: Generate a coverage report using lcov.info. Requires genhtml to be installed.
 
   generate:build-runner:

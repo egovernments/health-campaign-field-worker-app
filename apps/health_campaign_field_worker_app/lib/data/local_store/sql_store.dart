@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:health_campaign_field_worker_app/data/local_store/tables/delivery_table.dart';
-import 'package:health_campaign_field_worker_app/data/local_store/tables/campaign_registration_table.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -9,14 +7,7 @@ import 'package:path/path.dart' as p;
 
 part 'sql_store.g.dart';
 
-@DriftDatabase(tables: [
-  CampaignRegistrationTable,
-  HouseholdTable,
-  IndividualTable,
-  IndividualIdentifierTable,
-  DeliveryTable,
-  DeliveryResourceTable,
-])
+@DriftDatabase(tables: [])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
 
