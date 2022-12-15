@@ -1,8 +1,8 @@
 # Register bricks which can be consumed via the Mason CLI.
 # https://github.com/felangel/mason
 bricks:
-  # Sample Brick
-  # Run `mason make hello` to try it out.
+  freezed_bloc:
+    path: ./freezed_bloc/
   hello: 0.1.0+1
   # Bricks can also be imported via git url.
   # Uncomment the following lines to import
