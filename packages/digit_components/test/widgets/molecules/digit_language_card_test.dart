@@ -27,9 +27,9 @@ void main() {
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitLanguageCard(
         list: languageList,
-        actionlabel: 'Continue',
-        onPressedButton: () {},
-        onPressedicon: () {},
+        languageSubmitLabel: '',
+        onLanguageSubmit: () {},
+        onLanguageChange: () {},
       )));
 
       expect(
