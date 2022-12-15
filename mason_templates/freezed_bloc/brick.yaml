@@ -26,6 +26,3 @@ vars:
     description: Name of the bloc
     prompt: What do you want to call the BLoC?
 
-  events:
-    type: array
-
