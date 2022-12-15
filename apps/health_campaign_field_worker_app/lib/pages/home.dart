@@ -25,10 +25,12 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: e
-                        .map((e) => SizedBox(
-                              width: MediaQuery.of(context).size.width / 3,
-                              child: e,
-                            ))
+                        .map(
+                          (e) => SizedBox(
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: e,
+                          ),
+                        )
                         .toList(),
                   ),
                 ),

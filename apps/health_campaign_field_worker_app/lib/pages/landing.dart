@@ -14,27 +14,26 @@ class LandingPage extends StatelessWidget {
     List<DigitRowCardModel> languageList =
         list.map((e) => DigitRowCardModel.fromJson(e)).toList();
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      body: ScrollableContent(
-        children: [
-          DigitBanner(
-            color: DigitTheme.instance.colors.regalBlue,
-            imgUrl:
-                'https://s3.ap-south-1.amazonaws.com/pb-egov-assets/pb.testing/Punjab-bg-QA.jpg',
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: DigitLanguageCard(
-                list: languageList,
-                onPressedButton: () =>
-                    Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                )),
-                onPressedicon: (data) {},
-                actionlabel: 'Continue',
-              ),
+      body: Container(
+        color: theme.colorScheme.primary,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            DigitLanguageCard(
+              list: languageList,
+              onLanguageSubmit: () =>
+                  Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              )),
+              onLanguageChange: (data) {},
+              languageSubmitLabel: 'Continue',
             ),
-          ),
-        ],
+            const PoweredByDigit(),
+          ],
+        ),
       ),
     );
   }
