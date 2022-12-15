@@ -6,10 +6,16 @@ void run(HookContext context) {
   final variables = context.vars;
 
   if (!variables.containsKey('name'))  {
-    return;
+    logger.err('`name` is required');
+    throw Exception();
   }
 
   final name = variables['name'].toString().pascalCase;
+  if (name.isEmpty) {
+    logger.err('`name` is required');
+    throw Exception();
+  }
+
   logger.info('Generating $name');
 
 
