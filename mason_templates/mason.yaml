@@ -1,1 +1,3 @@
 bricks:
+  freezed_bloc:
+    path: ./freezed_bloc/
