@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/app_bloc_observer.dart';
+import 'blocs/app_config/app_config.dart';
 import 'blocs/auth/auth.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -25,6 +26,10 @@ class MainApplication extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
+        BlocProvider(
+          create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
+            ..add(const ApplicationConfigEvent.onfetchConfig()),
+        ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(
