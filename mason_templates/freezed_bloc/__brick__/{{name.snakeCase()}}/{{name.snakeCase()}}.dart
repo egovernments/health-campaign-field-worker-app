@@ -25,14 +25,14 @@ class {{name.pascalCase()}}Bloc extends Bloc<{{name.pascalCase()}}Event, {{name.
 
 @freezed
 class {{name.pascalCase()}}Event with _${{name.pascalCase()}}Event {
-  {{^events}}const {{name.pascalCase()}}Event._();{{/events}}
-  {{#events}}const {{name.pascalCase()}}Event.{{..camelCase()}}() = {{name.pascalCase()}}{{..pascalCase()}}Event;
+  {{^events}}const factory {{name.pascalCase()}}Event._();{{/events}}
+  {{#events}}const factory {{name.pascalCase()}}Event.{{..camelCase()}}() = {{name.pascalCase()}}{{..pascalCase()}}Event;
   {{/events}}
 }
 
 @freezed
 class {{name.pascalCase()}}State with _${{name.pascalCase()}}State {
-  {{^states}}const {{name.pascalCase()}}State._();{{/states}}
-  {{#states}}const {{name.pascalCase()}}State.{{..camelCase()}}() = {{name.pascalCase()}}{{..pascalCase()}}State;
+  {{^states}}const factory {{name.pascalCase()}}State._();{{/states}}
+  {{#states}}const factory {{name.pascalCase()}}State.{{..camelCase()}}() = {{name.pascalCase()}}{{..pascalCase()}}State;
   {{/states}}
 }
