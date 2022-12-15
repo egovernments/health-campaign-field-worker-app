@@ -49,7 +49,7 @@ class Languages with _$Languages {
   factory Languages({
     required String label,
     required String value,
-    required bool isSelected,
+    @Default(false) bool isSelected,
   }) = _Languages;
 
   factory Languages.fromJson(Map<String, dynamic> json) =>
