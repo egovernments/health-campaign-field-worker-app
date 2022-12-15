@@ -6,3 +6,5 @@ export './scrollable_content.dart';
 export './powered_by_digit.dart';
 export './labeled_field.dart';
 export './digit_dialog.dart';
+export './atoms/digit_table_item.dart';
+export './molecules/digit_table.dart';
