@@ -14,7 +14,12 @@ class HomePage extends StatelessWidget {
           header: Column(
             children: const [
               BackNavigationHelpHeaderWidget(),
-              ProgressIndicatorContainer(),
+              ProgressIndicatorContainer(
+                progressIndicatorLabel: 'Just 125 more to go',
+                progressIndicatorPrefixLabel: 'Yay! 15 registrations completed',
+                progressIndicatorSufixLabel: '200',
+                progressIndicatorvalue: .08,
+              ),
             ],
           ),
           footer: const PoweredByDigit(),
