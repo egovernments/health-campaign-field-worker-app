@@ -29,7 +29,7 @@ class LanguageSelectionPage extends StatelessWidget {
                             .map((e) => DigitRowCardModel.fromJson(e.toJson()))
                             .toList() as List<DigitRowCardModel>,
                         onLanguageSubmit: () =>
-                            context.router.replace(const LoginRoute()),
+                            context.router.push(const LoginRoute()),
                         onLanguageChange: (data) {},
                         languageSubmitLabel: 'Continue',
                       )

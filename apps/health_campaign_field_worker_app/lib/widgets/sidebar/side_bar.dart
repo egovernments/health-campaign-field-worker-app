@@ -1,16 +1,14 @@
-import 'dart:convert';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
-import '../../data/fake_language_schema.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/app_config/app_config.dart';
+import '../../models/app_config/app_config_model.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
   @override
   Widget build(BuildContext context) {
-    final List list = json.decode(fakeLanguageSchema);
-    List<DigitRowCardModel> languageList =
-        list.map((e) => DigitRowCardModel.fromJson(e)).toList();
     final theme = Theme.of(context);
 
     return ScrollableContent(
@@ -42,13 +40,26 @@ class SideBar extends StatelessWidget {
           icon: Icons.language,
           content: Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: DigitRowCard(
-              onPressed: (data) {},
-              list: languageList,
-              width: (MediaQuery.of(context).size.width *
-                      0.5 /
-                      languageList.length) -
-                  (4 * languageList.length),
+            child: BlocBuilder<ApplicationConfigBloc, ApplicationConfigState>(
+              builder: (context, state) {
+                List<Languages>? languageList =
+                    state.appConfigDetail?.configuration?.appConfig.languages;
+
+                return state.appConfigDetail?.configuration?.appConfig
+                            .languages !=
+                        null
+                    ? DigitRowCard(
+                        onPressed: (data) {},
+                        list: languageList
+                            ?.map((e) => DigitRowCardModel.fromJson(e.toJson()))
+                            .toList() as List<DigitRowCardModel>,
+                        width: (MediaQuery.of(context).size.width *
+                                0.5 /
+                                languageList!.length) -
+                            (4 * languageList.length),
+                      )
+                    : const Text('');
+              },
             ),
           ),
           onPressed: () {},
