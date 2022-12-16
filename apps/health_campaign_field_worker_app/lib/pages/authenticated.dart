@@ -3,8 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/blocs/location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../blocs/app_config/app_config.dart';
 import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
