@@ -26,7 +26,7 @@ void main() {
     testWidgets('Widget is created without errors', (widgetTester) async {
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitLanguageCard(
-        list: languageList,
+        digitRowCardItems: languageList,
         languageSubmitLabel: '',
         onLanguageSubmit: () {},
         onLanguageChange: () {},

@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/app_config/app_config.dart';
 import '../router/app_router.dart';
 
-class LandingPage extends StatelessWidget {
-  const LandingPage({Key? key}) : super(key: key);
+class LanguageSelectionPage extends StatelessWidget {
+  const LanguageSelectionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

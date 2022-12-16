@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
-import 'package:digit_components/widgets/digit_row_card/digit_row_card_model.dart';
+import 'package:digit_components/widgets/digit_row_card/digit_row_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
