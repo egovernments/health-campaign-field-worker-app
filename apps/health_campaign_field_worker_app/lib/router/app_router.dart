@@ -13,7 +13,7 @@ part 'app_router.gr.dart';
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: [
-    AutoRoute(page: LandingPage, path: ''),
+    AutoRoute(page: LandingPage, path: '/language_selection'),
     AutoRoute(page: LoginPage, path: '/login'),
     AutoRoute(
       page: AuthenticatedPageWrapper,

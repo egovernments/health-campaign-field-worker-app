@@ -24,12 +24,12 @@ class LandingPage extends StatelessWidget {
                             .languages !=
                         null
                     ? DigitLanguageCard(
-                        list: state
+                        digitRowCardItems: state
                             .appConfigDetail?.configuration?.appConfig.languages
                             .map((e) => DigitRowCardModel.fromJson(e.toJson()))
                             .toList() as List<DigitRowCardModel>,
                         onLanguageSubmit: () =>
-                            AutoRouter.of(context).pushNamed('login'),
+                            context.router.navigate(const LoginRoute()),
                         onLanguageChange: (data) {},
                         languageSubmitLabel: 'Continue',
                       )
