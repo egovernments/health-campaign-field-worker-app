@@ -2,28 +2,40 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorContainer extends StatelessWidget {
-  const ProgressIndicatorContainer({super.key});
+  final String progressIndicatorLabel;
+  final String progressIndicatorPrefixLabel;
+  final String progressIndicatorSufixLabel;
+  final double progressIndicatorvalue;
+  const ProgressIndicatorContainer({
+    super.key,
+    required this.progressIndicatorLabel,
+    required this.progressIndicatorPrefixLabel,
+    required this.progressIndicatorSufixLabel,
+    required this.progressIndicatorvalue,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DigitCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Text(
-            'Just 125 more to go',
-            style: Theme.of(context).textTheme.bodyMedium,
+            progressIndicatorLabel,
+            style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
           Padding(
             padding: const EdgeInsets.all(18),
             child: Column(
               children: [
-                const LinearProgressIndicator(
+                LinearProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.fromARGB(255, 19, 120, 22),
+                    theme.colorScheme.onSurfaceVariant,
                   ),
-                  value: 0.8,
+                  value: progressIndicatorvalue,
                   minHeight: 7.0,
                 ),
                 Padding(
@@ -32,13 +44,13 @@ class ProgressIndicatorContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Yay! 15 registrations completed',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        progressIndicatorPrefixLabel,
+                        style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        '200',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        progressIndicatorSufixLabel,
+                        style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                     ],
