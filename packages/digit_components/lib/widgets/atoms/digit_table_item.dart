@@ -18,11 +18,12 @@ class DigitTableItem extends StatelessWidget {
       this.isColored});
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       color: isColored != null
           ? index % 2 == 0
-              ? const Color(0xffEEEEEE)
-              : Colors.white
+              ? theme.scaffoldBackgroundColor
+              : theme.cardColor
           : null,
       width: width ?? 100,
       height: height ?? 50,
