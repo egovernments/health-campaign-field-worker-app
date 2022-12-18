@@ -29,29 +29,29 @@ class {{name.pascalCase()}}RequestModel extends DataModel {
 class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}RequestModel {
   {{#attributes}}
   @override
-  final {{type}}{{nullable}}?{{/nullable}} {{name.camelCase()}};
+  final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/attributes}}
   {{#customAttributes}}
   @override
-  final {{type}}RequestModel{{nullable}}?{{/nullable}} {{name.camelCase()}};
+  final {{type}}RequestModel{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}
   {{#dateTimeAttributes}}
   @override
-  final {{type}}{{nullable}}?{{/nullable}} {{name.camelCase()}}Time;
+  final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Model({
-  {{#attributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
-  {{/attributes}}{{#customAttributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
-  {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required{{/nullable}} int{{nullable}}?{{/nullable}} {{name.camelCase()}},
-  {{/dateTimeAttributes}}super.auditDetails,
+    {{#attributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
+    {{/attributes}}{{#customAttributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
+    {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required{{/nullable}} int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
+    {{/dateTimeAttributes}}super.auditDetails,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-  {{/dateTimeAttributes}} super();
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
+      {{/dateTimeAttributes}} super();
 
   {{#dateTimeAttributes}}
   @override
-  int{{nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{nullable}}?{{/nullable}} .millisecondsSinceEpoch;
+  int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}} .millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
 }
