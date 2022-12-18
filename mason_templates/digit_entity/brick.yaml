@@ -10,3 +10,7 @@ vars:
     type: string
     description: Name of the entity
     prompt: What do you want to call this entity?
+  attributes:
+    type: array
+
+
