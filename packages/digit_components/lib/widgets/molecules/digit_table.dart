@@ -9,6 +9,8 @@ class DigitTable extends StatelessWidget {
   final int itemCount;
   final double leftHandSideColumnWidth;
   final double rightHandSideColumnWidth;
+  final Color? color;
+  final EdgeInsets? padding;
   const DigitTable({
     super.key,
     required this.getTitleWidget,
@@ -18,17 +20,19 @@ class DigitTable extends StatelessWidget {
     required this.itemCount,
     required this.leftHandSideColumnWidth,
     required this.rightHandSideColumnWidth,
+    this.color,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SizedBox(
       height: height,
       child: Container(
         decoration: BoxDecoration(
-            border:
-                Border.all(color: const Color.fromARGB(255, 206, 202, 202))),
-        padding: const EdgeInsets.all(2),
+            border: Border.all(color: color ?? theme.scaffoldBackgroundColor)),
+        padding: padding ?? const EdgeInsets.all(2),
         child: HorizontalDataTable(
           leftHandSideColumnWidth: leftHandSideColumnWidth,
           rightHandSideColumnWidth: rightHandSideColumnWidth,
