@@ -1,0 +1,15 @@
+#dart pub global activate mason_cli
+path="$PWD"
+mason add digit_entity --path ./mason_templates/digit_entity -g
+
+cd apps/health_campaign_field_worker_app/lib || exit
+app_root="$PWD"
+
+cd models/model_configs || exit
+
+for file in *.json ; do
+  echo "$file"
+  mason make digit_entity -c "$file" --on-conflict overwrite -o "$app_root"
+done
+
+echo "$PWD"
