@@ -1,2 +1,5 @@
 bricks:
-  ./freezed_bloc: ^0.1.1
+  freezed_bloc:
+    path: freezed_bloc
+  digit_entity:
+    path: digit_entity
