@@ -8,3 +8,5 @@ export './labeled_field.dart';
 export './digit_dialog.dart';
 export './atoms/digit_table_item.dart';
 export './molecules/digit_table.dart';
+export './digit_info_card.dart';
+export './digit_outline_button.dart';

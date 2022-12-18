@@ -1,25 +1,26 @@
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 
-class DigitInfo extends StatelessWidget {
+class DigitInfoCard extends StatelessWidget {
   final String title;
   final String description;
   final Color backgroundcolor;
   final IconData? icon;
   final Color? iconcolor;
-
-  const DigitInfo(
+  final EdgeInsets? padding;
+  const DigitInfoCard(
       {super.key,
       required this.title,
       required this.description,
       required this.backgroundcolor,
       this.iconcolor,
-      this.icon});
+      this.icon,
+      this.padding});
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: DigitTheme.instance.containerMargin,
-      padding: const EdgeInsets.all(8),
+      padding: padding ?? const EdgeInsets.all(8),
       color: backgroundcolor,
       child: Column(
         children: [
@@ -27,7 +28,7 @@ class DigitInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: padding ?? const EdgeInsets.all(8),
                 child: Icon(
                   icon,
                   color: iconcolor,

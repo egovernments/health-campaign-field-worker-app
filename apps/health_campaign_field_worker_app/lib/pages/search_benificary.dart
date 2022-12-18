@@ -1,6 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/digit_info.dart';
-import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:digit_components/widgets/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,9 +49,9 @@ class SearchBenificiaryPage extends StatelessWidget {
           index: index,
           isColored: true,
           width: 140,
-          child: const Text(
+          child: Text(
             'Delivered',
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: theme.colorScheme.inverseSurface),
           ),
         ),
         DigitTableItem(
@@ -100,7 +98,9 @@ class SearchBenificiaryPage extends StatelessWidget {
               secondInbox: '756',
               secondInboxContent: 'No. of Bedets Delivered',
             ),
-            const DigitSearchBar(),
+            const DigitSearchBar(
+              hintText: 'Enter the name of household head',
+            ),
             DigitCard(
               child: Column(
                 children: [
@@ -114,7 +114,7 @@ class SearchBenificiaryPage extends StatelessWidget {
                         status: 'Delivered',
                         title: 'Jose Antonio',
                       ),
-                      OutLineButton(
+                      DigitOutLineButton(
                         label: 'Open',
                         onPressed: () {},
                       ),
@@ -161,7 +161,7 @@ class SearchBenificiaryPage extends StatelessWidget {
                 ],
               ),
             ),
-            DigitInfo(
+            DigitInfoCard(
               icon: Icons.info,
               backgroundcolor: theme.colorScheme.tertiaryContainer,
               iconcolor: theme.colorScheme.scrim,
