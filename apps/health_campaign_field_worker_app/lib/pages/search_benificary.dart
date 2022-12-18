@@ -1,5 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/digit_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
@@ -13,16 +12,14 @@ class SearchBenificiaryPage extends StatelessWidget {
   const SearchBenificiaryPage({super.key});
 
   Widget getTitleItemWidget(String label, double width) {
-    return Container(
+    return DigitTableItemTitle(
+      label: label,
       width: width,
-      height: 56,
-      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-      alignment: Alignment.centerLeft,
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
   List<Widget> getTitleWidget() {
+    // This Data will be replaced once we get the data from API
     return [
       getTitleItemWidget('Beneficiary', 140),
       getTitleItemWidget('Status', 140),
@@ -32,6 +29,7 @@ class SearchBenificiaryPage extends StatelessWidget {
   }
 
   Widget generateFirstColumnRow(BuildContext context, int index) {
+    // This Data will be replaced once we get the data from API
     return DigitTableItem(
       content: 'Jose',
       index: index,
@@ -42,6 +40,7 @@ class SearchBenificiaryPage extends StatelessWidget {
   Widget generateRightHandSideColumnRow(BuildContext context, int index) {
     final theme = Theme.of(context);
 
+    // This Data will be replaced once we get the data from API
     return Row(
       children: <Widget>[
         DigitTableItem(
