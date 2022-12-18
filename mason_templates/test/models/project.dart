@@ -39,3 +39,59 @@ class ProjectRequestModel extends DataModel {
   
 }
 
+@MappableClass()
+class ProjectModel extends DataModel implements ProjectRequestModel {
+  
+  @override
+  final String id;
+  
+  @override
+  final String tenantId;
+  
+  @override
+  final String projectTypeId;
+  
+  @override
+  final bool isTaskEnabled;
+  
+  @override
+  final String? parent;
+  
+  
+  @override
+  final AddressRequestModel? address;
+  
+  
+  @override
+  final DateTime startDateTime;
+  
+  @override
+  final DateTime endDateTime;
+  
+
+  ProjectModel({
+    required this.id,
+    required this.tenantId,
+    required this.projectTypeId,
+    required this.isTaskEnabled,
+     this.parent,
+     this.address,
+    required int startDate,
+    required int endDate,
+    super.auditDetails,
+  }): startDateTime = startDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startDate),
+      endDateTime = endDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(endDate),
+       super();
+
+  
+  @override
+  int get startDate => startDateTime .millisecondsSinceEpoch;
+  
+  @override
+  int get endDate => endDateTime .millisecondsSinceEpoch;
+  
+}
