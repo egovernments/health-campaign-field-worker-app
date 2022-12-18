@@ -1,74 +1,57 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import '../address/address_model.dart';
+{{#customAttributes}}import '../{{name.snakeCase()}}/{{name.snakeCase()}}_model.dart';
+{{/customAttributes}}
 import '../data_model.dart';
 
 @MappableClass()
-class ProjectRequestModel extends DataModel {
-  final String? id;
-  final String? tenantId;
-  final String? projectTypeId;
-  final AddressModel? address;
-  final DateTime? startDateTime;
-  final DateTime? endDateTime;
-  final bool? isTaskEnabled;
-  final String? parent;
-
-  ProjectRequestModel({
-    this.id,
-    this.tenantId,
-    this.projectTypeId,
-    this.address,
-    int? startDate,
-    int? endDate,
-    this.isTaskEnabled,
-    this.parent,
-    super.auditDetails,
-  })  : startDateTime = startDate == null
+class {{name.pascalCase()}}RequestModel extends DataModel {
+  {{#attributes}}final {{type}}? {{name.camelCase()}};
+  {{/attributes}}
+  {{#customAttributes}}final {{type}}RequestModel? {{name.camelCase()}};
+  {{/customAttributes}}
+  {{#dateTimeAttributes}}final {{type}}? {{name.camelCase()}}Time;
+  {{/dateTimeAttributes}}
+  {{name.pascalCase()}}RequestModel({
+    {{#attributes}}this.{{name.camelCase()}},
+    {{/attributes}}{{#customAttributes}}this.{{name.camelCase()}},
+    {{/customAttributes}}{{#dateTimeAttributes}}int? {{name.camelCase()}},
+    {{/dateTimeAttributes}}super.auditDetails,
+  }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
       ? null
-      : DateTime.fromMillisecondsSinceEpoch(startDate),
-        endDateTime = endDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(endDate);
+      : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
+  {{/dateTimeAttributes}} super();
 
-  int? get startDate => startDateTime?.millisecondsSinceEpoch;
-  int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  {{#dateTimeAttributes}}int? get {{name}} => {{name}}Time?.millisecondsSinceEpoch;
+  {{/dateTimeAttributes}}
 }
 
 @MappableClass()
-class ProjectModel extends DataModel implements ProjectRequestModel {
+class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}RequestModel {
+  {{#attributes}}
   @override
-  final String id;
+  final {{type}}{{nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/attributes}}
+  {{#customAttributes}}
   @override
-  final String tenantId;
+  final {{type}}RequestModel{{nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/customAttributes}}
+  {{#dateTimeAttributes}}
   @override
-  final String projectTypeId;
-  @override
-  final AddressModel? address;
-  @override
-  final DateTime startDateTime;
-  @override
-  final DateTime endDateTime;
-  @override
-  final bool isTaskEnabled;
-  @override
-  final String? parent;
+  final {{type}}{{nullable}}?{{/nullable}} {{name.camelCase()}}Time;
+  {{/dateTimeAttributes}}
 
-  ProjectModel({
-    required this.id,
-    required this.tenantId,
-    required this.projectTypeId,
-    required int startDate,
-    required int endDate,
-    this.address,
-    this.isTaskEnabled = true,
-    this.parent,
-    required AuditDetails auditDetails,
-  })  : startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate),
-        endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate),
-        super(auditDetails: auditDetails);
+  {{name.pascalCase()}}Model({
+  {{#attributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
+  {{/attributes}}{{#customAttributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
+  {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required{{/nullable}} int{{nullable}}?{{/nullable}} {{name.camelCase()}},
+  {{/dateTimeAttributes}}super.auditDetails,
+  }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
+  {{/dateTimeAttributes}} super();
 
+  {{#dateTimeAttributes}}
   @override
-  int get startDate => startDateTime.millisecondsSinceEpoch;
-  @override
-  int get endDate => endDateTime.millisecondsSinceEpoch;
+  int{{nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{nullable}}?{{/nullable}} .millisecondsSinceEpoch;
+  {{/dateTimeAttributes}}
 }

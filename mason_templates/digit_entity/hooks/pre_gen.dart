@@ -5,6 +5,9 @@ void run(HookContext context) async {
   final logger = context.logger;
   final variables = context.vars;
 
+  logger.info(variables.toString());
+  return;
+
   if (!variables.containsKey('name')) {
     logger.err('`name` is required');
     throw Exception();
@@ -20,28 +23,85 @@ void run(HookContext context) async {
 
   logger.info(lightYellow.wrap('Add attributes`. Leave empty to exit'));
 
-  List<Map<String, dynamic>> attributes = [];
+  final attributes = <Map<String, dynamic>>[];
+  final customAttributes = <Map<String, dynamic>>[];
+  final dateTimeAttributes = <Map<String, dynamic>>[];
 
   while (true) {
     final attribute =
-        logger.prompt(': ').replaceAll(RegExp('\\s+'), ' ').trim();
+        await logger.prompt('Name: ').replaceAll(RegExp('\\s+'), ' ').trim();
     if (attribute.trim().isEmpty) {
       break;
     }
 
-    String type = logger.chooseOne<String>(
+    AttributeType type = await logger.chooseOne<AttributeType>(
       'Type: ',
-      choices: ['String', 'int', 'num', 'double', 'bool', 'custom'],
-      defaultValue: 'String',
+      choices: AttributeType.values,
+      defaultValue: AttributeType.STRING,
+      display: (choice) => choice.name.pascalCase,
     );
 
-    if (type == 'custom') {
-      type = logger
+    late String custom;
+    if (type == AttributeType.CUSTOM) {
+      custom = await logger
           .prompt('Enter custom type: ')
           .replaceAll(RegExp('\\s+'), ' ')
           .trim();
+      custom = custom.isEmpty ? 'dynamic' : custom;
     }
 
-    bool nullable = logger.chooseOne('Nullable?', choices: [true, false]);
+    bool nullable = await logger.chooseOne(
+      'Nullable?',
+      choices: [true, false],
+      defaultValue: false,
+    );
+
+    switch (type) {
+      case AttributeType.CUSTOM:
+        customAttributes.add(
+          {
+            'name': custom,
+            'type': type.valueName,
+            'nullable': nullable,
+          },
+        );
+        break;
+      case AttributeType.DATE_TIME:
+        dateTimeAttributes.add(
+          {
+            'name': attribute,
+            'type': type.valueName,
+            'nullable': nullable,
+          },
+        );
+        break;
+      default:
+        attributes.add({
+          'name': attribute,
+          'type': type.valueName,
+          'nullable': nullable,
+        });
+    }
   }
+
+  context.vars['attributes'] = attributes;
+  context.vars['dateTimeAttributes'] = dateTimeAttributes;
+  context.vars['customAttributes'] = customAttributes;
+}
+
+enum AttributeType {
+  STRING('String'),
+  INT('int'),
+  NUM('num'),
+  DOUBLE('double'),
+  BOOL('bool'),
+  DATE_TIME('DateTime'),
+  CUSTOM('custom'),
+  DYNAMIC('dynamic');
+
+  final String type;
+
+  const AttributeType(this.type);
+
+  String get valueName => type;
 }
