@@ -10,17 +10,19 @@ class DigitOutLineButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: theme.colorScheme.secondary),
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: theme.colorScheme.secondary),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: theme.colorScheme.secondary,
+          ),
         ),
-        child: Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: Text(
-              label,
-              style: TextStyle(
-                color: theme.colorScheme.secondary,
-              ),
-            )));
+      ),
+    );
   }
 }
