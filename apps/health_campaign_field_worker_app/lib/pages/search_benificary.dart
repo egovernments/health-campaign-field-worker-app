@@ -15,6 +15,7 @@ class SearchBenificiaryPage extends StatelessWidget {
     return DigitTableItemTitle(
       label: label,
       width: width,
+      height: 56,
     );
   }
 
