@@ -11,65 +11,6 @@ import '../widgets/header/back_navigation_help_header.dart';
 class SearchBenificiaryPage extends StatelessWidget {
   const SearchBenificiaryPage({super.key});
 
-  Widget getTitleItemWidget(String label, double width) {
-    return DigitTableItemTitle(
-      label: label,
-      width: width,
-      height: 56,
-    );
-  }
-
-  List<Widget> getTitleWidget() {
-    // This Data will be replaced once we get the data from API
-    return [
-      getTitleItemWidget('Beneficiary', 140),
-      getTitleItemWidget('Status', 140),
-      getTitleItemWidget('Age', 140),
-      getTitleItemWidget('Gender', 140),
-    ];
-  }
-
-  Widget generateFirstColumnRow(BuildContext context, int index) {
-    // This Data will be replaced once we get the data from API
-    return DigitTableItem(
-      content: 'Jose',
-      index: index,
-      width: 140,
-    );
-  }
-
-  Widget generateRightHandSideColumnRow(BuildContext context, int index) {
-    final theme = Theme.of(context);
-
-    // This Data will be replaced once we get the data from API
-    return Row(
-      children: <Widget>[
-        DigitTableItem(
-          content: '',
-          index: index,
-          isColored: true,
-          width: 140,
-          child: Text(
-            'Delivered',
-            style: TextStyle(color: theme.colorScheme.inverseSurface),
-          ),
-        ),
-        DigitTableItem(
-          content: '45',
-          index: index,
-          isColored: true,
-          width: 140,
-        ),
-        DigitTableItem(
-          content: 'Male',
-          index: index,
-          isColored: true,
-          width: 140,
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -126,7 +67,7 @@ class SearchBenificiaryPage extends StatelessWidget {
                             generateFirstColumnRow: generateFirstColumnRow,
                             generateRightHandSideColumnRow:
                                 generateRightHandSideColumnRow,
-                            getTitleWidget: getTitleWidget,
+                            getTitleWidget: _getTitleWidget,
                             itemCount: 3,
                             height: 200,
                             leftHandSideColumnWidth: 120,
@@ -188,5 +129,64 @@ class SearchBenificiaryPage extends StatelessWidget {
             : null,
       );
     });
+  }
+
+  Widget _getTitleItemWidget(String label, double width) {
+    return DigitTableItemTitle(
+      label: label,
+      width: width,
+      height: 56,
+    );
+  }
+
+  List<Widget> _getTitleWidget() {
+    // This Data will be replaced once we get the data from API
+    return [
+      _getTitleItemWidget('Beneficiary', 140),
+      _getTitleItemWidget('Status', 140),
+      _getTitleItemWidget('Age', 140),
+      _getTitleItemWidget('Gender', 140),
+    ];
+  }
+
+  Widget generateFirstColumnRow(BuildContext context, int index) {
+    // This Data will be replaced once we get the data from API
+    return DigitTableItem(
+      content: 'Jose',
+      index: index,
+      width: 140,
+    );
+  }
+
+  Widget generateRightHandSideColumnRow(BuildContext context, int index) {
+    final theme = Theme.of(context);
+
+    // This Data will be replaced once we get the data from API
+    return Row(
+      children: <Widget>[
+        DigitTableItem(
+          content: '',
+          index: index,
+          isColored: true,
+          width: 140,
+          child: Text(
+            'Delivered',
+            style: TextStyle(color: theme.colorScheme.inverseSurface),
+          ),
+        ),
+        DigitTableItem(
+          content: '45',
+          index: index,
+          isColored: true,
+          width: 140,
+        ),
+        DigitTableItem(
+          content: 'Male',
+          index: index,
+          isColored: true,
+          width: 140,
+        ),
+      ],
+    );
   }
 }
