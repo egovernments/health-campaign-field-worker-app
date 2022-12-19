@@ -6,6 +6,8 @@ export 'project/project.dart';
 export 'oplog/oplog_entry.dart';
 export 'individual.dart';
 export 'household.dart';
+export 'product.dart';
+export 'product_variant.dart';
 export 'household_member.dart';
 export 'data_model.mapper.g.dart';
 
