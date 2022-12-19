@@ -11,6 +11,7 @@ class DigitTable extends StatelessWidget {
   final double rightHandSideColumnWidth;
   final Color? color;
   final EdgeInsets? padding;
+  
   const DigitTable({
     super.key,
     required this.getTitleWidget,
