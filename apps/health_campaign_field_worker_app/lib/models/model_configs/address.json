@@ -7,7 +7,6 @@
     {"name":  "latitude", "type":  "double", "nullable":  "false"},
     {"name":  "longitude", "type":  "double", "nullable":  "false"},
     {"name":  "locationAccuracy", "type":  "double", "nullable":  "false"},
-    {"name":  "type", "type":  "String", "nullable":  "false"},
     {"name":  "addressLine1", "type":  "String", "nullable":  "false"},
     {"name":  "addressLine2", "type":  "String", "nullable":  "false"},
     {"name":  "landmark", "type":  "String", "nullable":  "true"},
@@ -17,6 +16,8 @@
     {"name":  "street", "type":  "String", "nullable":  "true"}
   ],
   "customAttributes": [
-    {"name":  "locality", "type":  "boundary", "nullable":  "false"}
-  ]
+    {"name":  "locality", "type":  "boundary", "nullable":  "false"},
+    {"name":  "type", "type":  "AddressType", "nullable":  "false", "isEnum":  true}
+  ],
+  "isEnum": false
 }
