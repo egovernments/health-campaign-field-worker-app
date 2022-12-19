@@ -4,8 +4,6 @@ import 'package:recase/recase.dart';
 void run(HookContext context) async {
   final logger = context.logger;
   final variables = context.vars;
-
-  logger.info(variables.toString());
   return;
 
   if (!variables.containsKey('name')) {

@@ -1,15 +1,15 @@
 import 'package:dart_mappable/dart_mappable.dart';
-{{#customAttributes}}import '../{{name.snakeCase()}}/{{name.snakeCase()}}_model.dart';
-{{/customAttributes}}
-import '../data_model.dart';
+
+{{#customAttributes}}import '{{type.snakeCase()}}.dart';
+{{/customAttributes}}import 'data_model.dart';
 
 @MappableClass()
 class {{name.pascalCase()}}RequestModel extends DataModel {
   {{#attributes}}final {{type}}? {{name.camelCase()}};
   {{/attributes}}
-  {{#customAttributes}}final {{type}}RequestModel? {{name.camelCase()}};
+  {{#customAttributes}}final {{type.pascalCase()}}RequestModel? {{name.camelCase()}};
   {{/customAttributes}}
-  {{#dateTimeAttributes}}final {{type}}? {{name.camelCase()}}Time;
+  {{#dateTimeAttributes}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
   {{name.pascalCase()}}RequestModel({
     {{#attributes}}this.{{name.camelCase()}},
@@ -33,7 +33,7 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
   {{/attributes}}
   {{#customAttributes}}
   @override
-  final {{type}}RequestModel{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  final {{type.pascalCase()}}RequestModel{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}
   {{#dateTimeAttributes}}
   @override
@@ -45,9 +45,9 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
     {{/attributes}}{{#customAttributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
     {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required{{/nullable}} int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
-  }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
+  }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
+          : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
       {{/dateTimeAttributes}} super();
 
   {{#dateTimeAttributes}}
