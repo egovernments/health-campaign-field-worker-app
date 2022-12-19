@@ -8,14 +8,15 @@ class DigitTableItem extends StatelessWidget {
   final Widget? child;
   final bool? isColored;
 
-  const DigitTableItem(
-      {super.key,
-      this.width,
-      this.height,
-      required this.content,
-      required this.index,
-      this.child,
-      this.isColored,});
+  const DigitTableItem({
+    super.key,
+    this.width,
+    this.height,
+    required this.content,
+    required this.index,
+    this.child,
+    this.isColored,
+  });
 
   @override
   Widget build(BuildContext context) {
