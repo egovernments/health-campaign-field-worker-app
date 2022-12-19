@@ -15,7 +15,8 @@ class DigitTableItem extends StatelessWidget {
       required this.content,
       required this.index,
       this.child,
-      this.isColored});
+      this.isColored,});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
