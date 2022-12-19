@@ -27,7 +27,7 @@ void main() {
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitLanguageCard(
         digitRowCardItems: languageList,
-        languageSubmitLabel: '',
+        languageSubmitLabel: 'Continue',
         onLanguageSubmit: () {},
         onLanguageChange: () {},
       )));
