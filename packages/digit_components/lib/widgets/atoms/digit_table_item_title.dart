@@ -6,8 +6,14 @@ class DigitTableItemTitle extends StatelessWidget {
   final double? height;
   final EdgeInsets? padding;
 
-  const DigitTableItemTitle(
-      {super.key, this.width, required this.label, this.height, this.padding});
+  const DigitTableItemTitle({
+    super.key,
+    this.width,
+    required this.label,
+    this.height,
+    this.padding,
+  });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

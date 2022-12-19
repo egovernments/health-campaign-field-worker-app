@@ -37,20 +37,21 @@ class DigitTheme {
   }
 
   ColorScheme get colorScheme => ColorScheme(
-      brightness: Brightness.light,
-      primary: colors.regalBlue,
-      onPrimary: colors.white,
-      secondary: colors.burningOrange,
-      onSecondary: colors.white,
-      error: colors.lavaRed,
-      onError: colors.white,
-      background: colors.seaShellGray,
-      onBackground: colors.woodsmokeBlack,
-      surface: colors.alabasterWhite,
-      onSurface: colors.woodsmokeBlack,
-      tertiaryContainer: colors.tropicalBlue,
-      inversePrimary: colors.paleLeafGreen,
-      scrim: colors.waterBlue);
+        brightness: Brightness.light,
+        primary: colors.regalBlue,
+        onPrimary: colors.white,
+        secondary: colors.burningOrange,
+        onSecondary: colors.white,
+        error: colors.lavaRed,
+        onError: colors.white,
+        background: colors.seaShellGray,
+        onBackground: colors.woodsmokeBlack,
+        surface: colors.alabasterWhite,
+        onSurface: colors.woodsmokeBlack,
+        tertiaryContainer: colors.tropicalBlue,
+        inversePrimary: colors.paleLeafGreen,
+        scrim: colors.waterBlue,
+      );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
         vertical: 8,

@@ -8,14 +8,17 @@ class DigitInfoCard extends StatelessWidget {
   final IconData? icon;
   final Color? iconcolor;
   final EdgeInsets? padding;
-  const DigitInfoCard(
-      {super.key,
-      required this.title,
-      required this.description,
-      required this.backgroundcolor,
-      this.iconcolor,
-      this.icon,
-      this.padding});
+
+  const DigitInfoCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.backgroundcolor,
+    this.iconcolor,
+    this.icon,
+    this.padding,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
