@@ -1,0 +1,49 @@
+{
+  "name": "individual",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "dateOfBirth",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "rowVersion",
+      "type": "int",
+      "nullable": false
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "address",
+      "type": "address",
+      "nullable": false
+    },
+    {
+      "name": "gender",
+      "type": "gender",
+      "nullable": false,
+      "isEnum": true
+    }
+  ],
+  "isEnum": false
+}
