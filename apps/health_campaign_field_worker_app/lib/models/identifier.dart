@@ -22,17 +22,17 @@ class IdentifierRequestModel extends DataModel {
 class IdentifierModel extends DataModel implements IdentifierRequestModel {
   
   @override
-  final String? type;
+  final String type;
   
   @override
-  final String? id;
+  final String id;
   
   
   
 
   IdentifierModel({
-     this.type,
-     this.id,
+    required this.type,
+    required this.id,
     super.auditDetails,
   }):  super();
 

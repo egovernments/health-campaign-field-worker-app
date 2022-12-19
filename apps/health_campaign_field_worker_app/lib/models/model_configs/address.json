@@ -4,79 +4,79 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "doorNo",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "latitude",
       "type": "double",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "longitude",
       "type": "double",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "locationAccuracy",
       "type": "double",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "addressLine1",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "addressLine2",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "landmark",
       "type": "String",
-      "nullable": "true"
+      "nullable": true
     },
     {
       "name": "city",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "pincode",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "buildingName",
       "type": "String",
-      "nullable": "true"
+      "nullable": true
     },
     {
       "name": "street",
       "type": "String",
-      "nullable": "true"
+      "nullable": true
     }
   ],
   "customAttributes": [
     {
       "name": "locality",
       "type": "boundary",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "type",
       "type": "AddressType",
-      "nullable": "false",
+      "nullable": false,
       "isEnum": true
     }
   ],
