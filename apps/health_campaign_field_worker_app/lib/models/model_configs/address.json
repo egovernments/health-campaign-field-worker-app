@@ -1,0 +1,22 @@
+{
+  "name": "address",
+  "attributes": [
+    {"name":  "id", "type":  "String", "nullable":  "false"},
+    {"name":  "tenantId", "type":  "String", "nullable":  "false"},
+    {"name":  "doorNo", "type":  "String", "nullable":  "false"},
+    {"name":  "latitude", "type":  "double", "nullable":  "false"},
+    {"name":  "longitude", "type":  "double", "nullable":  "false"},
+    {"name":  "locationAccuracy", "type":  "double", "nullable":  "false"},
+    {"name":  "type", "type":  "String", "nullable":  "false"},
+    {"name":  "addressLine1", "type":  "String", "nullable":  "false"},
+    {"name":  "addressLine2", "type":  "String", "nullable":  "false"},
+    {"name":  "landmark", "type":  "String", "nullable":  "true"},
+    {"name":  "city", "type":  "String", "nullable":  "false"},
+    {"name":  "pincode", "type":  "String", "nullable":  "false"},
+    {"name":  "buildingName", "type":  "String", "nullable":  "true"},
+    {"name":  "street", "type":  "String", "nullable":  "true"}
+  ],
+  "customAttributes": [
+    {"name":  "locality", "type":  "boundary", "nullable":  "false"}
+  ]
+}

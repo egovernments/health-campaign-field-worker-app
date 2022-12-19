@@ -1,0 +1,14 @@
+{
+  "name": "boundary",
+  "attributes": [
+    {"name":  "code", "type":  "String", "nullable":  false},
+    {"name":  "name", "type":  "String", "nullable":  false},
+    {"name":  "label", "type":  "String", "nullable":  true},
+    {"name":  "latitude", "type":  "String", "nullable":  true},
+    {"name":  "longitude", "type":  "String", "nullable":  true},
+    {"name":  "materializedPath", "type":  "String", "nullable":  true}
+  ],
+  "customAttributes": [
+    {"name":  "children", "type": "boundary", "nullable":  true}
+  ]
+}
