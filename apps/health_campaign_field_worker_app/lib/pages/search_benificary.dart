@@ -105,7 +105,7 @@ class SearchBenificiaryPage extends StatelessWidget {
             DigitInfoCard(
               icon: Icons.info,
               backgroundcolor: theme.colorScheme.tertiaryContainer,
-              iconcolor: theme.colorScheme.scrim,
+              iconcolor: theme.colorScheme.surfaceTint,
               description:
                   'Click on Register New Household button to add details.',
               title: 'Match not found!',

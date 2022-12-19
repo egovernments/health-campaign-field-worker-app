@@ -50,7 +50,7 @@ class DigitTheme {
         onSurface: colors.woodsmokeBlack,
         tertiaryContainer: colors.tropicalBlue,
         inversePrimary: colors.paleLeafGreen,
-        scrim: colors.waterBlue,
+        surfaceTint: colors.waterBlue,
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
