@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import 'address.dart';
 import 'gender.dart';
+import 'identifier.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -15,6 +16,7 @@ class IndividualRequestModel extends DataModel {
   
   final AddressRequestModel? address;
   final Gender? gender;
+  final List<IdentifierRequestModel>? identifiers;
   
   
   IndividualRequestModel({
@@ -26,6 +28,7 @@ class IndividualRequestModel extends DataModel {
     this.rowVersion,
     this.address,
     this.gender,
+    this.identifiers,
     super.auditDetails,
   }):  super();
 
@@ -60,6 +63,9 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   @override
   final Gender gender;
   
+  @override
+  final List<IdentifierRequestModel> identifiers;
+  
   
 
   IndividualModel({
@@ -71,6 +77,7 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
     required this.rowVersion,
     required this.address,
     required this.gender,
+    required this.identifiers,
     super.auditDetails,
   }):  super();
 

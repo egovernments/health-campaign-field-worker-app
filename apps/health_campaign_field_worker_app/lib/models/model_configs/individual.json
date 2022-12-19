@@ -43,6 +43,12 @@
       "type": "gender",
       "nullable": false,
       "isEnum": true
+    },
+    {
+      "name": "identifiers",
+      "type": "identifier",
+      "nullable": false,
+      "isList": true
     }
   ],
   "isEnum": false
