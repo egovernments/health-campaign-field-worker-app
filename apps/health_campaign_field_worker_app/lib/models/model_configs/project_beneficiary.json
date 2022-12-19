@@ -1,0 +1,38 @@
+{
+  "name": "projectBeneficiary",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "projectId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "beneficiaryId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "rowVersion",
+      "type": "int",
+      "nullable": false
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "dateOfRegistration",
+      "type": "DateTime",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}
