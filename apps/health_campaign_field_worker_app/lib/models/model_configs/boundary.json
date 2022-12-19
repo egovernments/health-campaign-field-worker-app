@@ -10,5 +10,6 @@
   ],
   "customAttributes": [
     {"name":  "children", "type": "boundary", "nullable":  true}
-  ]
+  ],
+  "isEnum": false
 }

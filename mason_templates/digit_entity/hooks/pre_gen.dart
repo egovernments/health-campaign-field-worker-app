@@ -2,9 +2,9 @@ import 'package:mason/mason.dart';
 import 'package:recase/recase.dart';
 
 void run(HookContext context) async {
+  return;
   final logger = context.logger;
   final variables = context.vars;
-  return;
 
   if (!variables.containsKey('name')) {
     logger.err('`name` is required');

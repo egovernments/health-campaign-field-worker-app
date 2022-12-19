@@ -13,5 +13,6 @@
   "dateTimeAttributes": [
     {"name":  "startDate", "type":  "DateTime", "nullable":  false},
     {"name":  "endDate", "type":  "DateTime", "nullable":  false}
-  ]
+  ],
+  "isEnum": false
 }
