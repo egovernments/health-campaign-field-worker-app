@@ -7,7 +7,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 class {{name.pascalCase()}}RequestModel extends DataModel {
   {{#attributes}}final {{type}}? {{name.camelCase()}};
   {{/attributes}}
-  {{#customAttributes}}final {{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}? {{name.camelCase()}};
+  {{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/customAttributes}}
   {{#dateTimeAttributes}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
@@ -33,7 +33,7 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
   {{/attributes}}
   {{#customAttributes}}
   @override
-  final {{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}
   {{#dateTimeAttributes}}
   @override
