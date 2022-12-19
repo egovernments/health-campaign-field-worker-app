@@ -5,7 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 @MappableClass()
 class {{name.pascalCase()}}RequestModel extends DataModel {
-  {{#attributes}}final {{type}}? {{name.camelCase()}};
+  {{#attributes}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/attributes}}
   {{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/customAttributes}}
@@ -29,7 +29,7 @@ class {{name.pascalCase()}}RequestModel extends DataModel {
 class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}RequestModel {
   {{#attributes}}
   @override
-  final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/attributes}}
   {{#customAttributes}}
   @override

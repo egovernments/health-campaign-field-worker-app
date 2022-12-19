@@ -1,0 +1,21 @@
+{
+  "name": "projectProductVariant",
+  "attributes": [
+    {
+      "name": "productVariantId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "type",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "isBaseUnitVariant",
+      "type": "bool",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}
