@@ -1,0 +1,42 @@
+{
+  "name": "projectStaff",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },{
+      "name": "tenantId",
+      "type": "String",
+      "nullable": false
+    },{
+      "name": "userId",
+      "type": "String",
+      "nullable": false
+    },{
+      "name": "projectId",
+      "type": "String",
+      "nullable": false
+    },{
+      "name": "channel",
+      "type": "String",
+      "nullable": false
+    },{
+      "name": "rowVersion",
+      "type": "int",
+      "nullable": false
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "startDate",
+      "type": "DateTime",
+      "nullable": false
+    },{
+      "name": "endDate",
+      "type": "DateTime",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}
