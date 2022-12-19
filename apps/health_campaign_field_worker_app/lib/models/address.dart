@@ -50,37 +50,37 @@ class AddressRequestModel extends DataModel {
 class AddressModel extends DataModel implements AddressRequestModel {
   
   @override
-  final String? id;
+  final String id;
   
   @override
-  final String? tenantId;
+  final String tenantId;
   
   @override
-  final String? doorNo;
+  final String doorNo;
   
   @override
-  final double? latitude;
+  final double latitude;
   
   @override
-  final double? longitude;
+  final double longitude;
   
   @override
-  final double? locationAccuracy;
+  final double locationAccuracy;
   
   @override
-  final String? addressLine1;
+  final String addressLine1;
   
   @override
-  final String? addressLine2;
+  final String addressLine2;
   
   @override
   final String? landmark;
   
   @override
-  final String? city;
+  final String city;
   
   @override
-  final String? pincode;
+  final String pincode;
   
   @override
   final String? buildingName;
@@ -90,29 +90,29 @@ class AddressModel extends DataModel implements AddressRequestModel {
   
   
   @override
-  final BoundaryRequestModel? locality;
+  final BoundaryRequestModel locality;
   
   @override
-  final AddressType? type;
+  final AddressType type;
   
   
 
   AddressModel({
-     this.id,
-     this.tenantId,
-     this.doorNo,
-     this.latitude,
-     this.longitude,
-     this.locationAccuracy,
-     this.addressLine1,
-     this.addressLine2,
+    required this.id,
+    required this.tenantId,
+    required this.doorNo,
+    required this.latitude,
+    required this.longitude,
+    required this.locationAccuracy,
+    required this.addressLine1,
+    required this.addressLine2,
      this.landmark,
-     this.city,
-     this.pincode,
+    required this.city,
+    required this.pincode,
      this.buildingName,
      this.street,
-     this.locality,
-     this.type,
+    required this.locality,
+    required this.type,
     super.auditDetails,
   }):  super();
 

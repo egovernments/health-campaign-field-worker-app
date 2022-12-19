@@ -4,12 +4,12 @@
     {
       "name": "type",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     },
     {
       "name": "id",
       "type": "String",
-      "nullable": "false"
+      "nullable": false
     }
   ],
   "isEnum": false

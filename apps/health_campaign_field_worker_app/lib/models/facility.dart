@@ -33,37 +33,37 @@ class FacilityRequestModel extends DataModel {
 class FacilityModel extends DataModel implements FacilityRequestModel {
   
   @override
-  final String? id;
+  final String id;
   
   @override
-  final String? tenantId;
+  final String tenantId;
   
   @override
-  final bool? isPermanent;
+  final bool isPermanent;
   
   @override
-  final String? usage;
+  final String usage;
   
   @override
-  final int? storageCapacity;
+  final int storageCapacity;
   
   @override
-  final int? rowVersion;
+  final int rowVersion;
   
   
   @override
-  final AddressRequestModel? address;
+  final AddressRequestModel address;
   
   
 
   FacilityModel({
-     this.id,
-     this.tenantId,
-     this.isPermanent,
-     this.usage,
-     this.storageCapacity,
-     this.rowVersion,
-     this.address,
+    required this.id,
+    required this.tenantId,
+    required this.isPermanent,
+    required this.usage,
+    required this.storageCapacity,
+    required this.rowVersion,
+    required this.address,
     super.auditDetails,
   }):  super();
 
