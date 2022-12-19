@@ -6,6 +6,7 @@ class BenificiaryCard extends StatelessWidget {
   final String description;
   final String? status;
   final String? statusType;
+  
   const BenificiaryCard({
     super.key,
     required this.title,
