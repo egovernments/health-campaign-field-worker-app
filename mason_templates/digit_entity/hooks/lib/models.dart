@@ -27,11 +27,13 @@ class AttributeModel {
   final String type;
   final bool isList;
   final bool nullable;
+  final bool isPk;
 
   const AttributeModel({
     required this.name,
     required this.type,
     this.isList = false,
+    this.isPk = false,
     this.nullable = false,
   });
 }
