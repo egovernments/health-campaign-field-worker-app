@@ -10,9 +10,7 @@ class HouseholdRequestModel extends DataModel {
   final String? clientReferenceId;
   final int? memberCount;
   final int? rowVersion;
-  
   final AddressRequestModel? address;
-  
   
   HouseholdRequestModel({
     this.id,
@@ -23,8 +21,6 @@ class HouseholdRequestModel extends DataModel {
     this.address,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -45,10 +41,8 @@ class HouseholdModel extends DataModel implements HouseholdRequestModel {
   @override
   final int rowVersion;
   
-  
   @override
   final AddressRequestModel address;
-  
   
 
   HouseholdModel({
@@ -60,6 +54,4 @@ class HouseholdModel extends DataModel implements HouseholdRequestModel {
     required this.address,
     super.auditDetails,
   }):  super();
-
-  
 }

@@ -10,8 +10,6 @@ class ProjectStaffRequestModel extends DataModel {
   final String? projectId;
   final String? channel;
   final int? rowVersion;
-  
-  
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -34,6 +32,8 @@ class ProjectStaffRequestModel extends DataModel {
    super();
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  
+
   int? get endDate => endDateTime?.millisecondsSinceEpoch;
   
 }
@@ -59,8 +59,6 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
   @override
   final int rowVersion;
   
-  
-  
   @override
   final DateTime startDateTime;
   
@@ -82,10 +80,10 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
       endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  
   @override
   int  get startDate => startDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get endDate => endDateTime .millisecondsSinceEpoch;
   

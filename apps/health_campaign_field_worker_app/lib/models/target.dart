@@ -9,8 +9,6 @@ class TargetRequestModel extends DataModel {
   final String? baseline;
   final String? target;
   
-  
-  
   TargetRequestModel({
     this.id,
     this.beneficiaryType,
@@ -18,8 +16,6 @@ class TargetRequestModel extends DataModel {
     this.target,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -37,8 +33,6 @@ class TargetModel extends DataModel implements TargetRequestModel {
   @override
   final String target;
   
-  
-  
 
   TargetModel({
     required this.id,
@@ -47,6 +41,4 @@ class TargetModel extends DataModel implements TargetRequestModel {
     required this.target,
     super.auditDetails,
   }):  super();
-
-  
 }

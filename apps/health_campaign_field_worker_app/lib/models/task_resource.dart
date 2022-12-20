@@ -11,8 +11,6 @@ class TaskResourceRequestModel extends DataModel {
   final bool? isDelivered;
   final String? deliveryComment;
   
-  
-  
   TaskResourceRequestModel({
     this.id,
     this.tenantId,
@@ -22,8 +20,6 @@ class TaskResourceRequestModel extends DataModel {
     this.deliveryComment,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -47,8 +43,6 @@ class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
   @override
   final String? deliveryComment;
   
-  
-  
 
   TaskResourceModel({
     required this.id,
@@ -59,6 +53,4 @@ class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
      this.deliveryComment,
     super.auditDetails,
   }):  super();
-
-  
 }

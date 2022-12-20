@@ -9,8 +9,6 @@ class ProjectBeneficiaryRequestModel extends DataModel {
   final String? projectId;
   final String? beneficiaryId;
   final int? rowVersion;
-  
-  
   final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiaryRequestModel({
@@ -48,8 +46,6 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
   @override
   final int rowVersion;
   
-  
-  
   @override
   final DateTime dateOfRegistrationTime;
   
@@ -65,7 +61,6 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
        super();
 
-  
   @override
   int  get dateOfRegistration => dateOfRegistrationTime .millisecondsSinceEpoch;
   

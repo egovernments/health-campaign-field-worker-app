@@ -6,10 +6,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 @MappableClass()
 class {{name.pascalCase()}}RequestModel extends DataModel {
   {{#attributes}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
-  {{/attributes}}
-  {{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
-  {{/customAttributes}}
-  {{#dateTimeAttributes}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
+  {{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
+  {{/customAttributes}}{{#dateTimeAttributes}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
   {{name.pascalCase()}}RequestModel({
     {{#attributes}}this.{{name.camelCase()}},
@@ -19,9 +17,9 @@ class {{name.pascalCase()}}RequestModel extends DataModel {
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-  {{/dateTimeAttributes}} super();
+  {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
 
-  {{#dateTimeAttributes}}int? get {{name}} => {{name}}Time?.millisecondsSinceEpoch;
+  int? get {{name}} => {{name}}Time?.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
 }
 
@@ -30,12 +28,10 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
   {{#attributes}}
   @override
   final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/attributes}}
-  {{#customAttributes}}
+  {{/attributes}}{{#customAttributes}}
   @override
   final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/customAttributes}}
-  {{#dateTimeAttributes}}
+  {{/customAttributes}}{{#dateTimeAttributes}}
   @override
   final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
@@ -48,9 +44,8 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-      {{/dateTimeAttributes}} super();
+      {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
 
-  {{#dateTimeAttributes}}
   @override
   int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}} .millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
@@ -58,7 +53,5 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
 {{/isEnum}}{{#isEnum}}
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum {{name}} {
-  {{#attributes}}{{..camelCase()}},
-  {{/attributes}}
-}
-{{/isEnum}}
+  {{#attributes}}{{..camelCase()}}, {{/attributes}}
+}{{/isEnum}}

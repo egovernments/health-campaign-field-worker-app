@@ -13,10 +13,8 @@ class TaskRequestModel extends DataModel {
   final String? createdBy;
   final int? rowVersion;
   final String? status;
-  
   final List<TaskResourceRequestModel>? resources;
   final AddressRequestModel? address;
-  
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
@@ -57,9 +55,17 @@ class TaskRequestModel extends DataModel {
    super();
 
   int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
+  
+
   int? get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
+  
+
   int? get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
+  
+
   int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
+  
+
   int? get createdDate => createdDateTime?.millisecondsSinceEpoch;
   
 }
@@ -88,13 +94,11 @@ class TaskModel extends DataModel implements TaskRequestModel {
   @override
   final String status;
   
-  
   @override
   final List<TaskResourceRequestModel> resources;
   
   @override
   final AddressRequestModel address;
-  
   
   @override
   final DateTime plannedStartDateTime;
@@ -135,19 +139,22 @@ class TaskModel extends DataModel implements TaskRequestModel {
       createdDateTime = DateTime.fromMillisecondsSinceEpoch(createdDate),
        super();
 
-  
   @override
   int  get plannedStartDate => plannedStartDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get plannedEndDate => plannedEndDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get actualStartDate => actualStartDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get actualEndDate => actualEndDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get createdDate => createdDateTime .millisecondsSinceEpoch;
   

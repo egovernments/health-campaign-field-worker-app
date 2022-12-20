@@ -19,10 +19,8 @@ class AddressRequestModel extends DataModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
-  
   final BoundaryRequestModel? locality;
   final AddressType? type;
-  
   
   AddressRequestModel({
     this.id,
@@ -42,8 +40,6 @@ class AddressRequestModel extends DataModel {
     this.type,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -88,13 +84,11 @@ class AddressModel extends DataModel implements AddressRequestModel {
   @override
   final String? street;
   
-  
   @override
   final BoundaryRequestModel locality;
   
   @override
   final AddressType type;
-  
   
 
   AddressModel({
@@ -115,6 +109,4 @@ class AddressModel extends DataModel implements AddressRequestModel {
     required this.type,
     super.auditDetails,
   }):  super();
-
-  
 }

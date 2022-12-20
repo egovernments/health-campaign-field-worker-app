@@ -11,8 +11,6 @@ class ProductRequestModel extends DataModel {
   final String? manufacturer;
   final int? rowVersion;
   
-  
-  
   ProductRequestModel({
     this.id,
     this.tenantId,
@@ -22,8 +20,6 @@ class ProductRequestModel extends DataModel {
     this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -47,8 +43,6 @@ class ProductModel extends DataModel implements ProductRequestModel {
   @override
   final int rowVersion;
   
-  
-  
 
   ProductModel({
     required this.id,
@@ -59,6 +53,4 @@ class ProductModel extends DataModel implements ProductRequestModel {
     required this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }

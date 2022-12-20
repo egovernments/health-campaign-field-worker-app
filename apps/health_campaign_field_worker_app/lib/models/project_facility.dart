@@ -10,8 +10,6 @@ class ProjectFacilityRequestModel extends DataModel {
   final String? projectId;
   final String? rowVersion;
   
-  
-  
   ProjectFacilityRequestModel({
     this.id,
     this.tenantId,
@@ -20,8 +18,6 @@ class ProjectFacilityRequestModel extends DataModel {
     this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -42,8 +38,6 @@ class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestMo
   @override
   final String rowVersion;
   
-  
-  
 
   ProjectFacilityModel({
     required this.id,
@@ -53,6 +47,4 @@ class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestMo
     required this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }
