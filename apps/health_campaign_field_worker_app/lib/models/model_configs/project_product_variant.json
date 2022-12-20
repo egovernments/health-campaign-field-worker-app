@@ -3,18 +3,15 @@
   "attributes": [
     {
       "name": "productVariantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "type",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "isBaseUnitVariant",
-      "type": "bool",
-      "nullable": false
+      "type": "bool"
     }
   ],
   "isEnum": false

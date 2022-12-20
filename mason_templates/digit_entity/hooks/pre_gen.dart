@@ -7,4 +7,5 @@ void run(HookContext context) {
 
   final model = Mapper.fromMap<ConfigModel>(variables);
   logger.info(model.toJson());
+  context.vars = model.toMap();
 }
