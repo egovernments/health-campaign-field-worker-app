@@ -3,5 +3,4 @@ targets:
     builders:
       dart_mappable_builder:
         generate_for:
-          - ./models/models.dart
-          - pre_gen.dart
+          - lib/models.dart
