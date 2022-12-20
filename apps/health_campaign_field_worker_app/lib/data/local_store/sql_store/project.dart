@@ -6,7 +6,7 @@ class ProjectTable extends Table {
   TextColumn get projectTypeId => text()();
   TextColumn get subProjectTypeId => text()();
   BoolColumn get isTaskEnabled => boolean()();
-  TextColumn get parent => text()();
+  TextColumn get parent => text().nullable()();
   TextColumn get department => text()();
   TextColumn get description => text()();
   TextColumn get referenceId => text()();

@@ -9,11 +9,11 @@ class AddressTable extends Table {
   RealColumn get locationAccuracy => real()();
   TextColumn get addressLine1 => text()();
   TextColumn get addressLine2 => text()();
-  TextColumn get landmark => text()();
+  TextColumn get landmark => text().nullable()();
   TextColumn get city => text()();
   TextColumn get pincode => text()();
-  TextColumn get buildingName => text()();
-  TextColumn get street => text()();
+  TextColumn get buildingName => text().nullable()();
+  TextColumn get street => text().nullable()();
   
 
   @override
