@@ -5,7 +5,7 @@ class ProductTable extends Table {
   TextColumn get tenantId => text()();
   TextColumn get type => text()();
   TextColumn get name => text()();
-  TextColumn get manufacturer => text()();
+  TextColumn get manufacturer => text().nullable()();
   IntColumn get rowVersion => integer()();
   
 
