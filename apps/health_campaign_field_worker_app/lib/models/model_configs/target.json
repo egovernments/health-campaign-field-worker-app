@@ -3,23 +3,19 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "beneficiaryType",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "baseline",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "target",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     }
   ],
   "isEnum": false

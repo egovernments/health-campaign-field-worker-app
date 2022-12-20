@@ -3,30 +3,25 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "projectId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "resources",
-      "type": "ProjectProductVariant",
-      "nullable": false
+      "type": "ProjectProductVariant"
     }
   ],
   "isEnum": false

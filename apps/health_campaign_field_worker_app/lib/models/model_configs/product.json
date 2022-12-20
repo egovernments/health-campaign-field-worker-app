@@ -3,23 +3,19 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "type",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "name",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "manufacturer",
@@ -28,8 +24,7 @@
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "isEnum": false
