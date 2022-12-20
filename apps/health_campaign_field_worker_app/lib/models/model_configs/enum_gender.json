@@ -1,6 +1,5 @@
 {
   "name": "Gender",
-  "type": "enum",
   "attributes": [
     "MALE",
     "FEMALE",
