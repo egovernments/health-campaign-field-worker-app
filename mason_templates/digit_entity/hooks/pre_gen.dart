@@ -1,9 +1,6 @@
 import 'package:mason/mason.dart';
-import 'package:recase/recase.dart';
 
-import 'models/models.dart';
-
-void run(HookContext context) async {
+void run(HookContext context) {
   final logger = context.logger;
   final variables = context.vars;
 
@@ -11,6 +8,5 @@ void run(HookContext context) async {
   final customAttributes = variables['customAttributes'];
   final dateTimeAttributes = variables['dateTimeAttributes'];
 
-  logger.info(attributes.toString());
-  ConfigModel(name: '');
+
 }
