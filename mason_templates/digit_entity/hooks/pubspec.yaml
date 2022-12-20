@@ -1,8 +1,12 @@
-name: example_hooks
+name: digit_entity_hooks
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
+  dart_mappable: ^1.2.0
   mason: any
   recase: ^4.1.0
+dev_dependencies:
+  build_runner: ^2.3.3
+  dart_mappable_builder: ^1.2.1

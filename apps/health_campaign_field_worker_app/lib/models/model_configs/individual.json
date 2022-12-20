@@ -14,7 +14,8 @@
     {
       "name": "clientReferenceId",
       "type": "String",
-      "nullable": false
+      "nullable": false,
+      "primaryKey": true
     },
     {
       "name": "name",
