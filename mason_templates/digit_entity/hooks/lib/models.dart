@@ -9,6 +9,8 @@ class ConfigModel {
   final List<AttributeModel> attributes;
   final List<AttributeModel> customAttributes;
   final List<AttributeModel> dateTimeAttributes;
+  final List<AttributeModel> sqlAttributes;
+
   final bool isEnum;
 
   const ConfigModel({
@@ -17,6 +19,7 @@ class ConfigModel {
     this.attributes = const [],
     this.customAttributes = const [],
     this.dateTimeAttributes = const [],
+    this.sqlAttributes = const [],
     this.isEnum = false,
   });
 }
