@@ -1,0 +1,56 @@
+{
+  "name": "projectType",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "code",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "group",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "beneficiaryType",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "eligibilityCriteria",
+      "type": "String",
+      "nullable": false,
+      "isList": true
+    },
+    {
+      "name": "taskProcedure",
+      "type": "String",
+      "nullable": false,
+      "isList": true
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "resources",
+      "type": "projectProductVariant",
+      "nullable": false,
+      "isList": true
+    }
+  ],
+  "isEnum": false
+}
