@@ -1,7 +1,6 @@
 {
   "name": "AddressType",
-  "type": "enum",
-  "attributes": [
+  "enumValues": [
     "PERMANENT",
     "CORRESPONDENCE",
     "OTHER"

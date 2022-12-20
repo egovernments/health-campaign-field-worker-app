@@ -1,6 +1,6 @@
 {
   "name": "Gender",
-  "attributes": [
+  "enumValues": [
     "MALE",
     "FEMALE",
     "OTHER"
