@@ -6,7 +6,7 @@ class TaskResourceTable extends Table {
   TextColumn get productVariantId => text()();
   TextColumn get quantity => text()();
   BoolColumn get isDelivered => boolean()();
-  TextColumn get deliveryComment => text()();
+  TextColumn get deliveryComment => text().nullable()();
   
 
   @override
