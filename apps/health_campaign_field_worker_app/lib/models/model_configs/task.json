@@ -1,0 +1,81 @@
+{
+  "name": "task",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "projectId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "projectBeneficiaryId",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "createdBy",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "rowVersion",
+      "type": "int",
+      "nullable": false
+    },
+    {
+      "name": "status",
+      "type": "String",
+      "nullable": false
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "resources",
+      "type": "taskResource",
+      "nullable": false,
+      "isList": true
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "nullable": false
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "plannedStartDate",
+      "type": "DateTime",
+      "nullable": false
+    },
+    {
+      "name": "plannedEndDate",
+      "type": "DateTime",
+      "nullable": false
+    },
+    {
+      "name": "actualStartDate",
+      "type": "DateTime",
+      "nullable": false
+    },
+    {
+      "name": "actualEndDate",
+      "type": "DateTime",
+      "nullable": false
+    },
+    {
+      "name": "createdDate",
+      "type": "DateTime",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}

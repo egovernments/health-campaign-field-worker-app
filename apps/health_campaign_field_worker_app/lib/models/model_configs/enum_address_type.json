@@ -1,0 +1,10 @@
+{
+  "name": "AddressType",
+  "type": "enum",
+  "attributes": [
+    "PERMANENT",
+    "CORRESPONDENCE",
+    "OTHER"
+  ],
+  "isEnum": true
+}

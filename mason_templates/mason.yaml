@@ -1,0 +1,5 @@
+bricks:
+  freezed_bloc:
+    path: freezed_bloc
+  digit_entity:
+    path: digit_entity
