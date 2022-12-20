@@ -5,6 +5,7 @@ export 'models.mapper.g.dart';
 @MappableClass()
 class ConfigModel {
   final String name;
+  final List<String> enumValues;
   final List<AttributeModel> attributes;
   final List<AttributeModel> customAttributes;
   final List<AttributeModel> dateTimeAttributes;
@@ -12,6 +13,7 @@ class ConfigModel {
 
   const ConfigModel({
     required this.name,
+    this.enumValues = const [],
     this.attributes = const [],
     this.customAttributes = const [],
     this.dateTimeAttributes = const [],
