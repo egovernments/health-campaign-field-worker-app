@@ -10,8 +10,6 @@ class DocumentRequestModel extends DataModel {
   final String? fileStoreId;
   final String? documentUid;
   
-  
-  
   DocumentRequestModel({
     this.id,
     this.tenantId,
@@ -20,8 +18,6 @@ class DocumentRequestModel extends DataModel {
     this.documentUid,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -42,8 +38,6 @@ class DocumentModel extends DataModel implements DocumentRequestModel {
   @override
   final String documentUid;
   
-  
-  
 
   DocumentModel({
     required this.id,
@@ -53,6 +47,4 @@ class DocumentModel extends DataModel implements DocumentRequestModel {
     required this.documentUid,
     super.auditDetails,
   }):  super();
-
-  
 }

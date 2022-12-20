@@ -13,8 +13,6 @@ class HouseholdMemberRequestModel extends DataModel {
   final String? tenantId;
   final int? rowVersion;
   
-  
-  
   HouseholdMemberRequestModel({
     this.id,
     this.householdId,
@@ -26,8 +24,6 @@ class HouseholdMemberRequestModel extends DataModel {
     this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -57,8 +53,6 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
   @override
   final int rowVersion;
   
-  
-  
 
   HouseholdMemberModel({
     required this.id,
@@ -71,6 +65,4 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
     required this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }

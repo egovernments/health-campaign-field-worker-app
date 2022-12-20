@@ -18,11 +18,9 @@ class ProjectRequestModel extends DataModel {
   final String? referenceId;
   final String? projectHierarchy;
   final int? rowVersion;
-  
   final AddressRequestModel? address;
   final List<TargetRequestModel>? targets;
   final List<DocumentRequestModel>? documents;
-  
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -53,6 +51,8 @@ class ProjectRequestModel extends DataModel {
    super();
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  
+
   int? get endDate => endDateTime?.millisecondsSinceEpoch;
   
 }
@@ -93,7 +93,6 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   @override
   final int rowVersion;
   
-  
   @override
   final AddressRequestModel address;
   
@@ -102,7 +101,6 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
   @override
   final List<DocumentRequestModel> documents;
-  
   
   @override
   final DateTime startDateTime;
@@ -133,10 +131,10 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
       endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  
   @override
   int  get startDate => startDateTime .millisecondsSinceEpoch;
   
+
   @override
   int  get endDate => endDateTime .millisecondsSinceEpoch;
   

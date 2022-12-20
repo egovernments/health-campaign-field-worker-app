@@ -11,9 +11,7 @@ class BoundaryRequestModel extends DataModel {
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
-  
   final BoundaryRequestModel? children;
-  
   
   BoundaryRequestModel({
     this.code,
@@ -25,8 +23,6 @@ class BoundaryRequestModel extends DataModel {
     this.children,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -50,10 +46,8 @@ class BoundaryModel extends DataModel implements BoundaryRequestModel {
   @override
   final String? materializedPath;
   
-  
   @override
   final BoundaryRequestModel? children;
-  
   
 
   BoundaryModel({
@@ -66,6 +60,4 @@ class BoundaryModel extends DataModel implements BoundaryRequestModel {
      this.children,
     super.auditDetails,
   }):  super();
-
-  
 }

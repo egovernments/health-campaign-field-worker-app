@@ -11,9 +11,7 @@ class FacilityRequestModel extends DataModel {
   final String? usage;
   final int? storageCapacity;
   final int? rowVersion;
-  
   final AddressRequestModel? address;
-  
   
   FacilityRequestModel({
     this.id,
@@ -25,8 +23,6 @@ class FacilityRequestModel extends DataModel {
     this.address,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -50,10 +46,8 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   @override
   final int rowVersion;
   
-  
   @override
   final AddressRequestModel address;
-  
   
 
   FacilityModel({
@@ -66,6 +60,4 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
     required this.address,
     super.auditDetails,
   }):  super();
-
-  
 }

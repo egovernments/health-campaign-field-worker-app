@@ -11,8 +11,6 @@ class ProductVariantRequestModel extends DataModel {
   final String? variation;
   final int? rowVersion;
   
-  
-  
   ProductVariantRequestModel({
     this.id,
     this.tenantId,
@@ -22,8 +20,6 @@ class ProductVariantRequestModel extends DataModel {
     this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -47,8 +43,6 @@ class ProductVariantModel extends DataModel implements ProductVariantRequestMode
   @override
   final int rowVersion;
   
-  
-  
 
   ProductVariantModel({
     required this.id,
@@ -59,6 +53,4 @@ class ProductVariantModel extends DataModel implements ProductVariantRequestMode
     required this.rowVersion,
     super.auditDetails,
   }):  super();
-
-  
 }

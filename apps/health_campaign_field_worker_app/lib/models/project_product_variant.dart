@@ -8,16 +8,12 @@ class ProjectProductVariantRequestModel extends DataModel {
   final String? type;
   final bool? isBaseUnitVariant;
   
-  
-  
   ProjectProductVariantRequestModel({
     this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -32,8 +28,6 @@ class ProjectProductVariantModel extends DataModel implements ProjectProductVari
   @override
   final bool isBaseUnitVariant;
   
-  
-  
 
   ProjectProductVariantModel({
     required this.productVariantId,
@@ -41,6 +35,4 @@ class ProjectProductVariantModel extends DataModel implements ProjectProductVari
     required this.isBaseUnitVariant,
     super.auditDetails,
   }):  super();
-
-  
 }

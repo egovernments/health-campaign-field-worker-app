@@ -13,9 +13,7 @@ class ProjectTypeRequestModel extends DataModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
-  
   final List<ProjectProductVariantRequestModel>? resources;
-  
   
   ProjectTypeRequestModel({
     this.id,
@@ -29,8 +27,6 @@ class ProjectTypeRequestModel extends DataModel {
     this.resources,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -60,10 +56,8 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   @override
   final List<String> taskProcedure;
   
-  
   @override
   final List<ProjectProductVariantRequestModel> resources;
-  
   
 
   ProjectTypeModel({
@@ -78,6 +72,4 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
     required this.resources,
     super.auditDetails,
   }):  super();
-
-  
 }

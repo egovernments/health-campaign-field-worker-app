@@ -13,11 +13,9 @@ class IndividualRequestModel extends DataModel {
   final String? name;
   final String? dateOfBirth;
   final int? rowVersion;
-  
   final AddressRequestModel? address;
   final Gender? gender;
   final List<IdentifierRequestModel>? identifiers;
-  
   
   IndividualRequestModel({
     this.id,
@@ -31,8 +29,6 @@ class IndividualRequestModel extends DataModel {
     this.identifiers,
     super.auditDetails,
   }):  super();
-
-  
 }
 
 @MappableClass()
@@ -56,7 +52,6 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   @override
   final int rowVersion;
   
-  
   @override
   final AddressRequestModel address;
   
@@ -65,7 +60,6 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   
   @override
   final List<IdentifierRequestModel> identifiers;
-  
   
 
   IndividualModel({
@@ -80,6 +74,4 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
     required this.identifiers,
     super.auditDetails,
   }):  super();
-
-  
 }
