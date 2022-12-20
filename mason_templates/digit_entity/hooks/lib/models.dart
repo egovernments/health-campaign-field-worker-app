@@ -28,12 +28,14 @@ class AttributeModel {
   final bool isList;
   final bool nullable;
   final bool isPk;
+  final bool isEnum;
 
   const AttributeModel({
     required this.name,
     required this.type,
     this.isList = false,
     this.isPk = false,
+    this.isEnum = false,
     this.nullable = false,
   });
 }

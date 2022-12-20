@@ -3,13 +3,11 @@
   "attributes": [
     {
       "name": "code",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "name",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "label",

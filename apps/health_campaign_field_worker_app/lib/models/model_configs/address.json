@@ -3,43 +3,35 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "doorNo",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "latitude",
-      "type": "double",
-      "nullable": false
+      "type": "double"
     },
     {
       "name": "longitude",
-      "type": "double",
-      "nullable": false
+      "type": "double"
     },
     {
       "name": "locationAccuracy",
-      "type": "double",
-      "nullable": false
+      "type": "double"
     },
     {
       "name": "addressLine1",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "addressLine2",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "landmark",
@@ -48,13 +40,11 @@
     },
     {
       "name": "city",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "pincode",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "buildingName",
@@ -70,13 +60,11 @@
   "customAttributes": [
     {
       "name": "locality",
-      "type": "boundary",
-      "nullable": false
+      "type": "boundary"
     },
     {
       "name": "type",
       "type": "AddressType",
-      "nullable": false,
       "isEnum": true
     }
   ],
