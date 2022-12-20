@@ -1,6 +1,7 @@
-#dart pub global activate mason_cli
-path="$PWD"
+dart pub global activate mason_cli
+
 mason add digit_entity --path ./mason_templates/digit_entity -g
+mason add freezed_bloc --path ./mason_templates/freezed_bloc -g
 
 cd apps/health_campaign_field_worker_app/lib || exit
 app_root="$PWD"
