@@ -33,6 +33,7 @@ class DigitTheme {
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
       dialogTheme: dialogTheme,
+      outlinedButtonTheme: outlinedButtonTheme,
     );
   }
 
@@ -119,4 +120,9 @@ class DigitTheme {
         ),
         actionsPadding: const EdgeInsets.all(8),
       );
+
+  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+          side: BorderSide(color: colorScheme.secondary),
+          padding: const EdgeInsets.only(left: 15, right: 15)));
 }
