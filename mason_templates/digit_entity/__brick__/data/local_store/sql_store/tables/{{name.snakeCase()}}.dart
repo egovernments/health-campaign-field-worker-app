@@ -1,7 +1,7 @@
 {{^isEnum}}import 'package:drift/drift.dart';
 
 class {{name.pascalCase()}}Table extends Table {
-  {{#sqlAttributes}}{{columnType.pascalCase()}}Column get {{name}} => {{type.camelCase()}}(){{#nullable}}.nullable(){{/nullable}}{{#isPk}}.unique(){{/isPk}}();
+  {{#sqlAttributes}}{{^isEnum}}{{columnType.pascalCase()}}Column get {{name.camelCase()}} => {{type.camelCase()}}(){{#nullable}}.nullable(){{/nullable}}{{#isPk}}.unique(){{/isPk}}();{{/isEnum}}{{#isEnum}}IntColumn get {{name.camelCase()}} => intEnum<name.pascalCase()>()();{{/isEnum}}
   {{/sqlAttributes}}
 
   @override
