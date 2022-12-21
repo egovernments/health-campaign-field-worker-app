@@ -5,12 +5,14 @@ class TableHeader {
   final ValueChanged<TableHeader>? callBack;
   bool? isSortingRequired = false;
   bool? isAscendingOrder;
-  String? apiKey;
-  TableHeader(this.label,
-      {this.callBack,
-      this.isSortingRequired,
-      this.isAscendingOrder,
-      this.apiKey});
+  String? cellKey;
+  TableHeader(
+    this.label, {
+    this.callBack,
+    this.isSortingRequired,
+    this.isAscendingOrder,
+    this.cellKey,
+  });
 }
 
 class TableDataRow {
@@ -21,7 +23,7 @@ class TableDataRow {
 class TableData {
   final String label;
   final TextStyle? style;
-  final String? apiKey;
+  final String? cellKey;
   ValueChanged<TableData>? callBack;
-  TableData(this.label, {this.style, this.callBack, this.apiKey});
+  TableData(this.label, {this.style, this.callBack, this.cellKey});
 }
