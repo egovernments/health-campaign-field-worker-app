@@ -127,23 +127,20 @@ class SearchBeneficiaryPage extends StatelessWidget {
                     ),
                   ),
                   BlocBuilder<TableHideActionBloc, TableHideActionState>(
-                    builder: (context, state) => Transform.rotate(
-                      angle: state.isOpen
-                          ? (90 * math.pi / 180)
-                          : 270 * math.pi / 180,
-                      child: Container(
-                        height: 24,
-                        margin: const EdgeInsets.all(4),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new_outlined,
-                            size: 16,
-                          ),
-                          onPressed: () => context
-                              .read<TableHideActionBloc>()
-                              .add(const TableHideActionEvent.onupdateAction()),
+                    builder: (context, state) => Container(
+                      height: 24,
+                      margin: const EdgeInsets.all(4),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          state.isOpen
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down,
+                          size: 16,
                         ),
+                        onPressed: () => context
+                            .read<TableHideActionBloc>()
+                            .add(const TableHideActionEvent.onupdateAction()),
                       ),
                     ),
                   ),
