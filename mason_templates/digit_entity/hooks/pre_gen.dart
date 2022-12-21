@@ -2,7 +2,6 @@ import 'lib/models.dart';
 import 'package:mason/mason.dart';
 
 void run(HookContext context) {
-  final logger = context.logger;
   final variables = context.vars;
 
   final model = Mapper.fromMap<ConfigModel>(variables);
@@ -13,6 +12,7 @@ void run(HookContext context) {
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);
     }),
+    ...model.customAttributes.where((element) => element.isEnum),
   ];
 
   final updateModel = model.copyWith(sqlAttributes: sqlAttributes);
