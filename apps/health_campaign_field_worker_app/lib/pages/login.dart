@@ -2,6 +2,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
+import '../data/remote_client.dart';
+import '../data/repositories/remote/localization.dart';
+import '../data/repositories/remote/mdmd.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);

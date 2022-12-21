@@ -1,6 +1,8 @@
 import 'dart:async';
 import "package:dio/dio.dart";
 
+import '../models/request_info/request_info_model.dart';
+
 class Client {
   Dio init() {
     final Dio dio = Dio();
@@ -17,7 +19,21 @@ class ApiInterceptors extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // do something before request is sent
+    options.data = {
+      ...options.data,
+      "RequestInfo": {
+        ...const RequestInfoModel(
+          apiId: 'hcm',
+          ver: ".01",
+          ts: "",
+          action: "_search",
+          did: "1",
+          key: "",
+          msgId: "20170310130900|en_IN",
+          authToken: "a9679414-55dc-497c-9879-47f13069ba4a",
+        ).toJson(),
+      },
+    };
     super.onRequest(options, handler);
   }
 
