@@ -6,13 +6,14 @@ class DigitSearchBar extends StatelessWidget {
   final String? hintText;
   final EdgeInsets? contentPadding;
   final double? borderRadious;
-  const DigitSearchBar(
-      {super.key,
-      this.padding,
-      this.margin,
-      this.hintText,
-      this.contentPadding,
-      this.borderRadious});
+  const DigitSearchBar({
+    super.key,
+    this.padding,
+    this.margin,
+    this.hintText,
+    this.contentPadding,
+    this.borderRadious,
+  });
 
   @override
   Widget build(BuildContext context) {
