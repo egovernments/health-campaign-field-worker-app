@@ -24,6 +24,9 @@ void main() {
             find.widgetWithText(DigitOutLineButton, 'Button'),
             findsOneWidget,
           );
+          await widgetTester
+              .tap(find.widgetWithText(DigitOutLineButton, 'Button'));
+          await widgetTester.pumpAndSettle();
           expect(primary, true);
         },
       );
