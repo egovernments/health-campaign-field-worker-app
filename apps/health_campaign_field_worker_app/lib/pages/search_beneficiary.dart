@@ -77,15 +77,15 @@ class SearchBeneficiaryPage extends StatelessWidget {
                         headerList: [
                           TableHeader(
                             'Beneficiary',
-                            apiKey: 'beneficiary',
+                            cellKey: 'beneficiary',
                           ),
                           TableHeader(
                             'Age',
-                            apiKey: 'age',
+                            cellKey: 'age',
                           ),
                           TableHeader(
                             'Gender',
-                            apiKey: 'gender',
+                            cellKey: 'gender',
                           ),
                         ],
                         tableData: [
@@ -93,30 +93,30 @@ class SearchBeneficiaryPage extends StatelessWidget {
                             [
                               TableData(
                                 'Jose',
-                                apiKey: 'beneficiary',
+                                cellKey: 'beneficiary',
                               ),
                               TableData(
                                 '45',
-                                apiKey: 'age',
+                                cellKey: 'age',
                               ),
                               TableData(
                                 'Male',
-                                apiKey: 'gender',
+                                cellKey: 'gender',
                               ),
                             ],
                           ),
                           TableDataRow([
                             TableData(
                               'Maria',
-                              apiKey: 'beneficiary',
+                              cellKey: 'beneficiary',
                             ),
                             TableData(
                               '35',
-                              apiKey: 'age',
+                              cellKey: 'age',
                             ),
                             TableData(
                               'Female',
-                              apiKey: 'gender',
+                              cellKey: 'gender',
                             ),
                           ]),
                         ],
