@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BenificiaryCard extends StatelessWidget {
+class BeneficiaryCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String description;
   final String? status;
   final String? statusType;
-  
-  const BenificiaryCard({
+
+  const BeneficiaryCard({
     super.key,
     required this.title,
     required this.subtitle,
@@ -28,15 +28,13 @@ class BenificiaryCard extends StatelessWidget {
           title,
           style: theme.textTheme.headlineSmall,
         ),
-        status != null
-            ? Chip(
-                label: Text(status!),
-                backgroundColor: theme.colorScheme.inversePrimary,
-              )
-            : const SizedBox(
-                height: 0,
-                width: 0,
-              ),
+        Offstage(
+          offstage: status != null,
+          child: Chip(
+            label: Text(status!),
+            backgroundColor: theme.colorScheme.inversePrimary,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(4),
           child: Text(
