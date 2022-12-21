@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import '../../../../models/address_type.dart';
 
 class AddressTable extends Table {
   TextColumn get id => text()();
@@ -14,6 +15,7 @@ class AddressTable extends Table {
   TextColumn get pincode => text()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
+  IntColumn get type => intEnum<AddressType>()();
   
 
   @override
