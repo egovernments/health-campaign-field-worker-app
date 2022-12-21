@@ -1,17 +1,13 @@
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:flutter/material.dart';
 
-class BenificiaryInboxCard extends StatelessWidget {
-  final String firstInbox;
-  final String secondInbox;
-  final String firstInboxContent;
-  final String secondInboxContent;
-  const BenificiaryInboxCard({
+import '../../models/beneficiary_statistics/beneficiary_statistics_model.dart';
+
+class BeneficiaryStatisticsCard extends StatelessWidget {
+  final BeneficiaryStatisticsWrapperModel beneficiaryStatistics;
+  const BeneficiaryStatisticsCard({
     super.key,
-    required this.firstInbox,
-    required this.secondInbox,
-    required this.firstInboxContent,
-    required this.secondInboxContent,
+    required this.beneficiaryStatistics,
   });
 
   @override
@@ -29,12 +25,12 @@ class BenificiaryInboxCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  firstInbox,
+                  beneficiaryStatistics.beneficiaryStatisticsList.first.title,
                   style: theme.textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  firstInboxContent,
+                  beneficiaryStatistics.beneficiaryStatisticsList.first.content,
                   style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -46,12 +42,12 @@ class BenificiaryInboxCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  secondInbox,
+                  beneficiaryStatistics.beneficiaryStatisticsList.last.title,
                   style: theme.textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  secondInboxContent,
+                  beneficiaryStatistics.beneficiaryStatisticsList.last.content,
                   style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),

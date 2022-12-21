@@ -4,7 +4,7 @@ import '../pages/authenticated.dart';
 import '../pages/forms.dart';
 import '../pages/home.dart';
 import '../pages/login.dart';
-import '../pages/search_benificary.dart';
+import '../pages/search_beneficiary.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -20,7 +20,7 @@ part 'app_router.gr.dart';
       children: [
         AutoRoute(page: HomePage, path: ''),
         AutoRoute(page: FormsPage, path: 'forms/:pageName'),
-        AutoRoute(page: SearchBenificiaryPage, path: 'search-benificary'),
+        AutoRoute(page: SearchBeneficiaryPage, path: 'search-benificary'),
       ],
     ),
   ],
