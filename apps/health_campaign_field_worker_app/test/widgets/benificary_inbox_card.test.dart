@@ -14,8 +14,14 @@ void main() {
             child: BeneficiaryStatisticsCard(
               beneficiaryStatistics:
                   BeneficiaryStatisticsWrapperModel(beneficiaryStatisticsList: [
-                BeneficiaryStatisticsModel(title: '', content: ''),
-                BeneficiaryStatisticsModel(title: '', content: ''),
+                BeneficiaryStatisticsModel(
+                  title: '535',
+                  content: 'No. of Households Registered',
+                ),
+                BeneficiaryStatisticsModel(
+                  title: '756',
+                  content: 'No. of Bedets Delivered',
+                ),
               ]),
             ),
           ));
