@@ -11,7 +11,8 @@
     },
     {
       "name": "clientReferenceId",
-      "type": "String"
+      "type": "String",
+      "isPk": true
     },
     {
       "name": "memberCount",

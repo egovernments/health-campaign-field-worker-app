@@ -6,5 +6,5 @@ class {{name.pascalCase()}}Table extends Table {
   {{/sqlAttributes}}
 
   @override
-  Set<Column>? get primaryKey => { {{#sqlAttributes}}{{#isPk}}{{.}}, {{/isPk}}{{/sqlAttributes}} };
+  Set<Column>? get primaryKey => { {{#sqlAttributes}}{{#isPk}}{{name}}, {{/isPk}}{{/sqlAttributes}} };
 }{{/isEnum}}{{#isEnum}}// No table generated for Enum{{/isEnum}}
