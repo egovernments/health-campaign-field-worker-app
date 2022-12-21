@@ -1,4 +1,4 @@
-import 'package:hooks/models.dart';
+import 'lib/models.dart';
 import 'package:mason/mason.dart';
 
 void run(HookContext context) {
