@@ -4,12 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/table_hide_action.dart';
-import '../widgets/benificiary/benificiary_card.dart';
-import '../widgets/benificiary/benificiary_inbox_card.dart';
+import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
+import '../widgets/beneficiary/beneficiary_card.dart';
+import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 
-class SearchBenificiaryPage extends StatelessWidget {
-  const SearchBenificiaryPage({super.key});
+class SearchBeneficiaryPage extends StatelessWidget {
+  const SearchBeneficiaryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +34,18 @@ class SearchBenificiaryPage extends StatelessWidget {
                 ),
               ),
             ),
-            const BenificiaryInboxCard(
-              firstInbox: '535',
-              firstInboxContent: 'No. of Households Registered',
-              secondInbox: '756',
-              secondInboxContent: 'No. of Bedets Delivered',
+            const BeneficiaryStatisticsCard(
+              beneficiaryStatistics:
+                  BeneficiaryStatisticsWrapperModel(beneficiaryStatisticsList: [
+                BeneficiaryStatisticsModel(
+                  title: '535',
+                  content: 'No. of Households Registered',
+                ),
+                BeneficiaryStatisticsModel(
+                  title: '756',
+                  content: 'No. of Bedets Delivered',
+                ),
+              ]),
             ),
             const DigitSearchBar(
               hintText: 'Enter the name of household head',
@@ -49,7 +57,7 @@ class SearchBenificiaryPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const BenificiaryCard(
+                      const BeneficiaryCard(
                         description: '219 / Pemba (200mts)',
                         subtitle: '4 Members',
                         status: 'Delivered',
@@ -62,21 +70,19 @@ class SearchBenificiaryPage extends StatelessWidget {
                     ],
                   ),
                   BlocBuilder<TableHideActionBloc, TableHideActionState>(
-                    builder: (context, state) => state.isOpen
-                        ? DigitTable(
-                            generateFirstColumnRow: generateFirstColumnRow,
-                            generateRightHandSideColumnRow:
-                                generateRightHandSideColumnRow,
-                            getTitleWidget: _getTitleWidget,
-                            itemCount: 3,
-                            height: 200,
-                            leftHandSideColumnWidth: 120,
-                            rightHandSideColumnWidth: 150 * 3,
-                          )
-                        : const SizedBox(
-                            width: 0,
-                            height: 0,
-                          ),
+                    builder: (context, state) => Offstage(
+                      offstage: state.isOpen,
+                      child: DigitTable(
+                        generateFirstColumnRow: generateFirstColumnRow,
+                        generateRightHandSideColumnRow:
+                            generateRightHandSideColumnRow,
+                        getTitleWidget: _getTitleWidget,
+                        itemCount: 3,
+                        height: 200,
+                        leftHandSideColumnWidth: 120,
+                        rightHandSideColumnWidth: 150 * 3,
+                      ),
+                    ),
                   ),
                   BlocBuilder<TableHideActionBloc, TableHideActionState>(
                     builder: (context, state) => Transform.rotate(
@@ -112,21 +118,22 @@ class SearchBenificiaryPage extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: !isKeyboardVisible
-            ? const SizedBox(
-                height: 90,
-                child: DigitCard(
-                  child: DigitElevatedButton(
-                    onPressed: null,
-                    child: Center(
-                      child: Text(
-                        'Register New Household',
-                      ),
-                    ),
+        bottomNavigationBar: Offstage(
+          offstage: isKeyboardVisible,
+          child: const SizedBox(
+            height: 90,
+            child: DigitCard(
+              child: DigitElevatedButton(
+                onPressed: null,
+                child: Center(
+                  child: Text(
+                    'Register New Household',
                   ),
                 ),
-              )
-            : null,
+              ),
+            ),
+          ),
+        ),
       );
     });
   }
