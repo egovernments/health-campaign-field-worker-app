@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
@@ -73,14 +74,55 @@ class SearchBeneficiaryPage extends StatelessWidget {
                     builder: (context, state) => Offstage(
                       offstage: state.isOpen,
                       child: DigitTable(
-                        generateFirstColumnRow: generateFirstColumnRow,
-                        generateRightHandSideColumnRow:
-                            generateRightHandSideColumnRow,
-                        getTitleWidget: _getTitleWidget,
-                        itemCount: 3,
-                        height: 200,
-                        leftHandSideColumnWidth: 120,
-                        rightHandSideColumnWidth: 150 * 3,
+                        headerList: [
+                          TableHeader(
+                            'Beneficiary',
+                            apiKey: 'beneficiary',
+                          ),
+                          TableHeader(
+                            'Age',
+                            apiKey: 'age',
+                          ),
+                          TableHeader(
+                            'Gender',
+                            apiKey: 'gender',
+                          ),
+                        ],
+                        tableData: [
+                          TableDataRow(
+                            [
+                              TableData(
+                                'Jose',
+                                apiKey: 'beneficiary',
+                              ),
+                              TableData(
+                                '45',
+                                apiKey: 'age',
+                              ),
+                              TableData(
+                                'Male',
+                                apiKey: 'gender',
+                              ),
+                            ],
+                          ),
+                          TableDataRow([
+                            TableData(
+                              'Maria',
+                              apiKey: 'beneficiary',
+                            ),
+                            TableData(
+                              '35',
+                              apiKey: 'age',
+                            ),
+                            TableData(
+                              'Female',
+                              apiKey: 'gender',
+                            ),
+                          ]),
+                        ],
+                        leftColumnWidth: 150,
+                        rightColumnWidth: 50 * 7,
+                        height: 153,
                       ),
                     ),
                   ),
