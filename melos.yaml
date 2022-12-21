@@ -4,6 +4,8 @@ repository: https://github.com/egovernments/health-campaign-field-worker-app
 packages:
   - packages/*
   - apps/*
+  - mason_templates/digit_entity/hooks
+  - mason_templates/freezed_bloc/hooks
 
 command:
   bootstrap:
@@ -38,7 +40,7 @@ scripts:
   generate:build-runner:
     exec: flutter packages run build_runner build --delete-conflicting-outputs
     select-package:
-      flutter: true
+      dart: true
       depends-on: build_runner
 
   watch:build-runner:
