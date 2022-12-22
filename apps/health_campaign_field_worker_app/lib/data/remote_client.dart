@@ -2,12 +2,13 @@ import 'dart:async';
 import "package:dio/dio.dart";
 
 import '../models/request_info/request_info_model.dart';
+import '../utils/constants.dart';
 
 class Client {
   Dio init() {
     final Dio dio = Dio();
     dio.interceptors.add(ApiInterceptors());
-    dio.options.baseUrl = "https://health-dev.digit.org/";
+    dio.options.baseUrl = Constants.baseURL;
 
     return dio;
   }
