@@ -7,7 +7,7 @@ class ProjectBeneficiaryTable extends Table {
   TextColumn get projectId => text()();
   TextColumn get beneficiaryId => text()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override

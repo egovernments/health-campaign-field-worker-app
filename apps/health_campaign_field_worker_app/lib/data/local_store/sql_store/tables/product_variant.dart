@@ -8,7 +8,7 @@ class ProductVariantTable extends Table {
   TextColumn get sku => text()();
   TextColumn get variation => text()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override

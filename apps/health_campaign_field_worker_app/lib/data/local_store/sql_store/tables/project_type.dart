@@ -11,7 +11,7 @@ class ProjectTypeTable extends Table {
   TextColumn get beneficiaryType => text()();
   TextColumn get eligibilityCriteria => text()();
   TextColumn get taskProcedure => text()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get resources => text().references(ProjectProductVariantTable, #clientReferenceId)();
 

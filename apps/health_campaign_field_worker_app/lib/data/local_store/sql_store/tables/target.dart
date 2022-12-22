@@ -6,7 +6,7 @@ class TargetTable extends Table {
   TextColumn get beneficiaryType => text()();
   TextColumn get baseline => text()();
   TextColumn get target => text()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override
