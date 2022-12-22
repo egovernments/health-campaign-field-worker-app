@@ -7,7 +7,7 @@ class ProjectFacilityTable extends Table {
   TextColumn get facilityId => text()();
   TextColumn get projectId => text()();
   TextColumn get rowVersion => text()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override

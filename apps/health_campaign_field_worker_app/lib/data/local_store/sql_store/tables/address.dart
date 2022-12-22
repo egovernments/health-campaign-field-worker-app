@@ -17,7 +17,7 @@ class AddressTable extends Table {
   TextColumn get pincode => text()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   IntColumn get type => intEnum<AddressType>()();
   
   TextColumn get locality => text().references(BoundaryTable, #clientReferenceId)();

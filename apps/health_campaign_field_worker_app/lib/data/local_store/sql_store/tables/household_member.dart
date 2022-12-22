@@ -10,7 +10,7 @@ class HouseholdMemberTable extends Table {
   BoolColumn get isHeadOfHousehold => boolean()();
   TextColumn get tenantId => text()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override
