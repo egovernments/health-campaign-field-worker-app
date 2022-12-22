@@ -10,6 +10,7 @@ class ProjectStaffRequestModel extends DataModel {
   final String? projectId;
   final String? channel;
   final int? rowVersion;
+  final String? clientReferenceId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -20,6 +21,7 @@ class ProjectStaffRequestModel extends DataModel {
     this.projectId,
     this.channel,
     this.rowVersion,
+    this.clientReferenceId,
     int? startDate,
     int? endDate,
     super.auditDetails,
@@ -60,6 +62,9 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
   final int rowVersion;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final DateTime startDateTime;
   
   @override
@@ -73,6 +78,7 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
     required this.projectId,
     required this.channel,
     required this.rowVersion,
+    required this.clientReferenceId,
     required int startDate,
     required int endDate,
     super.auditDetails,

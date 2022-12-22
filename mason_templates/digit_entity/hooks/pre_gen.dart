@@ -1,10 +1,25 @@
+import 'package:collection/collection.dart';
+import 'package:dart_mappable/internals.dart';
+
 import 'lib/models.dart';
 import 'package:mason/mason.dart';
 
 void run(HookContext context) {
   final variables = context.vars;
 
-  final model = Mapper.fromMap<ConfigModel>(variables);
+  ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
+
+  if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'clientReferenceId',
+        type: 'String',
+        isPk: true,
+      ),
+    );
+  }
 
   final sqlAttributes = <AttributeModel>[
     ...model.attributes.map((e) {
@@ -15,7 +30,18 @@ void run(HookContext context) {
     ...model.customAttributes.where((element) => element.isEnum),
   ];
 
-  final updateModel = model.copyWith(sqlAttributes: sqlAttributes);
+  final references = [
+    ...model.customAttributes.where((element) => !element.isEnum).map((e) {
+      return e.copyWith(references: [
+        TableReferenceModel(table: e.type, column: e.name),
+      ]);
+    }),
+  ];
+
+  final updateModel = model.copyWith(
+    sqlAttributes: sqlAttributes,
+    referenceAttributes: references,
+  );
   context.vars = updateModel.toMap();
 }
 

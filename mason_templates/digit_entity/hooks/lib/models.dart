@@ -10,6 +10,7 @@ class ConfigModel {
   final List<AttributeModel> customAttributes;
   final List<AttributeModel> dateTimeAttributes;
   final List<AttributeModel> sqlAttributes;
+  final List<AttributeModel> referenceAttributes;
 
   final bool isEnum;
 
@@ -20,6 +21,7 @@ class ConfigModel {
     this.customAttributes = const [],
     this.dateTimeAttributes = const [],
     this.sqlAttributes = const [],
+    this.referenceAttributes = const [],
     this.isEnum = false,
   });
 }
@@ -33,6 +35,7 @@ class AttributeModel {
   final bool nullable;
   final bool isPk;
   final bool isEnum;
+  final List<TableReferenceModel> references;
 
   const AttributeModel({
     required this.name,
@@ -42,5 +45,17 @@ class AttributeModel {
     this.isPk = false,
     this.isEnum = false,
     this.nullable = false,
+    this.references = const [],
+  });
+}
+
+@MappableClass()
+class TableReferenceModel {
+  final String table;
+  final String column;
+
+  const TableReferenceModel({
+    required this.table,
+    required this.column
   });
 }
