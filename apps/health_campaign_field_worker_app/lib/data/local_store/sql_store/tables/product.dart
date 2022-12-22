@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+
 class ProductTable extends Table {
   TextColumn get id => text()();
   TextColumn get tenantId => text()();
@@ -7,8 +8,9 @@ class ProductTable extends Table {
   TextColumn get name => text()();
   TextColumn get manufacturer => text().nullable()();
   IntColumn get rowVersion => integer()();
+  TextColumn get clientReferenceId => text().unique()();
   
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }

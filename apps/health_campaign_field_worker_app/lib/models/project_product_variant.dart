@@ -7,11 +7,13 @@ class ProjectProductVariantRequestModel extends DataModel {
   final String? productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
+  final String? clientReferenceId;
   
   ProjectProductVariantRequestModel({
     this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -28,11 +30,15 @@ class ProjectProductVariantModel extends DataModel implements ProjectProductVari
   @override
   final bool isBaseUnitVariant;
   
+  @override
+  final String clientReferenceId;
+  
 
   ProjectProductVariantModel({
     required this.productVariantId,
     required this.type,
     required this.isBaseUnitVariant,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

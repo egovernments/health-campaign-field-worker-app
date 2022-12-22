@@ -9,6 +9,7 @@ class ProjectResourceRequestModel extends DataModel {
   final String? tenantId;
   final String? projectId;
   final int? rowVersion;
+  final String? clientReferenceId;
   final ProjectProductVariantRequestModel? resources;
   
   ProjectResourceRequestModel({
@@ -16,6 +17,7 @@ class ProjectResourceRequestModel extends DataModel {
     this.tenantId,
     this.projectId,
     this.rowVersion,
+    this.clientReferenceId,
     this.resources,
     super.auditDetails,
   }):  super();
@@ -37,6 +39,9 @@ class ProjectResourceModel extends DataModel implements ProjectResourceRequestMo
   final int rowVersion;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final ProjectProductVariantRequestModel resources;
   
 
@@ -45,6 +50,7 @@ class ProjectResourceModel extends DataModel implements ProjectResourceRequestMo
     required this.tenantId,
     required this.projectId,
     required this.rowVersion,
+    required this.clientReferenceId,
     required this.resources,
     super.auditDetails,
   }):  super();

@@ -10,6 +10,7 @@ class TaskResourceRequestModel extends DataModel {
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
+  final String? clientReferenceId;
   
   TaskResourceRequestModel({
     this.id,
@@ -18,6 +19,7 @@ class TaskResourceRequestModel extends DataModel {
     this.quantity,
     this.isDelivered,
     this.deliveryComment,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -43,6 +45,9 @@ class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
   @override
   final String? deliveryComment;
   
+  @override
+  final String clientReferenceId;
+  
 
   TaskResourceModel({
     required this.id,
@@ -51,6 +56,7 @@ class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
     required this.quantity,
     required this.isDelivered,
      this.deliveryComment,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

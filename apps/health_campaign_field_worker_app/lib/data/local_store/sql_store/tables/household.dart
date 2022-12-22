@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import 'address.dart';
+
 class HouseholdTable extends Table {
   TextColumn get id => text()();
   TextColumn get tenantId => text()();
@@ -7,6 +9,7 @@ class HouseholdTable extends Table {
   IntColumn get memberCount => integer()();
   IntColumn get rowVersion => integer()();
   
+  TextColumn get address => text().references(AddressTable, #clientReferenceId)();
 
   @override
   Set<Column>? get primaryKey => { clientReferenceId,  };
