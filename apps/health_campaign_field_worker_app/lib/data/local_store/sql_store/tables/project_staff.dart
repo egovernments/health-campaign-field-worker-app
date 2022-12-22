@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+
 class ProjectStaffTable extends Table {
   TextColumn get id => text()();
   TextColumn get tenantId => text()();
@@ -7,8 +8,9 @@ class ProjectStaffTable extends Table {
   TextColumn get projectId => text()();
   TextColumn get channel => text()();
   IntColumn get rowVersion => integer()();
+  TextColumn get clientReferenceId => text().unique()();
   
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }

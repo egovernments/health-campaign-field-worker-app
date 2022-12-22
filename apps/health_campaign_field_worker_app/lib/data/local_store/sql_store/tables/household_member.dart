@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+
 class HouseholdMemberTable extends Table {
   TextColumn get id => text()();
   TextColumn get householdId => text()();
@@ -9,8 +10,9 @@ class HouseholdMemberTable extends Table {
   BoolColumn get isHeadOfHousehold => boolean()();
   TextColumn get tenantId => text()();
   IntColumn get rowVersion => integer()();
+  TextColumn get clientReferenceId => text().unique()();
   
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }

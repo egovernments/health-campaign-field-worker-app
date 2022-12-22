@@ -9,6 +9,7 @@ class DocumentRequestModel extends DataModel {
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
+  final String? clientReferenceId;
   
   DocumentRequestModel({
     this.id,
@@ -16,6 +17,7 @@ class DocumentRequestModel extends DataModel {
     this.documentType,
     this.fileStoreId,
     this.documentUid,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -38,6 +40,9 @@ class DocumentModel extends DataModel implements DocumentRequestModel {
   @override
   final String documentUid;
   
+  @override
+  final String clientReferenceId;
+  
 
   DocumentModel({
     required this.id,
@@ -45,6 +50,7 @@ class DocumentModel extends DataModel implements DocumentRequestModel {
     required this.documentType,
     required this.fileStoreId,
     required this.documentUid,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

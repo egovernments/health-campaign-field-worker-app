@@ -13,6 +13,7 @@ class TaskRequestModel extends DataModel {
   final String? createdBy;
   final int? rowVersion;
   final String? status;
+  final String? clientReferenceId;
   final List<TaskResourceRequestModel>? resources;
   final AddressRequestModel? address;
   final DateTime? plannedStartDateTime;
@@ -29,6 +30,7 @@ class TaskRequestModel extends DataModel {
     this.createdBy,
     this.rowVersion,
     this.status,
+    this.clientReferenceId,
     this.resources,
     this.address,
     int? plannedStartDate,
@@ -95,6 +97,9 @@ class TaskModel extends DataModel implements TaskRequestModel {
   final String status;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final List<TaskResourceRequestModel> resources;
   
   @override
@@ -124,6 +129,7 @@ class TaskModel extends DataModel implements TaskRequestModel {
     required this.createdBy,
     required this.rowVersion,
     required this.status,
+    required this.clientReferenceId,
     required this.resources,
     required this.address,
     required int plannedStartDate,

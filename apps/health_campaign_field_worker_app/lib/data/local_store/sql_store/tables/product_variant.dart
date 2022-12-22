@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+
 class ProductVariantTable extends Table {
   TextColumn get id => text()();
   TextColumn get tenantId => text()();
@@ -7,8 +8,9 @@ class ProductVariantTable extends Table {
   TextColumn get sku => text()();
   TextColumn get variation => text()();
   IntColumn get rowVersion => integer()();
+  TextColumn get clientReferenceId => text().unique()();
   
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }

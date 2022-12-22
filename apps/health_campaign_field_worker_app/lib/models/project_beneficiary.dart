@@ -9,6 +9,7 @@ class ProjectBeneficiaryRequestModel extends DataModel {
   final String? projectId;
   final String? beneficiaryId;
   final int? rowVersion;
+  final String? clientReferenceId;
   final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiaryRequestModel({
@@ -17,6 +18,7 @@ class ProjectBeneficiaryRequestModel extends DataModel {
     this.projectId,
     this.beneficiaryId,
     this.rowVersion,
+    this.clientReferenceId,
     int? dateOfRegistration,
     super.auditDetails,
   }): dateOfRegistrationTime = dateOfRegistration == null
@@ -47,6 +49,9 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
   final int rowVersion;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final DateTime dateOfRegistrationTime;
   
 
@@ -56,6 +61,7 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
     required this.projectId,
     required this.beneficiaryId,
     required this.rowVersion,
+    required this.clientReferenceId,
     required int dateOfRegistration,
     super.auditDetails,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
