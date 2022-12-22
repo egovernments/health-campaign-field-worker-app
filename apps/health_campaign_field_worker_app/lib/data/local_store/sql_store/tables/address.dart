@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
+
 import '../../../../models/address_type.dart';
+import 'boundary.dart';
 
 class AddressTable extends Table {
   TextColumn get id => text()();
@@ -15,9 +17,11 @@ class AddressTable extends Table {
   TextColumn get pincode => text()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
+  TextColumn get clientReferenceId => text().unique()();
   IntColumn get type => intEnum<AddressType>()();
   
+  TextColumn get locality => text().references(BoundaryTable, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }

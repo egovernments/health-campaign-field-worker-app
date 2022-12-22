@@ -11,6 +11,7 @@ class BoundaryRequestModel extends DataModel {
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
+  final String? clientReferenceId;
   final BoundaryRequestModel? children;
   
   BoundaryRequestModel({
@@ -20,6 +21,7 @@ class BoundaryRequestModel extends DataModel {
     this.latitude,
     this.longitude,
     this.materializedPath,
+    this.clientReferenceId,
     this.children,
     super.auditDetails,
   }):  super();
@@ -47,6 +49,9 @@ class BoundaryModel extends DataModel implements BoundaryRequestModel {
   final String? materializedPath;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final BoundaryRequestModel? children;
   
 
@@ -57,6 +62,7 @@ class BoundaryModel extends DataModel implements BoundaryRequestModel {
      this.latitude,
      this.longitude,
      this.materializedPath,
+    required this.clientReferenceId,
      this.children,
     super.auditDetails,
   }):  super();

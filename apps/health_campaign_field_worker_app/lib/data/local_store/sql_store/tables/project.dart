@@ -1,5 +1,9 @@
 import 'package:drift/drift.dart';
 
+import 'address.dart';
+import 'target.dart';
+import 'document.dart';
+
 class ProjectTable extends Table {
   TextColumn get id => text()();
   TextColumn get tenantId => text()();
@@ -12,8 +16,12 @@ class ProjectTable extends Table {
   TextColumn get referenceId => text()();
   TextColumn get projectHierarchy => text()();
   IntColumn get rowVersion => integer()();
+  TextColumn get clientReferenceId => text().unique()();
   
+  TextColumn get address => text().references(AddressTable, #clientReferenceId)();
+  TextColumn get targets => text().references(TargetTable, #clientReferenceId)();
+  TextColumn get documents => text().references(DocumentTable, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }
