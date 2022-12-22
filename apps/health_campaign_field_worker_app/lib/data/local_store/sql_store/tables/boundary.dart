@@ -9,7 +9,7 @@ class BoundaryTable extends Table {
   TextColumn get latitude => text().nullable()();
   TextColumn get longitude => text().nullable()();
   TextColumn get materializedPath => text().nullable()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get children => text().references(BoundaryTable, #clientReferenceId)();
 
