@@ -1,13 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'blocs/app_bloc_observer.dart';
-<<<<<<< HEAD
 import 'blocs/app_config/app_config.dart';
-=======
-import 'blocs/app_initilization/app_initilization.dart';
->>>>>>> 8a5bccb (added api integration)
 import 'blocs/auth/auth.dart';
 import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
@@ -16,6 +11,7 @@ import 'router/app_router.dart';
 void main() {
   Bloc.observer = AppBlocObserver();
   DigitUi.instance.initThemeComponents();
+
   runApp(MainApplication(appRouter: AppRouter()));
 }
 
@@ -31,7 +27,6 @@ class MainApplication extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-<<<<<<< HEAD
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
@@ -40,22 +35,32 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
-=======
-        BlocProvider(
-          create: (context) => AppInitilizationBloc(
-            const AppInitilizationState(),
-          )..add(const AppInitilizationSetupEvent()),
-          lazy: false,
         ),
         BlocProvider(
-          create: (context) => AuthBloc(
-            const AuthState(),
-          ),
->>>>>>> 8a5bccb (added api integration)
+          create: (context) => LocalizationBloc(
+            const LocalizationState(),
+          )..add(const LocalizationEvent.onLoadLocalization(
+              module: 'mgramseva-common',
+              tenantId: 'pb',
+              locale: 'hi_IN',
+            )),
+          lazy: false,
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(
+          supportedLocales: const [
+            Locale('en', 'IN'),
+            Locale('hi', 'IN'),
+            Locale.fromSubtags(languageCode: 'pn'),
+          ],
+          locale: const Locale('en', 'IN'),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+          ],
           theme: DigitTheme.instance.mobileTheme,
           routeInformationParser: appRouter.defaultRouteParser(),
           routerDelegate: AutoRouterDelegate.declarative(
