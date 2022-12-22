@@ -21,7 +21,9 @@ class DigitTheme {
   const DigitTheme._internal();
 
   ThemeData get mobileTheme {
-    const Border(top: BorderSide());
+    const Border(
+      top: BorderSide(),
+    );
 
     return ThemeData(
       colorScheme: colorScheme,
@@ -37,18 +39,19 @@ class DigitTheme {
   }
 
   ColorScheme get colorScheme => ColorScheme(
-      brightness: Brightness.light,
-      primary: colors.regalBlue,
-      onPrimary: colors.white,
-      secondary: colors.burningOrange,
-      onSecondary: colors.white,
-      error: colors.lavaRed,
-      onError: colors.white,
-      background: colors.seaShellGray,
-      onBackground: colors.woodsmokeBlack,
-      surface: colors.alabasterWhite,
-      onSurface: colors.woodsmokeBlack,
-      onSurfaceVariant: colors.darkSpringGreen);
+        brightness: Brightness.light,
+        primary: colors.regalBlue,
+        onPrimary: colors.white,
+        secondary: colors.burningOrange,
+        onSecondary: colors.white,
+        error: colors.lavaRed,
+        onError: colors.white,
+        background: colors.seaShellGray,
+        onBackground: colors.woodsmokeBlack,
+        surface: colors.alabasterWhite,
+        onSurface: colors.woodsmokeBlack,
+        onSurfaceVariant: colors.darkSpringGreen,
+      );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
         vertical: 8,
@@ -56,7 +59,9 @@ class DigitTheme {
       );
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.zero),
+        borderRadius: BorderRadius.all(
+          Radius.zero,
+        ),
       );
 
   ElevatedButtonThemeData get elevatedButtonTheme => ElevatedButtonThemeData(
@@ -65,7 +70,9 @@ class DigitTheme {
           padding: buttonPadding,
           backgroundColor: colorScheme.secondary,
           foregroundColor: colorScheme.onSecondary,
-          disabledBackgroundColor: colorScheme.secondary.withOpacity(0.5),
+          disabledBackgroundColor: colorScheme.secondary.withOpacity(
+            0.5,
+          ),
           disabledForegroundColor: colorScheme.onSecondary,
           elevation: 0,
         ),
@@ -75,7 +82,9 @@ class DigitTheme {
         style: TextButton.styleFrom(
           shape: buttonBorder,
           padding: buttonPadding,
-          textStyle: const TextStyle(fontSize: 16),
+          textStyle: const TextStyle(
+            fontSize: 16,
+          ),
           foregroundColor: colorScheme.secondary,
         ),
       );
@@ -84,18 +93,33 @@ class DigitTheme {
         margin: EdgeInsets.fromLTRB(8, 16, 8, 0),
         elevation: 1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(4),
+          ),
         ),
       );
 
   InputDecorationTheme get inputDecorationTheme => InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(color: colors.davyGray),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: colors.davyGray,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(color: colors.davyGray, width: 2),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: colors.davyGray,
+            width: 2,
+          ),
         ),
         contentPadding: const EdgeInsets.all(12),
         isDense: true,
@@ -107,8 +131,14 @@ class DigitTheme {
         titleTextStyle: mobileTypography.headingL,
         contentTextStyle: mobileTypography.bodyL,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              4,
+            ),
+          ),
         ),
-        actionsPadding: const EdgeInsets.all(8),
+        actionsPadding: const EdgeInsets.all(
+          8,
+        ),
       );
 }

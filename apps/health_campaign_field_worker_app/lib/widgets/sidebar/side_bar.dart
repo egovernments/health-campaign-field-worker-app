@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/app_config/app_config.dart';
 import '../../models/app_config/app_config_model.dart';
+import '../../router/app_router.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -33,7 +35,7 @@ class SideBar extends StatelessWidget {
         DigitIconTile(
           title: 'Home',
           icon: Icons.home,
-          onPressed: () {},
+          onPressed: () => context.router.replace(const HomeRoute()),
         ),
         DigitIconTile(
           title: 'Language',
