@@ -2,7 +2,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:math' as math;
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/table_hide_action.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
@@ -175,64 +174,5 @@ class SearchBeneficiaryPage extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Widget _getTitleItemWidget(String label, double width) {
-    return DigitTableItemTitle(
-      label: label,
-      width: width,
-      height: 56,
-    );
-  }
-
-  List<Widget> _getTitleWidget() {
-    // This Data will be replaced once we get the data from API
-    return [
-      _getTitleItemWidget('Beneficiary', 140),
-      _getTitleItemWidget('Status', 140),
-      _getTitleItemWidget('Age', 140),
-      _getTitleItemWidget('Gender', 140),
-    ];
-  }
-
-  Widget generateFirstColumnRow(BuildContext context, int index) {
-    // This Data will be replaced once we get the data from API
-    return DigitTableItem(
-      content: 'Jose',
-      index: index,
-      width: 140,
-    );
-  }
-
-  Widget generateRightHandSideColumnRow(BuildContext context, int index) {
-    final theme = Theme.of(context);
-
-    // This Data will be replaced once we get the data from API
-    return Row(
-      children: <Widget>[
-        DigitTableItem(
-          content: '',
-          index: index,
-          isColored: true,
-          width: 140,
-          child: Text(
-            'Delivered',
-            style: TextStyle(color: theme.colorScheme.inverseSurface),
-          ),
-        ),
-        DigitTableItem(
-          content: '45',
-          index: index,
-          isColored: true,
-          width: 140,
-        ),
-        DigitTableItem(
-          content: 'Male',
-          index: index,
-          isColored: true,
-          width: 140,
-        ),
-      ],
-    );
   }
 }
