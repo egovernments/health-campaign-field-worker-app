@@ -28,7 +28,7 @@ class TaskResourceRequestModel extends DataModel {
 class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -50,7 +50,7 @@ class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
   
 
   TaskResourceModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.productVariantId,
     required this.quantity,

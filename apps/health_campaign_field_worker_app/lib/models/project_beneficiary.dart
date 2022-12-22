@@ -34,7 +34,7 @@ class ProjectBeneficiaryRequestModel extends DataModel {
 class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -56,7 +56,7 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
   
 
   ProjectBeneficiaryModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.projectId,
     required this.beneficiaryId,

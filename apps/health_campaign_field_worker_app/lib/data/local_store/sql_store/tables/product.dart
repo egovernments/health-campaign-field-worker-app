@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 
 class ProductTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get type => text()();
   TextColumn get name => text()();

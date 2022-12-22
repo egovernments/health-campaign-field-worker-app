@@ -35,7 +35,7 @@ class ProjectTypeRequestModel extends DataModel {
 class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -66,7 +66,7 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   
 
   ProjectTypeModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.name,
     required this.code,
