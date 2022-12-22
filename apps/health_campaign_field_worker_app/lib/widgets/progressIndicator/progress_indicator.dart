@@ -2,16 +2,16 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorContainer extends StatelessWidget {
-  final String progressIndicatorLabel;
-  final String progressIndicatorPrefixLabel;
-  final String progressIndicatorSufixLabel;
-  final double progressIndicatorvalue;
+  final String label;
+  final String prefixLabel;
+  final String sufixLabel;
+  final double value;
   const ProgressIndicatorContainer({
     super.key,
-    required this.progressIndicatorLabel,
-    required this.progressIndicatorPrefixLabel,
-    required this.progressIndicatorSufixLabel,
-    required this.progressIndicatorvalue,
+    required this.label,
+    required this.prefixLabel,
+    required this.sufixLabel,
+    required this.value,
   });
 
   @override
@@ -23,7 +23,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Text(
-            progressIndicatorLabel,
+            label,
             style: theme.textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
@@ -35,7 +35,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(
                     theme.colorScheme.onSurfaceVariant,
                   ),
-                  value: progressIndicatorvalue,
+                  value: value,
                   minHeight: 7.0,
                 ),
                 Padding(
@@ -44,12 +44,12 @@ class ProgressIndicatorContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        progressIndicatorPrefixLabel,
+                        prefixLabel,
                         style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        progressIndicatorSufixLabel,
+                        sufixLabel,
                         style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),

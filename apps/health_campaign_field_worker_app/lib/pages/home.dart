@@ -15,10 +15,10 @@ class HomePage extends StatelessWidget {
             children: const [
               BackNavigationHelpHeaderWidget(),
               ProgressIndicatorContainer(
-                progressIndicatorLabel: 'Just 125 more to go',
-                progressIndicatorPrefixLabel: 'Yay! 15 registrations completed',
-                progressIndicatorSufixLabel: '200',
-                progressIndicatorvalue: .08,
+                label: 'Just 125 more to go',
+                prefixLabel: 'Yay! 15 registrations completed',
+                sufixLabel: '200',
+                value: .08,
               ),
             ],
           ),
