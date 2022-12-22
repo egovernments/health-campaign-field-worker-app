@@ -48,7 +48,7 @@ class AddressRequestModel extends DataModel {
 class AddressModel extends DataModel implements AddressRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -97,7 +97,7 @@ class AddressModel extends DataModel implements AddressRequestModel {
   
 
   AddressModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.doorNo,
     required this.latitude,

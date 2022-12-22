@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 
 class ProjectStaffTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get userId => text()();
   TextColumn get projectId => text()();

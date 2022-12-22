@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 
 
 class ProjectBeneficiaryTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get projectId => text()();
   TextColumn get beneficiaryId => text()();

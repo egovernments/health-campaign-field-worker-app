@@ -5,7 +5,7 @@ import 'address.dart';
 import 'identifier.dart';
 
 class IndividualTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get clientReferenceId => text()();
   TextColumn get name => text()();
