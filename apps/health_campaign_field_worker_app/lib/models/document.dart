@@ -26,7 +26,7 @@ class DocumentRequestModel extends DataModel {
 class DocumentModel extends DataModel implements DocumentRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -45,7 +45,7 @@ class DocumentModel extends DataModel implements DocumentRequestModel {
   
 
   DocumentModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.documentType,
     required this.fileStoreId,

@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'address.dart';
 
 class FacilityTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   BoolColumn get isPermanent => boolean()();
   TextColumn get usage => text()();

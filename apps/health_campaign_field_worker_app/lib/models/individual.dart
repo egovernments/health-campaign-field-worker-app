@@ -35,7 +35,7 @@ class IndividualRequestModel extends DataModel {
 class IndividualModel extends DataModel implements IndividualRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -53,7 +53,7 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   final int rowVersion;
   
   @override
-  final AddressRequestModel address;
+  final AddressRequestModel? address;
   
   @override
   final Gender gender;
@@ -63,13 +63,13 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   
 
   IndividualModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.clientReferenceId,
     required this.name,
     required this.dateOfBirth,
     required this.rowVersion,
-    required this.address,
+     this.address,
     required this.gender,
     required this.identifiers,
     super.auditDetails,

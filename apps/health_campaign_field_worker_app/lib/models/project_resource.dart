@@ -27,7 +27,7 @@ class ProjectResourceRequestModel extends DataModel {
 class ProjectResourceModel extends DataModel implements ProjectResourceRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -46,7 +46,7 @@ class ProjectResourceModel extends DataModel implements ProjectResourceRequestMo
   
 
   ProjectResourceModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.projectId,
     required this.rowVersion,

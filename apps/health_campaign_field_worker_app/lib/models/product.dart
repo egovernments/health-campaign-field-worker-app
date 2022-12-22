@@ -28,7 +28,7 @@ class ProductRequestModel extends DataModel {
 class ProductModel extends DataModel implements ProductRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -50,7 +50,7 @@ class ProductModel extends DataModel implements ProductRequestModel {
   
 
   ProductModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.type,
     required this.name,

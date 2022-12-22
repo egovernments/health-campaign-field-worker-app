@@ -3,7 +3,8 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "tenantId",
@@ -30,7 +31,8 @@
   "customAttributes": [
     {
       "name": "address",
-      "type": "address"
+      "type": "address",
+      "nullable": true
     },
     {
       "name": "gender",

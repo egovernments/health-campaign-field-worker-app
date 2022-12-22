@@ -26,7 +26,7 @@ class ProjectFacilityRequestModel extends DataModel {
 class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -45,7 +45,7 @@ class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestMo
   
 
   ProjectFacilityModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.facilityId,
     required this.projectId,

@@ -76,7 +76,7 @@ class TaskRequestModel extends DataModel {
 class TaskModel extends DataModel implements TaskRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -122,7 +122,7 @@ class TaskModel extends DataModel implements TaskRequestModel {
   
 
   TaskModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.projectId,
     required this.projectBeneficiaryId,

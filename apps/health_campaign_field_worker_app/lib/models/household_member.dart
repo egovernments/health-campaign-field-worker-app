@@ -32,7 +32,7 @@ class HouseholdMemberRequestModel extends DataModel {
 class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String householdId;
@@ -60,7 +60,7 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
   
 
   HouseholdMemberModel({
-    required this.id,
+     this.id,
     required this.householdId,
     required this.householdClientReferenceId,
     required this.individualId,

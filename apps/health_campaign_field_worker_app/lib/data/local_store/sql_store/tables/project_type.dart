@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'project_product_variant.dart';
 
 class ProjectTypeTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get name => text()();
   TextColumn get code => text()();

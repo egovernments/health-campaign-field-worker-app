@@ -5,7 +5,7 @@ import 'target.dart';
 import 'document.dart';
 
 class ProjectTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get projectTypeId => text()();
   TextColumn get subProjectTypeId => text()();

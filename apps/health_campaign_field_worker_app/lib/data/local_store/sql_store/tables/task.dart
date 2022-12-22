@@ -4,7 +4,7 @@ import 'task_resource.dart';
 import 'address.dart';
 
 class TaskTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get projectId => text()();
   TextColumn get projectBeneficiaryId => text()();

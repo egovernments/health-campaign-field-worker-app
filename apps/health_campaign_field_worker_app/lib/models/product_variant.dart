@@ -28,7 +28,7 @@ class ProductVariantRequestModel extends DataModel {
 class ProductVariantModel extends DataModel implements ProductVariantRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -50,7 +50,7 @@ class ProductVariantModel extends DataModel implements ProductVariantRequestMode
   
 
   ProductVariantModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.productId,
     required this.sku,
