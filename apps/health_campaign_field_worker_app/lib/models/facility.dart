@@ -31,7 +31,7 @@ class FacilityRequestModel extends DataModel {
 class FacilityModel extends DataModel implements FacilityRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -56,7 +56,7 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   
 
   FacilityModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.isPermanent,
     required this.usage,

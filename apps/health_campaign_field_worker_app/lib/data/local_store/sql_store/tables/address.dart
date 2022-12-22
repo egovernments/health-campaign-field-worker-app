@@ -4,7 +4,7 @@ import '../../../../models/address_type.dart';
 import 'boundary.dart';
 
 class AddressTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get doorNo => text()();
   RealColumn get latitude => real()();

@@ -24,7 +24,7 @@ class TargetRequestModel extends DataModel {
 class TargetModel extends DataModel implements TargetRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String beneficiaryType;
@@ -40,7 +40,7 @@ class TargetModel extends DataModel implements TargetRequestModel {
   
 
   TargetModel({
-    required this.id,
+     this.id,
     required this.beneficiaryType,
     required this.baseline,
     required this.target,

@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'address.dart';
 
 class HouseholdTable extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get clientReferenceId => text()();
   IntColumn get memberCount => integer()();
