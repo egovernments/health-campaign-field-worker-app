@@ -29,7 +29,7 @@ class MainApplication extends StatelessWidget {
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
-            ..add(const ApplicationConfigEvent.onfetchConfig()),
+            ..add(const ApplicationConfigEvent.onFetchConfig()),
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {

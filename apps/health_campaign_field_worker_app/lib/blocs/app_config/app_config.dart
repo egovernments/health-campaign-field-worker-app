@@ -12,31 +12,31 @@ typedef ApplicationConfigEmitter = Emitter<ApplicationConfigState>;
 class ApplicationConfigBloc
     extends Bloc<ApplicationConfigEvent, ApplicationConfigState> {
   ApplicationConfigBloc(super.initialState) {
-    on<UpdateActionEvent>(_onfetchConfig);
+    on<UpdateActionEvent>(_onFetchConfig);
   }
 
-  FutureOr<void> _onfetchConfig(
+  FutureOr<void> _onFetchConfig(
     UpdateActionEvent event,
     ApplicationConfigEmitter emit,
   ) async {
-    emit(state.copyWith(isloading: true));
+    emit(state.copyWith(isLoading: true));
     emit(state.copyWith(
-      appConfigDetail: AppConfigModel.fromJson(json.decode(mokeAppConigData)),
-      isloading: false,
+      appConfigDetail: AppConfigModel.fromJson(json.decode(mockAppConigData)),
+      isLoading: false,
     ));
   }
 }
 
 @freezed
 class ApplicationConfigEvent with _$ApplicationConfigEvent {
-  const factory ApplicationConfigEvent.onfetchConfig() = UpdateActionEvent;
+  const factory ApplicationConfigEvent.onFetchConfig() = UpdateActionEvent;
 }
 
 @freezed
 class ApplicationConfigState with _$ApplicationConfigState {
   const ApplicationConfigState._();
   const factory ApplicationConfigState({
-    @Default(false) bool isloading,
+    @Default(false) bool isLoading,
     AppConfigModel? appConfigDetail,
   }) = _ApplicationConfigState;
 }
