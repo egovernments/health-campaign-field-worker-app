@@ -20,7 +20,7 @@ part 'app_router.gr.dart';
       children: [
         AutoRoute(page: HomePage, path: ''),
         AutoRoute(page: FormsPage, path: 'forms/:pageName'),
-        AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficary'),
+        AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
       ],
     ),
   ],
