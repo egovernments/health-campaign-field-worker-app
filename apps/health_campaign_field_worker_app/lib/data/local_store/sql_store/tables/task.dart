@@ -11,7 +11,7 @@ class TaskTable extends Table {
   TextColumn get createdBy => text()();
   IntColumn get rowVersion => integer()();
   TextColumn get status => text()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get resources => text().references(TaskResourceTable, #clientReferenceId)();
   TextColumn get address => text().references(AddressTable, #clientReferenceId)();

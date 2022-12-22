@@ -7,7 +7,7 @@ class ProjectResourceTable extends Table {
   TextColumn get tenantId => text()();
   TextColumn get projectId => text()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get resources => text().references(ProjectProductVariantTable, #clientReferenceId)();
 

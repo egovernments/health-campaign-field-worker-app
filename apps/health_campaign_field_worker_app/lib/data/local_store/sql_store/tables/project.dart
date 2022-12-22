@@ -16,7 +16,7 @@ class ProjectTable extends Table {
   TextColumn get referenceId => text()();
   TextColumn get projectHierarchy => text()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get address => text().references(AddressTable, #clientReferenceId)();
   TextColumn get targets => text().references(TargetTable, #clientReferenceId)();

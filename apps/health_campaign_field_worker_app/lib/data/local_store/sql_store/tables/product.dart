@@ -8,7 +8,7 @@ class ProductTable extends Table {
   TextColumn get name => text()();
   TextColumn get manufacturer => text().nullable()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override

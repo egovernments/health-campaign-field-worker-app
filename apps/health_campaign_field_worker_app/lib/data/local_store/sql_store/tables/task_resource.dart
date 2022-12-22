@@ -8,7 +8,7 @@ class TaskResourceTable extends Table {
   TextColumn get quantity => text()();
   BoolColumn get isDelivered => boolean()();
   TextColumn get deliveryComment => text().nullable()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
 
   @override

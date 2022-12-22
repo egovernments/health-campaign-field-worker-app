@@ -9,7 +9,7 @@ class FacilityTable extends Table {
   TextColumn get usage => text()();
   IntColumn get storageCapacity => integer()();
   IntColumn get rowVersion => integer()();
-  TextColumn get clientReferenceId => text().unique()();
+  TextColumn get clientReferenceId => text()();
   
   TextColumn get address => text().references(AddressTable, #clientReferenceId)();
 
