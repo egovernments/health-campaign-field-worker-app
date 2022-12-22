@@ -1,4 +1,4 @@
-const mokeAppConigData = """{
+const mockAppConigData = """{
   "tenantId": "default",
   "moduleName": "HCM-FIELD-APP-CONFIG",
   "configuration": {

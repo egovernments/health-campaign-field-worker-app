@@ -31,7 +31,7 @@ class ConfigurationModel with _$ConfigurationModel {
 @freezed
 class AppConfig with _$AppConfig {
   factory AppConfig({
-    @JsonKey(name: 'NETWORK_DETECTION') required String neworkDetection,
+    @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
     @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
     @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
