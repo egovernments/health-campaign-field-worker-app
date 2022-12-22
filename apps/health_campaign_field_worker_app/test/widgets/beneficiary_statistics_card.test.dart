@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group(
-    'BeneficiaryInboxCard Test',
+    'BeneficiaryStatisticsCard Test',
     () {
       testWidgets(
         'Widget is created without errors',
