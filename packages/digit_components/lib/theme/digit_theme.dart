@@ -127,5 +127,5 @@ class DigitTheme {
           padding: const EdgeInsets.only(left: 15, right: 15)));
 
   BorderSide get tableCellBorder =>
-      const BorderSide(color: Color.fromRGBO(238, 238, 238, 1), width: 0.5);
+      BorderSide(color: colorScheme.background, width: 0.5);
 }
