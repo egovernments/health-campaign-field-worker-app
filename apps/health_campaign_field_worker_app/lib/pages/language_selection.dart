@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:digit_components/digit_components.dart';
@@ -20,18 +22,21 @@ class LanguageSelectionPage extends StatelessWidget {
           children: [
             BlocBuilder<ApplicationConfigBloc, ApplicationConfigState>(
               builder: (context, state) {
-                final languages = state.appConfigDetail?.configuration?.appConfig
-                            .languages;
-                            
+                final languages =
+                    state.appConfigDetail?.configuration?.appConfig.languages;
+
                 if (languages == null) {
                   return const Offstage();
                 }
-                
+
                 return DigitLanguageCard(
-                  digitRowCardItems: languages.map((e) => DigitRowCardModel.fromJson(e.toJson())).toList(),
-                  onLanguageSubmit: () => context.router.push(const LoginRoute()),
-                  onLanguageChange: (_) {},
-                  languageSubmitLabel: 'Continue', 
+                  digitRowCardItems: languages
+                      .map((e) => DigitRowCardModel.fromJson(e.toJson()))
+                      .toList(),
+                  onLanguageSubmit: () =>
+                      context.router.push(const LoginRoute()),
+                  onLanguageChange: (val) {},
+                  languageSubmitLabel: 'Continue',
                 );
               },
             ),

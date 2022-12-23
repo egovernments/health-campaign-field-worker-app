@@ -4,7 +4,7 @@ import '../../models/digit_row_card/digit_row_card_model.dart';
 
 class DigitLanguageCard extends StatelessWidget {
   final List<DigitRowCardModel> digitRowCardItems;
-  final Function onLanguageChange;
+  final ValueChanged<String?> onLanguageChange;
   final VoidCallback onLanguageSubmit;
   final String languageSubmitLabel;
 
@@ -25,7 +25,7 @@ class DigitLanguageCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DigitRowCard(
-            onPressed: (data) => onLanguageChange(data),
+            onPressed: onLanguageChange,
             list: digitRowCardItems,
             width:
                 (MediaQuery.of(context).size.width / digitRowCardItems.length) -

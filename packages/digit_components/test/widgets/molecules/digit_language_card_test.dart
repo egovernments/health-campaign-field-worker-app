@@ -31,13 +31,13 @@ void main() {
       await widgetTester.pumpWidget(
         WidgetApp(
           child: DigitLanguageCard(
-            digitRowCardItems: languageList,
-            languageSubmitLabel: 'Continue',
-            onLanguageSubmit: () =>
-                languageChangeSubmitTriggered = !languageChangeSubmitTriggered,
-            onLanguageChange: (data) =>
-                languageChangeTriggered = !languageChangeTriggered,
-          ),
+              digitRowCardItems: languageList,
+              languageSubmitLabel: 'Continue',
+              onLanguageSubmit: () => languageChangeSubmitTriggered =
+                  !languageChangeSubmitTriggered,
+              onLanguageChange: (data) {
+                languageChangeTriggered = !languageChangeTriggered;
+              }),
         ),
       );
 
