@@ -47,9 +47,7 @@ class SideBar extends StatelessWidget {
                 List<Languages>? languageList =
                     state.appConfigDetail?.configuration?.appConfig.languages;
 
-                return state.appConfigDetail?.configuration?.appConfig
-                            .languages !=
-                        null
+                return languageList != null
                     ? DigitRowCard(
                         onPressed: (data) {},
                         list: languageList
