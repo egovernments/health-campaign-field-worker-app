@@ -9,6 +9,7 @@ import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
+import 'utils/constants.dart';
 
 void main() {
   Bloc.observer = AppBlocObserver();
@@ -46,7 +47,7 @@ class MainApplication extends StatelessWidget {
           )..add(const LocalizationEvent.onLoadLocalization(
               module: 'mgramseva-common',
               tenantId: 'pb',
-              locale: 'hi_IN',
+              locale: 'en_IN',
             )),
           lazy: false,
         ),
@@ -67,6 +68,7 @@ class MainApplication extends StatelessWidget {
           ],
           theme: DigitTheme.instance.mobileTheme,
           routeInformationParser: appRouter.defaultRouteParser(),
+          scaffoldMessengerKey: scaffoldMessengerKey,
           routerDelegate: AutoRouterDelegate.declarative(
             appRouter,
             navigatorObservers: () => [AppRouterObserver()],

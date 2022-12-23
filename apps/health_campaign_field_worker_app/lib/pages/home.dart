@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
     return [
       HomeItemCard(
         icon: Icons.add_business_rounded,
-        label: 'Register',
+        label: 'ADVANCE',
         onPressed: () {},
       ),
       const HomeItemCard(

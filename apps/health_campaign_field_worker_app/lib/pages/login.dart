@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/localization/localization.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,7 +21,9 @@ class LoginPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppLocalizations.of(context).translate('HCM_LOGIN'),
+                  AppLocalizations.of(context).translate(
+                    'SEARCH_CONNECTION_SUBLABEL',
+                  ),
                   style: theme.textTheme.displayMedium,
                 ),
                 const DigitTextField(label: 'User ID'),

@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:isar/isar.dart';
 
+import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../data/remote_client.dart';
 import '../../data/repositories/remote/localization.dart';
 import '../../models/localization/localization_model.dart';
+import 'app_localization.dart';
 
 part 'localization.freezed.dart';
 
@@ -21,7 +25,6 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     LocalizationEmitter emit,
   ) async {
     Client client = Client();
-
     LocalizationModel result =
         await LocalizationRepository(client.init()).search(
       url: 'localization/messages/v1/_search',
@@ -34,8 +37,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
     emit(state.copyWith(locaization: result));
     await Future.delayed(const Duration(seconds: 1));
+    await AppLocalizations(
+      const Locale('en', 'IN'),
+    ).load();
   }
 }
+
+class TodoSchema {}
 
 @freezed
 class LocalizationEvent with _$LocalizationEvent {
