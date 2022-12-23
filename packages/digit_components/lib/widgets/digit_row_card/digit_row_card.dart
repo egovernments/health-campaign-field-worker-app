@@ -39,7 +39,7 @@ class DigitRowCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      ele.label,
+                      e.label,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: e.isSelected

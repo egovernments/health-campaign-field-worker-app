@@ -4,7 +4,7 @@ import '../../models/digit_row_card/digit_row_card_model.dart';
 
 class DigitLanguageCard extends StatelessWidget {
   final List<DigitRowCardModel> digitRowCardItems;
-  final ValueChanged<String?> onLanguageChange;
+  final ValueChanged<DigitRowCardModel?> onLanguageChange;
   final VoidCallback onLanguageSubmit;
   final String languageSubmitLabel;
 
