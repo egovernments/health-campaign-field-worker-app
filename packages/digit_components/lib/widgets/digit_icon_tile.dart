@@ -28,11 +28,7 @@ class DigitIconTile extends StatelessWidget {
             title,
             textAlign: TextAlign.start,
           ),
-          content ??
-              const SizedBox(
-                width: 0,
-                height: 0,
-              )
+          content ?? const Offstage()
         ],
       ),
       onTap: onPressed,

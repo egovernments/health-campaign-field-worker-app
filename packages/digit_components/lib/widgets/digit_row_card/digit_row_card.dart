@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class DigitRowCard extends StatelessWidget {
   final List<DigitRowCardModel> list;
-  final Function onPressed;
+  final ValueChanged<DigitRowCardModel> onPressed;
   final double width;
 
   const DigitRowCard({
@@ -21,19 +21,19 @@ class DigitRowCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: list
           .map(
-            (ele) => SizedBox(
+            (e) => SizedBox(
               height: 38,
               width: width,
               child: GestureDetector(
-                onTap: () => onPressed(ele),
+                onTap: () => onPressed(e),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: ele.isSelected
+                      color: e.isSelected
                           ? theme.colorScheme.secondary
                           : theme.colorScheme.onBackground,
                     ),
-                    color: ele.isSelected
+                    color: e.isSelected
                         ? theme.colorScheme.secondary
                         : theme.colorScheme.onSecondary,
                   ),
@@ -42,7 +42,7 @@ class DigitRowCard extends StatelessWidget {
                       ele.label,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        color: ele.isSelected
+                        color: e.isSelected
                             ? theme.colorScheme.onSecondary
                             : theme.colorScheme.onBackground,
                       ),
