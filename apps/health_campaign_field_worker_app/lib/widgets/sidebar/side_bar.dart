@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
@@ -51,11 +50,11 @@ class SideBar extends StatelessWidget {
                     ? DigitRowCard(
                         onPressed: (data) {},
                         list: languageList
-                            ?.map((e) => DigitRowCardModel.fromJson(e.toJson()))
-                            .toList() as List<DigitRowCardModel>,
+                            .map((e) => DigitRowCardModel.fromJson(e.toJson()))
+                            .toList(),
                         width: (MediaQuery.of(context).size.width *
                                 0.5 /
-                                languageList!.length) -
+                                languageList.length) -
                             (4 * languageList.length),
                       )
                     : const Text('');
