@@ -20,23 +20,19 @@ class LanguageSelectionPage extends StatelessWidget {
           children: [
             BlocBuilder<ApplicationConfigBloc, ApplicationConfigState>(
               builder: (context, state) {
-                return state.appConfigDetail?.configuration?.appConfig
-                            .languages !=
-                        null
-                    ? DigitLanguageCard(
-                        digitRowCardItems: state
-                            .appConfigDetail?.configuration?.appConfig.languages
-                            .map((e) => DigitRowCardModel.fromJson(e.toJson()))
-                            .toList() as List<DigitRowCardModel>,
-                        onLanguageSubmit: () =>
-                            context.router.push(const LoginRoute()),
-                        onLanguageChange: (data) {},
-                        languageSubmitLabel: 'Continue',
-                      )
-                    : const SizedBox(
-                        width: 0,
-                        height: 0,
-                      );
+                final languages = state.appConfigDetail?.configuration?.appConfig
+                            .languages;
+                            
+                if (languages == null) {
+                  return const Offstage();
+                }
+                
+                return DigitLanguageCard(
+                  digitRowCardItems: languages.map((e) => DigitRowCardModel.fromJson(e.toJson())).toList(),
+                  onLanguageSubmit: () => context.router.push(const LoginRoute()),
+                  onLanguageChange: (_) {},
+                  languageSubmitLabel: 'Continue', 
+                );
               },
             ),
             const PoweredByDigit(),
