@@ -12,7 +12,7 @@ typedef ApplicationConfigEmitter = Emitter<ApplicationConfigState>;
 class ApplicationConfigBloc
     extends Bloc<ApplicationConfigEvent, ApplicationConfigState> {
   ApplicationConfigBloc(super.initialState) {
-    on<UpdateActionEvent>(_onFetchConfig);
+    on(_onFetchConfig);
   }
 
   FutureOr<void> _onFetchConfig(
