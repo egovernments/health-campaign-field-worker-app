@@ -6,6 +6,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
   final String prefixLabel;
   final String sufixLabel;
   final double value;
+  
   const ProgressIndicatorContainer({
     super.key,
     required this.label,
