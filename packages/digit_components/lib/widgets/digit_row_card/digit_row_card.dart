@@ -5,6 +5,7 @@ class DigitRowCard extends StatelessWidget {
   final List<DigitRowCardModel> list;
   final Function onPressed;
   final double width;
+
   const DigitRowCard({
     super.key,
     required this.onPressed,
