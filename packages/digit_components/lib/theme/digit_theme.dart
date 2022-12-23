@@ -21,9 +21,7 @@ class DigitTheme {
   const DigitTheme._internal();
 
   ThemeData get mobileTheme {
-    const Border(
-      top: BorderSide(),
-    );
+    const Border(top: BorderSide());
 
     return ThemeData(
       colorScheme: colorScheme,
