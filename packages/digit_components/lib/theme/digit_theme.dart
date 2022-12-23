@@ -57,9 +57,7 @@ class DigitTheme {
       );
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.zero,
-        ),
+        borderRadius: BorderRadius.all(Radius.zero),
       );
 
   ElevatedButtonThemeData get elevatedButtonTheme => ElevatedButtonThemeData(
