@@ -16,7 +16,8 @@ part 'localization.freezed.dart';
 typedef LocalizationEmitter = Emitter<LocalizationState>;
 
 class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
-  LocalizationBloc(super.initialState) {
+  final Client client;
+  LocalizationBloc(super.initialState, this.client) {
     on<OnLoadLocalizationEvent>(_onLoadLocalization);
   }
 
@@ -24,7 +25,6 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
-    Client client = Client();
     LocalizationModel result =
         await LocalizationRepository(client.init()).search(
       url: 'localization/messages/v1/_search',

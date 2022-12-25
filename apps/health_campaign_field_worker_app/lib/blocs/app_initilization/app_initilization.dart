@@ -12,18 +12,18 @@ typedef AppInitilizationEmitter = Emitter<AppInitilizationState>;
 
 class AppInitilizationBloc
     extends Bloc<AppInitilizationEvent, AppInitilizationState> {
-  AppInitilizationBloc(super.initialState) {
-    on<AppInitilizationSetupEvent>(_onappInitilizeSetup);
+  final MdmsRepository mdmsRepository;
+  AppInitilizationBloc(super.initialState, this.mdmsRepository) {
+    on<AppInitilizationSetupEvent>(_onAppInitilizeSetup);
   }
 
-  FutureOr<void> _onappInitilizeSetup(
+  FutureOr<void> _onAppInitilizeSetup(
     AppInitilizationSetupEvent event,
     AppInitilizationEmitter emit,
   ) async {
-    Client client = Client();
     ServiceRegistryPrimaryWrapperModel result =
-        await MdmsRepository(client.init()).searchServiceRegistry(
-      Constants.mdmdsApiEndPoint,
+        await mdmsRepository.searchServiceRegistry(
+      Constants.mdmsApiEndPoint,
       {
         "MdmsCriteria": {
           "tenantId": "default",
