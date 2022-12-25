@@ -7,6 +7,8 @@ import 'blocs/app_initilization/app_initilization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
+import 'data/remote_client.dart';
+import 'data/repositories/remote/mdmd.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
@@ -20,7 +22,6 @@ void main() {
 
 class MainApplication extends StatelessWidget {
   final AppRouter appRouter;
-
   const MainApplication({
     Key? key,
     required this.appRouter,
@@ -28,11 +29,14 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Client client = Client();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => AppInitilizationBloc(
             const AppInitilizationState(),
+            MdmsRepository(client.init()),
           )..add(const AppInitilizationSetupEvent()),
           lazy: false,
         ),
@@ -42,13 +46,13 @@ class MainApplication extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => LocalizationBloc(
-            const LocalizationState(),
-          )..add(const LocalizationEvent.onLoadLocalization(
-              module: 'mgramseva-common',
-              tenantId: 'pb',
-              locale: 'en_IN',
-            )),
+          create: (context) =>
+              LocalizationBloc(const LocalizationState(), client)
+                ..add(const LocalizationEvent.onLoadLocalization(
+                  module: 'mgramseva-common',
+                  tenantId: 'pb',
+                  locale: 'en_IN',
+                )),
           lazy: false,
         ),
       ],
