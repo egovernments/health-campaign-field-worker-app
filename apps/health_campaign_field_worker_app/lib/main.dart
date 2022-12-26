@@ -1,7 +1,9 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'blocs/app_bloc_observer.dart';
+import 'blocs/app_config/app_config.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
@@ -27,9 +29,11 @@ class MainApplication extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
-          create: (context) =>
+          create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
+            ..add(const ApplicationConfigEvent.onFetchConfig()),
+        ),  BlocProvider(
+               create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
-        ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(
@@ -42,7 +46,7 @@ class MainApplication extends StatelessWidget {
               if (state.isAuthenticated)
                 const AuthenticatedRouteWrapper()
               else
-                const LoginRoute(),
+                const UnauthenticatedRouteWrapper(),
             ],
           ),
         );

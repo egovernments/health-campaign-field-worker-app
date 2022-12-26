@@ -140,7 +140,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.0"
+    version: "4.4.0"
   collection:
     dependency: "direct main"
     description:
@@ -289,6 +289,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+
   horizontal_data_table:
     dependency: transitive
     description:

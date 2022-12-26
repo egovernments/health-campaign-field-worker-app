@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/progressIndicator/progress_indicator.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +15,12 @@ class HomePage extends StatelessWidget {
           header: Column(
             children: const [
               BackNavigationHelpHeaderWidget(),
-              Card(child: Placeholder(fallbackHeight: 120)),
+              ProgressIndicatorContainer(
+                label: 'Just 125 more to go',
+                prefixLabel: 'Yay! 15 registrations completed',
+                sufixLabel: '200',
+                value: .08,
+              ),
             ],
           ),
           footer: const PoweredByDigit(),
@@ -24,7 +30,14 @@ class HomePage extends StatelessWidget {
                 (e) => IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: e.map((e) => Expanded(child: e)).toList(),
+                    children: e
+                        .map(
+                          (e) => SizedBox(
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: e,
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               )
