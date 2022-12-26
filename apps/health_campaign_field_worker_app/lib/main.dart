@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'blocs/app_config/app_config.dart';
+import 'blocs/app_initilization/app_initilization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/table_hide_action.dart';
+import 'blocs/localization/app_localization.dart';
+import 'blocs/localization/localization.dart';
+import 'data/remote_client.dart';
+import 'data/repositories/remote/localization.dart';
+import 'data/repositories/remote/mdmd.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/constants.dart';
 
 void main() {
@@ -18,7 +25,6 @@ void main() {
 
 class MainApplication extends StatelessWidget {
   final AppRouter appRouter;
-
   const MainApplication({
     Key? key,
     required this.appRouter,
@@ -26,6 +32,8 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Client client = Client();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
@@ -34,12 +42,22 @@ class MainApplication extends StatelessWidget {
             ..add(const ApplicationConfigEvent.onFetchConfig()),
         ),
         BlocProvider(
+          create: (context) => AppInitilizationBloc(
+            const AppInitilizationState(),
+            MdmsRepository(client.init()),
+          )..add(const AppInitilizationSetupEvent()),
+          lazy: false,
+        ),
+        BlocProvider(
           create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
         ),
         BlocProvider(
           create: (context) => LocalizationBloc(
             const LocalizationState(),
+            LocalizationRepository(
+              client.init(),
+            ),
           )..add(const LocalizationEvent.onLoadLocalization(
               module: 'mgramseva-common',
               tenantId: 'pb',

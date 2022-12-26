@@ -48,16 +48,8 @@ class HomePage extends StatelessWidget {
   List<HomeItemCard> _getItems(BuildContext context) {
     return [
       HomeItemCard(
-<<<<<<< HEAD
-=======
-        icon: Icons.add_business_rounded,
-        label: 'ADVANCE',
-        onPressed: () {},
-      ),
-      const HomeItemCard(
->>>>>>> f720dca (added localization support)
         icon: Icons.all_inbox,
-        label: 'Beneficiaries',
+        label: 'ADVANCE',
         onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
       ),
       const HomeItemCard(

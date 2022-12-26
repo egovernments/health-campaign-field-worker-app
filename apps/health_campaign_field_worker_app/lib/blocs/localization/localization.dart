@@ -1,12 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
-
 import '../../data/local_store/no_sql/schema/localization.dart';
-import '../../data/remote_client.dart';
 import '../../data/repositories/remote/localization.dart';
 import '../../models/localization/localization_model.dart';
 import 'app_localization.dart';
@@ -16,7 +13,12 @@ part 'localization.freezed.dart';
 typedef LocalizationEmitter = Emitter<LocalizationState>;
 
 class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
-  LocalizationBloc(super.initialState) {
+  final LocalizationRepository localizationRepository;
+
+  LocalizationBloc(
+    super.initialState,
+    this.localizationRepository,
+  ) {
     on<OnLoadLocalizationEvent>(_onLoadLocalization);
   }
 
@@ -24,9 +26,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
-    Client client = Client();
-    LocalizationModel result =
-        await LocalizationRepository(client.init()).search(
+    LocalizationModel result = await localizationRepository.search(
       url: 'localization/messages/v1/_search',
       queryParameters: {
         "module": event.module,
@@ -35,15 +35,36 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
       },
     );
 
-    emit(state.copyWith(locaization: result));
-    await Future.delayed(const Duration(seconds: 1));
+    final isar = await Isar.open([LocalizationSchema]);
+    final List<Localization> newLocalizationList = [];
+
+    result.messages.every((element) {
+      final newLocalization = Localization();
+      newLocalization.message = element.message;
+      newLocalization.code = element.code;
+      newLocalization.locale = element.locale;
+      newLocalization.module = element.module;
+      newLocalizationList.add(newLocalization);
+
+      return true;
+    });
+
+    await isar.writeTxn(() async {
+      await isar.localizations.putAll(newLocalizationList); // insert & update
+    });
+
+// Need to add onemore method and pass the filers
+    final List<Localization> localizationList =
+        await isar.localizations.where().findAll();
+    if (localizationList.isNotEmpty) {
+      emit(state.copyWith(locaization: localizationList));
+    }
+
     await AppLocalizations(
       const Locale('en', 'IN'),
     ).load();
   }
 }
-
-class TodoSchema {}
 
 @freezed
 class LocalizationEvent with _$LocalizationEvent {
@@ -57,7 +78,7 @@ class LocalizationEvent with _$LocalizationEvent {
 @freezed
 class LocalizationState with _$LocalizationState {
   const factory LocalizationState({
-    LocalizationModel? locaization,
+    List<Localization> locaization,
     @Default(false) bool isLocalizationLoadCompleted,
   }) = _LocalizationState;
 }
