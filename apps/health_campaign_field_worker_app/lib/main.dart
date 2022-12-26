@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/app_bloc_observer.dart';
+<<<<<<< HEAD
 import 'blocs/app_config/app_config.dart';
+=======
+import 'blocs/app_initilization/app_initilization.dart';
+>>>>>>> 8a5bccb (added api integration)
 import 'blocs/auth/auth.dart';
 import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
@@ -27,6 +31,7 @@ class MainApplication extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+<<<<<<< HEAD
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
@@ -35,6 +40,18 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
+=======
+        BlocProvider(
+          create: (context) => AppInitilizationBloc(
+            const AppInitilizationState(),
+          )..add(const AppInitilizationSetupEvent()),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(
+            const AuthState(),
+          ),
+>>>>>>> 8a5bccb (added api integration)
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
