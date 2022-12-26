@@ -31,9 +31,11 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
             ..add(const ApplicationConfigEvent.onFetchConfig()),
-        ),  BlocProvider(
-               create: (context) =>
+        ),
+        BlocProvider(
+          create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
+        ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(
