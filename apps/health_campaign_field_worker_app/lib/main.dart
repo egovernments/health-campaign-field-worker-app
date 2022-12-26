@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'blocs/app_config/app_config.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 
@@ -30,7 +31,9 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
             ..add(const ApplicationConfigEvent.onFetchConfig()),
-        ),
+        ),  BlocProvider(
+               create: (context) =>
+              TableHideActionBloc(const TableHideActionState()),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
         return MaterialApp.router(

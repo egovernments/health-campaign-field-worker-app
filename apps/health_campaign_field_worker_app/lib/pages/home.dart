@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/progressIndicator/progress_indicator.dart';
@@ -46,10 +47,10 @@ class HomePage extends StatelessWidget {
 
   List<HomeItemCard> _getItems(BuildContext context) {
     return [
-      const HomeItemCard(
+      HomeItemCard(
         icon: Icons.all_inbox,
         label: 'Beneficiaries',
-        onPressed: null,
+        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
       ),
       const HomeItemCard(
         icon: Icons.menu_book,

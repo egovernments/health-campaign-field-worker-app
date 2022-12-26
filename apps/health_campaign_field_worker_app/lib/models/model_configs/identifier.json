@@ -1,0 +1,16 @@
+{
+  "name": "identifier",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}

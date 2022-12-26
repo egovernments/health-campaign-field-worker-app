@@ -1,0 +1,50 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
+import 'data_model.dart';
+
+@MappableClass()
+class ProjectFacilityRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? facilityId;
+  final String? projectId;
+  final String? rowVersion;
+  
+  ProjectFacilityRequestModel({
+    this.id,
+    this.tenantId,
+    this.facilityId,
+    this.projectId,
+    this.rowVersion,
+    super.auditDetails,
+  }):  super();
+}
+
+@MappableClass()
+class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestModel {
+  
+  @override
+  final String id;
+  
+  @override
+  final String tenantId;
+  
+  @override
+  final String facilityId;
+  
+  @override
+  final String projectId;
+  
+  @override
+  final String rowVersion;
+  
+
+  ProjectFacilityModel({
+    required this.id,
+    required this.tenantId,
+    required this.facilityId,
+    required this.projectId,
+    required this.rowVersion,
+    super.auditDetails,
+  }):  super();
+}

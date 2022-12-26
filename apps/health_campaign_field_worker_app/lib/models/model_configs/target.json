@@ -1,0 +1,26 @@
+{
+  "name": "target",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "beneficiaryType",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "baseline",
+      "type": "String",
+      "nullable": false
+    },
+    {
+      "name": "target",
+      "type": "String",
+      "nullable": false
+    }
+  ],
+  "isEnum": false
+}
