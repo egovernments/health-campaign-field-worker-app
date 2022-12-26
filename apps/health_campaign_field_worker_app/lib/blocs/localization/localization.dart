@@ -78,7 +78,7 @@ class LocalizationEvent with _$LocalizationEvent {
 @freezed
 class LocalizationState with _$LocalizationState {
   const factory LocalizationState({
-    List<Localization> locaization,
+    @Default([]) List<Localization> locaization,
     @Default(false) bool isLocalizationLoadCompleted,
   }) = _LocalizationState;
 }

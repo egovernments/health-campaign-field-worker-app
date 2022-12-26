@@ -1,10 +1,7 @@
 PODS:
   - Flutter (1.0.0)
-<<<<<<< HEAD
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
-=======
->>>>>>> 4e20576 (added repositories)
   - isar_flutter_libs (1.0.0):
     - Flutter
   - location (0.0.1):
@@ -29,10 +26,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-<<<<<<< HEAD
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
-=======
->>>>>>> 4e20576 (added repositories)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
@@ -45,11 +39,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-<<<<<<< HEAD
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
-=======
->>>>>>> 4e20576 (added repositories)
   isar_flutter_libs:
     :path: ".symlinks/plugins/isar_flutter_libs/ios"
   location:
@@ -61,10 +52,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-<<<<<<< HEAD
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-=======
->>>>>>> 4e20576 (added repositories)
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
