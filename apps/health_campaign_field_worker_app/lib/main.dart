@@ -8,6 +8,7 @@ import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'data/remote_client.dart';
+import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdmd.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -46,13 +47,14 @@ class MainApplication extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) =>
-              LocalizationBloc(const LocalizationState(), client)
-                ..add(const LocalizationEvent.onLoadLocalization(
-                  module: 'mgramseva-common',
-                  tenantId: 'pb',
-                  locale: 'en_IN',
-                )),
+          create: (context) => LocalizationBloc(
+            const LocalizationState(),
+            LocalizationRepository(client.init()),
+          )..add(const LocalizationEvent.onLoadLocalization(
+              module: 'hcm-common',
+              tenantId: 'pb',
+              locale: 'en_IN',
+            )),
           lazy: false,
         ),
       ],

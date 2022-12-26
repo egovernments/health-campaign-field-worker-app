@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/localization/localization_model.dart';
+import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../utils/constants.dart';
 import 'app_localizations_delegate.dart';
 import 'localization.dart';
@@ -13,27 +13,22 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  List<LocalizationMessageModel> _localizedStrings =
-      <LocalizationMessageModel>[];
+  static final List<Localization> _localizedStrings = <Localization>[];
   static const LocalizationsDelegate<AppLocalizations> delegate =
       AppLocalizationsDelegate();
 
   Future<bool> load() async {
-    // Make API call to local DB and fetch the stored Localizations. and assign the values to _localizedStrings
+    _localizedStrings.clear();
     if (scaffoldMessengerKey.currentContext != null) {
-      _localizedStrings = (BlocProvider.of<LocalizationBloc>(
-                scaffoldMessengerKey.currentContext!,
-              ).state.locaization !=
-              null
-          ? BlocProvider.of<LocalizationBloc>(
-              scaffoldMessengerKey.currentContext!,
-            ).state.locaization?.messages
-          : [])!;
+      _localizedStrings.addAll(BlocProvider.of<LocalizationBloc>(
+            scaffoldMessengerKey.currentContext!,
+          ).state.locaization ??
+          []);
 
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   String translate(
