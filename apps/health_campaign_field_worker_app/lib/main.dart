@@ -55,11 +55,9 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (context) => LocalizationBloc(
             const LocalizationState(),
-            LocalizationRepository(
-              client.init(),
-            ),
+            LocalizationRepository(client.init()),
           )..add(const LocalizationEvent.onLoadLocalization(
-              module: 'mgramseva-common',
+              module: 'hcm-common',
               tenantId: 'pb',
               locale: 'en_IN',
             )),
