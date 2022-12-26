@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import '../pages/authenticated.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -31,10 +30,9 @@ part 'app_router.gr.dart';
       path: '/',
       children: [
         AutoRoute(page: HomePage, path: ''),
-        AutoRoute(page: FormsPage, path: 'forms/:pageName'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
       ],
     ),
   ],
-)gi
+)
 class AppRouter extends _$AppRouter {}
