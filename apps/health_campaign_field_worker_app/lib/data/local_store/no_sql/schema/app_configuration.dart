@@ -7,32 +7,32 @@ class AppConiguration {
   Id id = Isar.autoIncrement;
 
   @Name("NETWORK_DETECTION")
-  late String networkDetection;
+  late String? networkDetection;
 
   @Name("PERSISTENCE_MODE")
-  late String persistenceMode;
+  late String? persistenceMode;
 
   @Name("SYNC_METHOD")
-  late String syncMethod;
+  late String? syncMethod;
 
   @Name("SYNC_TRIGGER")
-  late String syncTrigger;
+  late String? syncTrigger;
 
   @Name("LANGUAGES")
-  late List<Languages> languages;
+  late List<Languages>? languages;
 
   @Name("LOCALIZATION_MODULES")
-  late List<LocalizationModules> localizationModules;
+  late List<LocalizationModules>? localizationModules;
 }
 
 @embedded
 class Languages {
-  late String label;
-  late String value;
+  late String? label;
+  late String? value;
 }
 
 @embedded
 class LocalizationModules {
-  late String label;
+  late String? label;
   late String value;
 }

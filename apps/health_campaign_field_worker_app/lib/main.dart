@@ -2,11 +2,15 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:isar/isar.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'blocs/app_initilization/app_initilization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
+import 'data/local_store/no_sql/schema/app_configuration.dart';
+import 'data/local_store/no_sql/schema/localization.dart';
+import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdmd.dart';
@@ -14,18 +18,27 @@ import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
 
-void main() {
+void main() async {
   Bloc.observer = AppBlocObserver();
   DigitUi.instance.initThemeComponents();
-
-  runApp(MainApplication(appRouter: AppRouter()));
+  Isar isar = await Isar.open([
+    ServiceRegistrySchema,
+    LocalizationSchema,
+    AppConigurationSchema,
+  ]);
+  runApp(MainApplication(
+    appRouter: AppRouter(),
+    isar: isar,
+  ));
 }
 
 class MainApplication extends StatelessWidget {
   final AppRouter appRouter;
+  final Isar isar;
   const MainApplication({
     Key? key,
     required this.appRouter,
+    required this.isar,
   }) : super(key: key);
 
   @override
@@ -38,7 +51,8 @@ class MainApplication extends StatelessWidget {
           create: (context) => AppInitilizationBloc(
             const AppInitilizationState(),
             MdmsRepository(client.init()),
-          )..add(const AppInitilizationSetupEvent()),
+            isar,
+          )..add(const FindAppConfigurationEvent(actionType: 'SEARCH')),
           lazy: false,
         ),
         BlocProvider(
@@ -50,12 +64,8 @@ class MainApplication extends StatelessWidget {
           create: (context) => LocalizationBloc(
             const LocalizationState(),
             LocalizationRepository(client.init()),
-          )..add(const LocalizationEvent.onLoadLocalization(
-              module: 'hcm-common',
-              tenantId: 'pb',
-              locale: 'en_IN',
-            )),
-          lazy: false,
+            isar,
+          ),
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
