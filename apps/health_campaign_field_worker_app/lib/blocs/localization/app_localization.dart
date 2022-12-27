@@ -21,9 +21,8 @@ class AppLocalizations {
     _localizedStrings.clear();
     if (scaffoldMessengerKey.currentContext != null) {
       _localizedStrings.addAll(BlocProvider.of<LocalizationBloc>(
-            scaffoldMessengerKey.currentContext!,
-          ).state.locaization ??
-          []);
+        scaffoldMessengerKey.currentContext!,
+      ).state.locaization);
 
       return true;
     }

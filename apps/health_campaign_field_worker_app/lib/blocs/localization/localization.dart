@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,10 +15,11 @@ typedef LocalizationEmitter = Emitter<LocalizationState>;
 
 class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   final LocalizationRepository localizationRepository;
-
+  final Isar isar;
   LocalizationBloc(
     super.initialState,
     this.localizationRepository,
+    this.isar,
   ) {
     on<OnLoadLocalizationEvent>(_onLoadLocalization);
   }
@@ -27,15 +29,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     LocalizationEmitter emit,
   ) async {
     LocalizationModel result = await localizationRepository.search(
-      url: 'localization/messages/v1/_search',
+      url: event.endPoint,
       queryParameters: {
         "module": event.module,
         "locale": event.locale,
         "tenantId": event.tenantId,
       },
     );
-
-    final isar = await Isar.open([LocalizationSchema]);
     final List<Localization> newLocalizationList = [];
 
     result.messages.every((element) {
@@ -72,6 +72,7 @@ class LocalizationEvent with _$LocalizationEvent {
     required String module,
     required String tenantId,
     required String locale,
+    required String endPoint,
   }) = OnLoadLocalizationEvent;
 }
 
