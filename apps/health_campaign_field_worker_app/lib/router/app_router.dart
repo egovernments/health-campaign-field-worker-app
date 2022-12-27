@@ -24,5 +24,5 @@ part 'app_router.gr.dart';
       ],
     ),
   ],
-)gi
+)
 class AppRouter extends _$AppRouter {}
