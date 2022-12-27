@@ -2,6 +2,7 @@ class i18 {
   static Common common = const Common();
   static Login login = const Login();
   static ForgetPassword forgetPassword = const ForgetPassword();
+  static Home home = const Home();
 }
 
 class Common {
@@ -25,4 +26,13 @@ class ForgetPassword {
   String get contentText => 'FORGET_PASSWORD_CONTENT_TEXT';
   String get primaryActionLabel => 'PRIMARY_ACTION_LABEL';
   String get actionLabel => 'FORGET_PASSWORD_ACTION_LABEL';
+}
+
+class Home {
+  const Home();
+  String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
+  String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
+  String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
+  String get callbackLabel => 'HOME_CALL_BACK_LABEL';
+  String get fileComplaint => 'HOME_FILE_COMPLAINT';
 }

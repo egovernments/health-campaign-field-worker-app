@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import '../utils/18KeyConstants.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/progressIndicator/progress_indicator.dart';
@@ -46,29 +47,29 @@ class HomePage extends StatelessWidget {
 
   List<HomeItemCard> _getItems(BuildContext context) {
     return [
-      const HomeItemCard(
+      HomeItemCard(
         icon: Icons.all_inbox,
-        label: 'Beneficiaries',
+        label: i18.home.beneficiaryLabel,
         onPressed: null,
       ),
-      const HomeItemCard(
+      HomeItemCard(
         icon: Icons.menu_book,
-        label: 'View Reports',
+        label: i18.home.viewReportsLabel,
         onPressed: null,
       ),
       HomeItemCard(
         icon: Icons.sync_alt,
-        label: 'Sync Data',
+        label: i18.home.syncDataLabel,
         onPressed: () {},
       ),
-      const HomeItemCard(
+      HomeItemCard(
         icon: Icons.call,
-        label: 'Call Supervisor',
+        label: i18.home.callbackLabel,
         onPressed: null,
       ),
-      const HomeItemCard(
+      HomeItemCard(
         icon: Icons.announcement,
-        label: 'File Complaint',
+        label: i18.home.fileComplaint,
         onPressed: null,
       ),
     ];
