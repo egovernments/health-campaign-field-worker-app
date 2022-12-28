@@ -5,7 +5,7 @@ export 'models.mapper.g.dart';
 @MappableClass()
 class ConfigModel {
   final String name;
-  final List<String> enumValues;
+  final List<EnumValues> enumValues;
   final List<AttributeModel> attributes;
   final List<AttributeModel> customAttributes;
   final List<AttributeModel> dateTimeAttributes;
@@ -54,8 +54,16 @@ class TableReferenceModel {
   final String table;
   final String column;
 
-  const TableReferenceModel({
-    required this.table,
-    required this.column
+  const TableReferenceModel({required this.table, required this.column});
+}
+
+@MappableClass()
+class EnumValues {
+  final String name;
+  final String value;
+
+  const EnumValues({
+    required this.name,
+    required this.value,
   });
 }
