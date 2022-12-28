@@ -16,12 +16,42 @@
       "primaryKey": true
     },
     {
-      "name": "name",
-      "type": "String"
+      "name": "userId",
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "dateOfBirth",
       "type": "String"
+    },
+    {
+      "name": "mobileNumber",
+      "type": "String"
+    },
+    {
+      "name": "altContactNumber",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "email",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "fatherName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "husbandName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "photo",
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "rowVersion",
@@ -29,6 +59,15 @@
     }
   ],
   "customAttributes": [
+    {
+      "name": "name",
+      "type": "name"
+    },
+    {
+      "name": "bloodGroup",
+      "type": "bloodGroup",
+      "isEnum": true
+    },
     {
       "name": "address",
       "type": "address",

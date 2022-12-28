@@ -3,5 +3,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum AddressType {
-  permanent, correspondence, other, 
+  @MappableValue("PERMANENT") permanent,
+  @MappableValue("CORRESPONDENCE") correspondence,
+  @MappableValue("OTHER") other,
+  ;
 }
