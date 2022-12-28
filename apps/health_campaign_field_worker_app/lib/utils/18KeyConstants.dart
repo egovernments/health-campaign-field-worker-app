@@ -9,7 +9,7 @@ class Common {
   const Common();
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
   String get coreCommonAge => 'CORE_COMMON_AGE';
-  String get coreCommonGender => 'CORE_COMMOM_GENDER';
+  String get coreCommonGender => 'CORE_COMMON_GENDER';
 }
 
 class Login {

@@ -21,7 +21,7 @@ class ApplicationConfigBloc
   ) async {
     emit(state.copyWith(isLoading: true));
     emit(state.copyWith(
-      appConfigDetail: AppConfigModel.fromJson(json.decode(mockAppConigData)),
+      appConfigDetail: AppConfigModel.fromJson(json.decode(mockAppConfigData)),
       isLoading: false,
     ));
   }

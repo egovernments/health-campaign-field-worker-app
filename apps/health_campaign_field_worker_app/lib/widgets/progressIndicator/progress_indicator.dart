@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class ProgressIndicatorContainer extends StatelessWidget {
   final String label;
   final String prefixLabel;
-  final String sufixLabel;
+  final String suffixLabel;
   final double value;
-  
+
   const ProgressIndicatorContainer({
     super.key,
     required this.label,
     required this.prefixLabel,
-    required this.sufixLabel,
+    required this.suffixLabel,
     required this.value,
   });
 
@@ -50,7 +50,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        sufixLabel,
+                        suffixLabel,
                         style: theme.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
