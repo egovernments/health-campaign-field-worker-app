@@ -13,6 +13,7 @@ import 'tables/household.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
+import 'tables/name.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
 import 'tables/project.dart';
@@ -30,6 +31,7 @@ part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
   AddressTable,
+  NameTable,
   BoundaryTable,
   DocumentTable,
   FacilityTable,
