@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
               ProgressIndicatorContainer(
                 label: 'Just 125 more to go',
                 prefixLabel: 'Yay! 15 registrations completed',
-                sufixLabel: '200',
+                suffixLabel: '200',
                 value: .08,
               ),
             ],
