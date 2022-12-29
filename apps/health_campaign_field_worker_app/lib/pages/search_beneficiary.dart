@@ -29,7 +29,7 @@ class SearchBeneficiaryPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  i18.searchBeneficiary.listOfHouseholds,
+                  i18.searchBeneficiary.statisticsLabelText,
                   style: theme.textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -44,12 +44,12 @@ class SearchBeneficiaryPage extends StatelessWidget {
                 ),
                 BeneficiaryStatisticsModel(
                   title: '756',
-                  content: i18.searchBeneficiary.noOfBedetsDelivered,
+                  content: i18.searchBeneficiary.noOfBednetsDelivered,
                 ),
               ]),
             ),
             DigitSearchBar(
-              hintText: i18.searchBeneficiary.searchHintText,
+              hintText: i18.searchBeneficiary.beneficiarySearchHintText,
             ),
             DigitCard(
               child: Column(
@@ -165,7 +165,7 @@ class SearchBeneficiaryPage extends StatelessWidget {
                 onPressed: null,
                 child: Center(
                   child: Text(
-                    i18.searchBeneficiary.actionLabel,
+                    i18.searchBeneficiary.beneficiaryAddActionLabel,
                   ),
                 ),
               ),
