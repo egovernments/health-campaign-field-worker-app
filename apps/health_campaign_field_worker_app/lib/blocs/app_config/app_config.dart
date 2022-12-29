@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/fake_app_config.dart';
-import '../../models/app_config/app_config_model.dart';
 
 part 'app_config.freezed.dart';
 
@@ -21,7 +19,6 @@ class ApplicationConfigBloc
   ) async {
     emit(state.copyWith(isLoading: true));
     emit(state.copyWith(
-      appConfigDetail: AppConfigModel.fromJson(json.decode(mockAppConfigData)),
       isLoading: false,
     ));
   }

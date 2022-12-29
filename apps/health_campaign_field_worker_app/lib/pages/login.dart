@@ -25,11 +25,9 @@ class LoginPage extends StatelessWidget {
                 ),
                 const DigitTextField(
                   label: 'User ID',
-                  message: "",
                 ),
                 const DigitTextField(
                   label: 'Password',
-                  message: "",
                 ),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
