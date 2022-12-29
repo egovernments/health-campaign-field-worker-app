@@ -19,6 +19,7 @@ class AddressRequestModel extends DataModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
+  final String? clientReferenceId;
   final BoundaryRequestModel? locality;
   final AddressType? type;
   
@@ -36,6 +37,7 @@ class AddressRequestModel extends DataModel {
     this.pincode,
     this.buildingName,
     this.street,
+    this.clientReferenceId,
     this.locality,
     this.type,
     super.auditDetails,
@@ -46,7 +48,7 @@ class AddressRequestModel extends DataModel {
 class AddressModel extends DataModel implements AddressRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -85,6 +87,9 @@ class AddressModel extends DataModel implements AddressRequestModel {
   final String? street;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final BoundaryRequestModel locality;
   
   @override
@@ -92,7 +97,7 @@ class AddressModel extends DataModel implements AddressRequestModel {
   
 
   AddressModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.doorNo,
     required this.latitude,
@@ -105,6 +110,7 @@ class AddressModel extends DataModel implements AddressRequestModel {
     required this.pincode,
      this.buildingName,
      this.street,
+    required this.clientReferenceId,
     required this.locality,
     required this.type,
     super.auditDetails,

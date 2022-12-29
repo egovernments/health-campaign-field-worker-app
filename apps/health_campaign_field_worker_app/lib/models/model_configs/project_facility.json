@@ -4,27 +4,23 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "facilityId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "projectId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     }
   ],
   "isEnum": false

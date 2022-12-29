@@ -3,13 +3,11 @@
   "attributes": [
     {
       "name": "type",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "id",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     }
   ],
   "isEnum": false

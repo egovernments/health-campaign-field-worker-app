@@ -9,6 +9,7 @@ class ProjectFacilityRequestModel extends DataModel {
   final String? facilityId;
   final String? projectId;
   final String? rowVersion;
+  final String? clientReferenceId;
   
   ProjectFacilityRequestModel({
     this.id,
@@ -16,6 +17,7 @@ class ProjectFacilityRequestModel extends DataModel {
     this.facilityId,
     this.projectId,
     this.rowVersion,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -24,7 +26,7 @@ class ProjectFacilityRequestModel extends DataModel {
 class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -38,13 +40,17 @@ class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestMo
   @override
   final String rowVersion;
   
+  @override
+  final String clientReferenceId;
+  
 
   ProjectFacilityModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.facilityId,
     required this.projectId,
     required this.rowVersion,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

@@ -52,6 +52,7 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
 }
 {{/isEnum}}{{#isEnum}}
 @MappableEnum(caseStyle: CaseStyle.upperCase)
-enum {{name}} {
-  {{#attributes}}{{..camelCase()}}, {{/attributes}}
+enum {{name.pascalCase()}} {
+  {{#enumValues}}@MappableValue("{{value}}") {{name.camelCase()}},
+  {{/enumValues}};
 }{{/isEnum}}

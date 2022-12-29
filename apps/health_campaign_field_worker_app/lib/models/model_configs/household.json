@@ -4,34 +4,30 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "nullable": false
+      "isPk": true
     },
     {
       "name": "memberCount",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "Address",
-      "nullable": false
+      "type": "Address"
     }
   ],
   "isEnum": false

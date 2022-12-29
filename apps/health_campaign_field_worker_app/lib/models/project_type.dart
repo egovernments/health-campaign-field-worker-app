@@ -13,6 +13,7 @@ class ProjectTypeRequestModel extends DataModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
+  final String? clientReferenceId;
   final List<ProjectProductVariantRequestModel>? resources;
   
   ProjectTypeRequestModel({
@@ -24,6 +25,7 @@ class ProjectTypeRequestModel extends DataModel {
     this.beneficiaryType,
     this.eligibilityCriteria,
     this.taskProcedure,
+    this.clientReferenceId,
     this.resources,
     super.auditDetails,
   }):  super();
@@ -33,7 +35,7 @@ class ProjectTypeRequestModel extends DataModel {
 class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -57,11 +59,14 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   final List<String> taskProcedure;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final List<ProjectProductVariantRequestModel> resources;
   
 
   ProjectTypeModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.name,
     required this.code,
@@ -69,6 +74,7 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
     required this.beneficiaryType,
     required this.eligibilityCriteria,
     required this.taskProcedure,
+    required this.clientReferenceId,
     required this.resources,
     super.auditDetails,
   }):  super();

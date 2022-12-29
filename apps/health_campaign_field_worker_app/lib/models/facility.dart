@@ -11,6 +11,7 @@ class FacilityRequestModel extends DataModel {
   final String? usage;
   final int? storageCapacity;
   final int? rowVersion;
+  final String? clientReferenceId;
   final AddressRequestModel? address;
   
   FacilityRequestModel({
@@ -20,6 +21,7 @@ class FacilityRequestModel extends DataModel {
     this.usage,
     this.storageCapacity,
     this.rowVersion,
+    this.clientReferenceId,
     this.address,
     super.auditDetails,
   }):  super();
@@ -29,7 +31,7 @@ class FacilityRequestModel extends DataModel {
 class FacilityModel extends DataModel implements FacilityRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -47,16 +49,20 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   final int rowVersion;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final AddressRequestModel address;
   
 
   FacilityModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.isPermanent,
     required this.usage,
     required this.storageCapacity,
     required this.rowVersion,
+    required this.clientReferenceId,
     required this.address,
     super.auditDetails,
   }):  super();

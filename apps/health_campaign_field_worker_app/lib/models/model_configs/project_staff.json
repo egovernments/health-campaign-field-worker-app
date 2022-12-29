@@ -4,38 +4,31 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },{
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },{
       "name": "userId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },{
       "name": "projectId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },{
       "name": "channel",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },{
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "startDate",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     },{
       "name": "endDate",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     }
   ],
   "isEnum": false

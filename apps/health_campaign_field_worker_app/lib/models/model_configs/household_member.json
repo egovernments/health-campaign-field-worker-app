@@ -4,42 +4,35 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "householdId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "householdClientReferenceId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "individualId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "individualClientReferenceId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "isHeadOfHousehold",
-      "type": "bool",
-      "nullable": false
+      "type": "bool"
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "isEnum": false
