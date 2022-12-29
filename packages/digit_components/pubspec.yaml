@@ -17,6 +17,7 @@ dependencies:
   location: ^4.4.0
   location_platform_interface: ^2.3.0
   logging: ^1.1.0
+  reactive_forms: ^14.1.0
   plugin_platform_interface: ^2.1.3
 
 dev_dependencies:

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../pages/authenticated.dart';
 import '../pages/forms.dart';
 import '../pages/home.dart';
+import '../pages/household_location.dart';
 import '../pages/login.dart';
 import '../pages/search_beneficiary.dart';
 
@@ -21,6 +22,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: HomePage, path: ''),
         AutoRoute(page: FormsPage, path: 'forms/:pageName'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
+        AutoRoute(page: HouseholdLocationPage, path: 'household-location'),
       ],
     ),
   ],
