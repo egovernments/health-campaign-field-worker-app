@@ -18,7 +18,6 @@ part 'app_router.gr.dart';
       path: '/',
       children: [
         AutoRoute(page: HomePage, path: ''),
-        AutoRoute(page: FormsPage, path: 'forms/:pageName'),
       ],
     ),
   ],
