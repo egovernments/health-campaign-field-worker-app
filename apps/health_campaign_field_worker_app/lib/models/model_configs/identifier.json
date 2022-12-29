@@ -1,0 +1,14 @@
+{
+  "name": "identifier",
+  "attributes": [
+    {
+      "name": "type",
+      "type": "String"
+    },
+    {
+      "name": "id",
+      "type": "String"
+    }
+  ],
+  "isEnum": false
+}
