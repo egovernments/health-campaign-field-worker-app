@@ -4,32 +4,27 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "productId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "sku",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "variation",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "isEnum": false

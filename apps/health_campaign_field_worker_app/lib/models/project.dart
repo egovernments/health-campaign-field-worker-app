@@ -18,6 +18,7 @@ class ProjectRequestModel extends DataModel {
   final String? referenceId;
   final String? projectHierarchy;
   final int? rowVersion;
+  final String? clientReferenceId;
   final AddressRequestModel? address;
   final List<TargetRequestModel>? targets;
   final List<DocumentRequestModel>? documents;
@@ -36,6 +37,7 @@ class ProjectRequestModel extends DataModel {
     this.referenceId,
     this.projectHierarchy,
     this.rowVersion,
+    this.clientReferenceId,
     this.address,
     this.targets,
     this.documents,
@@ -61,7 +63,7 @@ class ProjectRequestModel extends DataModel {
 class ProjectModel extends DataModel implements ProjectRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -94,6 +96,9 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   final int rowVersion;
   
   @override
+  final String clientReferenceId;
+  
+  @override
   final AddressRequestModel address;
   
   @override
@@ -110,7 +115,7 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
 
   ProjectModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.projectTypeId,
     required this.subProjectTypeId,
@@ -121,6 +126,7 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
     required this.referenceId,
     required this.projectHierarchy,
     required this.rowVersion,
+    required this.clientReferenceId,
     required this.address,
     required this.targets,
     required this.documents,

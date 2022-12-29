@@ -65,7 +65,7 @@ Data classes should follow the below syntax.
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     }
   ],
   "customAttributes": [

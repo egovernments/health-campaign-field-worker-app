@@ -10,6 +10,7 @@ class ProductRequestModel extends DataModel {
   final String? name;
   final String? manufacturer;
   final int? rowVersion;
+  final String? clientReferenceId;
   
   ProductRequestModel({
     this.id,
@@ -18,6 +19,7 @@ class ProductRequestModel extends DataModel {
     this.name,
     this.manufacturer,
     this.rowVersion,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -26,7 +28,7 @@ class ProductRequestModel extends DataModel {
 class ProductModel extends DataModel implements ProductRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -43,14 +45,18 @@ class ProductModel extends DataModel implements ProductRequestModel {
   @override
   final int rowVersion;
   
+  @override
+  final String clientReferenceId;
+  
 
   ProductModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.type,
     required this.name,
      this.manufacturer,
     required this.rowVersion,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

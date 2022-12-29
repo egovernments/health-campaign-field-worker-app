@@ -12,6 +12,7 @@ class HouseholdMemberRequestModel extends DataModel {
   final bool? isHeadOfHousehold;
   final String? tenantId;
   final int? rowVersion;
+  final String? clientReferenceId;
   
   HouseholdMemberRequestModel({
     this.id,
@@ -22,6 +23,7 @@ class HouseholdMemberRequestModel extends DataModel {
     this.isHeadOfHousehold,
     this.tenantId,
     this.rowVersion,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -30,7 +32,7 @@ class HouseholdMemberRequestModel extends DataModel {
 class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String householdId;
@@ -53,9 +55,12 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
   @override
   final int rowVersion;
   
+  @override
+  final String clientReferenceId;
+  
 
   HouseholdMemberModel({
-    required this.id,
+     this.id,
     required this.householdId,
     required this.householdClientReferenceId,
     required this.individualId,
@@ -63,6 +68,7 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
     required this.isHeadOfHousehold,
     required this.tenantId,
     required this.rowVersion,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

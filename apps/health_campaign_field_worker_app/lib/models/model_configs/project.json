@@ -4,27 +4,23 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "projectTypeId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "subProjectTypeId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "isTaskEnabled",
-      "type": "bool",
-      "nullable": false
+      "type": "bool"
     },
     {
       "name": "parent",
@@ -33,59 +29,49 @@
     },
     {
       "name": "department",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "description",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "referenceId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "projectHierarchy",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "address",
-      "nullable": false
+      "type": "address"
     },
     {
       "name": "targets",
       "type": "target",
-      "nullable": false,
       "isList": true
     },
     {
       "name": "documents",
       "type": "document",
-      "nullable": false,
       "isList": true
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "startDate",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     },
     {
       "name": "endDate",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     }
   ],
   "isEnum": false

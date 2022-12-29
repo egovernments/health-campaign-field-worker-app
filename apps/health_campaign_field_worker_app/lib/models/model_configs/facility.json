@@ -4,39 +4,33 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "isPermanent",
-      "type": "bool",
-      "nullable": false
+      "type": "bool"
     },
     {
       "name": "usage",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "storageCapacity",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "address",
-      "nullable": false
+      "type": "address"
     }
   ],
   "isEnum": false

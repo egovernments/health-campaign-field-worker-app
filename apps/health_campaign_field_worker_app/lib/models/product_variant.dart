@@ -10,6 +10,7 @@ class ProductVariantRequestModel extends DataModel {
   final String? sku;
   final String? variation;
   final int? rowVersion;
+  final String? clientReferenceId;
   
   ProductVariantRequestModel({
     this.id,
@@ -18,6 +19,7 @@ class ProductVariantRequestModel extends DataModel {
     this.sku,
     this.variation,
     this.rowVersion,
+    this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }
@@ -26,7 +28,7 @@ class ProductVariantRequestModel extends DataModel {
 class ProductVariantModel extends DataModel implements ProductVariantRequestModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -43,14 +45,18 @@ class ProductVariantModel extends DataModel implements ProductVariantRequestMode
   @override
   final int rowVersion;
   
+  @override
+  final String clientReferenceId;
+  
 
   ProductVariantModel({
-    required this.id,
+     this.id,
     required this.tenantId,
     required this.productId,
     required this.sku,
     required this.variation,
     required this.rowVersion,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

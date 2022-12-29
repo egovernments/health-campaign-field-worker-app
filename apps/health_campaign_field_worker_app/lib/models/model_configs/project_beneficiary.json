@@ -4,34 +4,29 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "projectId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "beneficiaryId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "dateOfRegistration",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     }
   ],
   "isEnum": false
