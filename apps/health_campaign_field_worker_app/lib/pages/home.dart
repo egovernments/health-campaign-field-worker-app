@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
       HomeItemCard(
         icon: Icons.all_inbox,
         label: 'Beneficiaries',
-        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
+        onPressed: () => context.router.push(const HouseholdLocationRoute()),
       ),
       const HomeItemCard(
         icon: Icons.menu_book,
