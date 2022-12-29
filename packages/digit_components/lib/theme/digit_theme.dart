@@ -33,6 +33,7 @@ class DigitTheme {
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
       dialogTheme: dialogTheme,
+      outlinedButtonTheme: outlinedButtonTheme,
     );
   }
 
@@ -48,11 +49,19 @@ class DigitTheme {
         onBackground: colors.woodsmokeBlack,
         surface: colors.alabasterWhite,
         onSurface: colors.woodsmokeBlack,
+        tertiaryContainer: colors.tropicalBlue,
+        inversePrimary: colors.paleLeafGreen,
+        surfaceTint: colors.waterBlue,
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
         vertical: 8,
         horizontal: 24,
+      );
+
+  EdgeInsets get containerMargin => const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 8,
       );
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
@@ -111,4 +120,12 @@ class DigitTheme {
         ),
         actionsPadding: const EdgeInsets.all(8),
       );
+
+  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+          side: BorderSide(color: colorScheme.secondary),
+          padding: const EdgeInsets.only(left: 15, right: 15)));
+
+  BorderSide get tableCellBorder =>
+      BorderSide(color: colorScheme.background, width: 0.5);
 }
