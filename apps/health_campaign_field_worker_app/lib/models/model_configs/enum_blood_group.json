@@ -1,0 +1,38 @@
+{
+  "name": "BloodGroup",
+  "enumValues": [
+    {
+      "name": "aPositive",
+      "value": "A+"
+    },
+    {
+      "name": "bPositive",
+      "value": "B+"
+    },
+    {
+      "name": "oPositive",
+      "value": "O+"
+    },
+    {
+      "name": "abPositive",
+      "value": "AB+"
+    },
+    {
+      "name": "aNegative",
+      "value": "A-"
+    },
+    {
+      "name": "bNegative",
+      "value": "B-"
+    },
+    {
+      "name": "abNegative",
+      "value": "AB-"
+    },
+    {
+      "name": "oNegative",
+      "value": "O-"
+    }
+  ],
+  "isEnum": true
+}
