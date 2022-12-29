@@ -1,8 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forms_engine/forms_engine.dart';
 import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -35,25 +33,11 @@ class HomePage extends StatelessWidget {
       );
 
   List<HomeItemCard> _getItems(BuildContext context) {
-    final pageName =
-        context.watch<FormsBloc>().state.schema?.pages.entries.first.key;
-
     return [
       HomeItemCard(
-        icon: Icons.add_business_rounded,
-        label: 'Register',
-        onPressed: pageName == null
-            ? null
-            : () => context.router.push(
-                  FormsRoute(
-                    pageName: pageName,
-                  ),
-                ),
-      ),
-      const HomeItemCard(
         icon: Icons.all_inbox,
-        label: 'View Beneficiaries',
-        onPressed: null,
+        label: 'Beneficiaries',
+        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
       ),
       const HomeItemCard(
         icon: Icons.menu_book,
@@ -63,9 +47,7 @@ class HomePage extends StatelessWidget {
       HomeItemCard(
         icon: Icons.sync_alt,
         label: 'Sync Data',
-        onPressed: () => context.read<FormsBloc>().add(
-              const FormsLoadEvent(),
-            ),
+        onPressed: () {},
       ),
       const HomeItemCard(
         icon: Icons.call,
