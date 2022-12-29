@@ -1,0 +1,27 @@
+{
+  "name": "projectFacility",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "facilityId",
+      "type": "String"
+    },
+    {
+      "name": "projectId",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "String"
+    }
+  ],
+  "isEnum": false
+}

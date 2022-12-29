@@ -1,0 +1,37 @@
+{
+  "name": "facility",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "isPermanent",
+      "type": "bool"
+    },
+    {
+      "name": "usage",
+      "type": "String"
+    },
+    {
+      "name": "storageCapacity",
+      "type": "int"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "address",
+      "type": "address"
+    }
+  ],
+  "isEnum": false
+}

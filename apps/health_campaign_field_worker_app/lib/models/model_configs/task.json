@@ -1,0 +1,68 @@
+{
+  "name": "task",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "projectId",
+      "type": "String"
+    },
+    {
+      "name": "projectBeneficiaryId",
+      "type": "String"
+    },
+    {
+      "name": "createdBy",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    },
+    {
+      "name": "status",
+      "type": "String"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "resources",
+      "type": "taskResource",
+      "isList": true
+    },
+    {
+      "name": "address",
+      "type": "address"
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "plannedStartDate",
+      "type": "DateTime"
+    },
+    {
+      "name": "plannedEndDate",
+      "type": "DateTime"
+    },
+    {
+      "name": "actualStartDate",
+      "type": "DateTime"
+    },
+    {
+      "name": "actualEndDate",
+      "type": "DateTime"
+    },
+    {
+      "name": "createdDate",
+      "type": "DateTime"
+    }
+  ],
+  "isEnum": false
+}

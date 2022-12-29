@@ -27,6 +27,7 @@ dependencies:
   location: ^4.4.0
   dart_mappable: ^1.2.0
   dio: ^4.0.6
+  flutter_keyboard_visibility: ^5.4.0
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   flutter_localizations:

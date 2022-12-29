@@ -1,0 +1,88 @@
+{
+  "name": "individual",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "primaryKey": true
+    },
+    {
+      "name": "userId",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "dateOfBirth",
+      "type": "String"
+    },
+    {
+      "name": "mobileNumber",
+      "type": "String"
+    },
+    {
+      "name": "altContactNumber",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "email",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "fatherName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "husbandName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "photo",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "name",
+      "type": "name"
+    },
+    {
+      "name": "bloodGroup",
+      "type": "bloodGroup",
+      "isEnum": true
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "nullable": true
+    },
+    {
+      "name": "gender",
+      "type": "gender",
+      "isEnum": true
+    },
+    {
+      "name": "identifiers",
+      "type": "identifier",
+      "isList": true
+    }
+  ],
+  "isEnum": false
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Gender",
+  "enumValues": [
+    {
+      "name": "male",
+      "value": "MALE"
+    },
+    {
+      "name": "female",
+      "value": "FEMALE"
+    },
+    {
+      "name": "other",
+      "value": "OTHER"
+    }
+  ],
+  "isEnum": true
+}

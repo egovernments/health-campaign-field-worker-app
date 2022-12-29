@@ -10,6 +10,7 @@ import 'blocs/localization/localization.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdmd.dart';
+import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
@@ -56,6 +57,10 @@ class MainApplication extends StatelessWidget {
               locale: 'en_IN',
             )),
           lazy: false,
+        BlocProvider(create: (context) => AuthBloc(const AuthState())),
+        BlocProvider(
+          create: (context) =>
+              TableHideActionBloc(const TableHideActionState()),
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {

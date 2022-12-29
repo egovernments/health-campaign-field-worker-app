@@ -1,0 +1,34 @@
+{
+  "name": "household",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    },
+    {
+      "name": "memberCount",
+      "type": "int"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "address",
+      "type": "Address"
+    }
+  ],
+  "isEnum": false
+}

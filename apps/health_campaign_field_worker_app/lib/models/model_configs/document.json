@@ -1,0 +1,27 @@
+{
+  "name": "document",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "documentType",
+      "type": "String"
+    },
+    {
+      "name": "fileStoreId",
+      "type": "String"
+    },
+    {
+      "name": "documentUid",
+      "type": "String"
+    }
+  ],
+  "isEnum": false
+}

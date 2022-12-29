@@ -1,0 +1,29 @@
+{
+  "name": "projectResource",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "projectId",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "resources",
+      "type": "ProjectProductVariant"
+    }
+  ],
+  "isEnum": false
+}
