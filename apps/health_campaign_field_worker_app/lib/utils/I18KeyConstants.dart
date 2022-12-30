@@ -61,3 +61,4 @@ class ForgotPassword {
   String get primaryActionLabel => 'PRIMARY_ACTION_LABEL';
   String get actionLabel => 'FORGOT_PASSWORD_ACTION_LABEL';
 }
+
