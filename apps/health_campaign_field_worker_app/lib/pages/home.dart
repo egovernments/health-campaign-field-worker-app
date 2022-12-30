@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 
@@ -34,21 +35,20 @@ class HomePage extends StatelessWidget {
   List<HomeItemCard> _getItems(BuildContext context) {
     return [
       HomeItemCard(
-        icon: Icons.add_business_rounded,
-        label: 'ADVANCE',
-        onPressed: () {},
-      ),
-      const HomeItemCard(
         icon: Icons.all_inbox,
-        label: 'View Beneficiaries',
-        onPressed: null,
+        label: 'Beneficiaries',
+        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
       ),
       const HomeItemCard(
         icon: Icons.menu_book,
         label: 'View Reports',
         onPressed: null,
       ),
-      HomeItemCard(icon: Icons.sync_alt, label: 'Sync Data', onPressed: () {}),
+      HomeItemCard(
+        icon: Icons.sync_alt,
+        label: 'Sync Data',
+        onPressed: () {},
+      ),
       const HomeItemCard(
         icon: Icons.call,
         label: 'Call Supervisor',

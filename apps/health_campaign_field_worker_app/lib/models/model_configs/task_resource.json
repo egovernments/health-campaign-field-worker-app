@@ -1,0 +1,32 @@
+{
+  "name": "task_resource",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "productVariantId",
+      "type": "String"
+    },
+    {
+      "name": "quantity",
+      "type": "String"
+    },
+    {
+      "name": "isDelivered",
+      "type": "bool"
+    },
+    {
+      "name": "deliveryComment",
+      "type": "String",
+      "nullable": true
+    }
+  ],
+  "isEnum": false
+}

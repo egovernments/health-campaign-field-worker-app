@@ -1,0 +1,32 @@
+{
+  "name": "product",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "type",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "manufacturer",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "isEnum": false
+}

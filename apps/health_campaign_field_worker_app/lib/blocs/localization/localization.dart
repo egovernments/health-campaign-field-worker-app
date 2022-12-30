@@ -28,6 +28,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
     LocalizationModel result = await localizationRepository.search(
       url: event.endPoint,
       queryParameters: {
@@ -57,7 +58,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     final List<Localization> localizationList =
         await isar.localizations.where().findAll();
     if (localizationList.isNotEmpty) {
-      emit(state.copyWith(locaization: localizationList));
+      emit(state.copyWith(locaization: localizationList, loading: false));
     }
 
     await AppLocalizations(
@@ -80,6 +81,7 @@ class LocalizationEvent with _$LocalizationEvent {
 class LocalizationState with _$LocalizationState {
   const factory LocalizationState({
     @Default([]) List<Localization> locaization,
+    @Default(false) bool loading,
     @Default(false) bool isLocalizationLoadCompleted,
   }) = _LocalizationState;
 }

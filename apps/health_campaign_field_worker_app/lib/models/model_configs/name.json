@@ -1,0 +1,19 @@
+{
+  "name": "name",
+  "attributes": [
+    {
+      "name": "givenName",
+      "type": "String"
+    },
+    {
+      "name": "familyName",
+      "type": "String"
+    },
+    {
+      "name": "otherNames",
+      "type": "String",
+      "nullable": true
+    }
+  ],
+  "isEnum": false
+}

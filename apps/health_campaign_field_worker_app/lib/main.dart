@@ -13,7 +13,8 @@ import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/remote_client.dart';
 import 'data/repositories/remote/localization.dart';
-import 'data/repositories/remote/mdmd.dart';
+import 'data/repositories/remote/mdms.dart';
+import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
@@ -65,6 +66,12 @@ class MainApplication extends StatelessWidget {
             const LocalizationState(),
             LocalizationRepository(client.init()),
             isar,
+          ),
+        ),
+        BlocProvider(create: (context) => AuthBloc(const AuthState())),
+        BlocProvider(
+          create: (context) => TableHideActionBloc(
+            const TableHideActionState(),
           ),
         ),
       ],
