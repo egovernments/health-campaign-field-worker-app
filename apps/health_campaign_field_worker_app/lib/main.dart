@@ -51,8 +51,8 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (context) => AppInitilizationBloc(
             const AppInitilizationState(),
-            MdmsRepository(client.init()),
-            isar,
+            isar: isar,
+            mdmsRepository: MdmsRepository(client.init()),
           )..add(const FindAppConfigurationEvent(actionType: 'SEARCH')),
           lazy: false,
         ),

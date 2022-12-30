@@ -30,7 +30,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   ) async {
     emit(state.copyWith(loading: true));
     LocalizationModel result = await localizationRepository.search(
-      url: event.endPoint,
+      url: event.path,
       queryParameters: {
         "module": event.module,
         "locale": event.locale,
@@ -73,7 +73,7 @@ class LocalizationEvent with _$LocalizationEvent {
     required String module,
     required String tenantId,
     required String locale,
-    required String endPoint,
+    required String path,
   }) = OnLoadLocalizationEvent;
 }
 
