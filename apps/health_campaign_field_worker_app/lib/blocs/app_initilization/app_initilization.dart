@@ -7,6 +7,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdmd.dart';
 import '../../models/app_config/app_config_model.dart' as app_configuration;
+import '../../data/repositories/remote/mdms.dart';
 import '../../models/mdms/service_registry/service_registry_model.dart';
 import '../../utils/constants.dart';
 

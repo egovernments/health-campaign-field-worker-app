@@ -1,0 +1,78 @@
+{
+  "name": "project",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "projectTypeId",
+      "type": "String"
+    },
+    {
+      "name": "subProjectTypeId",
+      "type": "String"
+    },
+    {
+      "name": "isTaskEnabled",
+      "type": "bool"
+    },
+    {
+      "name": "parent",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "department",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "type": "String"
+    },
+    {
+      "name": "referenceId",
+      "type": "String"
+    },
+    {
+      "name": "projectHierarchy",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "address",
+      "type": "address"
+    },
+    {
+      "name": "targets",
+      "type": "target",
+      "isList": true
+    },
+    {
+      "name": "documents",
+      "type": "document",
+      "isList": true
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "startDate",
+      "type": "DateTime"
+    },
+    {
+      "name": "endDate",
+      "type": "DateTime"
+    }
+  ],
+  "isEnum": false
+}
