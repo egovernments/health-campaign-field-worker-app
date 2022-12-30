@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 
 import '../../data/local_store/no_sql/schema/service_registry.dart';
-import '../../data/repositories/remote/mdmd.dart';
+import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/mdms/service_registry/service_registry_model.dart';
@@ -19,7 +19,11 @@ class AppInitilizationBloc
     extends Bloc<AppInitilizationEvent, AppInitilizationState> {
   final MdmsRepository mdmsRepository;
   final Isar isar;
-  AppInitilizationBloc(super.initialState, this.mdmsRepository, this.isar) {
+  AppInitilizationBloc(
+    AppInitilizationState appInitilizationState, {
+    required this.mdmsRepository,
+    required this.isar,
+  }) : super(const AppInitilizationState()) {
     on<AppInitilizationSetupEvent>(_onAppInitilizeSetup);
     on<FindAppConfigurationEvent>(_onAppConfigurationSetup);
   }
@@ -30,7 +34,7 @@ class AppInitilizationBloc
   ) async {
     ServiceRegistryPrimaryWrapperModel result =
         await mdmsRepository.searchServiceRegistry(
-      Constants.mdmsApiEndPoint,
+      Constants.mdmsApiPath,
       {
         "MdmsCriteria": {
           "tenantId": "default",
@@ -50,25 +54,21 @@ class AppInitilizationBloc
 
     final List<ServiceRegistry> newServiceRegistryList = [];
 
-    result.serviceRegitry?.serviceRegistrylist?.every((element) {
+    result.serviceRegitry?.serviceRegistrylist?.forEach((element) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
-      final List<Actions> actions = [];
-      element.actions?.every((element) {
-        final newServiceRegistryAction = Actions();
-        newServiceRegistryAction.create = element.create;
-        newServiceRegistryAction.update = element.update;
-        newServiceRegistryAction.login = element.login;
-        newServiceRegistryAction.search = element.search;
-        actions.add(newServiceRegistryAction);
+      final List<Actions>? actions = element.actions?.map((element) {
+        final newServiceRegistryAction = Actions()
+          ..create = element.create
+          ..update = element.update
+          ..login = element.login
+          ..search = element.search;
 
-        return true;
-      });
+        return newServiceRegistryAction;
+      }).toList();
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);
-
-      return true;
     });
 
     await isar.writeTxn(() async {
@@ -86,7 +86,7 @@ class AppInitilizationBloc
   ) async {
     app_configuration.AppConfigPrimaryWrapperModel result =
         await mdmsRepository.searchAppConfig(
-      Constants.mdmsApiEndPoint,
+      Constants.mdmsApiPath,
       {
         "MdmsCriteria": {
           "tenantId": "default",
@@ -104,36 +104,33 @@ class AppInitilizationBloc
       },
     );
 
-    AppConiguration appConfiguration = AppConiguration();
+    final appConfiguration = AppConiguration();
+    result.appConfig?.appConfiglist?.forEach((element) {
+      appConfiguration
+        ..networkDetection = element.networkDetection
+        ..persistenceMode = element.persistenceMode
+        ..syncMethod = element.syncMethod
+        ..syncTrigger = element.syncTrigger;
 
-    result.appConfig?.appConfiglist?.every((element) {
-      appConfiguration.networkDetection = element.networkDetection;
-      appConfiguration.persistenceMode = element.persistenceMode;
-      appConfiguration.syncMethod = element.syncMethod;
-      appConfiguration.syncTrigger = element.syncTrigger;
-      final List<Languages> languageList = [];
-      final List<LocalizationModules> localizationModules = [];
-      element.languages.every((element) {
-        final languages = Languages();
-        languages.label = element.label;
-        languages.value = element.value;
-        languageList.add(languages);
+      final List<Languages> languageList = element.languages.map((element) {
+        final languages = Languages()
+          ..label = element.label
+          ..value = element.value;
 
-        return true;
-      });
+        return languages;
+      }).toList();
 
-      element.localizationModules?.every((element) {
-        final localization = LocalizationModules();
-        localization.label = element.label;
-        localization.value = element.value;
-        localizationModules.add(localization);
+      final List<LocalizationModules>? localizationModules =
+          element.localizationModules?.map((element) {
+        final localization = LocalizationModules()
+          ..label = element.label
+          ..value = element.value;
 
-        return true;
-      });
+        return localization;
+      }).toList();
+
       appConfiguration.localizationModules = localizationModules;
       appConfiguration.languages = languageList;
-
-      return true;
     });
 
     await isar.writeTxn(() async {
@@ -144,8 +141,7 @@ class AppInitilizationBloc
 
 @freezed
 class AppInitilizationEvent with _$AppInitilizationEvent {
-  const factory AppInitilizationEvent.onApplicationInitilizeSetup() =
-      AppInitilizationSetupEvent;
+  const factory AppInitilizationEvent.onSetup() = AppInitilizationSetupEvent;
 
   const factory AppInitilizationEvent.onApplicationConfigurationSetup({
     String? service,
