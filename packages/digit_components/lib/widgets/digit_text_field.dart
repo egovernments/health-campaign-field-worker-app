@@ -15,7 +15,7 @@ class DigitTextField extends StatelessWidget {
   final TextInputType? textInputType;
   final String? pattern;
   final bool? obscureText;
-  final String message;
+  final String? message;
   final Function(String?)? validator;
   final TextCapitalization? textCapitalization;
   final AutovalidateMode? autoValidation;
@@ -34,7 +34,7 @@ class DigitTextField extends StatelessWidget {
     this.inputFormatter,
     this.pattern,
     this.validator,
-    required this.message,
+    this.message,
     this.focusNode,
     this.textCapitalization,
     this.onChange,
