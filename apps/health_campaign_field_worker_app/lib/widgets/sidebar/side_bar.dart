@@ -46,18 +46,19 @@ class SideBar extends StatelessWidget {
                 List<Languages>? languageList =
                     state.appConfigDetail?.configuration?.appConfig.languages;
 
-                return languageList != null
-                    ? DigitRowCard(
-                        onPressed: (data) {},
-                        list: languageList
-                            .map((e) => DigitRowCardModel.fromJson(e.toJson()))
-                            .toList(),
-                        width: (MediaQuery.of(context).size.width *
-                                0.5 /
-                                languageList.length) -
-                            (4 * languageList.length),
-                      )
-                    : const Text('');
+                return Offstage(
+                  offstage: languageList == null,
+                  child: DigitRowCard(
+                    onPressed: (data) {},
+                    list: languageList!
+                        .map((e) => DigitRowCardModel.fromJson(e.toJson()))
+                        .toList(),
+                    width: (MediaQuery.of(context).size.width *
+                            0.5 /
+                            languageList.length) -
+                        (4 * languageList.length),
+                  ),
+                );
               },
             ),
           ),
