@@ -2,7 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
-import '../utils/18KeyConstants.dart';
+import '../utils/I18KeyConstants.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,12 +47,12 @@ class LoginPage extends StatelessWidget {
                 TextButton(
                   onPressed: () => DigitDialog.show(
                     context,
-                    title: i18.forgetPassword.labelText,
-                    content: i18.forgetPassword.contentText,
-                    primaryActionLabel: i18.forgetPassword.primaryActionLabel,
+                    title: i18.forgotPassword.labelText,
+                    content: i18.forgotPassword.contentText,
+                    primaryActionLabel: i18.forgotPassword.primaryActionLabel,
                     primaryAction: () => Navigator.pop(context),
                   ),
-                  child: Center(child: Text(i18.forgetPassword.actionLabel)),
+                  child: Center(child: Text(i18.forgotPassword.actionLabel)),
                 ),
               ],
             ),

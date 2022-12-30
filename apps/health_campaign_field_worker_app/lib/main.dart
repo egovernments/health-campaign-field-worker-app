@@ -31,6 +31,8 @@ class MainApplication extends StatelessWidget {
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
             ..add(const ApplicationConfigEvent.onFetchConfig()),
+        ),
+        BlocProvider(
           create: (context) =>
               TableHideActionBloc(const TableHideActionState()),
         ),
