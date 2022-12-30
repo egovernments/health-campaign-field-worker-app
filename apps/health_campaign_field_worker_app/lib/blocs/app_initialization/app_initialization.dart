@@ -11,26 +11,26 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/mdms/service_registry/service_registry_model.dart';
 import '../../utils/constants.dart';
 
-part 'app_initilization.freezed.dart';
+part 'app_initialization.freezed.dart';
 
-typedef AppInitilizationEmitter = Emitter<AppInitilizationState>;
+typedef AppInitializationEmitter = Emitter<AppInitializationState>;
 
-class AppInitilizationBloc
-    extends Bloc<AppInitilizationEvent, AppInitilizationState> {
+class AppInitializationBloc
+    extends Bloc<AppInitializationEvent, AppInitializationState> {
   final MdmsRepository mdmsRepository;
   final Isar isar;
-  AppInitilizationBloc(
-    AppInitilizationState appInitilizationState, {
+  AppInitializationBloc(
+    AppInitializationState appInitializationState, {
     required this.mdmsRepository,
     required this.isar,
-  }) : super(const AppInitilizationState()) {
-    on<AppInitilizationSetupEvent>(_onAppInitilizeSetup);
+  }) : super(const AppInitializationState()) {
+    on<AppInitializationSetupEvent>(_onAppInitilizeSetup);
     on<FindAppConfigurationEvent>(_onAppConfigurationSetup);
   }
 
   FutureOr<void> _onAppInitilizeSetup(
-    AppInitilizationSetupEvent event,
-    AppInitilizationEmitter emit,
+    AppInitializationSetupEvent event,
+    AppInitializationEmitter emit,
   ) async {
     ServiceRegistryPrimaryWrapperModel result =
         await mdmsRepository.searchServiceRegistry(
@@ -82,7 +82,7 @@ class AppInitilizationBloc
 
   FutureOr<void> _onAppConfigurationSetup(
     FindAppConfigurationEvent event,
-    AppInitilizationEmitter emit,
+    AppInitializationEmitter emit,
   ) async {
     app_configuration.AppConfigPrimaryWrapperModel result =
         await mdmsRepository.searchAppConfig(
@@ -140,21 +140,21 @@ class AppInitilizationBloc
 }
 
 @freezed
-class AppInitilizationEvent with _$AppInitilizationEvent {
-  const factory AppInitilizationEvent.onSetup() = AppInitilizationSetupEvent;
+class AppInitializationEvent with _$AppInitializationEvent {
+  const factory AppInitializationEvent.onSetup() = AppInitializationSetupEvent;
 
-  const factory AppInitilizationEvent.onApplicationConfigurationSetup({
+  const factory AppInitializationEvent.onApplicationConfigurationSetup({
     String? service,
     required String actionType,
   }) = FindAppConfigurationEvent;
 }
 
 @freezed
-class AppInitilizationState with _$AppInitilizationState {
-  const AppInitilizationState._();
+class AppInitializationState with _$AppInitializationState {
+  const AppInitializationState._();
 
-  const factory AppInitilizationState({
-    @Default(false) bool isInitilizationCompleted,
+  const factory AppInitializationState({
+    @Default(false) bool isInitializationCompleted,
     @Default([]) List<ServiceRegistry> localizationList,
-  }) = _AppInitilizationState;
+  }) = _AppInitializationState;
 }
