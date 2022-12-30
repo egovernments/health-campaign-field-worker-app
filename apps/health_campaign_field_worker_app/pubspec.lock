@@ -492,13 +492,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.5"
-  isar_flutter_libs:
-    dependency: "direct main"
-    description:
-      name: isar_flutter_libs
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.5"
   isar_generator:
     dependency: "direct dev"
     description:
@@ -979,15 +972,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-<<<<<<< HEAD
     version: "6.1.0"
-=======
-    version: "6.2.2"
->>>>>>> 28958f9 (added missing version)
-=======
-    version: "6.1.0"
->>>>>>> 79d197f (fixed  failing test case)
   xxh3:
     dependency: transitive
     description:
