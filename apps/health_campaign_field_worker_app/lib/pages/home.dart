@@ -5,7 +5,7 @@ import '../utils/18KeyConstants.dart';
 import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
-import '../widgets/progressIndicator/progress_indicator.dart';
+import '../widgets/progress_indicator/progress_indicator.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
