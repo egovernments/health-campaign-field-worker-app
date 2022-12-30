@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/repositories/remote/mdmd.dart';
+import '../../data/repositories/remote/mdms.dart';
 import '../../models/mdms/service_registry/service_registry_model.dart';
 import '../../utils/constants.dart';
 
