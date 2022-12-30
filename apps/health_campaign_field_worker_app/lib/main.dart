@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 import 'blocs/app_bloc_observer.dart';
-import 'blocs/app_initilization/app_initilization.dart';
+import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
@@ -49,8 +49,8 @@ class MainApplication extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppInitilizationBloc(
-            const AppInitilizationState(),
+          create: (context) => AppInitializationBloc(
+            const AppInitializationState(),
             isar: isar,
             mdmsRepository: MdmsRepository(client.init()),
           )..add(const FindAppConfigurationEvent(actionType: 'SEARCH')),
