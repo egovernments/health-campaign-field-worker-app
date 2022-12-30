@@ -1,7 +1,7 @@
 class i18 {
   static Common common = const Common();
   static Login login = const Login();
-  static ForgetPassword forgetPassword = const ForgetPassword();
+  static ForgotPassword forgotPassword = const ForgotPassword();
   static Home home = const Home();
 }
 
@@ -20,12 +20,12 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 }
 
-class ForgetPassword {
-  const ForgetPassword();
-  String get labelText => 'FORGET_PASSWORD_LABEL_TEXT';
-  String get contentText => 'FORGET_PASSWORD_CONTENT_TEXT';
+class ForgotPassword {
+  const ForgotPassword();
+  String get labelText => 'FORGOT_PASSWORD_LABEL_TEXT';
+  String get contentText => 'FORGOT_PASSWORD_CONTENT_TEXT';
   String get primaryActionLabel => 'PRIMARY_ACTION_LABEL';
-  String get actionLabel => 'FORGET_PASSWORD_ACTION_LABEL';
+  String get actionLabel => 'FORGOT_PASSWORD_ACTION_LABEL';
 }
 
 class Home {

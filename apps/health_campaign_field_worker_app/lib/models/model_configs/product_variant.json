@@ -1,0 +1,31 @@
+{
+  "name": "productVariant",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "productId",
+      "type": "String"
+    },
+    {
+      "name": "sku",
+      "type": "String"
+    },
+    {
+      "name": "variation",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "isEnum": false
+}
