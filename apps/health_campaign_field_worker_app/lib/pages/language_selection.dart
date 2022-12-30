@@ -6,7 +6,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/app_config/app_config.dart';
 import '../router/app_router.dart';
-import '../utils/18KeyConstants.dart';
+import '../utils/I18KeyConstants.dart';
 
 class LanguageSelectionPage extends StatelessWidget {
   const LanguageSelectionPage({Key? key}) : super(key: key);
