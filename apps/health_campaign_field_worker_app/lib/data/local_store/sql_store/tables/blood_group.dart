@@ -1,0 +1,1 @@
+// No table generated for Enum

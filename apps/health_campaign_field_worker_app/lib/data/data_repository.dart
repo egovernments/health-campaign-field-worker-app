@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
-import 'local_store/sql_store.dart';
+import 'local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 
 abstract class DataRepository<D extends DataModel, R extends DataModel> {

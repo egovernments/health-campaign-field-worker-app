@@ -1,0 +1,39 @@
+{
+  "name": "householdMember",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "householdId",
+      "type": "String"
+    },
+    {
+      "name": "householdClientReferenceId",
+      "type": "String"
+    },
+    {
+      "name": "individualId",
+      "type": "String"
+    },
+    {
+      "name": "individualClientReferenceId",
+      "type": "String"
+    },
+    {
+      "name": "isHeadOfHousehold",
+      "type": "bool"
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
+    }
+  ],
+  "isEnum": false
+}
