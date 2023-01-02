@@ -23,8 +23,12 @@ class LoginPage extends StatelessWidget {
                   'Login',
                   style: theme.textTheme.displayMedium,
                 ),
-                const DigitTextField(label: 'User ID'),
-                const DigitTextField(label: 'Password'),
+                const DigitTextField(
+                  label: 'User ID',
+                ),
+                const DigitTextField(
+                  label: 'Password',
+                ),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) => DigitElevatedButton(
