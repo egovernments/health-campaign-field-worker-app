@@ -14,11 +14,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: ScrollableContent(
           header: Column(
-            children: const [
-              BackNavigationHelpHeaderWidget(),
+            children: [
+              const BackNavigationHelpHeaderWidget(),
               ProgressIndicatorContainer(
-                label: 'Just 125 more to go',
-                prefixLabel: 'Yay! 15 registrations completed',
+                label: i18.home.progressIndicatorTitle,
+                prefixLabel: i18.home.progressIndicatorPrefixLabel,
                 suffixLabel: '200',
                 value: .08,
               ),
