@@ -36,6 +36,8 @@ class Home {
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
+  String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
+  String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
 }
 
 class SearchBeneficiary {
