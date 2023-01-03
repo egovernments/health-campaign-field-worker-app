@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:dio/src/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -33,14 +34,14 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Client client = Client();
+    Dio client = Client().init();
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => AppInitilizationBloc(
             const AppInitilizationState(),
-            MdmsRepository(client.init()),
+            MdmsRepository(client),
           )..add(const AppInitilizationSetupEvent()),
           lazy: false,
         ),
@@ -66,16 +67,16 @@ class MainApplication extends StatelessWidget {
               final appConfig =
                   appConfigState.appConfigDetail?.configuration?.appConfig;
               final tenantId = appConfigState.appConfigDetail?.tenantId;
+              final localizationModulesList = appConfig?.localizationModules;
 
               return BlocProvider(
-                create: appConfig != null
+                create: (appConfig != null && localizationModulesList != null)
                     ? (context) => LocalizationBloc(
                           const LocalizationState(),
-                          LocalizationRepository(client.init()),
+                          LocalizationRepository(client),
                         )..add(LocalizationEvent.onLoadLocalization(
-                            module: appConfig.localizationModules!
+                            module: localizationModulesList
                                 .map((e) => e.value.toString())
-                                .toList()
                                 .join(',')
                                 .toString(),
                             tenantId: tenantId ?? "default",
@@ -83,9 +84,8 @@ class MainApplication extends StatelessWidget {
                           ))
                     : (context) => LocalizationBloc(
                           const LocalizationState(),
-                          LocalizationRepository(client.init()),
+                          LocalizationRepository(client),
                         ),
-                lazy: false,
                 child: MaterialApp.router(
                   supportedLocales: appConfig != null
                       ? appConfig.languages.map((e) {
