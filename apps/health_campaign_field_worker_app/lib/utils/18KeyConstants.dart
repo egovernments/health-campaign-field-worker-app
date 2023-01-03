@@ -3,6 +3,7 @@ class i18 {
   static Login login = const Login();
   static ForgotPassword forgotPassword = const ForgotPassword();
   static Home home = const Home();
+  static HousholdDetails housholdDetails = const HousholdDetails();
 }
 
 class Common {
@@ -35,4 +36,12 @@ class Home {
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
   String get callbackLabel => 'HOME_CALL_BACK_LABEL';
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
+}
+
+class HousholdDetails {
+  const HousholdDetails();
+  String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+  String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
+  String get dateOfRegistrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 }
