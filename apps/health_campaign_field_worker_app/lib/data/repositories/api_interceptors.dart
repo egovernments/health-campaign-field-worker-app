@@ -23,21 +23,4 @@ class ApiInterceptors extends Interceptor {
     };
     super.onRequest(options, handler);
   }
-
-  @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
-    // ignore: no-empty-block
-    if (err.type == DioErrorType.response && err.response?.statusCode == 401) {
-    } else {
-      handler.next(err);
-    }
-  }
-
-  @override
-  Future<dynamic> onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) async {
-    return handler.next(response);
-  }
 }

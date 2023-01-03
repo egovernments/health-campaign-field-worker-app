@@ -19,7 +19,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     super.initialState,
     this.localizationRepository,
   ) {
-    on<OnLoadLocalizationEvent>(_onLoadLocalization);
+    on(_onLoadLocalization);
   }
 
   FutureOr<void> _onLoadLocalization(

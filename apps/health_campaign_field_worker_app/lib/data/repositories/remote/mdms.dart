@@ -9,11 +9,12 @@ import '../../../models/mdms/service_registry/service_registry_model.dart';
 
 class MdmsRepository {
   final Dio _client;
-  MdmsRepository(this._client);
+
+  const MdmsRepository(this._client);
 
   Future<ServiceRegistryPrimaryWrapperModel> searchServiceRegistry(
     String apiEndPoint,
-    Map body,
+    Map<String, dynamic> body,
   ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
@@ -22,8 +23,7 @@ class MdmsRepository {
         json.decode(response.toString())['MdmsRes'],
       );
     } on DioError catch (ex) {
-      // Assuming there will be an errorMessage property in the JSON object
-      throw Exception(ex);
+      rethrow;
     }
   }
 }

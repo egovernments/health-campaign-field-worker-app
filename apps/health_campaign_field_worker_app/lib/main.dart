@@ -70,35 +70,45 @@ class MainApplication extends StatelessWidget {
               TableHideActionBloc(const TableHideActionState()),
         ),
       ],
-      child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-        return MaterialApp.router(
-          supportedLocales: const [
-            Locale('en', 'IN'),
-            Locale('hi', 'IN'),
-            Locale.fromSubtags(languageCode: 'pn'),
-          ],
-          locale: const Locale('en', 'IN'),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
-          theme: DigitTheme.instance.mobileTheme,
-          routeInformationParser: appRouter.defaultRouteParser(),
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          routerDelegate: AutoRouterDelegate.declarative(
-            appRouter,
-            navigatorObservers: () => [AppRouterObserver()],
-            routes: (handler) => [
-              if (state.isAuthenticated)
-                const AuthenticatedRouteWrapper()
-              else
-                const UnauthenticatedRouteWrapper(),
-            ],
-          ),
-        );
-      }),
+      child: BlocBuilder<ApplicationConfigBloc, ApplicationConfigState>(
+        builder: (context, appConfigState) {
+          return BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, authState) {
+              final appConfig =
+                  appConfigState.appConfigDetail?.configuration?.appConfig;
+
+              return MaterialApp.router(
+                supportedLocales: const [
+                  Locale('en', 'IN'),
+                  Locale('hi', 'IN'),
+                  Locale.fromSubtags(languageCode: 'pn'),
+                ],
+                locale: const Locale('en', 'IN'),
+                localizationsDelegates: [
+                  if (appConfig != null)
+                    AppLocalizations.getDelegate(appConfig),
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                ],
+                theme: DigitTheme.instance.mobileTheme,
+                routeInformationParser: appRouter.defaultRouteParser(),
+                scaffoldMessengerKey: scaffoldMessengerKey,
+                routerDelegate: AutoRouterDelegate.declarative(
+                  appRouter,
+                  navigatorObservers: () => [AppRouterObserver()],
+                  routes: (handler) => [
+                    if (authState.isAuthenticated)
+                      const AuthenticatedRouteWrapper()
+                    else
+                      const UnauthenticatedRouteWrapper(),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
