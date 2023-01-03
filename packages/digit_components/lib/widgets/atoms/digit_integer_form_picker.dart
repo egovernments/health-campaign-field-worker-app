@@ -33,41 +33,43 @@ class DigitIntegerFormPicker extends StatelessWidget {
           ));
     }
 
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          _buildButton(
-            context,
-            border: Border(
-              left: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.remove,
-            onPressed: () => form.control(formControlName).value -= 1,
+    return LabeledField(
+        label: label,
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              _buildButton(
+                context,
+                border: Border(
+                  left: _borderSide,
+                  bottom: _borderSide,
+                  top: _borderSide,
+                ),
+                icon: Icons.remove,
+                onPressed: () => form.control(formControlName).value -= 1,
+              ),
+              Expanded(
+                child: ReactiveTextField(
+                  readOnly: true,
+                  textAlign: TextAlign.center,
+                  formControlName: formControlName,
+                  decoration: InputDecoration(labelText: hint),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              _buildButton(
+                context,
+                border: Border(
+                  right: _borderSide,
+                  bottom: _borderSide,
+                  top: _borderSide,
+                ),
+                icon: Icons.add,
+                onPressed: () => form.control(formControlName).value += 1,
+              ),
+            ],
           ),
-          Expanded(
-            child: ReactiveTextField(
-              readOnly: true,
-              textAlign: TextAlign.center,
-              formControlName: formControlName,
-              decoration: InputDecoration(labelText: hint),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          _buildButton(
-            context,
-            border: Border(
-              right: _borderSide,
-              bottom: _borderSide,
-              top: _borderSide,
-            ),
-            icon: Icons.add,
-            onPressed: () => form.control(formControlName).value += 1,
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildButton(
