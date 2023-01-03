@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'blocs/app_bloc_observer.dart';
+import 'blocs/app_config/app_config.dart';
 import 'blocs/app_initilization/app_initilization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
@@ -24,6 +25,7 @@ void main() {
 
 class MainApplication extends StatelessWidget {
   final AppRouter appRouter;
+
   const MainApplication({
     Key? key,
     required this.appRouter,
@@ -60,9 +62,12 @@ class MainApplication extends StatelessWidget {
         ),
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
-          create: (context) => TableHideActionBloc(
-            const TableHideActionState(),
-          ),
+          create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
+            ..add(const ApplicationConfigEvent.onFetchConfig()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              TableHideActionBloc(const TableHideActionState()),
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
@@ -89,7 +94,7 @@ class MainApplication extends StatelessWidget {
               if (state.isAuthenticated)
                 const AuthenticatedRouteWrapper()
               else
-                const LoginRoute(),
+                const UnauthenticatedRouteWrapper(),
             ],
           ),
         );
