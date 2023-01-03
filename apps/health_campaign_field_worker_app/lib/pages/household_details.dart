@@ -1,8 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import '../utils/18KeyConstants.dart';
+import '../utils/I18KeyConstants.dart';
+import '../widgets/header/back_navigation_help_header.dart';
 
 class HouseHoldDetailsPage extends StatelessWidget {
   const HouseHoldDetailsPage({super.key});
@@ -17,7 +17,7 @@ class HouseHoldDetailsPage extends StatelessWidget {
         builder: (context, form, child) {
           return ScrollableContent(
             header: Column(children: const [
-              // BackNavigationHelpHeaderWidget(),
+              BackNavigationHelpHeaderWidget(),
             ]),
             footer: Offstage(
               offstage: false,
@@ -58,7 +58,7 @@ class HouseHoldDetailsPage extends StatelessWidget {
                       DigitIntegerFormPicker(
                         form: form,
                         formControlName: 'memberCount',
-                        label: i18.housholdDetails.dateOfRegistrationLabel,
+                        label: i18.housholdDetails.noOfMembersCountLabel,
                         incrementer: true,
                       ),
                     ]),
