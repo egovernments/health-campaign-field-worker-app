@@ -49,17 +49,6 @@ class MainApplication extends StatelessWidget {
             const AuthState(),
           ),
         ),
-        BlocProvider(
-          create: (context) => LocalizationBloc(
-            const LocalizationState(),
-            LocalizationRepository(client.init()),
-          )..add(const LocalizationEvent.onLoadLocalization(
-              module: 'hcm-common',
-              tenantId: 'pb',
-              locale: 'en_IN',
-            )),
-          lazy: false,
-        ),
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
           create: (_) => ApplicationConfigBloc(const ApplicationConfigState())
@@ -76,33 +65,57 @@ class MainApplication extends StatelessWidget {
             builder: (context, authState) {
               final appConfig =
                   appConfigState.appConfigDetail?.configuration?.appConfig;
+              final tenantId = appConfigState.appConfigDetail?.tenantId;
 
-              return MaterialApp.router(
-                supportedLocales: const [
-                  Locale('en', 'IN'),
-                  Locale('hi', 'IN'),
-                  Locale.fromSubtags(languageCode: 'pn'),
-                ],
-                locale: const Locale('en', 'IN'),
-                localizationsDelegates: [
-                  if (appConfig != null)
-                    AppLocalizations.getDelegate(appConfig),
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                ],
-                theme: DigitTheme.instance.mobileTheme,
-                routeInformationParser: appRouter.defaultRouteParser(),
-                scaffoldMessengerKey: scaffoldMessengerKey,
-                routerDelegate: AutoRouterDelegate.declarative(
-                  appRouter,
-                  navigatorObservers: () => [AppRouterObserver()],
-                  routes: (handler) => [
-                    if (authState.isAuthenticated)
-                      const AuthenticatedRouteWrapper()
-                    else
-                      const UnauthenticatedRouteWrapper(),
+              return BlocProvider(
+                create: appConfig != null
+                    ? (context) => LocalizationBloc(
+                          const LocalizationState(),
+                          LocalizationRepository(client.init()),
+                        )..add(LocalizationEvent.onLoadLocalization(
+                            module: appConfig.localizationModules!
+                                .map((e) => e.value.toString())
+                                .toList()
+                                .join(',')
+                                .toString(),
+                            tenantId: tenantId ?? "default",
+                            locale: appConfig.languages.first.value,
+                          ))
+                    : (context) => LocalizationBloc(
+                          const LocalizationState(),
+                          LocalizationRepository(client.init()),
+                        ),
+                lazy: false,
+                child: MaterialApp.router(
+                  supportedLocales: appConfig != null
+                      ? appConfig.languages.map((e) {
+                          final results = e.value.split('_');
+
+                          return results.isNotEmpty
+                              ? Locale(results.first, results.last)
+                              : const Locale('en', 'IN');
+                        })
+                      : [],
+                  localizationsDelegates: [
+                    if (appConfig != null)
+                      AppLocalizations.getDelegate(appConfig),
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
                   ],
+                  theme: DigitTheme.instance.mobileTheme,
+                  routeInformationParser: appRouter.defaultRouteParser(),
+                  scaffoldMessengerKey: scaffoldMessengerKey,
+                  routerDelegate: AutoRouterDelegate.declarative(
+                    appRouter,
+                    navigatorObservers: () => [AppRouterObserver()],
+                    routes: (handler) => [
+                      if (authState.isAuthenticated)
+                        const AuthenticatedRouteWrapper()
+                      else
+                        const UnauthenticatedRouteWrapper(),
+                    ],
+                  ),
                 ),
               );
             },
