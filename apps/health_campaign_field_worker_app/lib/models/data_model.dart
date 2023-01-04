@@ -17,6 +17,8 @@ export 'individual.dart';
 export 'product.dart';
 export 'product_variant.dart';
 export 'project.dart';
+export 'blood_group.dart';
+export 'name.dart';
 export 'project_beneficiary.dart';
 export 'project_facility.dart';
 export 'project_product_variant.dart';

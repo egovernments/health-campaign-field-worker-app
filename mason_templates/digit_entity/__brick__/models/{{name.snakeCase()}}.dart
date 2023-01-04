@@ -1,45 +1,45 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-{{^isEnum}}{{#customAttributes}}import '{{type.snakeCase()}}.dart';
-{{/customAttributes}}import 'data_model.dart';
+{{^isEnum}}import 'data_model.dart';
 
 @MappableClass()
 class {{name.pascalCase()}}RequestModel extends DataModel {
-  {{#attributes}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
-  {{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
-  {{/customAttributes}}{{#dateTimeAttributes}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
-  {{/dateTimeAttributes}}
+  {{#attributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
+  {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
+  {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
+  {{/includeForQuery}}{{/dateTimeAttributes}}
   {{name.pascalCase()}}RequestModel({
-    {{#attributes}}this.{{name.camelCase()}},
-    {{/attributes}}{{#customAttributes}}this.{{name.camelCase()}},
-    {{/customAttributes}}{{#dateTimeAttributes}}int? {{name.camelCase()}},
-    {{/dateTimeAttributes}}super.auditDetails,
-  }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
+    {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}},
+    {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}this.{{name.camelCase()}},
+    {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}int? {{name.camelCase()}},
+    {{/includeForQuery}}{{/dateTimeAttributes}}super.auditDetails,
+  }): {{#dateTimeAttributes}}{{#includeForQuery}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-  {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
+  {{/includeForQuery}}{{/dateTimeAttributes}} super();{{#dateTimeAttributes}}{{#includeForQuery}}
 
   int? get {{name}} => {{name}}Time?.millisecondsSinceEpoch;
-  {{/dateTimeAttributes}}
+  {{/includeForQuery}}{{/dateTimeAttributes}}
 }
 
 @MappableClass()
 class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}RequestModel {
-  {{#attributes}}
+  {{#attributes}}{{#includeForQuery}}
   @override
-  final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/attributes}}{{#customAttributes}}
+  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/attributes}}{{#customAttributes}}{{#includeForQuery}}
   @override
-  final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/customAttributes}}{{#dateTimeAttributes}}
+  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}
   @override
-  final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
+  {{/includeForQuery}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Model({
-    {{#attributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
-    {{/attributes}}{{#customAttributes}}{{^nullable}}required{{/nullable}} this.{{name.camelCase()}},
-    {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required{{/nullable}} int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
+    {{#attributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
+    {{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
+    {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null

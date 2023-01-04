@@ -41,7 +41,8 @@
     {
       "name": "fatherName",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "husbandName",
