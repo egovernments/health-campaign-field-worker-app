@@ -16,14 +16,36 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
 abstract class RemoteRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
   final Dio dio;
+  final String path;
+  final String entityName;
 
-  RemoteRepository(this.dio);
+  RemoteRepository(
+    this.dio, {
+    required this.path,
+    required this.entityName,
+  });
+
+  String get createPath => '$path/_create';
+
+  String get updatePath => '$path/_update';
+
+  String get searchPath => '$path/_search';
 
   @override
-  FutureOr<void> create(D entity);
+  FutureOr<Response> create(D entity) async {
+    return await dio.post(
+      createPath,
+      data: {
+        entityName: [entity.toMap()],
+        "apiOperation": "CREATE",
+      },
+    );
+  }
 
   @override
-  FutureOr<void> update(D entity);
+  FutureOr<void> update(D entity) {
+
+  }
 }
 
 abstract class LocalRepository<D extends DataModel, R extends DataModel>
