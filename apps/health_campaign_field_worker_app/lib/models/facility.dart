@@ -10,9 +10,6 @@ class FacilityRequestModel extends DataModel {
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final int? rowVersion;
-  final String? clientReferenceId;
-  final AddressRequestModel? address;
   
   FacilityRequestModel({
     this.id,
@@ -20,10 +17,7 @@ class FacilityRequestModel extends DataModel {
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    this.rowVersion,
-    this.clientReferenceId,
-    this.address,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
@@ -44,19 +38,13 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   
   @override
   final int storageCapacity;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final AddressRequestModel address;
   
 
   FacilityModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.isPermanent,
     required this.usage,

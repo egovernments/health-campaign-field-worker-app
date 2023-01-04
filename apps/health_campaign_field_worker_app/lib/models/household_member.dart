@@ -12,8 +12,6 @@ class HouseholdMemberRequestModel extends DataModel {
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
   final String? tenantId;
-  final int? rowVersion;
-  final String? clientReferenceId;
   
   HouseholdMemberRequestModel({
     this.id,
@@ -23,9 +21,7 @@ class HouseholdMemberRequestModel extends DataModel {
     this.individualClientReferenceId,
     this.isHeadOfHousehold,
     this.tenantId,
-    this.rowVersion,
-    this.clientReferenceId,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
@@ -52,16 +48,12 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
   
   @override
   final String tenantId;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
   
 
   HouseholdMemberModel({
-     this.id,
+    this.id,
     required this.householdId,
     required this.householdClientReferenceId,
     required this.individualId,

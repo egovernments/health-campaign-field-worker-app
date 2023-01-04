@@ -9,17 +9,13 @@ class HouseholdRequestModel extends DataModel {
   final String? tenantId;
   final String? clientReferenceId;
   final int? memberCount;
-  final int? rowVersion;
-  final AddressRequestModel? address;
   
   HouseholdRequestModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
     this.memberCount,
-    this.rowVersion,
-    this.address,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
@@ -37,16 +33,12 @@ class HouseholdModel extends DataModel implements HouseholdRequestModel {
   
   @override
   final int memberCount;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final AddressRequestModel address;
   
 
   HouseholdModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.clientReferenceId,
     required this.memberCount,

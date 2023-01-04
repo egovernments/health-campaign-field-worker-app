@@ -12,14 +12,7 @@ class ProjectRequestModel extends DataModel {
   final bool? isTaskEnabled;
   final String? parent;
   final String? department;
-  final String? description;
   final String? referenceId;
-  final String? projectHierarchy;
-  final int? rowVersion;
-  final String? clientReferenceId;
-  final AddressRequestModel? address;
-  final List<TargetRequestModel>? targets;
-  final List<DocumentRequestModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -31,17 +24,10 @@ class ProjectRequestModel extends DataModel {
     this.isTaskEnabled,
     this.parent,
     this.department,
-    this.description,
     this.referenceId,
-    this.projectHierarchy,
-    this.rowVersion,
-    this.clientReferenceId,
-    this.address,
-    this.targets,
-    this.documents,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.boundaryCode,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -80,29 +66,15 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
   @override
   final String department;
-  
-  @override
   final String description;
   
   @override
   final String referenceId;
-  
-  @override
   final String projectHierarchy;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final AddressRequestModel address;
-  
-  @override
   final List<TargetRequestModel> targets;
-  
-  @override
   final List<DocumentRequestModel> documents;
   
   @override
@@ -113,12 +85,12 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
 
   ProjectModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.projectTypeId,
     required this.subProjectTypeId,
     required this.isTaskEnabled,
-     this.parent,
+    this.parent,
     required this.department,
     required this.description,
     required this.referenceId,

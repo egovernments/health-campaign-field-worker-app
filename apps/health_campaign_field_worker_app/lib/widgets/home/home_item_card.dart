@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../../blocs/localization/app_localization.dart';
+
 class HomeItemCard extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -36,7 +38,9 @@ class HomeItemCard extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              label,
+              AppLocalizations.of(context).translate(
+                label,
+              ),
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),

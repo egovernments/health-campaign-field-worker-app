@@ -35,8 +35,13 @@ export 'data_model.mapper.g.dart';
 abstract class DataModel {
   final AuditDetails? auditDetails;
   final bool isDeleted;
+  final String? boundaryCode;
 
-  const DataModel({this.auditDetails, this.isDeleted = false});
+  const DataModel({
+    this.auditDetails,
+    this.isDeleted = false,
+    this.boundaryCode,
+  });
 }
 
 @MappableClass()
