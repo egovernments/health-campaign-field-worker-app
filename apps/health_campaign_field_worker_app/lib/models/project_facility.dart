@@ -5,17 +5,33 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectFacilityRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? facilityId;
+  final String? projectId;
   
   ProjectFacilityRequestModel({
-    super.auditDetails,
+    this.id,
+    this.tenantId,
+    this.facilityId,
+    this.projectId,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String facilityId;
+  
+  @override
   final String projectId;
   final String rowVersion;
   final String clientReferenceId;

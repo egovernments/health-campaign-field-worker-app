@@ -5,22 +5,58 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectStaffRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? userId;
+  final String? projectId;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
   
   ProjectStaffRequestModel({
-    super.auditDetails,
-  }):  super();
+    this.id,
+    this.tenantId,
+    this.userId,
+    this.projectId,
+    int? startDate,
+    int? endDate,
+    super.boundaryCode,
+  }): startDateTime = startDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super();
+
+  int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  
+
+  int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass()
 class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String userId;
+  
+  @override
   final String projectId;
   final String channel;
   final int rowVersion;
   final String clientReferenceId;
+  
+  @override
   final DateTime startDateTime;
+  
+  @override
   final DateTime endDateTime;
   
 

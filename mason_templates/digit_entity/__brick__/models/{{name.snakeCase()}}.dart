@@ -13,7 +13,7 @@ class {{name.pascalCase()}}RequestModel extends DataModel {
     {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}},
     {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}this.{{name.camelCase()}},
     {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}int? {{name.camelCase()}},
-    {{/includeForQuery}}{{/dateTimeAttributes}}super.auditDetails,
+    {{/includeForQuery}}{{/dateTimeAttributes}}super.boundaryCode,
   }): {{#dateTimeAttributes}}{{#includeForQuery}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),

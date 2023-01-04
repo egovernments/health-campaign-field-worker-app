@@ -5,18 +5,38 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProductVariantRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? productId;
+  final String? sku;
+  final String? variation;
   
   ProductVariantRequestModel({
-    super.auditDetails,
+    this.id,
+    this.tenantId,
+    this.productId,
+    this.sku,
+    this.variation,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class ProductVariantModel extends DataModel implements ProductVariantRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String productId;
+  
+  @override
   final String sku;
+  
+  @override
   final String variation;
   final int rowVersion;
   final String clientReferenceId;
