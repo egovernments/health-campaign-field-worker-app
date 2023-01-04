@@ -25,6 +25,9 @@ class MainApplication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    return MultiRepositoryProvider(providers: [], child: Offstage(),);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
