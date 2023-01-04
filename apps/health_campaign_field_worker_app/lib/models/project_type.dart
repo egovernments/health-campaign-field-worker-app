@@ -1,6 +1,6 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'project_product_variant.dart';
 import 'data_model.dart';
 
 @MappableClass()

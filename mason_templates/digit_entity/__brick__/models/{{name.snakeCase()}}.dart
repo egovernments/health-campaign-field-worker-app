@@ -1,7 +1,7 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-{{^isEnum}}{{#customAttributes}}import '{{type.snakeCase()}}.dart';
-{{/customAttributes}}import 'data_model.dart';
+{{^isEnum}}import 'data_model.dart';
 
 @MappableClass()
 class {{name.pascalCase()}}RequestModel extends DataModel {
