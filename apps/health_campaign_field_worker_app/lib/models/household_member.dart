@@ -5,20 +5,48 @@ import 'data_model.dart';
 
 @MappableClass()
 class HouseholdMemberRequestModel extends DataModel {
+  final String? id;
+  final String? householdId;
+  final String? householdClientReferenceId;
+  final String? individualId;
+  final String? individualClientReferenceId;
+  final bool? isHeadOfHousehold;
+  final String? tenantId;
   
   HouseholdMemberRequestModel({
-    super.auditDetails,
+    this.id,
+    this.householdId,
+    this.householdClientReferenceId,
+    this.individualId,
+    this.individualClientReferenceId,
+    this.isHeadOfHousehold,
+    this.tenantId,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String householdId;
+  
+  @override
   final String householdClientReferenceId;
+  
+  @override
   final String individualId;
+  
+  @override
   final String individualClientReferenceId;
+  
+  @override
   final bool isHeadOfHousehold;
+  
+  @override
   final String tenantId;
   final int rowVersion;
   final String clientReferenceId;

@@ -5,22 +5,70 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? projectTypeId;
+  final String? subProjectTypeId;
+  final bool? isTaskEnabled;
+  final String? parent;
+  final String? department;
+  final String? referenceId;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
   
   ProjectRequestModel({
-    super.auditDetails,
-  }):  super();
+    this.id,
+    this.tenantId,
+    this.projectTypeId,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
+    this.parent,
+    this.department,
+    this.referenceId,
+    int? startDate,
+    int? endDate,
+    super.boundaryCode,
+  }): startDateTime = startDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super();
+
+  int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  
+
+  int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass()
 class ProjectModel extends DataModel implements ProjectRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String projectTypeId;
+  
+  @override
   final String subProjectTypeId;
+  
+  @override
   final bool isTaskEnabled;
+  
+  @override
   final String? parent;
+  
+  @override
   final String department;
   final String description;
+  
+  @override
   final String referenceId;
   final String projectHierarchy;
   final int rowVersion;
@@ -28,7 +76,11 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   final AddressRequestModel address;
   final List<TargetRequestModel> targets;
   final List<DocumentRequestModel> documents;
+  
+  @override
   final DateTime startDateTime;
+  
+  @override
   final DateTime endDateTime;
   
 

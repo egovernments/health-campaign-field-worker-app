@@ -5,18 +5,38 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProductRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? type;
+  final String? name;
+  final String? manufacturer;
   
   ProductRequestModel({
-    super.auditDetails,
+    this.id,
+    this.tenantId,
+    this.type,
+    this.name,
+    this.manufacturer,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class ProductModel extends DataModel implements ProductRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String type;
+  
+  @override
   final String name;
+  
+  @override
   final String? manufacturer;
   final int rowVersion;
   final String clientReferenceId;

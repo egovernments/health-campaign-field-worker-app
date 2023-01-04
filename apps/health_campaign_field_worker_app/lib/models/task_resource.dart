@@ -7,7 +7,7 @@ import 'data_model.dart';
 class TaskResourceRequestModel extends DataModel {
   
   TaskResourceRequestModel({
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 

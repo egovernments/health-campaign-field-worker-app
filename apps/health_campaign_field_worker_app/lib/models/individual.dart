@@ -5,20 +5,38 @@ import 'data_model.dart';
 
 @MappableClass()
 class IndividualRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? clientReferenceId;
+  final String? dateOfBirth;
   final String? fatherName;
+  final Gender? gender;
   
   IndividualRequestModel({
+    this.id,
+    this.tenantId,
+    this.clientReferenceId,
+    this.dateOfBirth,
     this.fatherName,
-    super.auditDetails,
+    this.gender,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class IndividualModel extends DataModel implements IndividualRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String clientReferenceId;
   final String? userId;
+  
+  @override
   final String dateOfBirth;
   final String mobileNumber;
   final String? altContactNumber;
@@ -32,6 +50,8 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   final NameRequestModel name;
   final BloodGroup bloodGroup;
   final AddressRequestModel? address;
+  
+  @override
   final Gender gender;
   final List<IdentifierRequestModel> identifiers;
   

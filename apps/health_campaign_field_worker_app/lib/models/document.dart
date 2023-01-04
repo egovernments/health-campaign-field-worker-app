@@ -7,7 +7,7 @@ import 'data_model.dart';
 class DocumentRequestModel extends DataModel {
   
   DocumentRequestModel({
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 

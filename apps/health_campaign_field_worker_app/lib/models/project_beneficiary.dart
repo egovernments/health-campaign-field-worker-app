@@ -5,20 +5,46 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectBeneficiaryRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? projectId;
+  final String? beneficiaryId;
+  final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiaryRequestModel({
-    super.auditDetails,
-  }):  super();
+    this.id,
+    this.tenantId,
+    this.projectId,
+    this.beneficiaryId,
+    int? dateOfRegistration,
+    super.boundaryCode,
+  }): dateOfRegistrationTime = dateOfRegistration == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
+   super();
+
+  int? get dateOfRegistration => dateOfRegistrationTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass()
 class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String projectId;
+  
+  @override
   final String beneficiaryId;
   final int rowVersion;
   final String clientReferenceId;
+  
+  @override
   final DateTime dateOfRegistrationTime;
   
 

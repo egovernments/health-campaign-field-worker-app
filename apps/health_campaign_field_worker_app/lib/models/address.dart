@@ -7,7 +7,7 @@ import 'data_model.dart';
 class AddressRequestModel extends DataModel {
   
   AddressRequestModel({
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 

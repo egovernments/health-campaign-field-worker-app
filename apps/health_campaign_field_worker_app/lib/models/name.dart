@@ -5,16 +5,28 @@ import 'data_model.dart';
 
 @MappableClass()
 class NameRequestModel extends DataModel {
+  final String? givenName;
+  final String? familyName;
+  final String? otherNames;
   
   NameRequestModel({
-    super.auditDetails,
+    this.givenName,
+    this.familyName,
+    this.otherNames,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class NameModel extends DataModel implements NameRequestModel {
+  
+  @override
   final String givenName;
+  
+  @override
   final String familyName;
+  
+  @override
   final String? otherNames;
   final String clientReferenceId;
   

@@ -3,16 +3,19 @@
   "attributes": [
     {
       "name": "givenName",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "familyName",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "otherNames",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     }
   ],
   "isEnum": false

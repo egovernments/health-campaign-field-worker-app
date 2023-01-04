@@ -7,7 +7,7 @@ import 'data_model.dart';
 class ProjectTypeRequestModel extends DataModel {
   
   ProjectTypeRequestModel({
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 

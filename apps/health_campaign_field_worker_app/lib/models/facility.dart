@@ -5,18 +5,38 @@ import 'data_model.dart';
 
 @MappableClass()
 class FacilityRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final bool? isPermanent;
+  final String? usage;
+  final int? storageCapacity;
   
   FacilityRequestModel({
-    super.auditDetails,
+    this.id,
+    this.tenantId,
+    this.isPermanent,
+    this.usage,
+    this.storageCapacity,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class FacilityModel extends DataModel implements FacilityRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final bool isPermanent;
+  
+  @override
   final String usage;
+  
+  @override
   final int storageCapacity;
   final int rowVersion;
   final String clientReferenceId;

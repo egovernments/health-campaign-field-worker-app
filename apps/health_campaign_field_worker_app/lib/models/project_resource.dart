@@ -5,16 +5,28 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectResourceRequestModel extends DataModel {
+  final String? id;
+  final String? tenantId;
+  final String? projectId;
   
   ProjectResourceRequestModel({
-    super.auditDetails,
+    this.id,
+    this.tenantId,
+    this.projectId,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class ProjectResourceModel extends DataModel implements ProjectResourceRequestModel {
+  
+  @override
   final String? id;
+  
+  @override
   final String tenantId;
+  
+  @override
   final String projectId;
   final int rowVersion;
   final String clientReferenceId;
