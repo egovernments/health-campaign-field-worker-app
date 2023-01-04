@@ -2,14 +2,14 @@ import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart
 import 'package:flutter/material.dart';
 
 class DigitRowCard extends StatelessWidget {
-  final List<DigitRowCardModel> list;
-  final ValueChanged<DigitRowCardModel> onPressed;
+  final List<DigitRowCardModel> rowItems;
+  final ValueChanged<DigitRowCardModel>? onChanged;
   final double width;
 
   const DigitRowCard({
     super.key,
-    required this.onPressed,
-    required this.list,
+    this.onChanged,
+    required this.rowItems,
     required this.width,
   });
 
@@ -19,13 +19,13 @@ class DigitRowCard extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: list
+      children: rowItems
           .map(
             (e) => SizedBox(
               height: 38,
               width: width,
               child: GestureDetector(
-                onTap: () => onPressed(e),
+                onTap: () => onChanged?.call(e),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(

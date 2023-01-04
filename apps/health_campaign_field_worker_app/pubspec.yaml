@@ -31,6 +31,8 @@ dependencies:
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   nested: ^1.0.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

@@ -4,23 +4,28 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "productId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "sku",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "variation",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",

@@ -7,13 +7,11 @@ import 'data_model.dart';
 class IdentifierRequestModel extends DataModel {
   final String? type;
   final String? id;
-  final String? clientReferenceId;
   
   IdentifierRequestModel({
     this.type,
     this.id,
-    this.clientReferenceId,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
@@ -25,8 +23,6 @@ class IdentifierModel extends DataModel implements IdentifierRequestModel {
   
   @override
   final String id;
-  
-  @override
   final String clientReferenceId;
   
 
