@@ -35,8 +35,8 @@ void main() {
 
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitRowCard(
-        list: languageList,
-        onPressed: (data) => onPressed(data),
+        rowItems: languageList,
+        onChanged: (data) => onPressed(data),
         width: 90,
       )));
 
@@ -55,8 +55,8 @@ void main() {
 
       await widgetTester.pumpWidget(WidgetApp(
           child: DigitRowCard(
-        list: languageList,
-        onPressed: (data) => onPressed(data),
+        rowItems: languageList,
+        onChanged: (data) => onPressed(data),
         width: 90,
       )));
 

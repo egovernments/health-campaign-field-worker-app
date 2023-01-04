@@ -2,7 +2,8 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
-import '../utils/I18KeyConstants.dart';
+import '../blocs/localization/app_localization.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,7 +22,9 @@ class LoginPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  i18.login.labelText,
+                  AppLocalizations.of(context).translate(
+                    i18.login.labelText,
+                  ),
                   style: theme.textTheme.displayMedium,
                 ),
                 DigitTextField(label: i18.login.userIdPlaceholder),
