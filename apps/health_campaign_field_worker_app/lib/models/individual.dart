@@ -1,10 +1,6 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'name.dart';
-import 'blood_group.dart';
-import 'address.dart';
-import 'gender.dart';
-import 'identifier.dart';
 import 'data_model.dart';
 
 @MappableClass()
