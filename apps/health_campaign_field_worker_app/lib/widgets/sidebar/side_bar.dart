@@ -49,8 +49,8 @@ class SideBar extends StatelessWidget {
                 return Offstage(
                   offstage: languageList == null,
                   child: DigitRowCard(
-                    onPressed: (data) {},
-                    list: languageList!
+                    onChanged: (data) {},
+                    rowItems: languageList!
                         .map((e) => DigitRowCardModel.fromJson(e.toJson()))
                         .toList(),
                     width: (MediaQuery.of(context).size.width *

@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import '../utils/I18KeyConstants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';

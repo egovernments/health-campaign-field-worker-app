@@ -4,14 +4,14 @@ import '../../models/digit_row_card/digit_row_card_model.dart';
 
 class DigitLanguageCard extends StatelessWidget {
   final List<DigitRowCardModel> digitRowCardItems;
-  final ValueChanged<DigitRowCardModel?> onLanguageChange;
+  final ValueChanged<DigitRowCardModel>? onLanguageChange;
   final VoidCallback onLanguageSubmit;
   final String languageSubmitLabel;
 
   const DigitLanguageCard({
     super.key,
     required this.digitRowCardItems,
-    required this.onLanguageChange,
+    this.onLanguageChange,
     required this.onLanguageSubmit,
     required this.languageSubmitLabel,
   });
@@ -25,8 +25,8 @@ class DigitLanguageCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DigitRowCard(
-            onPressed: onLanguageChange,
-            list: digitRowCardItems,
+            onChanged: onLanguageChange,
+            rowItems: digitRowCardItems,
             width:
                 (MediaQuery.of(context).size.width / digitRowCardItems.length) -
                     16 * digitRowCardItems.length,
@@ -37,9 +37,7 @@ class DigitLanguageCard extends StatelessWidget {
           ),
           DigitElevatedButton(
             onPressed: onLanguageSubmit,
-            child: Center(
-              child: Text(languageSubmitLabel),
-            ),
+            child: Center(child: Text(languageSubmitLabel)),
           ),
         ],
       ),
