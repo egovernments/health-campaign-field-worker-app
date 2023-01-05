@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class AddressRequestModel extends DataModel {
+class AddressSearchModel extends DataModel {
   
-  AddressRequestModel({
+  AddressSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class AddressModel extends DataModel implements AddressRequestModel {
+class AddressModel extends DataModel implements AddressSearchModel {
   final String? id;
   final String tenantId;
   final String doorNo;
@@ -27,7 +27,7 @@ class AddressModel extends DataModel implements AddressRequestModel {
   final String? buildingName;
   final String? street;
   final String clientReferenceId;
-  final BoundaryRequestModel locality;
+  final BoundarySearchModel locality;
   final AddressType type;
   
 

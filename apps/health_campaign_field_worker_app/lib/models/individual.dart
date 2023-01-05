@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class IndividualRequestModel extends DataModel {
+class IndividualSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? clientReferenceId;
@@ -12,7 +12,7 @@ class IndividualRequestModel extends DataModel {
   final String? fatherName;
   final Gender? gender;
   
-  IndividualRequestModel({
+  IndividualSearchModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
@@ -24,7 +24,7 @@ class IndividualRequestModel extends DataModel {
 }
 
 @MappableClass()
-class IndividualModel extends DataModel implements IndividualRequestModel {
+class IndividualModel extends DataModel implements IndividualSearchModel {
   
   @override
   final String? id;
@@ -47,13 +47,13 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   final String? husbandName;
   final String? photo;
   final int rowVersion;
-  final NameRequestModel name;
+  final NameSearchModel name;
   final BloodGroup bloodGroup;
-  final AddressRequestModel? address;
+  final AddressSearchModel? address;
   
   @override
   final Gender gender;
-  final List<IdentifierRequestModel> identifiers;
+  final List<IdentifierSearchModel> identifiers;
   
 
   IndividualModel({

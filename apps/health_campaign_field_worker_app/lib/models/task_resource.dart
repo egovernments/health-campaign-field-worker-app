@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class TaskResourceRequestModel extends DataModel {
+class TaskResourceSearchModel extends DataModel {
   
-  TaskResourceRequestModel({
+  TaskResourceSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class TaskResourceModel extends DataModel implements TaskResourceRequestModel {
+class TaskResourceModel extends DataModel implements TaskResourceSearchModel {
   final String? id;
   final String tenantId;
   final String productVariantId;

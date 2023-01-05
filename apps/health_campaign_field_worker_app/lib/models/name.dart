@@ -4,12 +4,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class NameRequestModel extends DataModel {
+class NameSearchModel extends DataModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
   
-  NameRequestModel({
+  NameSearchModel({
     this.givenName,
     this.familyName,
     this.otherNames,
@@ -18,7 +18,7 @@ class NameRequestModel extends DataModel {
 }
 
 @MappableClass()
-class NameModel extends DataModel implements NameRequestModel {
+class NameModel extends DataModel implements NameSearchModel {
   
   @override
   final String givenName;
