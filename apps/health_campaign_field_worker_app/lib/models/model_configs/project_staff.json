@@ -1,5 +1,6 @@
 {
   "name": "projectStaff",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
