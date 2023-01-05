@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
-
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart' as app_configuration;
-import '../../data/repositories/remote/mdms.dart';
 import '../../models/mdms/service_registry/service_registry_model.dart';
 import '../../utils/constants.dart';
 
@@ -54,7 +52,7 @@ class AppInitializationBloc
 
     final List<ServiceRegistry> newServiceRegistryList = [];
 
-    result.serviceRegitry?.serviceRegistrylist?.forEach((element) {
+    result.serviceRegistry?.serviceRegistryList?.forEach((element) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
       final List<Actions>? actions = element.actions?.map((element) {
@@ -103,7 +101,6 @@ class AppInitializationBloc
         },
       },
     );
-
     final appConfiguration = AppConiguration();
     result.appConfig?.appConfiglist?.forEach((element) {
       appConfiguration
@@ -136,6 +133,8 @@ class AppInitializationBloc
     await isar.writeTxn(() async {
       await isar.appConigurations.putAll([appConfiguration]);
     });
+
+    emit(state.copyWith(appConiguration: appConfiguration));
   }
 }
 
@@ -155,6 +154,7 @@ class AppInitializationState with _$AppInitializationState {
 
   const factory AppInitializationState({
     @Default(false) bool isInitializationCompleted,
+    AppConiguration? appConiguration,
     @Default([]) List<ServiceRegistry> localizationList,
   }) = _AppInitializationState;
 }

@@ -21,13 +21,14 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     this.localizationRepository,
     this.isar,
   ) {
-    on<OnLoadLocalizationEvent>(_onLoadLocalization);
+    on(_onLoadLocalization);
   }
 
   FutureOr<void> _onLoadLocalization(
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
+    print(event.module);
     emit(state.copyWith(loading: true));
     LocalizationModel result = await localizationRepository.search(
       url: event.path,

@@ -10,7 +10,7 @@ class ServiceRegistryPrimaryWrapperModel
     with _$ServiceRegistryPrimaryWrapperModel {
   const factory ServiceRegistryPrimaryWrapperModel({
     @JsonKey(name: 'HCM-SERVICE-REGISTRY')
-        final ServiceRegistrySecondaryWrapperModel? serviceRegitry,
+        final ServiceRegistrySecondaryWrapperModel? serviceRegistry,
   }) = _ServiceRegistryPrimaryWrapperModel;
 
   factory ServiceRegistryPrimaryWrapperModel.fromJson(
@@ -24,7 +24,7 @@ class ServiceRegistrySecondaryWrapperModel
     with _$ServiceRegistrySecondaryWrapperModel {
   const factory ServiceRegistrySecondaryWrapperModel({
     @JsonKey(name: 'serviceRegistry')
-        List<ServiceRegistryModel>? serviceRegistrylist,
+        List<ServiceRegistryModel>? serviceRegistryList,
   }) = _ServiceRegistrySecondaryWrapperModel;
 
   factory ServiceRegistrySecondaryWrapperModel.fromJson(
