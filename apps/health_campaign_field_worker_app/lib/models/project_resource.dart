@@ -4,12 +4,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectResourceRequestModel extends DataModel {
+class ProjectResourceSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
   
-  ProjectResourceRequestModel({
+  ProjectResourceSearchModel({
     this.id,
     this.tenantId,
     this.projectId,
@@ -18,7 +18,7 @@ class ProjectResourceRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectResourceModel extends DataModel implements ProjectResourceRequestModel {
+class ProjectResourceModel extends DataModel implements ProjectResourceSearchModel {
   
   @override
   final String? id;
@@ -30,7 +30,7 @@ class ProjectResourceModel extends DataModel implements ProjectResourceRequestMo
   final String projectId;
   final int rowVersion;
   final String clientReferenceId;
-  final ProjectProductVariantRequestModel resources;
+  final ProjectProductVariantSearchModel resources;
   
 
   ProjectResourceModel({

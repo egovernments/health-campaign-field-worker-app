@@ -3,7 +3,7 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ProjectProductVariantRepository extends RemoteRepository<ProjectProductVariantModel, ProjectProductVariantRequestModel> {
+class ProjectProductVariantRepository extends RemoteRepository<ProjectProductVariantModel, ProjectProductVariantSearchModel> {
   ProjectProductVariantRepository(
     super.dio, {
     required super.path,

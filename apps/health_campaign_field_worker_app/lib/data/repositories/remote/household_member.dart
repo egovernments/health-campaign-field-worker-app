@@ -3,7 +3,7 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class HouseholdMemberRepository extends RemoteRepository<HouseholdMemberModel, HouseholdMemberRequestModel> {
+class HouseholdMemberRepository extends RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
   HouseholdMemberRepository(
     super.dio, {
     required super.path,

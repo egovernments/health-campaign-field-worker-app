@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class TaskRequestModel extends DataModel {
+class TaskSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
@@ -16,7 +16,7 @@ class TaskRequestModel extends DataModel {
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
   
-  TaskRequestModel({
+  TaskSearchModel({
     this.id,
     this.tenantId,
     this.projectId,
@@ -56,7 +56,7 @@ class TaskRequestModel extends DataModel {
 }
 
 @MappableClass()
-class TaskModel extends DataModel implements TaskRequestModel {
+class TaskModel extends DataModel implements TaskSearchModel {
   
   @override
   final String? id;
@@ -77,8 +77,8 @@ class TaskModel extends DataModel implements TaskRequestModel {
   @override
   final String status;
   final String clientReferenceId;
-  final List<TaskResourceRequestModel> resources;
-  final AddressRequestModel address;
+  final List<TaskResourceSearchModel> resources;
+  final AddressSearchModel address;
   
   @override
   final DateTime plannedStartDateTime;

@@ -4,14 +4,14 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class FacilityRequestModel extends DataModel {
+class FacilitySearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
   
-  FacilityRequestModel({
+  FacilitySearchModel({
     this.id,
     this.tenantId,
     this.isPermanent,
@@ -22,7 +22,7 @@ class FacilityRequestModel extends DataModel {
 }
 
 @MappableClass()
-class FacilityModel extends DataModel implements FacilityRequestModel {
+class FacilityModel extends DataModel implements FacilitySearchModel {
   
   @override
   final String? id;
@@ -40,7 +40,7 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   final int storageCapacity;
   final int rowVersion;
   final String clientReferenceId;
-  final AddressRequestModel address;
+  final AddressSearchModel address;
   
 
   FacilityModel({
