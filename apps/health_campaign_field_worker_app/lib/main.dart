@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,11 +23,13 @@ import 'utils/constants.dart';
 void main() async {
   Bloc.observer = AppBlocObserver();
   DigitUi.instance.initThemeComponents();
+
   Isar isar = await Isar.open([
     ServiceRegistrySchema,
     LocalizationSchema,
     AppConigurationSchema,
   ]);
+
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: isar,
@@ -38,13 +41,13 @@ class MainApplication extends StatelessWidget {
   final Isar isar;
   const MainApplication({
     Key? key,
-    required this.appRouter,
     required this.isar,
+    required this.appRouter,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Client client = Client();
+    Dio client = Client().init();
 
     return MultiBlocProvider(
       providers: [
@@ -52,8 +55,8 @@ class MainApplication extends StatelessWidget {
           create: (context) => AppInitializationBloc(
             const AppInitializationState(),
             isar: isar,
-            mdmsRepository: MdmsRepository(client.init()),
-          )..add(const FindAppConfigurationEvent(actionType: 'SEARCH')),
+            mdmsRepository: MdmsRepository(client),
+          )..add(const AppInitializationSetupEvent()),
           lazy: false,
         ),
         BlocProvider(
@@ -61,49 +64,89 @@ class MainApplication extends StatelessWidget {
             const AuthState(),
           ),
         ),
-        BlocProvider(
-          create: (context) => LocalizationBloc(
-            const LocalizationState(),
-            LocalizationRepository(client.init()),
-            isar,
-          ),
-        ),
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
-          create: (context) => TableHideActionBloc(
-            const TableHideActionState(),
-          ),
+          create: (_) => AppInitializationBloc(
+            const AppInitializationState(),
+            isar: isar,
+            mdmsRepository: MdmsRepository(client),
+          )..add(const AppInitializationEvent.onApplicationConfigurationSetup(
+              actionType: 'SEARCH',
+            )),
+        ),
+        BlocProvider(
+          create: (context) =>
+              TableHideActionBloc(const TableHideActionState()),
         ),
       ],
-      child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-        return MaterialApp.router(
-          supportedLocales: const [
-            Locale('en', 'IN'),
-            Locale('hi', 'IN'),
-            Locale.fromSubtags(languageCode: 'pn'),
-          ],
-          locale: const Locale('en', 'IN'),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-          ],
-          theme: DigitTheme.instance.mobileTheme,
-          routeInformationParser: appRouter.defaultRouteParser(),
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          routerDelegate: AutoRouterDelegate.declarative(
-            appRouter,
-            navigatorObservers: () => [AppRouterObserver()],
-            routes: (handler) => [
-              if (state.isAuthenticated)
-                const AuthenticatedRouteWrapper()
-              else
-                const LoginRoute(),
-            ],
-          ),
-        );
-      }),
+      child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
+        builder: (context, appConfigState) {
+          return BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, authState) {
+              final appConfig = appConfigState.appConiguration;
+              // final tenantId = appConfigState.appConiguration?;
+              final localizationModulesList = appConfig?.localizationModules;
+              final firstLanguage = appConfig?.languages?.first.value;
+              final languages = appConfig?.languages;
+
+              return BlocProvider(
+                create: (appConfig != null &&
+                        localizationModulesList != null &&
+                        firstLanguage != null)
+                    ? (context) => LocalizationBloc(
+                          const LocalizationState(),
+                          LocalizationRepository(client),
+                          isar,
+                        )..add(LocalizationEvent.onLoadLocalization(
+                            module: localizationModulesList
+                                .map((e) => e.value.toString())
+                                .join(',')
+                                .toString(),
+                            tenantId: "default",
+                            locale: firstLanguage,
+                            path: 'localization/messages/v1/_search',
+                          ))
+                    : (context) => LocalizationBloc(
+                          const LocalizationState(),
+                          LocalizationRepository(client),
+                          isar,
+                        ),
+                child: MaterialApp.router(
+                  supportedLocales: appConfig != null && languages != null
+                      ? languages.map((e) {
+                          final results = e.value.split('_');
+
+                          return results.isNotEmpty
+                              ? Locale(results.first, results.last)
+                              : const Locale('en', 'IN');
+                        })
+                      : [const Locale('en', 'IN')],
+                  localizationsDelegates: [
+                    if (appConfig != null)
+                      AppLocalizations.getDelegate(appConfig),
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                  ],
+                  theme: DigitTheme.instance.mobileTheme,
+                  routeInformationParser: appRouter.defaultRouteParser(),
+                  scaffoldMessengerKey: scaffoldMessengerKey,
+                  routerDelegate: AutoRouterDelegate.declarative(
+                    appRouter,
+                    navigatorObservers: () => [AppRouterObserver()],
+                    routes: (handler) => [
+                      if (authState.isAuthenticated)
+                        const AuthenticatedRouteWrapper()
+                      else
+                        const UnauthenticatedRouteWrapper(),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

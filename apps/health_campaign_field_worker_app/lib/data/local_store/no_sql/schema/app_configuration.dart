@@ -27,12 +27,12 @@ class AppConiguration {
 
 @embedded
 class Languages {
-  late String? label;
-  late String? value;
+  late String label;
+  late String value;
 }
 
 @embedded
 class LocalizationModules {
-  late String? label;
+  late String label;
   late String value;
 }

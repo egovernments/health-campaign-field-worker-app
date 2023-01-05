@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../utils/constants.dart';
 import 'app_localizations_delegate.dart';
@@ -9,13 +10,17 @@ class AppLocalizations {
   final Locale? locale;
 
   AppLocalizations(this.locale);
+
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static final List<Localization> _localizedStrings = <Localization>[];
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      AppLocalizationsDelegate();
+
+  static LocalizationsDelegate<AppLocalizations> getDelegate(
+    AppConiguration config,
+  ) =>
+      AppLocalizationsDelegate(config);
 
   Future<bool> load() async {
     _localizedStrings.clear();

@@ -1,10 +1,9 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
-import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -24,12 +23,12 @@ class LoginPage extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.of(context).translate(
-                    'SEARCH_CONNECTION_SUBLABEL',
+                    i18.login.labelText,
                   ),
                   style: theme.textTheme.displayMedium,
                 ),
-                const DigitTextField(label: 'User ID'),
-                const DigitTextField(label: 'Password'),
+                DigitTextField(label: i18.login.userIdPlaceholder),
+                DigitTextField(label: i18.login.passwordPlaceholder),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) => DigitElevatedButton(
@@ -43,21 +42,20 @@ class LoginPage extends StatelessWidget {
                                   ),
                                 );
                           },
-                    child: const Center(
-                      child: Text('Login'),
+                    child: Center(
+                      child: Text(i18.login.actionLabel),
                     ),
                   ),
                 ),
                 TextButton(
                   onPressed: () => DigitDialog.show(
                     context,
-                    title: 'Forgot Password?',
-                    content:
-                        'Please contact the administrator if you have forgotten your password',
-                    primaryActionLabel: 'OK',
+                    title: i18.forgotPassword.labelText,
+                    content: i18.forgotPassword.contentText,
+                    primaryActionLabel: i18.forgotPassword.primaryActionLabel,
                     primaryAction: () => Navigator.pop(context),
                   ),
-                  child: const Center(child: Text('Forgot Password?')),
+                  child: Center(child: Text(i18.forgotPassword.actionLabel)),
                 ),
               ],
             ),
