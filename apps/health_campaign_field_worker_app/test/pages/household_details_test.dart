@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:health_campaign_field_worker_app/blocs/household_details/household_details.dart';
 
 import 'package:health_campaign_field_worker_app/utils/I18KeyConstants.dart';
 import 'package:mocktail/mocktail.dart';
@@ -23,8 +25,13 @@ void main() {
     final mockObserver = MockNavigatorObserver();
 
     Future<void> buildTester(WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp.router(
+      await tester.pumpWidget(MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
+          ),
+        ],
+        child: MaterialApp.router(
           routerDelegate: AutoRouterDelegate.declarative(
             appRouter,
             navigatorObservers: () => [mockObserver],
@@ -33,7 +40,7 @@ void main() {
             ],
           ),
         ),
-      );
+      ));
     }
 
     testWidgets('is initialized correctly', (widgetTester) async {
