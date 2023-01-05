@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class DocumentRequestModel extends DataModel {
+class DocumentSearchModel extends DataModel {
   
-  DocumentRequestModel({
+  DocumentSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class DocumentModel extends DataModel implements DocumentRequestModel {
+class DocumentModel extends DataModel implements DocumentSearchModel {
   final String? id;
   final String tenantId;
   final String documentType;

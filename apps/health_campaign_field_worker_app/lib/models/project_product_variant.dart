@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectProductVariantRequestModel extends DataModel {
+class ProjectProductVariantSearchModel extends DataModel {
   
-  ProjectProductVariantRequestModel({
+  ProjectProductVariantSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProjectProductVariantModel extends DataModel implements ProjectProductVariantRequestModel {
+class ProjectProductVariantModel extends DataModel implements ProjectProductVariantSearchModel {
   final String productVariantId;
   final String type;
   final bool isBaseUnitVariant;

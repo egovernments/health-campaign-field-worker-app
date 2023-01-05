@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class TargetRequestModel extends DataModel {
+class TargetSearchModel extends DataModel {
   
-  TargetRequestModel({
+  TargetSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class TargetModel extends DataModel implements TargetRequestModel {
+class TargetModel extends DataModel implements TargetSearchModel {
   final String? id;
   final String beneficiaryType;
   final String baseline;

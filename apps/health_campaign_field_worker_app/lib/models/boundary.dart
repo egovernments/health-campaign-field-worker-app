@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class BoundaryRequestModel extends DataModel {
+class BoundarySearchModel extends DataModel {
   
-  BoundaryRequestModel({
+  BoundarySearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class BoundaryModel extends DataModel implements BoundaryRequestModel {
+class BoundaryModel extends DataModel implements BoundarySearchModel {
   final String code;
   final String name;
   final String? label;
@@ -20,7 +20,7 @@ class BoundaryModel extends DataModel implements BoundaryRequestModel {
   final String? longitude;
   final String? materializedPath;
   final String clientReferenceId;
-  final BoundaryRequestModel? children;
+  final BoundarySearchModel? children;
   
 
   BoundaryModel({

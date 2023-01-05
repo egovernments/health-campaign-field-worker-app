@@ -4,13 +4,13 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectFacilityRequestModel extends DataModel {
+class ProjectFacilitySearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? facilityId;
   final String? projectId;
   
-  ProjectFacilityRequestModel({
+  ProjectFacilitySearchModel({
     this.id,
     this.tenantId,
     this.facilityId,
@@ -20,7 +20,7 @@ class ProjectFacilityRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectFacilityModel extends DataModel implements ProjectFacilityRequestModel {
+class ProjectFacilityModel extends DataModel implements ProjectFacilitySearchModel {
   
   @override
   final String? id;

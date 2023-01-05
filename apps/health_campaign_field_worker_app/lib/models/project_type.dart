@@ -4,15 +4,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectTypeRequestModel extends DataModel {
+class ProjectTypeSearchModel extends DataModel {
   
-  ProjectTypeRequestModel({
+  ProjectTypeSearchModel({
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
+class ProjectTypeModel extends DataModel implements ProjectTypeSearchModel {
   final String? id;
   final String tenantId;
   final String name;
@@ -22,7 +22,7 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
   final List<String> eligibilityCriteria;
   final List<String> taskProcedure;
   final String clientReferenceId;
-  final List<ProjectProductVariantRequestModel> resources;
+  final List<ProjectProductVariantSearchModel> resources;
   
 
   ProjectTypeModel({
