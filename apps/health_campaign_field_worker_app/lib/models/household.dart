@@ -1,30 +1,26 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'address.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class HouseholdRequestModel extends DataModel {
+class HouseholdSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? clientReferenceId;
   final int? memberCount;
-  final int? rowVersion;
-  final AddressRequestModel? address;
   
-  HouseholdRequestModel({
+  HouseholdSearchModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
     this.memberCount,
-    this.rowVersion,
-    this.address,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class HouseholdModel extends DataModel implements HouseholdRequestModel {
+class HouseholdModel extends DataModel implements HouseholdSearchModel {
   
   @override
   final String? id;
@@ -37,16 +33,12 @@ class HouseholdModel extends DataModel implements HouseholdRequestModel {
   
   @override
   final int memberCount;
-  
-  @override
   final int rowVersion;
-  
-  @override
-  final AddressRequestModel address;
+  final AddressSearchModel address;
   
 
   HouseholdModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.clientReferenceId,
     required this.memberCount,
