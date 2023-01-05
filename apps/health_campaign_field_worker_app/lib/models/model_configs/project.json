@@ -4,32 +4,39 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "projectTypeId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "subProjectTypeId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "isTaskEnabled",
-      "type": "bool"
+      "type": "bool",
+      "includeForQuery": true
     },
     {
       "name": "parent",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "department",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "description",
@@ -37,7 +44,8 @@
     },
     {
       "name": "referenceId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "projectHierarchy",
@@ -67,11 +75,13 @@
   "dateTimeAttributes": [
     {
       "name": "startDate",
-      "type": "DateTime"
+      "type": "DateTime",
+      "includeForQuery": true
     },
     {
       "name": "endDate",
-      "type": "DateTime"
+      "type": "DateTime",
+      "includeForQuery": true
     }
   ],
   "isEnum": false

@@ -1,44 +1,33 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'task_resource.dart';
-import 'address.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class TaskRequestModel extends DataModel {
+class TaskSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
   final String? projectBeneficiaryId;
   final String? createdBy;
-  final int? rowVersion;
   final String? status;
-  final String? clientReferenceId;
-  final List<TaskResourceRequestModel>? resources;
-  final AddressRequestModel? address;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
-  final DateTime? createdDateTime;
   
-  TaskRequestModel({
+  TaskSearchModel({
     this.id,
     this.tenantId,
     this.projectId,
     this.projectBeneficiaryId,
     this.createdBy,
-    this.rowVersion,
     this.status,
-    this.clientReferenceId,
-    this.resources,
-    this.address,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
     int? actualEndDate,
-    int? createdDate,
-    super.auditDetails,
+    super.boundaryCode,
   }): plannedStartDateTime = plannedStartDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
@@ -51,9 +40,6 @@ class TaskRequestModel extends DataModel {
   actualEndDateTime = actualEndDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-  createdDateTime = createdDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(createdDate),
    super();
 
   int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
@@ -67,13 +53,10 @@ class TaskRequestModel extends DataModel {
 
   int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
   
-
-  int? get createdDate => createdDateTime?.millisecondsSinceEpoch;
-  
 }
 
 @MappableClass()
-class TaskModel extends DataModel implements TaskRequestModel {
+class TaskModel extends DataModel implements TaskSearchModel {
   
   @override
   final String? id;
@@ -89,21 +72,13 @@ class TaskModel extends DataModel implements TaskRequestModel {
   
   @override
   final String createdBy;
-  
-  @override
   final int rowVersion;
   
   @override
   final String status;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final List<TaskResourceRequestModel> resources;
-  
-  @override
-  final AddressRequestModel address;
+  final List<TaskResourceSearchModel> resources;
+  final AddressSearchModel address;
   
   @override
   final DateTime plannedStartDateTime;
@@ -116,13 +91,11 @@ class TaskModel extends DataModel implements TaskRequestModel {
   
   @override
   final DateTime actualEndDateTime;
-  
-  @override
   final DateTime createdDateTime;
   
 
   TaskModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.projectId,
     required this.projectBeneficiaryId,

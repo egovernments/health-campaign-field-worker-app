@@ -4,16 +4,19 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "primaryKey": true
+      "primaryKey": true,
+      "includeForQuery": true
     },
     {
       "name": "userId",
@@ -22,7 +25,8 @@
     },
     {
       "name": "dateOfBirth",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "mobileNumber",
@@ -41,7 +45,8 @@
     {
       "name": "fatherName",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "husbandName",
@@ -76,7 +81,8 @@
     {
       "name": "gender",
       "type": "gender",
-      "isEnum": true
+      "isEnum": true,
+      "includeForQuery": true
     },
     {
       "name": "identifiers",
