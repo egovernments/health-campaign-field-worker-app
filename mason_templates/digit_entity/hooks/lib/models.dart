@@ -12,6 +12,7 @@ class ConfigModel {
   final List<AttributeModel> sqlAttributes;
   final List<AttributeModel> referenceAttributes;
 
+  final bool createRepository;
   final bool isEnum;
 
   const ConfigModel({
@@ -23,6 +24,7 @@ class ConfigModel {
     this.sqlAttributes = const [],
     this.referenceAttributes = const [],
     this.isEnum = false,
+    this.createRepository = false,
   });
 }
 

@@ -14,7 +14,7 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<dynamic> update(D entity);
 }
 
-class RemoteRepository<D extends DataModel, R extends DataModel>
+abstract class RemoteRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
   final Dio dio;
   final String path;
