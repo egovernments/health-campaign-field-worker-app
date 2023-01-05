@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectRequestModel extends DataModel {
+class ProjectSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectTypeId;
@@ -16,7 +16,7 @@ class ProjectRequestModel extends DataModel {
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
-  ProjectRequestModel({
+  ProjectSearchModel({
     this.id,
     this.tenantId,
     this.projectTypeId,
@@ -44,7 +44,7 @@ class ProjectRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectModel extends DataModel implements ProjectRequestModel {
+class ProjectModel extends DataModel implements ProjectSearchModel {
   
   @override
   final String? id;
@@ -73,9 +73,9 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   final String projectHierarchy;
   final int rowVersion;
   final String clientReferenceId;
-  final AddressRequestModel address;
-  final List<TargetRequestModel> targets;
-  final List<DocumentRequestModel> documents;
+  final AddressSearchModel address;
+  final List<TargetSearchModel> targets;
+  final List<DocumentSearchModel> documents;
   
   @override
   final DateTime startDateTime;

@@ -3,7 +3,7 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class TaskRepository extends RemoteRepository<TaskModel, TaskRequestModel> {
+class TaskRepository extends RemoteRepository<TaskModel, TaskSearchModel> {
   TaskRepository(
     super.dio, {
     required super.path,

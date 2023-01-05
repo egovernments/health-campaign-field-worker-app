@@ -4,12 +4,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 {{^isEnum}}import 'data_model.dart';
 
 @MappableClass()
-class {{name.pascalCase()}}RequestModel extends DataModel {
+class {{name.pascalCase()}}SearchModel extends DataModel {
   {{#attributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
-  {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
+  {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
   {{/includeForQuery}}{{/dateTimeAttributes}}
-  {{name.pascalCase()}}RequestModel({
+  {{name.pascalCase()}}SearchModel({
     {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}},
     {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}this.{{name.camelCase()}},
     {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}int? {{name.camelCase()}},
@@ -24,13 +24,13 @@ class {{name.pascalCase()}}RequestModel extends DataModel {
 }
 
 @MappableClass()
-class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}RequestModel {
+class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}SearchModel {
   {{#attributes}}{{#includeForQuery}}
   @override
   {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/attributes}}{{#customAttributes}}{{#includeForQuery}}
   @override
-  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}RequestModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}
   @override
   {{/includeForQuery}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;

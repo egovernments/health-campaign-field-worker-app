@@ -3,7 +3,7 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class FacilityRepository extends RemoteRepository<FacilityModel, FacilityRequestModel> {
+class FacilityRepository extends RemoteRepository<FacilityModel, FacilitySearchModel> {
   FacilityRepository(
     super.dio, {
     required super.path,
