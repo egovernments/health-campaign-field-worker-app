@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
 
-class TargetTable extends Table {
+class Target extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get beneficiaryType => text()();
   TextColumn get baseline => text()();

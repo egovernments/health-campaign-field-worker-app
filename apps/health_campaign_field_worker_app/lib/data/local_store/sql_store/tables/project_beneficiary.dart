@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
 
-class ProjectBeneficiaryTable extends Table {
+class ProjectBeneficiary extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get projectId => text()();
