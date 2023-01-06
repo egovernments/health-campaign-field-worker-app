@@ -1,3 +1,5 @@
+// Generated using mason. Do not modify by hand
+
 {{^isEnum}}import 'package:drift/drift.dart';
 
 {{#sqlAttributes}}{{#isEnum}}import '../../../../models/{{type.snakeCase()}}.dart';
