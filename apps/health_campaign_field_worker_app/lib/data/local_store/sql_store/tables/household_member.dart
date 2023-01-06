@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
 
-class HouseholdMemberTable extends Table {
+class HouseholdMember extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get householdId => text()();
   TextColumn get householdClientReferenceId => text()();

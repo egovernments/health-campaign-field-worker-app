@@ -6,7 +6,7 @@ import 'name.dart';
 import 'address.dart';
 import 'identifier.dart';
 
-class IndividualTable extends Table {
+class Individual extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get clientReferenceId => text()();
@@ -22,9 +22,9 @@ class IndividualTable extends Table {
   IntColumn get bloodGroup => intEnum<BloodGroup>()();
   IntColumn get gender => intEnum<Gender>()();
   
-  TextColumn get name => text().references(NameTable, #clientReferenceId)();
-  TextColumn get address => text().references(AddressTable, #clientReferenceId)();
-  TextColumn get identifiers => text().references(IdentifierTable, #clientReferenceId)();
+  TextColumn get name => text().references(Name, #clientReferenceId)();
+  TextColumn get address => text().references(Address, #clientReferenceId)();
+  TextColumn get identifiers => text().references(Identifier, #clientReferenceId)();
 
   @override
   Set<Column>? get primaryKey => {  };

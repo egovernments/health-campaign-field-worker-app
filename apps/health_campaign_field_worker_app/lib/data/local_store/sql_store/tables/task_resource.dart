@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 
 
-class TaskResourceTable extends Table {
+class TaskResource extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get productVariantId => text()();
