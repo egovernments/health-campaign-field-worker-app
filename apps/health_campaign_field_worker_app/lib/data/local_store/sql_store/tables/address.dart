@@ -1,3 +1,5 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
 import '../../../../models/address_type.dart';
