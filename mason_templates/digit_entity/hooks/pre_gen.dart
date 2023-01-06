@@ -8,9 +8,6 @@ void run(HookContext context) {
   final variables = context.vars;
 
   ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
-  if (model.isEnum) {
-    context.logger.info('IsEnum: ${model.toJson()}');
-  }
 
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==

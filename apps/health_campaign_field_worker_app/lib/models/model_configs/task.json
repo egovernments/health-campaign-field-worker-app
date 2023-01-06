@@ -1,5 +1,6 @@
 {
   "name": "task",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",

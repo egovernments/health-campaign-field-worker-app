@@ -1,8 +1,10 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
 import 'address.dart';
 
-class FacilityTable extends Table {
+class Facility extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   BoolColumn get isPermanent => boolean()();
@@ -11,7 +13,7 @@ class FacilityTable extends Table {
   IntColumn get rowVersion => integer()();
   TextColumn get clientReferenceId => text()();
   
-  TextColumn get address => text().references(AddressTable, #clientReferenceId)();
+  TextColumn get address => text().references(Address, #clientReferenceId)();
 
   @override
   Set<Column>? get primaryKey => { clientReferenceId,  };
