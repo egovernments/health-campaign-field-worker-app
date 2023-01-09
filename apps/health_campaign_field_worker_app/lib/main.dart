@@ -71,7 +71,7 @@ class MainApplication extends StatelessWidget {
             isar: isar,
             mdmsRepository: MdmsRepository(client),
           )..add(const AppInitializationEvent.onApplicationConfigurationSetup(
-              actionType: 'SEARCH',
+              actionType: 'search',
             )),
         ),
         BlocProvider(

@@ -6,6 +6,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../blocs/app_config/app_config.dart';
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/app_localization.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
@@ -37,9 +38,13 @@ class LanguageSelectionPage extends StatelessWidget {
                             value: e.value,
                           ))
                       .toList(),
+                  onLanguageChange: (value) {
+                    print(value);
+                  },
                   onLanguageSubmit: () =>
                       context.router.push(const LoginRoute()),
-                  languageSubmitLabel: i18.common.coreCommonContinue,
+                  languageSubmitLabel: AppLocalizations.of(context)
+                      .translate(i18.common.coreCommonContinue),
                 );
               },
             ),

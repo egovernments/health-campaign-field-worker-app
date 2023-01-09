@@ -7,25 +7,25 @@ import '../blocs/app_initialization/app_initialization.dart';
 class Constants {
   static const String baseURL = 'https://health-dev.digit.org/';
   static const String mdmsApiPath = 'egov-mdms-service/v1/_search';
-  static getEndPoint(BuildContext context, service, String action) {
+  static getEndPoint(
+    BuildContext context,
+    service,
+    String action,
+    String entityName,
+  ) {
+    print("-------actionResult-----");
     final actionResult = context
         .read<AppInitializationBloc>()
         .state
         .localizationList
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
-        ?.first;
+        .firstWhere((element) => element.entityName == entityName)
+        .path;
 
-    switch (action) {
-      case 'CREATE':
-        return actionResult?.create;
-      case 'SEARCH':
-        return actionResult?.search;
-      case 'UPDATE':
-        return actionResult?.update;
-      case 'LOGIN':
-        return actionResult?.login;
-    }
+    print(actionResult);
+
+    return actionResult;
   }
 }
 

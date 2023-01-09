@@ -7,17 +7,12 @@ class ServiceRegistry {
   Id id = Isar.autoIncrement;
 
   late String? service;
-
-  late List<Actions>? actions;
+  late List<Actions> actions;
 }
 
 @embedded
 class Actions {
-  late String? create;
-
-  late String? update;
-
-  late String? login;
-
-  late String? search;
+  late String path;
+  late String entityName;
+  late String name;
 }
