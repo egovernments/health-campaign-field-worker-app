@@ -50,29 +50,7 @@ class AppInitializationBloc
       },
     );
 
-    final List<ServiceRegistry> newServiceRegistryList = [];
-
-    result.serviceRegistry?.serviceRegistryList?.forEach((element) {
-      final newServiceRegistry = ServiceRegistry();
-      newServiceRegistry.service = element.service;
-      final List<Actions>? actions = element.actions?.map((element) {
-        final newServiceRegistryAction = Actions()
-          ..create = element.create
-          ..update = element.update
-          ..login = element.login
-          ..search = element.search;
-
-        return newServiceRegistryAction;
-      }).toList();
-
-      newServiceRegistry.actions = actions;
-      newServiceRegistryList.add(newServiceRegistry);
-    });
-
-    await isar.writeTxn(() async {
-      await isar.serviceRegistrys
-          .putAll(newServiceRegistryList); // insert & update
-    });
+    await mdmsRepository.writeToRegistryDB(result, isar);
     List<ServiceRegistry> localizationList =
         await isar.serviceRegistrys.where().findAll();
     emit(state.copyWith(localizationList: localizationList));
@@ -101,40 +79,11 @@ class AppInitializationBloc
         },
       },
     );
-    final appConfiguration = AppConiguration();
-    result.appConfig?.appConfiglist?.forEach((element) {
-      appConfiguration
-        ..networkDetection = element.networkDetection
-        ..persistenceMode = element.persistenceMode
-        ..syncMethod = element.syncMethod
-        ..syncTrigger = element.syncTrigger;
 
-      final List<Languages> languageList = element.languages.map((element) {
-        final languages = Languages()
-          ..label = element.label
-          ..value = element.value;
-
-        return languages;
-      }).toList();
-
-      final List<LocalizationModules>? localizationModules =
-          element.localizationModules?.map((element) {
-        final localization = LocalizationModules()
-          ..label = element.label
-          ..value = element.value;
-
-        return localization;
-      }).toList();
-
-      appConfiguration.localizationModules = localizationModules;
-      appConfiguration.languages = languageList;
-    });
-
-    await isar.writeTxn(() async {
-      await isar.appConigurations.putAll([appConfiguration]);
-    });
-
-    emit(state.copyWith(appConiguration: appConfiguration));
+    mdmsRepository.writeToAppConfigDB(result, isar);
+    List<AppConiguration> appConfiguration =
+        await isar.appConigurations.where().findAll();
+    emit(state.copyWith(appConiguration: appConfiguration.first));
   }
 }
 

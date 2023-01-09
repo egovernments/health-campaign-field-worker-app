@@ -47,10 +47,9 @@ class ServiceRegistryModel with _$ServiceRegistryModel {
 @freezed
 class ActionsModel with _$ActionsModel {
   const factory ActionsModel({
-    final String? create,
-    final String? update,
-    final String? login,
-    final String? search,
+    required final String action,
+    required final String entityName,
+    required final String path,
   }) = _ActionsModel;
 
   factory ActionsModel.fromJson(Map<String, dynamic> json) =>
