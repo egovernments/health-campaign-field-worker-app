@@ -43,7 +43,7 @@ class MdmsRepository {
         final newServiceRegistryAction = Actions()
           ..entityName = item.entityName
           ..path = item.path
-          ..name = item.action;
+          ..action = item.action;
 
         return newServiceRegistryAction;
       }).toList();

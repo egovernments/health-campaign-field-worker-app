@@ -56,7 +56,6 @@ class SideBar extends StatelessWidget {
                             (ele) =>
                                 ele.value.toString() == value.value.toString(),
                           );
-
                           context
                               .read<LocalizationBloc>()
                               .add(LocalizationEvent.onLoadLocalization(

@@ -104,7 +104,7 @@ class MainApplication extends StatelessWidget {
                                 .toString(),
                             tenantId: "pb",
                             locale: firstLanguage,
-                            path: 'localization/messages/v1/_search',
+                            path: Constants.localizationApiPath,
                           ))
                     : (context) => LocalizationBloc(
                           const LocalizationState(),
