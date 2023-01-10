@@ -14,5 +14,5 @@ class ServiceRegistry {
 class Actions {
   late String path;
   late String entityName;
-  late String name;
+  late String action;
 }

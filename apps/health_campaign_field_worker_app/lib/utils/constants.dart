@@ -7,6 +7,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 class Constants {
   static const String baseURL = 'https://health-dev.digit.org/';
   static const String mdmsApiPath = 'egov-mdms-service/v1/_search';
+  static const String localizationApiPath = 'localization/messages/v1/_search';
   static getEndPoint(
     BuildContext context,
     service,
