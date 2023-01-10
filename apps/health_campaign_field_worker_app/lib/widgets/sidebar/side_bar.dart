@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
-import '../../blocs/localization/app_localization.dart';
 import '../../blocs/localization/localization.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 import '../../router/app_router.dart';
 
 class SideBar extends StatelessWidget {
@@ -48,50 +46,49 @@ class SideBar extends StatelessWidget {
               builder: (context, state) {
                 final languages = state.appConiguration?.languages;
 
-                if (languages == null) {
-                  return const Offstage();
-                }
+                return Offstage(
+                  offstage: languages == null,
+                  child: BlocBuilder<LocalizationBloc, LocalizationState>(
+                    builder: (context, localizationState) {
+                      return DigitRowCard(
+                        onChanged: (value) {
+                          int index = languages.indexWhere(
+                            (ele) =>
+                                ele.value.toString() == value.value.toString(),
+                          );
 
-                return BlocBuilder<LocalizationBloc, LocalizationState>(
-                  builder: (context, localizationState) {
-                    return DigitLanguageCard(
-                      digitRowCardItems: languages.map((e) {
-                        var index = languages.indexOf(e);
+                          context
+                              .read<LocalizationBloc>()
+                              .add(LocalizationEvent.onLoadLocalization(
+                                module: 'hcm-common',
+                                tenantId: "pb",
+                                locale: value.value.toString(),
+                                path: 'localization/messages/v1/_search',
+                              ));
 
-                        return DigitRowCardModel(
-                          label: e.label,
-                          value: e.value,
-                          isSelected: index == localizationState.index,
-                        );
-                      }).toList(),
-                      onLanguageChange: (value) async {
-                        int index = languages.indexWhere(
-                          (ele) =>
-                              ele.value.toString() == value.value.toString(),
-                        );
+                          context.read<LocalizationBloc>().add(
+                                OnUpdateLocalizationIndexEvent(
+                                  index: index,
+                                  code: value.value.toString(),
+                                ),
+                              );
+                        },
+                        rowItems: languages!.map((e) {
+                          var index = languages.indexOf(e);
 
-                        context
-                            .read<LocalizationBloc>()
-                            .add(LocalizationEvent.onLoadLocalization(
-                              module: 'hcm-common',
-                              tenantId: "pb",
-                              locale: value.value.toString(),
-                              path: 'localization/messages/v1/_search',
-                            ));
-
-                        context.read<LocalizationBloc>().add(
-                              OnUpdateLocalizationIndexEvent(
-                                index: index,
-                                code: value.value.toString(),
-                              ),
-                            );
-                      },
-                      onLanguageSubmit: () =>
-                          context.router.push(const LoginRoute()),
-                      languageSubmitLabel: AppLocalizations.of(context)
-                          .translate(i18.common.coreCommonContinue),
-                    );
-                  },
+                          return DigitRowCardModel(
+                            label: e.label,
+                            value: e.value,
+                            isSelected: index == localizationState.index,
+                          );
+                        }).toList(),
+                        width: (MediaQuery.of(context).size.width *
+                                0.5 /
+                                languages.length) -
+                            (4 * languages.length),
+                      );
+                    },
+                  ),
                 );
               },
             ),
