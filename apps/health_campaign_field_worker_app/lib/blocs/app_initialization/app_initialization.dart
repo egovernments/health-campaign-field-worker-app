@@ -51,9 +51,9 @@ class AppInitializationBloc
     );
 
     await mdmsRepository.writeToRegistryDB(result, isar);
-    List<ServiceRegistry> localizationList =
+    List<ServiceRegistry> serviceRegistryList =
         await isar.serviceRegistrys.where().findAll();
-    emit(state.copyWith(localizationList: localizationList));
+    emit(state.copyWith(serviceRegistryList: serviceRegistryList));
   }
 
   FutureOr<void> _onAppConfigurationSetup(
@@ -104,6 +104,6 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState({
     @Default(false) bool isInitializationCompleted,
     AppConiguration? appConiguration,
-    @Default([]) List<ServiceRegistry> localizationList,
+    @Default([]) List<ServiceRegistry> serviceRegistryList,
   }) = _AppInitializationState;
 }
