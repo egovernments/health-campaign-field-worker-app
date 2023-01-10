@@ -27,8 +27,16 @@ class LoginPage extends StatelessWidget {
                   ),
                   style: theme.textTheme.displayMedium,
                 ),
-                DigitTextField(label: i18.login.userIdPlaceholder),
-                DigitTextField(label: i18.login.passwordPlaceholder),
+                DigitTextField(
+                  label: AppLocalizations.of(context).translate(
+                    i18.login.userIdPlaceholder,
+                  ),
+                ),
+                DigitTextField(
+                  label: AppLocalizations.of(context).translate(
+                    i18.login.passwordPlaceholder,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) => DigitElevatedButton(
@@ -43,7 +51,8 @@ class LoginPage extends StatelessWidget {
                                 );
                           },
                     child: Center(
-                      child: Text(i18.login.actionLabel),
+                      child: Text(AppLocalizations.of(context)
+                          .translate(i18.login.actionLabel)),
                     ),
                   ),
                 ),
@@ -55,7 +64,13 @@ class LoginPage extends StatelessWidget {
                     primaryActionLabel: i18.forgotPassword.primaryActionLabel,
                     primaryAction: () => Navigator.pop(context),
                   ),
-                  child: Center(child: Text(i18.forgotPassword.actionLabel)),
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context).translate(
+                        i18.forgotPassword.actionLabel,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

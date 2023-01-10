@@ -1,8 +1,30 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../blocs/app_initialization/app_initialization.dart';
 
 class Constants {
   static const String baseURL = 'https://health-dev.digit.org/';
-  static const String mdmsApiEndPoint = 'egov-mdms-service/v1/_search';
+  static const String mdmsApiPath = 'egov-mdms-service/v1/_search';
+  static const String localizationApiPath = 'localization/messages/v1/_search';
+  static getEndPoint(
+    BuildContext context,
+    service,
+    String action,
+    String entityName,
+  ) {
+    final actionResult = context
+        .read<AppInitializationBloc>()
+        .state
+        .serviceRegistryList
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhere((element) => element.entityName == entityName)
+        .path;
+
+    return actionResult;
+  }
 }
 
 /// By using this key, we can push pages without context

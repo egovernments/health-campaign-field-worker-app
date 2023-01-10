@@ -6,26 +6,28 @@ part 'app_config_model.freezed.dart';
 part 'app_config_model.g.dart';
 
 @freezed
-class AppConfigModel with _$AppConfigModel {
-  const factory AppConfigModel({
-    required String tenantId,
-    required String moduleName,
-    ConfigurationModel? configuration,
-  }) = _AppConfigModel;
+class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
+  const factory AppConfigPrimaryWrapperModel({
+    @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
+        final AppConfigSecondaryWrapperModel? appConfig,
+  }) = _AppConfigPrimaryWrapperModel;
 
-  factory AppConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$AppConfigModelFromJson(json);
+  factory AppConfigPrimaryWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$AppConfigPrimaryWrapperModelFromJson(json);
 }
 
 @freezed
-class ConfigurationModel with _$ConfigurationModel {
-  const factory ConfigurationModel({
-    required int configVersion,
-    required AppConfig appConfig,
-  }) = _ConfigurationModel;
+class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
+  const factory AppConfigSecondaryWrapperModel({
+    @JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist,
+  }) = _AppConfigSecondaryWrapperModel;
 
-  factory ConfigurationModel.fromJson(Map<String, dynamic> json) =>
-      _$ConfigurationModelFromJson(json);
+  factory AppConfigSecondaryWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$AppConfigSecondaryWrapperModelFromJson(json);
 }
 
 @freezed
