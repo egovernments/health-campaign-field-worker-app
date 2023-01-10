@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import '../blocs/app_config/app_config.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
+import '../blocs/localization/localization.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
@@ -31,20 +29,46 @@ class LanguageSelectionPage extends StatelessWidget {
                   return const Offstage();
                 }
 
-                return DigitLanguageCard(
-                  digitRowCardItems: languages
-                      .map((e) => DigitRowCardModel(
-                            label: e.label,
-                            value: e.value,
-                          ))
-                      .toList(),
-                  onLanguageChange: (value) {
-                    print(value);
+                return BlocBuilder<LocalizationBloc, LocalizationState>(
+                  builder: (context, localizationState) {
+                    return DigitLanguageCard(
+                      digitRowCardItems: languages.map((e) {
+                        var index = languages.indexOf(e);
+
+                        return DigitRowCardModel(
+                          label: e.label,
+                          value: e.value,
+                          isSelected: index == localizationState.index,
+                        );
+                      }).toList(),
+                      onLanguageChange: (value) async {
+                        int index = languages.indexWhere(
+                          (ele) =>
+                              ele.value.toString() == value.value.toString(),
+                        );
+
+                        context
+                            .read<LocalizationBloc>()
+                            .add(LocalizationEvent.onLoadLocalization(
+                              module: 'hcm-common',
+                              tenantId: "pb",
+                              locale: value.value.toString(),
+                              path: 'localization/messages/v1/_search',
+                            ));
+
+                        context.read<LocalizationBloc>().add(
+                              OnUpdateLocalizationIndexEvent(
+                                index: index,
+                                code: value.value.toString(),
+                              ),
+                            );
+                      },
+                      onLanguageSubmit: () =>
+                          context.router.push(const LoginRoute()),
+                      languageSubmitLabel: AppLocalizations.of(context)
+                          .translate(i18.common.coreCommonContinue),
+                    );
                   },
-                  onLanguageSubmit: () =>
-                      context.router.push(const LoginRoute()),
-                  languageSubmitLabel: AppLocalizations.of(context)
-                      .translate(i18.common.coreCommonContinue),
                 );
               },
             ),

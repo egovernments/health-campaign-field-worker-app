@@ -26,7 +26,7 @@ void main() async {
 
   Isar isar = await Isar.open([
     ServiceRegistrySchema,
-    LocalizationSchema,
+    LocalizationWrapperSchema,
     AppConigurationSchema,
   ]);
 
@@ -102,7 +102,7 @@ class MainApplication extends StatelessWidget {
                                 .map((e) => e.value.toString())
                                 .join(',')
                                 .toString(),
-                            tenantId: "default",
+                            tenantId: "pb",
                             locale: firstLanguage,
                             path: 'localization/messages/v1/_search',
                           ))
@@ -118,12 +118,12 @@ class MainApplication extends StatelessWidget {
 
                           return results.isNotEmpty
                               ? Locale(results.first, results.last)
-                              : const Locale('en', 'IN');
+                              : const Locale('en', 'MZ');
                         })
-                      : [const Locale('en', 'IN')],
+                      : [const Locale('en', 'MZ')],
                   localizationsDelegates: [
                     if (appConfig != null)
-                      AppLocalizations.getDelegate(appConfig),
+                      AppLocalizations.getDelegate(appConfig, isar),
                     GlobalWidgetsLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,

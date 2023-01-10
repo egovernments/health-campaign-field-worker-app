@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,48 +21,75 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
     this.isar,
   ) {
     on(_onLoadLocalization);
+    on(_onUpdateLocalizationIndex);
   }
 
   FutureOr<void> _onLoadLocalization(
     OnLoadLocalizationEvent event,
     LocalizationEmitter emit,
   ) async {
-    print(event.module);
-    emit(state.copyWith(loading: true));
-    LocalizationModel result = await localizationRepository.search(
-      url: event.path,
-      queryParameters: {
-        "module": event.module,
-        "locale": event.locale,
-        "tenantId": event.tenantId,
-      },
-    );
-    final List<Localization> newLocalizationList = [];
+    final List<LocalizationWrapper> localizationList = await isar
+        .localizationWrappers
+        .filter()
+        .localeEqualTo(event.locale)
+        .findAll();
 
-    result.messages.every((element) {
-      final newLocalization = Localization();
-      newLocalization.message = element.message;
-      newLocalization.code = element.code;
-      newLocalization.locale = element.locale;
-      newLocalization.module = element.module;
-      newLocalizationList.add(newLocalization);
+    if (localizationList.isEmpty) {
+      emit(state.copyWith(loading: true));
+      LocalizationModel result = await localizationRepository.search(
+        url: event.path,
+        queryParameters: {
+          "module": event.module,
+          "locale": event.locale,
+          "tenantId": event.tenantId,
+        },
+      );
 
-      return true;
-    });
+      final LocalizationWrapper localizationWrapper = LocalizationWrapper();
+      final List<Localization> newLocalizationList = [];
 
-    await isar.writeTxn(() async {
-      await isar.localizations.putAll(newLocalizationList); // insert & update
-    });
+      result.messages.every((element) {
+        final newLocalization = Localization();
+        newLocalization.message = element.message;
+        newLocalization.code = element.code;
+        newLocalization.locale = element.locale;
+        newLocalization.module = element.module;
+        newLocalizationList.add(newLocalization);
 
-// Need to add onemore method and pass the filers
-    final List<Localization> localizationList =
-        await isar.localizations.where().findAll();
-    if (localizationList.isNotEmpty) {
-      emit(state.copyWith(locaization: localizationList, loading: false));
+        return true;
+      });
+      localizationWrapper.locale = event.locale;
+      localizationWrapper.localization = newLocalizationList;
+
+      await isar.writeTxn(() async {
+        await isar.localizationWrappers.put(localizationWrapper);
+        // insert & update
+      });
+      final List codes = event.locale.split('_');
+      loadLocal(codes);
+    } else if (localizationList.isNotEmpty) {
+      emit(state.copyWith(
+        locaization: localizationList.first.localization!,
+        loading: false,
+      ));
+      final List codes = event.locale.split('_');
+      loadLocal(codes);
     }
+  }
 
+  FutureOr<void> _onUpdateLocalizationIndex(
+    OnUpdateLocalizationIndexEvent event,
+    LocalizationEmitter emit,
+  ) async {
+    emit(state.copyWith(index: event.index));
+    final List codes = event.code.split('_');
+    loadLocal(codes);
+  }
+
+  FutureOr<void> loadLocal(List codes) async {
     await AppLocalizations(
-      const Locale('en', 'IN'),
+      Locale(codes.first, codes.last),
+      isar,
     ).load();
   }
 }
@@ -76,6 +102,11 @@ class LocalizationEvent with _$LocalizationEvent {
     required String locale,
     required String path,
   }) = OnLoadLocalizationEvent;
+
+  const factory LocalizationEvent.onUpdateLocalizationIndex({
+    required int index,
+    required String code,
+  }) = OnUpdateLocalizationIndexEvent;
 }
 
 @freezed
@@ -83,6 +114,7 @@ class LocalizationState with _$LocalizationState {
   const factory LocalizationState({
     @Default([]) List<Localization> locaization,
     @Default(false) bool loading,
+    @Default(0) int index,
     @Default(false) bool isLocalizationLoadCompleted,
   }) = _LocalizationState;
 }

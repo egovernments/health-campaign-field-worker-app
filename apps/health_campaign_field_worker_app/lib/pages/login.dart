@@ -27,7 +27,11 @@ class LoginPage extends StatelessWidget {
                   ),
                   style: theme.textTheme.displayMedium,
                 ),
-                DigitTextField(label: i18.login.userIdPlaceholder),
+                DigitTextField(
+                  label: AppLocalizations.of(context).translate(
+                    i18.login.userIdPlaceholder,
+                  ),
+                ),
                 DigitTextField(label: i18.login.passwordPlaceholder),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
