@@ -13,17 +13,14 @@ class Constants {
     String action,
     String entityName,
   ) {
-    print("-------actionResult-----");
     final actionResult = context
         .read<AppInitializationBloc>()
         .state
-        .localizationList
+        .serviceRegistryList
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhere((element) => element.entityName == entityName)
         .path;
-
-    print(actionResult);
 
     return actionResult;
   }
