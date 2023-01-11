@@ -12,5 +12,5 @@ class IndividualIdentifier extends Table {
   TextColumn get identifier => text().references(Identifier, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

@@ -11,5 +11,5 @@ class {{name.pascalCase()}} extends Table {
   {{#references}}TextColumn get {{name}} => text(){{#nullable}}.nullable(){{/nullable}}.references({{table.pascalCase()}}, #clientReferenceId)();{{/references}}{{/referenceAttributes}}
 
   @override
-  Set<Column>? get primaryKey => { {{#sqlAttributes}}{{#isPk}}{{name}}, {{/isPk}}{{/sqlAttributes}} };
+  Set<Column> get primaryKey => { {{#sqlAttributes}}{{#isPk}}{{name}}, {{/isPk}}{{/sqlAttributes}} };
 }{{/isEnum}}{{#isEnum}}// No table generated for Enum{{/isEnum}}

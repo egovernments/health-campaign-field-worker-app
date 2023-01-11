@@ -16,5 +16,5 @@ class Boundary extends Table {
   TextColumn get children => text().nullable().references(Boundary, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

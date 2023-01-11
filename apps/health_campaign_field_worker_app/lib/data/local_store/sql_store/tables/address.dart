@@ -25,5 +25,5 @@ class Address extends Table {
   TextColumn get locality => text().references(Boundary, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }
