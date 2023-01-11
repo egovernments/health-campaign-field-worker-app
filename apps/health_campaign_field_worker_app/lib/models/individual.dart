@@ -47,13 +47,13 @@ class IndividualModel extends DataModel implements IndividualSearchModel {
   final String? husbandName;
   final String? photo;
   final int rowVersion;
-  final NameSearchModel name;
+  final NameModel name;
   final BloodGroup bloodGroup;
-  final AddressSearchModel? address;
+  final AddressModel? address;
   
   @override
   final Gender gender;
-  final List<IdentifierSearchModel> identifiers;
+  final List<IdentifierModel> identifiers;
   
 
   IndividualModel({

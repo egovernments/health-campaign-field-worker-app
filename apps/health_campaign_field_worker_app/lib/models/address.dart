@@ -27,7 +27,7 @@ class AddressModel extends DataModel implements AddressSearchModel {
   final String? buildingName;
   final String? street;
   final String clientReferenceId;
-  final BoundarySearchModel locality;
+  final BoundaryModel locality;
   final AddressType type;
   
 
