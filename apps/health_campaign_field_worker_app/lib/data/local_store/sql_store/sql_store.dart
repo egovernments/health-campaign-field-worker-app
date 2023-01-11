@@ -13,6 +13,9 @@ import 'tables/household.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
+import 'tables/individual_address.dart';
+import 'tables/individual_identifier.dart';
+import 'tables/individual_name.dart';
 import 'tables/name.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -39,6 +42,9 @@ part 'sql_store.g.dart';
   HouseholdMember,
   Identifier,
   Individual,
+  IndividualAddress,
+  IndividualIdentifier,
+  IndividualName,
   Product,
   ProductVariant,
   Project,

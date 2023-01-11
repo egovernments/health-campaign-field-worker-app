@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 import 'local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
+import 'repositories/oplog/oplog.dart';
 
 abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<List<D>> search(R query);
@@ -95,17 +96,22 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
 abstract class LocalRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
   final LocalSqlDataStore sqlDataStore;
-  final Isar isar;
+  final OpLogManager opLogManager;
 
-  LocalRepository(this.sqlDataStore, this.isar);
-
-  @override
-  FutureOr<int> create(D entity);
+  LocalRepository(this.sqlDataStore, this.opLogManager);
 
   @override
-  FutureOr<int> update(D entity);
+  FutureOr<void> create(D entity);
 
-  FutureOr<int> createOplogEntry(D entity, ApiOperation operation);
+  @override
+  FutureOr<void> update(D entity);
+
+  FutureOr<void> createOplogEntry(
+    D entity,
+    ApiOperation operation,
+    DataModelType type,
+  ) =>
+      opLogManager.createEntry(OpLogEntry(entity, operation), type);
 
   FutureOr<void> deleteOplogEntry(OpLogEntry<D> entry);
 }
