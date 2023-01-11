@@ -148,6 +148,7 @@ class MainApplication extends StatelessWidget {
                       ),
                     )
                   : const MaterialApp(home: Scaffold(body: Text('Loading')));
+              // Placeholder for Loading Component
             },
           );
         },
