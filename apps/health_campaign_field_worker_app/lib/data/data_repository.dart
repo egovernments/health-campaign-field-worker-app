@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:isar/isar.dart';
 import 'local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import 'repositories/oplog/oplog.dart';
@@ -21,17 +20,26 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   final String path;
   final String entityName;
 
+  final String? _createPath;
+  final String? _updatePath;
+  final String? _searchPath;
+
   RemoteRepository(
     this.dio, {
+    String? createPath,
+    String? updatePath,
+    String? searchPath,
     required this.path,
     required this.entityName,
-  });
+  })  : _createPath = createPath,
+        _updatePath = updatePath,
+        _searchPath = searchPath;
 
-  String get createPath => '$path/_create';
+  String get createPath => _createPath ?? '$path/_create';
 
-  String get updatePath => '$path/_update';
+  String get updatePath => _updatePath ?? '$path/_update';
 
-  String get searchPath => '$path/_search';
+  String get searchPath => _searchPath ?? '$path/_search';
 
   @override
   FutureOr<List<D>> search(R query) async {

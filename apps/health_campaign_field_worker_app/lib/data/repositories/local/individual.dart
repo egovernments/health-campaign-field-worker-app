@@ -75,6 +75,7 @@ class IndividualRepository
 
   @override
   FutureOr<List<IndividualModel>> search(IndividualSearchModel query) {
+    
     // TODO: implement search
     throw UnimplementedError();
   }
