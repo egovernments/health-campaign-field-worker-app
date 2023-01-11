@@ -60,4 +60,4 @@ class AuditDetails {
         lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
-enum DataModelType { project }
+enum DataModelType { project, individual, household, beneficiary }
