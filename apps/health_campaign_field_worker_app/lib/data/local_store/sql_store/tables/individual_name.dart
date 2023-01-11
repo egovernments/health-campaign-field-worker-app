@@ -12,5 +12,5 @@ class IndividualName extends Table {
   TextColumn get name => text().references(Name, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

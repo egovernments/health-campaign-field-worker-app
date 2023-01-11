@@ -12,5 +12,5 @@ class IndividualAddress extends Table {
   TextColumn get address => text().references(Address, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }
