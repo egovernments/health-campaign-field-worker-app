@@ -13,7 +13,7 @@ class Boundary extends Table {
   TextColumn get materializedPath => text().nullable()();
   TextColumn get clientReferenceId => text()();
   
-  TextColumn get children => text().references(Boundary, #clientReferenceId)();
+  TextColumn get children => text().nullable().references(Boundary, #clientReferenceId)();
 
   @override
   Set<Column>? get primaryKey => { clientReferenceId,  };

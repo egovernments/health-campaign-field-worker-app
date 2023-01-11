@@ -8,7 +8,7 @@
 class {{name.pascalCase()}} extends Table {
   {{#sqlAttributes}}{{^isEnum}}{{columnType.pascalCase()}}Column get {{name.camelCase()}} => {{type.camelCase()}}(){{#nullable}}.nullable(){{/nullable}}();{{/isEnum}}{{#isEnum}}IntColumn get {{name.camelCase()}} => intEnum<{{type.pascalCase()}}>()();{{/isEnum}}
   {{/sqlAttributes}}{{#referenceAttributes}}
-  {{#references}}TextColumn get {{name}} => text().references({{table.pascalCase()}}, #clientReferenceId)();{{/references}}{{/referenceAttributes}}
+  {{#references}}TextColumn get {{name}} => text(){{#nullable}}.nullable(){{/nullable}}.references({{table.pascalCase()}}, #clientReferenceId)();{{/references}}{{/referenceAttributes}}
 
   @override
   Set<Column>? get primaryKey => { {{#sqlAttributes}}{{#isPk}}{{name}}, {{/isPk}}{{/sqlAttributes}} };

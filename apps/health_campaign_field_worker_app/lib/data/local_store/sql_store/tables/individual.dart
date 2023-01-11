@@ -25,7 +25,7 @@ class Individual extends Table {
   IntColumn get gender => intEnum<Gender>()();
   
   TextColumn get name => text().references(Name, #clientReferenceId)();
-  TextColumn get address => text().references(Address, #clientReferenceId)();
+  TextColumn get address => text().nullable().references(Address, #clientReferenceId)();
   TextColumn get identifiers => text().references(Identifier, #clientReferenceId)();
 
   @override
