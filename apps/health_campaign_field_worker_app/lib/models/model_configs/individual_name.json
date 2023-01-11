@@ -1,5 +1,5 @@
 {
-  "name": "IndividualAddress",
+  "name": "IndividualName",
   "attributes": [
     {
       "name": "clientReferenceId",
@@ -14,8 +14,8 @@
       "createReference": true
     },
     {
-      "name": "address",
-      "type": "address",
+      "name": "name",
+      "type": "name",
       "createReference": true
     }
   ]

@@ -21,6 +21,10 @@ void run(HookContext context) {
     );
   }
 
+  if (model.name.toLowerCase() == 'individual') {
+    context.logger.info(model.toJson());
+  }
+
   final sqlAttributes = <AttributeModel>[
     ...model.attributes.map((e) {
       final type = _getSqlType(e.type);
@@ -31,7 +35,10 @@ void run(HookContext context) {
   ];
 
   final references = [
-    ...model.customAttributes.where((element) => !element.isEnum).map((e) {
+    ...model.customAttributes
+        .where((element) => element.createReference)
+        .where((element) => !element.isEnum)
+        .map((e) {
       return e.copyWith(references: [
         TableReferenceModel(table: e.type, column: e.name),
       ]);
