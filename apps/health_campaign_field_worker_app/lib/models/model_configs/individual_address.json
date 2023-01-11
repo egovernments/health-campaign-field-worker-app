@@ -1,0 +1,20 @@
+{
+  "name": "IndividualAddress",
+  "attributes": [
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "individual",
+      "type": "individual"
+    },
+    {
+      "name": "address",
+      "type": "address"
+    }
+  ]
+}
