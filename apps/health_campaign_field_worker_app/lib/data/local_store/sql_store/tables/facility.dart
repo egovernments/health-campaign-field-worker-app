@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-import 'address.dart';
 
 class Facility extends Table {
   TextColumn get id => text().nullable()();
@@ -13,7 +12,6 @@ class Facility extends Table {
   IntColumn get rowVersion => integer()();
   TextColumn get clientReferenceId => text()();
   
-  TextColumn get address => text().references(Address, #clientReferenceId)();
 
   @override
   Set<Column>? get primaryKey => { clientReferenceId,  };

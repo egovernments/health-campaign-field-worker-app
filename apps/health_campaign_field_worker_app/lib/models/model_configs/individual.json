@@ -16,7 +16,7 @@
     {
       "name": "clientReferenceId",
       "type": "String",
-      "primaryKey": true,
+      "isPk": true,
       "includeForQuery": true
     },
     {

@@ -10,11 +10,13 @@
   "customAttributes": [
     {
       "name": "individual",
-      "type": "individual"
+      "type": "individual",
+      "createReference": true
     },
     {
       "name": "identifier",
-      "type": "identifier"
+      "type": "identifier",
+      "createReference": true
     }
   ]
 }

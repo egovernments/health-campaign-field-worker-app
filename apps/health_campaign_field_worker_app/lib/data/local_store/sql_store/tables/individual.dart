@@ -4,9 +4,6 @@ import 'package:drift/drift.dart';
 
 import '../../../../models/blood_group.dart';
 import '../../../../models/gender.dart';
-import 'name.dart';
-import 'address.dart';
-import 'identifier.dart';
 
 class Individual extends Table {
   TextColumn get id => text().nullable()();
@@ -24,10 +21,7 @@ class Individual extends Table {
   IntColumn get bloodGroup => intEnum<BloodGroup>()();
   IntColumn get gender => intEnum<Gender>()();
   
-  TextColumn get name => text().references(Name, #clientReferenceId)();
-  TextColumn get address => text().references(Address, #clientReferenceId)();
-  TextColumn get identifiers => text().references(Identifier, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => {  };
+  Set<Column>? get primaryKey => { clientReferenceId,  };
 }
