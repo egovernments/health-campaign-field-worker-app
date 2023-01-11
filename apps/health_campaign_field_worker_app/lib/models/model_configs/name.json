@@ -2,6 +2,11 @@
   "name": "name",
   "attributes": [
     {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    },
+    {
       "name": "givenName",
       "type": "String",
       "includeForQuery": true
