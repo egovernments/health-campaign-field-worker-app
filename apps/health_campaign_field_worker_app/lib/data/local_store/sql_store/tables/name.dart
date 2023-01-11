@@ -4,10 +4,10 @@ import 'package:drift/drift.dart';
 
 
 class Name extends Table {
+  TextColumn get clientReferenceId => text()();
   TextColumn get givenName => text()();
   TextColumn get familyName => text()();
   TextColumn get otherNames => text().nullable()();
-  TextColumn get clientReferenceId => text()();
   
 
   @override

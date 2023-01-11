@@ -49,7 +49,7 @@ class IndividualModel extends DataModel implements IndividualSearchModel {
   final int rowVersion;
   final NameModel name;
   final BloodGroup bloodGroup;
-  final AddressModel? address;
+  final List<AddressModel> address;
   
   @override
   final Gender gender;
@@ -71,7 +71,7 @@ class IndividualModel extends DataModel implements IndividualSearchModel {
     required this.rowVersion,
     required this.name,
     required this.bloodGroup,
-    this.address,
+    required this.address,
     required this.gender,
     required this.identifiers,
     super.auditDetails,

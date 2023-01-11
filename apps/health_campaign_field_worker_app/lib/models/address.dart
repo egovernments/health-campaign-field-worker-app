@@ -15,6 +15,7 @@ class AddressSearchModel extends DataModel {
 class AddressModel extends DataModel implements AddressSearchModel {
   final String? id;
   final String tenantId;
+  final String clientReferenceId;
   final String doorNo;
   final double latitude;
   final double longitude;
@@ -26,7 +27,6 @@ class AddressModel extends DataModel implements AddressSearchModel {
   final String pincode;
   final String? buildingName;
   final String? street;
-  final String clientReferenceId;
   final BoundaryModel locality;
   final AddressType type;
   
@@ -34,6 +34,7 @@ class AddressModel extends DataModel implements AddressSearchModel {
   AddressModel({
     this.id,
     required this.tenantId,
+    required this.clientReferenceId,
     required this.doorNo,
     required this.latitude,
     required this.longitude,
@@ -45,7 +46,6 @@ class AddressModel extends DataModel implements AddressSearchModel {
     required this.pincode,
     this.buildingName,
     this.street,
-    required this.clientReferenceId,
     required this.locality,
     required this.type,
     super.auditDetails,

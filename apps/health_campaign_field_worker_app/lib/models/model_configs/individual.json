@@ -77,7 +77,7 @@
     {
       "name": "address",
       "type": "address",
-      "nullable": true
+      "isList": true
     },
     {
       "name": "gender",
