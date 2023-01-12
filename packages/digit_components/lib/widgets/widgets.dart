@@ -16,4 +16,5 @@ export './digit_info_card.dart';
 export './digit_outline_button.dart';
 export './digit_search_bar.dart';
 export './atoms/digit_table_item_title.dart';
-
+export './molecules/digit_table_card.dart';
+export './atoms//digit_icon_button.dart';
