@@ -1,3 +1,4 @@
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -30,25 +31,29 @@ void main() async {
     AppConigurationSchema,
   ]);
 
+  Dio client = Client().init();
+
   runApp(MainApplication(
     appRouter: AppRouter(),
     isar: isar,
+    client: client,
   ));
 }
 
 class MainApplication extends StatelessWidget {
+  final Dio client;
   final AppRouter appRouter;
   final Isar isar;
+
   const MainApplication({
     Key? key,
     required this.isar,
+    required this.client,
     required this.appRouter,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Dio client = Client().init();
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -91,12 +96,11 @@ class MainApplication extends StatelessWidget {
 
               return appConfig != null
                   ? BlocProvider(
-                      create: (appConfig != null &&
-                              localizationModulesList != null &&
+                      create: (localizationModulesList != null &&
                               firstLanguage != null)
                           ? (context) => LocalizationBloc(
                                 const LocalizationState(),
-                                LocalizationRepository(client),
+                                LocalizationRepository(client, isar),
                                 isar,
                               )..add(LocalizationEvent.onLoadLocalization(
                                   module: localizationModulesList
@@ -109,7 +113,7 @@ class MainApplication extends StatelessWidget {
                                 ))
                           : (context) => LocalizationBloc(
                                 const LocalizationState(),
-                                LocalizationRepository(client),
+                                LocalizationRepository(client, isar),
                                 isar,
                               ),
                       child: MaterialApp.router(
