@@ -8,7 +8,8 @@ class Constants {
   static const String baseURL = 'https://health-dev.digit.org/';
   static const String mdmsApiPath = 'egov-mdms-service/v1/_search';
   static const String localizationApiPath = 'localization/messages/v1/_search';
-  static getEndPoint(
+
+  static String getEndPoint(
     BuildContext context,
     service,
     String action,
@@ -23,7 +24,7 @@ class Constants {
         .firstWhere((element) => element.entityName == entityName)
         .path;
 
-    return actionResult;
+    return actionResult ?? '';
   }
 }
 
