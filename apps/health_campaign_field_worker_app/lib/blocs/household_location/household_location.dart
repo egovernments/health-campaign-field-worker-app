@@ -39,7 +39,7 @@ class HouseholdLocationState with _$HouseholdLocationState {
   const factory HouseholdLocationState({
     @Default(false) bool loading,
     @Default(true) bool isEditModeEnabled,
-    AddressModel? adressmodel,
-    AddressRequestModel? addressRequestModel,
+    AddressModel? addressModel,
+    AddressSearchModel? addressRequestModel,
   }) = _HouseholdLocationState;
 }
