@@ -12,8 +12,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 
-class IndividualDetails extends StatelessWidget {
-  const IndividualDetails({super.key});
+class IndividualDetailsPage extends StatelessWidget {
+  const IndividualDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class IndividualDetails extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Individual Details Text',
+                      i18.individualDetails.individualsDetailsLabelText,
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -88,7 +88,6 @@ class IndividualDetails extends StatelessWidget {
                         ],
                       ),
 
-                      /// implement date picker over here
                       DigitDOBPicker(
                         datePickerFormControl: 'dob',
                         ageInputFormControl: 'age',
