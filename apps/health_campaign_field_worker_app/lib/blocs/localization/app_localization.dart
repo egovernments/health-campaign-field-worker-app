@@ -5,7 +5,7 @@ import '../../data/local_store/no_sql/schema/localization.dart';
 import 'app_localizations_delegate.dart';
 
 class AppLocalizations {
-  final Locale? locale;
+  final Locale locale;
   final Isar isar;
 
   AppLocalizations(this.locale, this.isar);
@@ -27,7 +27,7 @@ class AppLocalizations {
     final List<LocalizationWrapper> localizationList = await isar
         .localizationWrappers
         .filter()
-        .localeEqualTo('${locale!.languageCode}_${locale!.countryCode}')
+        .localeEqualTo('${locale.languageCode}_${locale.countryCode}')
         .findAll();
 
     if (localizationList.isNotEmpty) {
