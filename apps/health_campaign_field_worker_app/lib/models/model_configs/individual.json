@@ -46,8 +46,7 @@
     {
       "name": "fatherName",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
+      "nullable": true
     },
     {
       "name": "husbandName",
@@ -67,7 +66,8 @@
   "customAttributes": [
     {
       "name": "name",
-      "type": "name"
+      "type": "name",
+      "includeForQuery": true
     },
     {
       "name": "bloodGroup",
@@ -88,7 +88,8 @@
     {
       "name": "identifiers",
       "type": "identifier",
-      "isList": true
+      "isList": true,
+      "includeForQuery": true
     }
   ],
   "isEnum": false
