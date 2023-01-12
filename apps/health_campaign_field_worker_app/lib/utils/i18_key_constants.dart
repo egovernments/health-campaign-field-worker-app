@@ -1,10 +1,13 @@
 library i18;
 
+
+
 Common common = const Common();
 Login login = const Login();
 ForgotPassword forgotPassword = const ForgotPassword();
 Home home = const Home();
 SearchBeneficiary searchBeneficiary = const SearchBeneficiary();
+IndividualDetails individualDetails = const IndividualDetails();
 
 class Common {
   const Common();
@@ -76,4 +79,30 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+}
+
+class IndividualDetails {
+  const IndividualDetails();
+
+  String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+
+  String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
+
+  String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';
+
+  String get dobLabelText => 'DOB_LABEL_TEXT';
+
+  String get ageLabelText => 'AGE_LABEL_TEXT';
+
+  String get separatorLabelText => 'SEPARATOR_LABEL_TEXT';
+
+  String get genderLabelText => 'GENDER_LABEL_TEXT';
+
+  String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
+
+  String get submitButtonLabelText => 'Submit';
 }
