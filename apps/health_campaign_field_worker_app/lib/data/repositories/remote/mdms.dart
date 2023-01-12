@@ -26,7 +26,7 @@ class MdmsRepository {
       return ServiceRegistryPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
-    } on DioError catch (ex) {
+    } catch (_) {
       rethrow;
     }
   }
@@ -68,9 +68,9 @@ class MdmsRepository {
       return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
-    } on DioError catch (ex) {
+    } catch (_) {
       // Assuming there will be an errorMessage property in the JSON object
-      throw Exception(ex);
+      rethrow;
     }
   }
 
