@@ -1,31 +1,28 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class ProductVariantRequestModel extends DataModel {
+class ProductVariantSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? productId;
   final String? sku;
   final String? variation;
-  final int? rowVersion;
-  final String? clientReferenceId;
   
-  ProductVariantRequestModel({
+  ProductVariantSearchModel({
     this.id,
     this.tenantId,
     this.productId,
     this.sku,
     this.variation,
-    this.rowVersion,
-    this.clientReferenceId,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProductVariantModel extends DataModel implements ProductVariantRequestModel {
+class ProductVariantModel extends DataModel implements ProductVariantSearchModel {
   
   @override
   final String? id;
@@ -41,16 +38,12 @@ class ProductVariantModel extends DataModel implements ProductVariantRequestMode
   
   @override
   final String variation;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
   
 
   ProductVariantModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.productId,
     required this.sku,
