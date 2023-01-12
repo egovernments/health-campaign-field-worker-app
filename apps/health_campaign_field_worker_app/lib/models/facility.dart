@@ -1,34 +1,28 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'address.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class FacilityRequestModel extends DataModel {
+class FacilitySearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final int? rowVersion;
-  final String? clientReferenceId;
-  final AddressRequestModel? address;
   
-  FacilityRequestModel({
+  FacilitySearchModel({
     this.id,
     this.tenantId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    this.rowVersion,
-    this.clientReferenceId,
-    this.address,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class FacilityModel extends DataModel implements FacilityRequestModel {
+class FacilityModel extends DataModel implements FacilitySearchModel {
   
   @override
   final String? id;
@@ -44,19 +38,13 @@ class FacilityModel extends DataModel implements FacilityRequestModel {
   
   @override
   final int storageCapacity;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final AddressRequestModel address;
+  final AddressSearchModel address;
   
 
   FacilityModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.isPermanent,
     required this.usage,
