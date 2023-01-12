@@ -40,7 +40,7 @@ class HouseholdLocation {
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
   String get householdAddressLine1LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
-  String get localityFormLabel => 'LOCALITY_FORM_LABEL';
+  String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
   String get householdAddressLine2LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';

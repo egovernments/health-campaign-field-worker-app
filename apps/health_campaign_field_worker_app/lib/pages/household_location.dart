@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -70,8 +68,8 @@ class HouseholdLocationPage extends StatelessWidget {
                             .householdLocation.householdAddressLine2LabelText,
                       ),
                       DigitTextFormField(
-                        formControlName: 'locality',
-                        label: i18.householdLocation.householdLocationLabelText,
+                        formControlName: 'landmark',
+                        label: i18.householdLocation.landmarkFormLabel,
                       ),
                       DigitTextFormField(
                         formControlName: 'postalCode',
@@ -93,7 +91,7 @@ class HouseholdLocationPage extends StatelessWidget {
         'administrationArea': FormControl<String>(value: ''),
         'addressLine1': FormControl<String>(value: ''),
         'addressLine2': FormControl<String>(value: ''),
-        'locality': FormControl<String>(value: ''),
+        'landmark': FormControl<String>(value: ''),
         'postalCode': FormControl<String>(value: ''),
       });
 }
