@@ -37,6 +37,7 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
     @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
+    @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
     @JsonKey(name: 'LOCALIZATION_MODULES')
