@@ -4,15 +4,18 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "projectId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
