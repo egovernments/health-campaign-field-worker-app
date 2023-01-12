@@ -9,6 +9,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/beneficiary/beneficiary_card.dart';
 import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
+import 'individual_details.dart';
 
 class SearchBeneficiaryPage extends StatelessWidget {
   const SearchBeneficiaryPage({super.key});
@@ -162,7 +163,7 @@ class SearchBeneficiaryPage extends StatelessWidget {
             height: 90,
             child: DigitCard(
               child: DigitElevatedButton(
-                onPressed: null,
+                onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> const IndividualDetailsPage())),
                 child: Center(
                   child: Text(
                     i18.searchBeneficiary.beneficiaryAddActionLabel,

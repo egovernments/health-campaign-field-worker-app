@@ -84,6 +84,8 @@ class SearchBeneficiary {
 class IndividualDetails {
   const IndividualDetails();
 
+  String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
