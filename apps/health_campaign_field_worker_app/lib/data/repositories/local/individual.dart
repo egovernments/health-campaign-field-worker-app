@@ -74,10 +74,31 @@ class IndividualRepository
   }
 
   @override
-  FutureOr<List<IndividualModel>> search(IndividualSearchModel query) {
-    
-    // TODO: implement search
-    throw UnimplementedError();
+  FutureOr<List<IndividualModel>> search(IndividualSearchModel query) async {
+    final rows = await (sqlDataStore.select(sqlDataStore.individual)
+          ..where((table) {
+            // if (query.clientReferenceId != null) {
+            return table.clientReferenceId.equals(query.clientReferenceId);
+            // } else if (query.) {
+            //
+            // }
+          }))
+        .get();
+
+    return rows.map((e) {
+      return IndividualModel(
+        tenantId: e.tenantId,
+        clientReferenceId: e.clientReferenceId,
+        dateOfBirth: e.dateOfBirth,
+        mobileNumber: e.mobileNumber,
+        rowVersion: e.rowVersion,
+        name: NameModel(),
+        bloodGroup: e.bloodGroup,
+        address: [],
+        gender: e.gender,
+        identifiers: [],
+      );
+    }).toList();
   }
 
   @override
