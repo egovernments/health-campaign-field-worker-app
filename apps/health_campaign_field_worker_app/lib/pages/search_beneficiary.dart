@@ -9,6 +9,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/beneficiary/beneficiary_card.dart';
 import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
+import '../router/app_router.dart';
 
 class SearchBeneficiaryPage extends StatelessWidget {
   const SearchBeneficiaryPage({super.key});
@@ -66,7 +67,8 @@ class SearchBeneficiaryPage extends StatelessWidget {
                       ),
                       DigitOutLineButton(
                         label: i18.searchBeneficiary.iconLabel,
-                        onPressed: () {},
+                        onPressed: () =>
+                            context.router.push(const HouseholdOverViewRoute()),
                       ),
                     ],
                   ),
