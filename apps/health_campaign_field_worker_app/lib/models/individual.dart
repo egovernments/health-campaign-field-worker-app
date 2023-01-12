@@ -1,56 +1,30 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'name.dart';
-import 'blood_group.dart';
-import 'address.dart';
-import 'gender.dart';
-import 'identifier.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class IndividualRequestModel extends DataModel {
+class IndividualSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? clientReferenceId;
-  final String? userId;
   final String? dateOfBirth;
-  final String? mobileNumber;
-  final String? altContactNumber;
-  final String? email;
   final String? fatherName;
-  final String? husbandName;
-  final String? photo;
-  final int? rowVersion;
-  final NameRequestModel? name;
-  final BloodGroup? bloodGroup;
-  final AddressRequestModel? address;
   final Gender? gender;
-  final List<IdentifierRequestModel>? identifiers;
   
-  IndividualRequestModel({
+  IndividualSearchModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
-    this.userId,
     this.dateOfBirth,
-    this.mobileNumber,
-    this.altContactNumber,
-    this.email,
     this.fatherName,
-    this.husbandName,
-    this.photo,
-    this.rowVersion,
-    this.name,
-    this.bloodGroup,
-    this.address,
     this.gender,
-    this.identifiers,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class IndividualModel extends DataModel implements IndividualRequestModel {
+class IndividualModel extends DataModel implements IndividualSearchModel {
   
   @override
   final String? id;
@@ -60,66 +34,44 @@ class IndividualModel extends DataModel implements IndividualRequestModel {
   
   @override
   final String clientReferenceId;
-  
-  @override
   final String? userId;
   
   @override
   final String dateOfBirth;
-  
-  @override
   final String mobileNumber;
-  
-  @override
   final String? altContactNumber;
-  
-  @override
   final String? email;
   
   @override
   final String? fatherName;
-  
-  @override
   final String? husbandName;
-  
-  @override
   final String? photo;
-  
-  @override
   final int rowVersion;
-  
-  @override
-  final NameRequestModel name;
-  
-  @override
+  final NameSearchModel name;
   final BloodGroup bloodGroup;
-  
-  @override
-  final AddressRequestModel? address;
+  final AddressSearchModel? address;
   
   @override
   final Gender gender;
-  
-  @override
-  final List<IdentifierRequestModel> identifiers;
+  final List<IdentifierSearchModel> identifiers;
   
 
   IndividualModel({
-     this.id,
+    this.id,
     required this.tenantId,
     required this.clientReferenceId,
-     this.userId,
+    this.userId,
     required this.dateOfBirth,
     required this.mobileNumber,
-     this.altContactNumber,
-     this.email,
-     this.fatherName,
-     this.husbandName,
-     this.photo,
+    this.altContactNumber,
+    this.email,
+    this.fatherName,
+    this.husbandName,
+    this.photo,
     required this.rowVersion,
     required this.name,
     required this.bloodGroup,
-     this.address,
+    this.address,
     required this.gender,
     required this.identifiers,
     super.auditDetails,

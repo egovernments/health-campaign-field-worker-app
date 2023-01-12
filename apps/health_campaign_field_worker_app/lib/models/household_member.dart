@@ -1,9 +1,10 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class HouseholdMemberRequestModel extends DataModel {
+class HouseholdMemberSearchModel extends DataModel {
   final String? id;
   final String? householdId;
   final String? householdClientReferenceId;
@@ -11,10 +12,8 @@ class HouseholdMemberRequestModel extends DataModel {
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
   final String? tenantId;
-  final int? rowVersion;
-  final String? clientReferenceId;
   
-  HouseholdMemberRequestModel({
+  HouseholdMemberSearchModel({
     this.id,
     this.householdId,
     this.householdClientReferenceId,
@@ -22,14 +21,12 @@ class HouseholdMemberRequestModel extends DataModel {
     this.individualClientReferenceId,
     this.isHeadOfHousehold,
     this.tenantId,
-    this.rowVersion,
-    this.clientReferenceId,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestModel {
+class HouseholdMemberModel extends DataModel implements HouseholdMemberSearchModel {
   
   @override
   final String? id;
@@ -51,16 +48,12 @@ class HouseholdMemberModel extends DataModel implements HouseholdMemberRequestMo
   
   @override
   final String tenantId;
-  
-  @override
   final int rowVersion;
-  
-  @override
   final String clientReferenceId;
   
 
   HouseholdMemberModel({
-     this.id,
+    this.id,
     required this.householdId,
     required this.householdClientReferenceId,
     required this.individualId,

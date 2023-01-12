@@ -38,6 +38,5 @@ class HouseholdDetailsState with _$HouseholdDetailsState {
     @Default(false) bool loading,
     @Default(true) bool isEditModeEnabled,
     HouseholdModel? householdModel,
-    HouseholdRequestModel? householdRequestModel,
   }) = _HouseholdDetailsState;
 }

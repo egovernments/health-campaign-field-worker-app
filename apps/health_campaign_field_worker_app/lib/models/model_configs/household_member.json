@@ -4,31 +4,38 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "householdId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "householdClientReferenceId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "individualId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "individualClientReferenceId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "isHeadOfHousehold",
-      "type": "bool"
+      "type": "bool",
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
