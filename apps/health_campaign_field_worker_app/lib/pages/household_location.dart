@@ -21,7 +21,7 @@ class HouseholdLocationPage extends StatelessWidget {
         builder: (context, form, child) {
           return ScrollableContent(
             header: Column(children: const [
-              // BackNavigationHelpHeaderWidget(),
+              BackNavigationHelpHeaderWidget(),
             ]),
             footer: Offstage(
               offstage: false,
@@ -60,16 +60,18 @@ class HouseholdLocationPage extends StatelessWidget {
                             i18.householdLocation.administrationAreaFormLabel,
                       ),
                       DigitTextFormField(
-                        formControlName: 'housholdNo',
-                        label: i18.householdLocation.householdLocationLabelText,
+                        formControlName: 'addressLine1',
+                        label: i18
+                            .householdLocation.householdAddressLine1LabelText,
+                      ),
+                      DigitTextFormField(
+                        formControlName: 'addressLine2',
+                        label: i18
+                            .householdLocation.householdAddressLine2LabelText,
                       ),
                       DigitTextFormField(
                         formControlName: 'locality',
                         label: i18.householdLocation.householdLocationLabelText,
-                      ),
-                      DigitTextFormField(
-                        formControlName: 'state',
-                        label: i18.householdLocation.stateFormLabel,
                       ),
                       DigitTextFormField(
                         formControlName: 'postalCode',
@@ -89,9 +91,9 @@ class HouseholdLocationPage extends StatelessWidget {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'administrationArea': FormControl<String>(value: ''),
-        'housholdNo': FormControl<String>(value: ''),
+        'addressLine1': FormControl<String>(value: ''),
+        'addressLine2': FormControl<String>(value: ''),
         'locality': FormControl<String>(value: ''),
-        'state': FormControl<String>(value: ''),
         'postalCode': FormControl<String>(value: ''),
       });
 }
