@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../action_card/action_card.dart';
+
 class MemberCard extends StatelessWidget {
   final String name;
   final String gender;
@@ -68,9 +70,29 @@ class MemberCard extends StatelessWidget {
               ],
             ),
             DigitIconButton(
-              onPressed: () {
-                print("");
-              },
+              onPressed: () => DigitActionDialog.show(
+                context,
+                widget: ActionCard(
+                  items: [
+                    // ignore: no-empty-block
+                    ActionCardModel(
+                      Icons.edit,
+                      "Assign as household head",
+                      () {},
+                    ),
+                    ActionCardModel(
+                      Icons.edit,
+                      "Edit  Individual Details",
+                      () {},
+                    ),
+                    ActionCardModel(
+                      Icons.delete,
+                      "Delete Individual",
+                      () {},
+                    ),
+                  ],
+                ),
+              ),
               iconText: 'Edit',
               icon: Icons.edit,
             ),

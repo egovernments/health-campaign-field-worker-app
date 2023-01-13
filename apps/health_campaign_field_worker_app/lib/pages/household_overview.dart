@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
+import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/member_card/memeber_card.dart';
 
@@ -29,18 +30,35 @@ class HouseholdOverViewPage extends StatelessWidget {
                       style: theme.textTheme.displayMedium,
                     ),
                     DigitIconButton(
-                      onPressed: () => DigitDialog.show(
+                      onPressed: () => DigitActionDialog.show(
                         context,
-                        title: i18.forgotPassword.labelText,
-                        content: i18.forgotPassword.contentText,
-                        primaryActionLabel:
-                            i18.forgotPassword.primaryActionLabel,
-                        primaryAction: () => Navigator.pop(context),
+                        widget: ActionCard(
+                          items: [
+                            // ignore: no-empty-block
+                            ActionCardModel(
+                              Icons.edit,
+                              "Edit Household Details",
+                              () {},
+                            ),
+                            ActionCardModel(
+                              Icons.delete,
+                              "Delete Household",
+                              () {},
+                            ),
+                          ],
+                        ),
                       ),
                       iconText: 'Edit HouseHold',
                       icon: Icons.edit,
                     ),
                   ],
+                ),
+                DigitIconButton(
+                  icon: Icons.check_circle,
+                  iconText: 'Delivered',
+                  iconTextColor:
+                      DigitTheme.instance.colorScheme.onSurfaceVariant,
+                  iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                 ),
                 const DigitTableCard(
                   element: {
@@ -75,7 +93,7 @@ class HouseholdOverViewPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: SizedBox(
+      bottomNavigationBar: const SizedBox(
         height: 90,
         child: DigitCard(
           child: DigitElevatedButton(
