@@ -19,9 +19,7 @@ class HouseHoldDetailsPage extends StatelessWidget {
             header: Column(children: const [
               BackNavigationHelpHeaderWidget(),
             ]),
-            footer: Offstage(
-              offstage: false,
-              child: SizedBox(
+            footer: SizedBox(
                 height: 90,
                 child: DigitCard(
                   child: DigitElevatedButton(
@@ -38,7 +36,7 @@ class HouseHoldDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
+          
             children: [
               DigitCard(
                 child: Column(
