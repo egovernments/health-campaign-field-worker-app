@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
+import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 import '../../local_store/sql_store/sql_store.dart';
 
@@ -75,30 +76,7 @@ class IndividualRepository
 
   @override
   FutureOr<List<IndividualModel>> search(IndividualSearchModel query) async {
-    final rows = await (sqlDataStore.select(sqlDataStore.individual)
-          ..where((table) {
-            // if (query.clientReferenceId != null) {
-            return table.clientReferenceId.equals(query.clientReferenceId);
-            // } else if (query.) {
-            //
-            // }
-          }))
-        .get();
-
-    return rows.map((e) {
-      return IndividualModel(
-        tenantId: e.tenantId,
-        clientReferenceId: e.clientReferenceId,
-        dateOfBirth: e.dateOfBirth,
-        mobileNumber: e.mobileNumber,
-        rowVersion: e.rowVersion,
-        name: NameModel(),
-        bloodGroup: e.bloodGroup,
-        address: [],
-        gender: e.gender,
-        identifiers: [],
-      );
-    }).toList();
+    return [];
   }
 
   @override
