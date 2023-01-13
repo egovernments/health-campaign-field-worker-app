@@ -103,10 +103,10 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
 
 abstract class LocalRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
-  final LocalSqlDataStore sqlDataStore;
+  final LocalSqlDataStore sql;
   final OpLogManager opLogManager;
 
-  LocalRepository(this.sqlDataStore, this.opLogManager);
+  LocalRepository(this.sql, this.opLogManager);
 
   @override
   FutureOr<void> create(D entity);

@@ -10,7 +10,7 @@ import '../../local_store/sql_store/sql_store.dart';
 
 class IndividualRepository
     extends LocalRepository<IndividualModel, IndividualSearchModel> {
-  IndividualRepository(super.sqlDataStore, super.opLogManager);
+  IndividualRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(IndividualModel entity) async {
@@ -29,14 +29,14 @@ class IndividualRepository
 
     final individualCompanion = _getIndividualCompanion(entity);
 
-    await sqlDataStore.batch((batch) async {
-      batch.insert(sqlDataStore.name, nameCompanion);
-      batch.insert(sqlDataStore.individual, individualCompanion);
-      batch.insertAll(sqlDataStore.address, addressCompanions);
-      batch.insertAll(sqlDataStore.identifier, identifiersCompanion);
+    await sql.batch((batch) async {
+      batch.insert(sql.name, nameCompanion);
+      batch.insert(sql.individual, individualCompanion);
+      batch.insertAll(sql.address, addressCompanions);
+      batch.insertAll(sql.identifier, identifiersCompanion);
 
       batch.insert(
-        sqlDataStore.individualName,
+        sql.individualName,
         IndividualNameCompanion.insert(
           clientReferenceId: const Uuid().v1(),
           individual: individualCompanion.clientReferenceId.value,
@@ -45,7 +45,7 @@ class IndividualRepository
       );
 
       batch.insertAll(
-        sqlDataStore.individualAddress,
+        sql.individualAddress,
         addressCompanions.map(
           (e) => IndividualAddressCompanion.insert(
             clientReferenceId: const Uuid().v1(),
@@ -56,7 +56,7 @@ class IndividualRepository
       );
 
       batch.insertAll(
-        sqlDataStore.individualIdentifier,
+        sql.individualIdentifier,
         identifiersCompanion.map(
           (e) => IndividualIdentifierCompanion.insert(
             clientReferenceId: const Uuid().v1(),
