@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import '../models/address.dart';
 import '../models/data_model.dart';
+import '../router/app_router.dart';
 import '../utils/I18KeyConstants.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 
@@ -29,7 +30,7 @@ class HouseholdLocationPage extends StatelessWidget {
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        print(form.value);
+                        context.router.push(const AcknowledgementRoute());
                       } else {
                         form.markAllAsTouched();
                       }
