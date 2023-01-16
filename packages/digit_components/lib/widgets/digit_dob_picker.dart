@@ -2,7 +2,7 @@ import 'package:digit_components/widgets/atoms/digit_date_form_picker.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:flutter/material.dart';
 
-class DigitDOBPicker extends StatelessWidget {
+class DigitDobPicker extends StatelessWidget {
   final String datePickerFormControl;
   final String ageInputFormControl;
 
@@ -13,7 +13,7 @@ class DigitDOBPicker extends StatelessWidget {
   final String ageFieldLabel;
   final String separatorLabel;
 
-  const DigitDOBPicker(
+  const DigitDobPicker(
       {super.key,
       required this.datePickerFormControl,
       required this.ageInputFormControl,
@@ -51,7 +51,6 @@ class DigitDOBPicker extends StatelessWidget {
                 separatorLabel,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              // const SizedBox(height: 4,),
               DigitTextFormField(
                 formControlName: ageInputFormControl,
                 label: ageFieldLabel,

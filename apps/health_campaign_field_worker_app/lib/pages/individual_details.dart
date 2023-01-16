@@ -88,7 +88,7 @@ class IndividualDetailsPage extends StatelessWidget {
                         ],
                       ),
 
-                      DigitDOBPicker(
+                      DigitDobPicker(
                         datePickerFormControl: 'dob',
                         ageInputFormControl: 'age',
                         onChangeDate: (DateTime? dateTime) {},

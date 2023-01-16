@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DigitCheckBox extends StatelessWidget {
   final bool isChecked;
   final String checkBoxText;
-  final Function() onChange;
+  final VoidCallback onChange;
 
   const DigitCheckBox(
       {super.key,
