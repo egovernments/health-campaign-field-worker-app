@@ -81,8 +81,8 @@ class AppInitializationBloc
     );
 
     mdmsRepository.writeToAppConfigDB(result, isar);
-    List<AppConiguration> appConfiguration =
-        await isar.appConigurations.where().findAll();
+    List<AppConfiguration> appConfiguration =
+        await isar.appConfigurations.where().findAll();
     emit(state.copyWith(appConiguration: appConfiguration.first));
   }
 }
@@ -103,7 +103,7 @@ class AppInitializationState with _$AppInitializationState {
 
   const factory AppInitializationState({
     @Default(false) bool isInitializationCompleted,
-    AppConiguration? appConiguration,
+    AppConfiguration? appConiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
   }) = _AppInitializationState;
 }

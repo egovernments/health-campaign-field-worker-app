@@ -78,7 +78,7 @@ class MdmsRepository {
     app_configuration.AppConfigPrimaryWrapperModel result,
     Isar isar,
   ) async {
-    final appConfiguration = AppConiguration();
+    final appConfiguration = AppConfiguration();
     result.appConfig?.appConfiglist?.forEach((element) {
       appConfiguration
         ..networkDetection = element.networkDetection
@@ -108,7 +108,7 @@ class MdmsRepository {
     });
 
     await isar.writeTxn(() async {
-      await isar.appConigurations.put(appConfiguration);
+      await isar.appConfigurations.put(appConfiguration);
     });
   }
 }

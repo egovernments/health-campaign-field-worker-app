@@ -17,7 +17,7 @@ class AppLocalizations {
   static final List<Localization> _localizedStrings = <Localization>[];
 
   static LocalizationsDelegate<AppLocalizations> getDelegate(
-    AppConiguration config,
+    AppConfiguration config,
     Isar isar,
   ) =>
       AppLocalizationsDelegate(config, isar);
@@ -37,9 +37,7 @@ class AppLocalizations {
     return true;
   }
 
-  String translate(
-    String localizedValues,
-  ) {
+  String translate(String localizedValues) {
     if (_localizedStrings.isEmpty) {
       return localizedValues;
     } else {

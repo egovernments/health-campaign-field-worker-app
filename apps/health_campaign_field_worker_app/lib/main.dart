@@ -28,7 +28,7 @@ void main() async {
   Isar isar = await Isar.open([
     ServiceRegistrySchema,
     LocalizationWrapperSchema,
-    AppConigurationSchema,
+    AppConfigurationSchema,
   ]);
 
   Dio client = Client().init();
