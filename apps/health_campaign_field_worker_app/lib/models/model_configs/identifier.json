@@ -3,11 +3,13 @@
   "attributes": [
     {
       "name": "type",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "id",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     }
   ],
   "isEnum": false

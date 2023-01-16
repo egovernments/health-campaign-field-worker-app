@@ -4,23 +4,28 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "isPermanent",
-      "type": "bool"
+      "type": "bool",
+      "includeForQuery": true
     },
     {
       "name": "usage",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "storageCapacity",
-      "type": "int"
+      "type": "int",
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",

@@ -4,20 +4,24 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "isPk": true
+      "isPk": true,
+      "includeForQuery": true
     },
     {
       "name": "memberCount",
-      "type": "int"
+      "type": "int",
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",

@@ -1,36 +1,21 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectProductVariantRequestModel extends DataModel {
-  final String? productVariantId;
-  final String? type;
-  final bool? isBaseUnitVariant;
-  final String? clientReferenceId;
+class ProjectProductVariantSearchModel extends DataModel {
   
-  ProjectProductVariantRequestModel({
-    this.productVariantId,
-    this.type,
-    this.isBaseUnitVariant,
-    this.clientReferenceId,
-    super.auditDetails,
+  ProjectProductVariantSearchModel({
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProjectProductVariantModel extends DataModel implements ProjectProductVariantRequestModel {
-  
-  @override
+class ProjectProductVariantModel extends DataModel implements ProjectProductVariantSearchModel {
   final String productVariantId;
-  
-  @override
   final String type;
-  
-  @override
   final bool isBaseUnitVariant;
-  
-  @override
   final String clientReferenceId;
   
 

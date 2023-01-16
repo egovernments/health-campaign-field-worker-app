@@ -16,4 +16,4 @@ export './digit_info_card.dart';
 export './digit_outline_button.dart';
 export './digit_search_bar.dart';
 export './atoms/digit_table_item_title.dart';
-
+export './atoms/digit_text_form_field.dart';
