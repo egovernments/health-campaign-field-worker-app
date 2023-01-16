@@ -4,15 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../widgets/localized.dart';
 
-class LoginPage extends StatelessWidget {
-  final AppLocalizations localizations;
-
+class LoginPage extends LocalizedStatefulWidget {
   const LoginPage({
     Key? key,
-    required this.localizations,
+    super.appLocalizations,
   }) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends LocalizedState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

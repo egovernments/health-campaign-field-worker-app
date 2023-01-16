@@ -29,9 +29,7 @@ void main() {
         navigatorObserver: mockObserver,
         child: BlocProvider(
           create: (context) => AuthBloc(const AuthState()),
-          child: LoginPage(
-            localizations: mockLocalization,
-          ),
+          child: LoginPage(appLocalizations: mockLocalization),
         ),
       ));
     }
@@ -128,7 +126,7 @@ void main() {
         await widgetTester.tap(
           find.text(i18.forgotPassword.actionLabel),
           warnIfMissed: false,
-          );
+        );
         await widgetTester.pumpAndSettle();
 
         verify(() => mockObserver.didPop(any(), any<DialogRoute>()));

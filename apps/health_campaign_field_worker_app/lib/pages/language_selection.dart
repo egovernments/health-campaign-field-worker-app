@@ -4,21 +4,14 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/localization/app_localizations_delegate.dart';
 import '../blocs/localization/localization.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
-class LanguageSelectionPage extends StatefulWidget {
+class LanguageSelectionPage extends StatelessWidget {
   const LanguageSelectionPage({Key? key}) : super(key: key);
 
-  @override
-  State<LanguageSelectionPage> createState() => _LanguageSelectionPageState();
-}
-
-class _LanguageSelectionPageState extends State<LanguageSelectionPage>
-    with AppLocalizationMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -78,9 +71,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage>
                                   );
                             },
                             onLanguageSubmit: () => context.router.push(
-                              LoginRoute(
-                                localizations: localizations,
-                              ),
+                              LoginRoute(),
                             ),
                             languageSubmitLabel: AppLocalizations.of(context)
                                 .translate(i18.common.coreCommonContinue),

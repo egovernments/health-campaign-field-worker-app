@@ -38,7 +38,3 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
     return false;
   }
 }
-
-mixin AppLocalizationMixin<T extends StatefulWidget> on State<T> {
-  AppLocalizations get localizations => AppLocalizations.of(context);
-}
