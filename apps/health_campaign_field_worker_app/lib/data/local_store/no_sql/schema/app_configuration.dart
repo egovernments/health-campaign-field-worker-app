@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 part 'app_configuration.g.dart';
 
 @Collection()
-class AppConiguration {
+class AppConfiguration {
   Id id = Isar.autoIncrement;
 
   @Name("NETWORK_DETECTION")

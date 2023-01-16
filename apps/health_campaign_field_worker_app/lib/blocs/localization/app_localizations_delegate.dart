@@ -5,14 +5,14 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import 'app_localization.dart';
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
-  final AppConiguration _appConfig;
+  final AppConfiguration _appConfig;
   final Isar isar;
 
   const AppLocalizationsDelegate(this._appConfig, this.isar);
 
   @override
   bool isSupported(Locale locale) {
-    return _appConfig.languages!
+    return (_appConfig.languages ?? [])
         .map((e) {
           final results = e.value.split('_');
           if (results.isNotEmpty) return results.first;
