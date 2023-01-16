@@ -216,9 +216,42 @@ class IndividualRepository
   }
 
   @override
-  FutureOr<int> update(IndividualModel entity) {
-    // TODO: implement update
-    throw UnimplementedError();
+  FutureOr<void> update(IndividualModel entity) async {
+    final nameValue = entity.name;
+    final addressValue = entity.address;
+    final identifiers = entity.identifiers;
+
+    final nameCompanion = _getNameCompanion(nameValue);
+    final addressCompanions = addressValue.map((e) {
+      return _getAddressCompanion(e);
+    }).toList();
+
+    final identifierCompanions = identifiers.map((e) {
+      return _getIdentifierCompanion(e);
+    }).toList();
+
+    final individualCompanion = _getIndividualCompanion(entity);
+
+    await sql.batch((batch) async {
+      batch.update(
+        sql.name,
+        nameCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          nameValue.clientReferenceId,
+        ),
+      );
+
+      batch.update(
+        sql.individual,
+        individualCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+
+      batch.insertAllOnConflictUpdate(sql.address, addressCompanions);
+      batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
+    });
   }
 
   NameCompanion _getNameCompanion(NameModel nameValue) {
