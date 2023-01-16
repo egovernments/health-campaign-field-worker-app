@@ -27,22 +27,38 @@ class DigitAcknowledgement extends StatelessWidget {
     return Column(
       children: [
         Container(
+          margin: const EdgeInsets.all(8),
           height: cardHeight,
+          width: MediaQuery.of(context).size.width,
           color: color,
-          child: Container(
-              child: Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                textAlign: TextAlign.center,
-                label,
-                style: theme.textTheme.labelMedium,
-              ),
-              Icon(icon)
+                  textAlign: TextAlign.center,
+                  label,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
+                    color: theme.colorScheme.onPrimary,
+                  )),
+              Padding(
+                  padding: DigitTheme.instance.containerMargin,
+                  child: Icon(
+                    icon,
+                    size: 32,
+                    color: theme.colorScheme.onPrimary,
+                  ))
             ],
-          )),
+          ),
         ),
-        Text(description),
+        Padding(
+          padding: DigitTheme.instance.containerMargin,
+          child: Text(
+            description,
+            style: theme.textTheme.bodyMedium,
+          ),
+        ),
         DigitElevatedButton(
           onPressed: action,
           child: Text(actionLabel),
