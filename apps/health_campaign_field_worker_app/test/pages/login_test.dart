@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/auth/auth.dart';
+import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import 'package:health_campaign_field_worker_app/pages/login.dart';
+import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
+    as i18;
 import 'package:mocktail/mocktail.dart';
 
 import '../widget_app.dart';
+
+class MockAppLocalization extends Mock implements AppLocalizations {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -17,18 +22,34 @@ class FakeDialogRoute<T> extends Fake implements DialogRoute<T> {}
 void main() {
   group('Login page', () {
     final mockObserver = MockNavigatorObserver();
+    final mockLocalization = MockAppLocalization();
 
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(WidgetApp(
         navigatorObserver: mockObserver,
         child: BlocProvider(
           create: (context) => AuthBloc(const AuthState()),
-          child: const LoginPage(),
+          child: LoginPage(
+            localizations: mockLocalization,
+          ),
         ),
       ));
     }
 
     setUpAll(() {
+      for (final element in [
+        i18.login.userIdPlaceholder,
+        i18.login.passwordPlaceholder,
+        i18.login.labelText,
+        i18.login.actionLabel,
+        i18.forgotPassword.labelText,
+        i18.forgotPassword.contentText,
+        i18.forgotPassword.primaryActionLabel,
+        i18.forgotPassword.actionLabel,
+      ]) {
+        when(() => mockLocalization.translate(element)).thenReturn(element);
+      }
+
       registerFallbackValue(FakeRoute());
       registerFallbackValue(FakeDialogRoute());
     });
@@ -36,11 +57,32 @@ void main() {
     testWidgets('is initialized correctly', (widgetTester) async {
       await buildTester(widgetTester);
 
-      expect(find.widgetWithText(DigitTextField, 'User ID'), findsOneWidget);
-      expect(find.widgetWithText(DigitTextField, 'Password'), findsOneWidget);
-      expect(find.widgetWithText(DigitElevatedButton, 'Login'), findsOneWidget);
       expect(
-        find.widgetWithText(TextButton, 'Forgot Password?'),
+        find.widgetWithText(
+          DigitTextField,
+          i18.login.userIdPlaceholder,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(
+          DigitTextField,
+          i18.login.passwordPlaceholder,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(
+          DigitElevatedButton,
+          i18.login.actionLabel,
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(
+          TextButton,
+          i18.forgotPassword.actionLabel,
+        ),
         findsOneWidget,
       );
     });
@@ -51,7 +93,11 @@ void main() {
         await buildTester(widgetTester);
 
         await widgetTester.tap(
-          find.widgetWithText(TextButton, 'Forgot Password?'),
+          find.widgetWithText(
+            TextButton,
+            i18.forgotPassword.actionLabel,
+          ),
+          warnIfMissed: false,
         );
 
         await widgetTester.pumpAndSettle();
@@ -65,18 +111,24 @@ void main() {
 
         expect(dialog.title.runtimeType, Text);
         expect(dialog.content.runtimeType, Text);
-        expect(dialog.primaryActionLabel, 'OK');
+        expect(
+          dialog.primaryActionLabel,
+          i18.forgotPassword.primaryActionLabel,
+        );
 
         final title = dialog.title as Text;
         final content = dialog.content as Text;
 
-        expect(title.data, 'Forgot Password?');
+        expect(title.data, i18.forgotPassword.labelText);
         expect(
           content.data,
-          'Please contact the administrator if you have forgotten your password',
+          i18.forgotPassword.contentText,
         );
 
-        await widgetTester.tap(find.text('OK'));
+        await widgetTester.tap(
+          find.text(i18.forgotPassword.actionLabel),
+          warnIfMissed: false,
+          );
         await widgetTester.pumpAndSettle();
 
         verify(() => mockObserver.didPop(any(), any<DialogRoute>()));

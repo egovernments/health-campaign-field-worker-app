@@ -41,8 +41,9 @@ class AppLocalizations {
     if (_localizedStrings.isEmpty) {
       return localizedValues;
     } else {
-      var index = _localizedStrings
-          .indexWhere((medium) => medium.code == localizedValues);
+      final index = _localizedStrings.indexWhere(
+        (medium) => medium.code == localizedValues,
+      );
 
       return index != -1 ? _localizedStrings[index].message : localizedValues;
     }

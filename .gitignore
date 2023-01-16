@@ -55,3 +55,4 @@ pubspec_overrides.yaml
 # Related to Mason
 .mason
 
+apps/health_campaign_field_worker_app/libisar.dylib
