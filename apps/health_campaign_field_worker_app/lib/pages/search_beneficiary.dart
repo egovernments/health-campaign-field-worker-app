@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/table_hide_action.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
+import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/beneficiary/beneficiary_card.dart';
 import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
@@ -163,7 +164,8 @@ class SearchBeneficiaryPage extends StatelessWidget {
             height: 90,
             child: DigitCard(
               child: DigitElevatedButton(
-                onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> const IndividualDetailsPage())),
+                onPressed: () =>
+                    context.router.push(const HouseholdLocationRoute()),
                 child: Center(
                   child: Text(
                     i18.searchBeneficiary.beneficiaryAddActionLabel,
