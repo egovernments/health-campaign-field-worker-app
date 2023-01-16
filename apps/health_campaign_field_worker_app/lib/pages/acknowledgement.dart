@@ -6,11 +6,9 @@ class AcknowledgementPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: DigitAcknowledgement(
-        color: DigitTheme.instance.colorScheme.errorContainer,
+        color: DigitTheme.instance.colorScheme.onSurfaceVariant,
         cardHeight: MediaQuery.of(context).size.height / 3,
         action: (() {}),
         actionLabel: 'Back to Search',
