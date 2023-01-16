@@ -4,16 +4,20 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },{
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },{
       "name": "userId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },{
       "name": "projectId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },{
       "name": "channel",
       "type": "String"
@@ -25,10 +29,12 @@
   "dateTimeAttributes": [
     {
       "name": "startDate",
-      "type": "DateTime"
+      "type": "DateTime",
+      "includeForQuery": true
     },{
       "name": "endDate",
-      "type": "DateTime"
+      "type": "DateTime",
+      "includeForQuery": true
     }
   ],
   "isEnum": false

@@ -4,24 +4,29 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "type",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "name",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "manufacturer",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
