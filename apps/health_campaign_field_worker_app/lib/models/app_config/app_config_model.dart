@@ -6,26 +6,28 @@ part 'app_config_model.freezed.dart';
 part 'app_config_model.g.dart';
 
 @freezed
-class AppConfigModel with _$AppConfigModel {
-  const factory AppConfigModel({
-    required String tenantId,
-    required String moduleName,
-    ConfigurationModel? configuration,
-  }) = _AppConfigModel;
+class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
+  const factory AppConfigPrimaryWrapperModel({
+    @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
+        final AppConfigSecondaryWrapperModel? appConfig,
+  }) = _AppConfigPrimaryWrapperModel;
 
-  factory AppConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$AppConfigModelFromJson(json);
+  factory AppConfigPrimaryWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$AppConfigPrimaryWrapperModelFromJson(json);
 }
 
 @freezed
-class ConfigurationModel with _$ConfigurationModel {
-  const factory ConfigurationModel({
-    required int configVersion,
-    required AppConfig appConfig,
-  }) = _ConfigurationModel;
+class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
+  const factory AppConfigSecondaryWrapperModel({
+    @JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist,
+  }) = _AppConfigSecondaryWrapperModel;
 
-  factory ConfigurationModel.fromJson(Map<String, dynamic> json) =>
-      _$ConfigurationModelFromJson(json);
+  factory AppConfigSecondaryWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$AppConfigSecondaryWrapperModelFromJson(json);
 }
 
 @freezed
@@ -36,12 +38,52 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
-    @JsonKey(name: 'LOCALIZATION_MODULES')
-        required List<LocalizationModules>? localizationModules,
+    @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'BACKEND_INTERFACE')
+        required BackendInterface backendInterface,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
       _$AppConfigFromJson(json);
+}
+
+@freezed
+class BackendInterface with _$BackendInterface {
+  factory BackendInterface({
+    @JsonKey(name: 'interfaces') required List<Interfaces> interface,
+  }) = _BackendInterface;
+  factory BackendInterface.fromJson(Map<String, dynamic> json) =>
+      _$BackendInterfaceFromJson(json);
+}
+
+@freezed
+class InterfacesWrapper with _$InterfacesWrapper {
+  factory InterfacesWrapper({
+    required List<Interfaces> interface,
+  }) = _InterfacesWrapper;
+
+  factory InterfacesWrapper.fromJson(Map<String, dynamic> json) =>
+      _$InterfacesWrapperFromJson(json);
+}
+
+@freezed
+class Interfaces with _$Interfaces {
+  factory Interfaces({
+    required String type,
+    required String name,
+    required Config config,
+  }) = _Interfaces;
+
+  factory Interfaces.fromJson(Map<String, dynamic> json) =>
+      _$InterfacesFromJson(json);
+}
+
+@freezed
+class Config with _$Config {
+  factory Config({
+    required int localStoreTTL,
+  }) = _Config;
+  factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 }
 
 @freezed
@@ -54,13 +96,4 @@ class Languages with _$Languages {
 
   factory Languages.fromJson(Map<String, dynamic> json) =>
       _$LanguagesFromJson(json);
-}
-
-@freezed
-class LocalizationModules with _$LocalizationModules {
-  factory LocalizationModules({required String label, required String value}) =
-      _LocalizationModules;
-
-  factory LocalizationModules.fromJson(Map<String, dynamic> json) =>
-      _$LocalizationModulesFromJson(json);
 }
