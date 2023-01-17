@@ -1,0 +1,22 @@
+{
+  "name": "HouseholdAddress",
+  "attributes": [
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "household",
+      "type": "household",
+      "createReference": true
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "createReference": true
+    }
+  ]
+}

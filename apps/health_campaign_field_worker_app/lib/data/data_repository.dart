@@ -8,6 +8,9 @@ import '../models/data_model.dart';
 import 'repositories/oplog/oplog.dart';
 
 abstract class DataRepository<D extends DataModel, R extends DataModel> {
+
+  const DataRepository();
+
   FutureOr<List<D>> search(R query);
 
   FutureOr<dynamic> create(D entity);
@@ -109,7 +112,7 @@ abstract class LocalRepository<D extends DataModel, R extends DataModel>
 
   DataModelType get type;
 
-  LocalRepository(this.sql, this.opLogManager);
+  const LocalRepository(this.sql, this.opLogManager);
 
   @override
   @mustCallSuper

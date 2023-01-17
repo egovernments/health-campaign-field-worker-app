@@ -13,6 +13,7 @@ import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/facility.dart';
 import 'tables/household.dart';
+import 'tables/household_address.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
@@ -42,6 +43,7 @@ part 'sql_store.g.dart';
   Document,
   Facility,
   Household,
+  HouseholdAddress,
   HouseholdMember,
   Identifier,
   Individual,
