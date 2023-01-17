@@ -40,8 +40,6 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
-    @JsonKey(name: 'LOCALIZATION_MODULES')
-        required List<LocalizationModules>? localizationModules,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -51,10 +49,20 @@ class AppConfig with _$AppConfig {
 @freezed
 class BackendInterface with _$BackendInterface {
   factory BackendInterface({
-    required List<Interfaces> interfaces,
+    @JsonKey(name: 'interfaces') required List<Interfaces> interface,
   }) = _BackendInterface;
   factory BackendInterface.fromJson(Map<String, dynamic> json) =>
       _$BackendInterfaceFromJson(json);
+}
+
+@freezed
+class InterfacesWrapper with _$InterfacesWrapper {
+  factory InterfacesWrapper({
+    required List<Interfaces> interface,
+  }) = _InterfacesWrapper;
+
+  factory InterfacesWrapper.fromJson(Map<String, dynamic> json) =>
+      _$InterfacesWrapperFromJson(json);
 }
 
 @freezed
@@ -87,13 +95,4 @@ class Languages with _$Languages {
 
   factory Languages.fromJson(Map<String, dynamic> json) =>
       _$LanguagesFromJson(json);
-}
-
-@freezed
-class LocalizationModules with _$LocalizationModules {
-  factory LocalizationModules({required String label, required String value}) =
-      _LocalizationModules;
-
-  factory LocalizationModules.fromJson(Map<String, dynamic> json) =>
-      _$LocalizationModulesFromJson(json);
 }

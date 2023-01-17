@@ -1,8 +1,5 @@
-// ignore_for_file: avoid_dynamic_calls
-
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
@@ -80,6 +77,8 @@ class MdmsRepository {
   ) async {
     final appConfiguration = AppConfiguration();
     result.appConfig?.appConfiglist?.forEach((element) {
+      print(element.backendInterface);
+      print("-----BAckend ----");
       appConfiguration
         ..networkDetection = element.networkDetection
         ..persistenceMode = element.persistenceMode
@@ -94,16 +93,22 @@ class MdmsRepository {
         return languages;
       }).toList();
 
-      final List<LocalizationModules>? localizationModules =
-          element.localizationModules?.map((element) {
-        final localization = LocalizationModules()
-          ..label = element.label
-          ..value = element.value;
+      final List<Interfaces> interfaceList =
+          element.backendInterface.interface.map((e) {
+        final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
-        return localization;
+        final interfaces = Interfaces()
+          ..name = e.name
+          ..type = e.type
+          ..confg = config;
+
+        return interfaces;
       }).toList();
 
-      appConfiguration.localizationModules = localizationModules;
+      final backendInterface = BackendInterface()..interfaces = interfaceList;
+
+      appConfiguration.backendInterface = backendInterface;
+
       appConfiguration.languages = languageList;
     });
 

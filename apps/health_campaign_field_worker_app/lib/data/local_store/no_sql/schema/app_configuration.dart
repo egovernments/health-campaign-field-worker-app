@@ -21,8 +21,8 @@ class AppConfiguration {
   @Name("LANGUAGES")
   late List<Languages>? languages;
 
-  @Name("LOCALIZATION_MODULES")
-  late List<LocalizationModules>? localizationModules;
+  @Name("BACKEND_INTERFACE")
+  late BackendInterface? backendInterface;
 }
 
 @embedded
@@ -32,7 +32,19 @@ class Languages {
 }
 
 @embedded
-class LocalizationModules {
-  late String label;
-  late String value;
+class BackendInterface {
+  @Name("interfaces")
+  late List<Interfaces> interfaces;
+}
+
+@embedded
+class Interfaces {
+  late String type;
+  late String name;
+  late Config confg;
+}
+
+@embedded
+class Config {
+  late int localStoreTTL;
 }
