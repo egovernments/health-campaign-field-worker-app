@@ -48,9 +48,14 @@ class HouseholdOverViewPage extends StatelessWidget {
                                 title:
                                     "Do you want to delete this beneficiary?",
                                 primaryActionLabel: "Delete",
-                                primaryAction: () =>
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop(),
+                                primaryAction: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                  context.router
+                                      .push(const DeletionReasonRoute());
+                                },
                                 secondaryActionLabel: "Cancel",
                                 secondaryAction: () =>
                                     Navigator.of(context, rootNavigator: true)
