@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/household_details/household_details.dart';
+import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:mocktail/mocktail.dart';
 
 import '../router/router.dart';
-import 'login_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockAppLocalization extends Mock implements AppLocalizations {}
 
 class FakeRoute extends Fake implements Route {}
 
@@ -49,7 +51,7 @@ void main() {
             appRouter,
             navigatorObservers: () => [mockObserver],
             routes: (PendingRoutesHandler handler) => [
-              const HouseHoldDetailsRoute(),
+              HouseHoldDetailsRoute(appLocalizations: mockLocalization),
             ],
           ),
         ),
