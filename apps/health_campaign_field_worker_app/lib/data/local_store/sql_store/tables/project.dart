@@ -1,10 +1,9 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
-import 'address.dart';
-import 'target.dart';
-import 'document.dart';
 
-class ProjectTable extends Table {
+class Project extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get projectTypeId => text()();
@@ -18,10 +17,7 @@ class ProjectTable extends Table {
   IntColumn get rowVersion => integer()();
   TextColumn get clientReferenceId => text()();
   
-  TextColumn get address => text().references(AddressTable, #clientReferenceId)();
-  TextColumn get targets => text().references(TargetTable, #clientReferenceId)();
-  TextColumn get documents => text().references(DocumentTable, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

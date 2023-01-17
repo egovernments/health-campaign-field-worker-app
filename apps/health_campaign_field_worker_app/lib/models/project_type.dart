@@ -22,7 +22,7 @@ class ProjectTypeModel extends DataModel implements ProjectTypeSearchModel {
   final List<String> eligibilityCriteria;
   final List<String> taskProcedure;
   final String clientReferenceId;
-  final List<ProjectProductVariantSearchModel> resources;
+  final List<ProjectProductVariantModel> resources;
   
 
   ProjectTypeModel({

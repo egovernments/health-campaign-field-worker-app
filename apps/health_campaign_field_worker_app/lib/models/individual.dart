@@ -9,16 +9,18 @@ class IndividualSearchModel extends DataModel {
   final String? tenantId;
   final String? clientReferenceId;
   final String? dateOfBirth;
-  final String? fatherName;
+  final NameSearchModel? name;
   final Gender? gender;
+  final List<IdentifierSearchModel>? identifiers;
   
   IndividualSearchModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
     this.dateOfBirth,
-    this.fatherName,
+    this.name,
     this.gender,
+    this.identifiers,
     super.boundaryCode,
   }):  super();
 }
@@ -41,19 +43,21 @@ class IndividualModel extends DataModel implements IndividualSearchModel {
   final String mobileNumber;
   final String? altContactNumber;
   final String? email;
-  
-  @override
   final String? fatherName;
   final String? husbandName;
   final String? photo;
   final int rowVersion;
-  final NameSearchModel name;
+  
+  @override
+  final NameModel name;
   final BloodGroup bloodGroup;
-  final AddressSearchModel? address;
+  final List<AddressModel> address;
   
   @override
   final Gender gender;
-  final List<IdentifierSearchModel> identifiers;
+  
+  @override
+  final List<IdentifierModel> identifiers;
   
 
   IndividualModel({
@@ -71,7 +75,7 @@ class IndividualModel extends DataModel implements IndividualSearchModel {
     required this.rowVersion,
     required this.name,
     required this.bloodGroup,
-    this.address,
+    required this.address,
     required this.gender,
     required this.identifiers,
     super.auditDetails,
