@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import 'repositories/oplog/oplog.dart';
@@ -106,13 +107,21 @@ abstract class LocalRepository<D extends DataModel, R extends DataModel>
   final LocalSqlDataStore sql;
   final OpLogManager opLogManager;
 
+  DataModelType get type;
+
   LocalRepository(this.sql, this.opLogManager);
 
   @override
-  FutureOr<void> create(D entity);
+  @mustCallSuper
+  FutureOr<void> create(D entity) async {
+    await createOplogEntry(entity, ApiOperation.create, type);
+  }
 
   @override
-  FutureOr<void> update(D entity);
+  @mustCallSuper
+  FutureOr<void> update(D entity) async {
+    await createOplogEntry(entity, ApiOperation.update, type);
+  }
 
   FutureOr<void> createOplogEntry(
     D entity,
@@ -120,8 +129,6 @@ abstract class LocalRepository<D extends DataModel, R extends DataModel>
     DataModelType type,
   ) =>
       opLogManager.createEntry(OpLogEntry(entity, operation), type);
-
-  FutureOr<void> deleteOplogEntry(OpLogEntry<D> entry);
 }
 
 class InvalidApiResponseException implements Exception {

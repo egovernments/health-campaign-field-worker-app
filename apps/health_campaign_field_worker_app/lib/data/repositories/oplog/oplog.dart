@@ -5,12 +5,12 @@ import 'package:isar/isar.dart';
 import '../../../models/data_model.dart';
 import '../../local_store/no_sql/no_sql_store.dart';
 
-class OpLogManager {
+abstract class OpLogManager<T extends DataModel> {
   final Isar isar;
 
   const OpLogManager(this.isar);
 
-  FutureOr<void> createEntry<T extends DataModel>(
+  FutureOr<void> createEntry(
     OpLogEntry<T> entry,
     DataModelType type,
   ) async =>
@@ -22,7 +22,7 @@ class OpLogManager {
               ..entityString = entry.entity.toJson(),
           ));
 
-  FutureOr<List<OpLogEntry<T>>> getPendingSyncedEntries<T extends DataModel>(
+  FutureOr<List<OpLogEntry<T>>> getPendingSyncedEntries(
     DataModelType type,
   ) async {
     final entries = await isar.opLogs
@@ -38,4 +38,8 @@ class OpLogManager {
             ))
         .toList();
   }
+}
+
+class IndividualOpLogManager extends OpLogManager<IndividualModel> {
+  const IndividualOpLogManager(super.isar);
 }

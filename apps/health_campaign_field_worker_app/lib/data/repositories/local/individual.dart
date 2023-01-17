@@ -14,7 +14,11 @@ class IndividualRepository
   IndividualRepository(super.sql, super.opLogManager);
 
   @override
+  DataModelType get type => DataModelType.individual;
+
+  @override
   FutureOr<void> create(IndividualModel entity) async {
+
     final nameValue = entity.name;
     final addressValue = entity.address;
     final identifiers = entity.identifiers;
@@ -67,12 +71,8 @@ class IndividualRepository
         ),
       );
     });
-  }
 
-  @override
-  FutureOr<void> deleteOplogEntry(OpLogEntry<IndividualModel> entry) {
-    // TODO: implement deleteOplogEntry
-    throw UnimplementedError();
+    super.create(entity);
   }
 
   @override
@@ -252,6 +252,8 @@ class IndividualRepository
       batch.insertAllOnConflictUpdate(sql.address, addressCompanions);
       batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
     });
+
+    super.update(entity);
   }
 
   NameCompanion _getNameCompanion(NameModel nameValue) {
