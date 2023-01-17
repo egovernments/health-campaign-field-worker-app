@@ -76,7 +76,7 @@ class MemberCard extends StatelessWidget {
                   items: [
                     // ignore: no-empty-block
                     ActionCardModel(
-                      Icons.edit,
+                      Icons.person,
                       "Assign as household head",
                       () {},
                     ),
@@ -88,7 +88,18 @@ class MemberCard extends StatelessWidget {
                     ActionCardModel(
                       Icons.delete,
                       "Delete Individual",
-                      () {},
+                      () {
+                        DigitDialog.show(
+                          context,
+                          title: "Do you want to delete this beneficiary?",
+                          primaryActionLabel: "Delete",
+                          primaryAction: () =>
+                              Navigator.of(context, rootNavigator: true).pop(),
+                          secondaryActionLabel: "Cancel",
+                          secondaryAction: () =>
+                              Navigator.of(context, rootNavigator: true).pop(),
+                        );
+                      },
                     ),
                   ],
                 ),

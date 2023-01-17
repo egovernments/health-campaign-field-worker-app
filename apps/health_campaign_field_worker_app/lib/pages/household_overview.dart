@@ -1,7 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
-
+import '../router/app_router.dart';
 import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/member_card/memeber_card.dart';
@@ -43,7 +43,19 @@ class HouseholdOverViewPage extends StatelessWidget {
                             ActionCardModel(
                               Icons.delete,
                               "Delete Household",
-                              () {},
+                              () => DigitDialog.show(
+                                context,
+                                title:
+                                    "Do you want to delete this beneficiary?",
+                                primaryActionLabel: "Delete",
+                                primaryAction: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                                secondaryActionLabel: "Cancel",
+                                secondaryAction: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(),
+                              ),
                             ),
                           ],
                         ),
@@ -63,8 +75,7 @@ class HouseholdOverViewPage extends StatelessWidget {
                 const DigitTableCard(
                   element: {
                     "HouseholdHead": "Joseph Segio",
-                    "Administrative Area": "Solimbo",
-                    "Member Count": 4,
+                    "Household Head Name": "Jose (H)",
                   },
                 ),
                 const MemberCard(
@@ -93,12 +104,13 @@ class HouseholdOverViewPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: const SizedBox(
+      bottomNavigationBar: SizedBox(
         height: 90,
         child: DigitCard(
           child: DigitElevatedButton(
-            onPressed: null,
-            child: Center(
+            onPressed: () =>
+                context.router.push(const DeliverInterventionRoute()),
+            child: const Center(
               child: Text(
                 "Deliver Intervention",
               ),
