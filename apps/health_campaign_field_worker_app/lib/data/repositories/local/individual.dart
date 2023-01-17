@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
@@ -11,69 +10,10 @@ import '../../local_store/sql_store/sql_store.dart';
 
 class IndividualRepository
     extends LocalRepository<IndividualModel, IndividualSearchModel> {
-  IndividualRepository(super.sql, super.opLogManager);
+  const IndividualRepository(super.sql, super.opLogManager);
 
   @override
   DataModelType get type => DataModelType.individual;
-
-  @override
-  FutureOr<void> create(IndividualModel entity) async {
-
-    final nameValue = entity.name;
-    final addressValue = entity.address;
-    final identifiers = entity.identifiers;
-
-    final nameCompanion = _getNameCompanion(nameValue);
-    final addressCompanions = addressValue.map((e) {
-      return _getAddressCompanion(e);
-    }).toList();
-
-    final identifierCompanions = identifiers.map((e) {
-      return _getIdentifierCompanion(e);
-    }).toList();
-
-    final individualCompanion = _getIndividualCompanion(entity);
-
-    await sql.batch((batch) async {
-      batch.insert(sql.name, nameCompanion);
-      batch.insert(sql.individual, individualCompanion);
-      batch.insertAll(sql.address, addressCompanions);
-      batch.insertAll(sql.identifier, identifierCompanions);
-
-      batch.insert(
-        sql.individualName,
-        IndividualNameCompanion.insert(
-          clientReferenceId: const Uuid().v1(),
-          individual: individualCompanion.clientReferenceId.value,
-          name: nameCompanion.clientReferenceId.value,
-        ),
-      );
-
-      batch.insertAll(
-        sql.individualAddress,
-        addressCompanions.map(
-          (e) => IndividualAddressCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            address: e.clientReferenceId.value,
-          ),
-        ),
-      );
-
-      batch.insertAll(
-        sql.individualIdentifier,
-        identifierCompanions.map(
-          (e) => IndividualIdentifierCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            identifier: e.clientReferenceId.value,
-          ),
-        ),
-      );
-    });
-
-    super.create(entity);
-  }
 
   @override
   FutureOr<List<IndividualModel>> search(IndividualSearchModel query) async {
@@ -157,7 +97,7 @@ class IndividualRepository
           ))
         .get();
 
-    final list = results.map((e) {
+    return results.map((e) {
       final individual = e.readTable(sql.individual);
       final name = e.readTable(sql.name);
       final address = e.readTable(sql.address);
@@ -207,12 +147,64 @@ class IndividualRepository
         ],
       );
     }).toList();
+  }
 
-    for (final i in list) {
-      debugPrint(i.toJson());
-    }
+  @override
+  FutureOr<void> create(IndividualModel entity) async {
+    final nameValue = entity.name;
+    final addressValue = entity.address;
+    final identifiers = entity.identifiers;
 
-    return [];
+    final nameCompanion = _getNameCompanion(nameValue);
+    final addressCompanions = addressValue.map((e) {
+      return _getAddressCompanion(e);
+    }).toList();
+
+    final identifierCompanions = identifiers.map((e) {
+      return _getIdentifierCompanion(e);
+    }).toList();
+
+    final individualCompanion = _getIndividualCompanion(entity);
+
+    await sql.batch((batch) async {
+      batch.insert(sql.name, nameCompanion);
+      batch.insert(sql.individual, individualCompanion);
+      batch.insertAll(sql.address, addressCompanions);
+      batch.insertAll(sql.identifier, identifierCompanions);
+
+      batch.insert(
+        sql.individualName,
+        IndividualNameCompanion.insert(
+          clientReferenceId: const Uuid().v1(),
+          individual: individualCompanion.clientReferenceId.value,
+          name: nameCompanion.clientReferenceId.value,
+        ),
+      );
+
+      batch.insertAll(
+        sql.individualAddress,
+        addressCompanions.map(
+          (e) => IndividualAddressCompanion.insert(
+            clientReferenceId: const Uuid().v1(),
+            individual: individualCompanion.clientReferenceId.value,
+            address: e.clientReferenceId.value,
+          ),
+        ),
+      );
+
+      batch.insertAll(
+        sql.individualIdentifier,
+        identifierCompanions.map(
+          (e) => IndividualIdentifierCompanion.insert(
+            clientReferenceId: const Uuid().v1(),
+            individual: individualCompanion.clientReferenceId.value,
+            identifier: e.clientReferenceId.value,
+          ),
+        ),
+      );
+    });
+
+    await super.create(entity);
   }
 
   @override
@@ -253,7 +245,7 @@ class IndividualRepository
       batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
     });
 
-    super.update(entity);
+    await super.update(entity);
   }
 
   NameCompanion _getNameCompanion(NameModel nameValue) {
