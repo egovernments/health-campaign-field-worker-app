@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 
-class HouseHoldDetailsPage extends StatelessWidget {
-  const HouseHoldDetailsPage({super.key});
+class HouseHoldDetailsPage extends LocalizedStatefulWidget {
+  const HouseHoldDetailsPage({
+    super.key,
+    super.appLocalizations,
+  });
+  @override
+  State<HouseHoldDetailsPage> createState() => _HouseHoldDetailsPageState();
+}
 
+class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -20,23 +28,23 @@ class HouseHoldDetailsPage extends StatelessWidget {
               BackNavigationHelpHeaderWidget(),
             ]),
             footer: SizedBox(
-                height: 90,
-                child: DigitCard(
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      if (form.valid) {
-                        print(form.value);
-                      } else {
-                        form.markAllAsTouched();
-                      }
-                    },
-                    child: Center(
-                      child: Text(i18.housholdDetails.actionLabel),
-                    ),
+              height: 90,
+              child: DigitCard(
+                child: DigitElevatedButton(
+                  onPressed: () {
+                    if (form.valid) {
+                      print(form.value);
+                    } else {
+                      form.markAllAsTouched();
+                    }
+                  },
+                  child: Center(
+                    child: Text(localizations
+                        .translate(i18.housholdDetails.actionLabel)),
                   ),
                 ),
               ),
-          
+            ),
             children: [
               DigitCard(
                 child: Column(
@@ -44,19 +52,24 @@ class HouseHoldDetailsPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      i18.housholdDetails.householdDetailsLabel,
+                      localizations
+                          .translate(i18.housholdDetails.householdDetailsLabel),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
                       DigitDateFormPicker(
                         formControlName: 'dateOfRegistration',
-                        label: i18.housholdDetails.dateOfRegistrationLabel,
+                        label: localizations.translate(
+                          i18.housholdDetails.dateOfRegistrationLabel,
+                        ),
                         isRequired: false,
                       ),
                       DigitIntegerFormPicker(
                         form: form,
                         formControlName: 'memberCount',
-                        label: i18.housholdDetails.noOfMembersCountLabel,
+                        label: localizations.translate(
+                          i18.housholdDetails.noOfMembersCountLabel,
+                        ),
                         incrementer: true,
                       ),
                     ]),

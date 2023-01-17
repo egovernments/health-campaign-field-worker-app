@@ -9,6 +9,7 @@ import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
 import 'package:mocktail/mocktail.dart';
 
 import '../router/router.dart';
+import 'login_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -18,12 +19,23 @@ class FakeDialogRoute<T> extends Fake implements DialogRoute<T> {}
 
 void main() {
   group("Household Details Page", () {
+    final mockObserver = MockNavigatorObserver();
+    final mockLocalization = MockAppLocalization();
     final appRouter = AppRouter();
+
     setUpAll(() {
+      for (final element in [
+        i18.housholdDetails.actionLabel,
+        i18.housholdDetails.dateOfRegistrationLabel,
+        i18.housholdDetails.householdDetailsLabel,
+        i18.housholdDetails.noOfMembersCountLabel,
+      ]) {
+        when(() => mockLocalization.translate(element)).thenReturn(element);
+      }
+
       registerFallbackValue(FakeRoute());
       registerFallbackValue(FakeDialogRoute());
     });
-    final mockObserver = MockNavigatorObserver();
 
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(MultiBlocProvider(
