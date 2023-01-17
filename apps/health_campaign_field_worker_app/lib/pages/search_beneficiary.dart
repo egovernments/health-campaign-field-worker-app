@@ -163,8 +163,9 @@ class SearchBeneficiaryPage extends StatelessWidget {
             height: 90,
             child: DigitCard(
               child: DigitElevatedButton(
-                onPressed: () =>
-                    context.router.push(const HouseholdLocationRoute()),
+                onPressed: () => context.router.push(
+                  HouseholdLocationRoute(),
+                ),
                 child: Center(
                   child: Text(
                     i18.searchBeneficiary.beneficiaryAddActionLabel,

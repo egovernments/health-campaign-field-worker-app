@@ -1,10 +1,10 @@
 library i18;
 
-Common common = const Common();
-Login login = const Login();
-ForgotPassword forgotPassword = const ForgotPassword();
-Home home = const Home();
-SearchBeneficiary searchBeneficiary = const SearchBeneficiary();
+const common = Common();
+const login = Login();
+const forgotPassword = ForgotPassword();
+const home = Home();
+const searchBeneficiary = SearchBeneficiary();
 const householdLocation = HouseholdLocation();
 
 class Common {
