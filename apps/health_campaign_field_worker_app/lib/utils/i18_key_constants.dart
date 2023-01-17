@@ -1,12 +1,12 @@
 library i18;
 
-Common common = const Common();
-Login login = const Login();
-ForgotPassword forgotPassword = const ForgotPassword();
-Home home = const Home();
-SearchBeneficiary searchBeneficiary = const SearchBeneficiary();
-HouseholdLocation householdLocation = const HouseholdLocation();
-HousholdDetails housholdDetails = const HousholdDetails();
+const common = Common();
+const login = Login();
+const forgotPassword = ForgotPassword();
+const home = Home();
+const searchBeneficiary = SearchBeneficiary();
+const householdLocation = HouseholdLocation();
+const housholdDetails = HousholdDetails();
 
 class Common {
   const Common();
@@ -82,12 +82,18 @@ class SearchBeneficiary {
 
 class HouseholdLocation {
   const HouseholdLocation();
-  String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
+ String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
+
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
-  String get housholdNoFormLabel => 'HOUSEHOLD_NO_FORM_LABEL';
-  String get localityFormLabel => 'LOCALITY_FORM_LABEL';
-  String get stateFormLabel => 'STATE_FORM_LABEL';
+
+  String get householdAddressLine1LabelText => 'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
+
+  String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get householdAddressLine2LabelText => 'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
+
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
+
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
 }
 
@@ -98,4 +104,5 @@ class HousholdDetails {
   String get dateOfRegistrationLabel =>
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+
 }
