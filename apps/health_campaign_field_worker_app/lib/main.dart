@@ -87,6 +87,8 @@ class MainApplication extends StatelessWidget {
       ],
       child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
         builder: (context, appConfigState) {
+          const defaultLocale = Locale('en', 'IN');
+
           return BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
               final appConfig = appConfigState.appConiguration;
@@ -106,11 +108,12 @@ class MainApplication extends StatelessWidget {
                               )..add(LocalizationEvent.onLoadLocalization(
                                   module: localizationModulesList.interfaces
                                       .where((element) =>
-                                          element.type == 'LOCALIZATION_MODULE')
+                                          element.type ==
+                                          Modules.localizationModule)
                                       .map((e) => e.name.toString())
                                       .join(',')
                                       .toString(),
-                                  tenantId: "pb",
+                                  tenantId: appConfig.tenantId.toString(),
                                   locale: firstLanguage,
                                   path: Constants.localizationApiPath,
                                 ))
@@ -126,9 +129,9 @@ class MainApplication extends StatelessWidget {
 
                                 return results.isNotEmpty
                                     ? Locale(results.first, results.last)
-                                    : const Locale('en', 'MZ');
+                                    : defaultLocale;
                               })
-                            : [const Locale('en', 'MZ')],
+                            : [defaultLocale],
                         localizationsDelegates: [
                           AppLocalizations.getDelegate(appConfig, isar),
                           GlobalWidgetsLocalizations.delegate,
