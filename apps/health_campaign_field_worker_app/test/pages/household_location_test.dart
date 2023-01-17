@@ -2,7 +2,8 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/pages/household_location.dart';
-import 'package:health_campaign_field_worker_app/utils/I18KeyConstants.dart';
+import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
+    as i18;
 import 'package:mocktail/mocktail.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
