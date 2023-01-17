@@ -2,12 +2,15 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/app_config/app_config.dart';
-import '../../models/app_config/app_config_model.dart';
+
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/localization/localization.dart';
 import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -41,22 +44,64 @@ class SideBar extends StatelessWidget {
           icon: Icons.language,
           content: Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: BlocBuilder<ApplicationConfigBloc, ApplicationConfigState>(
+            child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, state) {
-                List<Languages>? languageList =
-                    state.appConfigDetail?.configuration?.appConfig.languages;
+                final appConfig = state.appConfiguration;
+                final languages = state.appConfiguration?.languages;
+                final localizationModulesList =
+                    state.appConfiguration?.backendInterface;
 
                 return Offstage(
-                  offstage: languageList == null,
-                  child: DigitRowCard(
-                    onChanged: (data) {},
-                    rowItems: languageList!
-                        .map((e) => DigitRowCardModel.fromJson(e.toJson()))
-                        .toList(),
-                    width: (MediaQuery.of(context).size.width *
-                            0.5 /
-                            languageList.length) -
-                        (4 * languageList.length),
+                  offstage: languages == null,
+                  child: BlocBuilder<LocalizationBloc, LocalizationState>(
+                    builder: (context, localizationState) {
+                      return localizationModulesList != null
+                          ? DigitRowCard(
+                              onChanged: (value) {
+                                int index = languages.indexWhere(
+                                  (ele) =>
+                                      ele.value.toString() ==
+                                      value.value.toString(),
+                                );
+                                context
+                                    .read<LocalizationBloc>()
+                                    .add(LocalizationEvent.onLoadLocalization(
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                              Modules.localizationModule)
+                                          .map((e) => e.name.toString())
+                                          .join(',')
+                                          .toString(),
+                                      tenantId:
+                                          appConfig?.tenantId ?? "default",
+                                      locale: value.value.toString(),
+                                      path: Constants.localizationApiPath,
+                                    ));
+
+                                context.read<LocalizationBloc>().add(
+                                      OnUpdateLocalizationIndexEvent(
+                                        index: index,
+                                        code: value.value.toString(),
+                                      ),
+                                    );
+                              },
+                              rowItems: languages!.map((e) {
+                                var index = languages.indexOf(e);
+
+                                return DigitRowCardModel(
+                                  label: e.label,
+                                  value: e.value,
+                                  isSelected: index == localizationState.index,
+                                );
+                              }).toList(),
+                              width: (MediaQuery.of(context).size.width *
+                                      0.5 /
+                                      languages.length) -
+                                  (4 * languages.length),
+                            )
+                          : const Offstage();
+                    },
                   ),
                 );
               },

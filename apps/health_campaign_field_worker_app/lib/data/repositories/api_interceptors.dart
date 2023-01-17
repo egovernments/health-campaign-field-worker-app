@@ -21,6 +21,7 @@ class ApiInterceptors extends Interceptor {
         authToken: RequestInfoData.authToken,
       ).toJson(),
     };
+
     super.onRequest(options, handler);
   }
 }
