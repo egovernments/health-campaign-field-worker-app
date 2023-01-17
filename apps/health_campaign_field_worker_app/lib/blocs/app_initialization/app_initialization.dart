@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -8,6 +7,7 @@ import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../models/mdms/service_registry/service_registry_model.dart';
+import '../../utils/environment_config.dart';
 
 part 'app_initialization.freezed.dart';
 
@@ -17,6 +17,7 @@ class AppInitializationBloc
     extends Bloc<AppInitializationEvent, AppInitializationState> {
   final MdmsRepository mdmsRepository;
   final Isar isar;
+
   AppInitializationBloc(
     AppInitializationState appInitializationState, {
     required this.mdmsRepository,
@@ -32,7 +33,7 @@ class AppInitializationBloc
   ) async {
     ServiceRegistryPrimaryWrapperModel result =
         await mdmsRepository.searchServiceRegistry(
-      dotenv.env['MDMS_API_PATH'].toString(),
+      envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
           "tenantId": "default",
@@ -62,7 +63,7 @@ class AppInitializationBloc
   ) async {
     app_configuration.AppConfigPrimaryWrapperModel result =
         await mdmsRepository.searchAppConfig(
-      dotenv.env['MDMS_API_PATH'].toString(),
+      envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
           "tenantId": "default",

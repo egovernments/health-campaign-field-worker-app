@@ -19,11 +19,11 @@ import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'utils/environment_config.dart';
 
 void main() async {
   Bloc.observer = AppBlocObserver();
-  await dotenv.load(fileName: ".env");
+  await envConfig.initialize();
   DigitUi.instance.initThemeComponents();
 
   Isar isar = await Isar.open([
