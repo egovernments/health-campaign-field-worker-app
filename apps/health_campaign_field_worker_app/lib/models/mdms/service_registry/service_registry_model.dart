@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 part 'service_registry_model.freezed.dart';
 part 'service_registry_model.g.dart';
 
@@ -36,9 +37,21 @@ class ServiceRegistrySecondaryWrapperModel
 class ServiceRegistryModel with _$ServiceRegistryModel {
   const factory ServiceRegistryModel({
     final String? service,
-    final List<Map<String, String>>? actions,
+    final List<ActionsModel>? actions,
   }) = _ServiceRegistryModel;
 
   factory ServiceRegistryModel.fromJson(Map<String, dynamic> json) =>
       _$ServiceRegistryModelFromJson(json);
+}
+
+@freezed
+class ActionsModel with _$ActionsModel {
+  const factory ActionsModel({
+    required final String action,
+    required final String entityName,
+    required final String path,
+  }) = _ActionsModel;
+
+  factory ActionsModel.fromJson(Map<String, dynamic> json) =>
+      _$ActionsModelFromJson(json);
 }

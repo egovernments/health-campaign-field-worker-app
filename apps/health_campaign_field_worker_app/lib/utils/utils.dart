@@ -3,6 +3,7 @@ library app_utils;
 import 'package:drift/drift.dart';
 
 export 'app_exception.dart';
+export 'constants.dart';
 
 
 Expression<bool> buildAnd(Iterable<Expression<bool?>> iterable) {
@@ -18,3 +19,4 @@ Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
 
   return result.equals(true);
 }
+
