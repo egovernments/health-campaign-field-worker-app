@@ -24,9 +24,10 @@ class LanguageSelectionPage extends StatelessWidget {
           children: [
             BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, state) {
-                final languages = state.appConiguration?.languages;
+                final appConig = state.appConfiguration;
+                final languages = state.appConfiguration?.languages;
                 final localizationModulesList =
-                    state.appConiguration?.backendInterface?.interfaces;
+                    state.appConfiguration?.backendInterface?.interfaces;
                 if (languages == null) {
                   return const Offstage();
                 }
@@ -58,7 +59,7 @@ class LanguageSelectionPage extends StatelessWidget {
                                         .map((e) => e.name.toString())
                                         .join(',')
                                         .toString(),
-                                    tenantId: "pb",
+                                    tenantId: appConig?.tenantId ?? "default",
                                     locale: value.value.toString(),
                                     path: Constants.localizationApiPath,
                                   ));

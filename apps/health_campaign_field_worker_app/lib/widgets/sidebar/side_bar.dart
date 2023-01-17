@@ -46,9 +46,10 @@ class SideBar extends StatelessWidget {
             padding: const EdgeInsets.only(top: 16),
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, state) {
-                final languages = state.appConiguration?.languages;
+                final appConig = state.appConfiguration;
+                final languages = state.appConfiguration?.languages;
                 final localizationModulesList =
-                    state.appConiguration?.backendInterface;
+                    state.appConfiguration?.backendInterface;
 
                 return Offstage(
                   offstage: languages == null,
@@ -68,11 +69,11 @@ class SideBar extends StatelessWidget {
                                       module: localizationModulesList.interfaces
                                           .where((element) =>
                                               element.type ==
-                                              'LOCALIZATION_MODULE')
+                                              Modules.localizationModule)
                                           .map((e) => e.name.toString())
                                           .join(',')
                                           .toString(),
-                                      tenantId: "pb",
+                                      tenantId: appConig?.tenantId ?? "default",
                                       locale: value.value.toString(),
                                       path: Constants.localizationApiPath,
                                     ));

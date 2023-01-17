@@ -91,8 +91,7 @@ class MainApplication extends StatelessWidget {
 
           return BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
-              final appConfig = appConfigState.appConiguration;
-              // final tenantId = appConfigState.appConiguration?;
+              final appConfig = appConfigState.appConfiguration;
               final localizationModulesList = appConfig?.backendInterface;
               final firstLanguage = appConfig?.languages?.first.value;
               final languages = appConfig?.languages;
