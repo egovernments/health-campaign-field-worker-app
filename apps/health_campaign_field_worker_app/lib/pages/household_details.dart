@@ -41,7 +41,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                   },
                   child: Center(
                     child: Text(localizations
-                        .translate(i18.housholdDetails.actionLabel)),
+                        .translate(i18.householdDetails.actionLabel)),
                   ),
                 ),
               ),
@@ -53,15 +53,16 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      localizations
-                          .translate(i18.housholdDetails.householdDetailsLabel),
+                      localizations.translate(
+                        i18.householdDetails.householdDetailsLabel,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
                       DigitDateFormPicker(
                         formControlName: 'dateOfRegistration',
                         label: localizations.translate(
-                          i18.housholdDetails.dateOfRegistrationLabel,
+                          i18.householdDetails.dateOfRegistrationLabel,
                         ),
                         isRequired: false,
                       ),
@@ -69,7 +70,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         form: form,
                         formControlName: 'memberCount',
                         label: localizations.translate(
-                          i18.housholdDetails.noOfMembersCountLabel,
+                          i18.householdDetails.noOfMembersCountLabel,
                         ),
                         incrementer: true,
                       ),

@@ -27,10 +27,10 @@ void main() {
 
     setUpAll(() {
       for (final element in [
-        i18.housholdDetails.actionLabel,
-        i18.housholdDetails.dateOfRegistrationLabel,
-        i18.housholdDetails.householdDetailsLabel,
-        i18.housholdDetails.noOfMembersCountLabel,
+        i18.householdDetails.actionLabel,
+        i18.householdDetails.dateOfRegistrationLabel,
+        i18.householdDetails.householdDetailsLabel,
+        i18.householdDetails.noOfMembersCountLabel,
       ]) {
         when(() => mockLocalization.translate(element)).thenReturn(element);
       }
@@ -65,14 +65,14 @@ void main() {
       expect(
         find.widgetWithText(
           DigitDateFormPicker,
-          i18.housholdDetails.dateOfRegistrationLabel,
+          i18.householdDetails.dateOfRegistrationLabel,
         ),
         findsOneWidget,
       );
       expect(
         find.widgetWithText(
           DigitElevatedButton,
-          i18.housholdDetails.actionLabel,
+          i18.householdDetails.actionLabel,
         ),
         findsOneWidget,
       );
