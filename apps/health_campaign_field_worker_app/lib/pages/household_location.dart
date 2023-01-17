@@ -4,10 +4,20 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 
-class HouseholdLocationPage extends StatelessWidget {
-  const HouseholdLocationPage({super.key});
+class HouseholdLocationPage extends LocalizedStatefulWidget {
+  const HouseholdLocationPage({
+    super.key,
+    super.appLocalizations,
+  });
 
+  @override
+  State<HouseholdLocationPage> createState() => _HouseholdLocationPageState();
+}
+
+class _HouseholdLocationPageState
+    extends LocalizedState<HouseholdLocationPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -47,32 +57,41 @@ class HouseholdLocationPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      i18.householdLocation.householdLocationLabelText,
+                      localizations.translate(
+                        i18.householdLocation.householdLocationLabelText,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
                       DigitTextFormField(
                         formControlName: 'administrationArea',
-                        label:
-                            i18.householdLocation.administrationAreaFormLabel,
+                        label: localizations.translate(
+                          i18.householdLocation.administrationAreaFormLabel,
+                        ),
                       ),
                       DigitTextFormField(
                         formControlName: 'addressLine1',
-                        label: i18
-                            .householdLocation.householdAddressLine1LabelText,
+                        label: localizations.translate(
+                          i18.householdLocation.householdAddressLine1LabelText,
+                        ),
                       ),
                       DigitTextFormField(
                         formControlName: 'addressLine2',
-                        label: i18
-                            .householdLocation.householdAddressLine2LabelText,
+                        label: localizations.translate(
+                          i18.householdLocation.householdAddressLine2LabelText,
+                        ),
                       ),
                       DigitTextFormField(
                         formControlName: 'landmark',
-                        label: i18.householdLocation.landmarkFormLabel,
+                        label: localizations.translate(
+                          i18.householdLocation.landmarkFormLabel,
+                        ),
                       ),
                       DigitTextFormField(
                         formControlName: 'postalCode',
-                        label: i18.householdLocation.postalCodeFormLabel,
+                        label: localizations.translate(
+                          i18.householdLocation.postalCodeFormLabel,
+                        ),
                       ),
                     ]),
                     const SizedBox(height: 16),
