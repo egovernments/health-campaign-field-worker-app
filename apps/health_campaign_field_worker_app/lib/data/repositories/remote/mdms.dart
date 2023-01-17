@@ -62,6 +62,8 @@ class MdmsRepository {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
+      print(json.decode(response.toString())['MdmsRes']);
+
       return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
@@ -77,13 +79,12 @@ class MdmsRepository {
   ) async {
     final appConfiguration = AppConfiguration();
     result.appConfig?.appConfiglist?.forEach((element) {
-      print(element.backendInterface);
-      print("-----BAckend ----");
       appConfiguration
         ..networkDetection = element.networkDetection
         ..persistenceMode = element.persistenceMode
         ..syncMethod = element.syncMethod
-        ..syncTrigger = element.syncTrigger;
+        ..syncTrigger = element.syncTrigger
+        ..tenantId = element.tenantId;
 
       final List<Languages> languageList = element.languages.map((element) {
         final languages = Languages()

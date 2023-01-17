@@ -38,3 +38,7 @@ class RequestInfoData {
   static const key = "";
   static String? authToken;
 }
+
+class Modules {
+  static const String localizationModule = "LOCALIZATION_MODULE";
+}

@@ -23,6 +23,9 @@ class AppConfiguration {
 
   @Name("BACKEND_INTERFACE")
   late BackendInterface? backendInterface;
+
+  @Name("TENANT_ID")
+  late String? tenantId;
 }
 
 @embedded

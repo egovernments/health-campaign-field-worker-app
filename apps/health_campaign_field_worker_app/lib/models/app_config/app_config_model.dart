@@ -38,6 +38,7 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
+    @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
   }) = _AppConfig;
