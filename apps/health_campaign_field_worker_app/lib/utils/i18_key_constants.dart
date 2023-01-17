@@ -5,6 +5,7 @@ Login login = const Login();
 ForgotPassword forgotPassword = const ForgotPassword();
 Home home = const Home();
 SearchBeneficiary searchBeneficiary = const SearchBeneficiary();
+const householdLocation = HouseholdLocation();
 
 class Common {
   const Common();
@@ -76,4 +77,23 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+}
+
+class HouseholdLocation {
+  const HouseholdLocation();
+  String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
+
+  String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+
+  String get householdAddressLine1LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
+
+  String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get householdAddressLine2LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
+
+  String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
 }
