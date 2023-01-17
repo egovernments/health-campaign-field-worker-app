@@ -48,7 +48,7 @@ class SideBar extends StatelessWidget {
               builder: (context, state) {
                 final languages = state.appConiguration?.languages;
                 final localizationModulesList =
-                    state.appConiguration?.localizationModules;
+                    state.appConiguration?.backendInterface;
 
                 return Offstage(
                   offstage: languages == null,
@@ -65,8 +65,11 @@ class SideBar extends StatelessWidget {
                                 context
                                     .read<LocalizationBloc>()
                                     .add(LocalizationEvent.onLoadLocalization(
-                                      module: localizationModulesList
-                                          .map((e) => e.value.toString())
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                              'LOCALIZATION_MODULE')
+                                          .map((e) => e.name.toString())
                                           .join(',')
                                           .toString(),
                                       tenantId: "pb",

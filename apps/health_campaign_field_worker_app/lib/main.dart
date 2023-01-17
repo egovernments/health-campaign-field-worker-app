@@ -1,4 +1,3 @@
-
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +19,11 @@ import 'blocs/table_hide_action.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   Bloc.observer = AppBlocObserver();
+  await dotenv.load(fileName: ".env");
   DigitUi.instance.initThemeComponents();
 
   Isar isar = await Isar.open([
@@ -90,7 +91,7 @@ class MainApplication extends StatelessWidget {
             builder: (context, authState) {
               final appConfig = appConfigState.appConiguration;
               // final tenantId = appConfigState.appConiguration?;
-              final localizationModulesList = appConfig?.localizationModules;
+              final localizationModulesList = appConfig?.backendInterface;
               final firstLanguage = appConfig?.languages?.first.value;
               final languages = appConfig?.languages;
 
@@ -103,8 +104,10 @@ class MainApplication extends StatelessWidget {
                                 LocalizationRepository(client, isar),
                                 isar,
                               )..add(LocalizationEvent.onLoadLocalization(
-                                  module: localizationModulesList
-                                      .map((e) => e.value.toString())
+                                  module: localizationModulesList.interfaces
+                                      .where((element) =>
+                                          element.type == 'LOCALIZATION_MODULE')
+                                      .map((e) => e.name.toString())
                                       .join(',')
                                       .toString(),
                                   tenantId: "pb",

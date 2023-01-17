@@ -26,7 +26,7 @@ class LanguageSelectionPage extends StatelessWidget {
               builder: (context, state) {
                 final languages = state.appConiguration?.languages;
                 final localizationModulesList =
-                    state.appConiguration?.localizationModules;
+                    state.appConiguration?.backendInterface?.interfaces;
                 if (languages == null) {
                   return const Offstage();
                 }
@@ -55,7 +55,7 @@ class LanguageSelectionPage extends StatelessWidget {
                                   .read<LocalizationBloc>()
                                   .add(LocalizationEvent.onLoadLocalization(
                                     module: localizationModulesList
-                                        .map((e) => e.value.toString())
+                                        .map((e) => e.name.toString())
                                         .join(',')
                                         .toString(),
                                     tenantId: "pb",

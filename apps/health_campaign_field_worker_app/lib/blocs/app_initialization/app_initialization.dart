@@ -83,6 +83,8 @@ class AppInitializationBloc
     mdmsRepository.writeToAppConfigDB(result, isar);
     List<AppConfiguration> appConfiguration =
         await isar.appConfigurations.where().findAll();
+    print("appConfiguration");
+    print(appConfiguration);
     emit(state.copyWith(appConiguration: appConfiguration.first));
   }
 }
