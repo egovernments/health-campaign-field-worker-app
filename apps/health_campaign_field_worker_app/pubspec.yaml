@@ -32,6 +32,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.0
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
+  nested: ^1.0.0
   flutter_dotenv: ^5.0.2
   flutter_localizations:
     sdk: flutter

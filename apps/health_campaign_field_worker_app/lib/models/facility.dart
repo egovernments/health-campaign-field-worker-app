@@ -40,7 +40,7 @@ class FacilityModel extends DataModel implements FacilitySearchModel {
   final int storageCapacity;
   final int rowVersion;
   final String clientReferenceId;
-  final AddressSearchModel address;
+  final AddressModel address;
   
 
   FacilityModel({

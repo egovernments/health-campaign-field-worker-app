@@ -77,8 +77,8 @@ class TaskModel extends DataModel implements TaskSearchModel {
   @override
   final String status;
   final String clientReferenceId;
-  final List<TaskResourceSearchModel> resources;
-  final AddressSearchModel address;
+  final List<TaskResourceModel> resources;
+  final AddressModel address;
   
   @override
   final DateTime plannedStartDateTime;

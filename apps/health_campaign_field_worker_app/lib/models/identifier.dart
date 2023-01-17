@@ -20,16 +20,16 @@ class IdentifierModel extends DataModel implements IdentifierSearchModel {
   
   @override
   final String type;
+  final String clientReferenceId;
   
   @override
   final String id;
-  final String clientReferenceId;
   
 
   IdentifierModel({
     required this.type,
-    required this.id,
     required this.clientReferenceId,
+    required this.id,
     super.auditDetails,
   }):  super();
 }

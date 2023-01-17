@@ -1,11 +1,14 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
 import '../../../../models/address_type.dart';
 import 'boundary.dart';
 
-class AddressTable extends Table {
+class Address extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text()();
+  TextColumn get clientReferenceId => text()();
   TextColumn get doorNo => text()();
   RealColumn get latitude => real()();
   RealColumn get longitude => real()();
@@ -17,11 +20,10 @@ class AddressTable extends Table {
   TextColumn get pincode => text()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
-  TextColumn get clientReferenceId => text()();
   IntColumn get type => intEnum<AddressType>()();
   
-  TextColumn get locality => text().references(BoundaryTable, #clientReferenceId)();
+  TextColumn get locality => text().references(Boundary, #clientReferenceId)();
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

@@ -12,6 +12,7 @@ class ConfigModel {
   final List<AttributeModel> sqlAttributes;
   final List<AttributeModel> referenceAttributes;
 
+  final bool createRepository;
   final bool isEnum;
 
   const ConfigModel({
@@ -23,6 +24,7 @@ class ConfigModel {
     this.sqlAttributes = const [],
     this.referenceAttributes = const [],
     this.isEnum = false,
+    this.createRepository = false,
   });
 }
 
@@ -35,6 +37,7 @@ class AttributeModel {
   final bool nullable;
   final bool isPk;
   final bool isEnum;
+  final bool createReference;
   final List<TableReferenceModel> references;
 
   final bool includeForQuery;
@@ -47,6 +50,7 @@ class AttributeModel {
     this.isPk = false,
     this.isEnum = false,
     this.nullable = false,
+    this.createReference = false,
     this.includeForQuery = false,
     this.references = const [],
   });
