@@ -1,5 +1,6 @@
 {
   "name": "projectResource",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
