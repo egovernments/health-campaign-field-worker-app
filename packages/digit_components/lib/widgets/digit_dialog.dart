@@ -26,7 +26,7 @@ class DigitDialog extends StatelessWidget {
   static Future<T?> show<T>(
     BuildContext context, {
     required String title,
-    required String content,
+    String? content,
     required String primaryActionLabel,
     String? secondaryActionLabel,
     VoidCallback? primaryAction,
@@ -37,7 +37,10 @@ class DigitDialog extends StatelessWidget {
         barrierColor: DigitTheme.instance.colors.black.withOpacity(0.7),
         builder: (context) => DigitDialog(
           title: Text(title, textAlign: TextAlign.left),
-          content: Text(content, textAlign: TextAlign.left),
+          content: Offstage(
+            offstage: content == null,
+            child: Text(content.toString(), textAlign: TextAlign.left),
+          ),
           primaryActionLabel: primaryActionLabel,
           primaryAction: primaryAction,
           secondaryActionLabel: secondaryActionLabel,
