@@ -8,7 +8,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final DateTime? initialDate;
-  final Function(DateTime?)? onChangeOfDate;
+  final ValueChanged<DateTime?>? onChangeOfDate;
   final String formControlName;
   final bool? isEnabled;
   final String? requiredMessage;
