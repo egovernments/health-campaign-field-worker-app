@@ -9,6 +9,7 @@ import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/localization/app_localization.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 
@@ -41,7 +42,10 @@ class IndividualDetailsPage extends StatelessWidget {
                       }
                     },
                     child: Center(
-                      child: Text(i18.individualDetails.submitButtonLabelText),
+                      child: Text(
+                        AppLocalizations.of(context).translate(
+                            i18.individualDetails.submitButtonLabelText,),
+                      ),
                     ),
                   ),
                 ),
@@ -87,7 +91,6 @@ class IndividualDetailsPage extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       DigitDobPicker(
                         datePickerFormControl: 'dob',
                         ageInputFormControl: 'age',

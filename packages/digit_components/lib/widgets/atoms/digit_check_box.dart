@@ -5,11 +5,12 @@ class DigitCheckBox extends StatelessWidget {
   final String checkBoxText;
   final VoidCallback onChange;
 
-  const DigitCheckBox(
-      {super.key,
-      required this.checkBoxText,
-      required this.onChange,
-      this.isChecked = false});
+  const DigitCheckBox({
+    super.key,
+    required this.checkBoxText,
+    required this.onChange,
+    this.isChecked = false,
+  });
 
   @override
   Widget build(BuildContext context) {
