@@ -328,6 +328,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.1.1"
+  flutter_dotenv:
+    dependency: "direct main"
+    description:
+      name: flutter_dotenv
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.2"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -610,7 +617,7 @@ packages:
     source: hosted
     version: "0.3.0"
   nested:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: nested
       url: "https://pub.dartlang.org"
@@ -722,7 +729,7 @@ packages:
     source: hosted
     version: "4.2.4"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"

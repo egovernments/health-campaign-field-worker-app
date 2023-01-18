@@ -1,105 +1,96 @@
-import 'package:mason/mason.dart';
-import 'package:recase/recase.dart';
+import 'package:collection/collection.dart';
 
-void run(HookContext context) async {
-  return;
-  final logger = context.logger;
+import 'lib/models.dart';
+import 'package:mason/mason.dart';
+
+void run(HookContext context) {
   final variables = context.vars;
 
-  if (!variables.containsKey('name')) {
-    logger.err('`name` is required');
-    throw Exception();
-  }
+  ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
 
-  final name = variables['name'].toString().pascalCase;
-  if (name.isEmpty) {
-    logger.err('`name` is required');
-    throw Exception();
-  }
-
-  logger.info('Generating entity for $name');
-
-  logger.info(lightYellow.wrap('Add attributes`. Leave empty to exit'));
-
-  final attributes = <Map<String, dynamic>>[];
-  final customAttributes = <Map<String, dynamic>>[];
-  final dateTimeAttributes = <Map<String, dynamic>>[];
-
-  while (true) {
-    final attribute =
-        await logger.prompt('Name: ').replaceAll(RegExp('\\s+'), ' ').trim();
-    if (attribute.trim().isEmpty) {
-      break;
-    }
-
-    AttributeType type = await logger.chooseOne<AttributeType>(
-      'Type: ',
-      choices: AttributeType.values,
-      defaultValue: AttributeType.STRING,
-      display: (choice) => choice.name.pascalCase,
+  if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'clientReferenceId',
+        type: 'String',
+        isPk: true,
+      ),
     );
-
-    late String custom;
-    if (type == AttributeType.CUSTOM) {
-      custom = await logger
-          .prompt('Enter custom type: ')
-          .replaceAll(RegExp('\\s+'), ' ')
-          .trim();
-      custom = custom.isEmpty ? 'dynamic' : custom;
-    }
-
-    bool nullable = await logger.chooseOne(
-      'Nullable?',
-      choices: [true, false],
-      defaultValue: false,
-    );
-
-    switch (type) {
-      case AttributeType.CUSTOM:
-        customAttributes.add(
-          {
-            'name': custom,
-            'type': type.valueName,
-            'nullable': nullable,
-          },
-        );
-        break;
-      case AttributeType.DATE_TIME:
-        dateTimeAttributes.add(
-          {
-            'name': attribute,
-            'type': type.valueName,
-            'nullable': nullable,
-          },
-        );
-        break;
-      default:
-        attributes.add({
-          'name': attribute,
-          'type': type.valueName,
-          'nullable': nullable,
-        });
-    }
   }
 
-  context.vars['attributes'] = attributes;
-  context.vars['dateTimeAttributes'] = dateTimeAttributes;
-  context.vars['customAttributes'] = customAttributes;
+  if (model.name.toLowerCase() == 'individual') {
+    context.logger.info(model.toJson());
+  }
+
+  final sqlAttributes = <AttributeModel>[
+    ...model.attributes.map((e) {
+      final type = _getSqlType(e.type);
+      final columnType = _getSqlColumnType(e.type);
+      return e.copyWith(type: type, columnType: columnType);
+    }),
+    ...model.customAttributes.where((element) => element.isEnum),
+  ];
+
+  final references = [
+    ...model.customAttributes
+        .where((element) => element.createReference)
+        .where((element) => !element.isEnum)
+        .map((e) {
+      return e.copyWith(references: [
+        TableReferenceModel(table: e.type, column: e.name),
+      ]);
+    }),
+  ];
+
+  final updateModel = model.copyWith(
+    sqlAttributes: sqlAttributes,
+    referenceAttributes: references,
+  );
+  context.vars = updateModel.toMap();
 }
 
-enum AttributeType {
-  STRING('String'),
-  INT('int'),
-  NUM('num'),
-  DOUBLE('double'),
-  BOOL('bool'),
-  DATE_TIME('DateTime'),
-  CUSTOM('custom'),
-  DYNAMIC('dynamic');
+String _getSqlType(String dartType) {
+  String type;
+  switch (dartType) {
+    case 'String':
+      type = 'Text';
+      break;
+    case 'int':
+      type = 'Integer';
+      break;
+    case 'double':
+      type = 'Real';
+      break;
+    case 'bool':
+      type = 'Boolean';
+      break;
+    default:
+      type = 'Text';
+  }
 
-  final String type;
+  return type;
+}
 
-  const AttributeType(this.type);
+String _getSqlColumnType(String dartType) {
+  String type;
+  switch (dartType) {
+    case 'String':
+      type = 'Text';
+      break;
+    case 'int':
+      type = 'Int';
+      break;
+    case 'double':
+      type = 'Real';
+      break;
+    case 'bool':
+      type = 'Bool';
+      break;
+    default:
+      type = 'Text';
+  }
 
-  String get valueName => type;
+  return type;
 }

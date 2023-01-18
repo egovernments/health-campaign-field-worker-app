@@ -4,12 +4,17 @@
     {
       "name": "type",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
     },
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     }
   ],
   "isEnum": false

@@ -4,13 +4,15 @@ repository: https://github.com/egovernments/health-campaign-field-worker-app
 packages:
   - packages/*
   - apps/*
+  - mason_templates/digit_entity/hooks
+  - mason_templates/freezed_bloc/hooks
 
 command:
   bootstrap:
     usePubspecOverrides: true
 
 scripts:
-  postbootstrap: melos run generate:build-runner --no-select
+  postbootstrap: melos run generate:build-runner --no-select && melos run hooks:build-runner --no-select
 
   test:
     run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
@@ -41,6 +43,12 @@ scripts:
       flutter: true
       depends-on: build_runner
 
+  hooks:build-runner:
+    exec: dart run build_runner build --delete-conflicting-outputs
+    select-package:
+      dart: true
+      depends-on: [build_runner, mason]
+
   watch:build-runner:
     exec: flutter packages run build_runner watch
     select-package:
@@ -49,4 +57,8 @@ scripts:
 
   open_report:
     run: melos exec -- melos run generate:coverage-report && open coverage_report/html/index.html
+
+  upgrade-deps:
+    run: melos exec -- dart pub upgrade
+
 

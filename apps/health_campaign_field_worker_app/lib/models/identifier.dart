@@ -1,24 +1,26 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class IdentifierRequestModel extends DataModel {
+class IdentifierSearchModel extends DataModel {
   final String? type;
   final String? id;
   
-  IdentifierRequestModel({
+  IdentifierSearchModel({
     this.type,
     this.id,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class IdentifierModel extends DataModel implements IdentifierRequestModel {
+class IdentifierModel extends DataModel implements IdentifierSearchModel {
   
   @override
   final String type;
+  final String clientReferenceId;
   
   @override
   final String id;
@@ -26,6 +28,7 @@ class IdentifierModel extends DataModel implements IdentifierRequestModel {
 
   IdentifierModel({
     required this.type,
+    required this.clientReferenceId,
     required this.id,
     super.auditDetails,
   }):  super();

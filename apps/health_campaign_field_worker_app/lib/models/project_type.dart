@@ -1,67 +1,32 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'project_product_variant.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectTypeRequestModel extends DataModel {
-  final String? id;
-  final String? tenantId;
-  final String? name;
-  final String? code;
-  final String? group;
-  final String? beneficiaryType;
-  final List<String>? eligibilityCriteria;
-  final List<String>? taskProcedure;
-  final List<ProjectProductVariantRequestModel>? resources;
+class ProjectTypeSearchModel extends DataModel {
   
-  ProjectTypeRequestModel({
-    this.id,
-    this.tenantId,
-    this.name,
-    this.code,
-    this.group,
-    this.beneficiaryType,
-    this.eligibilityCriteria,
-    this.taskProcedure,
-    this.resources,
-    super.auditDetails,
+  ProjectTypeSearchModel({
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
-  
-  @override
-  final String id;
-  
-  @override
+class ProjectTypeModel extends DataModel implements ProjectTypeSearchModel {
+  final String? id;
   final String tenantId;
-  
-  @override
   final String name;
-  
-  @override
   final String code;
-  
-  @override
   final String group;
-  
-  @override
   final String beneficiaryType;
-  
-  @override
   final List<String> eligibilityCriteria;
-  
-  @override
   final List<String> taskProcedure;
-  
-  @override
-  final List<ProjectProductVariantRequestModel> resources;
+  final String clientReferenceId;
+  final List<ProjectProductVariantModel> resources;
   
 
   ProjectTypeModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.name,
     required this.code,
@@ -69,6 +34,7 @@ class ProjectTypeModel extends DataModel implements ProjectTypeRequestModel {
     required this.beneficiaryType,
     required this.eligibilityCriteria,
     required this.taskProcedure,
+    required this.clientReferenceId,
     required this.resources,
     super.auditDetails,
   }):  super();

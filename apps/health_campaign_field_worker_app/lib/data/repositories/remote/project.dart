@@ -1,27 +1,12 @@
-import 'dart:async';
+// Generated using mason. Do not modify by hand
 
-import '../../data_repository.dart';
 import '../../../models/data_model.dart';
+import '../../data_repository.dart';
 
-class ProjectRepository
-    extends RemoteRepository<ProjectModel, ProjectRequestModel> {
-  ProjectRepository(super.dio);
-
-  @override
-  FutureOr<String> create(ProjectModel entity) async {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<List<ProjectModel>> search(ProjectRequestModel query) async {
-    // TODO: implement search
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<String> update(ProjectModel entity) async {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
+class ProjectRepository extends RemoteRepository<ProjectModel, ProjectSearchModel> {
+  ProjectRepository(
+    super.dio, {
+    required super.path,
+    super.entityName = 'Project',
+  });
 }

@@ -1,50 +1,44 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'project_product_variant.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectResourceRequestModel extends DataModel {
+class ProjectResourceSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
-  final int? rowVersion;
-  final ProjectProductVariantRequestModel? resources;
   
-  ProjectResourceRequestModel({
+  ProjectResourceSearchModel({
     this.id,
     this.tenantId,
     this.projectId,
-    this.rowVersion,
-    this.resources,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProjectResourceModel extends DataModel implements ProjectResourceRequestModel {
+class ProjectResourceModel extends DataModel implements ProjectResourceSearchModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
   
   @override
   final String projectId;
-  
-  @override
   final int rowVersion;
-  
-  @override
-  final ProjectProductVariantRequestModel resources;
+  final String clientReferenceId;
+  final ProjectProductVariantModel resources;
   
 
   ProjectResourceModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.projectId,
     required this.rowVersion,
+    required this.clientReferenceId,
     required this.resources,
     super.auditDetails,
   }):  super();

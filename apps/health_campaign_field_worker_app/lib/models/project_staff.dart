@@ -1,28 +1,25 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectStaffRequestModel extends DataModel {
+class ProjectStaffSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? userId;
   final String? projectId;
-  final String? channel;
-  final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
-  ProjectStaffRequestModel({
+  ProjectStaffSearchModel({
     this.id,
     this.tenantId,
     this.userId,
     this.projectId,
-    this.channel,
-    this.rowVersion,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.boundaryCode,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -39,10 +36,10 @@ class ProjectStaffRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
+class ProjectStaffModel extends DataModel implements ProjectStaffSearchModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -52,12 +49,9 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
   
   @override
   final String projectId;
-  
-  @override
   final String channel;
-  
-  @override
   final int rowVersion;
+  final String clientReferenceId;
   
   @override
   final DateTime startDateTime;
@@ -67,12 +61,13 @@ class ProjectStaffModel extends DataModel implements ProjectStaffRequestModel {
   
 
   ProjectStaffModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.userId,
     required this.projectId,
     required this.channel,
     required this.rowVersion,
+    required this.clientReferenceId,
     required int startDate,
     required int endDate,
     super.auditDetails,

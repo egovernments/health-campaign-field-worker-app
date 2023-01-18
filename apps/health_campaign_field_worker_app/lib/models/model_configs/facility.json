@@ -1,42 +1,42 @@
 {
   "name": "facility",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "isPermanent",
       "type": "bool",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "usage",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "storageCapacity",
       "type": "int",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "address",
-      "nullable": false
+      "type": "address"
     }
   ],
   "isEnum": false

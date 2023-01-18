@@ -1,50 +1,33 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class DocumentRequestModel extends DataModel {
-  final String? id;
-  final String? tenantId;
-  final String? documentType;
-  final String? fileStoreId;
-  final String? documentUid;
+class DocumentSearchModel extends DataModel {
   
-  DocumentRequestModel({
-    this.id,
-    this.tenantId,
-    this.documentType,
-    this.fileStoreId,
-    this.documentUid,
-    super.auditDetails,
+  DocumentSearchModel({
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class DocumentModel extends DataModel implements DocumentRequestModel {
-  
-  @override
-  final String id;
-  
-  @override
+class DocumentModel extends DataModel implements DocumentSearchModel {
+  final String? id;
   final String tenantId;
-  
-  @override
   final String documentType;
-  
-  @override
   final String fileStoreId;
-  
-  @override
   final String documentUid;
+  final String clientReferenceId;
   
 
   DocumentModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.documentType,
     required this.fileStoreId,
     required this.documentUid,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

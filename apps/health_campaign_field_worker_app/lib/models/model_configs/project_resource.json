@@ -1,32 +1,32 @@
 {
   "name": "projectResource",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "projectId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "resources",
-      "type": "ProjectProductVariant",
-      "nullable": false
+      "type": "ProjectProductVariant"
     }
   ],
   "isEnum": false

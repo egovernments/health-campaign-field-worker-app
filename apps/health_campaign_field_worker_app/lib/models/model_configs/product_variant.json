@@ -1,35 +1,36 @@
 {
   "name": "productVariant",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "productId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "sku",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "variation",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "isEnum": false

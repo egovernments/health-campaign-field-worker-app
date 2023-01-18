@@ -4,27 +4,23 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "productVariantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "quantity",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "isDelivered",
-      "type": "bool",
-      "nullable": false
+      "type": "bool"
     },
     {
       "name": "deliveryComment",

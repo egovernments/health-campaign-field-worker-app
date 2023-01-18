@@ -1,12 +1,10 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'address.dart';
-import 'target.dart';
-import 'document.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectRequestModel extends DataModel {
+class ProjectSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectTypeId;
@@ -14,17 +12,11 @@ class ProjectRequestModel extends DataModel {
   final bool? isTaskEnabled;
   final String? parent;
   final String? department;
-  final String? description;
   final String? referenceId;
-  final String? projectHierarchy;
-  final int? rowVersion;
-  final AddressRequestModel? address;
-  final List<TargetRequestModel>? targets;
-  final List<DocumentRequestModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
-  ProjectRequestModel({
+  ProjectSearchModel({
     this.id,
     this.tenantId,
     this.projectTypeId,
@@ -32,16 +24,10 @@ class ProjectRequestModel extends DataModel {
     this.isTaskEnabled,
     this.parent,
     this.department,
-    this.description,
     this.referenceId,
-    this.projectHierarchy,
-    this.rowVersion,
-    this.address,
-    this.targets,
-    this.documents,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.boundaryCode,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -58,10 +44,10 @@ class ProjectRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectModel extends DataModel implements ProjectRequestModel {
+class ProjectModel extends DataModel implements ProjectSearchModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -80,27 +66,16 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
   @override
   final String department;
-  
-  @override
   final String description;
   
   @override
   final String referenceId;
-  
-  @override
   final String projectHierarchy;
-  
-  @override
   final int rowVersion;
-  
-  @override
-  final AddressRequestModel address;
-  
-  @override
-  final List<TargetRequestModel> targets;
-  
-  @override
-  final List<DocumentRequestModel> documents;
+  final String clientReferenceId;
+  final AddressModel address;
+  final List<TargetModel> targets;
+  final List<DocumentModel> documents;
   
   @override
   final DateTime startDateTime;
@@ -110,17 +85,18 @@ class ProjectModel extends DataModel implements ProjectRequestModel {
   
 
   ProjectModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.projectTypeId,
     required this.subProjectTypeId,
     required this.isTaskEnabled,
-     this.parent,
+    this.parent,
     required this.department,
     required this.description,
     required this.referenceId,
     required this.projectHierarchy,
     required this.rowVersion,
+    required this.clientReferenceId,
     required this.address,
     required this.targets,
     required this.documents,

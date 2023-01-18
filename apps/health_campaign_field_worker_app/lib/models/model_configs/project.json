@@ -1,78 +1,75 @@
 {
   "name": "project",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "projectTypeId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "subProjectTypeId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "isTaskEnabled",
       "type": "bool",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "parent",
       "type": "String",
-      "nullable": true
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "department",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "description",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "referenceId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "projectHierarchy",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "address",
-      "nullable": false
+      "type": "address"
     },
     {
       "name": "targets",
       "type": "target",
-      "nullable": false,
       "isList": true
     },
     {
       "name": "documents",
       "type": "document",
-      "nullable": false,
       "isList": true
     }
   ],
@@ -80,12 +77,12 @@
     {
       "name": "startDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "endDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     }
   ],
   "isEnum": false

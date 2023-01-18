@@ -1,24 +1,23 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectBeneficiaryRequestModel extends DataModel {
+class ProjectBeneficiarySearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
   final String? beneficiaryId;
-  final int? rowVersion;
   final DateTime? dateOfRegistrationTime;
   
-  ProjectBeneficiaryRequestModel({
+  ProjectBeneficiarySearchModel({
     this.id,
     this.tenantId,
     this.projectId,
     this.beneficiaryId,
-    this.rowVersion,
     int? dateOfRegistration,
-    super.auditDetails,
+    super.boundaryCode,
   }): dateOfRegistrationTime = dateOfRegistration == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
@@ -29,10 +28,10 @@ class ProjectBeneficiaryRequestModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryRequestModel {
+class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiarySearchModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
@@ -42,20 +41,20 @@ class ProjectBeneficiaryModel extends DataModel implements ProjectBeneficiaryReq
   
   @override
   final String beneficiaryId;
-  
-  @override
   final int rowVersion;
+  final String clientReferenceId;
   
   @override
   final DateTime dateOfRegistrationTime;
   
 
   ProjectBeneficiaryModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.projectId,
     required this.beneficiaryId,
     required this.rowVersion,
+    required this.clientReferenceId,
     required int dateOfRegistration,
     super.auditDetails,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),

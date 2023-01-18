@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/table_hide_action.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
+import '../router/app_router.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/beneficiary/beneficiary_card.dart';
-import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
+import '../widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 
 class SearchBeneficiaryPage extends StatelessWidget {
@@ -28,27 +30,27 @@ class SearchBeneficiaryPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'List of Households',
+                  i18.searchBeneficiary.statisticsLabelText,
                   style: theme.textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
-            const BeneficiaryStatisticsCard(
+            BeneficiaryStatisticsCard(
               beneficiaryStatistics:
                   BeneficiaryStatisticsWrapperModel(beneficiaryStatisticsList: [
                 BeneficiaryStatisticsModel(
                   title: '535',
-                  content: 'No. of Households Registered',
+                  content: i18.searchBeneficiary.noOfHouseholdsRegistered,
                 ),
                 BeneficiaryStatisticsModel(
                   title: '756',
-                  content: 'No. of Bedets Delivered',
+                  content: i18.searchBeneficiary.noOfResourcesDelivered,
                 ),
               ]),
             ),
-            const DigitSearchBar(
-              hintText: 'Enter the name of household head',
+            DigitSearchBar(
+              hintText: i18.searchBeneficiary.beneficiarySearchHintText,
             ),
             DigitCard(
               child: Column(
@@ -64,8 +66,10 @@ class SearchBeneficiaryPage extends StatelessWidget {
                         title: 'Jose Antonio',
                       ),
                       DigitOutLineButton(
-                        label: 'Open',
-                        onPressed: () {},
+                        label: i18.searchBeneficiary.iconLabel,
+                        onPressed: () {
+                          // TODO: Complete implementation
+                        },
                       ),
                     ],
                   ),
@@ -150,22 +154,23 @@ class SearchBeneficiaryPage extends StatelessWidget {
               icon: Icons.info,
               backgroundcolor: theme.colorScheme.tertiaryContainer,
               iconcolor: theme.colorScheme.surfaceTint,
-              description:
-                  'Click on Register New Household button to add details.',
-              title: 'Match not found!',
+              description: i18.searchBeneficiary.beneficiaryInfoDescription,
+              title: i18.searchBeneficiary.beneficiaryInfoTitle,
             ),
           ],
         ),
         bottomNavigationBar: Offstage(
           offstage: isKeyboardVisible,
-          child: const SizedBox(
+          child: SizedBox(
             height: 90,
             child: DigitCard(
               child: DigitElevatedButton(
-                onPressed: null,
+                onPressed: () => context.router.push(
+                  HouseholdLocationRoute(),
+                ),
                 child: Center(
                   child: Text(
-                    'Register New Household',
+                    i18.searchBeneficiary.beneficiaryAddActionLabel,
                   ),
                 ),
               ),

@@ -4,27 +4,23 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "tenantId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "documentType",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "fileStoreId",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "documentUid",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     }
   ],
   "isEnum": false

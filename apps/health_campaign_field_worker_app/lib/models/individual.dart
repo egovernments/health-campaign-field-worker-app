@@ -1,74 +1,80 @@
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'address.dart';
-import 'gender.dart';
-import 'identifier.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class IndividualRequestModel extends DataModel {
+class IndividualSearchModel extends DataModel {
   final String? id;
   final String? tenantId;
   final String? clientReferenceId;
-  final String? name;
   final String? dateOfBirth;
-  final int? rowVersion;
-  final AddressRequestModel? address;
+  final NameSearchModel? name;
   final Gender? gender;
-  final List<IdentifierRequestModel>? identifiers;
+  final List<IdentifierSearchModel>? identifiers;
   
-  IndividualRequestModel({
+  IndividualSearchModel({
     this.id,
     this.tenantId,
     this.clientReferenceId,
-    this.name,
     this.dateOfBirth,
-    this.rowVersion,
-    this.address,
+    this.name,
     this.gender,
     this.identifiers,
-    super.auditDetails,
+    super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class IndividualModel extends DataModel implements IndividualRequestModel {
+class IndividualModel extends DataModel implements IndividualSearchModel {
   
   @override
-  final String id;
+  final String? id;
   
   @override
   final String tenantId;
   
   @override
   final String clientReferenceId;
-  
-  @override
-  final String name;
+  final String? userId;
   
   @override
   final String dateOfBirth;
-  
-  @override
+  final String mobileNumber;
+  final String? altContactNumber;
+  final String? email;
+  final String? fatherName;
+  final String? husbandName;
+  final String? photo;
   final int rowVersion;
   
   @override
-  final AddressRequestModel address;
+  final NameModel name;
+  final BloodGroup bloodGroup;
+  final List<AddressModel> address;
   
   @override
   final Gender gender;
   
   @override
-  final List<IdentifierRequestModel> identifiers;
+  final List<IdentifierModel> identifiers;
   
 
   IndividualModel({
-    required this.id,
+    this.id,
     required this.tenantId,
     required this.clientReferenceId,
-    required this.name,
+    this.userId,
     required this.dateOfBirth,
+    required this.mobileNumber,
+    this.altContactNumber,
+    this.email,
+    this.fatherName,
+    this.husbandName,
+    this.photo,
     required this.rowVersion,
+    required this.name,
+    required this.bloodGroup,
     required this.address,
     required this.gender,
     required this.identifiers,

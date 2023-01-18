@@ -1,37 +1,38 @@
 {
   "name": "household",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "nullable": false
+      "isPk": true,
+      "includeForQuery": true
     },
     {
       "name": "memberCount",
       "type": "int",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
       "name": "address",
-      "type": "Address",
-      "nullable": false
+      "type": "Address"
     }
   ],
   "isEnum": false

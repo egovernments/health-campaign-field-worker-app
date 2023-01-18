@@ -1,41 +1,41 @@
 {
   "name": "projectStaff",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },{
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },{
       "name": "userId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },{
       "name": "projectId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },{
       "name": "channel",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },{
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "startDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },{
       "name": "endDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     }
   ],
   "isEnum": false

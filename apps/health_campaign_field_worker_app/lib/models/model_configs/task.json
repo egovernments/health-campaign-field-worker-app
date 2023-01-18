@@ -1,80 +1,78 @@
 {
   "name": "task",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "projectId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "projectBeneficiaryId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "createdBy",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     },
     {
       "name": "status",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     }
   ],
   "customAttributes": [
     {
       "name": "resources",
       "type": "taskResource",
-      "nullable": false,
       "isList": true
     },
     {
       "name": "address",
-      "type": "address",
-      "nullable": false
+      "type": "address"
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "plannedStartDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "plannedEndDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "actualStartDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "actualEndDate",
       "type": "DateTime",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "createdDate",
-      "type": "DateTime",
-      "nullable": false
+      "type": "DateTime"
     }
   ],
   "isEnum": false

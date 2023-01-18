@@ -1,45 +1,46 @@
 {
   "name": "householdMember",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "householdId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "householdClientReferenceId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "individualId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "individualClientReferenceId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "isHeadOfHousehold",
       "type": "bool",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "isEnum": false

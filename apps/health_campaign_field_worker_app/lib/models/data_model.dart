@@ -17,6 +17,8 @@ export 'individual.dart';
 export 'product.dart';
 export 'product_variant.dart';
 export 'project.dart';
+export 'blood_group.dart';
+export 'name.dart';
 export 'project_beneficiary.dart';
 export 'project_facility.dart';
 export 'project_product_variant.dart';
@@ -33,8 +35,13 @@ export 'data_model.mapper.g.dart';
 abstract class DataModel {
   final AuditDetails? auditDetails;
   final bool isDeleted;
+  final String? boundaryCode;
 
-  const DataModel({this.auditDetails, this.isDeleted = false});
+  const DataModel({
+    this.auditDetails,
+    this.isDeleted = false,
+    this.boundaryCode,
+  });
 }
 
 @MappableClass()
@@ -53,4 +60,4 @@ class AuditDetails {
         lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
-enum DataModelType { project }
+enum DataModelType { project, individual, household, householdMember }

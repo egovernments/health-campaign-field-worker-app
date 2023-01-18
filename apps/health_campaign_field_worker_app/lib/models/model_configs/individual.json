@@ -1,54 +1,95 @@
 {
   "name": "individual",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": false
+      "nullable": true,
+      "includeForQuery": true
     },
     {
       "name": "tenantId",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "nullable": false
+      "isPk": true,
+      "includeForQuery": true
     },
     {
-      "name": "name",
+      "name": "userId",
       "type": "String",
-      "nullable": false
+      "nullable": true
     },
     {
       "name": "dateOfBirth",
       "type": "String",
-      "nullable": false
+      "includeForQuery": true
+    },
+    {
+      "name": "mobileNumber",
+      "type": "String"
+    },
+    {
+      "name": "altContactNumber",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "email",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "fatherName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "husbandName",
+      "type": "String",
+      "nullable": true
+    },
+    {
+      "name": "photo",
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "rowVersion",
-      "type": "int",
-      "nullable": false
+      "type": "int"
     }
   ],
   "customAttributes": [
     {
+      "name": "name",
+      "type": "name",
+      "includeForQuery": true
+    },
+    {
+      "name": "bloodGroup",
+      "type": "bloodGroup",
+      "isEnum": true
+    },
+    {
       "name": "address",
       "type": "address",
-      "nullable": false
+      "isList": true
     },
     {
       "name": "gender",
       "type": "gender",
-      "nullable": false,
-      "isEnum": true
+      "isEnum": true,
+      "includeForQuery": true
     },
     {
       "name": "identifiers",
       "type": "identifier",
-      "nullable": false,
-      "isList": true
+      "isList": true,
+      "includeForQuery": true
     }
   ],
   "isEnum": false

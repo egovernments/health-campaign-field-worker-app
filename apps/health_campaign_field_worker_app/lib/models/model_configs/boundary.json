@@ -3,13 +3,11 @@
   "attributes": [
     {
       "name": "code",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "name",
-      "type": "String",
-      "nullable": false
+      "type": "String"
     },
     {
       "name": "label",
@@ -36,7 +34,8 @@
     {
       "name": "children",
       "type": "boundary",
-      "nullable": true
+      "nullable": true,
+      "createReference": true
     }
   ],
   "isEnum": false
