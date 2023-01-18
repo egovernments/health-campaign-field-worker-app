@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DigitTheme {
+  static const kPadding = 8.0;
+
   static const DigitTheme _instance = DigitTheme._internal();
+
   static DigitTheme get instance => _instance;
 
   DigitColors get colors => const DigitColors();
@@ -56,14 +59,11 @@ class DigitTheme {
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 24,
+        vertical: kPadding,
+        horizontal: kPadding * 2,
       );
 
-  EdgeInsets get containerMargin => const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 8,
-      );
+  EdgeInsets get containerMargin => const EdgeInsets.all(kPadding);
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.zero),
@@ -87,15 +87,13 @@ class DigitTheme {
         style: TextButton.styleFrom(
           shape: buttonBorder,
           padding: buttonPadding,
-          textStyle: const TextStyle(
-            fontSize: 16,
-          ),
+          textStyle: const TextStyle(fontSize: 16),
           foregroundColor: colorScheme.secondary,
         ),
       );
 
   CardTheme get cardTheme => const CardTheme(
-        margin: EdgeInsets.fromLTRB(8, 16, 8, 0),
+        margin: EdgeInsets.fromLTRB(kPadding, kPadding * 2, kPadding, 0),
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -142,16 +140,18 @@ class DigitTheme {
             ),
           ),
         ),
-        actionsPadding: const EdgeInsets.all(
-          8,
-        ),
+        actionsPadding: const EdgeInsets.all(kPadding),
       );
 
   OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
+        style: OutlinedButton.styleFrom(
           side: BorderSide(color: colorScheme.secondary),
-          padding: const EdgeInsets.only(left: 15, right: 15)));
+          padding: buttonPadding,
+        ),
+      );
 
-  BorderSide get tableCellBorder =>
-      BorderSide(color: colorScheme.background, width: 0.5);
+  BorderSide get tableCellBorder => BorderSide(
+        color: colorScheme.background,
+        width: 0.5,
+      );
 }
