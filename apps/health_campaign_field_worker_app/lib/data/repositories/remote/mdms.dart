@@ -92,6 +92,15 @@ class MdmsRepository {
         return languages;
       }).toList();
 
+      final List<GenderOptions> genderOptions =
+          element.genderOptions.map((element) {
+        final genderOption = GenderOptions()
+          ..name = element.name
+          ..code = element.code;
+
+        return genderOption;
+      }).toList();
+
       final List<Interfaces> interfaceList =
           element.backendInterface.interface.map((e) {
         final config = Config()..localStoreTTL = e.config.localStoreTTL;
@@ -105,7 +114,7 @@ class MdmsRepository {
       }).toList();
 
       final backendInterface = BackendInterface()..interfaces = interfaceList;
-
+      appConfiguration.genderOptions = genderOptions;
       appConfiguration.backendInterface = backendInterface;
 
       appConfiguration.languages = languageList;
