@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/sidebar/side_bar.dart';
 
+import '../blocs/household_details/household_details.dart';
+
 class AuthenticatedPageWrapper extends StatelessWidget {
   const AuthenticatedPageWrapper({Key? key}) : super(key: key);
 
@@ -21,6 +23,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           BlocProvider(
             create: (_) => LocationBloc(location: Location())
               ..add(const LoadLocationEvent()),
+          ),
+          BlocProvider(
+            create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
           ),
         ],
         child: const AutoRouter(),
