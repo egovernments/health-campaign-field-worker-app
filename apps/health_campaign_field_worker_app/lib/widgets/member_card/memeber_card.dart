@@ -1,6 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-
+import '../../utils/i18_key_constants.dart' as i18;
 import '../action_card/action_card.dart';
 
 class MemberCard extends StatelessWidget {
@@ -61,7 +61,7 @@ class MemberCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        " | ${age} years",
+                        " | ${age} ${i18.memberCard.deliverDetailsYearText}",
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -77,25 +77,28 @@ class MemberCard extends StatelessWidget {
                     // ignore: no-empty-block
                     ActionCardModel(
                       Icons.person,
-                      "Assign as household head",
+                      i18.memberCard.assignAsHouseholdhead,
                       () {},
                     ),
                     ActionCardModel(
                       Icons.edit,
-                      "Edit  Individual Details",
+                      i18.memberCard.editIndividualDetails,
                       () {},
                     ),
                     ActionCardModel(
                       Icons.delete,
-                      "Delete Individual",
+                      i18.memberCard.deleteIndividualActionText,
                       () {
                         DigitDialog.show(
                           context,
-                          title: "Do you want to delete this beneficiary?",
-                          primaryActionLabel: "Delete",
+                          title: i18.householdOverView
+                              .householdOverViewActionCardTitle,
+                          primaryActionLabel: i18.householdOverView
+                              .householdOverViewPrimaryActionLabel,
                           primaryAction: () =>
                               Navigator.of(context, rootNavigator: true).pop(),
-                          secondaryActionLabel: "Cancel",
+                          secondaryActionLabel: i18.householdOverView
+                              .householdOverViewSecondaryActionLabel,
                           secondaryAction: () =>
                               Navigator.of(context, rootNavigator: true).pop(),
                         );
@@ -104,7 +107,7 @@ class MemberCard extends StatelessWidget {
                   ],
                 ),
               ),
-              iconText: 'Edit',
+              iconText: i18.householdOverView.householdOverViewEditIconText,
               icon: Icons.edit,
             ),
           ],
@@ -112,13 +115,15 @@ class MemberCard extends StatelessWidget {
         isDelivered
             ? DigitIconButton(
                 icon: Icons.info_rounded,
-                iconText: 'Not Delivered',
+                iconText: i18
+                    .householdOverView.householdOverViewNotDeliveredIconLabel,
                 iconTextColor: theme.errorColor,
                 iconColor: theme.errorColor,
               )
             : DigitIconButton(
                 icon: Icons.check_circle,
-                iconText: 'Delivered',
+                iconText:
+                    i18.householdOverView.householdOverViewDeliveredIconLabel,
                 iconTextColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                 iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
               ),
@@ -127,14 +132,14 @@ class MemberCard extends StatelessWidget {
                 onPressed: () {
                   print("");
                 },
-                child: const Center(
-                  child: Text('Deliver Intervention'),
+                child: Center(
+                  child: Text(i18.memberCard.deliverInterventionSubmitLabel),
                 ),
               )
             : SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: DigitOutLineButton(
-                  label: 'Update Delivery Details',
+                  label: i18.memberCard.deliverDetailsUpdateLabel,
                   onPressed: () {},
                 ),
               ),

@@ -69,7 +69,7 @@ class SearchBeneficiaryPage extends StatelessWidget {
                       DigitOutLineButton(
                         label: i18.searchBeneficiary.iconLabel,
                         onPressed: () =>
-                            context.router.push(const HouseholdOverViewRoute()),
+                            context.router.push(HouseholdOverViewRoute()),
                       ),
                     ],
                   ),
