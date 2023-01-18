@@ -4,7 +4,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../blocs/localization/app_localization.dart';
 
 class HouseHoldDetailsPage extends LocalizedStatefulWidget {
   const HouseHoldDetailsPage({
@@ -34,7 +33,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 child: DigitElevatedButton(
                   onPressed: () {
                     if (form.valid) {
-                      print(form.value);
+                      // TODO: Complete implementation
                     } else {
                       form.markAllAsTouched();
                     }
