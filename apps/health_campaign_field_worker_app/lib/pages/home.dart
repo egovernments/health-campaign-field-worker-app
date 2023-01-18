@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
       HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
-        onPressed: () {},
+        onPressed: null,
       ),
       HomeItemCard(
         icon: Icons.call,
