@@ -5,11 +5,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import '../widget_app.dart';
 import 'login_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockAppLocalization extends Mock implements AppLocalizations {}
 
 class FakeRoute extends Fake implements Route {}
 
@@ -45,15 +47,13 @@ void main() {
     testWidgets('is initialized correctly', (widgetTester) async {
       await buildTester(widgetTester);
       expect(
-        find.widgetWithText(
-          Text,
+        find.text(
           i18.acknowledgementSuccess.acknowledgementLabelText,
         ),
         findsOneWidget,
       );
       expect(
-        find.widgetWithText(
-          Text,
+        find.text(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
         findsOneWidget,
