@@ -1,6 +1,5 @@
 library i18;
 
-
 const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
@@ -108,6 +107,7 @@ class IndividualDetails {
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
   String get submitButtonLabelText => 'Submit';
+}
 
 class HouseholdLocation {
   const HouseholdLocation();

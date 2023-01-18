@@ -39,12 +39,25 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
+        required List<GenderOptions> genderOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
       _$AppConfigFromJson(json);
+}
+
+@freezed
+class GenderOptions with _$GenderOptions {
+  factory GenderOptions({
+    required String name,
+    required String code,
+  }) = _GenderOptions;
+
+  factory GenderOptions.fromJson(Map<String, dynamic> json) =>
+      _$GenderOptionsFromJson(json);
 }
 
 @freezed
