@@ -4,7 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class DigitDropDown extends StatelessWidget {
   final String label;
   final String initialValue;
-  final List<String> menuItems;
+  final List<MenuItemModel> menuItems;
   final void Function(String? value) onChanged;
   final String formControlName;
 
@@ -32,8 +32,8 @@ class DigitDropDown extends StatelessWidget {
             formControlName: formControlName,
             items: menuItems
                 .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
+                      value: e.code,
+                      child: Text(e.name),
                     ))
                 .toList(),
           ),
@@ -41,4 +41,10 @@ class DigitDropDown extends StatelessWidget {
       ),
     );
   }
+}
+
+class MenuItemModel {
+  final String name;
+  final String code;
+  MenuItemModel(this.name, this.code);
 }
