@@ -4,11 +4,20 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../router/app_router.dart';
 import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 import '../widgets/member_card/memeber_card.dart';
 
-class HouseholdOverViewPage extends StatelessWidget {
-  const HouseholdOverViewPage({super.key});
+class HouseholdOverViewPage extends LocalizedStatefulWidget {
+  const HouseholdOverViewPage({
+    super.key,
+    super.appLocalizations,
+  });
+  @override
+  State<HouseholdOverViewPage> createState() => _HouseholdOverViewPageState();
+}
 
+class _HouseholdOverViewPageState
+    extends LocalizedState<HouseholdOverViewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -26,7 +35,9 @@ class HouseholdOverViewPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'HouseHold',
+                      localizations.translate(
+                        i18.householdOverView.householdOverViewLabel,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     DigitIconButton(
@@ -37,17 +48,22 @@ class HouseholdOverViewPage extends StatelessWidget {
                             // ignore: no-empty-block
                             ActionCardModel(
                               Icons.edit,
-                              "Edit Household Details",
+                              localizations.translate(i18.householdOverView
+                                  .householdOverViewEditLabel),
                               () {},
                             ),
                             ActionCardModel(
                               Icons.delete,
-                              "Delete Household",
+                              i18.householdOverView
+                                  .householdOverViewDeleteLabel,
                               () => DigitDialog.show(
                                 context,
-                                title:
-                                    "Do you want to delete this beneficiary?",
-                                primaryActionLabel: "Delete",
+                                title: localizations.translate(i18
+                                    .householdOverView
+                                    .householdOverViewActionCardTitle),
+                                primaryActionLabel: localizations.translate(i18
+                                    .householdOverView
+                                    .householdOverViewPrimaryActionLabel),
                                 primaryAction: () {
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
@@ -56,7 +72,10 @@ class HouseholdOverViewPage extends StatelessWidget {
                                   context.router
                                       .push(const DeletionReasonRoute());
                                 },
-                                secondaryActionLabel: "Cancel",
+                                secondaryActionLabel: localizations.translate(
+                                  i18.householdOverView
+                                      .householdOverViewSecondaryActionLabel,
+                                ),
                                 secondaryAction: () =>
                                     Navigator.of(context, rootNavigator: true)
                                         .pop(),
@@ -65,22 +84,28 @@ class HouseholdOverViewPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      iconText: 'Edit HouseHold',
+                      iconText: localizations.translate(
+                        i18.householdOverView.householdOverViewEditIconText,
+                      ),
                       icon: Icons.edit,
                     ),
                   ],
                 ),
                 DigitIconButton(
                   icon: Icons.check_circle,
-                  iconText: 'Delivered',
+                  iconText: localizations.translate(
+                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+                  ),
                   iconTextColor:
                       DigitTheme.instance.colorScheme.onSurfaceVariant,
                   iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                 ),
-                const DigitTableCard(
+                DigitTableCard(
                   element: {
-                    "HouseholdHead": "Joseph Segio",
-                    "Household Head Name": "Jose (H)",
+                    localizations.translate(i18.householdOverView
+                        .householdOverViewHouseholdHeadLabel): "Joseph Segio",
+                    localizations.translate(i18.householdOverView
+                        .householdOverViewHouseholdHeadNameLabel): "Jose (H)",
                   },
                 ),
                 const MemberCard(
@@ -115,9 +140,11 @@ class HouseholdOverViewPage extends StatelessWidget {
           child: DigitElevatedButton(
             onPressed: () =>
                 context.router.push(const DeliverInterventionRoute()),
-            child: const Center(
+            child: Center(
               child: Text(
-                "Deliver Intervention",
+                localizations.translate(
+                  i18.householdOverView.householdOverViewActionText,
+                ),
               ),
             ),
           ),

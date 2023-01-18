@@ -8,6 +8,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final DateTime? initialDate;
+
   final ValueChanged<DateTime?>? onChangeOfDate;
   final String formControlName;
   final bool? isEnabled;
@@ -30,6 +31,7 @@ class DigitDateFormPicker extends StatelessWidget {
     required this.formControlName,
     this.isEnabled,
     this.requiredMessage,
+
     this.validator,
     this.autoValidation,
     this.margin,

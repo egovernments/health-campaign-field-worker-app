@@ -59,10 +59,19 @@ class DeliverInterventionPage extends StatelessWidget {
                         "Number Of Resources For Delivery": "03",
                       },
                     ),
-                    DigitDropDown(
+                    DigitDropdown(
                       label: 'Resource Delivered',
                       initialValue: 'Betnets',
-                      menuItems: const ['Betnets', 'Dolo'],
+                      menuItems: [
+                        MenuItemModel(
+                          "DOLO",
+                          "DOLO",
+                        ),
+                        MenuItemModel(
+                          "BEDNETS",
+                          "BEDNETS",
+                        ),
+                      ],
                       onChanged: (String? newValue) {},
                       formControlName: 'resourcDelivered',
                     ),
@@ -72,13 +81,22 @@ class DeliverInterventionPage extends StatelessWidget {
                       label: "Resource Delivered",
                       incrementer: true,
                     ),
-                    DigitDropDown(
+                    DigitDropdown(
                       label: 'Delivery Comment',
                       initialValue: 'Betnets',
-                      menuItems: const [
-                        'Insufficient Resources',
-                        'Beneficiary Refused',
-                        'Beneficiary Absent',
+                      menuItems: [
+                        MenuItemModel(
+                          "Insufficient Resources",
+                          "Insufficient Resources",
+                        ),
+                        MenuItemModel(
+                          "Insufficient Resources",
+                          "Insufficient Resources",
+                        ),
+                        MenuItemModel(
+                          "Beneficiary Absent",
+                          "Beneficiary Absent",
+                        ),
                       ],
                       onChanged: (String? newValue) {},
                       formControlName: 'deliveryComment',
