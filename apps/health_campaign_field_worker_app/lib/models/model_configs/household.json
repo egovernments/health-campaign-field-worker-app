@@ -1,5 +1,6 @@
 {
   "name": "household",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
