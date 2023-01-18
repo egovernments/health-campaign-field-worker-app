@@ -24,6 +24,9 @@ class AppConfiguration {
   @Name("BACKEND_INTERFACE")
   late BackendInterface? backendInterface;
 
+  @Name('GENDER_OPTIONS_POPULATOR')
+  late List<GenderOptions>? genderOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -38,6 +41,12 @@ class Languages {
 class BackendInterface {
   @Name("interfaces")
   late List<Interfaces> interfaces;
+}
+
+@embedded
+class GenderOptions {
+  late String name;
+  late String code;
 }
 
 @embedded
