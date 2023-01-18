@@ -69,8 +69,6 @@ class _HouseholdOverViewPageState
                                       .pop();
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
-                                  context.router
-                                      .push(const DeletionReasonRoute());
                                 },
                                 secondaryActionLabel: localizations.translate(
                                   i18.householdOverView
