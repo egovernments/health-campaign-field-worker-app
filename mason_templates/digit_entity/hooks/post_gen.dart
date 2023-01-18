@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:recase/recase.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:collection/collection.dart';
-import 'package:dart_mappable/internals.dart';
 
 import 'lib/models.dart';
 import 'package:mason/mason.dart';

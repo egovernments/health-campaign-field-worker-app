@@ -8,7 +8,7 @@ import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/beneficiary/beneficiary_card.dart';
-import '../widgets/beneficiary/beneficiary_ statistics_card.dart';
+import '../widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 
 class SearchBeneficiaryPage extends StatelessWidget {
@@ -67,7 +67,9 @@ class SearchBeneficiaryPage extends StatelessWidget {
                       ),
                       DigitOutLineButton(
                         label: i18.searchBeneficiary.iconLabel,
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: Complete implementation
+                        },
                       ),
                     ],
                   ),
