@@ -11,7 +11,7 @@ import '../pages/unauthenticated.dart';
 import '../pages/search_beneficiary.dart';
 
 export 'package:auto_route/auto_route.dart';
-
+import '../blocs/localization/app_localization.dart';
 part 'app_router.gr.dart';
 
 @MaterialAutoRouter(
