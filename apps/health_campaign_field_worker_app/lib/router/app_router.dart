@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import '../blocs/localization/app_localization.dart';
+import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/deletion_reason.dart';
 import '../pages/deliver_intervention.dart';
@@ -14,7 +14,7 @@ import '../pages/unauthenticated.dart';
 import '../pages/search_beneficiary.dart';
 
 export 'package:auto_route/auto_route.dart';
-
+import '../blocs/localization/app_localization.dart';
 part 'app_router.gr.dart';
 
 @MaterialAutoRouter(
@@ -43,6 +43,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: DeletionReasonPage, path: 'deletion-reason'),
         AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
         AutoRoute(page: HouseholdLocationPage, path: 'household-location'),
+        AutoRoute(page: AcknowledgementPage, path: 'ackowledgement'),
       ],
     ),
   ],

@@ -6,28 +6,28 @@ class DigitTextField extends StatelessWidget {
   final String label;
   final TextEditingController? controller;
   final String prefixText;
-  final int? maxLenght;
+  final int? maxLength;
   final int? maxLines;
   final bool isRequired;
-  final Function(String)? onChange;
+  final ValueChanged<String>? onChange;
   final List<FilteringTextInputFormatter>? inputFormatter;
   final FocusNode? focusNode;
   final TextInputType? textInputType;
   final String? pattern;
-  final bool? obscureText;
   final String? message;
-  final Function(String?)? validator;
+  final String? Function(String? value)? validator;
   final TextCapitalization? textCapitalization;
   final AutovalidateMode? autoValidation;
-  final bool? isDisabled;
-  final bool? readOnly;
+  final bool obscureText;
+  final bool isDisabled;
+  final bool readOnly;
   final bool? isFilled;
 
   const DigitTextField({
     super.key,
     required this.label,
     this.prefixText = '',
-    this.maxLenght,
+    this.maxLength,
     this.controller,
     this.isRequired = false,
     this.textInputType,
@@ -40,9 +40,9 @@ class DigitTextField extends StatelessWidget {
     this.onChange,
     this.maxLines,
     this.autoValidation,
-    this.obscureText,
-    this.isDisabled,
-    this.readOnly,
+    this.obscureText = false,
+    this.isDisabled = false,
+    this.readOnly = false,
     this.isFilled,
   });
 
@@ -52,12 +52,8 @@ class DigitTextField extends StatelessWidget {
       label: label,
       child: TextFormField(
         controller: controller,
-        enabled: isDisabled != null
-            ? (isDisabled == true)
-                ? false
-                : true
-            : true,
-        maxLength: maxLenght,
+        enabled: !isDisabled,
+        maxLength: maxLength,
         keyboardType: textInputType ?? TextInputType.text,
         autofocus: false,
         inputFormatters: inputFormatter,
@@ -65,16 +61,10 @@ class DigitTextField extends StatelessWidget {
         onChanged: onChange,
         maxLines: maxLines,
         focusNode: focusNode,
-        obscureText: obscureText ?? false,
+        obscureText: obscureText,
         autovalidateMode: autoValidation,
-        readOnly: readOnly ?? false,
-        validator: validator != null
-            ? (val) => validator!(val)
-            : (value) {
-                if (value!.trim().isEmpty && isRequired) {
-                  return null;
-                }
-              },
+        readOnly: readOnly,
+        validator: (value) => validator?.call(value),
       ),
     );
   }
