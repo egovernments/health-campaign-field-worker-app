@@ -113,7 +113,7 @@ class IndividualDetails {
 
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
-  String get submitButtonLabelText => 'Submit';
+  String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
 }
 
 class HouseholdLocation {
