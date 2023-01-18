@@ -43,7 +43,7 @@ class _IndividualDetailsPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        print(form.value);
+                        // TODO: Complete implementation
                       } else {
                         form.markAllAsTouched();
                       }

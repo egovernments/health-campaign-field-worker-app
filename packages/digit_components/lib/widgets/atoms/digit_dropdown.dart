@@ -5,7 +5,7 @@ class DigitDropDown extends StatelessWidget {
   final String label;
   final String initialValue;
   final List<MenuItemModel> menuItems;
-  final void Function(String? value) onChanged;
+  final ValueChanged<String?> onChanged;
   final String formControlName;
 
   const DigitDropDown(
