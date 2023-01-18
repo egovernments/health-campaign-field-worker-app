@@ -41,7 +41,6 @@ part 'app_router.gr.dart';
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
         AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
-        AutoRoute(page: DeletionReasonPage, path: 'deletion-reason'),
         AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
         AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
         AutoRoute(page: HouseholdLocationPage, path: 'household-location'),
