@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -27,7 +28,7 @@ class _HouseholdLocationPageState
         builder: (context, form, child) {
           return ScrollableContent(
             header: Column(children: const [
-              // BackNavigationHelpHeaderWidget(),
+              BackNavigationHelpHeaderWidget(),
             ]),
             footer: Offstage(
               offstage: false,
@@ -37,7 +38,7 @@ class _HouseholdLocationPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        print(form.value);
+                        context.router.push(AcknowledgementRoute());
                       } else {
                         form.markAllAsTouched();
                       }

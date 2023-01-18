@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:dart_mappable/internals.dart';
 
 import 'lib/models.dart';
 import 'package:mason/mason.dart';

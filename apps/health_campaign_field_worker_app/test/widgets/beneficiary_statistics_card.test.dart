@@ -1,5 +1,5 @@
 import 'package:health_campaign_field_worker_app/models/beneficiary_statistics/beneficiary_statistics_model.dart';
-import 'package:health_campaign_field_worker_app/widgets/beneficiary/beneficiary_%20statistics_card.dart';
+import 'package:health_campaign_field_worker_app/widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widget_app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
