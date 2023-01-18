@@ -5,14 +5,21 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../models/address_type.dart';
+import '../../../models/gender.dart';
+import '../../../models/blood_group.dart';
 import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/facility.dart';
 import 'tables/household.dart';
+import 'tables/household_address.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
+import 'tables/individual_address.dart';
+import 'tables/individual_identifier.dart';
+import 'tables/individual_name.dart';
 import 'tables/name.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -30,27 +37,31 @@ import 'tables/task_resource.dart';
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
-  AddressTable,
-  NameTable,
-  BoundaryTable,
-  DocumentTable,
-  FacilityTable,
-  HouseholdTable,
-  HouseholdMemberTable,
-  IdentifierTable,
-  IndividualTable,
-  ProductTable,
-  ProductVariantTable,
-  ProjectTable,
-  ProjectBeneficiaryTable,
-  ProjectFacilityTable,
-  ProjectProductVariantTable,
-  ProjectResourceTable,
-  ProjectStaffTable,
-  ProjectTypeTable,
-  TargetTable,
-  TaskTable,
-  TaskResourceTable,
+  Address,
+  Name,
+  Boundary,
+  Document,
+  Facility,
+  Household,
+  HouseholdAddress,
+  HouseholdMember,
+  Identifier,
+  Individual,
+  IndividualAddress,
+  IndividualIdentifier,
+  IndividualName,
+  Product,
+  ProductVariant,
+  Project,
+  ProjectBeneficiary,
+  ProjectFacility,
+  ProjectProductVariant,
+  ProjectResource,
+  ProjectStaff,
+  ProjectType,
+  Target,
+  Task,
+  TaskResource,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
