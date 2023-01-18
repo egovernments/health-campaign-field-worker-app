@@ -108,17 +108,19 @@ class _HouseholdOverViewPageState
                         .householdOverViewHouseholdHeadNameLabel): "Jose (H)",
                   },
                 ),
-                const MemberCard(
+                MemberCard(
                   name: 'Joseph Sergio (H)',
                   age: 40,
                   gender: 'Male',
                   isDelivered: false,
+                  localizations: localizations,
                 ),
-                const MemberCard(
+                MemberCard(
                   name: 'Maria',
                   age: 40,
                   gender: 'Female',
                   isDelivered: true,
+                  localizations: localizations,
                 ),
                 Center(
                   child: DigitIconButton(
