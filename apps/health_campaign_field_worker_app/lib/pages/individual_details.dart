@@ -1,5 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_check_box.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
@@ -121,25 +122,30 @@ class _IndividualDetailsPageState
                             i18.individualDetails.separatorLabelText,
                       ),
                       BlocBuilder<AppInitializationBloc,
-                          AppInitializationState>(builder: (context, state) {
-                        return DigitDropDown(
-                          label: i18.individualDetails.genderLabelText,
-                          initialValue: 'MALE',
-                          menuItems: state.appConfiguration != null &&
-                                  state.appConfiguration!.genderOptions != null
-                              ? state.appConfiguration!.genderOptions!
-                                  .map((e) => MenuItemModel(
+                          AppInitializationState>(
+                        builder: (context, state) {
+                          return DigitDropdown(
+                            label: localizations.translate(
+                              i18.individualDetails.genderLabelText,
+                            ),
+                            initialValue: state.appConfiguration?.genderOptions
+                                ?.firstOrNull?.name,
+                            menuItems: state.appConfiguration?.genderOptions
+                                    ?.map(
+                                      (e) => MenuItemModel(
                                         e.code,
-                                        e.name,
-                                      ))
-                                  .toList()
-                              : [],
-                          onChanged: (value) {
-                            // TODO: Complete implementation
-                          },
-                          formControlName: 'gender',
-                        );
-                      }),
+                                        localizations.translate(e.name),
+                                      ),
+                                    )
+                                    .toList() ??
+                                [],
+                            onChanged: (value) {
+                              // TODO: Complete implementation
+                            },
+                            formControlName: 'gender',
+                          );
+                        },
+                      ),
                       DigitTextFormField(
                         formControlName: 'mobileNumber',
                         label: localizations.translate(

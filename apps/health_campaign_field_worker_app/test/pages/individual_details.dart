@@ -104,7 +104,7 @@ void main() {
 
         expect(
           find.widgetWithText(
-            DigitDropDown,
+            DigitDropdown,
             i18.individualDetails.genderLabelText,
           ),
           findsOneWidget,
