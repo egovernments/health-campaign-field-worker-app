@@ -6,6 +6,7 @@ import '../pages/deletion_reason.dart';
 import '../pages/deliver_intervention.dart';
 import '../pages/home.dart';
 import '../pages/household_overview.dart';
+import '../pages/individual_details.dart';
 import '../pages/household_details.dart';
 import '../pages/household_location.dart';
 import '../pages/language_selection.dart';
@@ -41,6 +42,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
         AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
         AutoRoute(page: DeletionReasonPage, path: 'deletion-reason'),
+        AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
         AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
         AutoRoute(page: HouseholdLocationPage, path: 'household-location'),
         AutoRoute(page: AcknowledgementPage, path: 'ackowledgement'),

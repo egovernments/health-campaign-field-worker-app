@@ -8,6 +8,8 @@ const searchBeneficiary = SearchBeneficiary();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
+const individualDetails = IndividualDetails();
+const householdOverView = HouseholdOverView();
 
 class Common {
   const Common();
@@ -81,6 +83,34 @@ class SearchBeneficiary {
   String get iconLabel => 'ICON_LABEL';
 }
 
+class IndividualDetails {
+  const IndividualDetails();
+
+  String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
+  String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+
+  String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
+
+  String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';
+
+  String get dobLabelText => 'DOB_LABEL_TEXT';
+
+  String get ageLabelText => 'AGE_LABEL_TEXT';
+
+  String get separatorLabelText => 'SEPARATOR_LABEL_TEXT';
+
+  String get genderLabelText => 'GENDER_LABEL_TEXT';
+
+  String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
+
+  String get submitButtonLabelText => 'Submit';
+}
+
 class HouseholdLocation {
   const HouseholdLocation();
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
@@ -115,4 +145,32 @@ class HouseholdDetails {
   String get dateOfRegistrationLabel =>
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+}
+
+class HouseholdOverView {
+  const HouseholdOverView();
+  String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
+  String get householdOverViewEditLabel =>
+      'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+  String get householdOverViewDeleteLabel =>
+      'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
+  String get householdOverViewEditIconText =>
+      'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+  String get householdOverViewActionCardTitle =>
+      'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
+  String get householdOverViewPrimaryActionLabel =>
+      'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
+
+  String get householdOverViewSecondaryActionLabel =>
+      'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
+  String get householdOverViewDeliveredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+
+  String get householdOverViewHouseholdHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
+
+  String get householdOverViewHouseholdHeadNameLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
+
+  String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ActionText';
 }
