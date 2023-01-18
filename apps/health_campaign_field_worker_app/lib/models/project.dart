@@ -73,9 +73,9 @@ class ProjectModel extends DataModel implements ProjectSearchModel {
   final String projectHierarchy;
   final int rowVersion;
   final String clientReferenceId;
-  final AddressSearchModel address;
-  final List<TargetSearchModel> targets;
-  final List<DocumentSearchModel> documents;
+  final AddressModel address;
+  final List<TargetModel> targets;
+  final List<DocumentModel> documents;
   
   @override
   final DateTime startDateTime;

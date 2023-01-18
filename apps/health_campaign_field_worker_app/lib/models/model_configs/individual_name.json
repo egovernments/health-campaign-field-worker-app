@@ -1,0 +1,22 @@
+{
+  "name": "IndividualName",
+  "attributes": [
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "individual",
+      "type": "individual",
+      "createReference": true
+    },
+    {
+      "name": "name",
+      "type": "name",
+      "createReference": true
+    }
+  ]
+}

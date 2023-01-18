@@ -4,10 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/app_localization.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../widgets/localized.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends LocalizedStatefulWidget {
+  const LoginPage({
+    Key? key,
+    super.appLocalizations,
+  }) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends LocalizedState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -22,13 +31,21 @@ class LoginPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppLocalizations.of(context).translate(
+                  localizations.translate(
                     i18.login.labelText,
                   ),
                   style: theme.textTheme.displayMedium,
                 ),
-                DigitTextField(label: i18.login.userIdPlaceholder),
-                DigitTextField(label: i18.login.passwordPlaceholder),
+                DigitTextField(
+                  label: localizations.translate(
+                    i18.login.userIdPlaceholder,
+                  ),
+                ),
+                DigitTextField(
+                  label: localizations.translate(
+                    i18.login.passwordPlaceholder,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) => DigitElevatedButton(
@@ -43,7 +60,8 @@ class LoginPage extends StatelessWidget {
                                 );
                           },
                     child: Center(
-                      child: Text(i18.login.actionLabel),
+                      child:
+                          Text(localizations.translate(i18.login.actionLabel)),
                     ),
                   ),
                 ),
@@ -55,7 +73,13 @@ class LoginPage extends StatelessWidget {
                     primaryActionLabel: i18.forgotPassword.primaryActionLabel,
                     primaryAction: () => Navigator.pop(context),
                   ),
-                  child: Center(child: Text(i18.forgotPassword.actionLabel)),
+                  child: Center(
+                    child: Text(
+                      localizations.translate(
+                        i18.forgotPassword.actionLabel,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -13,7 +13,6 @@ for file in *.json ; do
   echo "$file"
   mason make digit_entity -c "$file" --on-conflict overwrite -o "$app_root"
 done
-#mason make digit_entity -c "enum_blood_group.json" --on-conflict overwrite -o "$app_root"
 
 cd "$home" || exit
 echo "$PWD"
