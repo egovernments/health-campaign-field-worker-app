@@ -6,7 +6,7 @@ import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
+import '../router/app_router.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -45,7 +45,9 @@ class _IndividualDetailsPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
+                        context.router.push(AcknowledgementRoute());
                         // TODO: Complete implementation
+
                       } else {
                         form.markAllAsTouched();
                       }

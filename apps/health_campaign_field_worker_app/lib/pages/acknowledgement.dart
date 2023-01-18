@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
+import '../router/app_router.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
   const AcknowledgementPage({
@@ -18,9 +19,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DigitAcknowledgement.success(
-        action: () {
-          // TODO: Complete implementation
-        },
+        action: () => context.router.pop(),
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(
