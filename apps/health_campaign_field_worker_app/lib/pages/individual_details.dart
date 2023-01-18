@@ -17,6 +17,7 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<IndividualDetailsPage> createState() => _IndividualDetailsPageState();
 }
@@ -75,11 +76,11 @@ class _IndividualDetailsPageState
                         label: localizations
                             .translate(i18.individualDetails.nameLabelText),
                       ),
-                      DigitCheckBox(
-                        checkBoxText: localizations
-                            .translate(i18.individualDetails.checkboxLabelText),
-                        onChange: () {},
-                        isChecked: true,
+                      DigitCheckbox(
+                        label: localizations.translate(
+                          i18.individualDetails.checkboxLabelText,
+                        ),
+                        value: true,
                       ),
                       DigitTextFormField(
                         formControlName: 'idType',
@@ -109,7 +110,9 @@ class _IndividualDetailsPageState
                       DigitDobPicker(
                         datePickerFormControl: 'dob',
                         ageInputFormControl: 'age',
-                        onChangeDate: (DateTime? dateTime) {},
+                        onChangeDate: (dateTime) {
+                          // TODO: Complete implementation
+                        },
                         datePickerLabel: localizations
                             .translate(i18.individualDetails.dobLabelText),
                         ageFieldLabel: localizations
@@ -131,7 +134,9 @@ class _IndividualDetailsPageState
                                       ))
                                   .toList()
                               : [],
-                          onChanged: (String? newValue) {},
+                          onChanged: (value) {
+                            // TODO: Complete implementation
+                          },
                           formControlName: 'gender',
                         );
                       }),

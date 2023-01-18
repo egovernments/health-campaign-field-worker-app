@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class DigitCheckBox extends StatelessWidget {
+class DigitCheckbox extends StatelessWidget {
   final bool value;
-  final String checkBoxText;
-  final ValueChanged<bool?>? onChange;
+  final String label;
+  final ValueChanged<bool?>? onChanged;
 
-  const DigitCheckBox({
+  const DigitCheckbox({
     super.key,
-    required this.checkBoxText,
-    this.onChange,
+    required this.label,
+    this.onChanged,
     this.value = false,
   });
 
@@ -19,7 +19,7 @@ class DigitCheckBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: InkWell(
-        onTap: onChange,
+        onTap: () => onChanged?.call(!value),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -27,29 +27,31 @@ class DigitCheckBox extends StatelessWidget {
               height: 24,
               width: 24,
               child: Checkbox(
-                  value: value,
-                  side: MaterialStateBorderSide.resolveWith((states) {
-                    if (states.contains(MaterialState.selected)) {
-                      return BorderSide(
-                          width: 2.0, color: theme.colorScheme.secondary);
-                    }
-                  }),
-                  fillColor: MaterialStateProperty.resolveWith((states) {
-                    if (states.contains(MaterialState.selected)) {
-                      return theme.colorScheme.surface;
-                    }
-                    return theme.colorScheme.secondary;
-                  }),
-                  checkColor: theme.colorScheme.secondary,
-                  onChanged: onChange,
+                value: value,
+                side: MaterialStateBorderSide.resolveWith((states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return BorderSide(
+                      width: 2.0,
+                      color: theme.colorScheme.secondary,
+                    );
+                  }
+                  return const BorderSide(width: 1.0);
+                }),
+                fillColor: MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return theme.colorScheme.surface;
+                  }
+                  return theme.colorScheme.secondary;
+                }),
+                checkColor: theme.colorScheme.secondary,
+                onChanged: onChanged,
+              ),
             ),
-            const SizedBox(
-              width: 16,
-            ),
+            const SizedBox(width: 16),
             Text(
-              checkBoxText,
+              label,
               style: Theme.of(context).textTheme.bodyLarge,
-            )
+            ),
           ],
         ),
       ),
