@@ -37,17 +37,19 @@ class _DeliverInterventionPageState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          i18.deliverIntervention.deliverInterventionLabel,
+                          localizations.translate(
+                            i18.deliverIntervention.deliverInterventionLabel,
+                          ),
                           style: theme.textTheme.displayMedium,
                         ),
                       ],
                     ),
                     DigitTableCard(
                       element: {
-                        i18.deliverIntervention.dateOfRegistrationLabel:
-                            "Joseph Segio",
-                        i18.householdOverView
-                            .householdOverViewHouseholdHeadLabel: "Jose (H)",
+                        localizations.translate(i18.deliverIntervention
+                            .dateOfRegistrationLabel): "Joseph Segio",
+                        localizations.translate(i18.householdOverView
+                            .householdOverViewHouseholdHeadLabel): "Jose (H)",
                       },
                     ),
                     DigitTableCard(
@@ -58,11 +60,19 @@ class _DeliverInterventionPageState
                         width: 1.0,
                       ),
                       element: {
-                        i18.deliverIntervention.idTypeText: "National ID",
-                        i18.deliverIntervention.idNumberText: "JGK87389",
-                        i18.common.coreCommonAge: "40 years",
-                        i18.common.coreCommonGender: "Male",
-                        i18.common.coreCommonMobileNumber: "+258 576478",
+                        localizations.translate(
+                          i18.deliverIntervention.idTypeText,
+                        ): "National ID",
+                        localizations.translate(
+                          i18.deliverIntervention.idNumberText,
+                        ): "JGK87389",
+                        localizations.translate(i18.common.coreCommonAge):
+                            "40 years",
+                        localizations.translate(i18.common.coreCommonGender):
+                            "Male",
+                        localizations.translate(
+                          i18.common.coreCommonMobileNumber,
+                        ): "+258 576478",
                       },
                     ),
                     DigitTableCard(
@@ -72,7 +82,9 @@ class _DeliverInterventionPageState
                       },
                     ),
                     DigitDropdown(
-                      label: i18.deliverIntervention.resourceDeliveredLabel,
+                      label: localizations.translate(
+                        i18.deliverIntervention.resourceDeliveredLabel,
+                      ),
                       initialValue: 'BEDNETS',
                       menuItems: [
                         MenuItemModel(
@@ -90,11 +102,15 @@ class _DeliverInterventionPageState
                     DigitIntegerFormPicker(
                       form: form,
                       formControlName: 'quantityDistributed',
-                      label: i18.deliverIntervention.quantityDistributedLabel,
+                      label: localizations.translate(
+                        i18.deliverIntervention.quantityDistributedLabel,
+                      ),
                       incrementer: true,
                     ),
                     DigitDropdown(
-                      label: i18.deliverIntervention.deliveryCommentLabel,
+                      label: localizations.translate(
+                        i18.deliverIntervention.deliveryCommentLabel,
+                      ),
                       initialValue: 'Betnets',
                       menuItems: [
                         MenuItemModel(
@@ -126,18 +142,22 @@ class _DeliverInterventionPageState
           child: DigitElevatedButton(
             onPressed: () => DigitDialog.show(
               context,
-              title: i18.deliverIntervention.dialogTitle,
-              content: i18.deliverIntervention.dialogContent,
-              primaryActionLabel: i18.common.coreCommonSubmit,
+              title:
+                  localizations.translate(i18.deliverIntervention.dialogTitle),
+              content: localizations
+                  .translate(i18.deliverIntervention.dialogContent),
+              primaryActionLabel:
+                  localizations.translate(i18.common.coreCommonSubmit),
               primaryAction: () =>
                   Navigator.of(context, rootNavigator: true).pop(),
-              secondaryActionLabel: i18.common.coreCommonCancel,
+              secondaryActionLabel:
+                  localizations.translate(i18.common.coreCommonCancel),
               secondaryAction: () =>
                   Navigator.of(context, rootNavigator: true).pop(),
             ),
             child: Center(
               child: Text(
-                i18.common.coreCommonSubmit,
+                localizations.translate(i18.common.coreCommonSubmit),
               ),
             ),
           ),

@@ -142,8 +142,7 @@ class _HouseholdOverViewPageState
         height: 90,
         child: DigitCard(
           child: DigitElevatedButton(
-            onPressed: () =>
-                context.router.push(const DeliverInterventionRoute()),
+            onPressed: () => context.router.push(DeliverInterventionRoute()),
             child: Center(
               child: Text(
                 localizations.translate(
