@@ -1,7 +1,9 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
 
-class ProjectProductVariantTable extends Table {
+class ProjectProductVariant extends Table {
   TextColumn get productVariantId => text()();
   TextColumn get type => text()();
   BoolColumn get isBaseUnitVariant => boolean()();
@@ -9,5 +11,5 @@ class ProjectProductVariantTable extends Table {
   
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

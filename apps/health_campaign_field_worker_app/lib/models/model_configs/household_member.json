@@ -1,5 +1,6 @@
 {
   "name": "householdMember",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",

@@ -1,5 +1,6 @@
 {
   "name": "projectProductVariant",
+  "createRepository": true,
   "attributes": [
     {
       "name": "productVariantId",
