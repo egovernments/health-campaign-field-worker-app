@@ -7,7 +7,6 @@ import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import '../widget_app.dart';
-import 'login_test.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 

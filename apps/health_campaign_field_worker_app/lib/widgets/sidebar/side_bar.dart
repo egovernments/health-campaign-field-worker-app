@@ -107,12 +107,16 @@ class SideBar extends StatelessWidget {
               },
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            // TODO: Complete implementation
+          },
         ),
         DigitIconTile(
           title: 'Logout',
           icon: Icons.logout,
-          onPressed: () {},
+          onPressed: () {
+            // TODO: Complete implementation
+          },
         ),
       ],
     );
