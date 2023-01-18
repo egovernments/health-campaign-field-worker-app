@@ -18,16 +18,13 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DigitAcknowledgement(
-        color: DigitTheme.instance.colorScheme.onSurfaceVariant,
-        cardHeight: MediaQuery.of(context).size.height / 3,
-        action: (() {}),
+      body: DigitAcknowledgement.error(
+        action: () {},
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),
-        icon: Icons.check_circle,
         label: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
       ),
