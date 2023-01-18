@@ -35,7 +35,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 child: DigitElevatedButton(
                   onPressed: () {
                     if (form.valid) {
-                      print(form.value);
+                      // TODO: Complete implementation
                       context.router.push(IndividualDetailsRoute());
                     } else {
                       form.markAllAsTouched();

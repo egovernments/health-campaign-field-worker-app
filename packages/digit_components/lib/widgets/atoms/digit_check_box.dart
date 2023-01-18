@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DigitCheckBox extends StatelessWidget {
-  final bool isChecked;
+  final bool value;
   final String checkBoxText;
-  final VoidCallback onChange;
+  final ValueChanged<bool?>? onChange;
 
   const DigitCheckBox({
     super.key,
     required this.checkBoxText,
-    required this.onChange,
-    this.isChecked = false,
+    this.onChange,
+    this.value = false,
   });
 
   @override
@@ -27,7 +27,7 @@ class DigitCheckBox extends StatelessWidget {
               height: 24,
               width: 24,
               child: Checkbox(
-                  value: isChecked,
+                  value: value,
                   side: MaterialStateBorderSide.resolveWith((states) {
                     if (states.contains(MaterialState.selected)) {
                       return BorderSide(
@@ -41,9 +41,7 @@ class DigitCheckBox extends StatelessWidget {
                     return theme.colorScheme.secondary;
                   }),
                   checkColor: theme.colorScheme.secondary,
-                  onChanged: (bool? value) {
-                    onChange;
-                  }),
+                  onChanged: onChange,
             ),
             const SizedBox(
               width: 16,

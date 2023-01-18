@@ -7,7 +7,7 @@ class DigitDobPicker extends StatelessWidget {
   final String ageInputFormControl;
 
   final bool isVerified;
-  final Function(DateTime? dateTime) onChangeDate;
+  final ValueChanged<DateTime?> onChangeDate;
 
   final String datePickerLabel;
   final String ageFieldLabel;

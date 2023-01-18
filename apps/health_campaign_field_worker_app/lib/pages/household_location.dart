@@ -38,7 +38,7 @@ class _HouseholdLocationPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        print(form.value);
+                        // TODO: Complete implementation
                         context.router.push(HouseHoldDetailsRoute());
                       } else {
                         form.markAllAsTouched();
