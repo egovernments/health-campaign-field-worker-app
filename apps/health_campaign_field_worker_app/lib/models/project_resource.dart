@@ -30,7 +30,7 @@ class ProjectResourceModel extends DataModel implements ProjectResourceSearchMod
   final String projectId;
   final int rowVersion;
   final String clientReferenceId;
-  final ProjectProductVariantSearchModel resources;
+  final ProjectProductVariantModel resources;
   
 
   ProjectResourceModel({

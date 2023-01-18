@@ -34,7 +34,8 @@
     {
       "name": "children",
       "type": "boundary",
-      "nullable": true
+      "nullable": true,
+      "createReference": true
     }
   ],
   "isEnum": false
