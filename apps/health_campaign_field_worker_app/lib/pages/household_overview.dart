@@ -127,7 +127,9 @@ class _HouseholdOverViewPageState
                     onPressed: () {
                       print("");
                     },
-                    iconText: 'Add Member',
+                    iconText: localizations.translate(
+                      i18.householdOverView.householdOverViewAddActionText,
+                    ),
                     icon: Icons.add,
                   ),
                 ),
