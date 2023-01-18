@@ -10,6 +10,7 @@ const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
 const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
+const memberCard = MemberCard();
 
 class Common {
   const Common();
@@ -165,6 +166,8 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+  String get householdOverViewNotDeliveredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
@@ -173,4 +176,17 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ActionText';
+}
+
+class MemberCard {
+  const MemberCard();
+  String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
+  String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUALDETAILS';
+  String get deleteIndividualActionText =>
+      'MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT';
+  String get deliverInterventionSubmitLabel =>
+      'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
+  String get deliverDetailsUpdateLabel =>
+      'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
+  String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
 }
