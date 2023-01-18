@@ -7,28 +7,93 @@ void main() {
   group(
     'DigitAcknowledgement Test',
     () {
-      bool actionTriggered = false;
+      late bool actionTriggered;
+
+      setUp(() {
+        actionTriggered = false;
+      });
+
       testWidgets(
-        'Widget is created without errors',
+        'Success Acknowledgement is created without errors',
         (widgetTester) async {
           await widgetTester.pumpWidget(
             WidgetApp(
-              child: DigitAcknowledgement(
+              child: DigitAcknowledgement.success(
                 action: () => actionTriggered = !actionTriggered,
                 actionLabel: 'DIGIT_ACKNOWLEDGEMENT_ACTION_LABEL',
-                cardHeight: 15,
-                color: Colors.yellow,
                 description: 'DIGIT_ACKNOWLEDGEMENT_DESCRIPTION',
-                icon: Icons.abc_outlined,
                 label: 'DIGIT_ACKNOWLEDGEMENT_LABEL',
               ),
             ),
           );
+
           expect(
             find.widgetWithText(
-                DigitAcknowledgement, 'DIGIT_ACKNOWLEDGEMENT_LABEL'),
+              DigitAcknowledgement,
+              'DIGIT_ACKNOWLEDGEMENT_LABEL',
+            ),
             findsOneWidget,
           );
+
+          expect(
+            find.widgetWithIcon(
+              DigitAcknowledgement,
+              Icons.check_circle,
+            ),
+            findsOneWidget,
+          );
+
+          expect(actionTriggered, false);
+          await widgetTester.tap(
+            find.widgetWithText(
+              DigitElevatedButton,
+              'DIGIT_ACKNOWLEDGEMENT_ACTION_LABEL',
+            ),
+          );
+
+          expect(actionTriggered, true);
+        },
+      );
+
+      testWidgets(
+        'Error Acknowledgement is created without errors',
+            (widgetTester) async {
+          await widgetTester.pumpWidget(
+            WidgetApp(
+              child: DigitAcknowledgement.error(
+                action: () => actionTriggered = !actionTriggered,
+                actionLabel: 'DIGIT_ACKNOWLEDGEMENT_ACTION_LABEL',
+                description: 'DIGIT_ACKNOWLEDGEMENT_DESCRIPTION',
+                label: 'DIGIT_ACKNOWLEDGEMENT_LABEL',
+              ),
+            ),
+          );
+
+          expect(
+            find.widgetWithText(
+              DigitAcknowledgement,
+              'DIGIT_ACKNOWLEDGEMENT_LABEL',
+            ),
+            findsOneWidget,
+          );
+
+          expect(
+            find.widgetWithIcon(
+              DigitAcknowledgement,
+              Icons.error,
+            ),
+            findsOneWidget,
+          );
+
+          expect(actionTriggered, false);
+          await widgetTester.tap(
+            find.widgetWithText(
+              DigitElevatedButton,
+              'DIGIT_ACKNOWLEDGEMENT_ACTION_LABEL',
+            ),
+          );
+
+          expect(actionTriggered, true);
         },
       );
     },
