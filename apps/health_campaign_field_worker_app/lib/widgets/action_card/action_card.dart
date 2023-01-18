@@ -15,7 +15,7 @@ class ActionCard extends StatelessWidget {
             (e) => DigitOutlineIconButton(
               icon: e.icon,
               label: e.label,
-              onPressed: e.callback,
+              onPressed: e.action,
             ),
           )
           .toList(),
@@ -26,6 +26,11 @@ class ActionCard extends StatelessWidget {
 class ActionCardModel {
   final IconData icon;
   final String label;
-  final VoidCallback callback;
-  const ActionCardModel(this.icon, this.label, this.callback);
+  final VoidCallback action;
+
+  const ActionCardModel({
+    required this.icon,
+    required this.label,
+    required this.action,
+  });
 }

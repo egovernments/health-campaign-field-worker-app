@@ -21,6 +21,7 @@ class MemberCard extends StatelessWidget {
     required this.localizations,
     required this.isDelivered,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -64,7 +65,7 @@ class MemberCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        " | ${age} ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
+                        " | $age ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -77,24 +78,30 @@ class MemberCard extends StatelessWidget {
                 context,
                 widget: ActionCard(
                   items: [
-                    // ignore: no-empty-block
                     ActionCardModel(
-                      Icons.person,
-                      localizations
-                          .translate(i18.memberCard.assignAsHouseholdhead),
-                      () {},
+                      icon: Icons.person,
+                      label: localizations.translate(
+                        i18.memberCard.assignAsHouseholdhead,
+                      ),
+                      action: () {
+                        // TODO: Complete implementation
+                      },
                     ),
                     ActionCardModel(
-                      Icons.edit,
-                      localizations
-                          .translate(i18.memberCard.editIndividualDetails),
-                      () {},
+                      icon: Icons.edit,
+                      label: localizations.translate(
+                        i18.memberCard.editIndividualDetails,
+                      ),
+                      action: () {
+                        // TODO: Complete implementation
+                      },
                     ),
                     ActionCardModel(
-                      Icons.delete,
-                      localizations
-                          .translate(i18.memberCard.deleteIndividualActionText),
-                      () {
+                      icon: Icons.delete,
+                      label: localizations.translate(
+                        i18.memberCard.deleteIndividualActionText,
+                      ),
+                      action: () {
                         DigitDialog.show(
                           context,
                           title: localizations.translate(i18.householdOverView
@@ -141,7 +148,7 @@ class MemberCard extends StatelessWidget {
         isDelivered
             ? DigitElevatedButton(
                 onPressed: () {
-                  print("");
+                  // TODO: Complete implementation
                 },
                 child: Center(
                   child: Text(localizations.translate(
@@ -154,7 +161,9 @@ class MemberCard extends StatelessWidget {
                 child: DigitOutLineButton(
                   label: localizations
                       .translate(i18.memberCard.deliverDetailsUpdateLabel),
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: Complete implementation
+                  },
                 ),
               ),
       ]),
