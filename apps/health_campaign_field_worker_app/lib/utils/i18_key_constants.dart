@@ -9,7 +9,6 @@ const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
 
-
 class Common {
   const Common();
 
@@ -107,9 +106,8 @@ class AcknowledgementSuccess {
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
-  
-  
-  
+}
+
 class HouseholdDetails {
   const HouseholdDetails();
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
@@ -117,5 +115,4 @@ class HouseholdDetails {
   String get dateOfRegistrationLabel =>
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
-
 }
