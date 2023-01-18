@@ -6,6 +6,7 @@ const forgotPassword = ForgotPassword();
 const home = Home();
 const searchBeneficiary = SearchBeneficiary();
 const householdLocation = HouseholdLocation();
+const acknowledgementSuccess = AcknowledgementSuccess();
 
 class Common {
   const Common();
@@ -96,4 +97,12 @@ class HouseholdLocation {
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+}
+
+class AcknowledgementSuccess {
+  const AcknowledgementSuccess();
+  String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+  String get acknowledgementDescriptionText =>
+      'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 }
