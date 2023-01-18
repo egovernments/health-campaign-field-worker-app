@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../action_card/action_card.dart';
 
@@ -9,6 +10,7 @@ class MemberCard extends StatelessWidget {
   final int age;
   final bool? isHead;
   final bool isDelivered;
+  final AppLocalizations localizations;
 
   const MemberCard({
     super.key,
@@ -16,6 +18,7 @@ class MemberCard extends StatelessWidget {
     required this.gender,
     required this.age,
     this.isHead,
+    required this.localizations,
     required this.isDelivered,
   });
   @override
@@ -45,7 +48,7 @@ class MemberCard extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,
                   child: Text(
-                    name,
+                    localizations.translate(name),
                     style: theme.textTheme.bodyLarge,
                   ),
                 ),
@@ -56,12 +59,12 @@ class MemberCard extends StatelessWidget {
                       Container(
                         margin: DigitTheme.instance.containerMargin,
                         child: Text(
-                          gender,
+                          localizations.translate(gender),
                           style: theme.textTheme.bodyMedium,
                         ),
                       ),
                       Text(
-                        " | ${age} ${i18.memberCard.deliverDetailsYearText}",
+                        " | ${age} ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -77,28 +80,33 @@ class MemberCard extends StatelessWidget {
                     // ignore: no-empty-block
                     ActionCardModel(
                       Icons.person,
-                      i18.memberCard.assignAsHouseholdhead,
+                      localizations
+                          .translate(i18.memberCard.assignAsHouseholdhead),
                       () {},
                     ),
                     ActionCardModel(
                       Icons.edit,
-                      i18.memberCard.editIndividualDetails,
+                      localizations
+                          .translate(i18.memberCard.editIndividualDetails),
                       () {},
                     ),
                     ActionCardModel(
                       Icons.delete,
-                      i18.memberCard.deleteIndividualActionText,
+                      localizations
+                          .translate(i18.memberCard.deleteIndividualActionText),
                       () {
                         DigitDialog.show(
                           context,
-                          title: i18.householdOverView
-                              .householdOverViewActionCardTitle,
-                          primaryActionLabel: i18.householdOverView
-                              .householdOverViewPrimaryActionLabel,
+                          title: localizations.translate(i18.householdOverView
+                              .householdOverViewActionCardTitle),
+                          primaryActionLabel: localizations.translate(i18
+                              .householdOverView
+                              .householdOverViewPrimaryActionLabel),
                           primaryAction: () =>
                               Navigator.of(context, rootNavigator: true).pop(),
-                          secondaryActionLabel: i18.householdOverView
-                              .householdOverViewSecondaryActionLabel,
+                          secondaryActionLabel: localizations.translate(i18
+                              .householdOverView
+                              .householdOverViewSecondaryActionLabel),
                           secondaryAction: () =>
                               Navigator.of(context, rootNavigator: true).pop(),
                         );
@@ -107,7 +115,9 @@ class MemberCard extends StatelessWidget {
                   ],
                 ),
               ),
-              iconText: i18.householdOverView.householdOverViewEditIconText,
+              iconText: localizations.translate(
+                i18.householdOverView.householdOverViewEditIconText,
+              ),
               icon: Icons.edit,
             ),
           ],
@@ -115,15 +125,16 @@ class MemberCard extends StatelessWidget {
         isDelivered
             ? DigitIconButton(
                 icon: Icons.info_rounded,
-                iconText: i18
-                    .householdOverView.householdOverViewNotDeliveredIconLabel,
+                iconText: localizations.translate(i18
+                    .householdOverView.householdOverViewNotDeliveredIconLabel),
                 iconTextColor: theme.errorColor,
                 iconColor: theme.errorColor,
               )
             : DigitIconButton(
                 icon: Icons.check_circle,
-                iconText:
-                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+                iconText: localizations.translate(
+                  i18.householdOverView.householdOverViewDeliveredIconLabel,
+                ),
                 iconTextColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                 iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
               ),
@@ -133,13 +144,16 @@ class MemberCard extends StatelessWidget {
                   print("");
                 },
                 child: Center(
-                  child: Text(i18.memberCard.deliverInterventionSubmitLabel),
+                  child: Text(localizations.translate(
+                    i18.memberCard.deliverInterventionSubmitLabel,
+                  )),
                 ),
               )
             : SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: DigitOutLineButton(
-                  label: i18.memberCard.deliverDetailsUpdateLabel,
+                  label: localizations
+                      .translate(i18.memberCard.deliverDetailsUpdateLabel),
                   onPressed: () {},
                 ),
               ),
