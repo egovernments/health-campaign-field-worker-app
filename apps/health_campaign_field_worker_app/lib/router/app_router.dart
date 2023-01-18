@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
-import '../pages/deletion_reason.dart';
 import '../pages/deliver_intervention.dart';
 import '../pages/home.dart';
 import '../pages/household_overview.dart';
