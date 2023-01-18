@@ -30,7 +30,7 @@ class LocalizationRepository {
       return LocalizationModel.fromJson(
         json.decode(response.toString()),
       );
-    } on DioError catch (ex) {
+    } on DioError catch (_) {
       // Assuming there will be an errorMessage property in the JSON object
       rethrow;
     }

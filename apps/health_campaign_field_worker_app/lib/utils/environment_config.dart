@@ -61,11 +61,13 @@ class Variables {
     required DotEnv dotEnv,
   }) : _dotEnv = dotEnv;
 
-  String get baseUrl =>
-      useFallbackValues ? _baseUrl.value : _dotEnv.get(_baseUrl.key);
+  String get baseUrl => useFallbackValues
+      ? _baseUrl.value
+      : _dotEnv.get(_baseUrl.key, fallback: _baseUrl.value);
 
-  String get mdmsApiPath =>
-      useFallbackValues ? _mdmsApi.value : _dotEnv.get(_mdmsApi.key);
+  String get mdmsApiPath => useFallbackValues
+      ? _mdmsApi.value
+      : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
 }
 
 class EnvEntry {
