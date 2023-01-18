@@ -11,6 +11,7 @@ const householdDetails = HouseholdDetails();
 const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
+const deliverIntervention = DeliverIntervention();
 
 class Common {
   const Common();
@@ -20,6 +21,9 @@ class Common {
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
+  String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
+  String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
+  String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 }
 
 class Login {
@@ -175,7 +179,10 @@ class HouseholdOverView {
   String get householdOverViewHouseholdHeadNameLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
 
-  String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ActionText';
+  String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
+
+  String get householdOverViewAddActionText =>
+      'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }
 
 class MemberCard {
@@ -189,4 +196,31 @@ class MemberCard {
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+  String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+  String get dateOfRegistrationLabel =>
+      'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
+
+  String get resourceDeliveredLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
+
+  String get quantityDistributedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
+
+  String get deliveryCommentLabel =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+
+  String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
+
+  String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
+  String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
+
+  String get noOfResourcesForDelivery =>
+      'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
+
+  String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
+  String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 }
