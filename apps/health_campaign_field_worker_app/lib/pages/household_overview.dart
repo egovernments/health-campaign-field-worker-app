@@ -5,13 +5,14 @@ import '../router/app_router.dart';
 import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../widgets/member_card/memeber_card.dart';
+import '../widgets/member_card/member_card.dart';
 
 class HouseholdOverViewPage extends LocalizedStatefulWidget {
   const HouseholdOverViewPage({
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<HouseholdOverViewPage> createState() => _HouseholdOverViewPageState();
 }
@@ -34,11 +35,14 @@ class _HouseholdOverViewPageState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      localizations.translate(
-                        i18.householdOverView.householdOverViewLabel,
+                    Flexible(
+                      child: Text(
+                        localizations.translate(
+                          i18.householdOverView.householdOverViewLabel,
+                        ),
+                        style: theme.textTheme.displayMedium,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      style: theme.textTheme.displayMedium,
                     ),
                     DigitIconButton(
                       onPressed: () => DigitActionDialog.show(
@@ -47,16 +51,20 @@ class _HouseholdOverViewPageState
                           items: [
                             // ignore: no-empty-block
                             ActionCardModel(
-                              Icons.edit,
-                              localizations.translate(i18.householdOverView
-                                  .householdOverViewEditLabel),
-                              () {},
+                              icon: Icons.edit,
+                              label: localizations.translate(
+                                i18.householdOverView
+                                    .householdOverViewEditLabel,
+                              ),
+                              action: () {
+                                // TODO: Complete implementation
+                              },
                             ),
                             ActionCardModel(
-                              Icons.delete,
-                              i18.householdOverView
+                              icon: Icons.delete,
+                              label: i18.householdOverView
                                   .householdOverViewDeleteLabel,
-                              () => DigitDialog.show(
+                              action: () => DigitDialog.show(
                                 context,
                                 title: localizations.translate(i18
                                     .householdOverView
@@ -101,7 +109,7 @@ class _HouseholdOverViewPageState
                 DigitTableCard(
                   element: {
                     localizations.translate(i18.householdOverView
-                        .householdOverViewHouseholdHeadLabel): "Joseph Segio",
+                        .householdOverViewHouseholdHeadLabel): "Joseph Sergio",
                     localizations.translate(i18.householdOverView
                         .householdOverViewHouseholdHeadNameLabel): "Jose (H)",
                   },
@@ -123,7 +131,7 @@ class _HouseholdOverViewPageState
                 Center(
                   child: DigitIconButton(
                     onPressed: () {
-                      print("");
+                      // TODO: Complete implementation
                     },
                     iconText: localizations.translate(
                       i18.householdOverView.householdOverViewAddActionText,
