@@ -1,9 +1,20 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-class AcknowledgementPage extends StatelessWidget {
-  const AcknowledgementPage({super.key});
+import '../utils/i18_key_constants.dart' as i18;
+import '../widgets/localized.dart';
 
+class AcknowledgementPage extends LocalizedStatefulWidget {
+  const AcknowledgementPage({
+    super.key,
+    super.appLocalizations,
+  });
+
+  @override
+  State<AcknowledgementPage> createState() => _AcknowledgementPageState();
+}
+
+class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,10 +22,14 @@ class AcknowledgementPage extends StatelessWidget {
         color: DigitTheme.instance.colorScheme.onSurfaceVariant,
         cardHeight: MediaQuery.of(context).size.height / 3,
         action: (() {}),
-        actionLabel: 'Back to Search',
-        description: 'The data has been recorded successfully. ',
+        actionLabel:
+            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+        description: localizations.translate(
+          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+        ),
         icon: Icons.check_circle,
-        label: 'Data recorded successfully',
+        label: localizations
+            .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
       ),
     );
   }
