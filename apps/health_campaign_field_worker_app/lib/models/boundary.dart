@@ -20,7 +20,7 @@ class BoundaryModel extends DataModel implements BoundarySearchModel {
   final String? longitude;
   final String? materializedPath;
   final String clientReferenceId;
-  final BoundarySearchModel? children;
+  final BoundaryModel? children;
   
 
   BoundaryModel({

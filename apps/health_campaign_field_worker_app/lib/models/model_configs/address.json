@@ -11,6 +11,11 @@
       "type": "String"
     },
     {
+      "name": "clientReferenceId",
+      "type": "String",
+      "isPk": true
+    },
+    {
       "name": "doorNo",
       "type": "String"
     },
@@ -61,7 +66,8 @@
   "customAttributes": [
     {
       "name": "locality",
-      "type": "boundary"
+      "type": "boundary",
+      "createReference": true
     },
     {
       "name": "type",
