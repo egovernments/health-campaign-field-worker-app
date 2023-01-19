@@ -158,7 +158,7 @@ class _SyncFailed extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
-          Icons.check_circle,
+          Icons.error_outline,
           size: 32,
           color: theme.colorScheme.error,
         ),

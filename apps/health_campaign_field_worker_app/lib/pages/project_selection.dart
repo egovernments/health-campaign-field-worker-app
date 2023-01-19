@@ -42,6 +42,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               ),
               DigitProjectCell(
                 projectText: 'projectText',
+                onTap: (){},
+              ),
+              DigitProjectCell(
+                projectText: 'projectText',
                 onTap: () => DigitSyncDialog.showSyncInProgressDialog(
                   context,
                   syncInProgressTitleText:
