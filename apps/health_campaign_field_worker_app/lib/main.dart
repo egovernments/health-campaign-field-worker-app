@@ -93,7 +93,7 @@ class MainApplication extends StatelessWidget {
             builder: (context, authState) {
               final appConfig = appConfigState.appConfiguration;
               final localizationModulesList = appConfig?.backendInterface;
-              final firstLanguage = appConfig?.languages?.first.value;
+              final firstLanguage = appConfig?.languages?.last.value;
               final languages = appConfig?.languages;
 
               return appConfig != null
