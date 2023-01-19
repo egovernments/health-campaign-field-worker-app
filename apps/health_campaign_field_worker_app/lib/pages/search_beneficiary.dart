@@ -11,10 +11,20 @@ import '../widgets/beneficiary/beneficiary_card.dart';
 import '../widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../router/app_router.dart';
+import '../widgets/localized.dart';
 
-class SearchBeneficiaryPage extends StatelessWidget {
-  const SearchBeneficiaryPage({super.key});
+class SearchBeneficiaryPage extends LocalizedStatefulWidget {
+  const SearchBeneficiaryPage({
+    super.key,
+    super.appLocalizations,
+  });
 
+  @override
+  State<SearchBeneficiaryPage> createState() => _SearchBeneficiaryPageState();
+}
+
+class _SearchBeneficiaryPageState
+    extends LocalizedState<SearchBeneficiaryPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -31,7 +41,8 @@ class SearchBeneficiaryPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  i18.searchBeneficiary.statisticsLabelText,
+                  localizations
+                      .translate(i18.searchBeneficiary.statisticsLabelText),
                   style: theme.textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -42,16 +53,20 @@ class SearchBeneficiaryPage extends StatelessWidget {
                   BeneficiaryStatisticsWrapperModel(beneficiaryStatisticsList: [
                 BeneficiaryStatisticsModel(
                   title: '535',
-                  content: i18.searchBeneficiary.noOfHouseholdsRegistered,
+                  content: localizations.translate(
+                    i18.searchBeneficiary.noOfHouseholdsRegistered,
+                  ),
                 ),
                 BeneficiaryStatisticsModel(
                   title: '756',
-                  content: i18.searchBeneficiary.noOfResourcesDelivered,
+                  content: localizations
+                      .translate(i18.searchBeneficiary.noOfResourcesDelivered),
                 ),
               ]),
             ),
             DigitSearchBar(
-              hintText: i18.searchBeneficiary.beneficiarySearchHintText,
+              hintText: localizations
+                  .translate(i18.searchBeneficiary.beneficiarySearchHintText),
             ),
             DigitCard(
               child: Column(
@@ -67,7 +82,8 @@ class SearchBeneficiaryPage extends StatelessWidget {
                         title: 'Jose Antonio',
                       ),
                       DigitOutLineButton(
-                        label: i18.searchBeneficiary.iconLabel,
+                        label: localizations
+                            .translate(i18.searchBeneficiary.iconLabel),
                         onPressed: () =>
                             context.router.push(HouseholdOverViewRoute()),
                       ),
@@ -154,8 +170,10 @@ class SearchBeneficiaryPage extends StatelessWidget {
               icon: Icons.info,
               backgroundcolor: theme.colorScheme.tertiaryContainer,
               iconcolor: theme.colorScheme.surfaceTint,
-              description: i18.searchBeneficiary.beneficiaryInfoDescription,
-              title: i18.searchBeneficiary.beneficiaryInfoTitle,
+              description: localizations
+                  .translate(i18.searchBeneficiary.beneficiaryInfoDescription),
+              title: localizations
+                  .translate(i18.searchBeneficiary.beneficiaryInfoTitle),
             ),
           ],
         ),
@@ -169,9 +187,9 @@ class SearchBeneficiaryPage extends StatelessWidget {
                   HouseholdLocationRoute(),
                 ),
                 child: Center(
-                  child: Text(
+                  child: Text(localizations.translate(
                     i18.searchBeneficiary.beneficiaryAddActionLabel,
-                  ),
+                  )),
                 ),
               ),
             ),

@@ -70,7 +70,9 @@ class _IndividualDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      i18.individualDetails.individualsDetailsLabelText,
+                      localizations.translate(
+                        i18.individualDetails.individualsDetailsLabelText,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
