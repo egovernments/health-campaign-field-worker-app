@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:dart_mappable/internals.dart';
 
 import 'lib/models.dart';
 import 'package:mason/mason.dart';
@@ -8,9 +7,6 @@ void run(HookContext context) {
   final variables = context.vars;
 
   ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
-  if (model.isEnum) {
-    context.logger.info('IsEnum: ${model.toJson()}');
-  }
 
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
@@ -24,6 +20,10 @@ void run(HookContext context) {
     );
   }
 
+  if (model.name.toLowerCase() == 'individual') {
+    context.logger.info(model.toJson());
+  }
+
   final sqlAttributes = <AttributeModel>[
     ...model.attributes.map((e) {
       final type = _getSqlType(e.type);
@@ -34,7 +34,10 @@ void run(HookContext context) {
   ];
 
   final references = [
-    ...model.customAttributes.where((element) => !element.isEnum).map((e) {
+    ...model.customAttributes
+        .where((element) => element.createReference)
+        .where((element) => !element.isEnum)
+        .map((e) {
       return e.copyWith(references: [
         TableReferenceModel(table: e.type, column: e.name),
       ]);

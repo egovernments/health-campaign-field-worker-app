@@ -34,7 +34,7 @@ class HouseholdModel extends DataModel implements HouseholdSearchModel {
   @override
   final int memberCount;
   final int rowVersion;
-  final AddressSearchModel address;
+  final AddressModel address;
   
 
   HouseholdModel({

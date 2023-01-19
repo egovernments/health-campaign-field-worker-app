@@ -1,5 +1,6 @@
 {
   "name": "individual",
+  "createRepository": true,
   "attributes": [
     {
       "name": "id",
@@ -15,7 +16,7 @@
     {
       "name": "clientReferenceId",
       "type": "String",
-      "primaryKey": true,
+      "isPk": true,
       "includeForQuery": true
     },
     {
@@ -45,8 +46,7 @@
     {
       "name": "fatherName",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
+      "nullable": true
     },
     {
       "name": "husbandName",
@@ -66,7 +66,8 @@
   "customAttributes": [
     {
       "name": "name",
-      "type": "name"
+      "type": "name",
+      "includeForQuery": true
     },
     {
       "name": "bloodGroup",
@@ -76,7 +77,7 @@
     {
       "name": "address",
       "type": "address",
-      "nullable": true
+      "isList": true
     },
     {
       "name": "gender",
@@ -87,7 +88,8 @@
     {
       "name": "identifiers",
       "type": "identifier",
-      "isList": true
+      "isList": true,
+      "includeForQuery": true
     }
   ],
   "isEnum": false
