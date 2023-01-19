@@ -12,24 +12,24 @@ class DigitSyncDialog extends StatelessWidget {
       DigitTheme.instance.colors.black.withOpacity(0.7);
 
   static showSyncInProgressDialog(BuildContext context,
-      {required String progressTitleText}) {
+      {required String syncInProgressTitleText}) {
     return showDialog(
         context: context,
         barrierColor: _barrierColor,
-        barrierDismissible: true,
 
-        /// todo - make this false
+        /// TODO - turn this to false during implementation
+        barrierDismissible: true,
         builder: (context) => DigitSyncDialog(
               content: _InProgress(
-                progressTitleText: progressTitleText,
+                syncInProgressTitleText: syncInProgressTitleText,
               ),
             ));
   }
 
   static showSyncCompleteDialog(BuildContext context,
       {required String syncCompleteTitleText,
-      required String retryButtonText,
-      required VoidCallback retryCallback}) {
+      required String syncCompleteButtonText,
+      required VoidCallback syncCompleteCallback}) {
     return showDialog(
         context: context,
         barrierColor: _barrierColor,
@@ -39,8 +39,8 @@ class DigitSyncDialog extends StatelessWidget {
               ),
               actions: [
                 DigitElevatedButton(
-                  onPressed: retryCallback,
-                  child: Center(child: Text(retryButtonText)),
+                  onPressed: syncCompleteCallback,
+                  child: Center(child: Text(syncCompleteButtonText)),
                 ),
               ],
             ));
@@ -84,15 +84,17 @@ class DigitSyncDialog extends StatelessWidget {
 }
 
 class _InProgress extends StatelessWidget {
-  final String progressTitleText;
+  final String syncInProgressTitleText;
 
-  const _InProgress({required this.progressTitleText});
+  const _InProgress({required this.syncInProgressTitleText});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 16,),
+      padding: const EdgeInsets.only(
+        top: 16,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -105,7 +107,7 @@ class _InProgress extends StatelessWidget {
             height: 14,
           ),
           Text(
-            progressTitleText,
+            syncInProgressTitleText,
             style: theme.textTheme.headlineSmall
                 ?.copyWith(color: theme.colorScheme.secondary),
           )
