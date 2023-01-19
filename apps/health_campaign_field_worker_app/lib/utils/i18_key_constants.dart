@@ -122,13 +122,11 @@ class HouseholdLocation {
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
 
-  String get householdAddressLine1LabelText =>
-      'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
+  String get householdAddressLine1LabelText => 'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
 
   String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
 
-  String get householdAddressLine2LabelText =>
-      'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
+  String get householdAddressLine2LabelText => 'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
 
   String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
 
@@ -138,8 +136,7 @@ class HouseholdLocation {
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
-  String get acknowledgementDescriptionText =>
-      'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get acknowledgementDescriptionText => 'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 }
 
@@ -147,79 +144,59 @@ class HouseholdDetails {
   const HouseholdDetails();
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
-  String get dateOfRegistrationLabel =>
-      'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
+  String get dateOfRegistrationLabel => 'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
 }
 
 class HouseholdOverView {
   const HouseholdOverView();
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
-  String get householdOverViewEditLabel =>
-      'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
-  String get householdOverViewDeleteLabel =>
-      'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
-  String get householdOverViewEditIconText =>
-      'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
-  String get householdOverViewActionCardTitle =>
-      'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
-  String get householdOverViewPrimaryActionLabel =>
-      'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
+  String get householdOverViewEditLabel => 'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+  String get householdOverViewDeleteLabel => 'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
+  String get householdOverViewEditIconText => 'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+  String get householdOverViewActionCardTitle => 'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
+  String get householdOverViewPrimaryActionLabel => 'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
 
-  String get householdOverViewSecondaryActionLabel =>
-      'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
-  String get householdOverViewDeliveredIconLabel =>
-      'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
-  String get householdOverViewNotDeliveredIconLabel =>
-      'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
+  String get householdOverViewSecondaryActionLabel => 'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
+  String get householdOverViewDeliveredIconLabel => 'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+  String get householdOverViewNotDeliveredIconLabel => 'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
-  String get householdOverViewHouseholdHeadLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
+  String get householdOverViewHouseholdHeadLabel => 'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
-  String get householdOverViewHouseholdHeadNameLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
+  String get householdOverViewHouseholdHeadNameLabel => 'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
 
-  String get householdOverViewAddActionText =>
-      'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+  String get householdOverViewAddActionText => 'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }
 
 class MemberCard {
   const MemberCard();
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUALDETAILS';
-  String get deleteIndividualActionText =>
-      'MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT';
-  String get deliverInterventionSubmitLabel =>
-      'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
-  String get deliverDetailsUpdateLabel =>
-      'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
+  String get deleteIndividualActionText => 'MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT';
+  String get deliverInterventionSubmitLabel => 'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
+  String get deliverDetailsUpdateLabel => 'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
-  String get dateOfRegistrationLabel =>
-      'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
+  String get dateOfRegistrationLabel => 'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 
-  String get resourceDeliveredLabel =>
-      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
+  String get resourceDeliveredLabel => 'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
 
-  String get quantityDistributedLabel =>
-      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
+  String get quantityDistributedLabel => 'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
 
-  String get deliveryCommentLabel =>
-      'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get deliveryCommentLabel => 'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
 
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
   String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
 
-  String get noOfResourcesForDelivery =>
-      'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
+  String get noOfResourcesForDelivery => 'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
 
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';

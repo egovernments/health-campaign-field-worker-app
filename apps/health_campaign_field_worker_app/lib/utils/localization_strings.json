@@ -1,0 +1,1022 @@
+[
+  {
+    "code": "CORE_COMMON_CONTINUE",
+    "locale": "en_MZ",
+    "message": "Continue",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_CONTINUE",
+    "locale": "pt_MZ",
+    "message": "Prosseguir",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_AGE",
+    "locale": "en_MZ",
+    "message": "Age",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_AGE",
+    "locale": "pt_MZ",
+    "message": "Era",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_GENDER",
+    "locale": "en_MZ",
+    "message": "Gender",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_GENDER",
+    "locale": "pt_MZ",
+    "message": "Gênero",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_MOBILE_NUMBER",
+    "locale": "en_MZ",
+    "message": "Mobile Number",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_MOBILE_NUMBER",
+    "locale": "pt_MZ",
+    "message": "Número de celular",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_SUBMIT",
+    "locale": "en_MZ",
+    "message": "Submit",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_SUBMIT",
+    "locale": "pt_MZ",
+    "message": "Enviar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_CANCEL",
+    "locale": "en_MZ",
+    "message": "Cancel",
+    "module": "hcm-common"
+  },
+  {
+    "code": "CORE_COMMON_CANCEL",
+    "locale": "pt_MZ",
+    "message": "Cancelar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "LOGIN_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Login",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Conecte-se",
+    "module": "hcm-login"
+  },
+  {
+    "code": "USER_ID_PLACEHOLDER",
+    "locale": "en_MZ",
+    "message": "User ID",
+    "module": "hcm-login"
+  },
+  {
+    "code": "USER_ID_PLACEHOLDER",
+    "locale": "pt_MZ",
+    "message": "ID do usuário",
+    "module": "hcm-login"
+  },
+  {
+    "code": "PASSWORD_PLACEHOLDER",
+    "locale": "en_MZ",
+    "message": "Password",
+    "module": "hcm-login"
+  },
+  {
+    "code": "PASSWORD_PLACEHOLDER",
+    "locale": "pt_MZ",
+    "message": "Senha",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Login",
+    "module": "hcm-login"
+  },
+  {
+    "code": "LOGIN_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Conecte-se",
+    "module": "hcm-login"
+  },
+  {
+    "code": "FORGOT_PASSWORD_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Forgot Password",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "FORGOT_PASSWORD_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Esqueceu a senha",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "FORGOT_PASSWORD_CONTENT_TEXT",
+    "locale": "en_MZ",
+    "message": "Please contact your administrator if you have forgotten your password",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "FORGOT_PASSWORD_CONTENT_TEXT",
+    "locale": "pt_MZ",
+    "message": "Entre em contato com seu administrador se você esqueceu sua senha",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "PRIMARY_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "OK",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "PRIMARY_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "OK",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "FORGOT_PASSWORD_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Forgot Password?",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "FORGOT_PASSWORD_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Esqueceu a senha?",
+    "module": "hcm-forgot-password"
+  },
+  {
+    "code": "HOME_BENEFICIARY_LABEL",
+    "locale": "en_MZ",
+    "message": "Beneficiaries",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_BENEFICIARY_LABEL",
+    "locale": "pt_MZ",
+    "message": "Beneficiários",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_VIEW_REPORTS_LABEL",
+    "locale": "en_MZ",
+    "message": "View Reports",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_VIEW_REPORTS_LABEL",
+    "locale": "pt_MZ",
+    "message": "Ver relatórios",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_SYNC_DATA_LABEL",
+    "locale": "en_MZ",
+    "message": "Sync Data",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_SYNC_DATA_LABEL",
+    "locale": "pt_MZ",
+    "message": "Dados de sincronização",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_CALL_BACK_LABEL",
+    "locale": "en_MZ",
+    "message": "Call Supervisor",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_CALL_BACK_LABEL",
+    "locale": "pt_MZ",
+    "message": "Ligue para o supervisor",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_FILE_COMPLAINT",
+    "locale": "en_MZ",
+    "message": "File Complaint",
+    "module": "hcm-home"
+  },
+  {
+    "code": "HOME_FILE_COMPLAINT",
+    "locale": "pt_MZ",
+    "message": "Reclamação do arquivo",
+    "module": "hcm-home"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_TITLE",
+    "locale": "en_MZ",
+    "message": "more to reach target",
+    "module": "hcm-home"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_TITLE",
+    "locale": "pt_MZ",
+    "message": "mais para atingir o alvo",
+    "module": "hcm-home"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_PREFIX_LABEL",
+    "locale": "en_MZ",
+    "message": "completed",
+    "module": "hcm-home"
+  },
+  {
+    "code": "PROGRESS_INDICATOR_PREFIX_LABEL",
+    "locale": "pt_MZ",
+    "message": "concluído",
+    "module": "hcm-home"
+  },
+  {
+    "code": "BENEFICIARY_STATISTICS_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Search Households",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_STATISTICS_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Pesquise famílias",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "NO_OF_HOUSEHOLDS_REGISTERED",
+    "locale": "en_MZ",
+    "message": "No. of Households\nRegistered",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "NO_OF_HOUSEHOLDS_REGISTERED",
+    "locale": "pt_MZ",
+    "message": "No. de famílias\nRegistrado",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "NO_OF_RESOURCES_DELIVERED",
+    "locale": "en_MZ",
+    "message": "No. of Bednets\nDelivered",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "NO_OF_RESOURCES_DELIVERED",
+    "locale": "pt_MZ",
+    "message": "No. de redes de cama\nEntregue",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_SEARCH_HINT_TEXT",
+    "locale": "en_MZ",
+    "message": "Enter the name of household head",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_SEARCH_HINT_TEXT",
+    "locale": "pt_MZ",
+    "message": "Digite o nome do chefe da família",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_INFO_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "Click on Register New Household button to add details.",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_INFO_DESCRIPTION",
+    "locale": "pt_MZ",
+    "message": "Clique em Registrar um novo botão doméstico para adicionar detalhes.",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_INFO_TITLE",
+    "locale": "en_MZ",
+    "message": "Match not found!",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_INFO_TITLE",
+    "locale": "pt_MZ",
+    "message": "Match não encontrado!",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_ADD_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Register New Household",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_ADD_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Registrar uma nova família",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ICON_LABEL",
+    "locale": "en_MZ",
+    "message": "Open",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ICON_LABEL",
+    "locale": "pt_MZ",
+    "message": "Abrir",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "INDIVIDUAL_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Individual Details",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "INDIVIDUAL_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Detalhes individuais",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "INDIVIDUAL_NAME_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Name of the Individual*",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "INDIVIDUAL_NAME_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Nome do indivíduo*",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HEAD_OF_HOUSEHOLD_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Head of household",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HEAD_OF_HOUSEHOLD_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Chefe de família",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_TYPE_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "ID Type",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_TYPE_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Tipo de identificação",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_NUMBER_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "ID Number*",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_NUMBER_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Número de identidade*",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_NUMBER_SUGGESTION_TEXT",
+    "locale": "en_MZ",
+    "message": "Enter 10 digit ID number",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "ID_NUMBER_SUGGESTION_TEXT",
+    "locale": "pt_MZ",
+    "message": "Insira o número de identificação de 10 dígitos",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "DOB_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Date of Birth",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "DOB_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Data de nascimento",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "AGE_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Age",
+    "module": "hcm-common"
+  },
+  {
+    "code": "AGE_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Era",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SEPARATOR_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "(or)",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SEPARATOR_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "(ou)",
+    "module": "hcm-common"
+  },
+  {
+    "code": "GENDER_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Gender",
+    "module": "hcm-common"
+  },
+  {
+    "code": "GENDER_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Gênero",
+    "module": "hcm-common"
+  },
+  {
+    "code": "MOBILE_NUMBER_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Mobile Number",
+    "module": "hcm-common"
+  },
+  {
+    "code": "MOBILE_NUMBER_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Número de celular",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SUBMIT_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Submit",
+    "module": "hcm-common"
+  },
+  {
+    "code": "SUBMIT_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Enviar",
+    "module": "hcm-common"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Household Location",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Localização da família",
+    "module": "hcm-household"
+  },
+  {
+    "code": "ADMINISTRATION_AREA_FORM_LABEL",
+    "locale": "en_MZ",
+    "message": "Administrative Area",
+    "module": "hcm-household"
+  },
+  {
+    "code": "ADMINISTRATION_AREA_FORM_LABEL",
+    "locale": "pt_MZ",
+    "message": "Área administrativa",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL",
+    "locale": "en_MZ",
+    "message": "Address Line 1",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL",
+    "locale": "pt_MZ",
+    "message": "Endereço Linha 1",
+    "module": "hcm-household"
+  },
+  {
+    "code": "LANDMARK_FORM_LABEL",
+    "locale": "en_MZ",
+    "message": "Landmark",
+    "module": "hcm-household"
+  },
+  {
+    "code": "LANDMARK_FORM_LABEL",
+    "locale": "pt_MZ",
+    "message": "Marco",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL",
+    "locale": "en_MZ",
+    "message": "Address Line 2",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL",
+    "locale": "pt_MZ",
+    "message": "endereço linha 2",
+    "module": "hcm-household"
+  },
+  {
+    "code": "POSTAL_CODE_FORM_LABEL",
+    "locale": "en_MZ",
+    "message": "Postal Code",
+    "module": "hcm-household"
+  },
+  {
+    "code": "POSTAL_CODE_FORM_LABEL",
+    "locale": "pt_MZ",
+    "message": "Código postal",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Next",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_LOCATION_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Próximo",
+    "module": "hcm-household"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Data recorded successfully",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Dados registrados com sucesso",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
+    "locale": "en_MZ",
+    "message": "The data has been recorded successfully.",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
+    "locale": "pt_MZ",
+    "message": "Os dados foram registrados com sucesso.",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Back to Search",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "De volta à pesquisa",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_LABEL",
+    "locale": "en_MZ",
+    "message": "Household Details",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_LABEL",
+    "locale": "pt_MZ",
+    "message": "Detalhes da família",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Next",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Próximo",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL",
+    "locale": "en_MZ",
+    "message": "Date of Registration",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Data de registro",
+    "module": "hcm-household"
+  },
+  {
+    "code": "NO_OF_MEMBERS_COUNT_LABEL",
+    "locale": "en_MZ",
+    "message": "Number of members living in the household*",
+    "module": "hcm-household"
+  },
+  {
+    "code": "NO_OF_MEMBERS_COUNT_LABEL",
+    "locale": "pt_MZ",
+    "message": "Número de membros que vivem na casa*",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_LABEL",
+    "locale": "en_MZ",
+    "message": "Household",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_LABEL",
+    "locale": "pt_MZ",
+    "message": "Doméstico",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL",
+    "locale": "en_MZ",
+    "message": "Edit household",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL",
+    "locale": "pt_MZ",
+    "message": "Editar família",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL",
+    "locale": "en_MZ",
+    "message": "Delete Household",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL",
+    "locale": "pt_MZ",
+    "message": "Excluir família",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Edit",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT",
+    "locale": "pt_MZ",
+    "message": "Editar",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE",
+    "locale": "en_MZ",
+    "message": "Do you want to delete this\nbeneficiary?",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE",
+    "locale": "pt_MZ",
+    "message": "Você quer excluir isso\nbeneficiário?",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Delete",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Excluir",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Cancel",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Cancelar",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL",
+    "locale": "en_MZ",
+    "message": "Delivered",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL",
+    "locale": "pt_MZ",
+    "message": "Entregue",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL",
+    "locale": "en_MZ",
+    "message": "Not Delivered",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL",
+    "locale": "pt_MZ",
+    "message": "Não entregue",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL",
+    "locale": "en_MZ",
+    "message": "Household\nHead",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL",
+    "locale": "pt_MZ",
+    "message": "Doméstico\nCabeça",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL",
+    "locale": "en_MZ",
+    "message": "Household Head Name:",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL",
+    "locale": "pt_MZ",
+    "message": "Nome da cabeça da família:",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_ACTION_TEXT",
+    "locale": "en_MZ",
+    "message": "Deliver Intervention",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_ACTION_TEXT",
+    "locale": "pt_MZ",
+    "message": "Entregar intervenção",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT",
+    "locale": "en_MZ",
+    "message": "Add Member",
+    "module": "hcm-household"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT",
+    "locale": "pt_MZ",
+    "message": "Adicionar membro",
+    "module": "hcm-household"
+  },
+  {
+    "code": "MEMBER_CARD_ASSIGN_AS_HEAD",
+    "locale": "en_MZ",
+    "message": "Assign as household head",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_ASSIGN_AS_HEAD",
+    "locale": "pt_MZ",
+    "message": "Designe como chefe de família",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_EDIT_INDIVIDUALDETAILS",
+    "locale": "en_MZ",
+    "message": "Edit",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_EDIT_INDIVIDUALDETAILS",
+    "locale": "pt_MZ",
+    "message": "Editar",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT",
+    "locale": "en_MZ",
+    "message": "Edit  Individual Details",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT",
+    "locale": "pt_MZ",
+    "message": "Edite detalhes individuais",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL",
+    "locale": "en_MZ",
+    "message": "Submit",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL",
+    "locale": "pt_MZ",
+    "message": "Enviar",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "locale": "en_MZ",
+    "message": "Update Delivery Details",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL",
+    "locale": "pt_MZ",
+    "message": "Atualizar detalhes de entrega",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT",
+    "locale": "en_MZ",
+    "message": "years",
+    "module": "hcm-member"
+  },
+  {
+    "code": "MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT",
+    "locale": "pt_MZ",
+    "message": "anos",
+    "module": "hcm-member"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Deliver Intervention",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Entregar intervenção",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL",
+    "locale": "en_MZ",
+    "message": "Date of Registration:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL",
+    "locale": "pt_MZ",
+    "message": "Data de registro:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL",
+    "locale": "en_MZ",
+    "message": "Resource Delivered*",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL",
+    "locale": "pt_MZ",
+    "message": "Recurso entregue*",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
+    "locale": "en_MZ",
+    "message": "Quantity Distributed*",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
+    "locale": "pt_MZ",
+    "message": "Quantidade distribuída*",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL",
+    "locale": "en_MZ",
+    "message": "Delivery Comment",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL",
+    "locale": "pt_MZ",
+    "message": "Comentário de entrega",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_ID_TYPE_TEXT",
+    "locale": "en_MZ",
+    "message": "ID Type:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_ID_TYPE_TEXT",
+    "locale": "pt_MZ",
+    "message": "Tipo de identificação:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_ID_NUMBER_TEXT",
+    "locale": "en_MZ",
+    "message": "ID Number:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_ID_NUMBER_TEXT",
+    "locale": "pt_MZ",
+    "message": "Número de identidade:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_MEMBER_COUNT_TEXT",
+    "locale": "en_MZ",
+    "message": "Member Count:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_MEMBER_COUNT_TEXT",
+    "locale": "pt_MZ",
+    "message": "Contagem de membro:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY",
+    "locale": "en_MZ",
+    "message": "Number Of Resources For Delivery:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY",
+    "locale": "pt_MZ",
+    "message": "Número de recursos para entrega:",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DIALOG_TITLE",
+    "locale": "en_MZ",
+    "message": "Ready to Submit?",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DIALOG_TITLE",
+    "locale": "pt_MZ",
+    "message": "Pronto para enviar?",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DIALOG_CONTENT",
+    "locale": "en_MZ",
+    "message": "Make sure you review all details before clicking on the Submit button. Click on the Cancel button to go back to the previous page.",
+    "module": "hcm-delivery"
+  },
+  {
+    "code": "DELIVER_INTERVENTION_DIALOG_CONTENT",
+    "locale": "pt_MZ",
+    "message": "Certifique -se de revisar todos os detalhes antes de clicar no botão Enviar. Clique no botão Cancelar para voltar para a página anterior.",
+    "module": "hcm-delivery"
+  }
+]
