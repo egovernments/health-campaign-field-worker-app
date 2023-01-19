@@ -1,7 +1,9 @@
+// Generated using mason. Do not modify by hand
+
 import 'package:drift/drift.dart';
 
 
-class TargetTable extends Table {
+class Target extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get beneficiaryType => text()();
   TextColumn get baseline => text()();
@@ -10,5 +12,5 @@ class TargetTable extends Table {
   
 
   @override
-  Set<Column>? get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

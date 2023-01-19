@@ -1,10 +1,14 @@
 library i18;
 
-Common common = const Common();
-Login login = const Login();
-ForgotPassword forgotPassword = const ForgotPassword();
-Home home = const Home();
-SearchBeneficiary searchBeneficiary = const SearchBeneficiary();
+const common = Common();
+const login = Login();
+const forgotPassword = ForgotPassword();
+const home = Home();
+const searchBeneficiary = SearchBeneficiary();
+const householdLocation = HouseholdLocation();
+const acknowledgementSuccess = AcknowledgementSuccess();
+const householdDetails = HouseholdDetails();
+IndividualDetails individualDetails = const IndividualDetails();
 
 class Common {
   const Common();
@@ -76,4 +80,68 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+}
+
+class IndividualDetails {
+  const IndividualDetails();
+
+  String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
+  String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+
+  String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
+
+  String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';
+
+  String get dobLabelText => 'DOB_LABEL_TEXT';
+
+  String get ageLabelText => 'AGE_LABEL_TEXT';
+
+  String get separatorLabelText => 'SEPARATOR_LABEL_TEXT';
+
+  String get genderLabelText => 'GENDER_LABEL_TEXT';
+
+  String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
+
+  String get submitButtonLabelText => 'Submit';
+}
+
+class HouseholdLocation {
+  const HouseholdLocation();
+  String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
+
+  String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+
+  String get householdAddressLine1LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
+
+  String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get householdAddressLine2LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
+
+  String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+}
+
+class AcknowledgementSuccess {
+  const AcknowledgementSuccess();
+  String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+  String get acknowledgementDescriptionText =>
+      'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+  String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+}
+
+class HouseholdDetails {
+  const HouseholdDetails();
+  String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+  String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
+  String get dateOfRegistrationLabel =>
+      'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
+  String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
 }

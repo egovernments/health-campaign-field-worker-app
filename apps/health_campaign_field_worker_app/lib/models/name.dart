@@ -19,6 +19,7 @@ class NameSearchModel extends DataModel {
 
 @MappableClass()
 class NameModel extends DataModel implements NameSearchModel {
+  final String clientReferenceId;
   
   @override
   final String givenName;
@@ -28,14 +29,13 @@ class NameModel extends DataModel implements NameSearchModel {
   
   @override
   final String? otherNames;
-  final String clientReferenceId;
   
 
   NameModel({
+    required this.clientReferenceId,
     required this.givenName,
     required this.familyName,
     this.otherNames,
-    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 }

@@ -30,7 +30,7 @@ class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase(
   {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/attributes}}{{#customAttributes}}{{#includeForQuery}}
   @override
-  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}
   @override
   {{/includeForQuery}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
