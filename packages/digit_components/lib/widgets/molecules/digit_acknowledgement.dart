@@ -50,26 +50,28 @@ class DigitAcknowledgement extends StatelessWidget {
                   minHeight: MediaQuery.of(context).size.height / 3,
                 ),
                 color: color,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        textAlign: TextAlign.center,
-                        label,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w400,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          textAlign: TextAlign.center,
+                          label,
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w400,
+                            color: theme.colorScheme.onPrimary,
+                          )),
+                      Padding(
+                        padding: DigitTheme.instance.containerMargin,
+                        child: Icon(
+                          icon,
+                          size: 32,
                           color: theme.colorScheme.onPrimary,
-                        )),
-                    Padding(
-                      padding: DigitTheme.instance.containerMargin,
-                      child: Icon(
-                        icon,
-                        size: 32,
-                        color: theme.colorScheme.onPrimary,
-                      ),
-                    )
-                  ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Padding(
