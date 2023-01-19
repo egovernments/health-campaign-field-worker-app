@@ -41,11 +41,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 style: theme.textTheme.displayMedium,
               ),
               DigitProjectCell(
-                projectText: 'projectText',
-                onTap: (){},
-              ),
-              DigitProjectCell(
-                projectText: 'projectText',
+                projectText: 'Sync In Progress',
                 onTap: () => DigitSyncDialog.showSyncInProgressDialog(
                   context,
                   syncInProgressTitleText:
@@ -55,7 +51,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 ),
               ),
               DigitProjectCell(
-                projectText: 'projectText',
+                projectText: 'Sync Complete',
                 onTap: () => DigitSyncDialog.showSyncCompleteDialog(
                   context,
                   syncCompleteTitleText: 'Sync complete',
@@ -64,7 +60,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 ),
               ),
               DigitProjectCell(
-                projectText: 'projectText',
+                projectText: 'Sync Fail',
                 onTap: () => DigitSyncDialog.showSyncFailedDialog(
                   context,
                   syncFailedTitleText: 'Sync Failed',
