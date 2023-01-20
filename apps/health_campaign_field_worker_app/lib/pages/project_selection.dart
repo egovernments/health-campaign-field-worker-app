@@ -34,11 +34,14 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                localizations.translate(
-                  i18.projectSelection.projectDetailsLabelText,
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  localizations.translate(
+                    i18.projectSelection.projectDetailsLabelText,
+                  ),
+                  style: theme.textTheme.displayMedium,
                 ),
-                style: theme.textTheme.displayMedium,
               ),
               DigitProjectCell(
                 projectText: 'Sync In Progress',
