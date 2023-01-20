@@ -77,7 +77,6 @@ class DigitSyncDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         content: content,
-        // contentPadding: EdgeInsets.all(0),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: actions,
       );
