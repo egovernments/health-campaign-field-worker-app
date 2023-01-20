@@ -164,11 +164,11 @@ class ProjectSelection {
 
   String get syncCompleteTitleText => 'SYNC_COMPLETE';
 
-  String get syncCompleteButtonText => 'Close';
+  String get syncCompleteButtonText => 'CLOSE';
 
   String get syncFailedTitleText => 'SYNC_FAILED';
 
-  String get retryButtonText => 'Retry';
+  String get retryButtonText => 'RETRY';
 
-  String get dismissButtonText => 'Dismiss';
+  String get dismissButtonText => 'DISMISS';
 }
