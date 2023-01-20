@@ -23,16 +23,15 @@ class AppInitializationBloc
     required this.mdmsRepository,
     required this.isar,
   }) : super(const AppInitializationState()) {
-    on<AppInitializationSetupEvent>(_onAppInitilizeSetup);
-    on<FindAppConfigurationEvent>(_onAppConfigurationSetup);
+    on(_onAppInitializeSetup);
+    on(_onAppConfigurationSetup);
   }
 
-  FutureOr<void> _onAppInitilizeSetup(
+  FutureOr<void> _onAppInitializeSetup(
     AppInitializationSetupEvent event,
     AppInitializationEmitter emit,
   ) async {
-    ServiceRegistryPrimaryWrapperModel result =
-        await mdmsRepository.searchServiceRegistry(
+    final result = await mdmsRepository.searchServiceRegistry(
       envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
@@ -52,7 +51,7 @@ class AppInitializationBloc
     );
 
     await mdmsRepository.writeToRegistryDB(result, isar);
-    List<ServiceRegistry> serviceRegistryList =
+    final serviceRegistryList =
         await isar.serviceRegistrys.where().findAll();
     emit(state.copyWith(serviceRegistryList: serviceRegistryList));
   }
@@ -82,8 +81,7 @@ class AppInitializationBloc
     );
 
     mdmsRepository.writeToAppConfigDB(result, isar);
-    List<AppConfiguration> appConfiguration =
-        await isar.appConfigurations.where().findAll();
+    final appConfiguration = await isar.appConfigurations.where().findAll();
 
     emit(state.copyWith(appConfiguration: appConfiguration.first));
   }

@@ -62,27 +62,18 @@ class MainApplication extends StatelessWidget {
             const AppInitializationState(),
             isar: isar,
             mdmsRepository: MdmsRepository(client),
-          )..add(const AppInitializationSetupEvent()),
+          )
+            ..add(const AppInitializationSetupEvent())
+            ..add(
+              const FindAppConfigurationEvent(actionType: 'search'),
+            ),
           lazy: false,
-        ),
-        BlocProvider(
-          create: (context) => AuthBloc(
-            const AuthState(),
-          ),
         ),
         BlocProvider(create: (context) => AuthBloc(const AuthState())),
         BlocProvider(
-          create: (_) => AppInitializationBloc(
-            const AppInitializationState(),
-            isar: isar,
-            mdmsRepository: MdmsRepository(client),
-          )..add(const AppInitializationEvent.onApplicationConfigurationSetup(
-              actionType: 'search',
-            )),
-        ),
-        BlocProvider(
-          create: (context) =>
-              TableHideActionBloc(const TableHideActionState()),
+          create: (context) => TableHideActionBloc(
+            const TableHideActionState(),
+          ),
         ),
       ],
       child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -92,19 +83,30 @@ class MainApplication extends StatelessWidget {
           return BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
               final appConfig = appConfigState.appConfiguration;
-              final localizationModulesList = appConfig?.backendInterface;
-              final firstLanguage = appConfig?.languages?.first.value;
-              final languages = appConfig?.languages;
 
-              return appConfig != null
-                  ? BlocProvider(
-                      create: (localizationModulesList != null &&
-                              firstLanguage != null)
-                          ? (context) => LocalizationBloc(
-                                const LocalizationState(),
-                                LocalizationRepository(client, isar),
-                                isar,
-                              )..add(LocalizationEvent.onLoadLocalization(
+              if (appConfig == null) {
+                return const MaterialApp(
+                  home: Scaffold(
+                    body: Center(
+                      child: Text('Loading'),
+                    ),
+                  ),
+                );
+              }
+
+              final localizationModulesList = appConfig.backendInterface;
+              final firstLanguage = appConfig.languages?.first.value;
+              final languages = appConfig.languages;
+
+              return BlocProvider(
+                create:
+                    (localizationModulesList != null && firstLanguage != null)
+                        ? (context) => LocalizationBloc(
+                              const LocalizationState(),
+                              LocalizationRepository(client, isar),
+                              isar,
+                            )..add(
+                                LocalizationEvent.onLoadLocalization(
                                   module: localizationModulesList.interfaces
                                       .where((element) =>
                                           element.type ==
@@ -115,45 +117,44 @@ class MainApplication extends StatelessWidget {
                                   tenantId: appConfig.tenantId.toString(),
                                   locale: firstLanguage,
                                   path: Constants.localizationApiPath,
-                                ))
-                          : (context) => LocalizationBloc(
-                                const LocalizationState(),
-                                LocalizationRepository(client, isar),
-                                isar,
-                              ),
-                      child: MaterialApp.router(
-                        supportedLocales: languages != null
-                            ? languages.map((e) {
-                                final results = e.value.split('_');
+                                ),
+                              )
+                        : (context) => LocalizationBloc(
+                              const LocalizationState(),
+                              LocalizationRepository(client, isar),
+                              isar,
+                            ),
+                child: MaterialApp.router(
+                  supportedLocales: languages != null
+                      ? languages.map((e) {
+                          final results = e.value.split('_');
 
-                                return results.isNotEmpty
-                                    ? Locale(results.first, results.last)
-                                    : defaultLocale;
-                              })
-                            : [defaultLocale],
-                        localizationsDelegates: [
-                          AppLocalizations.getDelegate(appConfig, isar),
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          GlobalMaterialLocalizations.delegate,
-                        ],
-                        theme: DigitTheme.instance.mobileTheme,
-                        routeInformationParser: appRouter.defaultRouteParser(),
-                        scaffoldMessengerKey: scaffoldMessengerKey,
-                        routerDelegate: AutoRouterDelegate.declarative(
-                          appRouter,
-                          navigatorObservers: () => [AppRouterObserver()],
-                          routes: (handler) => [
-                            if (authState.isAuthenticated)
-                              const AuthenticatedRouteWrapper()
-                            else
-                              const UnauthenticatedRouteWrapper(),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const MaterialApp(home: Scaffold(body: Text('Loading')));
-              // Placeholder for Loading Component
+                          return results.isNotEmpty
+                              ? Locale(results.first, results.last)
+                              : defaultLocale;
+                        })
+                      : [defaultLocale],
+                  localizationsDelegates: [
+                    AppLocalizations.getDelegate(appConfig, isar),
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                  ],
+                  theme: DigitTheme.instance.mobileTheme,
+                  routeInformationParser: appRouter.defaultRouteParser(),
+                  scaffoldMessengerKey: scaffoldMessengerKey,
+                  routerDelegate: AutoRouterDelegate.declarative(
+                    appRouter,
+                    navigatorObservers: () => [AppRouterObserver()],
+                    routes: (handler) => [
+                      if (authState.isAuthenticated)
+                        const AuthenticatedRouteWrapper()
+                      else
+                        const UnauthenticatedRouteWrapper(),
+                    ],
+                  ),
+                ),
+              );
             },
           );
         },
