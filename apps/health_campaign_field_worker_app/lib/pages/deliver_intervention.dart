@@ -77,8 +77,11 @@ class _DeliverInterventionPageState
                     ),
                     DigitTableCard(
                       element: {
-                        i18.deliverIntervention.memberCountText: 4,
-                        i18.deliverIntervention.noOfResourcesForDelivery: "03",
+                        localizations.translate(
+                          i18.deliverIntervention.memberCountText,
+                        ): 4,
+                        localizations.translate(i18.deliverIntervention
+                            .noOfResourcesForDelivery): "03",
                       },
                     ),
                     DigitDropdown(

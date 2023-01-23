@@ -31,6 +31,7 @@ class _HouseholdOverViewPageState
         children: [
           DigitCard(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,14 +98,17 @@ class _HouseholdOverViewPageState
                     ),
                   ],
                 ),
-                DigitIconButton(
-                  icon: Icons.check_circle,
-                  iconText: localizations.translate(
-                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: DigitIconButton(
+                    icon: Icons.check_circle,
+                    iconText: localizations.translate(
+                      i18.householdOverView.householdOverViewDeliveredIconLabel,
+                    ),
+                    iconTextColor:
+                        DigitTheme.instance.colorScheme.onSurfaceVariant,
+                    iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                   ),
-                  iconTextColor:
-                      DigitTheme.instance.colorScheme.onSurfaceVariant,
-                  iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                 ),
                 DigitTableCard(
                   element: {

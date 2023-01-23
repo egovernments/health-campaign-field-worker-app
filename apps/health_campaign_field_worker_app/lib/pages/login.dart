@@ -67,9 +67,14 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                 TextButton(
                   onPressed: () => DigitDialog.show(
                     context,
-                    title: i18.forgotPassword.labelText,
-                    content: i18.forgotPassword.contentText,
-                    primaryActionLabel: i18.forgotPassword.primaryActionLabel,
+                    title:
+                        localizations.translate(i18.forgotPassword.labelText),
+                    content: localizations.translate(
+                      i18.forgotPassword.contentText,
+                    ),
+                    primaryActionLabel: localizations.translate(
+                      i18.forgotPassword.primaryActionLabel,
+                    ),
                     primaryAction: () => Navigator.pop(context),
                   ),
                   child: Center(

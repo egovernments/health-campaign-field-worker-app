@@ -39,12 +39,12 @@ class MemberCard extends StatelessWidget {
       ),
       margin: DigitTheme.instance.containerMargin,
       padding: const EdgeInsets.all(8),
-      child: Column(children: [
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,
@@ -130,20 +130,27 @@ class MemberCard extends StatelessWidget {
           ],
         ),
         isDelivered
-            ? DigitIconButton(
-                icon: Icons.info_rounded,
-                iconText: localizations.translate(i18
-                    .householdOverView.householdOverViewNotDeliveredIconLabel),
-                iconTextColor: theme.errorColor,
-                iconColor: theme.errorColor,
-              )
-            : DigitIconButton(
-                icon: Icons.check_circle,
-                iconText: localizations.translate(
-                  i18.householdOverView.householdOverViewDeliveredIconLabel,
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: DigitIconButton(
+                  icon: Icons.info_rounded,
+                  iconText: localizations.translate(i18.householdOverView
+                      .householdOverViewNotDeliveredIconLabel),
+                  iconTextColor: theme.errorColor,
+                  iconColor: theme.errorColor,
                 ),
-                iconTextColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
-                iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
+              )
+            : Align(
+                alignment: Alignment.centerLeft,
+                child: DigitIconButton(
+                  icon: Icons.check_circle,
+                  iconText: localizations.translate(
+                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+                  ),
+                  iconTextColor:
+                      DigitTheme.instance.colorScheme.onSurfaceVariant,
+                  iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
+                ),
               ),
         isDelivered
             ? DigitElevatedButton(
