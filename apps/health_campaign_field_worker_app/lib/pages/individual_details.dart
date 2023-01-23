@@ -122,8 +122,9 @@ class _IndividualDetailsPageState
                             .translate(i18.individualDetails.dobLabelText),
                         ageFieldLabel: localizations
                             .translate(i18.individualDetails.ageLabelText),
-                        separatorLabel:
-                            i18.individualDetails.separatorLabelText,
+                        separatorLabel: localizations.translate(
+                          i18.individualDetails.separatorLabelText,
+                        ),
                       ),
                       BlocBuilder<AppInitializationBloc,
                           AppInitializationState>(
