@@ -34,7 +34,6 @@ class MainApplication extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AppInitializationBloc(
-            const AppInitializationState(),
             isar: isar,
             mdmsRepository: MdmsRepository(client),
           )..add(const AppInitializationSetupEvent()),
@@ -52,9 +51,7 @@ class MainApplication extends StatelessWidget {
 
           return BlocBuilder<AuthBloc, AuthState>(
             builder: (context, authState) {
-              final appConfig = appConfigState.appConfiguration;
-
-              if (appConfig == null) {
+              if (appConfigState is! AppInitialized) {
                 return const MaterialApp(
                   home: Scaffold(
                     body: Center(
@@ -63,6 +60,8 @@ class MainApplication extends StatelessWidget {
                   ),
                 );
               }
+
+              final appConfig = appConfigState.appConfiguration;
 
               final localizationModulesList = appConfig.backendInterface;
               final firstLanguage = appConfig.languages?.first.value;

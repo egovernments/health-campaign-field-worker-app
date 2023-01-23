@@ -7,7 +7,6 @@ import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../utils/environment_config.dart';
 
 part 'app_initialization.freezed.dart';
@@ -19,19 +18,18 @@ class AppInitializationBloc
   final MdmsRepository mdmsRepository;
   final Isar isar;
 
-  AppInitializationBloc(
-    AppInitializationState appInitializationState, {
+  AppInitializationBloc({
     required this.mdmsRepository,
     required this.isar,
-  }) : super(const AppInitializationState()) {
+  }) : super(const AppUninitialized()) {
     on(_onAppInitializeSetup);
-    on(_onAppConfigurationSetup);
   }
 
   FutureOr<void> _onAppInitializeSetup(
     AppInitializationSetupEvent event,
     AppInitializationEmitter emit,
   ) async {
+    emit(const AppInitializing());
     final result = await mdmsRepository.searchServiceRegistry(
       envConfig.variables.mdmsApiPath,
       {
@@ -53,16 +51,8 @@ class AppInitializationBloc
 
     await mdmsRepository.writeToRegistryDB(result, isar);
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
-    emit(state.copyWith(serviceRegistryList: serviceRegistryList));
-    add(const FindAppConfigurationEvent(actionType: 'search'));
-  }
 
-  FutureOr<void> _onAppConfigurationSetup(
-    FindAppConfigurationEvent event,
-    AppInitializationEmitter emit,
-  ) async {
-    app_configuration.AppConfigPrimaryWrapperModel result =
-        await mdmsRepository.searchAppConfig(
+    final configResult = await mdmsRepository.searchAppConfig(
       envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
@@ -81,15 +71,15 @@ class AppInitializationBloc
       },
     );
 
-    mdmsRepository.writeToAppConfigDB(result, isar);
-    final appConfiguration = await isar.appConfigurations.where().findAll();
+    await mdmsRepository.writeToAppConfigDB(configResult, isar);
+    final configs = await isar.appConfigurations.where().findAll();
 
-    emit(
-      state.copyWith(
-        appConfiguration:
-            appConfiguration.isEmpty ? null : appConfiguration.first,
-      ),
-    );
+    if (configs.isEmpty) throw Exception('`configs` cannot be empty');
+
+    emit(AppInitialized(
+      appConfiguration: configs.first,
+      serviceRegistryList: serviceRegistryList,
+    ));
   }
 }
 
@@ -105,11 +95,12 @@ class AppInitializationEvent with _$AppInitializationEvent {
 
 @freezed
 class AppInitializationState with _$AppInitializationState {
-  const AppInitializationState._();
+  const factory AppInitializationState.uninitialized() = AppUninitialized;
 
-  const factory AppInitializationState({
-    @Default(false) bool isInitializationCompleted,
-    AppConfiguration? appConfiguration,
+  const factory AppInitializationState.loading() = AppInitializing;
+
+  const factory AppInitializationState.initialized({
+    required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-  }) = _AppInitializationState;
+  }) = AppInitialized;
 }
