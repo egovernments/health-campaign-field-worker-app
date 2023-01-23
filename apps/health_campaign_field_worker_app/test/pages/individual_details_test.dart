@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
 import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/app_configuration.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:mocktail/mocktail.dart';
@@ -19,7 +20,22 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
   @override
-  Stream<AppInitializationState> get stream async* {}
+  Stream<AppInitializationState> get stream async* {
+    yield AppInitialized(
+      appConfiguration: AppConfiguration()
+        ..genderOptions = [
+          GenderOptions()
+            ..name = 'MALE'
+            ..code = 'MALE',
+          GenderOptions()
+            ..name = 'FEMALE'
+            ..code = 'FEMALE',
+          GenderOptions()
+            ..name = 'OTHER'
+            ..code = 'OTHER',
+        ],
+    );
+  }
 }
 
 class MockAppLocalization extends Mock implements AppLocalizations {}
@@ -36,6 +52,22 @@ void main() {
     AppInitializationBloc appInitializationBloc = MockAppInitializationBloc();
 
     setUpAll(() {
+      when(() => appInitializationBloc.state)
+          .thenAnswer((invocation) => AppInitialized(
+                appConfiguration: AppConfiguration()
+                  ..genderOptions = [
+                    GenderOptions()
+                      ..name = 'MALE'
+                      ..code = 'MALE',
+                    GenderOptions()
+                      ..name = 'FEMALE'
+                      ..code = 'FEMALE',
+                    GenderOptions()
+                      ..name = 'OTHER'
+                      ..code = 'OTHER',
+                  ],
+              ));
+
       for (final element in [
         i18.individualDetails.submitButtonLabelText,
         i18.individualDetails.individualsDetailsLabelText,
@@ -50,6 +82,9 @@ void main() {
         i18.individualDetails.genderLabelText,
         i18.individualDetails.mobileNumberLabelText,
         i18.individualDetails.submitButtonLabelText,
+        'MALE',
+        'FEMALE',
+        'OTHER',
       ]) {
         when(() => mockLocalization.translate(element)).thenReturn(element);
       }

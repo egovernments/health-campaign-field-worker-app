@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -127,21 +128,21 @@ class _IndividualDetailsPageState
                         builder: (context, state) {
                           if (state is! AppInitialized) return const Offstage();
 
+                          final genderOptions =
+                              state.appConfiguration.genderOptions ??
+                                  <GenderOptions>[];
+
                           return DigitDropdown(
                             label: localizations.translate(
                               i18.individualDetails.genderLabelText,
                             ),
-                            initialValue: state.appConfiguration.genderOptions
-                                ?.firstOrNull?.name,
-                            menuItems: state.appConfiguration.genderOptions
-                                    ?.map(
-                                      (e) => MenuItemModel(
-                                        e.code,
-                                        localizations.translate(e.name),
-                                      ),
-                                    )
-                                    .toList() ??
-                                [],
+                            initialValue: genderOptions.firstOrNull?.name,
+                            menuItems: genderOptions.map((e) {
+                              return MenuItemModel(
+                                e.code,
+                                localizations.translate(e.name),
+                              );
+                            }).toList(),
                             onChanged: (value) {
                               // TODO: Complete implementation
                             },
