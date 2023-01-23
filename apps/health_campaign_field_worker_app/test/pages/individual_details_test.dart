@@ -5,34 +5,70 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:health_campaign_field_worker_app/pages/individual_details.dart';
+import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
+import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:mocktail/mocktail.dart';
 
-class MockStackRouter extends Mock implements StackRouter {
+import '../router/router.dart';
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
   @override
-  bool canPop({
-    bool ignoreChildRoutes = false,
-    bool ignoreParentRoutes = false,
-    bool ignorePagelessRoutes = false,
-  }) {
-    return true;
-  }
+  Stream<AppInitializationState> get stream async* {}
 }
+
+class MockAppLocalization extends Mock implements AppLocalizations {}
+
+class FakeRoute extends Fake implements Route {}
+
+class FakeDialogRoute<T> extends Fake implements DialogRoute<T> {}
 
 void main() {
   group('Individual Details Page', () {
-    final mockStackRouter = MockStackRouter();
+    final mockObserver = MockNavigatorObserver();
+    final mockLocalization = MockAppLocalization();
+    final appRouter = AppRouter();
+    AppInitializationBloc appInitializationBloc = MockAppInitializationBloc();
+
+    setUpAll(() {
+      for (final element in [
+        i18.individualDetails.submitButtonLabelText,
+        i18.individualDetails.individualsDetailsLabelText,
+        i18.individualDetails.nameLabelText,
+        i18.individualDetails.checkboxLabelText,
+        i18.individualDetails.idTypeLabelText,
+        i18.individualDetails.idNumberLabelText,
+        i18.individualDetails.idNumberSuggestionText,
+        i18.individualDetails.dobLabelText,
+        i18.individualDetails.ageLabelText,
+        i18.individualDetails.separatorLabelText,
+        i18.individualDetails.genderLabelText,
+        i18.individualDetails.mobileNumberLabelText,
+        i18.individualDetails.submitButtonLabelText,
+      ]) {
+        when(() => mockLocalization.translate(element)).thenReturn(element);
+      }
+    });
+
+    registerFallbackValue(FakeRoute());
+    registerFallbackValue(FakeDialogRoute());
+
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(
-        Center(
-          child: MaterialApp(
-            home: StackRouterScope(
-              controller: mockStackRouter,
-              stateHash: 1,
-              child: const IndividualDetailsPage(),
+        BlocProvider.value(
+          value: appInitializationBloc,
+          child: MaterialApp.router(
+            routerDelegate: AutoRouterDelegate.declarative(
+              appRouter,
+              navigatorObservers: () => [mockObserver],
+              routes: (PendingRoutesHandler handler) => [
+                IndividualDetailsRoute(appLocalizations: mockLocalization),
+              ],
             ),
           ),
         ),
