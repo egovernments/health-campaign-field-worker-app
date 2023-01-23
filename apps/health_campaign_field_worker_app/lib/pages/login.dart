@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../blocs/auth/auth.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -67,10 +69,16 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                 TextButton(
                   onPressed: () => DigitDialog.show(
                     context,
-                    title: i18.forgotPassword.labelText,
-                    content: i18.forgotPassword.contentText,
-                    primaryActionLabel: i18.forgotPassword.primaryActionLabel,
-                    primaryAction: () => Navigator.pop(context),
+                    options: DigitDialogOptions(
+                      titleText: i18.forgotPassword.labelText,
+                      contentText: i18.forgotPassword.contentText,
+                      primaryAction: DigitActionOptions(
+                        label: i18.forgotPassword.primaryActionLabel,
+                        action: () {
+                          context.router.pop();
+                        },
+                      ),
+                    ),
                   ),
                   child: Center(
                     child: Text(
