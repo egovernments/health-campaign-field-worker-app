@@ -27,7 +27,7 @@ void main() {
           child: MaterialApp(
             home: StackRouterScope(
               controller: mockStackRouter,
-              stateHash: 1,
+              stateHash: 2,
               child: const DeliverInterventionPage(),
             ),
           ),
