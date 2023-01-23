@@ -2,11 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:health_campaign_field_worker_app/pages/household_overview.dart';
-
+import 'package:health_campaign_field_worker_app/pages/deliver_intervention.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
-import 'package:health_campaign_field_worker_app/widgets/member_card/member_card.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockStackRouter extends Mock implements StackRouter {
@@ -21,7 +19,7 @@ class MockStackRouter extends Mock implements StackRouter {
 }
 
 void main() {
-  group('Household OverView Page', () {
+  group('Deliver Intervention  Page', () {
     final mockStackRouter = MockStackRouter();
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(
@@ -30,7 +28,7 @@ void main() {
             home: StackRouterScope(
               controller: mockStackRouter,
               stateHash: 1,
-              child: const HouseholdOverViewPage(),
+              child: const DeliverInterventionPage(),
             ),
           ),
         ),
@@ -38,7 +36,7 @@ void main() {
     }
 
     testWidgets(
-      'Ensure that Delivery Intervention button is initialized and rendered correctly',
+      'Ensure that Submit button is initialized and rendered correctly',
       (widgetTester) async {
         await buildTester(widgetTester);
         await widgetTester.pumpAndSettle();
@@ -47,7 +45,7 @@ void main() {
         expect(
           find.widgetWithText(
             DigitElevatedButton,
-            i18.householdOverView.householdOverViewActionText,
+            i18.common.coreCommonSubmit,
           ),
           findsOneWidget,
         );
@@ -63,14 +61,34 @@ void main() {
         expect(find.byType(DigitCard), findsNWidgets(2));
       },
     );
-
     testWidgets(
-      'Ensure that correct number of MemberCard are rendered on screen',
+      'Ensure that all static components are initialized and rendered correctly',
       (widgetTester) async {
         await buildTester(widgetTester);
         await widgetTester.pumpAndSettle();
+        expect(
+          find.widgetWithText(
+            DigitIntegerFormPicker,
+            i18.deliverIntervention.quantityDistributedLabel,
+          ),
+          findsOneWidget,
+        );
 
-        expect(find.byType(MemberCard), findsAtLeastNWidgets(1));
+        expect(
+          find.widgetWithText(
+            DigitDropdown,
+            i18.deliverIntervention.resourceDeliveredLabel,
+          ),
+          findsOneWidget,
+        );
+
+        expect(
+          find.widgetWithText(
+            DigitDropdown,
+            i18.deliverIntervention.deliveryCommentLabel,
+          ),
+          findsOneWidget,
+        );
       },
     );
   });
