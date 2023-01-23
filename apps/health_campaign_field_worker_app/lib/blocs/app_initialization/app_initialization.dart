@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart' as app_configuration;
-import '../../models/mdms/service_registry/service_registry_model.dart';
 import '../../utils/environment_config.dart';
 
 part 'app_initialization.freezed.dart';
@@ -51,9 +52,9 @@ class AppInitializationBloc
     );
 
     await mdmsRepository.writeToRegistryDB(result, isar);
-    final serviceRegistryList =
-        await isar.serviceRegistrys.where().findAll();
+    final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     emit(state.copyWith(serviceRegistryList: serviceRegistryList));
+    add(const FindAppConfigurationEvent(actionType: 'search'));
   }
 
   FutureOr<void> _onAppConfigurationSetup(
@@ -83,7 +84,12 @@ class AppInitializationBloc
     mdmsRepository.writeToAppConfigDB(result, isar);
     final appConfiguration = await isar.appConfigurations.where().findAll();
 
-    emit(state.copyWith(appConfiguration: appConfiguration.first));
+    emit(
+      state.copyWith(
+        appConfiguration:
+            appConfiguration.isEmpty ? null : appConfiguration.first,
+      ),
+    );
   }
 }
 
