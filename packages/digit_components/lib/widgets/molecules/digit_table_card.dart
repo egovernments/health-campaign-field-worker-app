@@ -6,6 +6,7 @@ class DigitTableCard extends StatelessWidget {
   final EdgeInsets? padding;
   final Border? border;
   final Color? color;
+  
   const DigitTableCard(
       {super.key,
       required this.element,
