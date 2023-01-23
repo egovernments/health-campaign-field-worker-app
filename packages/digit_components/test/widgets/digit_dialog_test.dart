@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_test/flutter_test.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'widget_app.dart';
@@ -127,10 +126,14 @@ void main() {
             builder: (context) => ElevatedButton(
               onPressed: () => DigitDialog.show<bool>(
                 context,
-                title: alertTitle,
-                content: content,
-                primaryActionLabel: primaryActionLabel,
-                primaryAction: () => Navigator.of(context).pop(!primary),
+                options: DigitDialogOptions(
+                  titleText: alertTitle,
+                  contentText: content,
+                  primaryAction: DigitActionOptions(
+                    label: primaryActionLabel,
+                    action: () => Navigator.of(context).pop(!primary),
+                  ),
+                ),
               ).then((value) {
                 if (value == null) return;
                 primary = value;
