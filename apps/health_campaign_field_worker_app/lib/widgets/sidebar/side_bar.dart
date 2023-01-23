@@ -37,7 +37,7 @@ class SideBar extends StatelessWidget {
         DigitIconTile(
           title: 'Home',
           icon: Icons.home,
-          onPressed: () => context.router.replace(const HomeRoute()),
+          onPressed: () => context.router.replace(HomeRoute()),
         ),
         DigitIconTile(
           title: 'Language',

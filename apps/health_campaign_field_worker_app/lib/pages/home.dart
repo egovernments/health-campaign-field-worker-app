@@ -63,7 +63,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.all_inbox,
         label: i18.home.beneficiaryLabel,
-        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
+        onPressed: () => context.router.push(SearchBeneficiaryRoute()),
       ),
       HomeItemCard(
         icon: Icons.menu_book,
