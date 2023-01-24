@@ -43,35 +43,34 @@ class DigitAcknowledgement extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: DigitTheme.kPadding * 2,
-                  vertical: DigitTheme.kPadding * 4,
+                  horizontal: kPadding * 2,
+                  vertical: kPadding * 4,
                 ),
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height / 3,
                 ),
                 color: color,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          textAlign: TextAlign.center,
-                          label,
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w400,
-                            color: theme.colorScheme.onPrimary,
-                          )),
-                      Padding(
-                        padding: DigitTheme.instance.containerMargin,
-                        child: Icon(
-                          icon,
-                          size: 32,
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                      )
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      textAlign: TextAlign.center,
+                      label,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                    ),
+                    Padding(
+                      padding: DigitTheme.instance.containerMargin,
+                      child: Icon(
+                        icon,
+                        size: 32,
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                    )
+                  ],
                 ),
               ),
               Padding(
@@ -86,10 +85,10 @@ class DigitAcknowledgement extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(
-                  DigitTheme.kPadding,
-                  DigitTheme.kPadding,
-                  DigitTheme.kPadding,
-                  DigitTheme.kPadding * 2,
+                  kPadding,
+                  kPadding,
+                  kPadding,
+                  kPadding * 2,
                 ),
                 child: DigitElevatedButton(
                   onPressed: action,

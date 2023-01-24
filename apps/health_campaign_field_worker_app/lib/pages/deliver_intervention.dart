@@ -147,18 +147,22 @@ class _DeliverInterventionPageState
           child: DigitElevatedButton(
             onPressed: () => DigitDialog.show(
               context,
-              title:
-                  localizations.translate(i18.deliverIntervention.dialogTitle),
-              content: localizations
-                  .translate(i18.deliverIntervention.dialogContent),
-              primaryActionLabel:
-                  localizations.translate(i18.common.coreCommonSubmit),
-              primaryAction: () =>
-                  Navigator.of(context, rootNavigator: true).pop(),
-              secondaryActionLabel:
-                  localizations.translate(i18.common.coreCommonCancel),
-              secondaryAction: () =>
-                  Navigator.of(context, rootNavigator: true).pop(),
+              options: DigitDialogOptions(
+                titleText: localizations
+                    .translate(i18.deliverIntervention.dialogTitle),
+                contentText: localizations
+                    .translate(i18.deliverIntervention.dialogContent),
+                primaryAction: DigitDialogActions(
+                  label: localizations.translate(i18.common.coreCommonSubmit),
+                  action: (context) =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                ),
+                secondaryAction: DigitDialogActions(
+                  label: localizations.translate(i18.common.coreCommonCancel),
+                  action: (context) =>
+                      Navigator.of(context, rootNavigator: true).pop(),
+                ),
+              ),
             ),
             child: Center(
               child: Text(
