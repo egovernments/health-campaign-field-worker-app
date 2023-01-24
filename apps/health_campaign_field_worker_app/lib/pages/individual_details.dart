@@ -46,8 +46,6 @@ class _IndividualDetailsPageState
                     onPressed: () {
                       if (form.valid) {
                         context.router.push(AcknowledgementRoute());
-                        // TODO: Complete implementation
-
                       } else {
                         form.markAllAsTouched();
                       }
