@@ -107,25 +107,24 @@ void main() {
         await buildTester(widgetTester);
         await widgetTester.pumpAndSettle();
 
-        // expect(find.byType(DigitElevatedButton), findsOneWidget);
-        // expect(
-        //   find.widgetWithText(
-        //     DigitElevatedButton,
-        //     i18.individualDetails.submitButtonLabelText,
-        //   ),
-        //   findsOneWidget,
-        // );
+        expect(find.byType(DigitElevatedButton), findsAtLeastNWidgets(1));
+        expect(
+          find.widgetWithText(
+            DigitElevatedButton,
+            i18.householdOverView.householdOverViewActionText,
+          ),
+          findsOneWidget,
+        );
       },
     );
+    testWidgets(
+      'Ensure that correct number of DigitCards are rendered on screen',
+      (widgetTester) async {
+        await buildTester(widgetTester);
+        await widgetTester.pumpAndSettle();
 
-    // testWidgets(
-    //   'Ensure that correct number of DigitCards are rendered on screen',
-    //   (widgetTester) async {
-    //     await buildTester(widgetTester);
-    //     await widgetTester.pumpAndSettle();
-
-    //     expect(find.byType(DigitCard), findsNWidgets(2));
-    //   },
-    // );
+        expect(find.byType(DigitCard), findsNWidgets(2));
+      },
+    );
   });
 }
