@@ -107,15 +107,15 @@ void main() {
           find.byType(DigitDialog),
         ) as DigitDialog;
 
-        expect(dialog.title.runtimeType, Text);
-        expect(dialog.content.runtimeType, Text);
+        expect(dialog.options.title.runtimeType, Text);
+        expect(dialog.options.content.runtimeType, Text);
         expect(
-          dialog.primaryActionLabel,
+          dialog.options.primaryAction?.label,
           i18.forgotPassword.primaryActionLabel,
         );
 
-        final title = dialog.title as Text;
-        final content = dialog.content as Text;
+        final title = dialog.options.title as Text;
+        final content = dialog.options.content as Text;
 
         expect(title.data, i18.forgotPassword.labelText);
         expect(
@@ -124,7 +124,7 @@ void main() {
         );
 
         await widgetTester.tap(
-          find.text(i18.forgotPassword.actionLabel),
+          find.text(i18.forgotPassword.primaryActionLabel),
           warnIfMissed: false,
         );
         await widgetTester.pumpAndSettle();
