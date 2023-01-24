@@ -50,7 +50,6 @@ class _HouseholdOverViewPageState
                         context,
                         widget: ActionCard(
                           items: [
-                            // ignore: no-empty-block
                             ActionCardModel(
                               icon: Icons.edit,
                               label: localizations.translate(

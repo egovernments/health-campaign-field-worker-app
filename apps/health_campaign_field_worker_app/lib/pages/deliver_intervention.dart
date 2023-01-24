@@ -36,11 +36,13 @@ class _DeliverInterventionPageState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          localizations.translate(
-                            i18.deliverIntervention.deliverInterventionLabel,
+                        Expanded(
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention.deliverInterventionLabel,
+                            ),
+                            style: theme.textTheme.displayMedium,
                           ),
-                          style: theme.textTheme.displayMedium,
                         ),
                       ],
                     ),
