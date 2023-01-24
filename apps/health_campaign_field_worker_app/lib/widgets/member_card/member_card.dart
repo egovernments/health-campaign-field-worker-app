@@ -49,7 +49,7 @@ class MemberCard extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 2,
                   child: Text(
-                    localizations.translate(name),
+                    name,
                     style: theme.textTheme.bodyLarge,
                   ),
                 ),
@@ -64,68 +64,75 @@ class MemberCard extends StatelessWidget {
                           style: theme.textTheme.bodyMedium,
                         ),
                       ),
-                      Text(
-                        " | $age ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
-                        style: theme.textTheme.bodyMedium,
+                      Expanded(
+                        child: Text(
+                          " | $age ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            DigitIconButton(
-              onPressed: () => DigitActionDialog.show(
-                context,
-                widget: ActionCard(
-                  items: [
-                    ActionCardModel(
-                      icon: Icons.person,
-                      label: localizations.translate(
-                        i18.memberCard.assignAsHouseholdhead,
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: DigitIconButton(
+                onPressed: () => DigitActionDialog.show(
+                  context,
+                  widget: ActionCard(
+                    items: [
+                      ActionCardModel(
+                        icon: Icons.person,
+                        label: localizations.translate(
+                          i18.memberCard.assignAsHouseholdhead,
+                        ),
+                        action: () {
+                          // TODO: Complete implementation
+                        },
                       ),
-                      action: () {
-                        // TODO: Complete implementation
-                      },
-                    ),
-                    ActionCardModel(
-                      icon: Icons.edit,
-                      label: localizations.translate(
-                        i18.memberCard.editIndividualDetails,
+                      ActionCardModel(
+                        icon: Icons.edit,
+                        label: localizations.translate(
+                          i18.memberCard.editIndividualDetails,
+                        ),
+                        action: () {
+                          // TODO: Complete implementation
+                        },
                       ),
-                      action: () {
-                        // TODO: Complete implementation
-                      },
-                    ),
-                    ActionCardModel(
-                      icon: Icons.delete,
-                      label: localizations.translate(
-                        i18.memberCard.deleteIndividualActionText,
+                      ActionCardModel(
+                        icon: Icons.delete,
+                        label: localizations.translate(
+                          i18.memberCard.deleteIndividualActionText,
+                        ),
+                        action: () {
+                          DigitDialog.show(
+                            context,
+                            title: localizations.translate(i18.householdOverView
+                                .householdOverViewActionCardTitle),
+                            primaryActionLabel: localizations.translate(i18
+                                .householdOverView
+                                .householdOverViewPrimaryActionLabel),
+                            primaryAction: () =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
+                            secondaryActionLabel: localizations.translate(i18
+                                .householdOverView
+                                .householdOverViewSecondaryActionLabel),
+                            secondaryAction: () =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
+                          );
+                        },
                       ),
-                      action: () {
-                        DigitDialog.show(
-                          context,
-                          title: localizations.translate(i18.householdOverView
-                              .householdOverViewActionCardTitle),
-                          primaryActionLabel: localizations.translate(i18
-                              .householdOverView
-                              .householdOverViewPrimaryActionLabel),
-                          primaryAction: () =>
-                              Navigator.of(context, rootNavigator: true).pop(),
-                          secondaryActionLabel: localizations.translate(i18
-                              .householdOverView
-                              .householdOverViewSecondaryActionLabel),
-                          secondaryAction: () =>
-                              Navigator.of(context, rootNavigator: true).pop(),
-                        );
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                iconText: localizations.translate(
+                  i18.householdOverView.householdOverViewEditIconText,
+                ),
+                icon: Icons.edit,
               ),
-              iconText: localizations.translate(
-                i18.householdOverView.householdOverViewEditIconText,
-              ),
-              icon: Icons.edit,
             ),
           ],
         ),
@@ -158,9 +165,13 @@ class MemberCard extends StatelessWidget {
                   // TODO: Complete implementation
                 },
                 child: Center(
-                  child: Text(localizations.translate(
-                    i18.memberCard.deliverInterventionSubmitLabel,
-                  )),
+                  child: Expanded(
+                    child: Text(
+                      localizations.translate(
+                        i18.memberCard.deliverInterventionSubmitLabel,
+                      ),
+                    ),
+                  ),
                 ),
               )
             : SizedBox(
