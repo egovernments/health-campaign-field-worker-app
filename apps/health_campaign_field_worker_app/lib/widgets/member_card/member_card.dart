@@ -8,7 +8,7 @@ class MemberCard extends StatelessWidget {
   final String name;
   final String gender;
   final int age;
-  final bool? isHead;
+  final bool isHead;
   final bool isDelivered;
   final AppLocalizations localizations;
 
@@ -17,7 +17,7 @@ class MemberCard extends StatelessWidget {
     required this.name,
     required this.gender,
     required this.age,
-    this.isHead,
+    this.isHead = false,
     required this.localizations,
     required this.isDelivered,
   });
@@ -165,11 +165,9 @@ class MemberCard extends StatelessWidget {
                   // TODO: Complete implementation
                 },
                 child: Center(
-                  child: Expanded(
-                    child: Text(
-                      localizations.translate(
-                        i18.memberCard.deliverInterventionSubmitLabel,
-                      ),
+                  child: Text(
+                    localizations.translate(
+                      i18.memberCard.deliverInterventionSubmitLabel,
                     ),
                   ),
                 ),
