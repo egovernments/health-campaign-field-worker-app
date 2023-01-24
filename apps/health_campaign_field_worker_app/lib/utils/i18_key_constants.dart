@@ -8,6 +8,7 @@ const searchBeneficiary = SearchBeneficiary();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
+const projectSelection = ProjectSelection();
 IndividualDetails individualDetails = const IndividualDetails();
 
 class Common {
@@ -112,6 +113,7 @@ class IndividualDetails {
 
 class HouseholdLocation {
   const HouseholdLocation();
+
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
@@ -131,17 +133,42 @@ class HouseholdLocation {
 
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
+
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
+
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 }
 
 class HouseholdDetails {
   const HouseholdDetails();
+
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
+
   String get dateOfRegistrationLabel =>
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
+
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+}
+
+class ProjectSelection {
+  const ProjectSelection();
+
+  String get projectDetailsLabelText => 'PROJECT_DETAILS_LABEL';
+
+  String get syncInProgressTitleText => 'SYNC_IN_PROGRESS';
+
+  String get syncCompleteTitleText => 'SYNC_COMPLETE';
+
+  String get syncCompleteButtonText => 'CLOSE';
+
+  String get syncFailedTitleText => 'SYNC_FAILED';
+
+  String get retryButtonText => 'RETRY';
+
+  String get dismissButtonText => 'DISMISS';
 }

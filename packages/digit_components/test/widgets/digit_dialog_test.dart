@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_test/flutter_test.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'widget_app.dart';
@@ -23,8 +22,8 @@ void main() {
     Future<void> buildTester(
       WidgetTester widgetTester, {
       MockNavigatorObserver? mockObserver,
-      VoidCallback? primaryAction,
-      VoidCallback? secondaryAction,
+      void Function(BuildContext context)? primaryAction,
+      void Function(BuildContext context)? secondaryAction,
     }) async {
       await widgetTester.pumpWidget(
         WidgetApp(
@@ -35,12 +34,18 @@ void main() {
               onPressed: () => showDialog(
                 context: context,
                 builder: (_) => DigitDialog(
-                  title: const Text(alertTitle),
-                  content: const Text(content),
-                  primaryAction: primaryAction,
-                  primaryActionLabel: primaryActionLabel,
-                  secondaryAction: secondaryAction,
-                  secondaryActionLabel: secondaryActionLabel,
+                  options: DigitDialogOptions(
+                    title: const Text(alertTitle),
+                    content: const Text(content),
+                    primaryAction: DigitDialogActions(
+                      label: primaryActionLabel,
+                      action: primaryAction,
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      label: secondaryActionLabel,
+                      action: secondaryAction,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -71,7 +76,7 @@ void main() {
 
       await buildTester(
         widgetTester,
-        primaryAction: () => primary = !primary,
+        primaryAction: (context) => primary = !primary,
       );
 
       await widgetTester.tap(
@@ -86,7 +91,7 @@ void main() {
 
       await buildTester(
         widgetTester,
-        secondaryAction: () => secondary = !secondary,
+        secondaryAction: (context) => secondary = !secondary,
       );
 
       await widgetTester.tap(
@@ -99,8 +104,8 @@ void main() {
     testWidgets('has UI components', (widgetTester) async {
       await buildTester(
         widgetTester,
-        primaryAction: () {},
-        secondaryAction: () {},
+        primaryAction: (context) {},
+        secondaryAction: (context) {},
       );
 
       expect(find.text(alertTitle), findsOneWidget);
@@ -127,10 +132,14 @@ void main() {
             builder: (context) => ElevatedButton(
               onPressed: () => DigitDialog.show<bool>(
                 context,
-                title: alertTitle,
-                content: content,
-                primaryActionLabel: primaryActionLabel,
-                primaryAction: () => Navigator.of(context).pop(!primary),
+                options: DigitDialogOptions(
+                  titleText: alertTitle,
+                  contentText: content,
+                  primaryAction: DigitDialogActions(
+                    label: primaryActionLabel,
+                    action: (context) => Navigator.of(context).pop(!primary),
+                  ),
+                ),
               ).then((value) {
                 if (value == null) return;
                 primary = value;
