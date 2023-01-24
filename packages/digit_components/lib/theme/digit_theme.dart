@@ -63,7 +63,7 @@ class DigitTheme {
         horizontal: kPadding * 2,
       );
 
-  EdgeInsets get containerMargin => const EdgeInsets.all(kPadding)
+  EdgeInsets get containerMargin => const EdgeInsets.all(kPadding);
   EdgeInsets get verticalMargin => const EdgeInsets.symmetric(
         vertical: kPadding,
       );
