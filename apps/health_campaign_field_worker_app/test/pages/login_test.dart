@@ -111,11 +111,23 @@ void main() {
           dialog.primaryActionLabel,
           i18.forgotPassword.primaryActionLabel,
         );
+        expect(dialog.title.runtimeType, Text);
+        expect(dialog.content.runtimeType, Text);
+
+        final title = dialog.title as Text;
+        final content = dialog.content as Text;
+
+        expect(title.data, i18.forgotPassword.labelText);
+        expect(
+          content.data,
+          i18.forgotPassword.contentText,
+        );
 
         await widgetTester.tap(
           find.text(i18.forgotPassword.actionLabel),
           warnIfMissed: false,
         );
+
         await widgetTester.pumpAndSettle();
 
         verify(() => mockObserver.didPop(any(), any<DialogRoute>()));
