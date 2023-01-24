@@ -108,20 +108,29 @@ class MemberCard extends StatelessWidget {
                         action: () {
                           DigitDialog.show(
                             context,
-                            title: localizations.translate(i18.householdOverView
-                                .householdOverViewActionCardTitle),
-                            primaryActionLabel: localizations.translate(i18
-                                .householdOverView
-                                .householdOverViewPrimaryActionLabel),
-                            primaryAction: () =>
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
-                            secondaryActionLabel: localizations.translate(i18
-                                .householdOverView
-                                .householdOverViewSecondaryActionLabel),
-                            secondaryAction: () =>
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
+                            options: DigitDialogOptions(
+                              titleText: localizations.translate(i18
+                                  .householdOverView
+                                  .householdOverViewActionCardTitle),
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(i18
+                                    .householdOverView
+                                    .householdOverViewPrimaryActionLabel),
+                                action: (context) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                },
+                              ),
+                              secondaryAction: DigitDialogActions(
+                                label: localizations.translate(i18
+                                    .householdOverView
+                                    .householdOverViewSecondaryActionLabel),
+                                action: (context) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                },
+                              ),
+                            ),
                           );
                         },
                       ),

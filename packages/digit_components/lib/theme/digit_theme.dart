@@ -5,9 +5,9 @@ import 'package:digit_components/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DigitTheme {
-  static const kPadding = 8.0;
+const kPadding = 8.0;
 
+class DigitTheme {
   static const DigitTheme _instance = DigitTheme._internal();
 
   static DigitTheme get instance => _instance;
