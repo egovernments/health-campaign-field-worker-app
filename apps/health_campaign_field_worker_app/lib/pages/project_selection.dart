@@ -4,7 +4,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 
-import '../blocs/localization/app_localization.dart';
+import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -45,32 +45,53 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               ),
               DigitProjectCell(
                 projectText: 'Sync In Progress',
-                onTap: () => DigitSyncDialog.showSyncInProgressDialog(
+                onTap: () => DigitSyncDialogContent.show(
                   context,
-                  syncInProgressTitleText:
-                      AppLocalizations.of(context).translate(
+                  barrierDismissible: true,
+                  type: DigitSyncDialogType.inProgress,
+                  label: localizations.translate(
                     i18.projectSelection.syncInProgressTitleText,
                   ),
                 ),
               ),
               DigitProjectCell(
                 projectText: 'Sync Complete',
-                onTap: () => DigitSyncDialog.showSyncCompleteDialog(
+                onTap: () => DigitSyncDialogContent.show(
                   context,
-                  syncCompleteTitleText: 'Sync complete',
-                  syncCompleteButtonText: 'Close',
-                  syncCompleteCallback: () {},
+                  type: DigitSyncDialogType.complete,
+                  label: localizations.translate(
+                    i18.projectSelection.syncCompleteTitleText,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.projectSelection.syncCompleteButtonText,
+                    ),
+                    action: (context) => context.router.pop(),
+                  ),
                 ),
               ),
               DigitProjectCell(
                 projectText: 'Sync Fail',
-                onTap: () => DigitSyncDialog.showSyncFailedDialog(
+                onTap: () => DigitSyncDialogContent.show(
                   context,
-                  syncFailedTitleText: 'Sync Failed',
-                  retryButtonText: 'Retry',
-                  dismissButtonText: 'Dismiss',
-                  retryCallback: () {},
-                  dismissCallback: () {},
+                  type: DigitSyncDialogType.failed,
+                  label: localizations.translate(
+                    i18.projectSelection.syncFailedTitleText,
+                  ),
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.projectSelection.retryButtonText,
+                    ),
+                    action: (context) => context.router.pop(),
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.projectSelection.syncCompleteButtonText,
+                    ),
+                    action: (context) {
+                      // TODO: Complete Implementation
+                    },
+                  ),
                 ),
               ),
             ],
