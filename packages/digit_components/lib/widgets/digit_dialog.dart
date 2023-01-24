@@ -2,82 +2,49 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class DigitDialog extends StatelessWidget {
-  final Widget? title;
-  final Widget? content;
-  final EdgeInsets titlePadding;
-  final EdgeInsets contentPadding;
-  final String? primaryActionLabel;
-  final VoidCallback? primaryAction;
-  final String? secondaryActionLabel;
-  final VoidCallback? secondaryAction;
+  final DigitDialogOptions options;
 
+  @visibleForTesting
   const DigitDialog({
     super.key,
-    this.content,
-    this.title,
-    this.primaryActionLabel,
-    this.primaryAction,
-    this.titlePadding = const EdgeInsets.fromLTRB(
-      kPadding,
-      kPadding * 2,
-      kPadding,
-      kPadding,
-    ),
-    this.contentPadding = const EdgeInsets.all(kPadding),
-    this.secondaryActionLabel,
-    this.secondaryAction,
+    required this.options,
   });
 
   static Future<T?> show<T>(
     BuildContext context, {
     required DigitDialogOptions options,
   }) {
-    Widget? title = options.title;
-    Widget? content = options.content;
-
-    if (options.titleText != null) {
-      title ??= Text(options.titleText!, textAlign: TextAlign.left);
-    }
-
-    if (options.contentText != null) {
-      content ??= Text(options.contentText!, textAlign: TextAlign.left);
-    }
-
     return showDialog<T>(
       context: context,
       barrierDismissible: options.barrierDismissible,
       barrierColor: options.barrierColor ??
           DigitTheme.instance.colors.black.withOpacity(0.7),
       builder: (context) => DigitDialog(
-        title: title,
-        content: content,
-        primaryActionLabel: options.primaryAction?.label,
-        primaryAction: options.primaryAction?.action,
-        secondaryActionLabel: options.secondaryAction?.label,
-        secondaryAction: options.secondaryAction?.action,
+        key: options.key,
+        options: options,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: title,
-        content: content,
+        title: options.title,
+        content: options.content,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
-          if (primaryActionLabel != null)
+          if (options.primaryAction != null)
             DigitElevatedButton(
-              onPressed: primaryAction,
-              child: Center(child: Text(primaryActionLabel!)),
+              onPressed: () => options.primaryAction!.action?.call(context),
+              child: Center(child: Text(options.primaryAction!.label)),
             ),
-          if (secondaryActionLabel != null)
+          if (options.secondaryAction != null)
             TextButton(
-              onPressed: secondaryAction,
-              child: Center(child: Text(secondaryActionLabel!)),
+              onPressed: () => options.secondaryAction!.action?.call(context),
+              child: Center(child: Text(options.secondaryAction!.label)),
             ),
         ],
-        titlePadding: titlePadding,
-        contentPadding: contentPadding,
+        titlePadding: options.titlePadding,
+        contentPadding: options.contentPadding,
       );
 }
 
@@ -86,32 +53,57 @@ class DigitDialogOptions {
   final EdgeInsets contentPadding;
   final String? titleText;
   final String? contentText;
-  final Widget? title;
-  final Widget? content;
-  final DigitActionOptions? primaryAction;
-  final DigitActionOptions? secondaryAction;
+  final Widget? _titleWidget;
+  final Widget? _contentWidget;
+  final DigitDialogActions? primaryAction;
+  final DigitDialogActions? secondaryAction;
   final bool barrierDismissible;
   final Color? barrierColor;
+  final Key? key;
 
   const DigitDialogOptions({
     this.titleText,
     this.contentText,
-    this.title,
-    this.content,
+    Widget? title,
+    Widget? content,
     this.primaryAction,
     this.secondaryAction,
     this.barrierDismissible = false,
     this.titlePadding = const EdgeInsets.all(kPadding),
     this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
-  });
+    this.key,
+  })  : _titleWidget = title,
+        _contentWidget = content;
+
+  Widget? get title {
+    if (_titleWidget != null) return _titleWidget;
+    if (titleText != null) {
+      return Text(
+        titleText!,
+        textAlign: TextAlign.left,
+      );
+    }
+    return null;
+  }
+
+  Widget? get content {
+    if (_contentWidget != null) return _contentWidget;
+    if (contentText != null) {
+      return Text(
+        contentText!,
+        textAlign: TextAlign.left,
+      );
+    }
+    return null;
+  }
 }
 
-class DigitActionOptions {
+class DigitDialogActions<T> {
   final String label;
-  final VoidCallback? action;
+  final T Function(BuildContext context)? action;
 
-  const DigitActionOptions({
+  const DigitDialogActions({
     required this.label,
     this.action,
   });

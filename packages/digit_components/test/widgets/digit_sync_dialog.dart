@@ -1,4 +1,4 @@
-import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,10 +27,13 @@ void main() {
           child: Builder(
             builder: (context) => ElevatedButton(
               child: const Text(testButton),
-              onPressed: () => DigitSyncDialog.showSyncInProgressDialog(
-                context,
-                syncInProgressTitleText: syncInProgressTitleText,
-              ),
+              onPressed: () {
+                DigitSyncDialogContent.show(
+                  context,
+                  type: DigitSyncDialogType.inProgress,
+                  label: syncInProgressTitleText,
+                );
+              },
             ),
           ),
         ),
@@ -76,12 +79,17 @@ void main() {
         child: Builder(
             builder: (context) => ElevatedButton(
                   child: const Text(testButton),
-                  onPressed: () => DigitSyncDialog.showSyncCompleteDialog(
-                    context,
-                    syncCompleteTitleText: syncCompleteTitleText,
-                    syncCompleteButtonText: syncCompleteButtonText,
-                    syncCompleteCallback: () {},
-                  ),
+                  onPressed: () {
+                    DigitSyncDialogContent.show(
+                      context,
+                      type: DigitSyncDialogType.complete,
+                      label: syncCompleteTitleText,
+                      primaryAction: DigitDialogActions(
+                        label: syncCompleteButtonText,
+                        action: (_) {},
+                      ),
+                    );
+                  },
                 )),
       ));
 
@@ -108,7 +116,7 @@ void main() {
         widgetTester,
       );
       expect(find.text(syncCompleteTitleText), findsOneWidget);
-      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byIcon(Icons.check_circle_outline), findsOneWidget);
       expect(find.byType(DigitElevatedButton), findsOneWidget);
       expect(find.text(syncCompleteButtonText), findsOneWidget);
     });
@@ -124,21 +132,31 @@ void main() {
       WidgetTester widgetTester, {
       MockNavigatorObserver? mockObserver,
     }) async {
-      await widgetTester.pumpWidget(WidgetApp(
-        navigatorObserver: mockObserver,
-        child: Builder(
+      await widgetTester.pumpWidget(
+        WidgetApp(
+          navigatorObserver: mockObserver,
+          child: Builder(
             builder: (context) => ElevatedButton(
-                  child: const Text(testButton),
-                  onPressed: () => DigitSyncDialog.showSyncFailedDialog(
-                    context,
-                    syncFailedTitleText: syncFailedTitleText,
-                    retryButtonText: retryButtonText,
-                    dismissButtonText: dismissButtonText,
-                    retryCallback: () {},
-                    dismissCallback: () {},
+              child: const Text(testButton),
+              onPressed: () {
+                DigitSyncDialogContent.show(
+                  context,
+                  type: DigitSyncDialogType.failed,
+                  label: syncFailedTitleText,
+                  primaryAction: DigitDialogActions(
+                    label: retryButtonText,
+                    action: (_) {},
                   ),
-                )),
-      ));
+                  secondaryAction: DigitDialogActions(
+                    label: dismissButtonText,
+                    action: (_) {},
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
 
       await widgetTester.tap(find.widgetWithText(ElevatedButton, testButton));
       await widgetTester.pumpAndSettle();

@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,13 +69,17 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                   onPressed: () => DigitDialog.show(
                     context,
                     options: DigitDialogOptions(
-                      titleText: i18.forgotPassword.labelText,
-                      contentText: i18.forgotPassword.contentText,
-                      primaryAction: DigitActionOptions(
-                        label: i18.forgotPassword.primaryActionLabel,
-                        action: () {
-                          context.router.pop();
-                        },
+                      titleText: localizations.translate(
+                        i18.forgotPassword.labelText,
+                      ),
+                      contentText: localizations.translate(
+                        i18.forgotPassword.contentText,
+                      ),
+                      primaryAction: DigitDialogActions(
+                        label: localizations.translate(
+                          i18.forgotPassword.primaryActionLabel,
+                        ),
+                        action: (ctx) => Navigator.pop(context),
                       ),
                     ),
                   ),
