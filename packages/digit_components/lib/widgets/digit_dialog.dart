@@ -37,10 +37,9 @@ class DigitDialog extends StatelessWidget {
         barrierColor: DigitTheme.instance.colors.black.withOpacity(0.7),
         builder: (context) => DigitDialog(
           title: Text(title, textAlign: TextAlign.left),
-          content: Offstage(
-            offstage: content == null,
-            child: Text(content.toString(), textAlign: TextAlign.left),
-          ),
+          content: content != null
+              ? Text(content.toString(), textAlign: TextAlign.left)
+              : null,
           primaryActionLabel: primaryActionLabel,
           primaryAction: primaryAction,
           secondaryActionLabel: secondaryActionLabel,
