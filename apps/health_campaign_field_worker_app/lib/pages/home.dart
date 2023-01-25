@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +25,18 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     return Scaffold(
       body: ScrollableContent(
+        slivers: [
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _getItems(context).elementAt(index),
+              childCount: _getItems(context).length,
+            ),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 145,
+              childAspectRatio: 104 / 128,
+            ),
+          ),
+        ],
         header: Column(
           children: [
             const BackNavigationHelpHeaderWidget(
@@ -45,24 +56,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
         footer: const PoweredByDigit(),
         children: [
-          ..._getItems(context)
-              .slices(3)
-              .map(
-                (e) => IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: e
-                        .map(
-                          (e) => SizedBox(
-                            width: MediaQuery.of(context).size.width / 3,
-                            child: e,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              )
-              .toList(),
           const SizedBox(height: kPadding * 2),
           DigitInfoCard(
             icon: Icons.info,
@@ -89,6 +82,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         onPressed: null,
       ),
       HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.fileComplaint,
+        onPressed: null,
+      ),
+      HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
         onPressed: null,
@@ -96,11 +94,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.call,
         label: i18.home.callbackLabel,
-        onPressed: null,
-      ),
-      HomeItemCard(
-        icon: Icons.announcement,
-        label: i18.home.fileComplaint,
         onPressed: null,
       ),
     ];
