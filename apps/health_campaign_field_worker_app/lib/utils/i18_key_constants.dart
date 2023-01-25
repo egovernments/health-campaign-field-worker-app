@@ -67,6 +67,10 @@ class Home {
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
+
+  String get dataSycncInfoLabel => 'DATA_SYNC_INFO_LABEL';
+
+  String get dataSycncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 }
 
 class SearchBeneficiary {
@@ -197,14 +201,15 @@ class HouseholdOverView {
 class MemberCard {
   const MemberCard();
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
-  String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUALDETAILS';
+  String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
   String get deleteIndividualActionText =>
-      'MEMBER_CARD_EDIT_INDIVIDUAL_ACTION_TEXT';
+      'MEMBER_CARD_DELETE_INDIVIDUAL_ACTION_TEXT';
   String get deliverInterventionSubmitLabel =>
       'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
+  String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 }
 
 class DeliverIntervention {

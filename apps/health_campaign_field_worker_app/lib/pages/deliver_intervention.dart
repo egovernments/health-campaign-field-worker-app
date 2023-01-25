@@ -49,9 +49,7 @@ class _DeliverInterventionPageState
                     DigitTableCard(
                       element: {
                         localizations.translate(i18.deliverIntervention
-                            .dateOfRegistrationLabel): "Joseph Segio",
-                        localizations.translate(i18.householdOverView
-                            .householdOverViewHouseholdHeadLabel): "Jose (H)",
+                            .dateOfRegistrationLabel): "1 August 2022",
                       },
                     ),
                     DigitTableCard(
@@ -62,6 +60,8 @@ class _DeliverInterventionPageState
                         width: 1.0,
                       ),
                       element: {
+                        localizations.translate(i18.householdOverView
+                            .householdOverViewHouseholdHeadLabel): "Jose (H)",
                         localizations.translate(
                           i18.deliverIntervention.idTypeText,
                         ): "National ID",
@@ -106,6 +106,7 @@ class _DeliverInterventionPageState
                     ),
                     DigitIntegerFormPicker(
                       form: form,
+                      minimum: 0,
                       formControlName: 'quantityDistributed',
                       label: localizations.translate(
                         i18.deliverIntervention.quantityDistributedLabel,
