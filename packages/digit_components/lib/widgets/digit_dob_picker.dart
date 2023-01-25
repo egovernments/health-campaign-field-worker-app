@@ -42,9 +42,7 @@ class DigitDobPicker extends StatelessWidget {
                   label: datePickerLabel,
                   isRequired: true,
                   formControlName: datePickerFormControl,
-                  onChangeOfDate: ((value) {
-                    print('value changes');
-                  })),
+                  onChangeOfDate: ((value) {})),
               const SizedBox(
                 height: 16,
               ),
