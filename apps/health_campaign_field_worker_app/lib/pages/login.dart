@@ -79,7 +79,8 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         label: localizations.translate(
                           i18.forgotPassword.primaryActionLabel,
                         ),
-                        action: (ctx) => Navigator.pop(context),
+                        action: (ctx) =>
+                            Navigator.of(context, rootNavigator: true).pop(),
                       ),
                     ),
                   ),

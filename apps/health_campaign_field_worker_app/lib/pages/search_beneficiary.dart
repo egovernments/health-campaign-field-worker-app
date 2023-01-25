@@ -3,6 +3,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
 import '../blocs/table_hide_action.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../router/app_router.dart';
@@ -77,7 +78,7 @@ class _SearchBeneficiaryPageState
                       const BeneficiaryCard(
                         description: '219 / Pemba (200mts)',
                         subtitle: '4 Members',
-                        status: 'Delivered',
+                        status: 'Not Delivered',
                         title: 'Jose Antonio',
                       ),
                       DigitOutLineButton(
@@ -90,12 +91,16 @@ class _SearchBeneficiaryPageState
                   ),
                   BlocBuilder<TableHideActionBloc, TableHideActionState>(
                     builder: (context, state) => Offstage(
-                      offstage: state.isOpen,
+                      offstage: !state.isOpen,
                       child: DigitTable(
                         headerList: [
                           TableHeader(
                             'Beneficiary',
                             cellKey: 'beneficiary',
+                          ),
+                          TableHeader(
+                            'Delivery',
+                            cellKey: 'delivery',
                           ),
                           TableHeader(
                             'Age',
@@ -114,6 +119,13 @@ class _SearchBeneficiaryPageState
                                 cellKey: 'beneficiary',
                               ),
                               TableData(
+                                'Delivered',
+                                cellKey: 'delivery',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              TableData(
                                 '45',
                                 cellKey: 'age',
                               ),
@@ -129,6 +141,11 @@ class _SearchBeneficiaryPageState
                               cellKey: 'beneficiary',
                             ),
                             TableData(
+                              'Not Delivered',
+                              cellKey: 'delivery',
+                              style: TextStyle(color: theme.errorColor),
+                            ),
+                            TableData(
                               '35',
                               cellKey: 'age',
                             ),
@@ -138,9 +155,9 @@ class _SearchBeneficiaryPageState
                             ),
                           ]),
                         ],
-                        leftColumnWidth: 150,
-                        rightColumnWidth: 50 * 7,
-                        height: 153,
+                        leftColumnWidth: 110,
+                        rightColumnWidth: 45 * 8,
+                        height: 170,
                       ),
                     ),
                   ),
@@ -167,8 +184,8 @@ class _SearchBeneficiaryPageState
             ),
             DigitInfoCard(
               icon: Icons.info,
-              backgroundcolor: theme.colorScheme.tertiaryContainer,
-              iconcolor: theme.colorScheme.surfaceTint,
+              backgroundColor: theme.colorScheme.tertiaryContainer,
+              iconColor: theme.colorScheme.surfaceTint,
               description: localizations
                   .translate(i18.searchBeneficiary.beneficiaryInfoDescription),
               title: localizations

@@ -61,6 +61,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     ),
                     Column(children: [
                       DigitDateFormPicker(
+                        isEnabled: false,
                         formControlName: 'dateOfRegistration',
                         label: localizations.translate(
                           i18.householdDetails.dateOfRegistrationLabel,
@@ -68,6 +69,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         isRequired: false,
                       ),
                       DigitIntegerFormPicker(
+                        minimum: 0,
                         form: form,
                         formControlName: 'memberCount',
                         label: localizations.translate(
@@ -88,7 +90,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        'dateOfRegistration': FormControl<String>(value: ''),
+        'dateOfRegistration': FormControl<DateTime>(value: DateTime.now()),
         'memberCount': FormControl<int>(value: 1),
       });
 }

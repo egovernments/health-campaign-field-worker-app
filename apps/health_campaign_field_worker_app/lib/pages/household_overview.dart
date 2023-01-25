@@ -62,8 +62,9 @@ class _HouseholdOverViewPageState
                             ),
                             ActionCardModel(
                               icon: Icons.delete,
-                              label: i18.householdOverView
-                                  .householdOverViewDeleteLabel,
+                              label: localizations.translate(i18
+                                  .householdOverView
+                                  .householdOverViewDeleteLabel),
                               action: () => DigitDialog.show(
                                 context,
                                 options: DigitDialogOptions(

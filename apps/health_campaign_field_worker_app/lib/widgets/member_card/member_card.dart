@@ -77,70 +77,73 @@ class MemberCard extends StatelessWidget {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 3,
-              child: DigitIconButton(
-                onPressed: () => DigitActionDialog.show(
-                  context,
-                  widget: ActionCard(
-                    items: [
-                      ActionCardModel(
-                        icon: Icons.person,
-                        label: localizations.translate(
-                          i18.memberCard.assignAsHouseholdhead,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: DigitIconButton(
+                  onPressed: () => DigitActionDialog.show(
+                    context,
+                    widget: ActionCard(
+                      items: [
+                        ActionCardModel(
+                          icon: Icons.person,
+                          label: localizations.translate(
+                            i18.memberCard.assignAsHouseholdhead,
+                          ),
+                          action: () {
+                            // TODO: Complete implementation
+                          },
                         ),
-                        action: () {
-                          // TODO: Complete implementation
-                        },
-                      ),
-                      ActionCardModel(
-                        icon: Icons.edit,
-                        label: localizations.translate(
-                          i18.memberCard.editIndividualDetails,
+                        ActionCardModel(
+                          icon: Icons.edit,
+                          label: localizations.translate(
+                            i18.memberCard.editIndividualDetails,
+                          ),
+                          action: () {
+                            // TODO: Complete implementation
+                          },
                         ),
-                        action: () {
-                          // TODO: Complete implementation
-                        },
-                      ),
-                      ActionCardModel(
-                        icon: Icons.delete,
-                        label: localizations.translate(
-                          i18.memberCard.deleteIndividualActionText,
-                        ),
-                        action: () {
-                          DigitDialog.show(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(i18
-                                  .householdOverView
-                                  .householdOverViewActionCardTitle),
-                              primaryAction: DigitDialogActions(
-                                label: localizations.translate(i18
+                        ActionCardModel(
+                          icon: Icons.delete,
+                          label: localizations.translate(
+                            i18.memberCard.deleteIndividualActionText,
+                          ),
+                          action: () {
+                            DigitDialog.show(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(i18
                                     .householdOverView
-                                    .householdOverViewPrimaryActionLabel),
-                                action: (context) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                },
+                                    .householdOverViewActionCardTitle),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(i18
+                                      .householdOverView
+                                      .householdOverViewPrimaryActionLabel),
+                                  action: (context) {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(i18
+                                      .householdOverView
+                                      .householdOverViewSecondaryActionLabel),
+                                  action: (context) {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                  },
+                                ),
                               ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations.translate(i18
-                                    .householdOverView
-                                    .householdOverViewSecondaryActionLabel),
-                                action: (context) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
+                  iconText: localizations.translate(
+                    i18.memberCard.editDetails,
+                  ),
+                  icon: Icons.edit,
                 ),
-                iconText: localizations.translate(
-                  i18.householdOverView.householdOverViewEditIconText,
-                ),
-                icon: Icons.edit,
               ),
             ),
           ],

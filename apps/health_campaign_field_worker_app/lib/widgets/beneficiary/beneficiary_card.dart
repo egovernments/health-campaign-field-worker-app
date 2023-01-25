@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class BeneficiaryCard extends StatelessWidget {
@@ -24,15 +25,20 @@ class BeneficiaryCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: theme.textTheme.headlineSmall,
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: Text(
+            title,
+            style: theme.textTheme.headlineSmall,
+          ),
         ),
         Offstage(
-          offstage: status != null,
-          child: Chip(
-            label: Text(status!),
-            backgroundColor: theme.colorScheme.inversePrimary,
+          offstage: status == null,
+          child: DigitIconButton(
+            icon: Icons.info_rounded,
+            iconText: status,
+            iconTextColor: theme.errorColor,
+            iconColor: theme.errorColor,
           ),
         ),
         Padding(
