@@ -19,25 +19,31 @@ class HomePage extends LocalizedStatefulWidget {
 
 class _HomePageState extends LocalizedState<HomePage> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: ScrollableContent(
-          header: Column(
-            children: [
-              const BackNavigationHelpHeaderWidget(),
-              ProgressIndicatorContainer(
-                label: localizations.translate(
-                  i18.home.progressIndicatorTitle,
-                ),
-                prefixLabel: localizations.translate(
-                  i18.home.progressIndicatorPrefixLabel,
-                ),
-                suffixLabel: '200',
-                value: .08,
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: ScrollableContent(
+        header: Column(
+          children: [
+            const BackNavigationHelpHeaderWidget(
+              showBackNavigation: false,
+            ),
+            ProgressIndicatorContainer(
+              label: localizations.translate(
+                i18.home.progressIndicatorTitle,
               ),
-            ],
-          ),
-          footer: const PoweredByDigit(),
-          children: _getItems(context)
+              prefixLabel: localizations.translate(
+                i18.home.progressIndicatorPrefixLabel,
+              ),
+              suffixLabel: '200',
+              value: .08,
+            ),
+          ],
+        ),
+        footer: const PoweredByDigit(),
+        children: [
+          ..._getItems(context)
               .slices(3)
               .map(
                 (e) => IntrinsicHeight(
@@ -55,8 +61,17 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
               )
               .toList(),
-        ),
-      );
+          DigitInfoCard(
+            icon: Icons.info,
+            backgroundcolor: theme.colorScheme.tertiaryContainer,
+            iconcolor: theme.colorScheme.surfaceTint,
+            description: localizations.translate(i18.home.dataSycncInfoContent),
+            title: localizations.translate(i18.home.dataSycncInfoLabel),
+          ),
+        ],
+      ),
+    );
+  }
 
   List<HomeItemCard> _getItems(BuildContext context) {
     return [

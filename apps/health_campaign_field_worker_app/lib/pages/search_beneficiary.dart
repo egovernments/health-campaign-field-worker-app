@@ -90,7 +90,7 @@ class _SearchBeneficiaryPageState
                   ),
                   BlocBuilder<TableHideActionBloc, TableHideActionState>(
                     builder: (context, state) => Offstage(
-                      offstage: state.isOpen,
+                      offstage: !state.isOpen,
                       child: DigitTable(
                         headerList: [
                           TableHeader(

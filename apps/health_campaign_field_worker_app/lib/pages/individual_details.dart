@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -45,16 +46,39 @@ class _IndividualDetailsPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        context.router.push(AcknowledgementRoute());
+                        DigitDialog.show(
+                          context,
+                          options: DigitDialogOptions(
+                            titleText: localizations
+                                .translate(i18.deliverIntervention.dialogTitle),
+                            contentText: localizations.translate(
+                              i18.deliverIntervention.dialogContent,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                              action: (context) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                                context.router.push(AcknowledgementRoute());
+                              },
+                            ),
+                            secondaryAction: DigitDialogActions(
+                              label: localizations
+                                  .translate(i18.common.coreCommonCancel),
+                              action: (context) =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
+                            ),
+                          ),
+                        );
                       } else {
                         form.markAllAsTouched();
                       }
                     },
                     child: Center(
                       child: Text(
-                        localizations.translate(
-                          i18.individualDetails.submitButtonLabelText,
-                        ),
+                        localizations.translate(i18.common.coreCommonSubmit),
                       ),
                     ),
                   ),
@@ -173,7 +197,7 @@ class _IndividualDetailsPageState
         'individualName': FormControl<String>(value: ''),
         'idType': FormControl<String>(value: ''),
         'idNumber': FormControl<String>(value: ''),
-        'dob': FormControl<String>(value: ''),
+        'dob': FormControl<DateTime>(),
         'age': FormControl<String>(value: ''),
         'gender': FormControl<String>(value: ''),
         'mobileNumber': FormControl<String>(value: ''),

@@ -37,7 +37,10 @@ class SideBar extends StatelessWidget {
         DigitIconTile(
           title: 'Home',
           icon: Icons.home,
-          onPressed: () => context.router.replace(HomeRoute()),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.router.replace(HomeRoute());
+          },
         ),
         BlocBuilder<AppInitializationBloc, AppInitializationState>(
           builder: (context, state) {
