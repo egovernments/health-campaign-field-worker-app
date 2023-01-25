@@ -173,7 +173,7 @@ class _DeliverInterventionPageState
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        'resourcDelivered': FormControl<String>(value: ''),
+        'resourceDelivered': FormControl<String>(value: ''),
         'quantityDistributed': FormControl<int>(value: 1),
         'deliveryComment': FormControl<String>(value: ''),
       });
