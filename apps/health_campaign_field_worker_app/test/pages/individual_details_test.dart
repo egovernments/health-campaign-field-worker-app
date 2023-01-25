@@ -82,6 +82,7 @@ void main() {
         i18.individualDetails.genderLabelText,
         i18.individualDetails.mobileNumberLabelText,
         i18.individualDetails.submitButtonLabelText,
+        i18.common.coreCommonSubmit,
         'MALE',
         'FEMALE',
         'OTHER',
@@ -120,7 +121,7 @@ void main() {
         expect(
           find.widgetWithText(
             DigitElevatedButton,
-            i18.individualDetails.submitButtonLabelText,
+            i18.common.coreCommonSubmit,
           ),
           findsOneWidget,
         );

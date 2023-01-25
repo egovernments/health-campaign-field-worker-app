@@ -4,28 +4,36 @@ import 'package:flutter/material.dart';
 class DigitInfoCard extends StatelessWidget {
   final String title;
   final String description;
-  final Color backgroundcolor;
+  final Color backgroundColor;
   final IconData? icon;
-  final Color? iconcolor;
+  final Color? iconColor;
   final EdgeInsets? padding;
 
   const DigitInfoCard({
     super.key,
     required this.title,
     required this.description,
-    required this.backgroundcolor,
-    this.iconcolor,
+    required this.backgroundColor,
+    this.iconColor,
     this.icon,
     this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: DigitTheme.instance.containerMargin,
       padding: padding ?? const EdgeInsets.all(8),
-      color: backgroundcolor,
+      decoration: ShapeDecoration(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        color: backgroundColor,
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -33,19 +41,23 @@ class DigitInfoCard extends StatelessWidget {
               Padding(
                 padding: padding ?? const EdgeInsets.all(8),
                 child: Icon(
-                  icon,
-                  color: iconcolor,
+                  icon ?? Icons.info,
+                  color: iconColor,
                 ),
               ),
               Text(
                 title,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: theme.textTheme.headlineMedium,
               )
             ],
           ),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyLarge,
+          Padding(
+            padding: const EdgeInsets.all(kPadding),
+            child: Text(
+              description,
+              style: theme.textTheme.bodyLarge,
+              textAlign: TextAlign.start,
+            ),
           )
         ],
       ),

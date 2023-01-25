@@ -23,9 +23,13 @@ class DigitOutlineIconButton extends StatelessWidget {
         onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, color: iconColor ?? theme.colorScheme.secondary),
-            Expanded(
+            const SizedBox(
+              width: 4,
+            ),
+            Flexible(
                 child: Text(label,
                     style: TextStyle(
                         color: iconColor ?? theme.colorScheme.secondary))),

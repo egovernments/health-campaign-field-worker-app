@@ -39,11 +39,10 @@ class DigitDobPicker extends StatelessWidget {
           child: Column(
             children: [
               DigitDateFormPicker(
-                label: datePickerLabel,
-                isRequired: true,
-                formControlName: datePickerFormControl,
-                onChangeOfDate: onChangeDate,
-              ),
+                  label: datePickerLabel,
+                  isRequired: true,
+                  formControlName: datePickerFormControl,
+                  onChangeOfDate: ((value) {})),
               const SizedBox(
                 height: 16,
               ),
