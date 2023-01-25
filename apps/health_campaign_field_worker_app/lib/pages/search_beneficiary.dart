@@ -78,7 +78,7 @@ class _SearchBeneficiaryPageState
                       const BeneficiaryCard(
                         description: '219 / Pemba (200mts)',
                         subtitle: '4 Members',
-                        status: 'Delivered',
+                        status: 'Not Delivered',
                         title: 'Jose Antonio',
                       ),
                       DigitOutLineButton(
@@ -155,8 +155,8 @@ class _SearchBeneficiaryPageState
                             ),
                           ]),
                         ],
-                        leftColumnWidth: 100,
-                        rightColumnWidth: 45 * 6,
+                        leftColumnWidth: 110,
+                        rightColumnWidth: 45 * 8,
                         height: 170,
                       ),
                     ),

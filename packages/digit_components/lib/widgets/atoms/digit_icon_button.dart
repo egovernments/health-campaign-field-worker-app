@@ -34,6 +34,9 @@ class DigitIconButton extends StatelessWidget {
               color: iconColor ?? theme.colorScheme.secondary,
             ),
           ),
+          const SizedBox(
+            width: 4,
+          ),
           if (iconText != null)
             Flexible(
                 child: Text(
