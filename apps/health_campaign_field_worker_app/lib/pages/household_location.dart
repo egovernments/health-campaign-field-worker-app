@@ -45,7 +45,8 @@ class _HouseholdLocationPageState
                       }
                     },
                     child: Center(
-                      child: Text(i18.householdLocation.actionLabel),
+                      child: Text(localizations
+                          .translate(i18.householdLocation.actionLabel)),
                     ),
                   ),
                 ),

@@ -16,9 +16,13 @@ export './digit_info_card.dart';
 export './digit_outline_button.dart';
 export './digit_search_bar.dart';
 export './atoms/digit_table_item_title.dart';
+export './molecules/digit_table_card.dart';
+export './atoms//digit_icon_button.dart';
+export './atoms/digit_action_dialog.dart';
+export './atoms/digit_outline_icon_button.dart';
+export './atoms/digit_integer_form_picker.dart';
+export './atoms/digit_dropdown.dart';
 export './atoms/digit_text_form_field.dart';
 export './molecules/digit_acknowledgement.dart';
 export './atoms/digit_date_form_picker.dart';
 export './atoms/digit_integer_form_picker.dart';
-
-

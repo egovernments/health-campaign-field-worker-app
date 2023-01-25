@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:isar/isar.dart';
-import '../../../models/app_config/app_config_model.dart' as app_configuration;
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:isar/isar.dart';
+
+import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/service_registry_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
@@ -36,7 +38,7 @@ class MdmsRepository {
     result.serviceRegistry?.serviceRegistryList?.forEach((element) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
-      final List<Actions>? actions = element.actions?.map((item) {
+      final actions = element.actions?.map((item) {
         final newServiceRegistryAction = Actions()
           ..entityName = item.entityName
           ..path = item.path
@@ -65,8 +67,8 @@ class MdmsRepository {
       return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
-    } catch (_) {
-      // Assuming there will be an errorMessage property in the JSON object
+    } catch (e) {
+      debugPrint('MDMS.dart: $e');
       rethrow;
     }
   }

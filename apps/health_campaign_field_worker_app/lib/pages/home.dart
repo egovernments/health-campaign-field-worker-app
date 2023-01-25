@@ -5,11 +5,19 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../router/app_router.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
+import '../widgets/localized.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends LocalizedStatefulWidget {
+  const HomePage({
+    super.key,
+    super.appLocalizations,
+  });
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends LocalizedState<HomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: ScrollableContent(
@@ -17,8 +25,12 @@ class HomePage extends StatelessWidget {
             children: [
               const BackNavigationHelpHeaderWidget(),
               ProgressIndicatorContainer(
-                label: i18.home.progressIndicatorTitle,
-                prefixLabel: i18.home.progressIndicatorPrefixLabel,
+                label: localizations.translate(
+                  i18.home.progressIndicatorTitle,
+                ),
+                prefixLabel: localizations.translate(
+                  i18.home.progressIndicatorPrefixLabel,
+                ),
                 suffixLabel: '200',
                 value: .08,
               ),
@@ -51,7 +63,7 @@ class HomePage extends StatelessWidget {
       HomeItemCard(
         icon: Icons.all_inbox,
         label: i18.home.beneficiaryLabel,
-        onPressed: () => context.router.push(const SearchBeneficiaryRoute()),
+        onPressed: () => context.router.push(SearchBeneficiaryRoute()),
       ),
       HomeItemCard(
         icon: Icons.menu_book,

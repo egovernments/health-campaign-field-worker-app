@@ -127,6 +127,7 @@ void main() {
           find.text(i18.forgotPassword.primaryActionLabel),
           warnIfMissed: false,
         );
+
         await widgetTester.pumpAndSettle();
 
         verify(() => mockObserver.didPop(any(), any<DialogRoute>()));
