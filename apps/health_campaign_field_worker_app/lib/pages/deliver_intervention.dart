@@ -102,7 +102,7 @@ class _DeliverInterventionPageState
                         ),
                       ],
                       onChanged: (String? newValue) {},
-                      formControlName: 'resourcDelivered',
+                      formControlName: 'resourceDelivered',
                     ),
                     DigitIntegerFormPicker(
                       form: form,
@@ -117,7 +117,7 @@ class _DeliverInterventionPageState
                       label: localizations.translate(
                         i18.deliverIntervention.deliveryCommentLabel,
                       ),
-                      initialValue: 'Betnets',
+                      initialValue: 'Bednets',
                       menuItems: [
                         MenuItemModel(
                           "Insufficient Resources",

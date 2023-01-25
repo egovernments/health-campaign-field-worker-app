@@ -98,6 +98,10 @@ class _SearchBeneficiaryPageState
                             cellKey: 'beneficiary',
                           ),
                           TableHeader(
+                            'Delivery',
+                            cellKey: 'delivery',
+                          ),
+                          TableHeader(
                             'Age',
                             cellKey: 'age',
                           ),
@@ -112,6 +116,13 @@ class _SearchBeneficiaryPageState
                               TableData(
                                 'Jose',
                                 cellKey: 'beneficiary',
+                              ),
+                              TableData(
+                                'Delivered',
+                                cellKey: 'delivery',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
                               ),
                               TableData(
                                 '45',
@@ -129,6 +140,11 @@ class _SearchBeneficiaryPageState
                               cellKey: 'beneficiary',
                             ),
                             TableData(
+                              'Not Delivered',
+                              cellKey: 'delivery',
+                              style: TextStyle(color: theme.errorColor),
+                            ),
+                            TableData(
                               '35',
                               cellKey: 'age',
                             ),
@@ -138,9 +154,9 @@ class _SearchBeneficiaryPageState
                             ),
                           ]),
                         ],
-                        leftColumnWidth: 150,
-                        rightColumnWidth: 50 * 7,
-                        height: 153,
+                        leftColumnWidth: 100,
+                        rightColumnWidth: 45 * 6,
+                        height: 170,
                       ),
                     ),
                   ),
