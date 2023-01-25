@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import '../utils/i18_key_constants.dart' as i18;
+
 import '../router/app_router.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
@@ -63,10 +64,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               .toList(),
           DigitInfoCard(
             icon: Icons.info,
-            backgroundcolor: theme.colorScheme.tertiaryContainer,
-            iconcolor: theme.colorScheme.surfaceTint,
-            description: localizations.translate(i18.home.dataSycncInfoContent),
-            title: localizations.translate(i18.home.dataSycncInfoLabel),
+            backgroundColor: theme.colorScheme.tertiaryContainer,
+            iconColor: theme.colorScheme.surfaceTint,
+            description: localizations.translate(i18.home.dataSyncInfoContent),
+            title: localizations.translate(i18.home.dataSyncInfoLabel),
           ),
         ],
       ),
