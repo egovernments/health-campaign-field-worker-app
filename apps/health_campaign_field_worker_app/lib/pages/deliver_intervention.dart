@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -118,10 +119,6 @@ class _DeliverInterventionPageState
                       ),
                       initialValue: 'Betnets',
                       menuItems: [
-                        MenuItemModel(
-                          "Insufficient Resources",
-                          "Insufficient Resources",
-                        ),
                         MenuItemModel(
                           "Insufficient Resources",
                           "Insufficient Resources",
