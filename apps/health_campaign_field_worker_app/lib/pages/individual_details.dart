@@ -1,14 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
-import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/localization/app_localization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -45,14 +45,14 @@ class _IndividualDetailsPageState
                   child: DigitElevatedButton(
                     onPressed: () {
                       if (form.valid) {
-                        // TODO: Complete implementation
+                        context.router.push(AcknowledgementRoute());
                       } else {
                         form.markAllAsTouched();
                       }
                     },
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context).translate(
+                        localizations.translate(
                           i18.individualDetails.submitButtonLabelText,
                         ),
                       ),
@@ -68,7 +68,9 @@ class _IndividualDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      i18.individualDetails.individualsDetailsLabelText,
+                      localizations.translate(
+                        i18.individualDetails.individualsDetailsLabelText,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -118,27 +120,30 @@ class _IndividualDetailsPageState
                             .translate(i18.individualDetails.dobLabelText),
                         ageFieldLabel: localizations
                             .translate(i18.individualDetails.ageLabelText),
-                        separatorLabel:
-                            i18.individualDetails.separatorLabelText,
+                        separatorLabel: localizations.translate(
+                          i18.individualDetails.separatorLabelText,
+                        ),
                       ),
                       BlocBuilder<AppInitializationBloc,
                           AppInitializationState>(
                         builder: (context, state) {
+                          if (state is! AppInitialized) return const Offstage();
+
+                          final genderOptions =
+                              state.appConfiguration.genderOptions ??
+                                  <GenderOptions>[];
+
                           return DigitDropdown(
                             label: localizations.translate(
                               i18.individualDetails.genderLabelText,
                             ),
-                            initialValue: state.appConfiguration?.genderOptions
-                                ?.firstOrNull?.name,
-                            menuItems: state.appConfiguration?.genderOptions
-                                    ?.map(
-                                      (e) => MenuItemModel(
-                                        e.code,
-                                        localizations.translate(e.name),
-                                      ),
-                                    )
-                                    .toList() ??
-                                [],
+                            initialValue: genderOptions.firstOrNull?.name,
+                            menuItems: genderOptions.map((e) {
+                              return MenuItemModel(
+                                e.code,
+                                localizations.translate(e.name),
+                              );
+                            }).toList(),
                             onChanged: (value) {
                               // TODO: Complete implementation
                             },

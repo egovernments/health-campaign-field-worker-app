@@ -64,6 +64,9 @@ class DigitTheme {
       );
 
   EdgeInsets get containerMargin => const EdgeInsets.all(kPadding);
+  EdgeInsets get verticalMargin => const EdgeInsets.symmetric(
+        vertical: kPadding,
+      );
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.zero),
