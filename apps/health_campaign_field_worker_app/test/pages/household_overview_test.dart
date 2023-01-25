@@ -72,8 +72,9 @@ void main() {
         i18.householdOverView.householdOverViewDeliveredIconLabel,
         i18.memberCard.deliverInterventionSubmitLabel,
         i18.memberCard.deliverDetailsUpdateLabel,
-        i18.memberCard.deliverDetailsYearText,
         i18.householdOverView.householdOverViewEditIconText,
+        i18.memberCard.editIndividualDetails,
+        i18.memberCard.editDetails,
         'Male',
         'Female',
       ]) {
