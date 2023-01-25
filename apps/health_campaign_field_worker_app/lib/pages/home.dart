@@ -14,6 +14,7 @@ class HomePage extends LocalizedStatefulWidget {
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -62,6 +63,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
               )
               .toList(),
+          const SizedBox(height: kPadding * 2),
           DigitInfoCard(
             icon: Icons.info,
             backgroundColor: theme.colorScheme.tertiaryContainer,

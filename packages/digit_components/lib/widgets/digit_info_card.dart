@@ -26,7 +26,12 @@ class DigitInfoCard extends StatelessWidget {
     return Container(
       margin: DigitTheme.instance.containerMargin,
       padding: padding ?? const EdgeInsets.all(8),
-      color: backgroundColor,
+      decoration: ShapeDecoration(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        color: backgroundColor,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
