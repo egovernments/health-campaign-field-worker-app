@@ -68,9 +68,9 @@ class Home {
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
 
-  String get dataSycncInfoLabel => 'DATA_SYNC_INFO_LABEL';
+  String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
-  String get dataSycncInfoContent => 'DATA_SYNC_INFO_CONTENT';
+  String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 }
 
 class SearchBeneficiary {

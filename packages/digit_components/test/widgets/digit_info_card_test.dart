@@ -15,8 +15,8 @@ void main() {
             const WidgetApp(
               child: DigitInfoCard(
                 icon: Icons.info,
-                backgroundcolor: Colors.white,
-                iconcolor: Colors.black,
+                backgroundColor: Colors.white,
+                iconColor: Colors.black,
                 description:
                     'Click on Register New Household button to add details.',
                 title: 'Match not found!',

@@ -3,6 +3,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
 import '../blocs/table_hide_action.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../router/app_router.dart';
@@ -183,8 +184,8 @@ class _SearchBeneficiaryPageState
             ),
             DigitInfoCard(
               icon: Icons.info,
-              backgroundcolor: theme.colorScheme.tertiaryContainer,
-              iconcolor: theme.colorScheme.surfaceTint,
+              backgroundColor: theme.colorScheme.tertiaryContainer,
+              iconColor: theme.colorScheme.surfaceTint,
               description: localizations
                   .translate(i18.searchBeneficiary.beneficiaryInfoDescription),
               title: localizations
