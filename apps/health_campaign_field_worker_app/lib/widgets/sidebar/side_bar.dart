@@ -18,20 +18,27 @@ class SideBar extends StatelessWidget {
     return ScrollableContent(
       footer: const PoweredByDigit(),
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 3,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Carlos',
-                style: theme.textTheme.displayMedium,
-              ),
-              Text(
-                '+258 6387387',
-                style: theme.textTheme.labelSmall,
-              ),
-            ],
+        Container(
+          color: theme.colorScheme.secondary.withOpacity(0.12),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Carlos',
+                  style: theme.textTheme.displayMedium,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  '+258 6387387',
+                  style: theme.textTheme.labelSmall,
+                ),
+              ],
+            ),
           ),
         ),
         DigitIconTile(
@@ -110,6 +117,20 @@ class SideBar extends StatelessWidget {
                 ),
               ),
             );
+          },
+        ),
+        DigitIconTile(
+          title: 'Edit Profile',
+          icon: Icons.perm_contact_calendar,
+          onPressed: () {
+            // TODO: Complete implementation
+          },
+        ),
+        DigitIconTile(
+          title: 'Projects',
+          icon: Icons.folder,
+          onPressed: () {
+            // TODO: Complete implementation
           },
         ),
         DigitIconTile(
