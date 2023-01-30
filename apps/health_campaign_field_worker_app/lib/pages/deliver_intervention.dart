@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -11,6 +12,7 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<DeliverInterventionPage> createState() =>
       _DeliverInterventionPageState();
@@ -48,6 +50,7 @@ class _DeliverInterventionPageState
                       ],
                     ),
                     DigitTableCard(
+                      leftPadding: false,
                       element: {
                         localizations.translate(i18.deliverIntervention
                             .dateOfRegistrationLabel): "1 August 2022",
@@ -79,14 +82,22 @@ class _DeliverInterventionPageState
                       },
                     ),
                     DigitTableCard(
+                      leftPadding: false,
                       element: {
                         localizations.translate(
                           i18.deliverIntervention.memberCountText,
-                        ): 4,
+                        ): '05',
+                      },
+                    ),
+                    const DigitDivider(),
+                    DigitTableCard(
+                      leftPadding: false,
+                      element: {
                         localizations.translate(i18.deliverIntervention
                             .noOfResourcesForDelivery): "03",
                       },
                     ),
+                    const DigitDivider(),
                     DigitDropdown(
                       label: localizations.translate(
                         i18.deliverIntervention.resourceDeliveredLabel,
@@ -123,6 +134,10 @@ class _DeliverInterventionPageState
                         MenuItemModel(
                           "Insufficient Resources",
                           "Insufficient Resources",
+                        ),
+                        MenuItemModel(
+                          "Beneficiary Refused",
+                          "Beneficiary Refused",
                         ),
                         MenuItemModel(
                           "Beneficiary Absent",

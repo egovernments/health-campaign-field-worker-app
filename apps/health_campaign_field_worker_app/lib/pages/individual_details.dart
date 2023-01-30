@@ -4,7 +4,6 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -109,10 +108,18 @@ class _IndividualDetailsPageState
                         ),
                         value: true,
                       ),
-                      DigitTextFormField(
-                        formControlName: 'idType',
+                      DigitDropdown(
                         label: localizations
                             .translate(i18.individualDetails.idTypeLabelText),
+                        initialValue: '',
+                        menuItems: [
+                          MenuItemModel('ID Type 1', 'code'),
+                          MenuItemModel('ID Type 2', 'code1'),
+                        ],
+                        onChanged: (value) {
+                          // TODO: Complete implementation
+                        },
+                        formControlName: 'idType',
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

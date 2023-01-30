@@ -56,6 +56,9 @@ class DigitTheme {
         tertiaryContainer: colors.tropicalBlue,
         inversePrimary: colors.paleLeafGreen,
         surfaceTint: colors.waterBlue,
+        outline: colors.quillGray,
+        shadow: colors.davyGray,
+        tertiary: colors.paleRose,
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
@@ -64,6 +67,7 @@ class DigitTheme {
       );
 
   EdgeInsets get containerMargin => const EdgeInsets.all(kPadding);
+
   EdgeInsets get verticalMargin => const EdgeInsets.symmetric(
         vertical: kPadding,
       );
