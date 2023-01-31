@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../widget_app.dart';
 
 void main() {
-  group('DigitTableItem Test', () {
+  group('DigitRadioListTile Test', () {
     testWidgets('DigitRadioListTile widget test', (widgetTester) async {
       // Create a DigitRadioListTile widget
       final digitRadioListTile = DigitRadioListTile(
