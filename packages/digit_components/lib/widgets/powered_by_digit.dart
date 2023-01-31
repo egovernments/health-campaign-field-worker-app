@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class PoweredByDigit extends StatefulWidget {
@@ -21,6 +22,7 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
             child: Image.asset(
               'assets/images/powered_by_digit.png',
               package: 'digit_components',
+              color: DigitTheme.instance.colorScheme.onPrimary,
               fit: BoxFit.contain,
             ),
           ),
