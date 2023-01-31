@@ -41,6 +41,11 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
         required List<GenderOptions> genderOptions,
+    @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+        required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+        required List<DeletionReasonOptions>
+            householdMemberDeletionReasonOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
   }) = _AppConfig;
@@ -58,6 +63,17 @@ class GenderOptions with _$GenderOptions {
 
   factory GenderOptions.fromJson(Map<String, dynamic> json) =>
       _$GenderOptionsFromJson(json);
+}
+
+@freezed
+class DeletionReasonOptions with _$DeletionReasonOptions {
+  factory DeletionReasonOptions({
+    required String name,
+    required String code,
+  }) = _DeletionReasonOptions;
+
+  factory DeletionReasonOptions.fromJson(Map<String, dynamic> json) =>
+      _$DeletionReasonOptionsFromJson(json);
 }
 
 @freezed

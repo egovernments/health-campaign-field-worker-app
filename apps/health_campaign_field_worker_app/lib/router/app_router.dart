@@ -14,6 +14,7 @@ import '../pages/household_location.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/project_selection.dart';
+import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
@@ -48,6 +49,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
         AutoRoute(page: HouseholdLocationPage, path: 'household-location'),
         AutoRoute(page: AcknowledgementPage, path: 'ackowledgement'),
+        AutoRoute(page: ReasonForDeletionPage, path: 'reason-for-deletion'),
         AutoRoute(page: ProjectSelectionPage, path: 'project-selection'),
       ],
     ),

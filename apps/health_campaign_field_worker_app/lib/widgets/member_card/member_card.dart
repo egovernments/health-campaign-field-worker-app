@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../action_card/action_card.dart';
+import '../../router/app_router.dart';
 
 class MemberCard extends StatelessWidget {
   final String name;
@@ -121,6 +122,10 @@ class MemberCard extends StatelessWidget {
                                   action: (context) {
                                     Navigator.of(context, rootNavigator: true)
                                         .pop();
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                    context.router
+                                        .push(ReasonForDeletionRoute());
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(

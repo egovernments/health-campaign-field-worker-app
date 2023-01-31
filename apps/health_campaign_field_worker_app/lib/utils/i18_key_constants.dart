@@ -13,6 +13,7 @@ const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
+const reasonForDeletion = ReasonForDeletion();
 
 class Common {
   const Common();
@@ -168,21 +169,28 @@ class HouseholdDetails {
 class HouseholdOverView {
   const HouseholdOverView();
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
+
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
+
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
+
   String get householdOverViewPrimaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
 
   String get householdOverViewSecondaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
+
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
@@ -201,13 +209,18 @@ class HouseholdOverView {
 class MemberCard {
   const MemberCard();
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
+
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
+
   String get deleteIndividualActionText =>
       'MEMBER_CARD_DELETE_INDIVIDUAL_ACTION_TEXT';
+
   String get deliverInterventionSubmitLabel =>
       'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
+
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
+
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 }
@@ -215,6 +228,7 @@ class MemberCard {
 class DeliverIntervention {
   const DeliverIntervention();
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 
@@ -230,12 +244,14 @@ class DeliverIntervention {
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
   String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
+
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
 
   String get noOfResourcesForDelivery =>
       'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
 
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
+
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 }
 
@@ -255,4 +271,10 @@ class ProjectSelection {
   String get retryButtonText => 'RETRY';
 
   String get dismissButtonText => 'DISMISS';
+}
+
+class ReasonForDeletion {
+  const ReasonForDeletion();
+
+  String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
 }

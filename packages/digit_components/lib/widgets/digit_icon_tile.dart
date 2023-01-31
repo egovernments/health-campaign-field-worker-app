@@ -16,22 +16,37 @@ class DigitIconTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-      ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.start,
-          ),
-          content ?? const Offstage()
-        ],
-      ),
+    return GestureDetector(
       onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  child: content ?? const Offstage(),
+                )
+              ],
+            ))
+          ],
+        ),
+      ),
     );
   }
 }

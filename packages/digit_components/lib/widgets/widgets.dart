@@ -26,3 +26,4 @@ export './atoms/digit_text_form_field.dart';
 export './molecules/digit_acknowledgement.dart';
 export './atoms/digit_date_form_picker.dart';
 export './atoms/digit_integer_form_picker.dart';
+export './atoms/digit_radio_button.dart';

@@ -27,6 +27,13 @@ class AppConfiguration {
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
+  @Name('HOUSEHOLD_DELETION_REASON_OPTIONS')
+  late List<HouseholdDeletionReasonOptions>? householdDeletionReasonOptions;
+
+  @Name('HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+  late List<HouseholdMemberDeletionReasonOptions>?
+      householdMemberDeletionReasonOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -59,4 +66,16 @@ class Interfaces {
 @embedded
 class Config {
   late int localStoreTTL;
+}
+
+@embedded
+class HouseholdDeletionReasonOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class HouseholdMemberDeletionReasonOptions {
+  late String name;
+  late String code;
 }
