@@ -19,6 +19,7 @@ class DigitIconTile extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
+        color: Theme.of(context).colorScheme.shadow,
       ),
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,

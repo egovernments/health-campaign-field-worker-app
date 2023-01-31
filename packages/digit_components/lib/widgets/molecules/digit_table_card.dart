@@ -6,6 +6,7 @@ class DigitTableCard extends StatelessWidget {
   final EdgeInsets? padding;
   final Border? border;
   final Color? color;
+  final bool leftPadding;
 
   const DigitTableCard({
     super.key,
@@ -13,6 +14,7 @@ class DigitTableCard extends StatelessWidget {
     this.padding,
     this.border,
     this.color,
+    this.leftPadding = true,
   });
 
   @override
@@ -26,23 +28,25 @@ class DigitTableCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+          padding:
+              EdgeInsets.only(left: leftPadding ? 8 : 0, right: 8, bottom: 16),
           child: Column(
             children: element.keys
-                .map((e) => Row(
-                      children: [
-                        Container(
-                          margin: DigitTheme.instance.verticalMargin,
-                          child: SizedBox(
+                .map((e) => Container(
+                      margin: DigitTheme.instance.verticalMargin,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Text(
                               e,
                               style: theme.textTheme.headline5,
                             ),
                           ),
-                        ),
-                        Text(element[e].toString())
-                      ],
+                          Text(element[e].toString()),
+                        ],
+                      ),
                     ))
                 .toList(),
           ),
