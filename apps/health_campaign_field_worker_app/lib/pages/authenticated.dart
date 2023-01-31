@@ -1,11 +1,11 @@
+import 'package:location/location.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/blocs/location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:location/location.dart';
+import '../widgets/sidebar/side_bar.dart';
 
 import '../blocs/household_details/household_details.dart';
-import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
   const AuthenticatedPageWrapper({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       drawer: Container(
-        margin: const EdgeInsets.only(top: kToolbarHeight * 1.36),
+        margin: const EdgeInsets.only(top: kToolbarHeight * 2),
         child: const Drawer(child: SideBar()),
       ),
       body: MultiBlocProvider(
