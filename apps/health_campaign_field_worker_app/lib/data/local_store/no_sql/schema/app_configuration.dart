@@ -27,6 +27,12 @@ class AppConfiguration {
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
+  @Name('ID_TYPE_OPTIONS_POPULATOR')
+  late List<IdTypeOptions>? idTypeOptions;
+
+  @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -45,6 +51,18 @@ class BackendInterface {
 
 @embedded
 class GenderOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class IdTypeOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class DeliveryCommentOptions {
   late String name;
   late String code;
 }

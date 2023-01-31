@@ -41,12 +41,38 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
     @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
         required List<GenderOptions> genderOptions,
+    @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+        required List<IdTypeOptions> idTypeOptions,
+    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+        required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
       _$AppConfigFromJson(json);
+}
+
+@freezed
+class IdTypeOptions with _$IdTypeOptions {
+  factory IdTypeOptions({
+    required String name,
+    required String code,
+  }) = _IdTypeOptions;
+
+  factory IdTypeOptions.fromJson(Map<String, dynamic> json) =>
+      _$IdTypeOptionsFromJson(json);
+}
+
+@freezed
+class DeliveryCommentOptions with _$DeliveryCommentOptions {
+  factory DeliveryCommentOptions({
+    required String name,
+    required String code,
+  }) = _DeliveryCommentOptions;
+
+  factory DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryCommentOptionsFromJson(json);
 }
 
 @freezed
@@ -65,6 +91,7 @@ class BackendInterface with _$BackendInterface {
   factory BackendInterface({
     @JsonKey(name: 'interfaces') required List<Interfaces> interface,
   }) = _BackendInterface;
+
   factory BackendInterface.fromJson(Map<String, dynamic> json) =>
       _$BackendInterfaceFromJson(json);
 }
@@ -96,6 +123,7 @@ class Config with _$Config {
   factory Config({
     required int localStoreTTL,
   }) = _Config;
+
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 }
 
