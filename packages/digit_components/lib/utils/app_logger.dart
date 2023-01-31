@@ -32,9 +32,9 @@ class AppLogger {
   }) =>
       debugPrint(
         [
-          '[${level.name.padRight(4, ' ').substring(0, 4)}] ',
-          '${(title ?? runtimeType.toString())}\n',
-          '${input.toString()}\n',
+          // '[${level.name.padRight(4, ' ').substring(0, 4)}] ',
+          // '${(title ?? runtimeType.toString())}\n',
+          // '${input.toString()}\n',
         ].join(''),
         wrapWidth: 120,
       );
