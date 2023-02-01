@@ -28,7 +28,7 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
               color: widget.isWhiteLogo
                   ? DigitTheme.instance.colorScheme.onPrimary
                   : null
-           ),
+            ),
           ),
         ),
       );
