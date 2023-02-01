@@ -27,7 +27,8 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
               fit: BoxFit.contain,
               color: widget.isWhiteLogo
                   ? DigitTheme.instance.colorScheme.onPrimary
-                  : null),
+                  : null
+           ),
           ),
         ),
       );
