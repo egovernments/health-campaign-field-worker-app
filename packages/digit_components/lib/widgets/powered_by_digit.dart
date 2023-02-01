@@ -21,12 +21,13 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
             height: 24,
             padding: widget.padding ?? const EdgeInsets.all(4),
             alignment: Alignment.center,
-            child: Image.asset('assets/images/powered_by_digit.png',
-                package: 'digit_components',
-                fit: BoxFit.contain,
-                color: widget.isWhiteLogo
-                    ? DigitTheme.instance.colorScheme.onPrimary
-                    : null),
+            child: Image.asset(
+              'assets/images/powered_by_digit.png',
+              package: 'digit_components',
+              fit: BoxFit.contain,
+              color: widget.isWhiteLogo
+                  ? DigitTheme.instance.colorScheme.onPrimary
+                  : null),
           ),
         ),
       );
