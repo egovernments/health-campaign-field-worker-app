@@ -22,29 +22,30 @@ class DigitTextField extends StatelessWidget {
   final bool isDisabled;
   final bool readOnly;
   final bool? isFilled;
+  final Widget? suffixIcon;
 
-  const DigitTextField({
-    super.key,
-    required this.label,
-    this.prefixText = '',
-    this.maxLength,
-    this.controller,
-    this.isRequired = false,
-    this.textInputType,
-    this.inputFormatter,
-    this.pattern,
-    this.validator,
-    this.message,
-    this.focusNode,
-    this.textCapitalization,
-    this.onChange,
-    this.maxLines,
-    this.autoValidation,
-    this.obscureText = false,
-    this.isDisabled = false,
-    this.readOnly = false,
-    this.isFilled,
-  });
+  const DigitTextField(
+      {super.key,
+      required this.label,
+      this.prefixText = '',
+      this.maxLength,
+      this.controller,
+      this.isRequired = false,
+      this.textInputType,
+      this.inputFormatter,
+      this.pattern,
+      this.validator,
+      this.message,
+      this.focusNode,
+      this.textCapitalization,
+      this.onChange,
+      this.maxLines,
+      this.autoValidation,
+      this.obscureText = false,
+      this.isDisabled = false,
+      this.readOnly = false,
+      this.isFilled,
+      this.suffixIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +66,13 @@ class DigitTextField extends StatelessWidget {
         autovalidateMode: autoValidation,
         readOnly: readOnly,
         validator: (value) => validator?.call(value),
+        decoration: InputDecoration(
+          suffixIconConstraints: const BoxConstraints(
+            maxHeight: 48,
+            maxWidth: 48,
+          ),
+          suffixIcon: suffixIcon, //maxLines = 1 if suffixIcon != null
+        ),
       ),
     );
   }
