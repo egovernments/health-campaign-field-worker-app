@@ -1,8 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -125,27 +129,31 @@ class _DeliverInterventionPageState
                       ),
                       incrementer: true,
                     ),
-                    DigitDropdown(
-                      label: localizations.translate(
-                        i18.deliverIntervention.deliveryCommentLabel,
-                      ),
-                      initialValue: 'Insufficient Resources',
-                      menuItems: [
-                        MenuItemModel(
-                          "Insufficient Resources",
-                          "Insufficient Resources",
-                        ),
-                        MenuItemModel(
-                          "Beneficiary Refused",
-                          "Beneficiary Refused",
-                        ),
-                        MenuItemModel(
-                          "Beneficiary Absent",
-                          "Beneficiary Absent",
-                        ),
-                      ],
-                      onChanged: (String? newValue) {},
-                      formControlName: 'deliveryComment',
+                    BlocBuilder<AppInitializationBloc, AppInitializationState>(
+                      builder: (context, state) {
+                        if (state is! AppInitialized) return const Offstage();
+
+                        final deliveryTypeOptions =
+                            state.appConfiguration.deliveryCommentOptions ??
+                                <DeliveryCommentOptions>[];
+
+                        return DigitDropdown(
+                          label: localizations.translate(
+                            i18.deliverIntervention.deliveryCommentLabel,
+                          ),
+                          initialValue: deliveryTypeOptions.firstOrNull?.name,
+                          menuItems: deliveryTypeOptions.map((e) {
+                            return MenuItemModel(
+                              e.code,
+                              localizations.translate(e.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            // TODO: Complete implementation
+                          },
+                          formControlName: 'deliveryComment',
+                        );
+                      },
                     ),
                   ],
                 ),
