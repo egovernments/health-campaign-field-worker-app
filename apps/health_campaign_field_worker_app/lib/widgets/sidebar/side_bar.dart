@@ -15,14 +15,13 @@ class SideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ScrollableContent(
-      footer: const PoweredByDigit(),
+    return Column(
       children: [
         Container(
           color: theme.colorScheme.secondary.withOpacity(0.12),
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 3,
+            height: 200,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -30,9 +29,9 @@ class SideBar extends StatelessWidget {
                   'Carlos',
                   style: theme.textTheme.displayMedium,
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                // const SizedBox(
+                //   height: 8,
+                // ),
                 Text(
                   '+258 6387387',
                   style: theme.textTheme.labelSmall,
@@ -70,8 +69,8 @@ class SideBar extends StatelessWidget {
                   builder: (context, localizationState) {
                     return localizationModulesList != null
                         ? Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: DigitRowCard(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: DigitRowCard(
                               onChanged: (value) {
                                 int index = languages.indexWhere(
                                   (ele) =>
@@ -114,7 +113,7 @@ class SideBar extends StatelessWidget {
                                       languages.length) -
                                   (4 * languages.length),
                             ),
-                        )
+                          )
                         : const Offstage();
                   },
                 ),
@@ -143,6 +142,7 @@ class SideBar extends StatelessWidget {
             // TODO: Complete implementation
           },
         ),
+        const PoweredByDigit(),
       ],
     );
   }

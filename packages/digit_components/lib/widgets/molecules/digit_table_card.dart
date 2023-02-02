@@ -42,9 +42,13 @@ class DigitTableCard extends StatelessWidget {
                             child: Text(
                               e,
                               style: theme.textTheme.headline5,
+                              textAlign: TextAlign.start,
                             ),
                           ),
-                          Text(element[e].toString()),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 1.4),
+                            child: Text(element[e].toString()),
+                          ),
                         ],
                       ),
                     ))
