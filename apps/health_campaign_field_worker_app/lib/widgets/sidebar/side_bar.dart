@@ -69,49 +69,52 @@ class SideBar extends StatelessWidget {
                 child: BlocBuilder<LocalizationBloc, LocalizationState>(
                   builder: (context, localizationState) {
                     return localizationModulesList != null
-                        ? DigitRowCard(
-                            onChanged: (value) {
-                              int index = languages.indexWhere(
-                                (ele) =>
-                                    ele.value.toString() ==
-                                    value.value.toString(),
-                              );
-                              context
-                                  .read<LocalizationBloc>()
-                                  .add(LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList.interfaces
-                                        .where((element) =>
-                                            element.type ==
-                                            Modules.localizationModule)
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
-                                    tenantId: appConfig.tenantId ?? "default",
-                                    locale: value.value.toString(),
-                                    path: Constants.localizationApiPath,
-                                  ));
+                        ? Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: DigitRowCard(
+                              onChanged: (value) {
+                                int index = languages.indexWhere(
+                                  (ele) =>
+                                      ele.value.toString() ==
+                                      value.value.toString(),
+                                );
+                                context
+                                    .read<LocalizationBloc>()
+                                    .add(LocalizationEvent.onLoadLocalization(
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                              Modules.localizationModule)
+                                          .map((e) => e.name.toString())
+                                          .join(',')
+                                          .toString(),
+                                      tenantId: appConfig.tenantId ?? "default",
+                                      locale: value.value.toString(),
+                                      path: Constants.localizationApiPath,
+                                    ));
 
-                              context.read<LocalizationBloc>().add(
-                                    OnUpdateLocalizationIndexEvent(
-                                      index: index,
-                                      code: value.value.toString(),
-                                    ),
-                                  );
-                            },
-                            rowItems: languages!.map((e) {
-                              var index = languages.indexOf(e);
+                                context.read<LocalizationBloc>().add(
+                                      OnUpdateLocalizationIndexEvent(
+                                        index: index,
+                                        code: value.value.toString(),
+                                      ),
+                                    );
+                              },
+                              rowItems: languages!.map((e) {
+                                var index = languages.indexOf(e);
 
-                              return DigitRowCardModel(
-                                label: e.label,
-                                value: e.value,
-                                isSelected: index == localizationState.index,
-                              );
-                            }).toList(),
-                            width: (MediaQuery.of(context).size.width *
-                                    0.5 /
-                                    languages.length) -
-                                (4 * languages.length),
-                          )
+                                return DigitRowCardModel(
+                                  label: e.label,
+                                  value: e.value,
+                                  isSelected: index == localizationState.index,
+                                );
+                              }).toList(),
+                              width: (MediaQuery.of(context).size.width *
+                                      0.56 /
+                                      languages.length) -
+                                  (4 * languages.length),
+                            ),
+                        )
                         : const Offstage();
                   },
                 ),

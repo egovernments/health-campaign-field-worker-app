@@ -108,18 +108,31 @@ class _IndividualDetailsPageState
                         ),
                         value: true,
                       ),
-                      DigitDropdown(
-                        label: localizations
-                            .translate(i18.individualDetails.idTypeLabelText),
-                        initialValue: '',
-                        menuItems: [
-                          MenuItemModel('ID Type 1', 'code'),
-                          MenuItemModel('ID Type 2', 'code1'),
-                        ],
-                        onChanged: (value) {
-                          // TODO: Complete implementation
+                      BlocBuilder<AppInitializationBloc,
+                          AppInitializationState>(
+                        builder: (context, state) {
+                          if (state is! AppInitialized) return const Offstage();
+
+                          final idTypeOptions =
+                              state.appConfiguration.idTypeOptions ??
+                                  <IdTypeOptions>[];
+
+                          return DigitDropdown(
+                            label: localizations.translate(
+                                i18.individualDetails.idTypeLabelText,),
+                            initialValue: idTypeOptions.firstOrNull?.name,
+                            menuItems: idTypeOptions.map((e) {
+                              return MenuItemModel(
+                                e.code,
+                                localizations.translate(e.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              // TODO: Complete implementation
+                            },
+                            formControlName: 'idType',
+                          );
                         },
-                        formControlName: 'idType',
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
