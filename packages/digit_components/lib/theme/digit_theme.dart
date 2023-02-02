@@ -72,6 +72,8 @@ class DigitTheme {
         vertical: kPadding,
       );
 
+  Duration get toastDuration => const Duration(seconds: 2);
+
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.zero),
       );
