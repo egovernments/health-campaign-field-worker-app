@@ -19,7 +19,10 @@ class NetworkManager {
     this.remoteRepositories = const [],
   });
 
-  Future<DataRepository<D, R>> repository<D extends DataModel, R extends DataModel>(BuildContext context) async {
+  Future<DataRepository<D, R>>
+      repository<D extends DataModel, R extends DataModel>(
+    BuildContext context,
+  ) async {
     switch (configuration.persistenceConfig) {
       case PersistenceConfiguration.offlineFirst:
         return context.read<LocalRepository<D, R>>();
@@ -29,37 +32,67 @@ class NetworkManager {
   }
 
   Future<void> syncUp() async {
-    if (configuration.persistenceConfig == PersistenceConfiguration.onlineOnly) {
+    if (configuration.persistenceConfig ==
+        PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
-    final pendingSyncEntries = await Future.wait(localRepositories.map((e) async {
-      final items = await e.getItemsToBeSynced();
+    final futures = await Future.wait(
+      localRepositories.map((e) => e.getItemsToBeSynced()),
+    );
 
-      return (e.type, items);
-    }));
+    final pendingSyncEntries = futures.expand((e) => e).toList();
+    pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
     for (final element in pendingSyncEntries) {
-      if (element.$0 == DataModelType.individual) {
-        final remote = remoteRepositories.firstWhereOrNull((e) => e.type == DataModelType.individual);
-        if (remote == null) break;
+      final remote = _getRemoteForType(element.type);
 
-
-        for (final entry in element.$1) {
-          if (entry.operation == ApiOperation.create) {
-            await remote.create(entry.entity);
-          } else if (entry.operation == ApiOperation.update) {
-            await remote.update(entry.entity);
-          }
-        }
+      if (element.operation == ApiOperation.create) {
+        await remote.create(element.entity);
+      } else if (element.operation == ApiOperation.create) {
+        await remote.update(element.entity);
       }
+
+      final local = _getLocalForType(element.type);
+      await local.markSynced(element.copyWith(isSynced: true));
     }
   }
 
   Future<void> syncDown() async {
-    if (configuration.persistenceConfig == PersistenceConfiguration.onlineOnly) {
+    if (configuration.persistenceConfig ==
+        PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
     }
+
+    // TODO(naveen): Complete implementation for sync down operation
+  }
+
+  RemoteRepository _getRemoteForType(DataModelType type) {
+    final repository = remoteRepositories.firstWhereOrNull(
+      (e) => e.type == type,
+    );
+
+    if (repository == null) {
+      throw Exception(
+        'Remote repository is not configured in the network manager',
+      );
+    }
+
+    return repository;
+  }
+
+  LocalRepository _getLocalForType(DataModelType type) {
+    final repository = localRepositories.firstWhereOrNull(
+      (e) => e.type == type,
+    );
+
+    if (repository == null) {
+      throw Exception(
+        'Remote repository is not configured in the network manager',
+      );
+    }
+
+    return repository;
   }
 }
 

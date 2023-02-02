@@ -20,7 +20,8 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<dynamic> update(D entity);
 }
 
-abstract class RemoteRepository<D extends DataModel, R extends DataModel> extends DataRepository<D, R> {
+abstract class RemoteRepository<D extends DataModel, R extends DataModel>
+    extends DataRepository<D, R> {
   final Dio dio;
   final String path;
   final String entityName;
@@ -106,7 +107,8 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel> extend
   }
 }
 
-abstract class LocalRepository<D extends DataModel, R extends DataModel> extends DataRepository<D, R> {
+abstract class LocalRepository<D extends DataModel, R extends DataModel>
+    extends DataRepository<D, R> {
   final LocalSqlDataStore sql;
   final OpLogManager opLogManager;
 
@@ -128,10 +130,22 @@ abstract class LocalRepository<D extends DataModel, R extends DataModel> extends
     D entity,
     ApiOperation operation,
   ) =>
-      opLogManager.createEntry(OpLogEntry(entity, operation), type);
+      opLogManager.createEntry(
+        OpLogEntry(
+          entity,
+          operation,
+          dateCreated: DateTime.now(),
+          type: type,
+        ),
+        type,
+      );
 
   Future<List<OpLogEntry>> getItemsToBeSynced() async {
     return opLogManager.getPendingSyncedEntries(type);
+  }
+
+  FutureOr<void> markSynced(OpLogEntry entry) async {
+    return opLogManager.markSynced(entry);
   }
 }
 
