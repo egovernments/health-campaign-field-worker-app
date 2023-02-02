@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:recase/recase.dart';
+
+import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 
-
 import 'lib/models.dart';
-import 'package:mason/mason.dart';
 
 void run(HookContext context) async {
   final variables = context.vars;
