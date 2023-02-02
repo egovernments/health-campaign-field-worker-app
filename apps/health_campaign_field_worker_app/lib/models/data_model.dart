@@ -59,13 +59,13 @@ class AuditDetails {
 }
 
 enum DataModelType {
-  project,
-  individual,
+  facility,
   household,
   householdMember,
-  facility,
+  individual,
   product,
   productVariant,
+  project,
   projectBeneficiary,
   projectFacility,
   projectProductVariant,

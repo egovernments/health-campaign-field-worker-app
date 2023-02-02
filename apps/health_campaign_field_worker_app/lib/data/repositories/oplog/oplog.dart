@@ -19,6 +19,7 @@ abstract class OpLogManager<T extends DataModel> {
               ..operation = entry.operation
               ..isSynced = false
               ..entityType = type
+              ..createdOn = entry.dateCreated
               ..entityString = entry.entity.toJson(),
           ));
 
@@ -35,8 +36,27 @@ abstract class OpLogManager<T extends DataModel> {
         .map((e) => OpLogEntry<T>(
               Mapper.fromJson<T>(e.entityString),
               e.operation,
+              dateCreated: e.createdOn,
+              id: e.id,
+              type: e.entityType,
+              isSynced: e.isSynced,
             ))
         .toList();
+  }
+
+  FutureOr<void> markSynced(OpLogEntry<T> entry) async {
+    final id = entry.id;
+    if (id == null) return;
+    await isar.opLogs.put(
+      OpLog<T>()
+        ..id = id
+        ..operation = entry.operation
+        ..isSynced = entry.isSynced
+        ..entityType = entry.type
+        ..createdOn = entry.dateCreated
+        ..syncedOn = DateTime.now()
+        ..entityString = entry.entity.toJson(),
+    );
   }
 }
 
