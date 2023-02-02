@@ -133,7 +133,7 @@ class _DeliverInterventionPageState
                       builder: (context, state) {
                         if (state is! AppInitialized) return const Offstage();
 
-                        final deliveryTypeOptions =
+                        final deliveryCommentOptions =
                             state.appConfiguration.deliveryCommentOptions ??
                                 <DeliveryCommentOptions>[];
 
@@ -141,8 +141,9 @@ class _DeliverInterventionPageState
                           label: localizations.translate(
                             i18.deliverIntervention.deliveryCommentLabel,
                           ),
-                          initialValue: deliveryTypeOptions.firstOrNull?.name,
-                          menuItems: deliveryTypeOptions.map((e) {
+                          initialValue:
+                              deliveryCommentOptions.firstOrNull?.name,
+                          menuItems: deliveryCommentOptions.map((e) {
                             return MenuItemModel(
                               e.code,
                               localizations.translate(e.name),
