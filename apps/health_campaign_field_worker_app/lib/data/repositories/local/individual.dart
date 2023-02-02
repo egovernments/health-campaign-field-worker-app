@@ -8,9 +8,8 @@ import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 import '../../local_store/sql_store/sql_store.dart';
 
-class IndividualRepository
-    extends LocalRepository<IndividualModel, IndividualSearchModel> {
-  const IndividualRepository(super.sql, super.opLogManager);
+class IndividualLocalRepository extends LocalRepository<IndividualModel, IndividualSearchModel> {
+  const IndividualLocalRepository(super.sql, super.opLogManager);
 
   @override
   DataModelType get type => DataModelType.individual;

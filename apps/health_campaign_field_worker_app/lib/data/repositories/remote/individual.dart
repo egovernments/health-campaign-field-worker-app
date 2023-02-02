@@ -3,10 +3,13 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class IndividualRepository extends RemoteRepository<IndividualModel, IndividualSearchModel> {
-  IndividualRepository(
+class IndividualRemoteRepository extends RemoteRepository<IndividualModel, IndividualSearchModel> {
+  IndividualRemoteRepository(
     super.dio, {
     required super.path,
     super.entityName = 'Individual',
   });
+
+  @override
+  DataModelType get type => DataModelType.individual;
 }

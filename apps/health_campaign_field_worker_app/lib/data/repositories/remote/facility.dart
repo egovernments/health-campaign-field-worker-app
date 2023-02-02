@@ -3,10 +3,13 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class FacilityRepository extends RemoteRepository<FacilityModel, FacilitySearchModel> {
-  FacilityRepository(
+class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilitySearchModel> {
+  FacilityRemoteRepository(
     super.dio, {
     required super.path,
     super.entityName = 'Facility',
   });
+
+  @override
+  DataModelType get type => DataModelType.facility;
 }

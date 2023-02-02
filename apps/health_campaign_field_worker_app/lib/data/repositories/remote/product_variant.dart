@@ -3,10 +3,13 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ProductVariantRepository extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
-  ProductVariantRepository(
+class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
+  ProductVariantRemoteRepository(
     super.dio, {
     required super.path,
     super.entityName = 'ProductVariant',
   });
+
+  @override
+  DataModelType get type => DataModelType.productVariant;
 }

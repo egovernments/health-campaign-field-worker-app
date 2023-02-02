@@ -3,13 +3,15 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'local_store/sql_store/sql_store.dart';
+
 import '../models/data_model.dart';
+import 'local_store/sql_store/sql_store.dart';
 import 'repositories/oplog/oplog.dart';
 
 abstract class DataRepository<D extends DataModel, R extends DataModel> {
-
   const DataRepository();
+
+  DataModelType get type;
 
   FutureOr<List<D>> search(R query);
 
@@ -18,8 +20,7 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<dynamic> update(D entity);
 }
 
-abstract class RemoteRepository<D extends DataModel, R extends DataModel>
-    extends DataRepository<D, R> {
+abstract class RemoteRepository<D extends DataModel, R extends DataModel> extends DataRepository<D, R> {
   final Dio dio;
   final String path;
   final String entityName;
@@ -105,33 +106,33 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   }
 }
 
-abstract class LocalRepository<D extends DataModel, R extends DataModel>
-    extends DataRepository<D, R> {
+abstract class LocalRepository<D extends DataModel, R extends DataModel> extends DataRepository<D, R> {
   final LocalSqlDataStore sql;
   final OpLogManager opLogManager;
-
-  DataModelType get type;
 
   const LocalRepository(this.sql, this.opLogManager);
 
   @override
   @mustCallSuper
   FutureOr<void> create(D entity) async {
-    await createOplogEntry(entity, ApiOperation.create, type);
+    await createOplogEntry(entity, ApiOperation.create);
   }
 
   @override
   @mustCallSuper
   FutureOr<void> update(D entity) async {
-    await createOplogEntry(entity, ApiOperation.update, type);
+    await createOplogEntry(entity, ApiOperation.update);
   }
 
   FutureOr<void> createOplogEntry(
     D entity,
     ApiOperation operation,
-    DataModelType type,
   ) =>
       opLogManager.createEntry(OpLogEntry(entity, operation), type);
+
+  Future<List<OpLogEntry>> getItemsToBeSynced() async {
+    return opLogManager.getPendingSyncedEntries(type);
+  }
 }
 
 class InvalidApiResponseException implements Exception {

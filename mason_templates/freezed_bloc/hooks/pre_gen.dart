@@ -1,11 +1,10 @@
 import 'package:mason/mason.dart';
-import 'package:recase/recase.dart';
 
 void run(HookContext context) {
   final logger = context.logger;
   final variables = context.vars;
 
-  if (!variables.containsKey('name'))  {
+  if (!variables.containsKey('name')) {
     logger.err('`name` is required');
     throw Exception();
   }
@@ -18,12 +17,11 @@ void run(HookContext context) {
 
   logger.info('Generating $name');
 
-
   final events = <String>[];
   final states = <String>[];
 
   logger.info(lightYellow.wrap('Provide names of triggered events. Leave empty to exit'));
-  while(true) {
+  while (true) {
     final property = logger.prompt(':').replaceAll(RegExp('\\s+'), ' ').trim();
     if (property.trim().isEmpty) {
       break;
@@ -33,7 +31,7 @@ void run(HookContext context) {
   }
 
   logger.info(lightYellow.wrap('Provide names of emitted states. Leave empty to exit'));
-  while(true) {
+  while (true) {
     final property = logger.prompt(':').replaceAll(RegExp('\\s+'), ' ').trim();
     if (property.trim().isEmpty) {
       break;
