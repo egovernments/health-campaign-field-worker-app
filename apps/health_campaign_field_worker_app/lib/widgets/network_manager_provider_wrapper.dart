@@ -32,16 +32,16 @@ import '../models/data_model.dart';
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
   final Dio dio;
-  final OpLogManager opLogManager;
+  final Widget child;
 
   final NetworkManagerConfiguration configuration;
 
   const NetworkManagerProviderWrapper({
     super.key,
     required this.configuration,
-    required this.opLogManager,
     required this.dio,
     required this.sql,
+    required this.child,
   });
 
   @override
@@ -96,14 +96,24 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           create: (ctx) => NetworkManager(
             configuration: configuration,
             localRepositories: [
-              IndividualLocalRepository(sql, opLogManager),
-              HouseholdLocalRepository(sql, opLogManager),
-              HouseholdMemberLocalRepository(sql, opLogManager),
+              IndividualLocalRepository(
+                sql,
+                ctx.read<OpLogManager<IndividualModel>>(),
+              ),
+              HouseholdLocalRepository(
+                sql,
+                ctx.read<OpLogManager<HouseholdModel>>(),
+              ),
+              HouseholdMemberLocalRepository(
+                sql,
+                ctx.read<OpLogManager<HouseholdMemberModel>>(),
+              ),
             ],
             remoteRepositories: [
               ..._getRemoteRepositories(dio, registryMap),
             ],
           ),
+          child: child,
         );
       },
     );
