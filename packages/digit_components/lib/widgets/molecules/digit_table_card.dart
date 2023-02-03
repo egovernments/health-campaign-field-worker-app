@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 
 class DigitTableCard extends StatelessWidget {
   final Map<String, dynamic> element;
-  final EdgeInsets? padding;
   final Border? border;
   final Color? color;
-  final bool leftPadding;
+  final EdgeInsetsGeometry? padding;
 
   const DigitTableCard({
     super.key,
     required this.element,
-    this.padding,
     this.border,
     this.color,
-    this.leftPadding = true,
+    this.padding,
   });
 
   @override
@@ -28,8 +26,7 @@ class DigitTableCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding:
-              EdgeInsets.only(left: leftPadding ? 8 : 0, right: 8, bottom: 16),
+          padding: padding ?? const EdgeInsets.only(right: 8, bottom: 16),
           child: Column(
             children: element.keys
                 .map((e) => Container(

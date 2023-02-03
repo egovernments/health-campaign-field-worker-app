@@ -5,7 +5,7 @@ class DigitDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Divider(
       key: const ValueKey('neo_divider'),
       color: Theme.of(context).colorScheme.outline,
       height: 1.0,

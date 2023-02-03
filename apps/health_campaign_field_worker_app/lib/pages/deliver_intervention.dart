@@ -54,7 +54,6 @@ class _DeliverInterventionPageState
                       ],
                     ),
                     DigitTableCard(
-                      leftPadding: false,
                       element: {
                         localizations.translate(i18.deliverIntervention
                             .dateOfRegistrationLabel): "1 August 2022",
@@ -67,6 +66,8 @@ class _DeliverInterventionPageState
                         style: BorderStyle.solid,
                         width: 1.0,
                       ),
+                      padding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 16),
                       element: {
                         localizations.translate(i18.householdOverView
                             .householdOverViewHouseholdHeadLabel): "Jose (H)",
@@ -86,7 +87,6 @@ class _DeliverInterventionPageState
                       },
                     ),
                     DigitTableCard(
-                      leftPadding: false,
                       element: {
                         localizations.translate(
                           i18.deliverIntervention.memberCountText,
@@ -95,7 +95,6 @@ class _DeliverInterventionPageState
                     ),
                     const DigitDivider(),
                     DigitTableCard(
-                      leftPadding: false,
                       element: {
                         localizations.translate(i18.deliverIntervention
                             .noOfResourcesForDelivery): "03",
