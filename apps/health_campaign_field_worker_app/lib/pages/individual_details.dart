@@ -4,7 +4,6 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -109,10 +108,31 @@ class _IndividualDetailsPageState
                         ),
                         value: true,
                       ),
-                      DigitTextFormField(
-                        formControlName: 'idType',
-                        label: localizations
-                            .translate(i18.individualDetails.idTypeLabelText),
+                      BlocBuilder<AppInitializationBloc,
+                          AppInitializationState>(
+                        builder: (context, state) {
+                          if (state is! AppInitialized) return const Offstage();
+
+                          final idTypeOptions =
+                              state.appConfiguration.idTypeOptions ??
+                                  <IdTypeOptions>[];
+
+                          return DigitDropdown(
+                            label: localizations.translate(
+                                i18.individualDetails.idTypeLabelText,),
+                            initialValue: idTypeOptions.firstOrNull?.name,
+                            menuItems: idTypeOptions.map((e) {
+                              return MenuItemModel(
+                                e.code,
+                                localizations.translate(e.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              // TODO: Complete implementation
+                            },
+                            formControlName: 'idType',
+                          );
+                        },
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

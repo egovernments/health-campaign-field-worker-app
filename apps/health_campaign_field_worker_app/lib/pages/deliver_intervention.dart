@@ -1,7 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -11,6 +16,7 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<DeliverInterventionPage> createState() =>
       _DeliverInterventionPageState();
@@ -60,6 +66,8 @@ class _DeliverInterventionPageState
                         style: BorderStyle.solid,
                         width: 1.0,
                       ),
+                      padding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 16),
                       element: {
                         localizations.translate(i18.householdOverView
                             .householdOverViewHouseholdHeadLabel): "Jose (H)",
@@ -82,11 +90,17 @@ class _DeliverInterventionPageState
                       element: {
                         localizations.translate(
                           i18.deliverIntervention.memberCountText,
-                        ): 4,
+                        ): '05',
+                      },
+                    ),
+                    const DigitDivider(),
+                    DigitTableCard(
+                      element: {
                         localizations.translate(i18.deliverIntervention
                             .noOfResourcesForDelivery): "03",
                       },
                     ),
+                    const DigitDivider(),
                     DigitDropdown(
                       label: localizations.translate(
                         i18.deliverIntervention.resourceDeliveredLabel,
@@ -114,23 +128,32 @@ class _DeliverInterventionPageState
                       ),
                       incrementer: true,
                     ),
-                    DigitDropdown(
-                      label: localizations.translate(
-                        i18.deliverIntervention.deliveryCommentLabel,
-                      ),
-                      initialValue: 'Insufficient Resources',
-                      menuItems: [
-                        MenuItemModel(
-                          "Insufficient Resources",
-                          "Insufficient Resources",
-                        ),
-                        MenuItemModel(
-                          "Beneficiary Absent",
-                          "Beneficiary Absent",
-                        ),
-                      ],
-                      onChanged: (String? newValue) {},
-                      formControlName: 'deliveryComment',
+                    BlocBuilder<AppInitializationBloc, AppInitializationState>(
+                      builder: (context, state) {
+                        if (state is! AppInitialized) return const Offstage();
+
+                        final deliveryCommentOptions =
+                            state.appConfiguration.deliveryCommentOptions ??
+                                <DeliveryCommentOptions>[];
+
+                        return DigitDropdown(
+                          label: localizations.translate(
+                            i18.deliverIntervention.deliveryCommentLabel,
+                          ),
+                          initialValue:
+                              deliveryCommentOptions.firstOrNull?.name,
+                          menuItems: deliveryCommentOptions.map((e) {
+                            return MenuItemModel(
+                              e.code,
+                              localizations.translate(e.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            // TODO: Complete implementation
+                          },
+                          formControlName: 'deliveryComment',
+                        );
+                      },
                     ),
                   ],
                 ),

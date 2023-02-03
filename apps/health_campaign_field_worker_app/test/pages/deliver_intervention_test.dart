@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
-import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +21,18 @@ class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
   @override
   Stream<AppInitializationState> get stream async* {
     yield AppInitialized(
-      appConfiguration: AppConfiguration(),
+      appConfiguration: AppConfiguration()
+        ..deliveryCommentOptions = [
+          DeliveryCommentOptions()
+            ..code = 'INSUFFICIENT_RESOURCES'
+            ..name = 'INSUFFICIENT_RESOURCES',
+          DeliveryCommentOptions()
+            ..code = 'BENEFICIARY_REFUSED'
+            ..name = 'BENEFICIARY_REFUSED',
+          DeliveryCommentOptions()
+            ..code = 'BENEFICIARY_ABSENT'
+            ..name = 'BENEFICIARY_ABSENT',
+        ],
     );
   }
 }
@@ -44,7 +53,18 @@ void main() {
     setUpAll(() {
       when(() => appInitializationBloc.state)
           .thenAnswer((invocation) => AppInitialized(
-                appConfiguration: AppConfiguration(),
+                appConfiguration: AppConfiguration()
+                  ..deliveryCommentOptions = [
+                    DeliveryCommentOptions()
+                      ..code = 'INSUFFICIENT_RESOURCES'
+                      ..name = 'INSUFFICIENT_RESOURCES',
+                    DeliveryCommentOptions()
+                      ..code = 'BENEFICIARY_REFUSED'
+                      ..name = 'BENEFICIARY_REFUSED',
+                    DeliveryCommentOptions()
+                      ..code = 'BENEFICIARY_ABSENT'
+                      ..name = 'BENEFICIARY_ABSENT',
+                  ],
               ));
 
       for (final element in [
@@ -65,6 +85,9 @@ void main() {
         i18.common.coreCommonCancel,
         i18.common.coreCommonSubmit,
         i18.householdOverView.householdOverViewHouseholdHeadLabel,
+        'INSUFFICIENT_RESOURCES',
+        'BENEFICIARY_REFUSED',
+        'BENEFICIARY_ABSENT',
       ]) {
         when(() => mockLocalization.translate(element)).thenReturn(element);
       }
