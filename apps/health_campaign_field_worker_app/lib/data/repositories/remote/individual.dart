@@ -6,7 +6,9 @@ import '../../data_repository.dart';
 class IndividualRemoteRepository extends RemoteRepository<IndividualModel, IndividualSearchModel> {
   IndividualRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.searchPath,
+    required super.createPath,
+    required super.updatePath,
     super.entityName = 'Individual',
   });
 
