@@ -35,10 +35,10 @@ class MdmsRepository {
     Isar isar,
   ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
-    result.serviceRegistry?.serviceRegistryList?.forEach((element) {
+    result.serviceRegistry?.serviceRegistryList.forEach((element) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
-      final actions = element.actions?.map((item) {
+      final actions = element.actions.map((item) {
         final newServiceRegistryAction = Actions()
           ..entityName = item.entityName
           ..path = item.path
@@ -47,7 +47,7 @@ class MdmsRepository {
         return newServiceRegistryAction;
       }).toList();
 
-      newServiceRegistry.actions = actions!;
+      newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);
     });
 
