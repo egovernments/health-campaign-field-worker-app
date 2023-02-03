@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/data/network_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/network_manager.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -43,9 +43,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         return MultiProvider(
           providers: [
             // Local Repositories
-            Provider(create: (_) => IndividualLocalRepository(sql, opLogManager)),
-            Provider(create: (_) => HouseholdLocalRepository(sql, opLogManager)),
-            Provider(create: (_) => HouseholdMemberLocalRepository(sql, opLogManager)),
+            Provider(
+                create: (_) => IndividualLocalRepository(sql, opLogManager)),
+            Provider(
+                create: (_) => HouseholdLocalRepository(sql, opLogManager)),
+            Provider(
+                create: (_) =>
+                    HouseholdMemberLocalRepository(sql, opLogManager)),
             // Remote Repositories
             Provider(create: (_) => IndividualRemoteRepository(dio, path: '')),
           ],
