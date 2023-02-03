@@ -22,6 +22,7 @@ class DigitTextField extends StatelessWidget {
   final bool isDisabled;
   final bool readOnly;
   final bool? isFilled;
+  final Widget? suffixIcon;
 
   const DigitTextField({
     super.key,
@@ -44,6 +45,7 @@ class DigitTextField extends StatelessWidget {
     this.isDisabled = false,
     this.readOnly = false,
     this.isFilled,
+    this.suffixIcon,
   });
 
   @override
@@ -65,6 +67,14 @@ class DigitTextField extends StatelessWidget {
         autovalidateMode: autoValidation,
         readOnly: readOnly,
         validator: (value) => validator?.call(value),
+        decoration: InputDecoration(
+          suffixIconConstraints: const BoxConstraints(
+            maxHeight: 48,
+            maxWidth: 48,
+          ),
+          //maxLines = 1 if suffixIcon != null
+          suffixIcon: suffixIcon,
+        ),
       ),
     );
   }
