@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../../models/digit_row_card/digit_row_card_model.dart';
 
 class DigitLanguageCard extends StatelessWidget {
@@ -21,14 +22,18 @@ class DigitLanguageCard extends StatelessWidget {
     return DigitCard(
       margin: const EdgeInsets.all(8),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DigitRowCard(
             onChanged: onLanguageChange,
             rowItems: digitRowCardItems,
-            width:
-                (MediaQuery.of(context).size.width / digitRowCardItems.length) -
+            width: MediaQuery.of(context).size.width > 760
+                ? (MediaQuery.of(context).size.width /
+                        (digitRowCardItems.length * 3)) -
+                    20
+                : (MediaQuery.of(context).size.width /
+                        digitRowCardItems.length) -
                     16 * digitRowCardItems.length,
           ),
           const SizedBox(
