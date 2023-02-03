@@ -37,6 +37,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   provider: ^6.0.5
+  recase: ^4.1.0
 
 dev_dependencies:
   flutter_test:

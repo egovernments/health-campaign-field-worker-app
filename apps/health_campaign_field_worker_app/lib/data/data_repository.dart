@@ -23,29 +23,19 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
 abstract class RemoteRepository<D extends DataModel, R extends DataModel>
     extends DataRepository<D, R> {
   final Dio dio;
-  final String path;
   final String entityName;
 
-  final String? _createPath;
-  final String? _updatePath;
-  final String? _searchPath;
+  final String createPath;
+  final String updatePath;
+  final String searchPath;
 
   RemoteRepository(
     this.dio, {
-    String? createPath,
-    String? updatePath,
-    String? searchPath,
-    required this.path,
+    required this.createPath,
+    required this.updatePath,
+    required this.searchPath,
     required this.entityName,
-  })  : _createPath = createPath,
-        _updatePath = updatePath,
-        _searchPath = searchPath;
-
-  String get createPath => _createPath ?? '$path/_create';
-
-  String get updatePath => _updatePath ?? '$path/_update';
-
-  String get searchPath => _searchPath ?? '$path/_search';
+  });
 
   @override
   FutureOr<List<D>> search(R query) async {
