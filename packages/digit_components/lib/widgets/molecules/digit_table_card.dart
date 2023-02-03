@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 class DigitTableCard extends StatelessWidget {
   final Map<String, dynamic> element;
-  final EdgeInsets? padding;
   final Border? border;
   final Color? color;
+  final EdgeInsetsGeometry? padding;
 
   const DigitTableCard({
     super.key,
     required this.element,
-    this.padding,
     this.border,
     this.color,
+    this.padding,
   });
 
   @override
@@ -26,23 +26,28 @@ class DigitTableCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+          padding: padding ?? const EdgeInsets.only(right: 8, bottom: 16),
           child: Column(
             children: element.keys
-                .map((e) => Row(
-                      children: [
-                        Container(
-                          margin: DigitTheme.instance.verticalMargin,
-                          child: SizedBox(
+                .map((e) => Container(
+                      margin: DigitTheme.instance.verticalMargin,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Text(
                               e,
                               style: theme.textTheme.headline5,
+                              textAlign: TextAlign.start,
                             ),
                           ),
-                        ),
-                        Text(element[e].toString())
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 1.4),
+                            child: Text(element[e].toString()),
+                          ),
+                        ],
+                      ),
                     ))
                 .toList(),
           ),

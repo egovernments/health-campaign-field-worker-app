@@ -17,11 +17,12 @@ class DigitIconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      minVerticalPadding: 16,
       leading: Icon(
         icon,
+        color: Theme.of(context).colorScheme.shadow,
       ),
       title: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
