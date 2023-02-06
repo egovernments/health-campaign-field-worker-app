@@ -19,10 +19,10 @@ class NetworkManager {
     this.remoteRepositories = const [],
   });
 
-  Future<DataRepository<D, R>>
+  DataRepository<D, R>
       repository<D extends EntityModel, R extends EntitySearchModel>(
     BuildContext context,
-  ) async {
+  ) {
     switch (configuration.persistenceConfig) {
       case PersistenceConfiguration.offlineFirst:
         return context.read<LocalRepository<D, R>>();
