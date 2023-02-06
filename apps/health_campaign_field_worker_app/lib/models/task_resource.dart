@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class TaskResourceSearchModel extends DataModel {
+class TaskResourceSearchModel extends EntitySearchModel {
   
   TaskResourceSearchModel({
     super.boundaryCode,
@@ -12,7 +12,7 @@ class TaskResourceSearchModel extends DataModel {
 }
 
 @MappableClass()
-class TaskResourceModel extends DataModel implements TaskResourceSearchModel {
+class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   final String? id;
   final String tenantId;
   final String productVariantId;

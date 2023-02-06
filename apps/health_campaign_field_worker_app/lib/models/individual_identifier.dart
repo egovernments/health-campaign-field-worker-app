@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class IndividualIdentifierSearchModel extends DataModel {
+class IndividualIdentifierSearchModel extends EntitySearchModel {
   
   IndividualIdentifierSearchModel({
     super.boundaryCode,
@@ -12,7 +12,7 @@ class IndividualIdentifierSearchModel extends DataModel {
 }
 
 @MappableClass()
-class IndividualIdentifierModel extends DataModel implements IndividualIdentifierSearchModel {
+class IndividualIdentifierModel extends EntityModel implements IndividualIdentifierSearchModel {
   final String clientReferenceId;
   final IndividualModel individual;
   final IdentifierModel identifier;

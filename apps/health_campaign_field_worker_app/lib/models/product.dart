@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProductSearchModel extends DataModel {
+class ProductSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
   final String? type;
@@ -22,7 +22,7 @@ class ProductSearchModel extends DataModel {
 }
 
 @MappableClass()
-class ProductModel extends DataModel implements ProductSearchModel {
+class ProductModel extends EntityModel implements ProductSearchModel {
   
   @override
   final String? id;

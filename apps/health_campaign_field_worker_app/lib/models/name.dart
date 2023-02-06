@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class NameSearchModel extends DataModel {
+class NameSearchModel extends EntitySearchModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
@@ -18,7 +18,7 @@ class NameSearchModel extends DataModel {
 }
 
 @MappableClass()
-class NameModel extends DataModel implements NameSearchModel {
+class NameModel extends EntityModel implements NameSearchModel {
   final String clientReferenceId;
   
   @override

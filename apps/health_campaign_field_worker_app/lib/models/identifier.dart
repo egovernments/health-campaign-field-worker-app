@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class IdentifierSearchModel extends DataModel {
+class IdentifierSearchModel extends EntitySearchModel {
   final String? type;
   final String? id;
   
@@ -16,7 +16,7 @@ class IdentifierSearchModel extends DataModel {
 }
 
 @MappableClass()
-class IdentifierModel extends DataModel implements IdentifierSearchModel {
+class IdentifierModel extends EntityModel implements IdentifierSearchModel {
   
   @override
   final String type;
