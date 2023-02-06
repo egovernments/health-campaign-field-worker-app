@@ -24,7 +24,8 @@ class ServiceRegistrySecondaryWrapperModel
     with _$ServiceRegistrySecondaryWrapperModel {
   const factory ServiceRegistrySecondaryWrapperModel({
     @JsonKey(name: 'serviceRegistry')
-        List<ServiceRegistryModel>? serviceRegistryList,
+    @Default([])
+        List<ServiceRegistryModel> serviceRegistryList,
   }) = _ServiceRegistrySecondaryWrapperModel;
 
   factory ServiceRegistrySecondaryWrapperModel.fromJson(
@@ -36,8 +37,8 @@ class ServiceRegistrySecondaryWrapperModel
 @freezed
 class ServiceRegistryModel with _$ServiceRegistryModel {
   const factory ServiceRegistryModel({
-    final String? service,
-    final List<ActionsModel>? actions,
+    required String service,
+    @Default([]) List<ActionsModel> actions,
   }) = _ServiceRegistryModel;
 
   factory ServiceRegistryModel.fromJson(Map<String, dynamic> json) =>
@@ -47,9 +48,9 @@ class ServiceRegistryModel with _$ServiceRegistryModel {
 @freezed
 class ActionsModel with _$ActionsModel {
   const factory ActionsModel({
-    required final String action,
-    required final String entityName,
-    required final String path,
+    required String action,
+    required String entityName,
+    required String path,
   }) = _ActionsModel;
 
   factory ActionsModel.fromJson(Map<String, dynamic> json) =>

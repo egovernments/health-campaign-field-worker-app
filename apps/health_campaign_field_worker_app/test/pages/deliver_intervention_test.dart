@@ -1,8 +1,4 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

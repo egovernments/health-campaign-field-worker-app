@@ -6,7 +6,7 @@ part 'service_registry.g.dart';
 class ServiceRegistry {
   Id id = Isar.autoIncrement;
 
-  late String? service;
+  late String service;
   late List<Actions> actions;
 }
 

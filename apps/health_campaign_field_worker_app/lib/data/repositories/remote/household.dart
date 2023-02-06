@@ -3,10 +3,15 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class HouseholdRepository extends RemoteRepository<HouseholdModel, HouseholdSearchModel> {
-  HouseholdRepository(
+class HouseholdRemoteRepository extends RemoteRepository<HouseholdModel, HouseholdSearchModel> {
+  HouseholdRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.searchPath,
+    required super.createPath,
+    required super.updatePath,
     super.entityName = 'Household',
   });
+
+  @override
+  DataModelType get type => DataModelType.household;
 }
