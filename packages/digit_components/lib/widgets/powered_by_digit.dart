@@ -1,10 +1,13 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class PoweredByDigit extends StatefulWidget {
   final Size? size;
   final EdgeInsets? padding;
+  final bool isWhiteLogo;
 
-  const PoweredByDigit({super.key, this.size, this.padding});
+  const PoweredByDigit(
+      {super.key, this.size, this.padding, this.isWhiteLogo = false});
 
   @override
   State<PoweredByDigit> createState() => _PoweredByDigitState();
@@ -22,6 +25,9 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
               'assets/images/powered_by_digit.png',
               package: 'digit_components',
               fit: BoxFit.contain,
+              color: widget.isWhiteLogo
+                  ? DigitTheme.instance.colorScheme.onPrimary
+                  : null
             ),
           ),
         ),

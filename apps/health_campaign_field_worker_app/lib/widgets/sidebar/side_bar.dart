@@ -15,23 +15,29 @@ class SideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ScrollableContent(
-      footer: const PoweredByDigit(),
+    return Column(
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 3,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Carlos',
-                style: theme.textTheme.displayMedium,
-              ),
-              Text(
-                '+258 6387387',
-                style: theme.textTheme.labelSmall,
-              ),
-            ],
+        Container(
+          color: theme.colorScheme.secondary.withOpacity(0.12),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Carlos',
+                  style: theme.textTheme.displayMedium,
+                ),
+                // const SizedBox(
+                //   height: 8,
+                // ),
+                Text(
+                  '+258 6387387',
+                  style: theme.textTheme.labelSmall,
+                ),
+              ],
+            ),
           ),
         ),
         DigitIconTile(
@@ -62,48 +68,51 @@ class SideBar extends StatelessWidget {
                 child: BlocBuilder<LocalizationBloc, LocalizationState>(
                   builder: (context, localizationState) {
                     return localizationModulesList != null
-                        ? DigitRowCard(
-                            onChanged: (value) {
-                              int index = languages.indexWhere(
-                                (ele) =>
-                                    ele.value.toString() ==
-                                    value.value.toString(),
-                              );
-                              context
-                                  .read<LocalizationBloc>()
-                                  .add(LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList.interfaces
-                                        .where((element) =>
-                                            element.type ==
-                                            Modules.localizationModule)
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
-                                    tenantId: appConfig.tenantId ?? "default",
-                                    locale: value.value.toString(),
-                                    path: Constants.localizationApiPath,
-                                  ));
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: DigitRowCard(
+                              onChanged: (value) {
+                                int index = languages.indexWhere(
+                                  (ele) =>
+                                      ele.value.toString() ==
+                                      value.value.toString(),
+                                );
+                                context
+                                    .read<LocalizationBloc>()
+                                    .add(LocalizationEvent.onLoadLocalization(
+                                      module: localizationModulesList.interfaces
+                                          .where((element) =>
+                                              element.type ==
+                                              Modules.localizationModule)
+                                          .map((e) => e.name.toString())
+                                          .join(',')
+                                          .toString(),
+                                      tenantId: appConfig.tenantId ?? "default",
+                                      locale: value.value.toString(),
+                                      path: Constants.localizationApiPath,
+                                    ));
 
-                              context.read<LocalizationBloc>().add(
-                                    OnUpdateLocalizationIndexEvent(
-                                      index: index,
-                                      code: value.value.toString(),
-                                    ),
-                                  );
-                            },
-                            rowItems: languages!.map((e) {
-                              var index = languages.indexOf(e);
+                                context.read<LocalizationBloc>().add(
+                                      OnUpdateLocalizationIndexEvent(
+                                        index: index,
+                                        code: value.value.toString(),
+                                      ),
+                                    );
+                              },
+                              rowItems: languages!.map((e) {
+                                var index = languages.indexOf(e);
 
-                              return DigitRowCardModel(
-                                label: e.label,
-                                value: e.value,
-                                isSelected: index == localizationState.index,
-                              );
-                            }).toList(),
-                            width: (MediaQuery.of(context).size.width *
-                                    0.5 /
-                                    languages.length) -
-                                (4 * languages.length),
+                                return DigitRowCardModel(
+                                  label: e.label,
+                                  value: e.value,
+                                  isSelected: index == localizationState.index,
+                                );
+                              }).toList(),
+                              width: (MediaQuery.of(context).size.width *
+                                      0.56 /
+                                      languages.length) -
+                                  (4 * languages.length),
+                            ),
                           )
                         : const Offstage();
                   },
@@ -113,12 +122,27 @@ class SideBar extends StatelessWidget {
           },
         ),
         DigitIconTile(
+          title: 'Edit Profile',
+          icon: Icons.perm_contact_calendar,
+          onPressed: () {
+            // TODO: Complete implementation
+          },
+        ),
+        DigitIconTile(
+          title: 'Projects',
+          icon: Icons.folder,
+          onPressed: () {
+            // TODO: Complete implementation
+          },
+        ),
+        DigitIconTile(
           title: 'Logout',
           icon: Icons.logout,
           onPressed: () {
             // TODO: Complete implementation
           },
         ),
+        const PoweredByDigit(),
       ],
     );
   }

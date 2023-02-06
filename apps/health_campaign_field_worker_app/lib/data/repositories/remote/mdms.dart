@@ -103,6 +103,24 @@ class MdmsRepository {
         return genderOption;
       }).toList();
 
+      final List<IdTypeOptions> idTypeOptions =
+          element.idTypeOptions.map((element) {
+        final idOption = IdTypeOptions()
+          ..name = element.name
+          ..code = element.code;
+
+        return idOption;
+      }).toList();
+
+      final List<DeliveryCommentOptions> deliveryCommentOptions =
+          element.deliveryCommentOptions.map((element) {
+        final deliveryCommentOption = DeliveryCommentOptions()
+          ..name = element.name
+          ..code = element.code;
+
+        return deliveryCommentOption;
+      }).toList();
+
       final List<Interfaces> interfaceList =
           element.backendInterface.interface.map((e) {
         final config = Config()..localStoreTTL = e.config.localStoreTTL;
@@ -117,6 +135,9 @@ class MdmsRepository {
 
       final backendInterface = BackendInterface()..interfaces = interfaceList;
       appConfiguration.genderOptions = genderOptions;
+      appConfiguration.idTypeOptions = idTypeOptions;
+      appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+
       appConfiguration.backendInterface = backendInterface;
 
       appConfiguration.languages = languageList;
