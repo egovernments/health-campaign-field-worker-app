@@ -8,7 +8,8 @@ import '../models/data_model.dart';
 import 'local_store/sql_store/sql_store.dart';
 import 'repositories/oplog/oplog.dart';
 
-abstract class DataRepository<D extends DataModel, R extends DataModel> {
+abstract class DataRepository<D extends EntityModel,
+    R extends EntitySearchModel> {
   const DataRepository();
 
   DataModelType get type;
@@ -18,10 +19,12 @@ abstract class DataRepository<D extends DataModel, R extends DataModel> {
   FutureOr<dynamic> create(D entity);
 
   FutureOr<dynamic> update(D entity);
+
+  FutureOr<dynamic> delete(D entity);
 }
 
-abstract class RemoteRepository<D extends DataModel, R extends DataModel>
-    extends DataRepository<D, R> {
+abstract class RemoteRepository<D extends EntityModel,
+    R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
   final String entityName;
 
@@ -32,6 +35,12 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   String get updatePath => actionMap[ApiOperation.update] ?? '';
 
   String get searchPath => actionMap[ApiOperation.search] ?? '';
+
+  String get bulkCreatePath => actionMap[ApiOperation.bulkCreate] ?? '';
+
+  String get bulkUpdatePath => actionMap[ApiOperation.bulkUpdate] ?? '';
+
+  String get bulkDeletePath => actionMap[ApiOperation.bulkDelete] ?? '';
 
   RemoteRepository(
     this.dio, {
@@ -88,6 +97,38 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   }
 
   @override
+  FutureOr<Response> delete(D entity) async {
+    return await dio.post(
+      createPath,
+      data: {
+        entityName: [entity.toMap()],
+        "apiOperation": "DELETE",
+      },
+    );
+  }
+
+  FutureOr<Response> bulkCreate(List<D> entities) async {
+    return await dio.post(bulkCreatePath, data: {
+      entityName: entities,
+      "apiOperation": "CREATE",
+    });
+  }
+
+  FutureOr<Response> bulkUpdate(List<D> entities) async {
+    return await dio.post(bulkUpdatePath, data: {
+      entityName: entities,
+      "apiOperation": "UPDATE",
+    });
+  }
+
+  FutureOr<Response> bulkDelete(List<D> entities) async {
+    return await dio.post(bulkDeletePath, data: {
+      entityName: entities,
+      "apiOperation": "DELETE",
+    });
+  }
+
+  @override
   FutureOr<Response> update(D entity) async {
     return await dio.post(
       updatePath,
@@ -99,8 +140,8 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   }
 }
 
-abstract class LocalRepository<D extends DataModel, R extends DataModel>
-    extends DataRepository<D, R> {
+abstract class LocalRepository<D extends EntityModel,
+    R extends EntitySearchModel> extends DataRepository<D, R> {
   final LocalSqlDataStore sql;
   final OpLogManager opLogManager;
 
@@ -109,18 +150,24 @@ abstract class LocalRepository<D extends DataModel, R extends DataModel>
   @override
   @mustCallSuper
   FutureOr<void> create(D entity) async {
-    await createOplogEntry(entity, ApiOperation.create);
+    await createOplogEntry(entity, DataOperation.create);
   }
 
   @override
   @mustCallSuper
   FutureOr<void> update(D entity) async {
-    await createOplogEntry(entity, ApiOperation.update);
+    await createOplogEntry(entity, DataOperation.update);
+  }
+
+  @override
+  @mustCallSuper
+  FutureOr<void> delete(D entity) async {
+    await createOplogEntry(entity, DataOperation.delete);
   }
 
   FutureOr<void> createOplogEntry(
     D entity,
-    ApiOperation operation,
+    DataOperation operation,
   ) =>
       opLogManager.createEntry(
         OpLogEntry(

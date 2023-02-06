@@ -35,7 +35,7 @@ class NoSqlStore {
 }
 
 @Collection()
-class OpLog<T extends DataModel> {
+class OpLog<T extends EntityModel> {
   Id id = Isar.autoIncrement;
   late String entityString;
 
@@ -49,7 +49,7 @@ class OpLog<T extends DataModel> {
   late DataModelType entityType;
 
   @Enumerated(EnumType.name)
-  late ApiOperation operation;
+  late DataOperation operation;
 
   late DateTime createdOn;
 

@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import '../../../models/data_model.dart';
 import '../../local_store/no_sql/no_sql_store.dart';
 
-abstract class OpLogManager<T extends DataModel> {
+abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;
 
   const OpLogManager(this.isar);

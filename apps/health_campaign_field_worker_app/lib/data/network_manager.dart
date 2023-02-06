@@ -20,7 +20,7 @@ class NetworkManager {
   });
 
   Future<DataRepository<D, R>>
-      repository<D extends DataModel, R extends DataModel>(
+      repository<D extends EntityModel, R extends EntitySearchModel>(
     BuildContext context,
   ) async {
     switch (configuration.persistenceConfig) {
@@ -44,17 +44,35 @@ class NetworkManager {
     final pendingSyncEntries = futures.expand((e) => e).toList();
     pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
-    for (final element in pendingSyncEntries) {
-      final remote = _getRemoteForType(element.type);
+    final groupedEntries = pendingSyncEntries.groupListsBy(
+      (element) => element.type,
+    );
 
-      if (element.operation == ApiOperation.create) {
-        await remote.create(element.entity);
-      } else if (element.operation == ApiOperation.create) {
-        await remote.update(element.entity);
+    for (final typeGroupedEntity in groupedEntries.entries) {
+      final groupedOperations = typeGroupedEntity.value.groupListsBy(
+        (element) => element.operation,
+      );
+
+      final remote = _getRemoteForType(typeGroupedEntity.key);
+      final local = _getLocalForType(typeGroupedEntity.key);
+
+      for (final operationGroupedEntity in groupedOperations.entries) {
+        final entities = operationGroupedEntity.value.map((e) {
+          return e.entity;
+        }).toList();
+
+        if (operationGroupedEntity.key == DataOperation.create) {
+          await remote.bulkCreate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.update) {
+          await remote.bulkUpdate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.delete) {
+          await remote.bulkDelete(entities);
+        }
+
+        for (final syncedEntity in operationGroupedEntity.value) {
+          local.markSynced(syncedEntity.copyWith(isSynced: true));
+        }
       }
-
-      final local = _getLocalForType(element.type);
-      await local.markSynced(element.copyWith(isSynced: true));
     }
   }
 
