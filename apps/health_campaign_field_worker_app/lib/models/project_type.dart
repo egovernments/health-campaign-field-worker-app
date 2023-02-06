@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProjectTypeSearchModel extends DataModel {
+class ProjectTypeSearchModel extends EntitySearchModel {
   
   ProjectTypeSearchModel({
     super.boundaryCode,
@@ -12,7 +12,7 @@ class ProjectTypeSearchModel extends DataModel {
 }
 
 @MappableClass()
-class ProjectTypeModel extends DataModel implements ProjectTypeSearchModel {
+class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   final String? id;
   final String tenantId;
   final String name;

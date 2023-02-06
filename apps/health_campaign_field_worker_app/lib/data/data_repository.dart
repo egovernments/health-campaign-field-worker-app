@@ -25,15 +25,17 @@ abstract class RemoteRepository<D extends DataModel, R extends DataModel>
   final Dio dio;
   final String entityName;
 
-  final String createPath;
-  final String updatePath;
-  final String searchPath;
+  final Map<ApiOperation, String> actionMap;
+
+  String get createPath => actionMap[ApiOperation.create] ?? '';
+
+  String get updatePath => actionMap[ApiOperation.update] ?? '';
+
+  String get searchPath => actionMap[ApiOperation.search] ?? '';
 
   RemoteRepository(
     this.dio, {
-    required this.createPath,
-    required this.updatePath,
-    required this.searchPath,
+    required this.actionMap,
     required this.entityName,
   });
 

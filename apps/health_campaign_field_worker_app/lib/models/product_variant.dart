@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProductVariantSearchModel extends DataModel {
+class ProductVariantSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
   final String? productId;
@@ -22,7 +22,7 @@ class ProductVariantSearchModel extends DataModel {
 }
 
 @MappableClass()
-class ProductVariantModel extends DataModel implements ProductVariantSearchModel {
+class ProductVariantModel extends EntityModel implements ProductVariantSearchModel {
   
   @override
   final String? id;

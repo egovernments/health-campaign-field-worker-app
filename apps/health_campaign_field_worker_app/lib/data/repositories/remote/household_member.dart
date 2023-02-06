@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class HouseholdMemberRemoteRepository extends RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
   HouseholdMemberRemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = 'HouseholdMember',
   });
 

@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class ProductRemoteRepository extends RemoteRepository<ProductModel, ProductSearchModel> {
   ProductRemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = 'Product',
   });
 

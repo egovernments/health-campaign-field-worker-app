@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 {{^isEnum}}import 'data_model.dart';
 
 @MappableClass()
-class {{name.pascalCase()}}SearchModel extends DataModel {
+class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
   {{#attributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
@@ -24,7 +24,7 @@ class {{name.pascalCase()}}SearchModel extends DataModel {
 }
 
 @MappableClass()
-class {{name.pascalCase()}}Model extends DataModel implements {{name.pascalCase()}}SearchModel {
+class {{name.pascalCase()}}Model extends EntityModel implements {{name.pascalCase()}}SearchModel {
   {{#attributes}}{{#includeForQuery}}
   @override
   {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};

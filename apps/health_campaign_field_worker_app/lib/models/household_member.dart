@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class HouseholdMemberSearchModel extends DataModel {
+class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? id;
   final String? householdId;
   final String? householdClientReferenceId;
@@ -26,7 +26,7 @@ class HouseholdMemberSearchModel extends DataModel {
 }
 
 @MappableClass()
-class HouseholdMemberModel extends DataModel implements HouseholdMemberSearchModel {
+class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchModel {
   
   @override
   final String? id;

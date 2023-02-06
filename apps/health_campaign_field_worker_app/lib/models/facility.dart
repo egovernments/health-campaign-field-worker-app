@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class FacilitySearchModel extends DataModel {
+class FacilitySearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
   final bool? isPermanent;
@@ -22,7 +22,7 @@ class FacilitySearchModel extends DataModel {
 }
 
 @MappableClass()
-class FacilityModel extends DataModel implements FacilitySearchModel {
+class FacilityModel extends EntityModel implements FacilitySearchModel {
   
   @override
   final String? id;

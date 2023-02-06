@@ -4,7 +4,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class BoundarySearchModel extends DataModel {
+class BoundarySearchModel extends EntitySearchModel {
   
   BoundarySearchModel({
     super.boundaryCode,
@@ -12,7 +12,7 @@ class BoundarySearchModel extends DataModel {
 }
 
 @MappableClass()
-class BoundaryModel extends DataModel implements BoundarySearchModel {
+class BoundaryModel extends EntityModel implements BoundarySearchModel {
   final String code;
   final String name;
   final String? label;

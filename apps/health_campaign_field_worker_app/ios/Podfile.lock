@@ -2,6 +2,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
   - isar_flutter_libs (1.0.0):
     - Flutter
   - location (0.0.1):
@@ -24,10 +27,12 @@ PODS:
     - sqlite3/fts5
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
+  - Toast (4.0.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
@@ -36,12 +41,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - sqlite3
+    - Toast
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   isar_flutter_libs:
     :path: ".symlinks/plugins/isar_flutter_libs/ios"
   location:
@@ -54,11 +62,13 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
+  fluttertoast: eb263d302cc92e04176c053d2385237e9f43fad0
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   path_provider_foundation: 37748e03f12783f9de2cb2c4eadfaa25fe6d4852
   sqlite3: 88dd99ef4ac3945f5a15facdd752933c52fd93bf
   sqlite3_flutter_libs: c00751e981228acb63595236703da79d31282b63
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
 

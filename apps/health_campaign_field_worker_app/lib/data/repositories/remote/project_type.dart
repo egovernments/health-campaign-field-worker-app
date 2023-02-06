@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class ProjectTypeRemoteRepository extends RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel> {
   ProjectTypeRemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = 'ProjectType',
   });
 

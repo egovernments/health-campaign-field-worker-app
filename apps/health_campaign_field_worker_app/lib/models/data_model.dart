@@ -31,15 +31,22 @@ export 'task_resource.dart';
 
 @MappableClass()
 abstract class DataModel {
-  final AuditDetails? auditDetails;
-  final bool isDeleted;
   final String? boundaryCode;
 
-  const DataModel({
-    this.auditDetails,
-    this.isDeleted = false,
-    this.boundaryCode,
-  });
+  const DataModel({this.boundaryCode});
+}
+
+@MappableClass()
+abstract class EntityModel extends DataModel {
+  final AuditDetails? auditDetails;
+  final bool isDeleted;
+
+  const EntityModel({this.auditDetails, this.isDeleted = false});
+}
+
+@MappableClass()
+abstract class EntitySearchModel extends DataModel {
+  const EntitySearchModel({super.boundaryCode});
 }
 
 @MappableClass()
