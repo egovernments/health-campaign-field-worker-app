@@ -32,6 +32,17 @@ class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
           GenderOptions()
             ..name = 'OTHER'
             ..code = 'OTHER',
+        ]
+        ..idTypeOptions = [
+          IdTypeOptions()
+            ..code = 'DEFAULT'
+            ..name = 'DEFAULT',
+          IdTypeOptions()
+            ..code = 'AADHAR'
+            ..name = 'AADHAR',
+          IdTypeOptions()
+            ..code = 'PAN'
+            ..name = 'PAN',
         ],
     );
   }
@@ -64,6 +75,17 @@ void main() {
                     GenderOptions()
                       ..name = 'OTHER'
                       ..code = 'OTHER',
+                  ]
+                  ..idTypeOptions = [
+                    IdTypeOptions()
+                      ..code = 'DEFAULT'
+                      ..name = 'DEFAULT',
+                    IdTypeOptions()
+                      ..code = 'AADHAR'
+                      ..name = 'AADHAR',
+                    IdTypeOptions()
+                      ..code = 'PAN'
+                      ..name = 'PAN',
                   ],
               ));
 
@@ -85,6 +107,9 @@ void main() {
         'MALE',
         'FEMALE',
         'OTHER',
+        'DEFAULT',
+        'AADHAR',
+        'PAN',
       ]) {
         when(() => mockLocalization.translate(element)).thenReturn(element);
       }
@@ -151,7 +176,7 @@ void main() {
 
         expect(
           find.widgetWithText(
-            DigitTextFormField,
+            DigitDropdown,
             i18.individualDetails.idTypeLabelText,
           ),
           findsOneWidget,

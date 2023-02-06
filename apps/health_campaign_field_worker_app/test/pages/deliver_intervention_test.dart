@@ -17,7 +17,18 @@ class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
   @override
   Stream<AppInitializationState> get stream async* {
     yield AppInitialized(
-      appConfiguration: AppConfiguration(),
+      appConfiguration: AppConfiguration()
+        ..deliveryCommentOptions = [
+          DeliveryCommentOptions()
+            ..code = 'INSUFFICIENT_RESOURCES'
+            ..name = 'INSUFFICIENT_RESOURCES',
+          DeliveryCommentOptions()
+            ..code = 'BENEFICIARY_REFUSED'
+            ..name = 'BENEFICIARY_REFUSED',
+          DeliveryCommentOptions()
+            ..code = 'BENEFICIARY_ABSENT'
+            ..name = 'BENEFICIARY_ABSENT',
+        ],
     );
   }
 }
@@ -38,7 +49,18 @@ void main() {
     setUpAll(() {
       when(() => appInitializationBloc.state)
           .thenAnswer((invocation) => AppInitialized(
-                appConfiguration: AppConfiguration(),
+                appConfiguration: AppConfiguration()
+                  ..deliveryCommentOptions = [
+                    DeliveryCommentOptions()
+                      ..code = 'INSUFFICIENT_RESOURCES'
+                      ..name = 'INSUFFICIENT_RESOURCES',
+                    DeliveryCommentOptions()
+                      ..code = 'BENEFICIARY_REFUSED'
+                      ..name = 'BENEFICIARY_REFUSED',
+                    DeliveryCommentOptions()
+                      ..code = 'BENEFICIARY_ABSENT'
+                      ..name = 'BENEFICIARY_ABSENT',
+                  ],
               ));
 
       for (final element in [
@@ -59,6 +81,9 @@ void main() {
         i18.common.coreCommonCancel,
         i18.common.coreCommonSubmit,
         i18.householdOverView.householdOverViewHouseholdHeadLabel,
+        'INSUFFICIENT_RESOURCES',
+        'BENEFICIARY_REFUSED',
+        'BENEFICIARY_ABSENT',
       ]) {
         when(() => mockLocalization.translate(element)).thenReturn(element);
       }
