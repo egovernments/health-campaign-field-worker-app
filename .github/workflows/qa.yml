@@ -2,7 +2,6 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-# lE6Qqe3Cv4nKPUVl2ZtiQpdulhQ5tZShQi3ia3rKB9
 
 name: Dart
 
@@ -23,6 +22,12 @@ jobs:
       
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
+
+      - uses: rnkdsh/action-upload-diawi@v1.3.1
+        with:
+          token: lE6Qqe3Cv4nKPUVl2ZtiQpdulhQ5tZShQi3ia3rKB9
+          file: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
+          recipients: ajil.oommen@egovernments.org
         
       - name: Install melos
         run: dart pub global activate melos
@@ -34,4 +39,4 @@ jobs:
         run: melos run all-test
         
       - name: Build field-worker-app Android
-        run: cd apps/health_campaign_field_worker_app && flutter build apk
+        run: cd apps/health_campaign_field_worker_app && flutter build apk --release
