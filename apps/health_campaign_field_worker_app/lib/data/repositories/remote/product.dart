@@ -3,10 +3,15 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ProductRepository extends RemoteRepository<ProductModel, ProductSearchModel> {
-  ProductRepository(
+class ProductRemoteRepository extends RemoteRepository<ProductModel, ProductSearchModel> {
+  ProductRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.searchPath,
+    required super.createPath,
+    required super.updatePath,
     super.entityName = 'Product',
   });
+
+  @override
+  DataModelType get type => DataModelType.product;
 }

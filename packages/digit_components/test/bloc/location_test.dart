@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:digit_components/blocs/location/location.dart';
-import 'package:location_platform_interface/location_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:location/location.dart';
+import 'package:location_platform_interface/location_platform_interface.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockLocationPlatform extends Mock
     with MockPlatformInterfaceMixin
@@ -87,8 +87,8 @@ void main() {
         true,
       ),
       isA<LocationState>()
-        ..having((state) => state.latitude, 'will fetch mocked lat', mockLat)
-        ..having((state) => state.longitude, 'will fetch mocked lng', mockLng),
+          .having((state) => state.latitude, 'will fetch mocked lat', mockLat)
+          .having((state) => state.longitude, 'will fetch mocked lng', mockLng),
       isA<LocationState>().having(
         (state) => state.loading,
         'will enter loading state',

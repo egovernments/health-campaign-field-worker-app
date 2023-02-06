@@ -51,6 +51,8 @@ class OpLog<T extends DataModel> {
   @Enumerated(EnumType.name)
   late ApiOperation operation;
 
+  late DateTime createdOn;
+
   DateTime? syncedOn;
 
   late bool isSynced;

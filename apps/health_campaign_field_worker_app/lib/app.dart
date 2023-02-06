@@ -10,11 +10,14 @@ import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/table_hide_action.dart';
+import 'data/local_store/sql_store/sql_store.dart';
+import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
+import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
   final Dio client;
@@ -93,34 +96,41 @@ class MainApplication extends StatelessWidget {
                               LocalizationRepository(client, isar),
                               isar,
                             ),
-                child: MaterialApp.router(
-                  supportedLocales: languages != null
-                      ? languages.map((e) {
-                          final results = e.value.split('_');
+                child: NetworkManagerProviderWrapper(
+                  configuration: NetworkManagerConfiguration(
+                    persistenceConfig: PersistenceConfiguration.offlineFirst,
+                  ),
+                  dio: client,
+                  sql: LocalSqlDataStore(),
+                  child: MaterialApp.router(
+                    supportedLocales: languages != null
+                        ? languages.map((e) {
+                            final results = e.value.split('_');
 
-                          return results.isNotEmpty
-                              ? Locale(results.first, results.last)
-                              : defaultLocale;
-                        })
-                      : [defaultLocale],
-                  localizationsDelegates: [
-                    AppLocalizations.getDelegate(appConfig, isar),
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                  ],
-                  theme: DigitTheme.instance.mobileTheme,
-                  routeInformationParser: appRouter.defaultRouteParser(),
-                  scaffoldMessengerKey: scaffoldMessengerKey,
-                  routerDelegate: AutoRouterDelegate.declarative(
-                    appRouter,
-                    navigatorObservers: () => [AppRouterObserver()],
-                    routes: (handler) => [
-                      if (authState.isAuthenticated)
-                        const AuthenticatedRouteWrapper()
-                      else
-                        const UnauthenticatedRouteWrapper(),
+                            return results.isNotEmpty
+                                ? Locale(results.first, results.last)
+                                : defaultLocale;
+                          })
+                        : [defaultLocale],
+                    localizationsDelegates: [
+                      AppLocalizations.getDelegate(appConfig, isar),
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
                     ],
+                    theme: DigitTheme.instance.mobileTheme,
+                    routeInformationParser: appRouter.defaultRouteParser(),
+                    scaffoldMessengerKey: scaffoldMessengerKey,
+                    routerDelegate: AutoRouterDelegate.declarative(
+                      appRouter,
+                      navigatorObservers: () => [AppRouterObserver()],
+                      routes: (handler) => [
+                        if (authState.isAuthenticated)
+                          const AuthenticatedRouteWrapper()
+                        else
+                          const UnauthenticatedRouteWrapper(),
+                      ],
+                    ),
                   ),
                 ),
               );
