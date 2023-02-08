@@ -58,10 +58,9 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final local = _getLocalRepositories(sql, isar);
 
         return MultiRepositoryProvider(
-          providers: [
-            ...local.map((e) => RepositoryProvider.value(value: e)),
-            ...remote.map((e) => RepositoryProvider.value(value: e)),
-          ],
+          providers: [...local, ...remote]
+              .map((e) => RepositoryProvider.value(value: e))
+              .toList(),
           child: Provider(
             create: (ctx) => NetworkManager(
               configuration: configuration,
