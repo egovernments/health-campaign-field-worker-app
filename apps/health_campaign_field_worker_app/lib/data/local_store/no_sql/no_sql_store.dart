@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:isar/isar.dart';
 
-import '../../../models/data_model.dart';
-
-part 'no_sql_store.g.dart';
+import 'schema/oplog.dart';
 
 /// Exposes an instance of [isar] object that can be used to access the system's
 /// NoSQL data store
@@ -32,30 +30,6 @@ class NoSqlStore {
     final isar = await Isar.open([OpLogSchema]);
     _isar = isar;
   }
-}
-
-@Collection()
-class OpLog<T extends EntityModel> {
-  Id id = Isar.autoIncrement;
-  late String entityString;
-
-  @ignore
-  T get entity => Mapper.fromJson<T>(entityString);
-  set entity(T entity) {
-    entityString = entity.toJson();
-  }
-
-  @Enumerated(EnumType.name)
-  late DataModelType entityType;
-
-  @Enumerated(EnumType.name)
-  late DataOperation operation;
-
-  late DateTime createdOn;
-
-  DateTime? syncedOn;
-
-  late bool isSynced;
 }
 
 class StoreNotInitializedException implements Exception {}
