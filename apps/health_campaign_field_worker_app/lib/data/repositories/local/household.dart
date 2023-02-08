@@ -1,9 +1,9 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
-import 'dart:async';
-
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 import '../../local_store/sql_store/sql_store.dart';
@@ -152,14 +152,14 @@ class HouseholdLocalRepository
     return AddressCompanion.insert(
       tenantId: e.tenantId,
       clientReferenceId: e.clientReferenceId,
-      doorNo: e.doorNo,
-      latitude: e.latitude,
-      longitude: e.longitude,
-      locationAccuracy: e.locationAccuracy,
-      addressLine1: e.addressLine1,
-      addressLine2: e.addressLine2,
-      city: e.city,
-      pincode: e.pincode,
+      doorNo: Value(e.doorNo),
+      latitude: Value(e.latitude),
+      longitude: Value(e.longitude),
+      locationAccuracy: Value(e.locationAccuracy),
+      addressLine1: Value(e.addressLine1),
+      addressLine2: Value(e.addressLine2),
+      city: Value(e.city),
+      pincode: Value(e.pincode),
       type: e.type,
       locality: e.locality.clientReferenceId,
       id: Value(e.id),

@@ -1,7 +1,11 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -18,6 +22,9 @@ class HouseHoldDetailsPage extends LocalizedStatefulWidget {
 }
 
 class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
+  static const _dateOfRegistrationKey = 'dateOfRegistration';
+  static const _memberCountKey = 'memberCount';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -35,12 +42,31 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
               child: DigitCard(
                 child: DigitElevatedButton(
                   onPressed: () {
-                    if (form.valid) {
-                      // TODO: Complete implementation
-                      context.router.push(IndividualDetailsRoute());
-                    } else {
-                      form.markAllAsTouched();
-                    }
+                    if (!form.valid) return;
+
+                    final bloc = context.read<BeneficiaryRegistrationBloc>();
+                    final address = bloc.state.addressModel;
+
+                    if (address == null) return;
+
+                    final dateOfRegistration =
+                        form.control(_dateOfRegistrationKey).value as DateTime;
+                    final memberCount =
+                        form.control(_memberCountKey).value as int;
+
+                    final model = HouseholdModel(
+                      tenantId: 'default',
+                      clientReferenceId: Uuid().v1(),
+                      memberCount: memberCount,
+                      rowVersion: 1,
+                      address: address,
+                    );
+
+                    bloc.add(BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                      model,
+                    ));
+
+                    context.router.push(IndividualDetailsRoute());
                   },
                   child: Center(
                     child: Text(localizations
@@ -64,7 +90,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     Column(children: [
                       DigitDateFormPicker(
                         isEnabled: false,
-                        formControlName: 'dateOfRegistration',
+                        formControlName: _dateOfRegistrationKey,
                         label: localizations.translate(
                           i18.householdDetails.dateOfRegistrationLabel,
                         ),
@@ -73,7 +99,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       DigitIntegerFormPicker(
                         minimum: 0,
                         form: form,
-                        formControlName: 'memberCount',
+                        formControlName: _memberCountKey,
                         label: localizations.translate(
                           i18.householdDetails.noOfMembersCountLabel,
                         ),
@@ -92,7 +118,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        'dateOfRegistration': FormControl<DateTime>(value: DateTime.now()),
-        'memberCount': FormControl<int>(value: 1),
+        _dateOfRegistrationKey: FormControl<DateTime>(value: DateTime.now()),
+        _memberCountKey: FormControl<int>(value: 1),
       });
 }

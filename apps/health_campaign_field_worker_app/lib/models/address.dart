@@ -16,15 +16,15 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   final String? id;
   final String tenantId;
   final String clientReferenceId;
-  final String doorNo;
-  final double latitude;
-  final double longitude;
-  final double locationAccuracy;
-  final String addressLine1;
-  final String addressLine2;
+  final String? doorNo;
+  final double? latitude;
+  final double? longitude;
+  final double? locationAccuracy;
+  final String? addressLine1;
+  final String? addressLine2;
   final String? landmark;
-  final String city;
-  final String pincode;
+  final String? city;
+  final String? pincode;
   final String? buildingName;
   final String? street;
   final BoundaryModel locality;
@@ -35,15 +35,15 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     this.id,
     required this.tenantId,
     required this.clientReferenceId,
-    required this.doorNo,
-    required this.latitude,
-    required this.longitude,
-    required this.locationAccuracy,
-    required this.addressLine1,
-    required this.addressLine2,
+    this.doorNo,
+    this.latitude,
+    this.longitude,
+    this.locationAccuracy,
+    this.addressLine1,
+    this.addressLine2,
     this.landmark,
-    required this.city,
-    required this.pincode,
+    this.city,
+    this.pincode,
     this.buildingName,
     this.street,
     required this.locality,
