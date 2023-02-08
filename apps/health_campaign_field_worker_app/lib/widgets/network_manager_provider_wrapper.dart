@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -31,12 +32,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
   final Dio dio;
   final Widget child;
+  final Isar isar;
 
   final NetworkManagerConfiguration configuration;
 
   const NetworkManagerProviderWrapper({
     super.key,
     required this.configuration,
+    required this.isar,
     required this.dio,
     required this.sql,
     required this.child,
@@ -51,33 +54,45 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           return const Offstage();
         }
 
-        final remotes = _getRemoteRepositories(dio, actionMap);
+        final remote = _getRemoteRepositories(dio, actionMap);
+        final local = _getLocalRepositories(sql, isar);
 
-        return Provider(
-          create: (ctx) => NetworkManager(
-            configuration: configuration,
-            localRepositories: [
-              IndividualLocalRepository(
-                sql,
-                ctx.read<OpLogManager<IndividualModel>>(),
-              ),
-              HouseholdLocalRepository(
-                sql,
-                ctx.read<OpLogManager<HouseholdModel>>(),
-              ),
-              HouseholdMemberLocalRepository(
-                sql,
-                ctx.read<OpLogManager<HouseholdMemberModel>>(),
-              ),
-            ],
-            remoteRepositories: [
-              ...remotes,
-            ],
+        return MultiRepositoryProvider(
+          providers: [
+            ...local.map((e) => RepositoryProvider.value(value: e)),
+            ...remote.map((e) => RepositoryProvider.value(value: e)),
+          ],
+          child: Provider(
+            create: (ctx) => NetworkManager(
+              configuration: configuration,
+              localRepositories: local,
+              remoteRepositories: remote,
+            ),
+            child: child,
           ),
-          child: child,
         );
       },
     );
+  }
+
+  List<LocalRepository> _getLocalRepositories(
+    LocalSqlDataStore sql,
+    Isar isar,
+  ) {
+    return [
+      IndividualLocalRepository(
+        sql,
+        OpLogManager<IndividualModel>(isar),
+      ),
+      HouseholdMemberLocalRepository(
+        sql,
+        OpLogManager<HouseholdMemberModel>(isar),
+      ),
+      HouseholdLocalRepository(
+        sql,
+        OpLogManager<HouseholdModel>(isar),
+      ),
+    ];
   }
 
   List<RemoteRepository> _getRemoteRepositories(
