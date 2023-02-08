@@ -9,6 +9,7 @@ import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/no_sql/schema/service_registry.dart';
+import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -18,12 +19,13 @@ void main() async {
   await envConfig.initialize();
   DigitUi.instance.initThemeComponents();
 
-  Isar isar = await Isar.open([
+  final isar = await Isar.open([
     ServiceRegistrySchema,
     LocalizationWrapperSchema,
     AppConfigurationSchema,
   ]);
 
+  final sql = LocalSqlDataStore();
   Dio client = Client().init();
 
   runApp(
@@ -31,6 +33,7 @@ void main() async {
       appRouter: AppRouter(),
       isar: isar,
       client: client,
+      sql: sql,
     ),
   );
 }

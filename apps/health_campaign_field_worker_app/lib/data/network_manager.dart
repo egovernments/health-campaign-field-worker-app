@@ -8,16 +8,9 @@ import 'data_repository.dart';
 // TODO(ajil-egov): Needs to be updated to bulk-api
 
 class NetworkManager {
-  final List<LocalRepository> localRepositories;
-  final List<RemoteRepository> remoteRepositories;
-
   final NetworkManagerConfiguration configuration;
 
-  const NetworkManager({
-    required this.configuration,
-    this.localRepositories = const [],
-    this.remoteRepositories = const [],
-  });
+  const NetworkManager({required this.configuration});
 
   DataRepository<D, R>
       repository<D extends EntityModel, R extends EntitySearchModel>(
@@ -31,7 +24,10 @@ class NetworkManager {
     }
   }
 
-  Future<void> syncUp() async {
+  Future<void> syncUp({
+    required List<LocalRepository> localRepositories,
+    required List<RemoteRepository> remoteRepositories,
+  }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
@@ -53,8 +49,15 @@ class NetworkManager {
         (element) => element.operation,
       );
 
-      final remote = _getRemoteForType(typeGroupedEntity.key);
-      final local = _getLocalForType(typeGroupedEntity.key);
+      final remote = _getRemoteForType(
+        typeGroupedEntity.key,
+        remoteRepositories,
+      );
+
+      final local = _getLocalForType(
+        typeGroupedEntity.key,
+        localRepositories,
+      );
 
       for (final operationGroupedEntity in groupedOperations.entries) {
         final entities = operationGroupedEntity.value.map((e) {
@@ -85,7 +88,10 @@ class NetworkManager {
     // TODO(naveen): Complete implementation for sync down operation
   }
 
-  RemoteRepository _getRemoteForType(DataModelType type) {
+  RemoteRepository _getRemoteForType(
+    DataModelType type,
+    List<RemoteRepository> remoteRepositories,
+  ) {
     final repository = remoteRepositories.firstWhereOrNull(
       (e) => e.type == type,
     );
@@ -99,7 +105,10 @@ class NetworkManager {
     return repository;
   }
 
-  LocalRepository _getLocalForType(DataModelType type) {
+  LocalRepository _getLocalForType(
+    DataModelType type,
+    List<LocalRepository> localRepositories,
+  ) {
     final repository = localRepositories.firstWhereOrNull(
       (e) => e.type == type,
     );

@@ -32,13 +32,13 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
   final String? id;
   
   @override
-  final String householdId;
+  final String? householdId;
   
   @override
   final String householdClientReferenceId;
   
   @override
-  final String individualId;
+  final String? individualId;
   
   @override
   final String individualClientReferenceId;
@@ -54,9 +54,9 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
 
   HouseholdMemberModel({
     this.id,
-    required this.householdId,
+    this.householdId,
     required this.householdClientReferenceId,
-    required this.individualId,
+    this.individualId,
     required this.individualClientReferenceId,
     required this.isHeadOfHousehold,
     required this.tenantId,

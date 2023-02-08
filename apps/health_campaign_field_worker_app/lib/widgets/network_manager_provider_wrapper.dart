@@ -58,15 +58,9 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final local = _getLocalRepositories(sql, isar);
 
         return MultiRepositoryProvider(
-          providers: [...local, ...remote]
-              .map((e) => RepositoryProvider.value(value: e))
-              .toList(),
+          providers: [...local, ...remote],
           child: Provider(
-            create: (ctx) => NetworkManager(
-              configuration: configuration,
-              localRepositories: local,
-              remoteRepositories: remote,
-            ),
+            create: (ctx) => NetworkManager(configuration: configuration),
             child: child,
           ),
         );
@@ -74,31 +68,39 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
     );
   }
 
-  List<LocalRepository> _getLocalRepositories(
+  List<RepositoryProvider> _getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
   ) {
     return [
-      IndividualLocalRepository(
-        sql,
-        OpLogManager<IndividualModel>(isar),
+      RepositoryProvider<
+          LocalRepository<IndividualModel, IndividualSearchModel>>(
+        create: (_) => IndividualLocalRepository(
+          sql,
+          OpLogManager<IndividualModel>(isar),
+        ),
       ),
-      HouseholdMemberLocalRepository(
-        sql,
-        OpLogManager<HouseholdMemberModel>(isar),
+      RepositoryProvider<
+          LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
+        create: (_) => HouseholdMemberLocalRepository(
+          sql,
+          OpLogManager<HouseholdMemberModel>(isar),
+        ),
       ),
-      HouseholdLocalRepository(
-        sql,
-        OpLogManager<HouseholdModel>(isar),
+      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
+        create: (_) => HouseholdLocalRepository(
+          sql,
+          OpLogManager<HouseholdModel>(isar),
+        ),
       ),
     ];
   }
 
-  List<RemoteRepository> _getRemoteRepositories(
+  List<RepositoryProvider> _getRemoteRepositories(
     Dio dio,
     Map<DataModelType, Map<ApiOperation, String>> actionMap,
   ) {
-    final remoteRepositories = <RemoteRepository>[];
+    final remoteRepositories = <RepositoryProvider>[];
     for (final value in DataModelType.values) {
       if (!actionMap.containsKey(value)) {
         continue;
@@ -108,33 +110,107 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
 
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
-          FacilityRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<FacilityModel, FacilitySearchModel>>(
+            create: (_) => FacilityRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.household)
-          HouseholdRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
+            create: (_) => HouseholdRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.householdMember)
-          HouseholdMemberRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>(
+            create: (_) =>
+                HouseholdMemberRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.individual)
-          IndividualRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<IndividualModel, IndividualSearchModel>>(
+            create: (_) => IndividualRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.product)
-          ProductRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProductModel, ProductSearchModel>>(
+            create: (_) => ProductRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.productVariant)
-          ProductVariantRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(
+            create: (_) =>
+                ProductVariantRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.project)
-          ProjectRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectModel, ProjectSearchModel>>(
+            create: (_) => ProjectRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.projectBeneficiary)
-          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>(
+            create: (_) =>
+                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.projectFacility)
-          ProjectFacilityRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectFacilityModel,
+                  ProjectFacilitySearchModel>>(
+            create: (_) =>
+                ProjectFacilityRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.projectProductVariant)
-          ProjectProductVariantRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectProductVariantModel,
+                  ProjectProductVariantSearchModel>>(
+            create: (_) =>
+                ProjectProductVariantRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.projectStaff)
-          ProjectStaffRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
+            create: (_) =>
+                ProjectStaffRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.projectResource)
-          ProjectResourceRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectResourceModel,
+                  ProjectResourceSearchModel>>(
+            create: (_) =>
+                ProjectResourceRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.projectType)
-          ProjectTypeRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<
+              RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel>>(
+            create: (_) => ProjectTypeRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.task)
-          TaskRemoteRepository(dio, actionMap: actions),
+          RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
+            create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

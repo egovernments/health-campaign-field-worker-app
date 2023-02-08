@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -91,9 +93,9 @@ class HouseholdMemberLocalRepository
     HouseholdMemberModel e,
   ) {
     return HouseholdMemberCompanion.insert(
-      householdId: e.householdId,
+      householdId: Value(e.householdId),
       householdClientReferenceId: e.householdClientReferenceId,
-      individualId: e.individualId,
+      individualId: Value(e.individualId),
       individualClientReferenceId: e.individualClientReferenceId,
       isHeadOfHousehold: e.isHeadOfHousehold,
       tenantId: e.tenantId,

@@ -23,12 +23,14 @@ class MainApplication extends StatelessWidget {
   final Dio client;
   final AppRouter appRouter;
   final Isar isar;
+  final LocalSqlDataStore sql;
 
   const MainApplication({
     Key? key,
     required this.isar,
     required this.client,
     required this.appRouter,
+    required this.sql,
   }) : super(key: key);
 
   @override
@@ -102,7 +104,7 @@ class MainApplication extends StatelessWidget {
                     persistenceConfig: PersistenceConfiguration.offlineFirst,
                   ),
                   dio: client,
-                  sql: LocalSqlDataStore(),
+                  sql: sql,
                   child: MaterialApp.router(
                     supportedLocales: languages != null
                         ? languages.map((e) {
