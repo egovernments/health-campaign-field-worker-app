@@ -5,9 +5,9 @@ import 'package:drift/drift.dart';
 
 class HouseholdMember extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get householdId => text()();
+  TextColumn get householdId => text().nullable()();
   TextColumn get householdClientReferenceId => text()();
-  TextColumn get individualId => text()();
+  TextColumn get individualId => text().nullable()();
   TextColumn get individualClientReferenceId => text()();
   BoolColumn get isHeadOfHousehold => boolean()();
   TextColumn get tenantId => text()();
