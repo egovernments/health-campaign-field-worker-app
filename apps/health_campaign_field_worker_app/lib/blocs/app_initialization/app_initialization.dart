@@ -153,4 +153,15 @@ class AppInitializationState with _$AppInitializationState {
       }),
     );
   }
+
+  @override
+  String toString() {
+    return when<String>(
+      uninitialized: () => 'Uninitialized',
+      loading: () => 'Loading',
+      initialized: (appConfiguration, serviceRegistryList) =>
+          'tenantId: ${appConfiguration.tenantId}\n'
+          'serviceCount: ${serviceRegistryList.length}',
+    );
+  }
 }
