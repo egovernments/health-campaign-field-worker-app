@@ -17,27 +17,33 @@
     },
     {
       "name": "doorNo",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "latitude",
-      "type": "double"
+      "type": "double",
+      "nullable": true
     },
     {
       "name": "longitude",
-      "type": "double"
+      "type": "double",
+      "nullable": true
     },
     {
       "name": "locationAccuracy",
-      "type": "double"
+      "type": "double",
+      "nullable": true
     },
     {
       "name": "addressLine1",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "addressLine2",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "landmark",
@@ -46,11 +52,13 @@
     },
     {
       "name": "city",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "pincode",
-      "type": "String"
+      "type": "String",
+      "nullable": true
     },
     {
       "name": "buildingName",
