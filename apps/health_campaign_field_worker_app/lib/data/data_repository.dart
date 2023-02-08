@@ -143,7 +143,7 @@ abstract class RemoteRepository<D extends EntityModel,
 abstract class LocalRepository<D extends EntityModel,
     R extends EntitySearchModel> extends DataRepository<D, R> {
   final LocalSqlDataStore sql;
-  final OpLogManager opLogManager;
+  final OpLogManager<D> opLogManager;
 
   const LocalRepository(this.sql, this.opLogManager);
 
@@ -183,7 +183,7 @@ abstract class LocalRepository<D extends EntityModel,
     return opLogManager.getPendingSyncedEntries(type);
   }
 
-  FutureOr<void> markSynced(OpLogEntry entry) async {
+  FutureOr<void> markSynced(OpLogEntry<D> entry) async {
     return opLogManager.markSynced(entry);
   }
 }

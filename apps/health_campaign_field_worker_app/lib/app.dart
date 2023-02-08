@@ -97,6 +97,7 @@ class MainApplication extends StatelessWidget {
                               isar,
                             ),
                 child: NetworkManagerProviderWrapper(
+                  isar: isar,
                   configuration: const NetworkManagerConfiguration(
                     persistenceConfig: PersistenceConfiguration.offlineFirst,
                   ),
