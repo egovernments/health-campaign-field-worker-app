@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 {{^isEnum}}import 'data_model.dart';
 
 @MappableClass()
@@ -47,8 +49,15 @@ class {{name.pascalCase()}}Model extends EntityModel implements {{name.pascalCas
       {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
 
   @override
-  int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}} .millisecondsSinceEpoch;
+  int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}}.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
+
+  {{name.pascalCase()}}Companion get companion {
+    return {{name.pascalCase()}}Companion(
+      {{#sqlAttributes}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
+      {{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.clientReferenceId),
+    {{/references}}{{/referenceAttributes}});
+  }
 }
 {{/isEnum}}{{#isEnum}}
 @MappableEnum(caseStyle: CaseStyle.upperCase)

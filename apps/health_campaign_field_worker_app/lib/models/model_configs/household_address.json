@@ -1,12 +1,6 @@
 {
   "name": "HouseholdAddress",
-  "attributes": [
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true
-    }
-  ],
+  "attributes": [],
   "customAttributes": [
     {
       "name": "household",

@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -34,33 +36,46 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String projectId;
+  final String? projectId;
   
   @override
-  final String beneficiaryId;
-  final int rowVersion;
+  final String? beneficiaryId;
+  final int? rowVersion;
   final String clientReferenceId;
   
   @override
-  final DateTime dateOfRegistrationTime;
+  final DateTime? dateOfRegistrationTime;
   
 
   ProjectBeneficiaryModel({
     this.id,
-    required this.tenantId,
-    required this.projectId,
-    required this.beneficiaryId,
-    required this.rowVersion,
+    this.tenantId,
+    this.projectId,
+    this.beneficiaryId,
+    this.rowVersion,
     required this.clientReferenceId,
-    required int dateOfRegistration,
+    int? dateOfRegistration,
     super.auditDetails,
-  }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
+  }): dateOfRegistrationTime = dateOfRegistration == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
        super();
 
   @override
-  int  get dateOfRegistration => dateOfRegistrationTime .millisecondsSinceEpoch;
+  int?  get dateOfRegistration => dateOfRegistrationTime?.millisecondsSinceEpoch;
   
+
+  ProjectBeneficiaryCompanion get companion {
+    return ProjectBeneficiaryCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      projectId: Value(projectId),
+      beneficiaryId: Value(beneficiaryId),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

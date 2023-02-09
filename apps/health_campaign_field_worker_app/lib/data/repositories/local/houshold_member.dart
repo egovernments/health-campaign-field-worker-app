@@ -1,11 +1,8 @@
 import 'dart:async';
 
-import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
@@ -60,8 +57,7 @@ class HouseholdMemberLocalRepository
 
   @override
   FutureOr<void> create(HouseholdMemberModel entity) async {
-    final householdMemberCompanion = _getHouseholdMemberCompanion(entity);
-
+    final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {
       batch.insert(sql.householdMember, householdMemberCompanion);
     });
@@ -71,7 +67,7 @@ class HouseholdMemberLocalRepository
 
   @override
   FutureOr<void> update(HouseholdMemberModel entity) async {
-    final householdMemberCompanion = _getHouseholdMemberCompanion(entity);
+    final householdMemberCompanion = entity.companion;
 
     await sql.batch((batch) {
       batch.update(
@@ -88,19 +84,4 @@ class HouseholdMemberLocalRepository
 
   @override
   DataModelType get type => DataModelType.householdMember;
-
-  HouseholdMemberCompanion _getHouseholdMemberCompanion(
-    HouseholdMemberModel e,
-  ) {
-    return HouseholdMemberCompanion.insert(
-      householdId: Value(e.householdId),
-      householdClientReferenceId: e.householdClientReferenceId,
-      individualId: Value(e.individualId),
-      individualClientReferenceId: e.individualClientReferenceId,
-      isHeadOfHousehold: e.isHeadOfHousehold,
-      tenantId: e.tenantId,
-      rowVersion: e.rowVersion,
-      clientReferenceId: e.clientReferenceId,
-    );
-  }
 }

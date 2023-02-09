@@ -5,11 +5,11 @@ import 'package:drift/drift.dart';
 
 class Facility extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  BoolColumn get isPermanent => boolean()();
-  TextColumn get usage => text()();
-  IntColumn get storageCapacity => integer()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isPermanent => boolean().nullable()();
+  TextColumn get usage => text().nullable()();
+  IntColumn get storageCapacity => integer().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

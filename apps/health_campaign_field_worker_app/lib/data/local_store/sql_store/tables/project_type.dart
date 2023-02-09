@@ -5,13 +5,13 @@ import 'package:drift/drift.dart';
 
 class ProjectType extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get name => text()();
-  TextColumn get code => text()();
-  TextColumn get group => text()();
-  TextColumn get beneficiaryType => text()();
-  TextColumn get eligibilityCriteria => text()();
-  TextColumn get taskProcedure => text()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get name => text().nullable()();
+  TextColumn get code => text().nullable()();
+  TextColumn get group => text().nullable()();
+  TextColumn get beneficiaryType => text().nullable()();
+  TextColumn get eligibilityCriteria => text().nullable()();
+  TextColumn get taskProcedure => text().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

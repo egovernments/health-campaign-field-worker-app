@@ -155,7 +155,7 @@ class _HouseholdLocationPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _administrationAreaKey: FormControl<String>(
-          value: '',
+          value: 'Solimbo',
           validators: [Validators.required],
         ),
         _addressLine1Key: FormControl<String>(value: ''),

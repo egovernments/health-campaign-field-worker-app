@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -24,22 +26,32 @@ class ProjectResourceModel extends EntityModel implements ProjectResourceSearchM
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String projectId;
-  final int rowVersion;
+  final String? projectId;
+  final int? rowVersion;
   final String clientReferenceId;
-  final ProjectProductVariantModel resources;
+  final ProjectProductVariantModel? resources;
   
 
   ProjectResourceModel({
     this.id,
-    required this.tenantId,
-    required this.projectId,
-    required this.rowVersion,
+    this.tenantId,
+    this.projectId,
+    this.rowVersion,
     required this.clientReferenceId,
-    required this.resources,
+    this.resources,
     super.auditDetails,
   }):  super();
+
+  ProjectResourceCompanion get companion {
+    return ProjectResourceCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      projectId: Value(projectId),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

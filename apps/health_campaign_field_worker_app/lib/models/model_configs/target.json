@@ -3,8 +3,7 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "beneficiaryType",

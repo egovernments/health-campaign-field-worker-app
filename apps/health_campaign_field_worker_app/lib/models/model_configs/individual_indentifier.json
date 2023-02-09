@@ -1,12 +1,6 @@
 {
   "name": "IndividualIdentifier",
-  "attributes": [
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true
-    }
-  ],
+  "attributes": [],
   "customAttributes": [
     {
       "name": "individual",

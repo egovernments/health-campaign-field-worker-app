@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -26,24 +28,34 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String clientReferenceId;
+  final String? clientReferenceId;
   
   @override
-  final int memberCount;
-  final int rowVersion;
-  final AddressModel address;
+  final int? memberCount;
+  final int? rowVersion;
+  final AddressModel? address;
   
 
   HouseholdModel({
     this.id,
-    required this.tenantId,
-    required this.clientReferenceId,
-    required this.memberCount,
-    required this.rowVersion,
-    required this.address,
+    this.tenantId,
+    this.clientReferenceId,
+    this.memberCount,
+    this.rowVersion,
+    this.address,
     super.auditDetails,
   }):  super();
+
+  HouseholdCompanion get companion {
+    return HouseholdCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      clientReferenceId: Value(clientReferenceId),
+      memberCount: Value(memberCount),
+      rowVersion: Value(rowVersion),
+      );
+  }
 }

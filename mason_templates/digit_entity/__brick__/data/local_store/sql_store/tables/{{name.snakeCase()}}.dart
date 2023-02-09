@@ -6,7 +6,7 @@
 {{/isEnum}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}import '{{table.snakeCase()}}.dart';
 {{/references}}{{/referenceAttributes}}
 class {{name.pascalCase()}} extends Table {
-  {{#sqlAttributes}}{{^isEnum}}{{columnType.pascalCase()}}Column get {{name.camelCase()}} => {{type.camelCase()}}(){{#nullable}}.nullable(){{/nullable}}();{{/isEnum}}{{#isEnum}}IntColumn get {{name.camelCase()}} => intEnum<{{type.pascalCase()}}>()();{{/isEnum}}
+  {{#sqlAttributes}}{{^isEnum}}{{columnType.pascalCase()}}Column get {{name.camelCase()}} => {{type.camelCase()}}(){{#nullable}}.nullable(){{/nullable}}();{{/isEnum}}{{#isEnum}}IntColumn get {{name.camelCase()}} => intEnum<{{type.pascalCase()}}>(){{#nullable}}.nullable(){{/nullable}}();{{/isEnum}}
   {{/sqlAttributes}}{{#referenceAttributes}}
   {{#references}}TextColumn get {{name}} => text(){{#nullable}}.nullable(){{/nullable}}.references({{table.pascalCase()}}, #clientReferenceId)();{{/references}}{{/referenceAttributes}}
 

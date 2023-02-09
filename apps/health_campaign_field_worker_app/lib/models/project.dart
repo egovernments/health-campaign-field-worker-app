@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -50,68 +52,89 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String projectTypeId;
+  final String? projectTypeId;
   
   @override
-  final String subProjectTypeId;
+  final String? subProjectTypeId;
   
   @override
-  final bool isTaskEnabled;
+  final bool? isTaskEnabled;
   
   @override
   final String? parent;
   
   @override
-  final String department;
-  final String description;
+  final String? department;
+  final String? description;
   
   @override
-  final String referenceId;
-  final String projectHierarchy;
-  final int rowVersion;
+  final String? referenceId;
+  final String? projectHierarchy;
+  final int? rowVersion;
   final String clientReferenceId;
-  final AddressModel address;
-  final List<TargetModel> targets;
-  final List<DocumentModel> documents;
+  final AddressModel? address;
+  final List<TargetModel>? targets;
+  final List<DocumentModel>? documents;
   
   @override
-  final DateTime startDateTime;
+  final DateTime? startDateTime;
   
   @override
-  final DateTime endDateTime;
+  final DateTime? endDateTime;
   
 
   ProjectModel({
     this.id,
-    required this.tenantId,
-    required this.projectTypeId,
-    required this.subProjectTypeId,
-    required this.isTaskEnabled,
+    this.tenantId,
+    this.projectTypeId,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
     this.parent,
-    required this.department,
-    required this.description,
-    required this.referenceId,
-    required this.projectHierarchy,
-    required this.rowVersion,
+    this.department,
+    this.description,
+    this.referenceId,
+    this.projectHierarchy,
+    this.rowVersion,
     required this.clientReferenceId,
-    required this.address,
-    required this.targets,
-    required this.documents,
-    required int startDate,
-    required int endDate,
+    this.address,
+    this.targets,
+    this.documents,
+    int? startDate,
+    int? endDate,
     super.auditDetails,
-  }): startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate),
-      endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate),
+  }): startDateTime = startDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startDate),
+      endDateTime = endDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
   @override
-  int  get startDate => startDateTime .millisecondsSinceEpoch;
+  int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
   @override
-  int  get endDate => endDateTime .millisecondsSinceEpoch;
+  int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
+
+  ProjectCompanion get companion {
+    return ProjectCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      projectTypeId: Value(projectTypeId),
+      subProjectTypeId: Value(subProjectTypeId),
+      isTaskEnabled: Value(isTaskEnabled),
+      parent: Value(parent),
+      department: Value(department),
+      description: Value(description),
+      referenceId: Value(referenceId),
+      projectHierarchy: Value(projectHierarchy),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

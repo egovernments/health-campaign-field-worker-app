@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -35,33 +37,47 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
   final String? householdId;
   
   @override
-  final String householdClientReferenceId;
+  final String? householdClientReferenceId;
   
   @override
   final String? individualId;
   
   @override
-  final String individualClientReferenceId;
+  final String? individualClientReferenceId;
   
   @override
-  final bool isHeadOfHousehold;
+  final bool? isHeadOfHousehold;
   
   @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final int? rowVersion;
   final String clientReferenceId;
   
 
   HouseholdMemberModel({
     this.id,
     this.householdId,
-    required this.householdClientReferenceId,
+    this.householdClientReferenceId,
     this.individualId,
-    required this.individualClientReferenceId,
-    required this.isHeadOfHousehold,
-    required this.tenantId,
-    required this.rowVersion,
+    this.individualClientReferenceId,
+    this.isHeadOfHousehold,
+    this.tenantId,
+    this.rowVersion,
     required this.clientReferenceId,
     super.auditDetails,
   }):  super();
+
+  HouseholdMemberCompanion get companion {
+    return HouseholdMemberCompanion(
+      id: Value(id),
+      householdId: Value(householdId),
+      householdClientReferenceId: Value(householdClientReferenceId),
+      individualId: Value(individualId),
+      individualClientReferenceId: Value(individualClientReferenceId),
+      isHeadOfHousehold: Value(isHeadOfHousehold),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

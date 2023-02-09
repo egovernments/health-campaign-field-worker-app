@@ -5,13 +5,13 @@ import '../../../../models/data_model.dart';
 part 'oplog.g.dart';
 
 @Collection()
-class OpLog<T extends EntityModel> {
+class OpLog {
   Id id = Isar.autoIncrement;
   late String entityString;
 
   @ignore
-  T get entity => Mapper.fromJson<T>(entityString);
-  set entity(T entity) {
+  T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+  void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();
   }
 

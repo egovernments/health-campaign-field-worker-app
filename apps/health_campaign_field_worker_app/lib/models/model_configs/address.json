@@ -3,8 +3,7 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "tenantId",
@@ -17,58 +16,47 @@
     },
     {
       "name": "doorNo",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "latitude",
-      "type": "double",
-      "nullable": true
+      "type": "double"
     },
     {
       "name": "longitude",
-      "type": "double",
-      "nullable": true
+      "type": "double"
     },
     {
       "name": "locationAccuracy",
-      "type": "double",
-      "nullable": true
+      "type": "double"
     },
     {
       "name": "addressLine1",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "addressLine2",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "landmark",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "city",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "pincode",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "buildingName",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "street",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     }
   ],
   "customAttributes": [

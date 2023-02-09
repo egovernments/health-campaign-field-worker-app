@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import '../../../models/data_model.dart';
 import '../../local_store/no_sql/schema/oplog.dart';
 
-class OpLogManager<T extends EntityModel> {
+abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;
 
   const OpLogManager(this.isar);
@@ -15,7 +15,7 @@ class OpLogManager<T extends EntityModel> {
     DataModelType type,
   ) async =>
       await isar.writeTxn(() async => await isar.opLogs.put(
-            OpLog<T>()
+            OpLog()
               ..operation = entry.operation
               ..isSynced = false
               ..entityType = type
@@ -48,7 +48,7 @@ class OpLogManager<T extends EntityModel> {
     final id = entry.id;
     if (id == null) return;
     await isar.opLogs.put(
-      OpLog<T>()
+      OpLog()
         ..id = id
         ..operation = entry.operation
         ..isSynced = entry.isSynced
@@ -58,4 +58,16 @@ class OpLogManager<T extends EntityModel> {
         ..entityString = entry.entity.toJson(),
     );
   }
+}
+
+class IndividualOpLogManager extends OpLogManager<IndividualModel> {
+  IndividualOpLogManager(super.isar);
+}
+
+class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
+  HouseholdOpLogManager(super.isar);
+}
+
+class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
+  HouseholdMemberOpLogManager(super.isar);
 }

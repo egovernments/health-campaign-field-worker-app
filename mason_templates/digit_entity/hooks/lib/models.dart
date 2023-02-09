@@ -49,7 +49,7 @@ class AttributeModel {
     this.isList = false,
     this.isPk = false,
     this.isEnum = false,
-    this.nullable = false,
+    this.nullable = true,
     this.createReference = false,
     this.includeForQuery = false,
     this.references = const [],

@@ -5,13 +5,11 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     },
     {
       "name": "householdId",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     },
     {
@@ -22,7 +20,6 @@
     {
       "name": "individualId",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     },
     {
