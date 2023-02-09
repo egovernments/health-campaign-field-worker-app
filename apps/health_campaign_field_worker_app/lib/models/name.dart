@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class NameSearchModel extends EntitySearchModel {
   final String? givenName;
   final String? familyName;
@@ -21,7 +21,7 @@ class NameSearchModel extends EntitySearchModel {
   }):  super();
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class NameModel extends EntityModel implements NameSearchModel {
   
   @override
