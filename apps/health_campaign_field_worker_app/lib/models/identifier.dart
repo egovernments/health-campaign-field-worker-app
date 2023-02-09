@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class IdentifierSearchModel extends EntitySearchModel {
   final String? type;
   final String? id;
@@ -19,7 +19,7 @@ class IdentifierSearchModel extends EntitySearchModel {
   }):  super();
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class IdentifierModel extends EntityModel implements IdentifierSearchModel {
   
   @override
