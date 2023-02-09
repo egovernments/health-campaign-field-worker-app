@@ -2,7 +2,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/address.dart';
@@ -10,6 +9,7 @@ import '../../models/address_type.dart';
 import '../../models/boundary.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -65,7 +65,7 @@ class _HouseholdLocationPageState
 
                       final model = AddressModel(
                         tenantId: 'default',
-                        clientReferenceId: Uuid().v1(),
+                        clientReferenceId: IdGen.i.identifier,
                         type: AddressType.correspondence,
                         addressLine1: addressLine1,
                         addressLine2: addressLine2,
