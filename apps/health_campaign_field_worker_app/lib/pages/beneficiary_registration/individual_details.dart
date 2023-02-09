@@ -60,22 +60,22 @@ class _IndividualDetailsPageState
                       final router = context.router;
                       final cubit =
                           BlocProvider.of<BeneficiaryRegistrationCubit>(
-                              context);
+                              context,);
                       cubit.updateIndividualDetails(
                         individualModel: IndividualModel(
                           clientReferenceId: IdGen.i.identifier,
-                          dateOfBirth: form.control(_dobKey).value,
+                          dateOfBirth: form.control(_dobKey).value.toString(),
                           mobileNumber: form.control(_mobileNumberKey).value,
                           rowVersion: 1,
                           name: NameModel(
                             clientReferenceId: IdGen.i.identifier,
                             givenName: form.control(_individualNameKey).value,
                           ),
-                          // gender: form.control(_genderKey).value as Gender,
-                          gender: Gender.male,
+                          gender: Gender.values.byName(form.control(_genderKey).value.toString().toLowerCase()),
                           identifiers: [
                             IdentifierModel(
                               type: form.control(_idTypeKey).value,
+                              id: form.control(_idNumberKey).value,
                               clientReferenceId: IdGen.i.identifier,
                             ),
                           ],
