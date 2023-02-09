@@ -13,12 +13,6 @@
       "includeForQuery": true
     },
     {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true,
-      "includeForQuery": true
-    },
-    {
       "name": "memberCount",
       "type": "int",
       "includeForQuery": true

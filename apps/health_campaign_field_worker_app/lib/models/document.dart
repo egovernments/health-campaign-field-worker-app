@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class DocumentSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   DocumentSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -20,6 +22,8 @@ class DocumentModel extends EntityModel implements DocumentSearchModel {
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
+  
+  @override
   final String clientReferenceId;
   
 

@@ -14,6 +14,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
   final String? tenantId;
+  final String? clientReferenceId;
   
   HouseholdMemberSearchModel({
     this.id,
@@ -23,6 +24,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
     this.individualClientReferenceId,
     this.isHeadOfHousehold,
     this.tenantId,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -51,6 +53,8 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
   @override
   final String? tenantId;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
 

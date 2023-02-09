@@ -13,6 +13,7 @@ class TaskSearchModel extends EntitySearchModel {
   final String? projectBeneficiaryId;
   final String? createdBy;
   final String? status;
+  final String? clientReferenceId;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
@@ -25,6 +26,7 @@ class TaskSearchModel extends EntitySearchModel {
     this.projectBeneficiaryId,
     this.createdBy,
     this.status,
+    this.clientReferenceId,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
@@ -78,6 +80,8 @@ class TaskModel extends EntityModel implements TaskSearchModel {
   
   @override
   final String? status;
+  
+  @override
   final String clientReferenceId;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;

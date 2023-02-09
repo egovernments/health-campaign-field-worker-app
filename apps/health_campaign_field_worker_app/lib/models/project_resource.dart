@@ -10,11 +10,13 @@ class ProjectResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
   final String? projectId;
+  final String? clientReferenceId;
   
   ProjectResourceSearchModel({
     this.id,
     this.tenantId,
     this.projectId,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -31,6 +33,8 @@ class ProjectResourceModel extends EntityModel implements ProjectResourceSearchM
   @override
   final String? projectId;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   final ProjectProductVariantModel? resources;
   

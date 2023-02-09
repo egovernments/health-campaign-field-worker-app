@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class TaskResourceSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   TaskResourceSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -21,6 +23,8 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
+  
+  @override
   final String clientReferenceId;
   
 

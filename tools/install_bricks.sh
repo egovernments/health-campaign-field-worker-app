@@ -1,5 +1,5 @@
 home="$PWD"
-#dart pub global activate mason_cli
+dart pub global activate mason_cli
 
 mason add digit_entity --path ./mason_templates/digit_entity -g
 mason add freezed_bloc --path ./mason_templates/freezed_bloc -g
@@ -16,4 +16,5 @@ done
 
 cd "$home" || exit
 echo "$PWD"
-#melos bootstrap
+
+melos bootstrap

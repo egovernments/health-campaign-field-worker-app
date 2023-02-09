@@ -9,10 +9,12 @@ import 'data_model.dart';
 class IdentifierSearchModel extends EntitySearchModel {
   final String? type;
   final String? id;
+  final String? clientReferenceId;
   
   IdentifierSearchModel({
     this.type,
     this.id,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -25,6 +27,8 @@ class IdentifierModel extends EntityModel implements IdentifierSearchModel {
   
   @override
   final String? id;
+  
+  @override
   final String clientReferenceId;
   
 

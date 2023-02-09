@@ -11,6 +11,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? userId;
   final String? projectId;
+  final String? clientReferenceId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -19,6 +20,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
     this.tenantId,
     this.userId,
     this.projectId,
+    this.clientReferenceId,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -53,6 +55,8 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   final String? projectId;
   final String? channel;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
   @override

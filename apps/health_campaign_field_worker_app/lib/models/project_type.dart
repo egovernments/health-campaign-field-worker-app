@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectTypeSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   ProjectTypeSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -23,6 +25,8 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
+  
+  @override
   final String clientReferenceId;
   final List<ProjectProductVariantModel>? resources;
   

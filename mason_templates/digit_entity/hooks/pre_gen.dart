@@ -16,6 +16,7 @@ void run(HookContext context) {
         name: 'clientReferenceId',
         type: 'String',
         isPk: true,
+        includeForQuery: true,
         nullable: false,
       ),
     );

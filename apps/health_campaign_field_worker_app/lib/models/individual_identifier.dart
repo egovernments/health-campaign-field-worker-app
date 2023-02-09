@@ -7,14 +7,18 @@ import 'data_model.dart';
 
 @MappableClass()
 class IndividualIdentifierSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   IndividualIdentifierSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class IndividualIdentifierModel extends EntityModel implements IndividualIdentifierSearchModel {
+  
+  @override
   final String clientReferenceId;
   final IndividualModel? individual;
   final IdentifierModel? identifier;
