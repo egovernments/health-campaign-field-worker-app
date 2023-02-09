@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
   ProductVariantRemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = 'ProductVariant',
   });
 

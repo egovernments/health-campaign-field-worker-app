@@ -5,24 +5,28 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "tenantId",
       "type": "String",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "userId",
       "type": "String",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "projectId",
       "type": "String",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "channel",
       "type": "String"
-    },{
+    },
+    {
       "name": "rowVersion",
       "type": "int"
     }
@@ -32,7 +36,8 @@
       "name": "startDate",
       "type": "DateTime",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "endDate",
       "type": "DateTime",
       "includeForQuery": true

@@ -5,10 +5,10 @@ import 'package:drift/drift.dart';
 
 class Document extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get documentType => text()();
-  TextColumn get fileStoreId => text()();
-  TextColumn get documentUid => text()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get documentType => text().nullable()();
+  TextColumn get fileStoreId => text().nullable()();
+  TextColumn get documentUid => text().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

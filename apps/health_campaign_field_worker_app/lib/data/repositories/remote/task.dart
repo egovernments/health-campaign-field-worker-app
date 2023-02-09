@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class TaskRemoteRepository extends RemoteRepository<TaskModel, TaskSearchModel> {
   TaskRemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = 'Task',
   });
 

@@ -4,9 +4,9 @@ import 'package:drift/drift.dart';
 
 
 class ProjectProductVariant extends Table {
-  TextColumn get productVariantId => text()();
-  TextColumn get type => text()();
-  BoolColumn get isBaseUnitVariant => boolean()();
+  TextColumn get productVariantId => text().nullable()();
+  TextColumn get type => text().nullable()();
+  BoolColumn get isBaseUnitVariant => boolean().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

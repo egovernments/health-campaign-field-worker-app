@@ -8,21 +8,14 @@ import 'data_repository.dart';
 // TODO(ajil-egov): Needs to be updated to bulk-api
 
 class NetworkManager {
-  final List<LocalRepository> localRepositories;
-  final List<RemoteRepository> remoteRepositories;
-
   final NetworkManagerConfiguration configuration;
 
-  const NetworkManager({
-    required this.configuration,
-    this.localRepositories = const [],
-    this.remoteRepositories = const [],
-  });
+  const NetworkManager({required this.configuration});
 
-  Future<DataRepository<D, R>>
-      repository<D extends DataModel, R extends DataModel>(
+  DataRepository<D, R>
+      repository<D extends EntityModel, R extends EntitySearchModel>(
     BuildContext context,
-  ) async {
+  ) {
     switch (configuration.persistenceConfig) {
       case PersistenceConfiguration.offlineFirst:
         return context.read<LocalRepository<D, R>>();
@@ -31,7 +24,10 @@ class NetworkManager {
     }
   }
 
-  Future<void> syncUp() async {
+  Future<void> syncUp({
+    required List<LocalRepository> localRepositories,
+    required List<RemoteRepository> remoteRepositories,
+  }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
@@ -44,17 +40,42 @@ class NetworkManager {
     final pendingSyncEntries = futures.expand((e) => e).toList();
     pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
-    for (final element in pendingSyncEntries) {
-      final remote = _getRemoteForType(element.type);
+    final groupedEntries = pendingSyncEntries.groupListsBy(
+      (element) => element.type,
+    );
 
-      if (element.operation == ApiOperation.create) {
-        await remote.create(element.entity);
-      } else if (element.operation == ApiOperation.create) {
-        await remote.update(element.entity);
+    for (final typeGroupedEntity in groupedEntries.entries) {
+      final groupedOperations = typeGroupedEntity.value.groupListsBy(
+        (element) => element.operation,
+      );
+
+      final remote = _getRemoteForType(
+        typeGroupedEntity.key,
+        remoteRepositories,
+      );
+
+      final local = _getLocalForType(
+        typeGroupedEntity.key,
+        localRepositories,
+      );
+
+      for (final operationGroupedEntity in groupedOperations.entries) {
+        final entities = operationGroupedEntity.value.map((e) {
+          return e.entity;
+        }).toList();
+
+        if (operationGroupedEntity.key == DataOperation.create) {
+          await remote.bulkCreate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.update) {
+          await remote.bulkUpdate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.delete) {
+          await remote.bulkDelete(entities);
+        }
+
+        for (final syncedEntity in operationGroupedEntity.value) {
+          local.markSynced(syncedEntity.copyWith(isSynced: true));
+        }
       }
-
-      final local = _getLocalForType(element.type);
-      await local.markSynced(element.copyWith(isSynced: true));
     }
   }
 
@@ -67,7 +88,10 @@ class NetworkManager {
     // TODO(naveen): Complete implementation for sync down operation
   }
 
-  RemoteRepository _getRemoteForType(DataModelType type) {
+  RemoteRepository _getRemoteForType(
+    DataModelType type,
+    List<RemoteRepository> remoteRepositories,
+  ) {
     final repository = remoteRepositories.firstWhereOrNull(
       (e) => e.type == type,
     );
@@ -81,7 +105,10 @@ class NetworkManager {
     return repository;
   }
 
-  LocalRepository _getLocalForType(DataModelType type) {
+  LocalRepository _getLocalForType(
+    DataModelType type,
+    List<LocalRepository> localRepositories,
+  ) {
     final repository = localRepositories.firstWhereOrNull(
       (e) => e.type == type,
     );

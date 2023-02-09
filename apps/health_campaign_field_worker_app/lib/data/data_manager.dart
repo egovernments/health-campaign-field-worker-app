@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'data_repository.dart';
 
 import '../models/data_model.dart';
+import 'data_repository.dart';
 
-class DataManager<D extends DataModel, R extends DataModel> {
+class DataManager<D extends EntityModel, R extends EntitySearchModel> {
   final RemoteRepository<D, R> remoteRepository;
   final LocalRepository<D, R> localRepository;
   final PersistenceConfiguration configuration;

@@ -200,7 +200,7 @@ class _SearchBeneficiaryPageState
             child: DigitCard(
               child: DigitElevatedButton(
                 onPressed: () => context.router.push(
-                  HouseholdLocationRoute(),
+                  const BeneficiaryRegistrationWrapperRoute(),
                 ),
                 child: Center(
                   child: Text(localizations.translate(

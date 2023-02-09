@@ -3,17 +3,11 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "tenantId",
       "type": "String"
-    },
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true
     },
     {
       "name": "doorNo",
@@ -41,8 +35,7 @@
     },
     {
       "name": "landmark",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "city",
@@ -54,13 +47,11 @@
     },
     {
       "name": "buildingName",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "street",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     }
   ],
   "customAttributes": [

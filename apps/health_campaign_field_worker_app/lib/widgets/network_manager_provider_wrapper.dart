@@ -1,9 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
-import 'package:recase/recase.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
@@ -33,12 +32,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
   final Dio dio;
   final Widget child;
+  final Isar isar;
 
   final NetworkManagerConfiguration configuration;
 
   const NetworkManagerProviderWrapper({
     super.key,
     required this.configuration,
+    required this.isar,
     required this.dio,
     required this.sql,
     required this.child,
@@ -48,267 +49,169 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppInitializationBloc, AppInitializationState>(
       builder: (context, state) {
-        if (state is! AppInitialized) {
+        final actionMap = state.entityActionMapping;
+        if (actionMap.isEmpty) {
           return const Offstage();
         }
 
-        final registries = state.serviceRegistryList;
-        final registryMap = registries
-            .map((e) {
-              return e.actions.map((e) {
-                ApiOperation? operation;
-                DataModelType? type;
+        final remote = _getRemoteRepositories(dio, actionMap);
+        final local = _getLocalRepositories(sql, isar);
 
-                operation = ApiOperation.values.firstWhereOrNull((element) {
-                  return e.action == element.name;
-                });
-
-                type = DataModelType.values.firstWhereOrNull((element) {
-                  return e.entityName.camelCase == element.name;
-                });
-
-                if (operation == null || type == null) return null;
-
-                return ActionPathModel(
-                  operation: operation,
-                  type: type,
-                  path: e.path,
-                );
-              });
-            })
-            .expand((element) => element)
-            .whereNotNull()
-            .fold(<DataModelType, Map<ApiOperation, String>>{}, (o, element) {
-              if (o.containsKey(element.type)) {
-                o[element.type]?.addEntries(
-                  [MapEntry(element.operation, element.path)],
-                );
-              } else {
-                o[element.type] = Map.fromEntries([
-                  MapEntry(element.operation, element.path),
-                ]);
-              }
-
-              return o;
-            });
-
-        return Provider(
-          create: (ctx) => NetworkManager(
-            configuration: configuration,
-            localRepositories: [
-              IndividualLocalRepository(
-                sql,
-                ctx.read<OpLogManager<IndividualModel>>(),
-              ),
-              HouseholdLocalRepository(
-                sql,
-                ctx.read<OpLogManager<HouseholdModel>>(),
-              ),
-              HouseholdMemberLocalRepository(
-                sql,
-                ctx.read<OpLogManager<HouseholdMemberModel>>(),
-              ),
-            ],
-            remoteRepositories: [
-              ..._getRemoteRepositories(dio, registryMap),
-            ],
+        return MultiRepositoryProvider(
+          providers: [...local, ...remote],
+          child: Provider(
+            create: (ctx) => NetworkManager(configuration: configuration),
+            child: child,
           ),
-          child: child,
         );
       },
     );
   }
 
-  List<RemoteRepository> _getRemoteRepositories(
+  List<RepositoryProvider> _getLocalRepositories(
+    LocalSqlDataStore sql,
+    Isar isar,
+  ) {
+    return [
+      RepositoryProvider<
+          LocalRepository<IndividualModel, IndividualSearchModel>>(
+        create: (_) => IndividualLocalRepository(
+          sql,
+          IndividualOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
+        create: (_) => HouseholdMemberLocalRepository(
+          sql,
+          HouseholdMemberOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
+        create: (_) => HouseholdLocalRepository(
+          sql,
+          HouseholdOpLogManager(isar),
+        ),
+      ),
+    ];
+  }
+
+  List<RepositoryProvider> _getRemoteRepositories(
     Dio dio,
     Map<DataModelType, Map<ApiOperation, String>> actionMap,
   ) {
-    final remoteRepositories = <RemoteRepository>[];
+    final remoteRepositories = <RepositoryProvider>[];
     for (final value in DataModelType.values) {
-      switch (value) {
-        case DataModelType.facility:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              FacilityRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.household:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              HouseholdRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.householdMember:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              HouseholdMemberRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.individual:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              IndividualRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.product:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProductRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.productVariant:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProductVariantRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.project:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectBeneficiary:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectBeneficiaryRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectFacility:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectFacilityRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectProductVariant:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectProductVariantRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectStaff:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectStaffRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectResource:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectResourceRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.projectType:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              ProjectTypeRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
-        case DataModelType.task:
-          if (actionMap.containsKey(value)) {
-            final actions = actionMap[value]!;
-            remoteRepositories.add(
-              TaskRemoteRepository(
-                dio,
-                searchPath: actions[ApiOperation.search] ?? '',
-                createPath: actions[ApiOperation.create] ?? '',
-                updatePath: actions[ApiOperation.update] ?? '',
-              ),
-            );
-          }
-          break;
+      if (!actionMap.containsKey(value)) {
+        continue;
       }
+
+      final actions = actionMap[value]!;
+
+      remoteRepositories.addAll([
+        if (value == DataModelType.facility)
+          RepositoryProvider<
+              RemoteRepository<FacilityModel, FacilitySearchModel>>(
+            create: (_) => FacilityRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.household)
+          RepositoryProvider<
+              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
+            create: (_) => HouseholdRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.householdMember)
+          RepositoryProvider<
+              RemoteRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>(
+            create: (_) =>
+                HouseholdMemberRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.individual)
+          RepositoryProvider<
+              RemoteRepository<IndividualModel, IndividualSearchModel>>(
+            create: (_) => IndividualRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.product)
+          RepositoryProvider<
+              RemoteRepository<ProductModel, ProductSearchModel>>(
+            create: (_) => ProductRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.productVariant)
+          RepositoryProvider<
+              RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(
+            create: (_) =>
+                ProductVariantRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.project)
+          RepositoryProvider<
+              RemoteRepository<ProjectModel, ProjectSearchModel>>(
+            create: (_) => ProjectRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.projectBeneficiary)
+          RepositoryProvider<
+              RemoteRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>(
+            create: (_) =>
+                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectFacility)
+          RepositoryProvider<
+              RemoteRepository<ProjectFacilityModel,
+                  ProjectFacilitySearchModel>>(
+            create: (_) =>
+                ProjectFacilityRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectProductVariant)
+          RepositoryProvider<
+              RemoteRepository<ProjectProductVariantModel,
+                  ProjectProductVariantSearchModel>>(
+            create: (_) =>
+                ProjectProductVariantRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectStaff)
+          RepositoryProvider<
+              RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
+            create: (_) =>
+                ProjectStaffRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectResource)
+          RepositoryProvider<
+              RemoteRepository<ProjectResourceModel,
+                  ProjectResourceSearchModel>>(
+            create: (_) =>
+                ProjectResourceRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectType)
+          RepositoryProvider<
+              RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel>>(
+            create: (_) => ProjectTypeRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.task)
+          RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
+            create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+      ]);
     }
 
     return remoteRepositories;

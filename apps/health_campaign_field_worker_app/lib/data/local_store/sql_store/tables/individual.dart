@@ -7,19 +7,19 @@ import '../../../../models/gender.dart';
 
 class Individual extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text().nullable()();
   TextColumn get userId => text().nullable()();
-  TextColumn get dateOfBirth => text()();
-  TextColumn get mobileNumber => text()();
+  TextColumn get dateOfBirth => text().nullable()();
+  TextColumn get mobileNumber => text().nullable()();
   TextColumn get altContactNumber => text().nullable()();
   TextColumn get email => text().nullable()();
   TextColumn get fatherName => text().nullable()();
   TextColumn get husbandName => text().nullable()();
   TextColumn get photo => text().nullable()();
-  IntColumn get rowVersion => integer()();
-  IntColumn get bloodGroup => intEnum<BloodGroup>()();
-  IntColumn get gender => intEnum<Gender>()();
+  IntColumn get rowVersion => integer().nullable()();
+  TextColumn get clientReferenceId => text()();
+  IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
+  IntColumn get gender => intEnum<Gender>().nullable()();
   
 
   @override

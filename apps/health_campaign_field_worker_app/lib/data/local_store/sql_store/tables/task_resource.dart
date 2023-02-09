@@ -5,10 +5,10 @@ import 'package:drift/drift.dart';
 
 class TaskResource extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get productVariantId => text()();
-  TextColumn get quantity => text()();
-  BoolColumn get isDelivered => boolean()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get productVariantId => text().nullable()();
+  TextColumn get quantity => text().nullable()();
+  BoolColumn get isDelivered => boolean().nullable()();
   TextColumn get deliveryComment => text().nullable()();
   TextColumn get clientReferenceId => text()();
   
