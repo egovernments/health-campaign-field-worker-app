@@ -8,6 +8,7 @@ import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/local_store/no_sql/schema/localization.dart';
+import 'data/local_store/no_sql/schema/oplog.dart';
 import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
@@ -23,6 +24,7 @@ void main() async {
     ServiceRegistrySchema,
     LocalizationWrapperSchema,
     AppConfigurationSchema,
+    OpLogSchema,
   ]);
 
   final sql = LocalSqlDataStore();

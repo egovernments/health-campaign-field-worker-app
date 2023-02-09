@@ -6,12 +6,12 @@ import 'package:drift/drift.dart';
 class HouseholdMember extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get householdId => text().nullable()();
-  TextColumn get householdClientReferenceId => text()();
+  TextColumn get householdClientReferenceId => text().nullable()();
   TextColumn get individualId => text().nullable()();
-  TextColumn get individualClientReferenceId => text()();
-  BoolColumn get isHeadOfHousehold => boolean()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get individualClientReferenceId => text().nullable()();
+  BoolColumn get isHeadOfHousehold => boolean().nullable()();
+  TextColumn get tenantId => text().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

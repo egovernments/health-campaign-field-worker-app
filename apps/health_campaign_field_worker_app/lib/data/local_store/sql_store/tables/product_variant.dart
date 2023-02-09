@@ -5,11 +5,11 @@ import 'package:drift/drift.dart';
 
 class ProductVariant extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get productId => text()();
-  TextColumn get sku => text()();
-  TextColumn get variation => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get productId => text().nullable()();
+  TextColumn get sku => text().nullable()();
+  TextColumn get variation => text().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

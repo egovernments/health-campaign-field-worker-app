@@ -7,11 +7,6 @@
       "includeForQuery": true
     },
     {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true
-    },
-    {
       "name": "id",
       "type": "String",
       "includeForQuery": true

@@ -8,8 +8,8 @@ import 'identifier.dart';
 class IndividualIdentifier extends Table {
   TextColumn get clientReferenceId => text()();
   
-  TextColumn get individual => text().references(Individual, #clientReferenceId)();
-  TextColumn get identifier => text().references(Identifier, #clientReferenceId)();
+  TextColumn get individual => text().nullable().references(Individual, #clientReferenceId)();
+  TextColumn get identifier => text().nullable().references(Identifier, #clientReferenceId)();
 
   @override
   Set<Column> get primaryKey => { clientReferenceId,  };

@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -14,8 +16,8 @@ class AddressSearchModel extends EntitySearchModel {
 @MappableClass()
 class AddressModel extends EntityModel implements AddressSearchModel {
   final String? id;
-  final String tenantId;
-  final String clientReferenceId;
+  final String? tenantId;
+  final String? clientReferenceId;
   final String? doorNo;
   final double? latitude;
   final double? longitude;
@@ -27,14 +29,14 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
-  final BoundaryModel locality;
-  final AddressType type;
+  final BoundaryModel? locality;
+  final AddressType? type;
   
 
   AddressModel({
     this.id,
-    required this.tenantId,
-    required this.clientReferenceId,
+    this.tenantId,
+    this.clientReferenceId,
     this.doorNo,
     this.latitude,
     this.longitude,
@@ -46,8 +48,29 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     this.pincode,
     this.buildingName,
     this.street,
-    required this.locality,
-    required this.type,
+    this.locality,
+    this.type,
     super.auditDetails,
   }):  super();
+
+  AddressCompanion get companion {
+    return AddressCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      clientReferenceId: Value(clientReferenceId),
+      doorNo: Value(doorNo),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      locationAccuracy: Value(locationAccuracy),
+      addressLine1: Value(addressLine1),
+      addressLine2: Value(addressLine2),
+      landmark: Value(landmark),
+      city: Value(city),
+      pincode: Value(pincode),
+      buildingName: Value(buildingName),
+      street: Value(street),
+      type: Value(type),
+      locality: Value(locality?.clientReferenceId),
+    );
+  }
 }

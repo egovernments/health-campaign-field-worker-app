@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -28,28 +30,40 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String productId;
+  final String? productId;
   
   @override
-  final String sku;
+  final String? sku;
   
   @override
-  final String variation;
-  final int rowVersion;
+  final String? variation;
+  final int? rowVersion;
   final String clientReferenceId;
   
 
   ProductVariantModel({
     this.id,
-    required this.tenantId,
-    required this.productId,
-    required this.sku,
-    required this.variation,
-    required this.rowVersion,
+    this.tenantId,
+    this.productId,
+    this.sku,
+    this.variation,
+    this.rowVersion,
     required this.clientReferenceId,
     super.auditDetails,
   }):  super();
+
+  ProductVariantCompanion get companion {
+    return ProductVariantCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      productId: Value(productId),
+      sku: Value(sku),
+      variation: Value(variation),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

@@ -5,7 +5,6 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     },
     {
@@ -31,7 +30,6 @@
     {
       "name": "parent",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     },
     {

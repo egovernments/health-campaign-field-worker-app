@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:mason/mason.dart';
 
 import 'lib/models.dart';
-import 'package:mason/mason.dart';
 
 void run(HookContext context) {
   final variables = context.vars;
@@ -16,12 +16,9 @@ void run(HookContext context) {
         name: 'clientReferenceId',
         type: 'String',
         isPk: true,
+        nullable: false,
       ),
     );
-  }
-
-  if (model.name.toLowerCase() == 'individual') {
-    context.logger.info(model.toJson());
   }
 
   final sqlAttributes = <AttributeModel>[

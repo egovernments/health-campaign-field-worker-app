@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -19,17 +21,25 @@ class IdentifierSearchModel extends EntitySearchModel {
 class IdentifierModel extends EntityModel implements IdentifierSearchModel {
   
   @override
-  final String type;
-  final String clientReferenceId;
+  final String? type;
   
   @override
-  final String id;
+  final String? id;
+  final String clientReferenceId;
   
 
   IdentifierModel({
-    required this.type,
+    this.type,
+    this.id,
     required this.clientReferenceId,
-    required this.id,
     super.auditDetails,
   }):  super();
+
+  IdentifierCompanion get companion {
+    return IdentifierCompanion(
+      type: Value(type),
+      id: Value(id),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

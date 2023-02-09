@@ -85,21 +85,22 @@ class HouseholdLocalRepository
 
   @override
   FutureOr<void> create(HouseholdModel entity) async {
-    final addressValue = entity.address;
-
-    final householdCompanion = _getHouseholdCompanion(entity);
-    final addressCompanion = _getAddressCompanion(addressValue);
+    final householdCompanion = entity.companion;
+    final addressCompanion = entity.address?.companion;
 
     await sql.batch((batch) async {
       batch.insert(sql.household, householdCompanion);
-      batch.insert(sql.address, addressCompanion);
+
+      if (addressCompanion != null) {
+        batch.insert(sql.address, addressCompanion);
+      }
 
       batch.insert(
         sql.householdAddress,
         HouseholdAddressCompanion.insert(
           clientReferenceId: const Uuid().v1(),
-          household: entity.clientReferenceId,
-          address: addressValue.clientReferenceId,
+          household: Value(entity.clientReferenceId),
+          address: Value(entity.address?.clientReferenceId),
         ),
       );
     });
@@ -109,10 +110,8 @@ class HouseholdLocalRepository
 
   @override
   FutureOr<void> update(HouseholdModel entity) async {
-    final addressValue = entity.address;
-
-    final householdCompanion = _getHouseholdCompanion(entity);
-    final addressCompanion = _getAddressCompanion(addressValue);
+    final householdCompanion = entity.companion;
+    final addressCompanion = entity.address?.companion;
 
     await sql.batch((batch) async {
       batch.update(
@@ -123,13 +122,15 @@ class HouseholdLocalRepository
         ),
       );
 
-      batch.update(
-        sql.address,
-        addressCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          addressValue.clientReferenceId,
-        ),
-      );
+      if (addressCompanion != null) {
+        batch.update(
+          sql.address,
+          addressCompanion,
+          where: (table) => table.clientReferenceId.equals(
+            addressCompanion.clientReferenceId.value,
+          ),
+        );
+      }
     });
 
     await super.update(entity);
@@ -137,35 +138,4 @@ class HouseholdLocalRepository
 
   @override
   DataModelType get type => DataModelType.household;
-
-  HouseholdCompanion _getHouseholdCompanion(HouseholdModel entity) {
-    return HouseholdCompanion.insert(
-      tenantId: entity.tenantId,
-      clientReferenceId: entity.clientReferenceId,
-      memberCount: entity.memberCount,
-      rowVersion: entity.rowVersion,
-      id: Value(entity.id),
-    );
-  }
-
-  AddressCompanion _getAddressCompanion(AddressModel e) {
-    return AddressCompanion.insert(
-      tenantId: e.tenantId,
-      clientReferenceId: e.clientReferenceId,
-      doorNo: Value(e.doorNo),
-      latitude: Value(e.latitude),
-      longitude: Value(e.longitude),
-      locationAccuracy: Value(e.locationAccuracy),
-      addressLine1: Value(e.addressLine1),
-      addressLine2: Value(e.addressLine2),
-      city: Value(e.city),
-      pincode: Value(e.pincode),
-      type: e.type,
-      locality: e.locality.clientReferenceId,
-      id: Value(e.id),
-      buildingName: Value(e.buildingName),
-      landmark: Value(e.landmark),
-      street: Value(e.street),
-    );
-  }
 }

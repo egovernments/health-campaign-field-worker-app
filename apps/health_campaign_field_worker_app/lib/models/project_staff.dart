@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -42,44 +44,60 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String userId;
+  final String? userId;
   
   @override
-  final String projectId;
-  final String channel;
-  final int rowVersion;
+  final String? projectId;
+  final String? channel;
+  final int? rowVersion;
   final String clientReferenceId;
   
   @override
-  final DateTime startDateTime;
+  final DateTime? startDateTime;
   
   @override
-  final DateTime endDateTime;
+  final DateTime? endDateTime;
   
 
   ProjectStaffModel({
     this.id,
-    required this.tenantId,
-    required this.userId,
-    required this.projectId,
-    required this.channel,
-    required this.rowVersion,
+    this.tenantId,
+    this.userId,
+    this.projectId,
+    this.channel,
+    this.rowVersion,
     required this.clientReferenceId,
-    required int startDate,
-    required int endDate,
+    int? startDate,
+    int? endDate,
     super.auditDetails,
-  }): startDateTime = DateTime.fromMillisecondsSinceEpoch(startDate),
-      endDateTime = DateTime.fromMillisecondsSinceEpoch(endDate),
+  }): startDateTime = startDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startDate),
+      endDateTime = endDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
   @override
-  int  get startDate => startDateTime .millisecondsSinceEpoch;
+  int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
   @override
-  int  get endDate => endDateTime .millisecondsSinceEpoch;
+  int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
+
+  ProjectStaffCompanion get companion {
+    return ProjectStaffCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      userId: Value(userId),
+      projectId: Value(projectId),
+      channel: Value(channel),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
@@ -28,30 +30,42 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final bool isPermanent;
+  final bool? isPermanent;
   
   @override
-  final String usage;
+  final String? usage;
   
   @override
-  final int storageCapacity;
-  final int rowVersion;
+  final int? storageCapacity;
+  final int? rowVersion;
   final String clientReferenceId;
-  final AddressModel address;
+  final AddressModel? address;
   
 
   FacilityModel({
     this.id,
-    required this.tenantId,
-    required this.isPermanent,
-    required this.usage,
-    required this.storageCapacity,
-    required this.rowVersion,
+    this.tenantId,
+    this.isPermanent,
+    this.usage,
+    this.storageCapacity,
+    this.rowVersion,
     required this.clientReferenceId,
-    required this.address,
+    this.address,
     super.auditDetails,
   }):  super();
+
+  FacilityCompanion get companion {
+    return FacilityCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      isPermanent: Value(isPermanent),
+      usage: Value(usage),
+      storageCapacity: Value(storageCapacity),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }

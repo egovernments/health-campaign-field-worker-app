@@ -77,20 +77,20 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           LocalRepository<IndividualModel, IndividualSearchModel>>(
         create: (_) => IndividualLocalRepository(
           sql,
-          OpLogManager<IndividualModel>(isar),
+          IndividualOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
           sql,
-          OpLogManager<HouseholdMemberModel>(isar),
+          HouseholdMemberOpLogManager(isar),
         ),
       ),
       RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
         create: (_) => HouseholdLocalRepository(
           sql,
-          OpLogManager<HouseholdModel>(isar),
+          HouseholdOpLogManager(isar),
         ),
       ),
     ];

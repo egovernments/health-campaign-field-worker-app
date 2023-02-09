@@ -3,8 +3,7 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "tenantId",
@@ -24,8 +23,7 @@
     },
     {
       "name": "deliveryComment",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     }
   ],
   "isEnum": false

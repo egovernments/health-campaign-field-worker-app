@@ -19,7 +19,6 @@
     {
       "name": "otherNames",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
     }
   ],
