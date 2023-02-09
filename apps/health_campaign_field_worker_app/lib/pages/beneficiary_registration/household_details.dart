@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -44,27 +45,20 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                   onPressed: () {
                     if (!form.valid) return;
 
-                    final bloc = context.read<BeneficiaryRegistrationBloc>();
-                    final address = bloc.state.addressModel;
-
-                    if (address == null) return;
-
                     final dateOfRegistration =
                         form.control(_dateOfRegistrationKey).value as DateTime;
                     final memberCount =
                         form.control(_memberCountKey).value as int;
 
+                    final cubit = context.read<BeneficiaryRegistrationCubit>();
                     final model = HouseholdModel(
                       tenantId: 'default',
                       clientReferenceId: Uuid().v1(),
                       memberCount: memberCount,
                       rowVersion: 1,
-                      address: address,
+                      address: cubit.addressModel,
                     );
-
-                    bloc.add(BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                      model,
-                    ));
+                    cubit.updateHouseholdModel(householdModel: model);
 
                     context.router.push(IndividualDetailsRoute());
                   },

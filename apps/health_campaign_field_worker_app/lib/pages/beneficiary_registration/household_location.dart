@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
 import '../../models/address.dart';
 import '../../models/address_type.dart';
 import '../../models/boundary.dart';
@@ -63,7 +63,7 @@ class _HouseholdLocationPageState
                       final postalCode =
                           form.control(_postalCodeKey).value as String;
 
-                      final model = AddressModel(
+                      final addressModel = AddressModel(
                         tenantId: 'default',
                         clientReferenceId: IdGen.i.identifier,
                         type: AddressType.correspondence,
@@ -77,10 +77,9 @@ class _HouseholdLocationPageState
                           clientReferenceId: '',
                         ),
                       );
-
-                      context.read<BeneficiaryRegistrationBloc>().add(
-                            BeneficiaryRegistrationSaveAddressEvent(model),
-                          );
+                      final cubit =
+                          context.read<BeneficiaryRegistrationCubit>();
+                      cubit.updateHouseholdLocation(addressModel: addressModel);
 
                       context.router.push(HouseHoldDetailsRoute());
                     },

@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
-import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -58,13 +58,27 @@ class _IndividualDetailsPageState
                       if (!form.valid) return;
 
                       final router = context.router;
-                      final bloc = context.read<BeneficiaryRegistrationBloc>();
-
-                      bloc.add(
-                        BeneficiaryRegistrationSaveIndividualDetailsEvent(
-                          IndividualModel(
+                      final cubit =
+                          BlocProvider.of<BeneficiaryRegistrationCubit>(
+                              context);
+                      cubit.updateIndividualDetails(
+                        individualModel: IndividualModel(
+                          clientReferenceId: IdGen.i.identifier,
+                          dateOfBirth: form.control(_dobKey).value,
+                          mobileNumber: form.control(_mobileNumberKey).value,
+                          rowVersion: 1,
+                          name: NameModel(
                             clientReferenceId: IdGen.i.identifier,
+                            givenName: form.control(_individualNameKey).value,
                           ),
+                          // gender: form.control(_genderKey).value as Gender,
+                          gender: Gender.male,
+                          identifiers: [
+                            IdentifierModel(
+                              type: form.control(_idTypeKey).value,
+                              clientReferenceId: IdGen.i.identifier,
+                            ),
+                          ],
                         ),
                       );
 
@@ -95,9 +109,14 @@ class _IndividualDetailsPageState
                       );
 
                       if (isSuccess ?? false) {
-                        bloc.add(const BeneficiaryRegistrationSubmitEvent());
+                        cubit.submitDetails();
                         router.push(AcknowledgementRoute());
                       }
+
+                      // if (isSuccess ?? false) {
+                      //   bloc.add(const BeneficiaryRegistrationSubmitEvent());
+                      //   router.push(AcknowledgementRoute());
+                      // }
                     },
                     child: Center(
                       child: Text(
