@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 {{^isEnum}}import 'data_model.dart';
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
   {{#attributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
@@ -25,7 +25,7 @@ class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
   {{/includeForQuery}}{{/dateTimeAttributes}}
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class {{name.pascalCase()}}Model extends EntityModel implements {{name.pascalCase()}}SearchModel {
   {{#attributes}}{{#includeForQuery}}
   @override

@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
@@ -39,7 +39,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   
   @override
