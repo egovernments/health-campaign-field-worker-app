@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class TargetSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   TargetSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -19,6 +21,8 @@ class TargetModel extends EntityModel implements TargetSearchModel {
   final String? beneficiaryType;
   final String? baseline;
   final String? target;
+  
+  @override
   final String clientReferenceId;
   
 

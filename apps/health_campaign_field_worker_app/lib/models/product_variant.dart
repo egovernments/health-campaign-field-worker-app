@@ -12,6 +12,7 @@ class ProductVariantSearchModel extends EntitySearchModel {
   final String? productId;
   final String? sku;
   final String? variation;
+  final String? clientReferenceId;
   
   ProductVariantSearchModel({
     this.id,
@@ -19,6 +20,7 @@ class ProductVariantSearchModel extends EntitySearchModel {
     this.productId,
     this.sku,
     this.variation,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -41,6 +43,8 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
   @override
   final String? variation;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
 

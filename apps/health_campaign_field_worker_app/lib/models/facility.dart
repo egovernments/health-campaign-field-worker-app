@@ -12,6 +12,7 @@ class FacilitySearchModel extends EntitySearchModel {
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
+  final String? clientReferenceId;
   
   FacilitySearchModel({
     this.id,
@@ -19,6 +20,7 @@ class FacilitySearchModel extends EntitySearchModel {
     this.isPermanent,
     this.usage,
     this.storageCapacity,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -41,6 +43,8 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   @override
   final int? storageCapacity;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   final AddressModel? address;
   

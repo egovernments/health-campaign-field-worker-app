@@ -12,6 +12,7 @@ class ProductSearchModel extends EntitySearchModel {
   final String? type;
   final String? name;
   final String? manufacturer;
+  final String? clientReferenceId;
   
   ProductSearchModel({
     this.id,
@@ -19,6 +20,7 @@ class ProductSearchModel extends EntitySearchModel {
     this.type,
     this.name,
     this.manufacturer,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -41,6 +43,8 @@ class ProductModel extends EntityModel implements ProductSearchModel {
   @override
   final String? manufacturer;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
 

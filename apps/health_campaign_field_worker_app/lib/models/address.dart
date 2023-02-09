@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class AddressSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   AddressSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -17,7 +19,6 @@ class AddressSearchModel extends EntitySearchModel {
 class AddressModel extends EntityModel implements AddressSearchModel {
   final String? id;
   final String? tenantId;
-  final String? clientReferenceId;
   final String? doorNo;
   final double? latitude;
   final double? longitude;
@@ -29,6 +30,9 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
+  
+  @override
+  final String clientReferenceId;
   final BoundaryModel? locality;
   final AddressType? type;
   
@@ -36,7 +40,6 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   AddressModel({
     this.id,
     this.tenantId,
-    this.clientReferenceId,
     this.doorNo,
     this.latitude,
     this.longitude,
@@ -48,6 +51,7 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     this.pincode,
     this.buildingName,
     this.street,
+    required this.clientReferenceId,
     this.locality,
     this.type,
     super.auditDetails,
@@ -57,7 +61,6 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     return AddressCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      clientReferenceId: Value(clientReferenceId),
       doorNo: Value(doorNo),
       latitude: Value(latitude),
       longitude: Value(longitude),
@@ -69,6 +72,7 @@ class AddressModel extends EntityModel implements AddressSearchModel {
       pincode: Value(pincode),
       buildingName: Value(buildingName),
       street: Value(street),
+      clientReferenceId: Value(clientReferenceId),
       type: Value(type),
       locality: Value(locality?.clientReferenceId),
     );

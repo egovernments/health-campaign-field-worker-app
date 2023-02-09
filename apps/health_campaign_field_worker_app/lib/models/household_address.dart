@@ -7,14 +7,18 @@ import 'data_model.dart';
 
 @MappableClass()
 class HouseholdAddressSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   HouseholdAddressSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class HouseholdAddressModel extends EntityModel implements HouseholdAddressSearchModel {
+  
+  @override
   final String clientReferenceId;
   final HouseholdModel? household;
   final AddressModel? address;

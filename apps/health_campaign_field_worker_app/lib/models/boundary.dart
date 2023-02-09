@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class BoundarySearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   BoundarySearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -21,6 +23,8 @@ class BoundaryModel extends EntityModel implements BoundarySearchModel {
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
+  
+  @override
   final String clientReferenceId;
   final BoundaryModel? children;
   

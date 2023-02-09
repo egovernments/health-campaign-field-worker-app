@@ -9,8 +9,8 @@ import 'data_model.dart';
 class IndividualSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? clientReferenceId;
   final String? dateOfBirth;
+  final String? clientReferenceId;
   final NameSearchModel? name;
   final Gender? gender;
   final List<IdentifierSearchModel>? identifiers;
@@ -18,8 +18,8 @@ class IndividualSearchModel extends EntitySearchModel {
   IndividualSearchModel({
     this.id,
     this.tenantId,
-    this.clientReferenceId,
     this.dateOfBirth,
+    this.clientReferenceId,
     this.name,
     this.gender,
     this.identifiers,
@@ -35,9 +35,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   
   @override
   final String? tenantId;
-  
-  @override
-  final String? clientReferenceId;
   final String? userId;
   
   @override
@@ -49,6 +46,9 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   final String? husbandName;
   final String? photo;
   final int? rowVersion;
+  
+  @override
+  final String clientReferenceId;
   
   @override
   final NameModel? name;
@@ -65,7 +65,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   IndividualModel({
     this.id,
     this.tenantId,
-    this.clientReferenceId,
     this.userId,
     this.dateOfBirth,
     this.mobileNumber,
@@ -75,6 +74,7 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
     this.husbandName,
     this.photo,
     this.rowVersion,
+    required this.clientReferenceId,
     this.name,
     this.bloodGroup,
     this.address,
@@ -87,7 +87,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
     return IndividualCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      clientReferenceId: Value(clientReferenceId),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),
       mobileNumber: Value(mobileNumber),
@@ -97,6 +96,7 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
       husbandName: Value(husbandName),
       photo: Value(photo),
       rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),
       );

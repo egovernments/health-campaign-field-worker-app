@@ -11,12 +11,14 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? facilityId;
   final String? projectId;
+  final String? clientReferenceId;
   
   ProjectFacilitySearchModel({
     this.id,
     this.tenantId,
     this.facilityId,
     this.projectId,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -36,6 +38,8 @@ class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchM
   @override
   final String? projectId;
   final String? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
 

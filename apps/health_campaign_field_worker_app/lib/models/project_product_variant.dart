@@ -7,8 +7,10 @@ import 'data_model.dart';
 
 @MappableClass()
 class ProjectProductVariantSearchModel extends EntitySearchModel {
+  final String? clientReferenceId;
   
   ProjectProductVariantSearchModel({
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -18,6 +20,8 @@ class ProjectProductVariantModel extends EntityModel implements ProjectProductVa
   final String? productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
+  
+  @override
   final String clientReferenceId;
   
 

@@ -11,6 +11,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? projectId;
   final String? beneficiaryId;
+  final String? clientReferenceId;
   final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiarySearchModel({
@@ -18,6 +19,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.tenantId,
     this.projectId,
     this.beneficiaryId,
+    this.clientReferenceId,
     int? dateOfRegistration,
     super.boundaryCode,
   }): dateOfRegistrationTime = dateOfRegistration == null
@@ -44,6 +46,8 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
   @override
   final String? beneficiaryId;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
   @override

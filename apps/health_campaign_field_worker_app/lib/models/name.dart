@@ -10,18 +10,19 @@ class NameSearchModel extends EntitySearchModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
+  final String? clientReferenceId;
   
   NameSearchModel({
     this.givenName,
     this.familyName,
     this.otherNames,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
 class NameModel extends EntityModel implements NameSearchModel {
-  final String? clientReferenceId;
   
   @override
   final String? givenName;
@@ -32,21 +33,24 @@ class NameModel extends EntityModel implements NameSearchModel {
   @override
   final String? otherNames;
   
+  @override
+  final String clientReferenceId;
+  
 
   NameModel({
-    this.clientReferenceId,
     this.givenName,
     this.familyName,
     this.otherNames,
+    required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 
   NameCompanion get companion {
     return NameCompanion(
-      clientReferenceId: Value(clientReferenceId),
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),
+      clientReferenceId: Value(clientReferenceId),
       );
   }
 }

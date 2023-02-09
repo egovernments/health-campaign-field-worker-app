@@ -9,14 +9,14 @@ import 'data_model.dart';
 class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? clientReferenceId;
   final int? memberCount;
+  final String? clientReferenceId;
   
   HouseholdSearchModel({
     this.id,
     this.tenantId,
-    this.clientReferenceId,
     this.memberCount,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
@@ -31,20 +31,20 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   final String? tenantId;
   
   @override
-  final String? clientReferenceId;
-  
-  @override
   final int? memberCount;
   final int? rowVersion;
+  
+  @override
+  final String clientReferenceId;
   final AddressModel? address;
   
 
   HouseholdModel({
     this.id,
     this.tenantId,
-    this.clientReferenceId,
     this.memberCount,
     this.rowVersion,
+    required this.clientReferenceId,
     this.address,
     super.auditDetails,
   }):  super();
@@ -53,9 +53,9 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
     return HouseholdCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      clientReferenceId: Value(clientReferenceId),
       memberCount: Value(memberCount),
       rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
       );
   }
 }

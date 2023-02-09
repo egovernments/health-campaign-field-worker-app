@@ -15,6 +15,7 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? parent;
   final String? department;
   final String? referenceId;
+  final String? clientReferenceId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -27,6 +28,7 @@ class ProjectSearchModel extends EntitySearchModel {
     this.parent,
     this.department,
     this.referenceId,
+    this.clientReferenceId,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -74,6 +76,8 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
   final String? referenceId;
   final String? projectHierarchy;
   final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   final AddressModel? address;
   final List<TargetModel>? targets;
