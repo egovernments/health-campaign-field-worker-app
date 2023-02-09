@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../blocs/app_initialization/app_initialization.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../router/app_router.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/localized.dart';
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../models/data_model.dart';
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
 
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   const IndividualDetailsPage({
@@ -25,6 +28,14 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
 
 class _IndividualDetailsPageState
     extends LocalizedState<IndividualDetailsPage> {
+  static const _individualNameKey = 'individualName';
+  static const _idTypeKey = 'idType';
+  static const _idNumberKey = 'idNumber';
+  static const _dobKey = 'dob';
+  static const _ageKey = 'age';
+  static const _genderKey = 'gender';
+  static const _mobileNumberKey = 'mobileNumber';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -43,36 +54,49 @@ class _IndividualDetailsPageState
                 height: 90,
                 child: DigitCard(
                   child: DigitElevatedButton(
-                    onPressed: () {
-                      if (form.valid) {
-                        DigitDialog.show(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations
-                                .translate(i18.deliverIntervention.dialogTitle),
-                            contentText: localizations.translate(
-                              i18.deliverIntervention.dialogContent,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations
-                                  .translate(i18.common.coreCommonSubmit),
-                              action: (context) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                                context.router.push(AcknowledgementRoute());
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: localizations
-                                  .translate(i18.common.coreCommonCancel),
-                              action: (context) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                            ),
+                    onPressed: () async {
+                      if (!form.valid) return;
+
+                      final router = context.router;
+                      final bloc = context.read<BeneficiaryRegistrationBloc>();
+
+                      bloc.add(
+                        BeneficiaryRegistrationSaveIndividualDetailsEvent(
+                          IndividualModel(
+                            clientReferenceId: IdGen.i.identifier,
                           ),
-                        );
-                      } else {
-                        form.markAllAsTouched();
+                        ),
+                      );
+
+                      final isSuccess = await DigitDialog.show<bool>(
+                        context,
+                        options: DigitDialogOptions(
+                          titleText: localizations
+                              .translate(i18.deliverIntervention.dialogTitle),
+                          contentText: localizations.translate(
+                            i18.deliverIntervention.dialogContent,
+                          ),
+                          primaryAction: DigitDialogActions(
+                            label: localizations
+                                .translate(i18.common.coreCommonSubmit),
+                            action: (context) {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop(true);
+                            },
+                          ),
+                          secondaryAction: DigitDialogActions(
+                            label: localizations
+                                .translate(i18.common.coreCommonCancel),
+                            action: (context) =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(false),
+                          ),
+                        ),
+                      );
+
+                      if (isSuccess ?? false) {
+                        bloc.add(const BeneficiaryRegistrationSubmitEvent());
+                        router.push(AcknowledgementRoute());
                       }
                     },
                     child: Center(
@@ -119,7 +143,8 @@ class _IndividualDetailsPageState
 
                           return DigitDropdown(
                             label: localizations.translate(
-                                i18.individualDetails.idTypeLabelText,),
+                              i18.individualDetails.idTypeLabelText,
+                            ),
                             initialValue: idTypeOptions.firstOrNull?.name,
                             menuItems: idTypeOptions.map((e) {
                               return MenuItemModel(
@@ -214,12 +239,12 @@ class _IndividualDetailsPageState
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        'individualName': FormControl<String>(value: ''),
-        'idType': FormControl<String>(value: ''),
-        'idNumber': FormControl<String>(value: ''),
-        'dob': FormControl<DateTime>(),
-        'age': FormControl<String>(value: ''),
-        'gender': FormControl<String>(value: ''),
-        'mobileNumber': FormControl<String>(value: ''),
+        _individualNameKey: FormControl<String>(value: ''),
+        _idTypeKey: FormControl<String>(value: ''),
+        _idNumberKey: FormControl<String>(value: ''),
+        _dobKey: FormControl<DateTime>(),
+        _ageKey: FormControl<String>(value: ''),
+        _genderKey: FormControl<String>(value: ''),
+        _mobileNumberKey: FormControl<String>(value: ''),
       });
 }

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
-import '../../local_store/no_sql/no_sql_store.dart';
+import '../../local_store/no_sql/schema/oplog.dart';
 
-abstract class OpLogManager<T extends DataModel> {
+abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;
 
   const OpLogManager(this.isar);
@@ -15,7 +15,7 @@ abstract class OpLogManager<T extends DataModel> {
     DataModelType type,
   ) async =>
       await isar.writeTxn(() async => await isar.opLogs.put(
-            OpLog<T>()
+            OpLog()
               ..operation = entry.operation
               ..isSynced = false
               ..entityType = type
@@ -48,7 +48,7 @@ abstract class OpLogManager<T extends DataModel> {
     final id = entry.id;
     if (id == null) return;
     await isar.opLogs.put(
-      OpLog<T>()
+      OpLog()
         ..id = id
         ..operation = entry.operation
         ..isSynced = entry.isSynced
@@ -61,5 +61,13 @@ abstract class OpLogManager<T extends DataModel> {
 }
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
-  const IndividualOpLogManager(super.isar);
+  IndividualOpLogManager(super.isar);
+}
+
+class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
+  HouseholdOpLogManager(super.isar);
+}
+
+class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
+  HouseholdMemberOpLogManager(super.isar);
 }

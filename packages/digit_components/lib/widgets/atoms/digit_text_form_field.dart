@@ -16,6 +16,7 @@ class DigitTextFormField extends StatelessWidget {
   final bool? obscureText;
   final String label;
   final TextCapitalization? textCapitalization;
+  final Map<String, String Function(Object)>? validationMessages;
 
   const DigitTextFormField({
     super.key,
@@ -31,17 +32,18 @@ class DigitTextFormField extends StatelessWidget {
     this.focusNode,
     this.textCapitalization,
     this.obscureText,
+    this.validationMessages,
     required this.label,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return LabeledField(
+  Widget build(BuildContext context) => LabeledField(
         label: label,
         child: ReactiveTextField(
           readOnly: readOnly ?? false,
           formControlName: formControlName,
           maxLength: maxLength,
+          validationMessages: validationMessages,
           autofocus: false,
           textCapitalization: textCapitalization ?? TextCapitalization.none,
           minLines: minLines,
@@ -61,6 +63,6 @@ class DigitTextFormField extends StatelessWidget {
                     child: suffix,
                   ),
           ),
-        ));
-  }
+        ),
+      );
 }

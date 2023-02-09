@@ -5,12 +5,12 @@ import 'package:drift/drift.dart';
 
 class Task extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
-  TextColumn get projectId => text()();
-  TextColumn get projectBeneficiaryId => text()();
-  TextColumn get createdBy => text()();
-  IntColumn get rowVersion => integer()();
-  TextColumn get status => text()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get projectId => text().nullable()();
+  TextColumn get projectBeneficiaryId => text().nullable()();
+  TextColumn get createdBy => text().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
+  TextColumn get status => text().nullable()();
   TextColumn get clientReferenceId => text()();
   
 

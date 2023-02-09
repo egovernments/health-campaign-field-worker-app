@@ -11,30 +11,25 @@
     },
     {
       "name": "label",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "latitude",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "longitude",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "materializedPath",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     }
   ],
   "customAttributes": [
     {
       "name": "children",
       "type": "boundary",
-      "nullable": true,
       "createReference": true
     }
   ],

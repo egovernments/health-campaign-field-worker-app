@@ -8,7 +8,8 @@ import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 import '../../local_store/sql_store/sql_store.dart';
 
-class IndividualLocalRepository extends LocalRepository<IndividualModel, IndividualSearchModel> {
+class IndividualLocalRepository
+    extends LocalRepository<IndividualModel, IndividualSearchModel> {
   const IndividualLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -150,24 +151,22 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
 
   @override
   FutureOr<void> create(IndividualModel entity) async {
-    final nameValue = entity.name;
-    final addressValue = entity.address;
-    final identifiers = entity.identifiers;
+    final individualCompanion = entity.companion;
 
-    final nameCompanion = _getNameCompanion(nameValue);
-    final addressCompanions = addressValue.map((e) {
-      return _getAddressCompanion(e);
-    }).toList();
+    final nameCompanion = entity.name?.companion;
+    final addressCompanions = entity.address?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
 
-    final identifierCompanions = identifiers.map((e) {
-      return _getIdentifierCompanion(e);
-    }).toList();
-
-    final individualCompanion = _getIndividualCompanion(entity);
+    final identifierCompanions = entity.identifiers?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
 
     await sql.batch((batch) async {
-      batch.insert(sql.name, nameCompanion);
       batch.insert(sql.individual, individualCompanion);
+      if (nameCompanion != null) batch.insert(sql.name, nameCompanion);
       batch.insertAll(sql.address, addressCompanions);
       batch.insertAll(sql.identifier, identifierCompanions);
 
@@ -175,8 +174,8 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
         sql.individualName,
         IndividualNameCompanion.insert(
           clientReferenceId: const Uuid().v1(),
-          individual: individualCompanion.clientReferenceId.value,
-          name: nameCompanion.clientReferenceId.value,
+          individual: Value(individualCompanion.clientReferenceId.value),
+          name: Value(nameCompanion?.clientReferenceId.value),
         ),
       );
 
@@ -185,8 +184,8 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
         addressCompanions.map(
           (e) => IndividualAddressCompanion.insert(
             clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            address: e.clientReferenceId.value,
+            individual: Value(individualCompanion.clientReferenceId.value),
+            address: Value(e.clientReferenceId.value),
           ),
         ),
       );
@@ -196,8 +195,8 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
         identifierCompanions.map(
           (e) => IndividualIdentifierCompanion.insert(
             clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            identifier: e.clientReferenceId.value,
+            individual: Value(individualCompanion.clientReferenceId.value),
+            identifier: Value(e.clientReferenceId.value),
           ),
         ),
       );
@@ -208,29 +207,29 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
 
   @override
   FutureOr<void> update(IndividualModel entity) async {
-    final nameValue = entity.name;
-    final addressValue = entity.address;
-    final identifiers = entity.identifiers;
+    final individualCompanion = entity.companion;
 
-    final nameCompanion = _getNameCompanion(nameValue);
-    final addressCompanions = addressValue.map((e) {
-      return _getAddressCompanion(e);
-    }).toList();
+    final nameCompanion = entity.name?.companion;
+    final addressCompanions = entity.address?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
 
-    final identifierCompanions = identifiers.map((e) {
-      return _getIdentifierCompanion(e);
-    }).toList();
-
-    final individualCompanion = _getIndividualCompanion(entity);
+    final identifierCompanions = entity.identifiers?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
 
     await sql.batch((batch) async {
-      batch.update(
-        sql.name,
-        nameCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          nameValue.clientReferenceId,
-        ),
-      );
+      if (nameCompanion != null) {
+        batch.update(
+          sql.name,
+          nameCompanion,
+          where: (table) => table.clientReferenceId.equals(
+            nameCompanion.clientReferenceId.value,
+          ),
+        );
+      }
 
       batch.update(
         sql.individual,
@@ -245,62 +244,5 @@ class IndividualLocalRepository extends LocalRepository<IndividualModel, Individ
     });
 
     await super.update(entity);
-  }
-
-  NameCompanion _getNameCompanion(NameModel nameValue) {
-    return NameCompanion.insert(
-      givenName: nameValue.givenName,
-      familyName: nameValue.familyName,
-      otherNames: Value(nameValue.otherNames),
-      clientReferenceId: nameValue.clientReferenceId,
-    );
-  }
-
-  AddressCompanion _getAddressCompanion(AddressModel e) {
-    return AddressCompanion.insert(
-      tenantId: e.tenantId,
-      clientReferenceId: e.clientReferenceId,
-      doorNo: e.doorNo,
-      latitude: e.latitude,
-      longitude: e.longitude,
-      locationAccuracy: e.locationAccuracy,
-      addressLine1: e.addressLine1,
-      addressLine2: e.addressLine2,
-      city: e.city,
-      pincode: e.pincode,
-      type: e.type,
-      locality: e.locality.clientReferenceId,
-      id: Value(e.id),
-      buildingName: Value(e.buildingName),
-      landmark: Value(e.landmark),
-      street: Value(e.street),
-    );
-  }
-
-  IdentifierCompanion _getIdentifierCompanion(IdentifierModel e) {
-    return IdentifierCompanion.insert(
-      type: e.type,
-      clientReferenceId: e.clientReferenceId,
-      id: e.id,
-    );
-  }
-
-  IndividualCompanion _getIndividualCompanion(IndividualModel entity) {
-    return IndividualCompanion.insert(
-      tenantId: entity.tenantId,
-      clientReferenceId: entity.clientReferenceId,
-      dateOfBirth: entity.dateOfBirth,
-      mobileNumber: entity.mobileNumber,
-      rowVersion: entity.rowVersion,
-      bloodGroup: entity.bloodGroup,
-      gender: entity.gender,
-      altContactNumber: Value(entity.altContactNumber),
-      email: Value(entity.email),
-      fatherName: Value(entity.fatherName),
-      husbandName: Value(entity.husbandName),
-      photo: Value(entity.photo),
-      id: Value(entity.id),
-      userId: Value(entity.userId),
-    );
   }
 }

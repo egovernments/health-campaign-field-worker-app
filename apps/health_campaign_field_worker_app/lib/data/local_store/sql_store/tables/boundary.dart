@@ -5,8 +5,8 @@ import 'package:drift/drift.dart';
 import 'boundary.dart';
 
 class Boundary extends Table {
-  TextColumn get code => text()();
-  TextColumn get name => text()();
+  TextColumn get code => text().nullable()();
+  TextColumn get name => text().nullable()();
   TextColumn get label => text().nullable()();
   TextColumn get latitude => text().nullable()();
   TextColumn get longitude => text().nullable()();

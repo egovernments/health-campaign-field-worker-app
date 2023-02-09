@@ -6,9 +6,7 @@ import '../../data_repository.dart';
 class {{name.pascalCase()}}RemoteRepository extends RemoteRepository<{{name.pascalCase()}}Model, {{name.pascalCase()}}SearchModel> {
   {{name.pascalCase()}}RemoteRepository(
     super.dio, {
-    required super.searchPath,
-    required super.createPath,
-    required super.updatePath,
+    required super.actionMap,
     super.entityName = '{{name.pascalCase()}}',
   });
 

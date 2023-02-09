@@ -1,15 +1,18 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import 'data_model.dart';
 
 @MappableClass()
-class ProductSearchModel extends DataModel {
+class ProductSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
   final String? type;
   final String? name;
   final String? manufacturer;
+  final String? clientReferenceId;
   
   ProductSearchModel({
     this.id,
@@ -17,39 +20,54 @@ class ProductSearchModel extends DataModel {
     this.type,
     this.name,
     this.manufacturer,
+    this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass()
-class ProductModel extends DataModel implements ProductSearchModel {
+class ProductModel extends EntityModel implements ProductSearchModel {
   
   @override
   final String? id;
   
   @override
-  final String tenantId;
+  final String? tenantId;
   
   @override
-  final String type;
+  final String? type;
   
   @override
-  final String name;
+  final String? name;
   
   @override
   final String? manufacturer;
-  final int rowVersion;
+  final int? rowVersion;
+  
+  @override
   final String clientReferenceId;
   
 
   ProductModel({
     this.id,
-    required this.tenantId,
-    required this.type,
-    required this.name,
+    this.tenantId,
+    this.type,
+    this.name,
     this.manufacturer,
-    required this.rowVersion,
+    this.rowVersion,
     required this.clientReferenceId,
     super.auditDetails,
   }):  super();
+
+  ProductCompanion get companion {
+    return ProductCompanion(
+      id: Value(id),
+      tenantId: Value(tenantId),
+      type: Value(type),
+      name: Value(name),
+      manufacturer: Value(manufacturer),
+      rowVersion: Value(rowVersion),
+      clientReferenceId: Value(clientReferenceId),
+      );
+  }
 }
