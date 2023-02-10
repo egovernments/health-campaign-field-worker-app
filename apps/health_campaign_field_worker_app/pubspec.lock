@@ -289,6 +289,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  db_viewer:
+    dependency: transitive
+    description:
+      name: db_viewer
+      sha256: "426daaaa0142facb95590da5b5b1d9a86d31c129098423c8644d3cc009bfe849"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   diff_match_patch:
     dependency: transitive
     description:
@@ -320,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.1"
+  drift_db_viewer:
+    dependency: "direct main"
+    description:
+      name: drift_db_viewer
+      sha256: "0ee16e566737f4210999cbdc80663a617538e4dc7ff7bf5aa8abf6e16fb675db"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   drift_dev:
     dependency: "direct dev"
     description:
