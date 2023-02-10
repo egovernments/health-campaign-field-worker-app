@@ -51,7 +51,10 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationSaveHouseholdDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(state.copyWith(householdModel: event.model));
+    emit(state.copyWith(
+      householdModel: event.household,
+      registrationDate: event.registrationDate,
+    ));
   }
 
   FutureOr<void> _handleSaveIndividualDetails(
@@ -68,10 +71,14 @@ class BeneficiaryRegistrationBloc
     final individual = state.individualModel;
     final household = state.householdModel;
     final address = state.addressModel;
+    final dateOfRegistration = state.registrationDate;
 
     if (individual == null) throw Exception('Individual cannot be null');
     if (household == null) throw Exception('Household cannot be null');
     if (address == null) throw Exception('Address cannot be null');
+    if (dateOfRegistration == null) {
+      throw Exception('Registration date cannot be null');
+    }
 
     emit(state.copyWith(loading: true));
     try {
@@ -82,6 +89,10 @@ class BeneficiaryRegistrationBloc
           rowVersion: 1,
           tenantId: envConfig.variables.tenantId,
           clientReferenceId: IdGen.i.identifier,
+          dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
+          // TODO(naveen): Please add project ID here
+          projectId: '',
+          beneficiaryClientReferenceId: individual.clientReferenceId,
         ),
       );
       await householdMemberRepository.create(
@@ -108,9 +119,10 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     AddressModel model,
   ) = BeneficiaryRegistrationSaveAddressEvent;
 
-  const factory BeneficiaryRegistrationEvent.saveHouseholdDetails(
-    HouseholdModel model,
-  ) = BeneficiaryRegistrationSaveHouseholdDetailsEvent;
+  const factory BeneficiaryRegistrationEvent.saveHouseholdDetails({
+    required HouseholdModel household,
+    required DateTime registrationDate,
+  }) = BeneficiaryRegistrationSaveHouseholdDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.saveIndividualDetails(
     IndividualModel model,
@@ -126,6 +138,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     IndividualModel? individualModel,
     HouseholdModel? householdModel,
+    DateTime? registrationDate,
     @Default(false) bool isHeadOfHousehold,
     @Default(false) bool loading,
   }) = _BeneficiaryRegistrationState;
