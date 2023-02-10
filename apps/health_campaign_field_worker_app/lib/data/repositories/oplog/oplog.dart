@@ -71,3 +71,8 @@ class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
 class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
   HouseholdMemberOpLogManager(super.isar);
 }
+
+class ProjectBeneficiaryOpLogManager
+    extends OpLogManager<ProjectBeneficiaryModel> {
+  ProjectBeneficiaryOpLogManager(super.isar);
+}

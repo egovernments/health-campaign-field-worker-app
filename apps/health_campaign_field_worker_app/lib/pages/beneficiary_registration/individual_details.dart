@@ -9,8 +9,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -61,30 +64,37 @@ class _IndividualDetailsPageState
                         context,
                       );
 
-                      // cubit.updateIndividualDetails(
-                      //   individualModel: IndividualModel(
-                      //     clientReferenceId: IdGen.i.identifier,
-                      //     dateOfBirth: form.control(_dobKey).value.toString(),
-                      //     mobileNumber: form.control(_mobileNumberKey).value,
-                      //     rowVersion: 1,
-                      //     name: NameModel(
-                      //       clientReferenceId: IdGen.i.identifier,
-                      //       givenName: form.control(_individualNameKey).value,
-                      //     ),
-                      //     gender: Gender.values.byName(form
-                      //         .control(_genderKey)
-                      //         .value
-                      //         .toString()
-                      //         .toLowerCase()),
-                      //     identifiers: [
-                      //       IdentifierModel(
-                      //         type: form.control(_idTypeKey).value,
-                      //         id: form.control(_idNumberKey).value,
-                      //         clientReferenceId: IdGen.i.identifier,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // );
+                      bloc.add(
+                        BeneficiaryRegistrationSaveIndividualDetailsEvent(
+                          IndividualModel(
+                            tenantId: envConfig.variables.tenantId,
+                            rowVersion: 1,
+                            clientReferenceId: IdGen.i.identifier,
+                            dateOfBirth: form.control(_dobKey).value.toString(),
+                            mobileNumber: form.control(_mobileNumberKey).value,
+                            name: NameModel(
+                              rowVersion: 1,
+                              tenantId: envConfig.variables.tenantId,
+                              clientReferenceId: IdGen.i.identifier,
+                              givenName: form.control(_individualNameKey).value,
+                            ),
+                            gender: Gender.values.byName(form
+                                .control(_genderKey)
+                                .value
+                                .toString()
+                                .toLowerCase()),
+                            identifiers: [
+                              IdentifierModel(
+                                tenantId: envConfig.variables.tenantId,
+                                type: form.control(_idTypeKey).value,
+                                id: form.control(_idNumberKey).value,
+                                clientReferenceId: IdGen.i.identifier,
+                                rowVersion: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
 
                       final isSuccess = await DigitDialog.show<bool>(
                         context,
@@ -113,14 +123,9 @@ class _IndividualDetailsPageState
                       );
 
                       if (isSuccess ?? false) {
-                        // cubit.submitDetails();
+                        bloc.add(const BeneficiaryRegistrationSubmitEvent());
                         router.push(AcknowledgementRoute());
                       }
-
-                      // if (isSuccess ?? false) {
-                      //   bloc.add(const BeneficiaryRegistrationSubmitEvent());
-                      //   router.push(AcknowledgementRoute());
-                      // }
                     },
                     child: Center(
                       child: Text(
