@@ -7,6 +7,8 @@ import 'address.dart';
 
 class IndividualAddress extends Table {
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
   TextColumn get individual => text().nullable().references(Individual, #clientReferenceId)();
   TextColumn get address => text().nullable().references(Address, #clientReferenceId)();

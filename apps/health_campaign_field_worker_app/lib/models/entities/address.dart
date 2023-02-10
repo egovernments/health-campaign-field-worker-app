@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class AddressSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   AddressSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -18,7 +20,6 @@ class AddressSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class AddressModel extends EntityModel implements AddressSearchModel {
   final String? id;
-  final String? tenantId;
   final String? doorNo;
   final double? latitude;
   final double? longitude;
@@ -33,13 +34,16 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final BoundaryModel? locality;
   final AddressType? type;
   
 
   AddressModel({
     this.id,
-    this.tenantId,
     this.doorNo,
     this.latitude,
     this.longitude,
@@ -52,6 +56,8 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     this.buildingName,
     this.street,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.locality,
     this.type,
     super.auditDetails,
@@ -60,7 +66,6 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   AddressCompanion get companion {
     return AddressCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       doorNo: Value(doorNo),
       latitude: Value(latitude),
       longitude: Value(longitude),
@@ -73,6 +78,8 @@ class AddressModel extends EntityModel implements AddressSearchModel {
       buildingName: Value(buildingName),
       street: Value(street),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       type: Value(type),
       locality: Value(locality?.clientReferenceId),
     );

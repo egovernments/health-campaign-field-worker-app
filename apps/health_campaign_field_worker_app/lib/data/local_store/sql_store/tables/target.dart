@@ -9,6 +9,8 @@ class Target extends Table {
   TextColumn get baseline => text().nullable()();
   TextColumn get target => text().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
 
   @override

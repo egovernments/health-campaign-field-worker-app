@@ -8,18 +8,18 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? projectId;
   final String? beneficiaryId;
   final String? clientReferenceId;
+  final String? tenantId;
   final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiarySearchModel({
     this.id,
-    this.tenantId,
     this.projectId,
     this.beneficiaryId,
     this.clientReferenceId,
+    this.tenantId,
     int? dateOfRegistration,
     super.boundaryCode,
   }): dateOfRegistrationTime = dateOfRegistration == null
@@ -38,17 +38,17 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? projectId;
   
   @override
   final String? beneficiaryId;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   
   @override
   final DateTime? dateOfRegistrationTime;
@@ -56,11 +56,11 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
 
   ProjectBeneficiaryModel({
     this.id,
-    this.tenantId,
     this.projectId,
     this.beneficiaryId,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     int? dateOfRegistration,
     super.auditDetails,
   }): dateOfRegistrationTime = dateOfRegistration == null
@@ -75,11 +75,11 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
   ProjectBeneficiaryCompanion get companion {
     return ProjectBeneficiaryCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

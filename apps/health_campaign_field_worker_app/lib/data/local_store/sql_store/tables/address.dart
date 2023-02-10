@@ -7,7 +7,6 @@ import 'boundary.dart';
 
 class Address extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text().nullable()();
   TextColumn get doorNo => text().nullable()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
@@ -20,6 +19,8 @@ class Address extends Table {
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
   TextColumn get locality => text().nullable().references(Boundary, #clientReferenceId)();

@@ -13,8 +13,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? individualId;
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
-  final String? tenantId;
   final String? clientReferenceId;
+  final String? tenantId;
   
   HouseholdMemberSearchModel({
     this.id,
@@ -23,8 +23,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
     this.individualId,
     this.individualClientReferenceId,
     this.isHeadOfHousehold,
-    this.tenantId,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -51,11 +51,11 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
   final bool? isHeadOfHousehold;
   
   @override
-  final String? tenantId;
-  final int? rowVersion;
+  final String clientReferenceId;
   
   @override
-  final String clientReferenceId;
+  final String tenantId;
+  final int rowVersion;
   
 
   HouseholdMemberModel({
@@ -65,9 +65,9 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
     this.individualId,
     this.individualClientReferenceId,
     this.isHeadOfHousehold,
-    this.tenantId,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -79,9 +79,9 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
       individualId: Value(individualId),
       individualClientReferenceId: Value(individualClientReferenceId),
       isHeadOfHousehold: Value(isHeadOfHousehold),
+      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      clientReferenceId: Value(clientReferenceId),
       );
   }
 }

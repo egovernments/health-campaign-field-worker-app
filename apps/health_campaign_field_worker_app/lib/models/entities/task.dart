@@ -8,12 +8,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class TaskSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? projectId;
   final String? projectBeneficiaryId;
   final String? createdBy;
   final String? status;
   final String? clientReferenceId;
+  final String? tenantId;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
@@ -21,12 +21,12 @@ class TaskSearchModel extends EntitySearchModel {
   
   TaskSearchModel({
     this.id,
-    this.tenantId,
     this.projectId,
     this.projectBeneficiaryId,
     this.createdBy,
     this.status,
     this.clientReferenceId,
+    this.tenantId,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
@@ -66,9 +66,6 @@ class TaskModel extends EntityModel implements TaskSearchModel {
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? projectId;
   
   @override
@@ -76,13 +73,16 @@ class TaskModel extends EntityModel implements TaskSearchModel {
   
   @override
   final String? createdBy;
-  final int? rowVersion;
   
   @override
   final String? status;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;
   
@@ -102,13 +102,13 @@ class TaskModel extends EntityModel implements TaskSearchModel {
 
   TaskModel({
     this.id,
-    this.tenantId,
     this.projectId,
     this.projectBeneficiaryId,
     this.createdBy,
-    this.rowVersion,
     this.status,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.resources,
     this.address,
     int? plannedStartDate,
@@ -157,13 +157,13 @@ class TaskModel extends EntityModel implements TaskSearchModel {
   TaskCompanion get companion {
     return TaskCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
       createdBy: Value(createdBy),
-      rowVersion: Value(rowVersion),
       status: Value(status),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

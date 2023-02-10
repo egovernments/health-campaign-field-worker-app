@@ -8,17 +8,17 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? facilityId;
   final String? projectId;
   final String? clientReferenceId;
+  final String? tenantId;
   
   ProjectFacilitySearchModel({
     this.id,
-    this.tenantId,
     this.facilityId,
     this.projectId,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -30,37 +30,37 @@ class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchM
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? facilityId;
   
   @override
   final String? projectId;
-  final String? rowVersion;
   
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   ProjectFacilityModel({
     this.id,
-    this.tenantId,
     this.facilityId,
     this.projectId,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

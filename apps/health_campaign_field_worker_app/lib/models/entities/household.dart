@@ -8,15 +8,15 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final int? memberCount;
   final String? clientReferenceId;
+  final String? tenantId;
   
   HouseholdSearchModel({
     this.id,
-    this.tenantId,
     this.memberCount,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -28,23 +28,23 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final int? memberCount;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final AddressModel? address;
   
 
   HouseholdModel({
     this.id,
-    this.tenantId,
     this.memberCount,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.address,
     super.auditDetails,
   }):  super();
@@ -52,10 +52,10 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   HouseholdCompanion get companion {
     return HouseholdCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       memberCount: Value(memberCount),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

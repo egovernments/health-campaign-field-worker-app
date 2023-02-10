@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   TaskResourceSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -18,7 +20,6 @@ class TaskResourceSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   final String? id;
-  final String? tenantId;
   final String? productVariantId;
   final String? quantity;
   final bool? isDelivered;
@@ -27,27 +28,33 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   TaskResourceModel({
     this.id,
-    this.tenantId,
     this.productVariantId,
     this.quantity,
     this.isDelivered,
     this.deliveryComment,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       productVariantId: Value(productVariantId),
       quantity: Value(quantity),
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

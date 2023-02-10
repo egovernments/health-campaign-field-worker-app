@@ -22,6 +22,32 @@ void run(HookContext context) {
     );
   }
 
+  if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'tenantId') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'tenantId',
+        type: 'String',
+        includeForQuery: true,
+        nullable: false,
+      ),
+    );
+  }
+
+  if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'rowVersion') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'rowVersion',
+        type: 'int',
+        includeForQuery: false,
+        nullable: false,
+      ),
+    );
+  }
+
   final sqlAttributes = <AttributeModel>[
     ...model.attributes.map((e) {
       final type = _getSqlType(e.type);

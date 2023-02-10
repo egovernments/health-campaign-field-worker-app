@@ -5,7 +5,6 @@ import 'package:drift/drift.dart';
 
 class Project extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text().nullable()();
   TextColumn get projectTypeId => text().nullable()();
   TextColumn get subProjectTypeId => text().nullable()();
   BoolColumn get isTaskEnabled => boolean().nullable()();
@@ -14,8 +13,9 @@ class Project extends Table {
   TextColumn get description => text().nullable()();
   TextColumn get referenceId => text().nullable()();
   TextColumn get projectHierarchy => text().nullable()();
-  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
 
   @override

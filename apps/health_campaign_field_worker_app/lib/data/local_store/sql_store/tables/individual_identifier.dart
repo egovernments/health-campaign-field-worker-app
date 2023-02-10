@@ -7,6 +7,8 @@ import 'identifier.dart';
 
 class IndividualIdentifier extends Table {
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
   TextColumn get individual => text().nullable().references(Individual, #clientReferenceId)();
   TextColumn get identifier => text().nullable().references(Identifier, #clientReferenceId)();

@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class TargetSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   TargetSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -25,6 +27,10 @@ class TargetModel extends EntityModel implements TargetSearchModel {
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   TargetModel({
     this.id,
@@ -32,6 +38,8 @@ class TargetModel extends EntityModel implements TargetSearchModel {
     this.baseline,
     this.target,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -42,6 +50,8 @@ class TargetModel extends EntityModel implements TargetSearchModel {
       baseline: Value(baseline),
       target: Value(target),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

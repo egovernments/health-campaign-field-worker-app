@@ -10,9 +10,9 @@ class HouseholdMember extends Table {
   TextColumn get individualId => text().nullable()();
   TextColumn get individualClientReferenceId => text().nullable()();
   BoolColumn get isHeadOfHousehold => boolean().nullable()();
-  TextColumn get tenantId => text().nullable()();
-  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
 
   @override

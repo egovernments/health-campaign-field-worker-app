@@ -11,12 +11,14 @@ class NameSearchModel extends EntitySearchModel {
   final String? familyName;
   final String? otherNames;
   final String? clientReferenceId;
+  final String? tenantId;
   
   NameSearchModel({
     this.givenName,
     this.familyName,
     this.otherNames,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -36,12 +38,18 @@ class NameModel extends EntityModel implements NameSearchModel {
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   NameModel({
     this.givenName,
     this.familyName,
     this.otherNames,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -51,6 +59,8 @@ class NameModel extends EntityModel implements NameSearchModel {
       familyName: Value(familyName),
       otherNames: Value(otherNames),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }
