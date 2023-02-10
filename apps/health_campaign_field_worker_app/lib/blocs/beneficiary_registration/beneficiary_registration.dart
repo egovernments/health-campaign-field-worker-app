@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 
 part 'beneficiary_registration.freezed.dart';
 
@@ -69,20 +70,24 @@ class BeneficiaryRegistrationBloc
     if (address == null) throw Exception('Address cannot be null');
 
     emit(state.copyWith(loading: true));
-    await individualRepository.create(individual);
-    await householdRepository.create(household);
-    await householdMemberSearchRepository.create(
-      HouseholdMemberModel(
-        householdClientReferenceId: household.clientReferenceId,
-        individualClientReferenceId: individual.clientReferenceId,
-        isHeadOfHousehold: state.isHeadOfHousehold,
-        // TODO(naveen): Please review the value for Tenant ID
-        tenantId: '',
-        rowVersion: 1,
-        clientReferenceId: const Uuid().v1(),
-      ),
-    );
-    emit(state.copyWith(loading: false));
+    try {
+      await individualRepository.create(individual);
+      await householdRepository.create(household);
+      await householdMemberSearchRepository.create(
+        HouseholdMemberModel(
+          householdClientReferenceId: household.clientReferenceId,
+          individualClientReferenceId: individual.clientReferenceId,
+          isHeadOfHousehold: state.isHeadOfHousehold,
+          tenantId: envConfig.variables.tenantId,
+          rowVersion: 1,
+          clientReferenceId: const Uuid().v1(),
+        ),
+      );
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
   }
 }
 
