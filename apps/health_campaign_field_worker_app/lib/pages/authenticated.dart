@@ -2,9 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/blocs/location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
 import '../blocs/household_details/household_details.dart';
+import '../blocs/sync/sync.dart';
+import '../data/local_store/no_sql/schema/oplog.dart';
 import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -20,6 +23,20 @@ class AuthenticatedPageWrapper extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) {
+              final isar = context.read<Isar>();
+              final bloc = SyncBloc(isar: isar)..add(const SyncRefreshEvent());
+
+              isar.opLogs
+                  .filter()
+                  .isSyncedEqualTo(false)
+                  .watch()
+                  .listen((event) => bloc.add(const SyncRefreshEvent()));
+
+              return bloc;
+            },
+          ),
           BlocProvider(
             create: (_) => LocationBloc(location: Location())
               ..add(const LoadLocationEvent()),

@@ -3,6 +3,7 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/sync/sync.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -60,12 +61,18 @@ class _HomePageState extends LocalizedState<HomePage> {
         footer: const PoweredByDigit(),
         children: [
           const SizedBox(height: kPadding * 2),
-          DigitInfoCard(
-            icon: Icons.info,
-            backgroundColor: theme.colorScheme.tertiaryContainer,
-            iconColor: theme.colorScheme.surfaceTint,
-            description: localizations.translate(i18.home.dataSyncInfoContent),
-            title: localizations.translate(i18.home.dataSyncInfoLabel),
+          BlocBuilder<SyncBloc, SyncState>(
+            builder: (context, state) {
+              return DigitInfoCard(
+                icon: Icons.info,
+                backgroundColor: theme.colorScheme.tertiaryContainer,
+                iconColor: theme.colorScheme.surfaceTint,
+                description: localizations
+                    .translate(i18.home.dataSyncInfoContent)
+                    .replaceAll('{}', state.count.toString()),
+                title: localizations.translate(i18.home.dataSyncInfoLabel),
+              );
+            },
           ),
         ],
       ),

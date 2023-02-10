@@ -1,11 +1,11 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
-
-// TODO(ajil-egov): Needs to be updated to bulk-api
 
 class NetworkManager {
   final NetworkManagerConfiguration configuration;
@@ -78,6 +78,13 @@ class NetworkManager {
       }
     }
   }
+
+  FutureOr<int> getPendingSyncRecords(
+    List<LocalRepository> localRepositories,
+  ) async =>
+      (await Future.wait(localRepositories.map((e) => e.getItemsToBeSynced())))
+          .expand((element) => element)
+          .length;
 
   Future<void> syncDown() async {
     if (configuration.persistenceConfig ==
