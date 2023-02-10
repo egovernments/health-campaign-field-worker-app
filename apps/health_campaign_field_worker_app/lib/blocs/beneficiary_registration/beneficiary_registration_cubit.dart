@@ -14,16 +14,11 @@ class BeneficiaryRegistrationCubit extends Cubit<BeneficiaryRegistrationState> {
   final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
       householdMemberSearchRepository;
 
-  // final individual = state.individualModel;
-  // final household = state.householdModel;
-  // final address = state.addressModel;
-
   late AddressModel _addressModel;
   late IndividualModel _individualModel;
   late HouseholdModel _householdModel;
 
   late bool _isHeadOFHousehold;
-  late int _memberCount;
 
   BeneficiaryRegistrationCubit(
     super.initialState, {
@@ -33,7 +28,6 @@ class BeneficiaryRegistrationCubit extends Cubit<BeneficiaryRegistrationState> {
   });
 
   void updateHouseholdLocation({required AddressModel addressModel}) {
-    print('============     updateHouseholdLocation being called -----------');
     _addressModel = addressModel;
   }
 
@@ -42,18 +36,15 @@ class BeneficiaryRegistrationCubit extends Cubit<BeneficiaryRegistrationState> {
   void updateHouseholdModel({
     required HouseholdModel householdModel,
   }) {
-    print('============     updateHouseholdModel being called -----------');
     _householdModel = householdModel;
-    // _householdModel.address = _addressModel;
   }
 
-  void updateIndividualDetails(
-      {required IndividualModel individualModel,
-      bool isHeadOFHousehold = false}) {
-    print('============     updateIndividualDetails being called -----------');
+  void updateIndividualDetails({
+    required IndividualModel individualModel,
+    bool isHeadOFHousehold = false,
+  }) {
     _individualModel = individualModel;
     _isHeadOFHousehold = isHeadOFHousehold;
-    // _individualModel.address.add(_addressModel);
   }
 
   submitDetails() async {
