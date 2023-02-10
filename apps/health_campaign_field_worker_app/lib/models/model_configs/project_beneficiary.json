@@ -8,11 +8,6 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "projectId",
       "type": "String",
       "includeForQuery": true
@@ -21,10 +16,6 @@
       "name": "beneficiaryId",
       "type": "String",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "dateTimeAttributes": [
