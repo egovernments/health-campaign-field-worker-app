@@ -49,8 +49,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     final memberCount =
                         form.control(_memberCountKey).value as int;
 
+                    final dateOfRegistration =
+                        form.control(_dateOfRegistrationKey).value as DateTime;
+
                     final bloc = context.read<BeneficiaryRegistrationBloc>();
-                    final model = HouseholdModel(
+                    final household = HouseholdModel(
                       tenantId: envConfig.variables.tenantId,
                       clientReferenceId: IdGen.i.identifier,
                       memberCount: memberCount,
@@ -59,7 +62,10 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     );
 
                     bloc.add(
-                      BeneficiaryRegistrationSaveHouseholdDetailsEvent(model),
+                      BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                        household: household,
+                        registrationDate: dateOfRegistration,
+                      ),
                     );
 
                     context.router.push(IndividualDetailsRoute());
