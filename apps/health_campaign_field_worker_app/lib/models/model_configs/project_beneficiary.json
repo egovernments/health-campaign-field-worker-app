@@ -16,6 +16,11 @@
       "name": "beneficiaryId",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "beneficiaryClientReferenceId",
+      "type": "String",
+      "includeForQuery": true
     }
   ],
   "dateTimeAttributes": [
