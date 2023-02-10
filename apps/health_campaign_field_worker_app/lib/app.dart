@@ -12,6 +12,7 @@ import 'blocs/localization/localization.dart';
 import 'blocs/table_hide_action.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
+import 'data/repositories/remote/auth.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -43,7 +44,12 @@ class MainApplication extends StatelessWidget {
             mdmsRepository: MdmsRepository(client),
           )..add(const AppInitializationSetupEvent()),
         ),
-        BlocProvider(create: (context) => AuthBloc(const AuthState())),
+        BlocProvider(
+          create: (context) => AuthBloc(
+            const AuthState(),
+            AuthRepository(client),
+          ),
+        ),
         BlocProvider(
           create: (context) => TableHideActionBloc(
             const TableHideActionState(),
