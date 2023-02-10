@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
+import '../../models/auth/auth_model.dart';
 import '../../utils/environment_config.dart';
 
 part 'auth.freezed.dart';
@@ -22,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(loading: true));
     await Future.delayed(const Duration(seconds: 1));
 
-    final result = await authRepository.authToken(
+    final AuthModel result = await authRepository.authToken(
       'user/oauth/token',
       null,
       {
@@ -34,8 +36,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "grant_type": "password",
       },
     );
-
-    emit(state.copyWith(accessToken: '', loading: false));
+    await storage.write(key: 'access_token', value: result.access_token);
+    print(storage.read(key: 'access_token'));
+    emit(state.copyWith(accessToken: result.access_token, loading: false));
   }
 
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
