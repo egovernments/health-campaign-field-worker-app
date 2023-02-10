@@ -11,6 +11,8 @@ class ProjectStaff extends Table {
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
   IntColumn get rowVersion => integer()();
+  DateTimeColumn get startDate => dateTime().nullable()();
+  DateTimeColumn get endDate => dateTime().nullable()();
   
 
   @override

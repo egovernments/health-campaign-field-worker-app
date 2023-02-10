@@ -54,6 +54,11 @@ void run(HookContext context) {
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);
     }),
+    ...model.dateTimeAttributes.map((e) {
+      final type = _getSqlType(e.type);
+      final columnType = _getSqlColumnType(e.type);
+      return e.copyWith(type: type, columnType: columnType);
+    }),
     ...model.customAttributes.where((element) => element.isEnum),
   ];
 
@@ -78,6 +83,9 @@ void run(HookContext context) {
 String _getSqlType(String dartType) {
   String type;
   switch (dartType) {
+    case 'DateTime':
+      type = 'DateTime';
+      break;
     case 'String':
       type = 'Text';
       break;
@@ -100,6 +108,9 @@ String _getSqlType(String dartType) {
 String _getSqlColumnType(String dartType) {
   String type;
   switch (dartType) {
+    case 'DateTime':
+      type = 'DateTime';
+      break;
     case 'String':
       type = 'Text';
       break;

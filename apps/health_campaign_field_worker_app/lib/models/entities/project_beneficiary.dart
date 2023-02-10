@@ -87,6 +87,7 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
+      dateOfRegistration: Value(dateOfRegistration),
       );
   }
 }
