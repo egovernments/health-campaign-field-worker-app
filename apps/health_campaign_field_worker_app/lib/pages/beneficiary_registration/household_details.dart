@@ -2,13 +2,13 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -43,28 +43,31 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
               child: DigitCard(
                 child: DigitElevatedButton(
                   onPressed: () {
+                    form.markAllAsTouched();
                     if (!form.valid) return;
 
-                    final dateOfRegistration =
-                        form.control(_dateOfRegistrationKey).value as DateTime;
                     final memberCount =
                         form.control(_memberCountKey).value as int;
 
-                    final cubit = context.read<BeneficiaryRegistrationCubit>();
+                    final bloc = context.read<BeneficiaryRegistrationBloc>();
                     final model = HouseholdModel(
-                      tenantId: 'default',
-                      clientReferenceId: Uuid().v1(),
+                      tenantId: envConfig.variables.tenantId,
+                      clientReferenceId: IdGen.i.identifier,
                       memberCount: memberCount,
+                      address: bloc.state.addressModel,
                       rowVersion: 1,
-                      address: cubit.addressModel,
                     );
-                    cubit.updateHouseholdModel(householdModel: model);
+
+                    bloc.add(
+                      BeneficiaryRegistrationSaveHouseholdDetailsEvent(model),
+                    );
 
                     context.router.push(IndividualDetailsRoute());
                   },
                   child: Center(
-                    child: Text(localizations
-                        .translate(i18.householdDetails.actionLabel)),
+                    child: Text(
+                      localizations.translate(i18.householdDetails.actionLabel),
+                    ),
                   ),
                 ),
               ),
