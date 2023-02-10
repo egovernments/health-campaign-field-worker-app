@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/repositories/remote/auth.dart';
+import '../../utils/environment_config.dart';
 
 part 'auth.freezed.dart';
 
@@ -28,11 +29,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "username": event.userId.toString(),
         "password": event.password.toString(),
         "userType": 'EMPLOYEE',
-        "tenantId": 'default',
+        "tenantId": envConfig.variables.tenantId,
         "scope": "read",
         "grant_type": "password",
       },
-
+    );
 
     emit(state.copyWith(accessToken: '', loading: false));
   }
