@@ -2,8 +2,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class ProjectProductVariantSearchModel extends EntitySearchModel {

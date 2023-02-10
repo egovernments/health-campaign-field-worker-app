@@ -2,27 +2,27 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class HouseholdSearchModel extends EntitySearchModel {
+class ProjectResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final int? memberCount;
+  final String? projectId;
   final String? clientReferenceId;
   
-  HouseholdSearchModel({
+  ProjectResourceSearchModel({
     this.id,
     this.tenantId,
-    this.memberCount,
+    this.projectId,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdModel extends EntityModel implements HouseholdSearchModel {
+class ProjectResourceModel extends EntityModel implements ProjectResourceSearchModel {
   
   @override
   final String? id;
@@ -31,29 +31,29 @@ class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   final String? tenantId;
   
   @override
-  final int? memberCount;
+  final String? projectId;
   final int? rowVersion;
   
   @override
   final String clientReferenceId;
-  final AddressModel? address;
+  final ProjectProductVariantModel? resources;
   
 
-  HouseholdModel({
+  ProjectResourceModel({
     this.id,
     this.tenantId,
-    this.memberCount,
+    this.projectId,
     this.rowVersion,
     required this.clientReferenceId,
-    this.address,
+    this.resources,
     super.auditDetails,
   }):  super();
 
-  HouseholdCompanion get companion {
-    return HouseholdCompanion(
+  ProjectResourceCompanion get companion {
+    return ProjectResourceCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      memberCount: Value(memberCount),
+      projectId: Value(projectId),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

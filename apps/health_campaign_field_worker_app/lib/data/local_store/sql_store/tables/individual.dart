@@ -2,8 +2,8 @@
 
 import 'package:drift/drift.dart';
 
-import '../../../../models/blood_group.dart';
-import '../../../../models/gender.dart';
+import '../../../../models/entities/blood_group.dart';
+import '../../../../models/entities/gender.dart';
 
 class Individual extends Table {
   TextColumn get id => text().nullable()();

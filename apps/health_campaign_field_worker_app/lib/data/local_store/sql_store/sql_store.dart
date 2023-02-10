@@ -5,9 +5,9 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../models/address_type.dart';
-import '../../../models/gender.dart';
-import '../../../models/blood_group.dart';
+import '../../../models/entities/address_type.dart';
+import '../../../models/entities/gender.dart';
+import '../../../models/entities/blood_group.dart';
 import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
