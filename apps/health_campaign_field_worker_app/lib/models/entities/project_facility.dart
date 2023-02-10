@@ -2,31 +2,29 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProductSearchModel extends EntitySearchModel {
+class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? type;
-  final String? name;
-  final String? manufacturer;
+  final String? facilityId;
+  final String? projectId;
   final String? clientReferenceId;
   
-  ProductSearchModel({
+  ProjectFacilitySearchModel({
     this.id,
     this.tenantId,
-    this.type,
-    this.name,
-    this.manufacturer,
+    this.facilityId,
+    this.projectId,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProductModel extends EntityModel implements ProductSearchModel {
+class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchModel {
   
   @override
   final String? id;
@@ -35,37 +33,32 @@ class ProductModel extends EntityModel implements ProductSearchModel {
   final String? tenantId;
   
   @override
-  final String? type;
+  final String? facilityId;
   
   @override
-  final String? name;
-  
-  @override
-  final String? manufacturer;
-  final int? rowVersion;
+  final String? projectId;
+  final String? rowVersion;
   
   @override
   final String clientReferenceId;
   
 
-  ProductModel({
+  ProjectFacilityModel({
     this.id,
     this.tenantId,
-    this.type,
-    this.name,
-    this.manufacturer,
+    this.facilityId,
+    this.projectId,
     this.rowVersion,
     required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 
-  ProductCompanion get companion {
-    return ProductCompanion(
+  ProjectFacilityCompanion get companion {
+    return ProjectFacilityCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      type: Value(type),
-      name: Value(name),
-      manufacturer: Value(manufacturer),
+      facilityId: Value(facilityId),
+      projectId: Value(projectId),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

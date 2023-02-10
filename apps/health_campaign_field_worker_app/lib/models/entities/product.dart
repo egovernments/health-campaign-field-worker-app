@@ -2,31 +2,31 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class FacilitySearchModel extends EntitySearchModel {
+class ProductSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final bool? isPermanent;
-  final String? usage;
-  final int? storageCapacity;
+  final String? type;
+  final String? name;
+  final String? manufacturer;
   final String? clientReferenceId;
   
-  FacilitySearchModel({
+  ProductSearchModel({
     this.id,
     this.tenantId,
-    this.isPermanent,
-    this.usage,
-    this.storageCapacity,
+    this.type,
+    this.name,
+    this.manufacturer,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class FacilityModel extends EntityModel implements FacilitySearchModel {
+class ProductModel extends EntityModel implements ProductSearchModel {
   
   @override
   final String? id;
@@ -35,39 +35,37 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   final String? tenantId;
   
   @override
-  final bool? isPermanent;
+  final String? type;
   
   @override
-  final String? usage;
+  final String? name;
   
   @override
-  final int? storageCapacity;
+  final String? manufacturer;
   final int? rowVersion;
   
   @override
   final String clientReferenceId;
-  final AddressModel? address;
   
 
-  FacilityModel({
+  ProductModel({
     this.id,
     this.tenantId,
-    this.isPermanent,
-    this.usage,
-    this.storageCapacity,
+    this.type,
+    this.name,
+    this.manufacturer,
     this.rowVersion,
     required this.clientReferenceId,
-    this.address,
     super.auditDetails,
   }):  super();
 
-  FacilityCompanion get companion {
-    return FacilityCompanion(
+  ProductCompanion get companion {
+    return ProductCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      isPermanent: Value(isPermanent),
-      usage: Value(usage),
-      storageCapacity: Value(storageCapacity),
+      type: Value(type),
+      name: Value(name),
+      manufacturer: Value(manufacturer),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

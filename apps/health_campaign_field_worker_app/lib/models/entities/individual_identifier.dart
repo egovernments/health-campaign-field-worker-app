@@ -2,40 +2,40 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class IndividualAddressSearchModel extends EntitySearchModel {
+class IndividualIdentifierSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
   
-  IndividualAddressSearchModel({
+  IndividualIdentifierSearchModel({
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class IndividualAddressModel extends EntityModel implements IndividualAddressSearchModel {
+class IndividualIdentifierModel extends EntityModel implements IndividualIdentifierSearchModel {
   
   @override
   final String clientReferenceId;
   final IndividualModel? individual;
-  final AddressModel? address;
+  final IdentifierModel? identifier;
   
 
-  IndividualAddressModel({
+  IndividualIdentifierModel({
     required this.clientReferenceId,
     this.individual,
-    this.address,
+    this.identifier,
     super.auditDetails,
   }):  super();
 
-  IndividualAddressCompanion get companion {
-    return IndividualAddressCompanion(
+  IndividualIdentifierCompanion get companion {
+    return IndividualIdentifierCompanion(
       clientReferenceId: Value(clientReferenceId),
       individual: Value(individual?.clientReferenceId),
-    address: Value(address?.clientReferenceId),
+    identifier: Value(identifier?.clientReferenceId),
     );
   }
 }
