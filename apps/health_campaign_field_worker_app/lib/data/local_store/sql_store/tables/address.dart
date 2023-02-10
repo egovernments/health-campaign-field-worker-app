@@ -2,7 +2,7 @@
 
 import 'package:drift/drift.dart';
 
-import '../../../../models/address_type.dart';
+import '../../../../models/entities/address_type.dart';
 import 'boundary.dart';
 
 class Address extends Table {

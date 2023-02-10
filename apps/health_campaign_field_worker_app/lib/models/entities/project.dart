@@ -2,24 +2,32 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProjectStaffSearchModel extends EntitySearchModel {
+class ProjectSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? userId;
-  final String? projectId;
+  final String? projectTypeId;
+  final String? subProjectTypeId;
+  final bool? isTaskEnabled;
+  final String? parent;
+  final String? department;
+  final String? referenceId;
   final String? clientReferenceId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
-  ProjectStaffSearchModel({
+  ProjectSearchModel({
     this.id,
     this.tenantId,
-    this.userId,
-    this.projectId,
+    this.projectTypeId,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
+    this.parent,
+    this.department,
+    this.referenceId,
     this.clientReferenceId,
     int? startDate,
     int? endDate,
@@ -40,7 +48,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
+class ProjectModel extends EntityModel implements ProjectSearchModel {
   
   @override
   final String? id;
@@ -49,15 +57,31 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   final String? tenantId;
   
   @override
-  final String? userId;
+  final String? projectTypeId;
   
   @override
-  final String? projectId;
-  final String? channel;
+  final String? subProjectTypeId;
+  
+  @override
+  final bool? isTaskEnabled;
+  
+  @override
+  final String? parent;
+  
+  @override
+  final String? department;
+  final String? description;
+  
+  @override
+  final String? referenceId;
+  final String? projectHierarchy;
   final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  final AddressModel? address;
+  final List<TargetModel>? targets;
+  final List<DocumentModel>? documents;
   
   @override
   final DateTime? startDateTime;
@@ -66,14 +90,22 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   final DateTime? endDateTime;
   
 
-  ProjectStaffModel({
+  ProjectModel({
     this.id,
     this.tenantId,
-    this.userId,
-    this.projectId,
-    this.channel,
+    this.projectTypeId,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
+    this.parent,
+    this.department,
+    this.description,
+    this.referenceId,
+    this.projectHierarchy,
     this.rowVersion,
     required this.clientReferenceId,
+    this.address,
+    this.targets,
+    this.documents,
     int? startDate,
     int? endDate,
     super.auditDetails,
@@ -93,13 +125,18 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 
-  ProjectStaffCompanion get companion {
-    return ProjectStaffCompanion(
+  ProjectCompanion get companion {
+    return ProjectCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      userId: Value(userId),
-      projectId: Value(projectId),
-      channel: Value(channel),
+      projectTypeId: Value(projectTypeId),
+      subProjectTypeId: Value(subProjectTypeId),
+      isTaskEnabled: Value(isTaskEnabled),
+      parent: Value(parent),
+      department: Value(department),
+      description: Value(description),
+      referenceId: Value(referenceId),
+      projectHierarchy: Value(projectHierarchy),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

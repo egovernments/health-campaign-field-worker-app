@@ -2,27 +2,31 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProjectResourceSearchModel extends EntitySearchModel {
+class FacilitySearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? projectId;
+  final bool? isPermanent;
+  final String? usage;
+  final int? storageCapacity;
   final String? clientReferenceId;
   
-  ProjectResourceSearchModel({
+  FacilitySearchModel({
     this.id,
     this.tenantId,
-    this.projectId,
+    this.isPermanent,
+    this.usage,
+    this.storageCapacity,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectResourceModel extends EntityModel implements ProjectResourceSearchModel {
+class FacilityModel extends EntityModel implements FacilitySearchModel {
   
   @override
   final String? id;
@@ -31,29 +35,39 @@ class ProjectResourceModel extends EntityModel implements ProjectResourceSearchM
   final String? tenantId;
   
   @override
-  final String? projectId;
+  final bool? isPermanent;
+  
+  @override
+  final String? usage;
+  
+  @override
+  final int? storageCapacity;
   final int? rowVersion;
   
   @override
   final String clientReferenceId;
-  final ProjectProductVariantModel? resources;
+  final AddressModel? address;
   
 
-  ProjectResourceModel({
+  FacilityModel({
     this.id,
     this.tenantId,
-    this.projectId,
+    this.isPermanent,
+    this.usage,
+    this.storageCapacity,
     this.rowVersion,
     required this.clientReferenceId,
-    this.resources,
+    this.address,
     super.auditDetails,
   }):  super();
 
-  ProjectResourceCompanion get companion {
-    return ProjectResourceCompanion(
+  FacilityCompanion get companion {
+    return FacilityCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      projectId: Value(projectId),
+      isPermanent: Value(isPermanent),
+      usage: Value(usage),
+      storageCapacity: Value(storageCapacity),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

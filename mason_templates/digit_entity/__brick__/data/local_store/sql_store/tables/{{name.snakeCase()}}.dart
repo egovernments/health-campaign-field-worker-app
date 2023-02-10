@@ -2,7 +2,7 @@
 
 {{^isEnum}}import 'package:drift/drift.dart';
 
-{{#sqlAttributes}}{{#isEnum}}import '../../../../models/{{type.snakeCase()}}.dart';
+{{#sqlAttributes}}{{#isEnum}}import '../../../../models/entities/{{type.snakeCase()}}.dart';
 {{/isEnum}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}import '{{table.snakeCase()}}.dart';
 {{/references}}{{/referenceAttributes}}
 class {{name.pascalCase()}} extends Table {

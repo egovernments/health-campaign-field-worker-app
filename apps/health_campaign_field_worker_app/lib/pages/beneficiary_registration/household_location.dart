@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
-import '../../models/address.dart';
-import '../../models/address_type.dart';
-import '../../models/boundary.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../models/entities/address.dart';
+import '../../models/entities/address_type.dart';
+import '../../models/entities/boundary.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
