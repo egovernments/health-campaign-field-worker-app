@@ -53,7 +53,7 @@ class HouseholdLocalRepository
 
     return results.map((e) {
       final household = e.readTable(sql.household);
-      final address = e.readTable(sql.address);
+      final address = e.readTableOrNull(sql.address);
 
       return HouseholdModel(
         id: household.id,
@@ -61,20 +61,22 @@ class HouseholdLocalRepository
         clientReferenceId: household.clientReferenceId,
         memberCount: household.memberCount,
         rowVersion: household.rowVersion,
-        address: AddressModel(
-          tenantId: address.tenantId,
-          clientReferenceId: address.clientReferenceId,
-          doorNo: address.doorNo,
-          latitude: address.latitude,
-          longitude: address.longitude,
-          locationAccuracy: address.locationAccuracy,
-          addressLine1: address.addressLine1,
-          addressLine2: address.addressLine2,
-          city: address.city,
-          pincode: address.pincode,
-          type: address.type,
-          rowVersion: address.rowVersion,
-        ),
+        address: address == null
+            ? null
+            : AddressModel(
+                tenantId: address.tenantId,
+                clientReferenceId: address.clientReferenceId,
+                doorNo: address.doorNo,
+                latitude: address.latitude,
+                longitude: address.longitude,
+                locationAccuracy: address.locationAccuracy,
+                addressLine1: address.addressLine1,
+                addressLine2: address.addressLine2,
+                city: address.city,
+                pincode: address.pincode,
+                type: address.type,
+                rowVersion: address.rowVersion,
+              ),
       );
     }).toList();
   }
@@ -96,7 +98,11 @@ class HouseholdLocalRepository
       batch.insert(sql.household, householdCompanion);
 
       if (addressCompanion != null) {
-        batch.insert(sql.address, addressCompanion);
+        batch.insert(
+          sql.address,
+          addressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
         batch.insert(sql.householdAddress, householdAddressCompanion);
       }
     });

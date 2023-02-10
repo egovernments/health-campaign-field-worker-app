@@ -28,6 +28,16 @@ void main() async {
   ]);
 
   final sql = LocalSqlDataStore();
+
+  // for (var element in sql.allTables) {
+  //   final count = await (sql.delete(element)
+  //         ..where(
+  //           (tbl) => const Constant(true),
+  //         ))
+  //       .go();
+  //   print('${element.tableName}: $count');
+  // }
+
   Dio client = Client().init();
 
   runApp(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
@@ -84,8 +85,8 @@ class IndividualLocalRepository
                   query.gender?.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.equals(
-                  query.name!.givenName,
+                sql.name.givenName.contains(
+                  query.name!.givenName!,
                 ),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
@@ -101,8 +102,8 @@ class IndividualLocalRepository
 
     return results.map((e) {
       final individual = e.readTable(sql.individual);
-      final name = e.readTable(sql.name);
-      final address = e.readTable(sql.address);
+      final name = e.readTableOrNull(sql.name);
+      final address = e.readTableOrNull(sql.address);
       final identifier = e.readTableOrNull(sql.identifier);
 
       return IndividualModel(
@@ -111,31 +112,35 @@ class IndividualLocalRepository
         dateOfBirth: individual.dateOfBirth,
         mobileNumber: individual.mobileNumber,
         rowVersion: individual.rowVersion,
-        name: NameModel(
-          clientReferenceId: name.clientReferenceId,
-          familyName: name.familyName,
-          givenName: name.givenName,
-          otherNames: name.otherNames,
-          rowVersion: name.rowVersion,
-          tenantId: name.tenantId,
-        ),
+        name: name == null
+            ? null
+            : NameModel(
+                clientReferenceId: name.clientReferenceId,
+                familyName: name.familyName,
+                givenName: name.givenName,
+                otherNames: name.otherNames,
+                rowVersion: name.rowVersion,
+                tenantId: name.tenantId,
+              ),
         bloodGroup: individual.bloodGroup,
         address: [
-          AddressModel(
-            tenantId: address.tenantId,
-            clientReferenceId: address.clientReferenceId,
-            doorNo: address.doorNo,
-            latitude: address.latitude,
-            longitude: address.longitude,
-            locationAccuracy: address.locationAccuracy,
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            pincode: address.pincode,
-            type: address.type,
-            rowVersion: address.rowVersion,
-          ),
-        ],
+          address == null
+              ? null
+              : AddressModel(
+                  tenantId: address.tenantId,
+                  clientReferenceId: address.clientReferenceId,
+                  doorNo: address.doorNo,
+                  latitude: address.latitude,
+                  longitude: address.longitude,
+                  locationAccuracy: address.locationAccuracy,
+                  addressLine1: address.addressLine1,
+                  addressLine2: address.addressLine2,
+                  city: address.city,
+                  pincode: address.pincode,
+                  type: address.type,
+                  rowVersion: address.rowVersion,
+                ),
+        ].whereNotNull().toList(),
         gender: individual.gender,
         identifiers: [
           if (identifier != null)
@@ -180,7 +185,11 @@ class IndividualLocalRepository
           return e.companion;
         }).toList();
 
-        batch.insertAll(sql.address, addressCompanions);
+        batch.insertAll(
+          sql.address,
+          addressCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
 
         batch.insertAll(
           sql.individualAddress,
