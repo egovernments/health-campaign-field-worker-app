@@ -37,9 +37,9 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                   sql.projectBeneficiary.beneficiaryId.equals(
                     query.beneficiaryId,
                   ),
-                if (query.dateOfRegistration != null)
+                if (query.dateOfRegistrationTime != null)
                   sql.projectBeneficiary.dateOfRegistration.equals(
-                    query.dateOfRegistration,
+                    query.dateOfRegistrationTime,
                   ),
               ],
             ),

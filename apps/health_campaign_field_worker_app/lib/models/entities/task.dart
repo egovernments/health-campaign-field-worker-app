@@ -164,6 +164,11 @@ class TaskModel extends EntityModel implements TaskSearchModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
+      plannedStartDate: Value(plannedStartDate),
+      plannedEndDate: Value(plannedEndDate),
+      actualStartDate: Value(actualStartDate),
+      actualEndDate: Value(actualEndDate),
+      createdDate: Value(createdDate),
       );
   }
 }
