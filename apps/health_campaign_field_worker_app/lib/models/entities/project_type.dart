@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectTypeSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   ProjectTypeSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -18,7 +20,6 @@ class ProjectTypeSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   final String? id;
-  final String? tenantId;
   final String? name;
   final String? code;
   final String? group;
@@ -28,12 +29,15 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final List<ProjectProductVariantModel>? resources;
   
 
   ProjectTypeModel({
     this.id,
-    this.tenantId,
     this.name,
     this.code,
     this.group,
@@ -41,6 +45,8 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
     this.eligibilityCriteria,
     this.taskProcedure,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.resources,
     super.auditDetails,
   }):  super();
@@ -48,7 +54,6 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   ProjectTypeCompanion get companion {
     return ProjectTypeCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       name: Value(name),
       code: Value(code),
       group: Value(group),
@@ -56,6 +61,8 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
       eligibilityCriteria: Value(eligibilityCriteria?.toString()),
       taskProcedure: Value(taskProcedure?.toString()),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

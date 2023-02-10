@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class IndividualAddressSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   IndividualAddressSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -20,12 +22,18 @@ class IndividualAddressModel extends EntityModel implements IndividualAddressSea
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final IndividualModel? individual;
   final AddressModel? address;
   
 
   IndividualAddressModel({
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.individual,
     this.address,
     super.auditDetails,
@@ -34,6 +42,8 @@ class IndividualAddressModel extends EntityModel implements IndividualAddressSea
   IndividualAddressCompanion get companion {
     return IndividualAddressCompanion(
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       individual: Value(individual?.clientReferenceId),
     address: Value(address?.clientReferenceId),
     );

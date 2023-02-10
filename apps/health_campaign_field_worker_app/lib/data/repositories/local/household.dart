@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/household_address.dart';
+import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class HouseholdLocalRepository
     extends LocalRepository<HouseholdModel, HouseholdSearchModel> {
@@ -72,12 +72,8 @@ class HouseholdLocalRepository
           addressLine2: address.addressLine2,
           city: address.city,
           pincode: address.pincode,
-          locality: BoundaryModel(
-            clientReferenceId: '',
-            code: '',
-            name: '',
-          ),
           type: address.type,
+          rowVersion: address.rowVersion,
         ),
       );
     }).toList();
@@ -88,21 +84,21 @@ class HouseholdLocalRepository
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 
+    final householdAddressCompanion = HouseholdAddressModel(
+      clientReferenceId: IdGen.i.identifier,
+      tenantId: envConfig.variables.tenantId,
+      rowVersion: 1,
+      address: entity.address,
+      household: entity,
+    ).companion;
+
     await sql.batch((batch) async {
       batch.insert(sql.household, householdCompanion);
 
       if (addressCompanion != null) {
         batch.insert(sql.address, addressCompanion);
+        batch.insert(sql.householdAddress, householdAddressCompanion);
       }
-
-      batch.insert(
-        sql.householdAddress,
-        HouseholdAddressCompanion.insert(
-          clientReferenceId: const Uuid().v1(),
-          household: Value(entity.clientReferenceId),
-          address: Value(entity.address?.clientReferenceId),
-        ),
-      );
     });
 
     await super.create(entity);

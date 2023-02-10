@@ -8,19 +8,19 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class FacilitySearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
   final String? clientReferenceId;
+  final String? tenantId;
   
   FacilitySearchModel({
     this.id,
-    this.tenantId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -32,9 +32,6 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final bool? isPermanent;
   
   @override
@@ -42,21 +39,24 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   
   @override
   final int? storageCapacity;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   final AddressModel? address;
   
 
   FacilityModel({
     this.id,
-    this.tenantId,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.address,
     super.auditDetails,
   }):  super();
@@ -64,12 +64,12 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
   FacilityCompanion get companion {
     return FacilityCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }
