@@ -1,6 +1,9 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../data/local_store/sql_store/sql_store.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -100,6 +103,19 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.call,
         label: i18.home.callbackLabel,
         onPressed: null,
+      ),
+      HomeItemCard(
+        icon: Icons.table_chart,
+        label: 'DB',
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DriftDbViewer(
+                context.read<LocalSqlDataStore>(),
+              ),
+            ),
+          );
+        },
       ),
     ];
   }
