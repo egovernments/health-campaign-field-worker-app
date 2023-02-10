@@ -31,15 +31,6 @@
       "name": "isHeadOfHousehold",
       "type": "bool",
       "includeForQuery": true
-    },
-    {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "isEnum": false
