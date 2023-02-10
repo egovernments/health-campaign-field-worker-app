@@ -2,29 +2,27 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProjectFacilitySearchModel extends EntitySearchModel {
+class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? facilityId;
-  final String? projectId;
+  final int? memberCount;
   final String? clientReferenceId;
   
-  ProjectFacilitySearchModel({
+  HouseholdSearchModel({
     this.id,
     this.tenantId,
-    this.facilityId,
-    this.projectId,
+    this.memberCount,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchModel {
+class HouseholdModel extends EntityModel implements HouseholdSearchModel {
   
   @override
   final String? id;
@@ -33,32 +31,29 @@ class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchM
   final String? tenantId;
   
   @override
-  final String? facilityId;
-  
-  @override
-  final String? projectId;
-  final String? rowVersion;
+  final int? memberCount;
+  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  final AddressModel? address;
   
 
-  ProjectFacilityModel({
+  HouseholdModel({
     this.id,
     this.tenantId,
-    this.facilityId,
-    this.projectId,
+    this.memberCount,
     this.rowVersion,
     required this.clientReferenceId,
+    this.address,
     super.auditDetails,
   }):  super();
 
-  ProjectFacilityCompanion get companion {
-    return ProjectFacilityCompanion(
+  HouseholdCompanion get companion {
+    return HouseholdCompanion(
       id: Value(id),
       tenantId: Value(tenantId),
-      facilityId: Value(facilityId),
-      projectId: Value(projectId),
+      memberCount: Value(memberCount),
       rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
       );

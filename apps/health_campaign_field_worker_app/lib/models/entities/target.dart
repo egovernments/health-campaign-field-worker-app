@@ -2,47 +2,45 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class IdentifierSearchModel extends EntitySearchModel {
-  final String? type;
-  final String? id;
+class TargetSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
   
-  IdentifierSearchModel({
-    this.type,
-    this.id,
+  TargetSearchModel({
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class IdentifierModel extends EntityModel implements IdentifierSearchModel {
-  
-  @override
-  final String? type;
-  
-  @override
+class TargetModel extends EntityModel implements TargetSearchModel {
   final String? id;
+  final String? beneficiaryType;
+  final String? baseline;
+  final String? target;
   
   @override
   final String clientReferenceId;
   
 
-  IdentifierModel({
-    this.type,
+  TargetModel({
     this.id,
+    this.beneficiaryType,
+    this.baseline,
+    this.target,
     required this.clientReferenceId,
     super.auditDetails,
   }):  super();
 
-  IdentifierCompanion get companion {
-    return IdentifierCompanion(
-      type: Value(type),
+  TargetCompanion get companion {
+    return TargetCompanion(
       id: Value(id),
+      beneficiaryType: Value(beneficiaryType),
+      baseline: Value(baseline),
+      target: Value(target),
       clientReferenceId: Value(clientReferenceId),
       );
   }

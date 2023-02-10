@@ -2,39 +2,39 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class HouseholdAddressSearchModel extends EntitySearchModel {
+class IndividualAddressSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
   
-  HouseholdAddressSearchModel({
+  IndividualAddressSearchModel({
     this.clientReferenceId,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdAddressModel extends EntityModel implements HouseholdAddressSearchModel {
+class IndividualAddressModel extends EntityModel implements IndividualAddressSearchModel {
   
   @override
   final String clientReferenceId;
-  final HouseholdModel? household;
+  final IndividualModel? individual;
   final AddressModel? address;
   
 
-  HouseholdAddressModel({
+  IndividualAddressModel({
     required this.clientReferenceId,
-    this.household,
+    this.individual,
     this.address,
     super.auditDetails,
   }):  super();
 
-  HouseholdAddressCompanion get companion {
-    return HouseholdAddressCompanion(
+  IndividualAddressCompanion get companion {
+    return IndividualAddressCompanion(
       clientReferenceId: Value(clientReferenceId),
-      household: Value(household?.clientReferenceId),
+      individual: Value(individual?.clientReferenceId),
     address: Value(address?.clientReferenceId),
     );
   }
