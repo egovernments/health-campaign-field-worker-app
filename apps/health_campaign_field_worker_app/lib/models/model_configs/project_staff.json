@@ -8,11 +8,6 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "userId",
       "type": "String",
       "includeForQuery": true
@@ -25,10 +20,6 @@
     {
       "name": "channel",
       "type": "String"
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "dateTimeAttributes": [

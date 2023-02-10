@@ -8,11 +8,6 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "productId",
       "type": "String",
       "includeForQuery": true
@@ -26,10 +21,6 @@
       "name": "variation",
       "type": "String",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "isEnum": false

@@ -6,10 +6,6 @@
       "type": "String"
     },
     {
-      "name": "tenantId",
-      "type": "String"
-    },
-    {
       "name": "productVariantId",
       "type": "String"
     },

@@ -7,11 +7,7 @@
       "type": "String",
       "includeForQuery": true
     },
-    {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
+
     {
       "name": "projectTypeId",
       "type": "String",
@@ -49,10 +45,6 @@
     {
       "name": "projectHierarchy",
       "type": "String"
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "customAttributes": [

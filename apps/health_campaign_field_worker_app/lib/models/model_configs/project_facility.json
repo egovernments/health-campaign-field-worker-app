@@ -8,11 +8,6 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "facilityId",
       "type": "String",
       "includeForQuery": true
@@ -21,10 +16,6 @@
       "name": "projectId",
       "type": "String",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "String"
     }
   ],
   "isEnum": false
