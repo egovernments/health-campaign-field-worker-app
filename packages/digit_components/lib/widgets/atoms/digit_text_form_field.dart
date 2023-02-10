@@ -15,6 +15,7 @@ class DigitTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool? obscureText;
   final String label;
+  final Widget? suffixIcon;
   final TextCapitalization? textCapitalization;
   final Map<String, String Function(Object)>? validationMessages;
 
@@ -34,6 +35,7 @@ class DigitTextFormField extends StatelessWidget {
     this.obscureText,
     this.validationMessages,
     required this.label,
+    this.suffixIcon,
   });
 
   @override

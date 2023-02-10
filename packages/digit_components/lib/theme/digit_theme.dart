@@ -138,6 +138,24 @@ class DigitTheme {
         isDense: true,
         isCollapsed: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
+        errorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: colors.lavaRed,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(color: colors.lavaRed, width: 2),
+        ),
       );
 
   DialogTheme get dialogTheme => DialogTheme(
