@@ -84,7 +84,7 @@ String _getSqlType(String dartType) {
   String type;
   switch (dartType) {
     case 'DateTime':
-      type = 'DateTime';
+      type = 'Integer';
       break;
     case 'String':
       type = 'Text';
@@ -109,7 +109,7 @@ String _getSqlColumnType(String dartType) {
   String type;
   switch (dartType) {
     case 'DateTime':
-      type = 'DateTime';
+      type = 'Int';
       break;
     case 'String':
       type = 'Text';

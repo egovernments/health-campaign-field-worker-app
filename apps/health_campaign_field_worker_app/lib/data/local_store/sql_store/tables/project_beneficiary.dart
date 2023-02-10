@@ -11,7 +11,7 @@ class ProjectBeneficiary extends Table {
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
   IntColumn get rowVersion => integer()();
-  DateTimeColumn get dateOfRegistration => dateTime().nullable()();
+  IntColumn get dateOfRegistration => integer().nullable()();
   
 
   @override

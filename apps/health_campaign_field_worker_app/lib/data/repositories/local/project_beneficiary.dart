@@ -39,12 +39,55 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                   ),
                 if (query.dateOfRegistrationTime != null)
                   sql.projectBeneficiary.dateOfRegistration.equals(
-                    query.dateOfRegistrationTime,
+                    query.dateOfRegistration,
                   ),
               ],
             ),
           ))
         .get();
+
+    return results.map((e) {
+      final projectBeneficiary = e.readTable(sql.projectBeneficiary);
+
+      return ProjectBeneficiaryModel(
+        clientReferenceId: projectBeneficiary.clientReferenceId,
+        tenantId: projectBeneficiary.tenantId,
+        rowVersion: projectBeneficiary.rowVersion,
+        id: projectBeneficiary.id,
+        beneficiaryClientReferenceId:
+            projectBeneficiary.beneficiaryClientReferenceId,
+        beneficiaryId: projectBeneficiary.beneficiaryId,
+        dateOfRegistration: projectBeneficiary.dateOfRegistration,
+        projectId: projectBeneficiary.projectId,
+      );
+    }).toList();
+  }
+
+  @override
+  FutureOr<void> create(ProjectBeneficiaryModel entity) async {
+    final projectBeneficiaryCompanion = entity.companion;
+    await sql.batch((batch) {
+      batch.insert(sql.projectBeneficiary, projectBeneficiaryCompanion);
+    });
+
+    await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> update(ProjectBeneficiaryModel entity) async {
+    final projectBeneficiaryCompanion = entity.companion;
+
+    await sql.batch((batch) {
+      batch.update(
+        sql.projectBeneficiary,
+        projectBeneficiaryCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.update(entity);
   }
 
   @override
