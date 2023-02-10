@@ -102,6 +102,8 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
       );
   }
 }
