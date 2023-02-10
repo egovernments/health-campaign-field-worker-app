@@ -8,9 +8,11 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class DocumentSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
+  final String? tenantId;
   
   DocumentSearchModel({
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -18,7 +20,6 @@ class DocumentSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class DocumentModel extends EntityModel implements DocumentSearchModel {
   final String? id;
-  final String? tenantId;
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
@@ -26,25 +27,31 @@ class DocumentModel extends EntityModel implements DocumentSearchModel {
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   DocumentModel({
     this.id,
-    this.tenantId,
     this.documentType,
     this.fileStoreId,
     this.documentUid,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
   DocumentCompanion get companion {
     return DocumentCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),
       documentUid: Value(documentUid),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

@@ -8,19 +8,19 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? userId;
   final String? projectId;
   final String? clientReferenceId;
+  final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
   ProjectStaffSearchModel({
     this.id,
-    this.tenantId,
     this.userId,
     this.projectId,
     this.clientReferenceId,
+    this.tenantId,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -46,18 +46,18 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? userId;
   
   @override
   final String? projectId;
   final String? channel;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   
   @override
   final DateTime? startDateTime;
@@ -68,12 +68,12 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
 
   ProjectStaffModel({
     this.id,
-    this.tenantId,
     this.userId,
     this.projectId,
     this.channel,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     int? startDate,
     int? endDate,
     super.auditDetails,
@@ -96,12 +96,12 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
   ProjectStaffCompanion get companion {
     return ProjectStaffCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

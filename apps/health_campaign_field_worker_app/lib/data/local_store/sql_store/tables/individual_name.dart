@@ -7,6 +7,8 @@ import 'name.dart';
 
 class IndividualName extends Table {
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
   TextColumn get individual => text().nullable().references(Individual, #clientReferenceId)();
   TextColumn get name => text().nullable().references(Name, #clientReferenceId)();

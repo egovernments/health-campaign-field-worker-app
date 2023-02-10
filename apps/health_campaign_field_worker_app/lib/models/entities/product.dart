@@ -8,19 +8,19 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProductSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? type;
   final String? name;
   final String? manufacturer;
   final String? clientReferenceId;
+  final String? tenantId;
   
   ProductSearchModel({
     this.id,
-    this.tenantId,
     this.type,
     this.name,
     this.manufacturer,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -32,9 +32,6 @@ class ProductModel extends EntityModel implements ProductSearchModel {
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? type;
   
   @override
@@ -42,32 +39,35 @@ class ProductModel extends EntityModel implements ProductSearchModel {
   
   @override
   final String? manufacturer;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   ProductModel({
     this.id,
-    this.tenantId,
     this.type,
     this.name,
     this.manufacturer,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
   ProductCompanion get companion {
     return ProductCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       type: Value(type),
       name: Value(name),
       manufacturer: Value(manufacturer),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

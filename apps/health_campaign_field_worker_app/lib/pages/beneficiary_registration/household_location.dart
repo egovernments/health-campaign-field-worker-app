@@ -65,6 +65,7 @@ class _HouseholdLocationPageState
                       addressLine2: addressLine2,
                       landmark: landmark,
                       pincode: postalCode,
+                      rowVersion: 1,
                     );
 
                     context.read<BeneficiaryRegistrationBloc>().add(
