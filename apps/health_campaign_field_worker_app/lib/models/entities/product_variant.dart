@@ -8,19 +8,19 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProductVariantSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? productId;
   final String? sku;
   final String? variation;
   final String? clientReferenceId;
+  final String? tenantId;
   
   ProductVariantSearchModel({
     this.id,
-    this.tenantId,
     this.productId,
     this.sku,
     this.variation,
     this.clientReferenceId,
+    this.tenantId,
     super.boundaryCode,
   }):  super();
 }
@@ -32,9 +32,6 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
   final String? id;
   
   @override
-  final String? tenantId;
-  
-  @override
   final String? productId;
   
   @override
@@ -42,32 +39,35 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
   
   @override
   final String? variation;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
   
+  @override
+  final String tenantId;
+  final int rowVersion;
+  
 
   ProductVariantModel({
     this.id,
-    this.tenantId,
     this.productId,
     this.sku,
     this.variation,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     super.auditDetails,
   }):  super();
 
   ProductVariantCompanion get companion {
     return ProductVariantCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       productId: Value(productId),
       sku: Value(sku),
       variation: Value(variation),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       );
   }
 }

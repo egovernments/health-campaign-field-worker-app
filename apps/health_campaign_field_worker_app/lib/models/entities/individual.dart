@@ -8,18 +8,18 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class IndividualSearchModel extends EntitySearchModel {
   final String? id;
-  final String? tenantId;
   final String? dateOfBirth;
   final String? clientReferenceId;
+  final String? tenantId;
   final NameSearchModel? name;
   final Gender? gender;
   final List<IdentifierSearchModel>? identifiers;
   
   IndividualSearchModel({
     this.id,
-    this.tenantId,
     this.dateOfBirth,
     this.clientReferenceId,
+    this.tenantId,
     this.name,
     this.gender,
     this.identifiers,
@@ -32,9 +32,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   
   @override
   final String? id;
-  
-  @override
-  final String? tenantId;
   final String? userId;
   
   @override
@@ -45,10 +42,13 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   final String? fatherName;
   final String? husbandName;
   final String? photo;
-  final int? rowVersion;
   
   @override
   final String clientReferenceId;
+  
+  @override
+  final String tenantId;
+  final int rowVersion;
   
   @override
   final NameModel? name;
@@ -64,7 +64,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
 
   IndividualModel({
     this.id,
-    this.tenantId,
     this.userId,
     this.dateOfBirth,
     this.mobileNumber,
@@ -73,8 +72,9 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
     this.fatherName,
     this.husbandName,
     this.photo,
-    this.rowVersion,
     required this.clientReferenceId,
+    required this.tenantId,
+    required this.rowVersion,
     this.name,
     this.bloodGroup,
     this.address,
@@ -86,7 +86,6 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   IndividualCompanion get companion {
     return IndividualCompanion(
       id: Value(id),
-      tenantId: Value(tenantId),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),
       mobileNumber: Value(mobileNumber),
@@ -95,8 +94,9 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
       fatherName: Value(fatherName),
       husbandName: Value(husbandName),
       photo: Value(photo),
-      rowVersion: Value(rowVersion),
       clientReferenceId: Value(clientReferenceId),
+      tenantId: Value(tenantId),
+      rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),
       );

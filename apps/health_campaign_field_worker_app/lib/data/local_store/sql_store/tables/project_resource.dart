@@ -5,10 +5,10 @@ import 'package:drift/drift.dart';
 
 class ProjectResource extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text().nullable()();
   TextColumn get projectId => text().nullable()();
-  IntColumn get rowVersion => integer().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get tenantId => text()();
+  IntColumn get rowVersion => integer()();
   
 
   @override
