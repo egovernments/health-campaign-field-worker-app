@@ -9,19 +9,20 @@ class ApiInterceptors extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    options.data = {
-      ...options.data,
-      "RequestInfo": RequestInfoModel(
-        apiId: RequestInfoData.apiId,
-        ver: RequestInfoData.ver,
-        ts: RequestInfoData.ts,
-        action: options.path.split('/').last,
-        did: RequestInfoData.did,
-        key: RequestInfoData.key,
-        authToken: RequestInfoData.authToken,
-      ).toJson(),
-    };
-
+    if (options.data is Map) {
+      options.data = {
+        ...options.data,
+        "RequestInfo": RequestInfoModel(
+          apiId: RequestInfoData.apiId,
+          ver: RequestInfoData.ver,
+          ts: RequestInfoData.ts,
+          action: options.path.split('/').last,
+          did: RequestInfoData.did,
+          key: RequestInfoData.key,
+          authToken: RequestInfoData.authToken,
+        ).toJson(),
+      };
+    }
     super.onRequest(options, handler);
   }
 }
