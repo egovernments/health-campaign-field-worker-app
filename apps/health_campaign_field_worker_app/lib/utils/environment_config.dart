@@ -56,6 +56,11 @@ class Variables {
     'egov-mdms-service/v1/_search',
   );
 
+  static const _tenantId = EnvEntry(
+    'TENANT_ID',
+    'default',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -68,6 +73,10 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+  String get tenantId => useFallbackValues
+      ? _tenantId.value
+      : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
 }
 
 class EnvEntry {
