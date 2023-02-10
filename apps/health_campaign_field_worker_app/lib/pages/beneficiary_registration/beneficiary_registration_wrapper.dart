@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/beneficiary_registration/beneficiary_registration_cubit.dart';
 import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
 
@@ -22,12 +21,16 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
     final householdMember = networkManager
         .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context);
 
+    final projectBeneficiary = networkManager.repository<
+        ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context);
+
     return BlocProvider(
-      create: (context) => BeneficiaryRegistrationCubit(
-        BeneficiaryRegistrationInitialState(),
+      create: (context) => BeneficiaryRegistrationBloc(
+        const BeneficiaryRegistrationState(),
         individualRepository: individual,
         householdRepository: household,
-        householdMemberSearchRepository: householdMember,
+        householdMemberRepository: householdMember,
+        projectBeneficiaryRepository: projectBeneficiary,
       ),
       child: const AutoRouter(),
     );
