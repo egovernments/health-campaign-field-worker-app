@@ -9,7 +9,6 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
-import 'blocs/table_hide_action.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -49,11 +48,6 @@ class MainApplication extends StatelessWidget {
             )..add(const AppInitializationSetupEvent()),
           ),
           BlocProvider(create: (context) => AuthBloc(const AuthState())),
-          BlocProvider(
-            create: (context) => TableHideActionBloc(
-              const TableHideActionState(),
-            ),
-          ),
         ],
         child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
           builder: (context, appConfigState) {
