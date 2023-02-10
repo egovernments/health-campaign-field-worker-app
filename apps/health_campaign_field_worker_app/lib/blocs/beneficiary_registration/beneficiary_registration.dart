@@ -3,11 +3,11 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 
 part 'beneficiary_registration.freezed.dart';
 
@@ -22,13 +22,17 @@ class BeneficiaryRegistrationBloc
       householdRepository;
 
   final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMemberSearchRepository;
+      householdMemberRepository;
+
+  final DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
+      projectBeneficiaryRepository;
 
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
     required this.householdRepository,
-    required this.householdMemberSearchRepository,
+    required this.householdMemberRepository,
+    required this.projectBeneficiaryRepository,
   }) {
     on(_handleSaveAddress);
     on(_handleSaveHouseholdDetails);
@@ -73,14 +77,21 @@ class BeneficiaryRegistrationBloc
     try {
       await individualRepository.create(individual);
       await householdRepository.create(household);
-      await householdMemberSearchRepository.create(
+      await projectBeneficiaryRepository.create(
+        ProjectBeneficiaryModel(
+          rowVersion: 1,
+          tenantId: envConfig.variables.tenantId,
+          clientReferenceId: IdGen.i.identifier,
+        ),
+      );
+      await householdMemberRepository.create(
         HouseholdMemberModel(
           householdClientReferenceId: household.clientReferenceId,
           individualClientReferenceId: individual.clientReferenceId,
           isHeadOfHousehold: state.isHeadOfHousehold,
           tenantId: envConfig.variables.tenantId,
           rowVersion: 1,
-          clientReferenceId: const Uuid().v1(),
+          clientReferenceId: IdGen.i.identifier,
         ),
       );
     } catch (error) {
