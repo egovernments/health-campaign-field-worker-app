@@ -61,9 +61,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   householdModel.address?.city,
                   householdModel.address?.pincode,
                 ].whereNotNull().take(2).join(' '),
-                subtitle: '4 Members',
+                subtitle: '${householdModel.memberCount ?? 1} Members',
                 status: 'Not Delivered',
-                title: 'Jose Antonio',
+                title: [
+                  individualModel.name?.givenName,
+                  individualModel.name?.familyName,
+                ].whereNotNull().join(''),
               ),
               DigitOutLineButton(
                 label: localizations.translate(i18.searchBeneficiary.iconLabel),
@@ -93,48 +96,32 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 ),
               ],
               tableData: [
-                TableDataRow(
-                  [
-                    TableData(
-                      'Jose',
-                      cellKey: 'beneficiary',
-                    ),
-                    TableData(
-                      'Delivered',
-                      cellKey: 'delivery',
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    TableData(
-                      '45',
-                      cellKey: 'age',
-                    ),
-                    TableData(
-                      'Male',
-                      cellKey: 'gender',
-                    ),
-                  ],
-                ),
-                TableDataRow([
-                  TableData(
-                    'Maria',
-                    cellKey: 'beneficiary',
-                  ),
-                  TableData(
-                    'Not Delivered',
-                    cellKey: 'delivery',
-                    style: TextStyle(color: theme.colorScheme.error),
-                  ),
-                  TableData(
-                    '35',
-                    cellKey: 'age',
-                  ),
-                  TableData(
-                    'Female',
-                    cellKey: 'gender',
-                  ),
-                ]),
+                // TableDataRow(
+                //   [
+                //     TableData(
+                //       [
+                //         individualModel.name?.givenName,
+                //         individualModel.name?.familyName,
+                //       ].whereNotNull().join('-'),
+                //       cellKey: 'beneficiary',
+                //     ),
+                //     TableData(
+                //       'Not Delivered',
+                //       cellKey: 'delivery',
+                //       style: TextStyle(
+                //         color: theme.colorScheme.onSurfaceVariant,
+                //       ),
+                //     ),
+                //     TableData(
+                //       '45',
+                //       cellKey: 'age',
+                //     ),
+                //     TableData(
+                //       'Male',
+                //       cellKey: 'gender',
+                //     ),
+                //   ],
+                // ),
               ],
               leftColumnWidth: 110,
               rightColumnWidth: 45 * 8,

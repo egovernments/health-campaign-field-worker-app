@@ -18,7 +18,7 @@ class HouseholdLocalRepository
       [
         leftOuterJoin(
           sql.householdAddress,
-          sql.householdAddress.address.equalsExp(
+          sql.householdAddress.household.equalsExp(
             sql.household.clientReferenceId,
           ),
         ),

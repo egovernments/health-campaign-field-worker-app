@@ -85,7 +85,7 @@ class SearchHouseholdsBloc
       );
     }
 
-    if (householdMembers.isEmpty) {
+    if (containers.isEmpty) {
       emit(const SearchHouseholdsNotFoundState());
     } else {
       emit(SearchHouseholdsResultsState(householdMembers: containers));
