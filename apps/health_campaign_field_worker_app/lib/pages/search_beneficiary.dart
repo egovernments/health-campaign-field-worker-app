@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../models/data_model.dart';
@@ -29,6 +30,7 @@ class _SearchBeneficiaryPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final sql = context.read<LocalSqlDataStore>();
 
     return BlocProvider(
       create: (context) => SearchHouseholdsBloc(
@@ -65,23 +67,30 @@ class _SearchBeneficiaryPageState
                   ),
                 ),
               ),
-              BeneficiaryStatisticsCard(
-                beneficiaryStatistics: BeneficiaryStatisticsWrapperModel(
-                  beneficiaryStatisticsList: [
-                    BeneficiaryStatisticsModel(
-                      title: '535',
-                      content: localizations.translate(
-                        i18.searchBeneficiary.noOfHouseholdsRegistered,
-                      ),
+              StreamBuilder(
+                initialData: [],
+                stream: sql.select(sql.household).watch(),
+                builder: (context, householdSnapshot) {
+                  return BeneficiaryStatisticsCard(
+                    beneficiaryStatistics: BeneficiaryStatisticsWrapperModel(
+                      beneficiaryStatisticsList: [
+                        BeneficiaryStatisticsModel(
+                          title:
+                              (householdSnapshot.data?.length ?? 0).toString(),
+                          content: localizations.translate(
+                            i18.searchBeneficiary.noOfHouseholdsRegistered,
+                          ),
+                        ),
+                        BeneficiaryStatisticsModel(
+                          title: '756',
+                          content: localizations.translate(
+                            i18.searchBeneficiary.noOfResourcesDelivered,
+                          ),
+                        ),
+                      ],
                     ),
-                    BeneficiaryStatisticsModel(
-                      title: '756',
-                      content: localizations.translate(
-                        i18.searchBeneficiary.noOfResourcesDelivered,
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
               DigitSearchBar(
                 hintText: localizations.translate(
