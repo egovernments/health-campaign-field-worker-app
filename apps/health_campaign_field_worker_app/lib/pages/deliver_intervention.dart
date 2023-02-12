@@ -116,7 +116,6 @@ class _DeliverInterventionPageState
                           "BEDNETS",
                         ),
                       ],
-                      onChanged: (String? newValue) {},
                       formControlName: 'resourceDelivered',
                     ),
                     DigitIntegerFormPicker(
@@ -148,9 +147,6 @@ class _DeliverInterventionPageState
                               localizations.translate(e.name),
                             );
                           }).toList(),
-                          onChanged: (value) {
-                            // TODO: Complete implementation
-                          },
                           formControlName: 'deliveryComment',
                         );
                       },
