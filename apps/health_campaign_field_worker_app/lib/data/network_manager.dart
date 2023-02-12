@@ -79,7 +79,7 @@ class NetworkManager {
     }
   }
 
-  FutureOr<int> getPendingSyncRecords(
+  FutureOr<int> getPendingSyncRecordsCount(
     List<LocalRepository> localRepositories,
   ) async =>
       (await Future.wait(localRepositories.map((e) => e.getItemsToBeSynced())))
