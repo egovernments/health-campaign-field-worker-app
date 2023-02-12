@@ -24,7 +24,7 @@ class DigitDateFormPicker extends StatelessWidget {
   const DigitDateFormPicker({
     super.key,
     required this.label,
-    required this.isRequired,
+    this.isRequired = false,
     this.firstDate,
     this.lastDate,
     this.initialDate,
