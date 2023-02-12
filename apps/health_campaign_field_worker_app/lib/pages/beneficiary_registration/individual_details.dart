@@ -64,6 +64,9 @@ class _IndividualDetailsPageState
                         context,
                       );
 
+                      // final age = form.control(_ageKey).value as int?;
+                      final dob = form.control(_dobKey).value as DateTime?;
+
                       bloc.add(
                         BeneficiaryRegistrationSaveIndividualDetailsEvent(
                           IndividualModel(
@@ -78,19 +81,25 @@ class _IndividualDetailsPageState
                               clientReferenceId: IdGen.i.identifier,
                               givenName: form.control(_individualNameKey).value,
                             ),
-                            gender: Gender.values.byName(form
-                                .control(_genderKey)
-                                .value
-                                .toString()
-                                .toLowerCase()),
+                            gender: form.control(_genderKey).value == null
+                                ? null
+                                : Gender.values.byName(form
+                                    .control(_genderKey)
+                                    .value
+                                    .toString()
+                                    .toLowerCase()),
                             identifiers: [
-                              IdentifierModel(
-                                tenantId: envConfig.variables.tenantId,
-                                type: form.control(_idTypeKey).value,
-                                id: form.control(_idNumberKey).value,
-                                clientReferenceId: IdGen.i.identifier,
-                                rowVersion: 1,
-                              ),
+                              if (form.control(_idTypeKey).value != null)
+                                IdentifierModel(
+                                  tenantId: envConfig.variables.tenantId,
+                                  type: form.control(_idTypeKey).value,
+                                  id: form.control(_idTypeKey).value ==
+                                          'DEFAULT'
+                                      ? IdGen.i.identifier
+                                      : form.control(_idNumberKey).value,
+                                  clientReferenceId: IdGen.i.identifier,
+                                  rowVersion: 1,
+                                ),
                             ],
                           ),
                         ),
@@ -152,8 +161,13 @@ class _IndividualDetailsPageState
                       children: [
                         DigitTextFormField(
                           formControlName: 'individualName',
-                          label: localizations
-                              .translate(i18.individualDetails.nameLabelText),
+                          label: localizations.translate(
+                            i18.individualDetails.nameLabelText,
+                          ),
+                          isRequired: true,
+                          validationMessages: {
+                            'required': (object) => 'Name is required',
+                          },
                         ),
                         DigitCheckbox(
                           label: localizations.translate(
@@ -163,45 +177,64 @@ class _IndividualDetailsPageState
                         ),
                         BlocBuilder<AppInitializationBloc,
                             AppInitializationState>(
-                          builder: (context, state) {
-                            if (state is! AppInitialized) {
-                              return const Offstage();
-                            }
+                          builder: (context, state) => state.maybeWhen(
+                            orElse: () => const Offstage(),
+                            initialized: (appConfiguration, _) {
+                              final idTypeOptions =
+                                  appConfiguration.idTypeOptions ??
+                                      <IdTypeOptions>[];
 
-                            final idTypeOptions =
-                                state.appConfiguration.idTypeOptions ??
-                                    <IdTypeOptions>[];
-
-                            return DigitDropdown(
-                              label: localizations.translate(
-                                i18.individualDetails.idTypeLabelText,
-                              ),
-                              initialValue: idTypeOptions.firstOrNull?.name,
-                              menuItems: idTypeOptions.map((e) {
-                                return MenuItemModel(
-                                  e.code,
-                                  localizations.translate(e.name),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                // TODO: Complete implementation
-                              },
-                              formControlName: 'idType',
-                            );
-                          },
+                              return DigitDropdown(
+                                isRequired: true,
+                                label: localizations.translate(
+                                  i18.individualDetails.idTypeLabelText,
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    form.control(_idNumberKey).setValidators(
+                                      [
+                                        if (value == 'DEFAULT')
+                                          Validators.required,
+                                      ],
+                                    );
+                                  });
+                                },
+                                initialValue: idTypeOptions.firstOrNull?.name,
+                                menuItems: idTypeOptions
+                                    .map((e) => MenuItemModel(
+                                          e.code,
+                                          localizations.translate(e.name),
+                                        ))
+                                    .toList(),
+                                formControlName: _idTypeKey,
+                                validationMessages: {
+                                  'required': (object) => 'ID Type is required',
+                                },
+                              );
+                            },
+                          ),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DigitTextFormField(
-                              formControlName: 'idNumber',
-                              label: localizations.translate(
-                                i18.individualDetails.idNumberLabelText,
-                              ),
+                            ReactiveFormConsumer(
+                              builder: (context, formGroup, child) {
+                                return DigitTextFormField(
+                                  isRequired:
+                                      formGroup.control(_idTypeKey).value !=
+                                          'DEFAULT',
+                                  formControlName: _idNumberKey,
+                                  label: localizations.translate(
+                                    i18.individualDetails.idNumberLabelText,
+                                  ),
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        'ID Number is required',
+                                  },
+                                );
+                              },
                             ),
-                            const SizedBox(
-                              height: 4,
-                            ),
+                            const SizedBox(height: 4),
                             Text(
                               localizations.translate(
                                 i18.individualDetails.idNumberSuggestionText,
@@ -211,11 +244,8 @@ class _IndividualDetailsPageState
                           ],
                         ),
                         DigitDobPicker(
-                          datePickerFormControl: 'dob',
-                          ageInputFormControl: 'age',
-                          onChangeDate: (dateTime) {
-                            // TODO: Complete implementation
-                          },
+                          datePickerFormControl: _dobKey,
+                          ageInputFormControl: _ageKey,
                           datePickerLabel: localizations
                               .translate(i18.individualDetails.dobLabelText),
                           ageFieldLabel: localizations
@@ -231,30 +261,32 @@ class _IndividualDetailsPageState
                               return const Offstage();
                             }
 
-                            final genderOptions =
-                                state.appConfiguration.genderOptions ??
-                                    <GenderOptions>[];
+                            return state.maybeWhen(
+                              orElse: () => const Offstage(),
+                              initialized: (appConfiguration, _) {
+                                final genderOptions =
+                                    state.appConfiguration.genderOptions ??
+                                        <GenderOptions>[];
 
-                            return DigitDropdown(
-                              label: localizations.translate(
-                                i18.individualDetails.genderLabelText,
-                              ),
-                              initialValue: genderOptions.firstOrNull?.name,
-                              menuItems: genderOptions
-                                  .map((e) => MenuItemModel(
-                                        e.code,
-                                        localizations.translate(e.name),
-                                      ))
-                                  .toList(),
-                              onChanged: (value) {
-                                // TODO: Complete implementation
+                                return DigitDropdown(
+                                  label: localizations.translate(
+                                    i18.individualDetails.genderLabelText,
+                                  ),
+                                  initialValue: genderOptions.firstOrNull?.name,
+                                  menuItems: genderOptions
+                                      .map((e) => MenuItemModel(
+                                            e.code,
+                                            localizations.translate(e.name),
+                                          ))
+                                      .toList(),
+                                  formControlName: _genderKey,
+                                );
                               },
-                              formControlName: 'gender',
                             );
                           },
                         ),
                         DigitTextFormField(
-                          formControlName: 'mobileNumber',
+                          formControlName: _mobileNumberKey,
                           label: localizations.translate(
                             i18.individualDetails.mobileNumberLabelText,
                           ),
@@ -273,12 +305,15 @@ class _IndividualDetailsPageState
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        _individualNameKey: FormControl<String>(value: ''),
-        _idTypeKey: FormControl<String>(value: ''),
-        _idNumberKey: FormControl<String>(value: ''),
+        _individualNameKey: FormControl<String>(
+          validators: [Validators.required],
+        ),
+        _idTypeKey: FormControl<String>(
+          validators: [Validators.required],
+        ),
+        _idNumberKey: FormControl<String>(),
         _dobKey: FormControl<DateTime>(),
-        _ageKey: FormControl<String>(value: ''),
-        _genderKey: FormControl<String>(value: ''),
-        _mobileNumberKey: FormControl<String>(value: ''),
+        _genderKey: FormControl<String>(),
+        _mobileNumberKey: FormControl<String>(),
       });
 }

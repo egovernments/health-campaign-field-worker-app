@@ -5,16 +5,20 @@ class DigitDropdown extends StatelessWidget {
   final String label;
   final String? initialValue;
   final List<MenuItemModel> menuItems;
-  final ValueChanged<String?> onChanged;
   final String formControlName;
+  final bool isRequired;
+  final ValueChanged<String?>? onChanged;
+  final Map<String, String Function(Object object)>? validationMessages;
 
   const DigitDropdown({
     super.key,
     required this.label,
     required this.menuItems,
     required this.formControlName,
-    required this.onChanged,
+    this.isRequired = false,
     this.initialValue,
+    this.onChanged,
+    this.validationMessages,
   });
 
   @override
@@ -25,11 +29,13 @@ class DigitDropdown extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            label,
+            '$label ${isRequired ? ' *' : ''}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 8),
           ReactiveDropdownField(
+            onChanged: (control) => onChanged?.call(control.value),
+            validationMessages: validationMessages,
             formControlName: formControlName,
             items: menuItems.map((e) {
               return DropdownMenuItem(
