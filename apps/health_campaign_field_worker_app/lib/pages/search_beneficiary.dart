@@ -68,7 +68,8 @@ class _SearchBeneficiaryPageState
                 ),
               ),
               StreamBuilder(
-                initialData: [],
+                initialData: const [],
+                // TODO: Needs to have a remote API counterpart
                 stream: sql.select(sql.household).watch(),
                 builder: (context, householdSnapshot) {
                   return BeneficiaryStatisticsCard(
@@ -120,9 +121,6 @@ class _SearchBeneficiaryPageState
                       child: CircularProgressIndicator(),
                     ),
                     notFound: (value) => DigitInfoCard(
-                      icon: Icons.info,
-                      backgroundColor: theme.colorScheme.tertiaryContainer,
-                      iconColor: theme.colorScheme.surfaceTint,
                       description: localizations.translate(
                         i18.searchBeneficiary.beneficiaryInfoDescription,
                       ),
@@ -134,10 +132,7 @@ class _SearchBeneficiaryPageState
                     results: (value) => Column(
                       children: [
                         for (final i in value.householdMembers)
-                          ViewBeneficiaryCard(
-                            householdModel: i.householdModel,
-                            individualModel: i.individualModel,
-                          ),
+                          ViewBeneficiaryCard(householdMember: i),
                       ],
                     ),
                   );
