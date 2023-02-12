@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DigitInfoCard extends StatelessWidget {
   final String title;
   final String description;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final IconData? icon;
   final Color? iconColor;
   final EdgeInsets? padding;
@@ -13,7 +13,7 @@ class DigitInfoCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
-    required this.backgroundColor,
+    this.backgroundColor,
     this.iconColor,
     this.icon,
     this.padding,
@@ -30,7 +30,7 @@ class DigitInfoCard extends StatelessWidget {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
-        color: backgroundColor,
+        color: backgroundColor ?? theme.colorScheme.tertiaryContainer,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +42,7 @@ class DigitInfoCard extends StatelessWidget {
                 padding: padding ?? const EdgeInsets.all(8),
                 child: Icon(
                   icon ?? Icons.info,
-                  color: iconColor,
+                  color: iconColor ?? theme.colorScheme.surfaceTint,
                 ),
               ),
               Text(

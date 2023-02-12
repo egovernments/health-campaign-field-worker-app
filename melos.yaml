@@ -12,7 +12,7 @@ command:
     usePubspecOverrides: true
 
 scripts:
-#  postbootstrap: melos run generate:build-runner --no-select && melos run hooks:build-runner --no-select
+  postbootstrap: melos run generate:build-runner --no-select && melos run hooks:build-runner --no-select
 
   test:
     run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
