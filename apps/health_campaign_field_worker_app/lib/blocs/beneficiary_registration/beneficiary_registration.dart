@@ -82,8 +82,9 @@ class BeneficiaryRegistrationBloc
 
     emit(state.copyWith(loading: true));
     try {
-      await individualRepository.create(individual);
-      await householdRepository.create(household);
+      await individualRepository
+          .create(individual.copyWith(address: [address]));
+      await householdRepository.create(household.copyWith(address: address));
       await projectBeneficiaryRepository.create(
         ProjectBeneficiaryModel(
           rowVersion: 1,

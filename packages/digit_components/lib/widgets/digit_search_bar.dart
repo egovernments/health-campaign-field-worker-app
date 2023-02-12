@@ -5,14 +5,17 @@ class DigitSearchBar extends StatelessWidget {
   final EdgeInsets? margin;
   final String? hintText;
   final EdgeInsets? contentPadding;
-  final double? borderRadious;
+  final double? borderRadius;
+  final ValueChanged<String>? onChanged;
+
   const DigitSearchBar({
     super.key,
     this.padding,
     this.margin,
     this.hintText,
     this.contentPadding,
-    this.borderRadious,
+    this.borderRadius,
+    this.onChanged,
   });
 
   @override
@@ -22,12 +25,13 @@ class DigitSearchBar extends StatelessWidget {
       shape: RoundedRectangleBorder(
         side: BorderSide(color: theme.scaffoldBackgroundColor, width: 1),
         borderRadius: BorderRadius.circular(
-            borderRadious != null ? (borderRadious! * 3) : 30),
+            borderRadius != null ? (borderRadius! * 3) : 30),
       ),
       margin: margin,
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: TextField(
+          onChanged: onChanged,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hintText ?? 'Enter the field details',
@@ -36,11 +40,11 @@ class DigitSearchBar extends StatelessWidget {
             contentPadding: contentPadding ??
                 const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
             focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(borderRadious ?? 10.0),
+                borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
                 borderSide: BorderSide(color: theme.cardColor)),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: theme.scaffoldBackgroundColor),
-              borderRadius: BorderRadius.circular(borderRadious ?? 10.0),
+              borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
             ),
           ),
         ),
