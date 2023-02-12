@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -10,14 +11,12 @@ import '../localized.dart';
 import 'beneficiary_card.dart';
 
 class ViewBeneficiaryCard extends LocalizedStatefulWidget {
-  final IndividualModel individualModel;
-  final HouseholdModel householdModel;
+  final HouseholdMemberWrapper householdMember;
 
   const ViewBeneficiaryCard({
     Key? key,
     super.appLocalizations,
-    required this.individualModel,
-    required this.householdModel,
+    required this.householdMember,
   }) : super(key: key);
 
   @override
@@ -25,15 +24,22 @@ class ViewBeneficiaryCard extends LocalizedStatefulWidget {
 }
 
 class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
-  late IndividualModel individualModel;
-  late HouseholdModel householdModel;
+  late HouseholdMemberWrapper householdMember;
 
   @override
   void initState() {
-    individualModel = widget.individualModel;
-    householdModel = widget.householdModel;
+    householdMember = widget.householdMember;
     super.initState();
   }
+
+  @override
+  void didUpdateWidget(covariant ViewBeneficiaryCard oldWidget) {
+    householdMember = widget.householdMember;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  HouseholdModel get householdModel => householdMember.household;
+  IndividualModel get individualModel => householdMember.individual;
 
   bool _isCardExpanded = false;
 

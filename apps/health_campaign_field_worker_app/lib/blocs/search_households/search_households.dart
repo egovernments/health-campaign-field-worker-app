@@ -32,7 +32,7 @@ class SearchHouseholdsBloc
     on(
       _handleSearchByHouseholdHead,
       transformer: debounce<SearchHouseholdsSearchByHouseholdHeadEvent>(
-        const Duration(milliseconds: 300),
+        const Duration(milliseconds: 500),
       ),
     );
     on(_handleClear);
@@ -66,7 +66,7 @@ class SearchHouseholdsBloc
       householdMembers.add(members.first);
     }
 
-    final containers = <HouseholdMemberContainer>[];
+    final containers = <HouseholdMemberWrapper>[];
     for (var e in householdMembers) {
       final individualModel = await individual.search(
         IndividualSearchModel(clientReferenceId: e.individualClientReferenceId),
@@ -78,9 +78,9 @@ class SearchHouseholdsBloc
       if (householdModel.isEmpty || individualModel.isEmpty) continue;
 
       containers.add(
-        HouseholdMemberContainer(
-          householdModel: householdModel.first,
-          individualModel: individualModel.first,
+        HouseholdMemberWrapper(
+          household: householdModel.first,
+          individual: individualModel.first,
         ),
       );
     }
@@ -119,16 +119,14 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
   const factory SearchHouseholdsState.empty() = SearchHouseholdsEmptyState;
 
   const factory SearchHouseholdsState.results({
-    @Default([]) List<HouseholdMemberContainer> householdMembers,
+    @Default([]) List<HouseholdMemberWrapper> householdMembers,
   }) = SearchHouseholdsResultsState;
 }
 
-class HouseholdMemberContainer {
-  final HouseholdModel householdModel;
-  final IndividualModel individualModel;
-
-  const HouseholdMemberContainer({
-    required this.householdModel,
-    required this.individualModel,
-  });
+@freezed
+class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
+  const factory HouseholdMemberWrapper({
+    required HouseholdModel household,
+    required IndividualModel individual,
+  }) = _HouseholdMemberWrapper;
 }
