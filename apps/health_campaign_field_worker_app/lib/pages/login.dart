@@ -63,8 +63,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       ),
                       validationMessages: {
                         "required": (control) {
-                          print("control");
-                          return 'user id is Required';
+                          return '${localizations.translate(i18.login.userIdPlaceholder)} is Required';
                         },
                       },
                       formControlName: _userId,
@@ -75,6 +74,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       label: localizations.translate(
                         i18.login.passwordPlaceholder,
                       ),
+                      validationMessages: {
+                        "required": (control) {
+                          return '${localizations.translate(i18.login.passwordPlaceholder)} is Required';
+                        },
+                      },
                       formControlName: _password,
                       keyboardType: TextInputType.text,
                       isRequired: true,
