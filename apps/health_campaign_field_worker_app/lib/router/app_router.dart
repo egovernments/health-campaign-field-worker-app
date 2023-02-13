@@ -62,6 +62,8 @@ part 'app_router.gr.dart';
               path: 'household-location',
               initial: true,
             ),
+            AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
+
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
