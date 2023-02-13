@@ -8,7 +8,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/selected_households/selected_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -70,6 +72,85 @@ class _IndividualDetailsPageState
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
+                      /// TODO - refactor this
+                      if (!widget.isHeadOfHousehold) {
+                        final networkManager = context.read<NetworkManager>();
+                        final householdMemberRepo = networkManager.repository<
+                            HouseholdMemberModel,
+                            HouseholdMemberSearchModel>(context);
+                        final individualRepo = networkManager.repository<
+                            IndividualModel, IndividualSearchModel>(context);
+
+                        final individualModel = IndividualModel(
+                          tenantId: envConfig.variables.tenantId,
+                          rowVersion: 1,
+                          clientReferenceId: IdGen.i.identifier,
+                          dateOfBirth: form.control(_dobKey).value.toString(),
+                          mobileNumber: form.control(_mobileNumberKey).value,
+                          name: NameModel(
+                            rowVersion: 1,
+                            tenantId: envConfig.variables.tenantId,
+                            clientReferenceId: IdGen.i.identifier,
+                            givenName: form.control(_individualNameKey).value,
+                          ),
+                          gender: form.control(_genderKey).value == null
+                              ? null
+                              : Gender.values.byName(form
+                                  .control(_genderKey)
+                                  .value
+                                  .toString()
+                                  .toLowerCase()),
+                          identifiers: [
+                            if (form.control(_idTypeKey).value != null)
+                              IdentifierModel(
+                                tenantId: envConfig.variables.tenantId,
+                                type: form.control(_idTypeKey).value,
+                                id: form.control(_idTypeKey).value == 'DEFAULT'
+                                    ? IdGen.i.identifier
+                                    : form.control(_idNumberKey).value,
+                                clientReferenceId: IdGen.i.identifier,
+                                rowVersion: 1,
+                              ),
+                          ],
+                        );
+
+                        final bloc = BlocProvider.of<SelectedHouseHoldsBloc>(
+                          context,
+                        );
+                        final household = bloc.state.household;
+
+                        /// todo - fix address being null issue in model
+                        try {
+                          await individualRepo
+                              .create(individualModel.copyWith(address: [
+                            household?.address ??
+                                AddressModel(
+                                  clientReferenceId: IdGen.i.identifier,
+                                  tenantId: IdGen.i.identifier,
+                                  rowVersion: 1,
+                                ),
+                          ]));
+                          await householdMemberRepo.create(
+                            HouseholdMemberModel(
+                              householdClientReferenceId:
+                                  household?.clientReferenceId ?? 'new',
+                              individualClientReferenceId:
+                                  individualModel.clientReferenceId,
+                              isHeadOfHousehold: false,
+                              tenantId: envConfig.variables.tenantId,
+                              rowVersion: 1,
+                              clientReferenceId: IdGen.i.identifier,
+                            ),
+                          );
+                        } on Exception catch (e) {
+                          print('Not head of household entry ran into error');
+                        }
+                        context.router.push(AcknowledgementRoute());
+
+                        return;
+                      }
+                      /// ---- end of unrefactored block
+
                       final router = context.router;
                       final bloc = BlocProvider.of<BeneficiaryRegistrationBloc>(
                         context,
@@ -92,7 +173,6 @@ class _IndividualDetailsPageState
                               clientReferenceId: IdGen.i.identifier,
                               givenName: form.control(_individualNameKey).value,
                             ),
-
                             gender: form.control(_genderKey).value == null
                                 ? null
                                 : Gender.values.byName(form
