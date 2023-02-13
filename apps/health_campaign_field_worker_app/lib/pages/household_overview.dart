@@ -9,6 +9,7 @@ import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/member_card/member_card.dart';
+import 'beneficiary_registration/individual_details.dart';
 
 class HouseholdOverViewPage extends LocalizedStatefulWidget {
   const HouseholdOverViewPage({
@@ -187,8 +188,11 @@ class _HouseholdOverViewPageState
                     Center(
                       child: DigitIconButton(
                         onPressed: () {
-                          // TODO: Complete implementation
-                        },
+                          /// TODO - change to auto route
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const IndividualDetailsPage()),
+                          );                             },
                         iconText: localizations.translate(
                           i18.householdOverView.householdOverViewAddActionText,
                         ),
