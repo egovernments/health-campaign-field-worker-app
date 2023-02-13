@@ -35,10 +35,6 @@ class _HouseholdOverViewPageState
         children: [
           BlocBuilder<SelectedHouseHoldsBloc, SelectedHouseHoldsState>(
             builder: (context, state) {
-              print(
-                state.individual?.name?.givenName,
-              );
-
               return DigitCard(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -86,12 +82,14 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewPrimaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
                                         },
                                       ),
                                       secondaryAction: DigitDialogActions(
@@ -99,9 +97,10 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewSecondaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
                                         },
                                       ),
                                     ),
