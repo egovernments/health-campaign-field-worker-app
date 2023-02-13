@@ -148,52 +148,58 @@ class MemberCard extends StatelessWidget {
             ),
           ],
         ),
-        isDelivered
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: DigitIconButton(
-                  icon: Icons.info_rounded,
-                  iconText: localizations.translate(i18.householdOverView
-                      .householdOverViewNotDeliveredIconLabel),
-                  iconTextColor: theme.errorColor,
-                  iconColor: theme.errorColor,
-                ),
-              )
-            : Align(
-                alignment: Alignment.centerLeft,
-                child: DigitIconButton(
-                  icon: Icons.check_circle,
-                  iconText: localizations.translate(
-                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+        Offstage(
+          offstage: true,
+          child: !isDelivered
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: DigitIconButton(
+                    icon: Icons.info_rounded,
+                    iconText: localizations.translate(i18.householdOverView
+                        .householdOverViewNotDeliveredIconLabel),
+                    iconTextColor: theme.errorColor,
+                    iconColor: theme.errorColor,
                   ),
-                  iconTextColor:
-                      DigitTheme.instance.colorScheme.onSurfaceVariant,
-                  iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
-                ),
-              ),
-        isDelivered
-            ? DigitElevatedButton(
-                onPressed: () {
-                  // TODO: Complete implementation
-                },
-                child: Center(
-                  child: Text(
-                    localizations.translate(
-                      i18.memberCard.deliverInterventionSubmitLabel,
+                )
+              : Align(
+                  alignment: Alignment.centerLeft,
+                  child: DigitIconButton(
+                    icon: Icons.check_circle,
+                    iconText: localizations.translate(
+                      i18.householdOverView.householdOverViewDeliveredIconLabel,
                     ),
+                    iconTextColor:
+                        DigitTheme.instance.colorScheme.onSurfaceVariant,
+                    iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              )
-            : SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: DigitOutLineButton(
-                  label: localizations
-                      .translate(i18.memberCard.deliverDetailsUpdateLabel),
+        ),
+        Offstage(
+          offstage: true,
+          child: isDelivered
+              ? DigitElevatedButton(
                   onPressed: () {
                     // TODO: Complete implementation
                   },
+                  child: Center(
+                    child: Text(
+                      localizations.translate(
+                        i18.memberCard.deliverInterventionSubmitLabel,
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: DigitOutLineButton(
+                    label: localizations
+                        .translate(i18.memberCard.deliverDetailsUpdateLabel),
+                    onPressed: () {
+                      // TODO: Complete implementation
+                    },
+                  ),
                 ),
-              ),
+        ),
       ]),
     );
   }

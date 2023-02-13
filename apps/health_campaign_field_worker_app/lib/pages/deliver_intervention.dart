@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/search_households/search_households.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -37,122 +38,145 @@ class _DeliverInterventionPageState
               BackNavigationHelpHeaderWidget(),
             ]),
             children: [
-              DigitCard(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            localizations.translate(
-                              i18.deliverIntervention.deliverInterventionLabel,
+              BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
+                builder: (context, state) {
+                  return state.map(
+                    loading: (value) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    notFound: (value) => DigitInfoCard(
+                      description: localizations.translate(
+                        i18.searchBeneficiary.beneficiaryInfoDescription,
+                      ),
+                      title: localizations.translate(
+                        i18.searchBeneficiary.beneficiaryInfoTitle,
+                      ),
+                    ),
+                    empty: (value) => const Offstage(),
+                    results: (value) => DigitCard(
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  localizations.translate(
+                                    i18.deliverIntervention
+                                        .deliverInterventionLabel,
+                                  ),
+                                  style: theme.textTheme.displayMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                          DigitTableCard(
+                            element: {
+                              localizations.translate(i18.deliverIntervention
+                                  .dateOfRegistrationLabel): "1 August 2022",
+                            },
+                          ),
+                          DigitTableCard(
+                            color: Theme.of(context).colorScheme.surface,
+                            border: Border.all(
+                              color: Colors.grey,
+                              style: BorderStyle.solid,
+                              width: 1.0,
                             ),
-                            style: theme.textTheme.displayMedium,
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 16),
+                            element: {
+                              localizations.translate(i18.householdOverView
+                                      .householdOverViewHouseholdHeadLabel):
+                                  "Jose (H)",
+                              localizations.translate(
+                                i18.deliverIntervention.idTypeText,
+                              ): "National ID",
+                              localizations.translate(
+                                i18.deliverIntervention.idNumberText,
+                              ): "JGK87389",
+                              localizations.translate(i18.common.coreCommonAge):
+                                  "40 years",
+                              localizations.translate(
+                                  i18.common.coreCommonGender): "Male",
+                              localizations.translate(
+                                i18.common.coreCommonMobileNumber,
+                              ): "+258 576478",
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(i18.deliverIntervention
-                            .dateOfRegistrationLabel): "1 August 2022",
-                      },
-                    ),
-                    DigitTableCard(
-                      color: Theme.of(context).colorScheme.surface,
-                      border: Border.all(
-                        color: Colors.grey,
-                        style: BorderStyle.solid,
-                        width: 1.0,
-                      ),
-                      padding:
-                          const EdgeInsets.only(left: 8, right: 8, bottom: 16),
-                      element: {
-                        localizations.translate(i18.householdOverView
-                            .householdOverViewHouseholdHeadLabel): "Jose (H)",
-                        localizations.translate(
-                          i18.deliverIntervention.idTypeText,
-                        ): "National ID",
-                        localizations.translate(
-                          i18.deliverIntervention.idNumberText,
-                        ): "JGK87389",
-                        localizations.translate(i18.common.coreCommonAge):
-                            "40 years",
-                        localizations.translate(i18.common.coreCommonGender):
-                            "Male",
-                        localizations.translate(
-                          i18.common.coreCommonMobileNumber,
-                        ): "+258 576478",
-                      },
-                    ),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(
-                          i18.deliverIntervention.memberCountText,
-                        ): '05',
-                      },
-                    ),
-                    const DigitDivider(),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(i18.deliverIntervention
-                            .noOfResourcesForDelivery): "03",
-                      },
-                    ),
-                    const DigitDivider(),
-                    DigitDropdown(
-                      label: localizations.translate(
-                        i18.deliverIntervention.resourceDeliveredLabel,
-                      ),
-                      initialValue: 'BEDNETS',
-                      menuItems: [
-                        MenuItemModel(
-                          "DOLO",
-                          "DOLO",
-                        ),
-                        MenuItemModel(
-                          "BEDNETS",
-                          "BEDNETS",
-                        ),
-                      ],
-                      formControlName: 'resourceDelivered',
-                    ),
-                    DigitIntegerFormPicker(
-                      form: form,
-                      minimum: 0,
-                      formControlName: 'quantityDistributed',
-                      label: localizations.translate(
-                        i18.deliverIntervention.quantityDistributedLabel,
-                      ),
-                      incrementer: true,
-                    ),
-                    BlocBuilder<AppInitializationBloc, AppInitializationState>(
-                      builder: (context, state) {
-                        if (state is! AppInitialized) return const Offstage();
-
-                        final deliveryCommentOptions =
-                            state.appConfiguration.deliveryCommentOptions ??
-                                <DeliveryCommentOptions>[];
-
-                        return DigitDropdown(
-                          label: localizations.translate(
-                            i18.deliverIntervention.deliveryCommentLabel,
+                          DigitTableCard(
+                            element: {
+                              localizations.translate(
+                                i18.deliverIntervention.memberCountText,
+                              ): '05',
+                            },
                           ),
-                          initialValue:
-                              deliveryCommentOptions.firstOrNull?.name,
-                          menuItems: deliveryCommentOptions.map((e) {
-                            return MenuItemModel(
-                              e.code,
-                              localizations.translate(e.name),
-                            );
-                          }).toList(),
-                          formControlName: 'deliveryComment',
-                        );
-                      },
+                          const DigitDivider(),
+                          DigitTableCard(
+                            element: {
+                              localizations.translate(i18.deliverIntervention
+                                  .noOfResourcesForDelivery): "03",
+                            },
+                          ),
+                          const DigitDivider(),
+                          DigitDropdown(
+                            label: localizations.translate(
+                              i18.deliverIntervention.resourceDeliveredLabel,
+                            ),
+                            initialValue: 'BEDNETS',
+                            menuItems: [
+                              MenuItemModel(
+                                "DOLO",
+                                "DOLO",
+                              ),
+                              MenuItemModel(
+                                "BEDNETS",
+                                "BEDNETS",
+                              ),
+                            ],
+                            formControlName: 'resourceDelivered',
+                          ),
+                          DigitIntegerFormPicker(
+                            form: form,
+                            minimum: 0,
+                            formControlName: 'quantityDistributed',
+                            label: localizations.translate(
+                              i18.deliverIntervention.quantityDistributedLabel,
+                            ),
+                            incrementer: true,
+                          ),
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              if (state is! AppInitialized)
+                                return const Offstage();
+
+                              final deliveryCommentOptions = state
+                                      .appConfiguration
+                                      .deliveryCommentOptions ??
+                                  <DeliveryCommentOptions>[];
+
+                              return DigitDropdown(
+                                label: localizations.translate(
+                                  i18.deliverIntervention.deliveryCommentLabel,
+                                ),
+                                initialValue:
+                                    deliveryCommentOptions.firstOrNull?.name,
+                                menuItems: deliveryCommentOptions.map((e) {
+                                  return MenuItemModel(
+                                    e.code,
+                                    localizations.translate(e.name),
+                                  );
+                                }).toList(),
+                                formControlName: 'deliveryComment',
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           );

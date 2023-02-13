@@ -6,8 +6,12 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
 import '../blocs/household_details/household_details.dart';
+import '../blocs/selected_households/selected_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/sql_store/tables/household_member.dart';
+import '../data/network_manager.dart';
+import '../models/entities/household_member.dart';
 import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -43,6 +47,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
+          ),
+          BlocProvider(
+            create: (_) => SelectedHouseHoldsBloc(
+              const SelectedHouseHoldsState(),
+              context
+                  .read<NetworkManager>()
+                  .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
+                    context,
+                  ),
+            ),
           ),
         ],
         child: const AutoRouter(),
