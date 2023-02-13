@@ -18,9 +18,12 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
 class IndividualDetailsPage extends LocalizedStatefulWidget {
+  final bool isHeadOfHousehold;
+
   const IndividualDetailsPage({
     super.key,
     super.appLocalizations,
+    this.isHeadOfHousehold = false,
   });
 
   @override
@@ -31,11 +34,19 @@ class _IndividualDetailsPageState
     extends LocalizedState<IndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _idTypeKey = 'idType';
+  static const _headOfHousehold = 'headOfHousehold';
   static const _idNumberKey = 'idNumber';
   static const _dobKey = 'dob';
   static const _ageKey = 'age';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  late bool isHeadOfHousehold;
+
+  @override
+  void initState() {
+    isHeadOfHousehold = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +92,7 @@ class _IndividualDetailsPageState
                               clientReferenceId: IdGen.i.identifier,
                               givenName: form.control(_individualNameKey).value,
                             ),
+
                             gender: form.control(_genderKey).value == null
                                 ? null
                                 : Gender.values.byName(form
@@ -169,11 +181,14 @@ class _IndividualDetailsPageState
                             'required': (object) => 'Name is required',
                           },
                         ),
-                        DigitCheckbox(
-                          label: localizations.translate(
-                            i18.individualDetails.checkboxLabelText,
+                        Offstage(
+                          offstage: !widget.isHeadOfHousehold,
+                          child: DigitCheckbox(
+                            label: localizations.translate(
+                              i18.individualDetails.checkboxLabelText,
+                            ),
+                            value: widget.isHeadOfHousehold,
                           ),
-                          value: true,
                         ),
                         BlocBuilder<AppInitializationBloc,
                             AppInitializationState>(
@@ -308,6 +323,7 @@ class _IndividualDetailsPageState
         _individualNameKey: FormControl<String>(
           validators: [Validators.required],
         ),
+        _headOfHousehold: FormControl<bool>(),
         _idTypeKey: FormControl<String>(
           validators: [Validators.required],
         ),
@@ -316,4 +332,5 @@ class _IndividualDetailsPageState
         _genderKey: FormControl<String>(),
         _mobileNumberKey: FormControl<String>(),
       });
+
 }

@@ -68,7 +68,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       ),
                     );
 
-                    context.router.push(IndividualDetailsRoute());
+                    context.router.push(IndividualDetailsRoute(isHeadOfHousehold:true));
                   },
                   child: Center(
                     child: Text(
