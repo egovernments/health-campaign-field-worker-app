@@ -1,10 +1,17 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/sync/sync.dart';
+import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/network_manager.dart';
+import '../models/entities/household.dart';
+import '../models/entities/household_member.dart';
+import '../models/entities/individual.dart';
+import '../models/entities/project_beneficiary.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -99,7 +106,52 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
-        onPressed: null,
+        onPressed: () async {
+          DigitSyncDialogContent.show(context, type: DigitSyncDialogType.inProgress, label: 'this label', barrierDismissible: true);
+          final dialogContext = context;
+          final networkManager = context.read<NetworkManager>();
+          final individualLocal = context
+              .read<LocalRepository<IndividualModel, IndividualSearchModel>>();
+          final individualRemote = context
+              .read<RemoteRepository<IndividualModel, IndividualSearchModel>>();
+
+          final householdLocal = context
+              .read<LocalRepository<HouseholdModel, HouseholdSearchModel>>();
+          final householdRemote = context
+              .read<RemoteRepository<HouseholdModel, HouseholdSearchModel>>();
+
+          final householdMemberLocal = context.read<
+              LocalRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>();
+          final householdMemberRemote = context.read<
+              RemoteRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>();
+
+          final projectBeneficiaryLocal = context.read<
+              LocalRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>();
+          final projectBeneficiaryRemote = context.read<
+              RemoteRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>();
+
+          networkManager.syncUp(localRepositories: [
+            individualLocal,
+            householdLocal,
+            householdMemberLocal,
+            projectBeneficiaryLocal,
+          ], remoteRepositories: [
+            individualRemote,
+            householdRemote,
+            householdMemberRemote,
+            projectBeneficiaryRemote,
+          ],);
+
+          // await Future.delayed(Duration(milliseconds: 250));
+          Navigator.of(context, rootNavigator: true).pop();
+
+
+          // Navigator.pop(dialogContext);
+        },
       ),
       HomeItemCard(
         icon: Icons.call,
