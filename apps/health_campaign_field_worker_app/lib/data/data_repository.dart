@@ -107,9 +107,16 @@ abstract class RemoteRepository<D extends EntityModel,
     );
   }
 
-  FutureOr<Response> bulkCreate(List<D> entities) async {
+  FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
+    List<String> jsonString = [];
+    for (var e in entities){
+      jsonString.add(e.toJson());
+    }
+
+    print(entities.first.toJson());
+    print('############ $entityName');
     return await dio.post(bulkCreatePath, data: {
-      entityName: entities,
+      entityName: jsonString,
       "apiOperation": "CREATE",
     });
   }
