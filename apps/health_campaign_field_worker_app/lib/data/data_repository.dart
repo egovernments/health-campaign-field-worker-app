@@ -122,15 +122,15 @@ abstract class RemoteRepository<D extends EntityModel,
 
     print('--------- API ---> $bulkCreatePath');
 
-
     final res = await dio.post(
       bulkCreatePath,
       options: Options(headers: headers),
-      data: {
-        'Individuals': jsonString,
-      },
+      data: jsonEncode({
+        ('${entityName}s').toString():
+            json.decode(entities.map((e) => e.toJson()).toList().toString()),
+      }),
     );
-    print(res.data);
+    print(res);
     return res;
   }
 
