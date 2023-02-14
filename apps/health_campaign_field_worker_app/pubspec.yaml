@@ -41,6 +41,8 @@ dependencies:
   drift_db_viewer: ^1.0.3
   bloc_concurrency: ^0.2.1
   stream_transform: ^2.1.0
+  flutter_secure_storage: ^8.0.0
+
 
 dev_dependencies:
   flutter_test:
