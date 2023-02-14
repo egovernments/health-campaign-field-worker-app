@@ -14,7 +14,14 @@ typedef SelectedHouseHoldsEmitter = Emitter<SelectedHouseHoldsState>;
 
 class SelectedHouseHoldsBloc
     extends Bloc<SelectedHouseHoldsEvent, SelectedHouseHoldsState> {
-  SelectedHouseHoldsBloc(super.initialState, this.householdMember) {
+  final DataRepository<IndividualModel, IndividualSearchModel>
+      individualMembers;
+
+  SelectedHouseHoldsBloc(
+    super.initialState,
+    this.householdMember,
+    this.individualMembers,
+  ) {
     on(_onHouseHoldsSelection);
   }
   final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
@@ -25,13 +32,23 @@ class SelectedHouseHoldsBloc
     SelectedHouseHoldsEmitter emit,
   ) async {
     final members = await householdMember.search(HouseholdMemberSearchModel(
-      individualClientReferenceId: event.household.clientReferenceId,
+      householdClientReferenceId: event.household.clientReferenceId,
       isHeadOfHousehold: false,
     ));
+
+    List<IndividualModel> memberList = [];
+    for (final element in members) {
+      List<IndividualModel> r =
+          await individualMembers.search(IndividualSearchModel(
+        clientReferenceId: element.individualClientReferenceId,
+      ));
+      memberList.add(r.first);
+    }
+
     emit(state.copyWith(
       household: event.household,
       individual: event.individual,
-      householdMembers: members,
+      householdMembers: memberList,
     ));
   }
 }
@@ -49,6 +66,6 @@ class SelectedHouseHoldsState with _$SelectedHouseHoldsState {
   const factory SelectedHouseHoldsState({
     HouseholdModel? household,
     IndividualModel? individual,
-    List<HouseholdMemberModel>? householdMembers,
+    List<IndividualModel>? householdMembers,
   }) = _SelectedHouseHoldsState;
 }

@@ -12,7 +12,6 @@ import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
 import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
@@ -101,12 +100,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => ProjectBeneficiaryLocalRepository(
           sql,
           ProjectBeneficiaryOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-        create: (_) => TaskLocalRepository(
-          sql,
-          TaskOpLogManager(isar),
         ),
       ),
     ];

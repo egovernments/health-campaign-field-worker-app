@@ -24,8 +24,6 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
     final projectBeneficiary = networkManager.repository<
         ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context);
 
-    final task = networkManager.repository<TaskModel, TaskSearchModel>(context);
-
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(
         const BeneficiaryRegistrationState(),
@@ -33,7 +31,6 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
         householdRepository: household,
         householdMemberRepository: householdMember,
         projectBeneficiaryRepository: projectBeneficiary,
-        taskRepository: task,
       ),
       child: const AutoRouter(),
     );

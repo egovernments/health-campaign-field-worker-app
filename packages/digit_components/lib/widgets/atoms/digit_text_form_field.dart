@@ -15,6 +15,7 @@ class DigitTextFormField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool obscureText;
   final String label;
+  final int? minLength;
   final Widget? suffixIcon;
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
@@ -38,6 +39,7 @@ class DigitTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.isRequired = false,
     this.readOnly = false,
+    this.minLength,
   });
 
   @override
