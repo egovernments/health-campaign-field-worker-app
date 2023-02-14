@@ -37,9 +37,12 @@ class NetworkManager {
       localRepositories.map((e) => e.getItemsToBeSynced()),
     );
 
+    print('----- Futures --- $futures');
+
     final pendingSyncEntries = futures.expand((e) => e).toList();
     pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
+    print('----- Pending  --- $pendingSyncEntries');
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
@@ -53,7 +56,7 @@ class NetworkManager {
         typeGroupedEntity.key,
         remoteRepositories,
       );
-
+      print('------ remote is $remote');
       final local = _getLocalForType(
         typeGroupedEntity.key,
         localRepositories,
@@ -61,11 +64,16 @@ class NetworkManager {
 
       for (final operationGroupedEntity in groupedOperations.entries) {
         final entities = operationGroupedEntity.value.map((e) {
+          print('---e is $e and ${e.entity}');
           return e.entity;
         }).toList();
 
+        print('----- entities --- $entities');
+
         if (operationGroupedEntity.key == DataOperation.create) {
-          await remote.bulkCreate(entities);
+          print('---- hjere -------');
+          final res = await remote.bulkCreate(entities);
+          print(res);
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);
         } else if (operationGroupedEntity.key == DataOperation.delete) {
