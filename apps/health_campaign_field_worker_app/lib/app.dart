@@ -48,7 +48,12 @@ class MainApplication extends StatelessWidget {
               mdmsRepository: MdmsRepository(client),
             )..add(const AppInitializationSetupEvent()),
           ),
-          BlocProvider(create: (context) => AuthBloc(const AuthState())),
+          BlocProvider(
+            create: (context) => AuthBloc(
+              const AuthState.initial(),
+              AuthRepository(client),
+            ),
+          ),
         ],
         child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
           builder: (context, appConfigState) {
@@ -128,10 +133,13 @@ class MainApplication extends StatelessWidget {
                         appRouter,
                         navigatorObservers: () => [AppRouterObserver()],
                         routes: (handler) => [
-                          if (authState.isAuthenticated)
-                            const AuthenticatedRouteWrapper()
-                          else
-                            const UnauthenticatedRouteWrapper(),
+                          authState.maybeWhen(
+                            initial: () => const UnauthenticatedRouteWrapper(),
+                            loaded:
+                                (String? accessToken, String? refreshToken) =>
+                                    const AuthenticatedRouteWrapper(),
+                            orElse: () => const UnauthenticatedRouteWrapper(),
+                          ),
                         ],
                       ),
                     ),

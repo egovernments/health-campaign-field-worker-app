@@ -149,6 +149,7 @@ class _IndividualDetailsPageState
 
                         return;
                       }
+
                       /// ---- end of unrefactored block
 
                       final router = context.router;
@@ -256,6 +257,7 @@ class _IndividualDetailsPageState
                           label: localizations.translate(
                             i18.individualDetails.nameLabelText,
                           ),
+                          maxLength: 200,
                           isRequired: true,
                           validationMessages: {
                             'required': (object) => 'Name is required',
@@ -315,9 +317,7 @@ class _IndividualDetailsPageState
                             ReactiveFormConsumer(
                               builder: (context, formGroup, child) {
                                 return DigitTextFormField(
-                                  isRequired:
-                                      formGroup.control(_idTypeKey).value !=
-                                          'DEFAULT',
+                                  isRequired: true,
                                   formControlName: _idNumberKey,
                                   label: localizations.translate(
                                     i18.individualDetails.idNumberLabelText,
@@ -381,10 +381,12 @@ class _IndividualDetailsPageState
                           },
                         ),
                         DigitTextFormField(
+                          keyboardType: TextInputType.number,
                           formControlName: _mobileNumberKey,
                           label: localizations.translate(
                             i18.individualDetails.mobileNumberLabelText,
                           ),
+                          maxLength: 10,
                         ),
                       ],
                     ),
@@ -412,5 +414,4 @@ class _IndividualDetailsPageState
         _genderKey: FormControl<String>(),
         _mobileNumberKey: FormControl<String>(),
       });
-
 }

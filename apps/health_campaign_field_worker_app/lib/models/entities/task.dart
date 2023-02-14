@@ -18,7 +18,7 @@ class TaskSearchModel extends EntitySearchModel {
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
-
+  
   TaskSearchModel({
     this.id,
     this.projectId,
@@ -32,67 +32,73 @@ class TaskSearchModel extends EntitySearchModel {
     int? actualStartDate,
     int? actualEndDate,
     super.boundaryCode,
-  })  : plannedStartDateTime = plannedStartDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
-        plannedEndDateTime = plannedEndDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
-        actualStartDateTime = actualStartDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
-        actualEndDateTime = actualEndDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-        super();
+  }): plannedStartDateTime = plannedStartDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
+  plannedEndDateTime = plannedEndDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
+  actualStartDateTime = actualStartDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
+  actualEndDateTime = actualEndDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
+   super();
 
   int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
+  
 
   int? get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
+  
 
   int? get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
+  
 
   int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass(ignoreNull: true)
 class TaskModel extends EntityModel implements TaskSearchModel {
+  
   @override
   final String? id;
-
+  
   @override
   final String? projectId;
-
+  
   @override
   final String? projectBeneficiaryId;
-
+  
   @override
   final String? createdBy;
-
+  
   @override
   final String? status;
-
+  
   @override
   final String clientReferenceId;
-
+  
   @override
   final String tenantId;
   final int rowVersion;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;
-
+  
   @override
   final DateTime? plannedStartDateTime;
-
+  
   @override
   final DateTime? plannedEndDateTime;
-
+  
   @override
   final DateTime? actualStartDateTime;
-
+  
   @override
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
+  
 
   TaskModel({
     this.id,
@@ -111,37 +117,42 @@ class TaskModel extends EntityModel implements TaskSearchModel {
     int? actualEndDate,
     int? createdDate,
     super.auditDetails,
-  })  : plannedStartDateTime = plannedStartDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
-        plannedEndDateTime = plannedEndDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
-        actualStartDateTime = actualStartDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
-        actualEndDateTime = actualEndDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-        createdDateTime = createdDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(createdDate),
-        super();
+  }): plannedStartDateTime = plannedStartDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
+      plannedEndDateTime = plannedEndDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
+      actualStartDateTime = actualStartDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
+      actualEndDateTime = actualEndDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
+      createdDateTime = createdDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(createdDate),
+       super();
 
   @override
-  int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
+  int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
+  
 
   @override
-  int? get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
+  int?  get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
+  
 
   @override
-  int? get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
+  int?  get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
+  
 
   @override
-  int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
+  int?  get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
+  
 
   @override
-  int? get createdDate => createdDateTime?.millisecondsSinceEpoch;
+  int?  get createdDate => createdDateTime?.millisecondsSinceEpoch;
+  
 
   TaskCompanion get companion {
     return TaskCompanion(
@@ -158,6 +169,6 @@ class TaskModel extends EntityModel implements TaskSearchModel {
       actualStartDate: Value(actualStartDate),
       actualEndDate: Value(actualEndDate),
       createdDate: Value(createdDate),
-    );
+      );
   }
 }

@@ -35,6 +35,10 @@ class _HouseholdOverViewPageState
         children: [
           BlocBuilder<SelectedHouseHoldsBloc, SelectedHouseHoldsState>(
             builder: (context, state) {
+              print(
+                state.individual?.name?.givenName,
+              );
+
               return DigitCard(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -82,14 +86,12 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewPrimaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
                                         },
                                       ),
                                       secondaryAction: DigitDialogActions(
@@ -97,10 +99,9 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewSecondaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop();
                                         },
                                       ),
                                     ),
@@ -143,55 +144,38 @@ class _HouseholdOverViewPageState
                         ): state.household?.memberCount,
                       },
                     ),
-                    MemberCard(
-                      name: state.individual!.name!.givenName.toString(),
-                      age: int.parse((DateTime.now()
-                                  .difference(DateTime.parse(
-                                    state.individual!.dateOfBirth!,
-                                  ))
-                                  .inDays /
-                              365)
-                          .round()
-                          .toStringAsFixed(0)),
-                      gender: state.individual!.gender!.name,
-                      isDelivered: false,
-                      localizations: localizations,
-                    ),
                     Column(
                       children: state.householdMembers!
                           .map(
                             (ele) => MemberCard(
-                              name: 'Joseph Sergio (H)',
+                              name: ele.name!.givenName!.toString(),
                               age: int.parse((DateTime.now()
                                           .difference(DateTime.parse(
-                                            state.individual!.dateOfBirth!,
+                                            ele.dateOfBirth!,
                                           ))
                                           .inDays /
                                       365)
                                   .round()
                                   .toStringAsFixed(0)),
-                              gender: 'Male',
+                              gender: ele.gender!.name,
                               isDelivered: false,
                               localizations: localizations,
                             ),
                           )
                           .toList(),
                     ),
-                    // MemberCard(
-                    //   name: 'Maria',
-                    //   age: 40,
-                    //   gender: 'Female',
-                    //   isDelivered: true,
-                    //   localizations: localizations,
-                    // ),
                     Center(
                       child: DigitIconButton(
                         onPressed: () {
                           /// TODO - change to auto route
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const IndividualDetailsPage()),
-                          );                             },
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const IndividualDetailsPage(),
+                            ),
+                          );
+                        },
                         iconText: localizations.translate(
                           i18.householdOverView.householdOverViewAddActionText,
                         ),

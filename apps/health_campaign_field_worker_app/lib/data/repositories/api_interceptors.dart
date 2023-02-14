@@ -26,3 +26,13 @@ class ApiInterceptors extends Interceptor {
     super.onRequest(options, handler);
   }
 }
+
+@override
+Future<dynamic> onResponse(
+  Response options,
+  RequestInterceptorHandler handler,
+) async {
+  print(
+    options.data,
+  );
+}
