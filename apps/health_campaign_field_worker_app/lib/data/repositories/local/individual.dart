@@ -145,9 +145,9 @@ class IndividualLocalRepository
         identifiers: [
           if (identifier != null)
             IdentifierModel(
-              type: identifier.type,
+              identifierType: identifier.identifierType,
               clientReferenceId: identifier.clientReferenceId,
-              id: identifier.id,
+              identifierId: identifier.identifierId,
               rowVersion: identifier.rowVersion,
               tenantId: identifier.tenantId,
             ),
