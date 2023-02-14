@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
+import 'local_store/secure_store/secure_store.dart';
 
 class NetworkManager {
   final NetworkManagerConfiguration configuration;
@@ -69,11 +70,18 @@ class NetworkManager {
         }).toList();
 
         print('----- entities --- $entities');
+        final tok = await storage.read(key: 'access_token');
+        print('====== ====== ====== ====== ====== ====== $tok');
 
         if (operationGroupedEntity.key == DataOperation.create) {
           print('---- hjere -------');
-          final res = await remote.bulkCreate(entities);
-          print(res);
+          try {
+            final res = await remote.bulkCreate(entities);
+            print(res);
+          } on Exception catch (e) {
+            print('------ :( $e');
+
+          }
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);
         } else if (operationGroupedEntity.key == DataOperation.delete) {
