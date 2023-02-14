@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
@@ -14,7 +15,6 @@ class ApiInterceptors extends Interceptor {
   ) async {
     final authToken = await storage.read(key: 'access_token');
     print('=====>>>>> Auth token is $authToken');
-
     if (options.data is Map) {
       options.data = {
         ...options.data,
@@ -25,15 +25,29 @@ class ApiInterceptors extends Interceptor {
           action: options.path.split('/').last,
           did: RequestInfoData.did,
           key: RequestInfoData.key,
-          authToken: authToken,
-
+          authToken: RequestInfoData.authToken,
         ).toJson(),
       };
+    } else if (options.data is String) {
+      if (json.decode(options.data) is Map) {
+        options.data = jsonEncode({
+          ...json.decode(options.data),
+          "RequestInfo": RequestInfoModel(
+            apiId: RequestInfoData.apiId,
+            ver: RequestInfoData.ver,
+            ts: RequestInfoData.ts,
+            action: options.path.split('/').last,
+            did: RequestInfoData.did,
+            key: RequestInfoData.key,
+            authToken: authToken,
+          ).toJson(),
+        });
+      }
     }
 
+    print("+==========");
 
     print(options.data);
-    // print(options.d);
     super.onRequest(options, handler);
   }
 
@@ -43,7 +57,6 @@ class ApiInterceptors extends Interceptor {
   //   print(response);
   //   super.onResponse(response, handler);
   // }
-
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
@@ -56,12 +69,10 @@ class ApiInterceptors extends Interceptor {
 
   @override
   Future<dynamic> onResponse(
-      Response<dynamic> response,
-      ResponseInterceptorHandler handler,
-      ) async {
-
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) async {
     print('========== ${response}');
     return handler.next(response);
   }
-
 }
