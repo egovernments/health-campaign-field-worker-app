@@ -27,12 +27,14 @@ class BeneficiaryRegistrationBloc
   final DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
       projectBeneficiaryRepository;
 
+  final DataRepository<TaskModel, TaskSearchModel> taskRepository;
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    required this.taskRepository,
   }) {
     on(_handleSaveAddress);
     on(_handleSaveHouseholdDetails);
@@ -85,6 +87,7 @@ class BeneficiaryRegistrationBloc
       await individualRepository
           .create(individual.copyWith(address: [address]));
       await householdRepository.create(household.copyWith(address: address));
+
       await projectBeneficiaryRepository.create(
         ProjectBeneficiaryModel(
           rowVersion: 1,
@@ -106,6 +109,15 @@ class BeneficiaryRegistrationBloc
           clientReferenceId: IdGen.i.identifier,
         ),
       );
+      await taskRepository.create(TaskModel(
+        clientReferenceId: IdGen.i.identifier,
+        tenantId: envConfig.variables.tenantId,
+        rowVersion: 1,
+        projectId: '',
+        status: 'NOT DELIVERED',
+        createdDate: DateTime.now().millisecondsSinceEpoch,
+        projectBeneficiaryId: individual.clientReferenceId,
+      ));
     } catch (error) {
       rethrow;
     } finally {

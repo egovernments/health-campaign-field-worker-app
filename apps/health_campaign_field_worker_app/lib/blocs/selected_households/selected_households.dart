@@ -21,6 +21,7 @@ class SelectedHouseHoldsBloc
     super.initialState,
     this.householdMember,
     this.individualMembers,
+    DataRepository<IndividualModel, IndividualSearchModel> repository,
   ) {
     on(_onHouseHoldsSelection);
   }
