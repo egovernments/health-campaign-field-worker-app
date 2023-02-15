@@ -13,6 +13,8 @@ const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
+const warehouseDetails = WarehouseDetails();
+const stockDetails = StockDetails();
 
 class Common {
   const Common();
@@ -22,8 +24,11 @@ class Common {
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
+
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
+
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
+
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 }
 
@@ -71,6 +76,8 @@ class Home {
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
+
+  String get manageStockLabel => 'MANAGE_STOCK_LABEL';
 }
 
 class SearchBeneficiary {
@@ -171,21 +178,28 @@ class HouseholdDetails {
 class HouseholdOverView {
   const HouseholdOverView();
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
+
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
+
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
+
   String get householdOverViewPrimaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
 
   String get householdOverViewSecondaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
+
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
@@ -258,4 +272,41 @@ class ProjectSelection {
   String get retryButtonText => 'RETRY';
 
   String get dismissButtonText => 'DISMISS';
+}
+
+class WarehouseDetails {
+  const WarehouseDetails();
+
+  String get warehouseDetailsLabel => 'WAREHOUSE_DETAILS_LABEL';
+
+  String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
+
+  String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
+
+  String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
+}
+
+class StockDetails {
+  const StockDetails();
+
+  String get stockReceiptDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
+
+  String get stockIssuedDetailsLabel => 'STOCK_ISSUED_DETAILS_LABEL';
+
+  String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
+
+  String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
+
+  String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+
+  String get quantitySent => 'STOCK_RECEIPT_DETAILS_QUANTITY_SENT';
+
+  String get noOfNetsIndicatedOnThePackingSlip =>
+      'STOCK_RECEIPT_DETAILS_NO_OF_NETS_INDICATED_ON_THE_PACKAING_SLIP';
+
+  String get nOOfPackingSlip => 'STOCK_RECEIPT_DETAILS_NO_OF_PACKING_SLIP';
+
+  String get typeOfTransport => 'STOCK_RECEIPT_DETAILS_TYPE_OF_TRANSPORT';
+
+  String get vehicleNumber => 'STOCK_RECEIPT_DETAILS_VEHICLE_NUMBER';
 }

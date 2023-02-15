@@ -25,3 +25,4 @@ export './molecules/digit_table_card.dart';
 export './powered_by_digit.dart';
 export './scrollable_content.dart';
 export 'digit_row_card/digit_row_card.dart';
+export './molecules/digit_list_view.dart';

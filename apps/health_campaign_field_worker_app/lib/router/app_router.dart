@@ -16,7 +16,9 @@ import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-
+import '../pages/manage_stocks.dart';
+import '../pages/warehouse_details.dart';
+import '../pages/stock_receipt_details.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -59,6 +61,9 @@ part 'app_router.gr.dart';
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
         AutoRoute(page: ProjectSelectionPage, path: 'project-selection'),
+        AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+        AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
+        AutoRoute(page: StockReceiptDetailsPage, path: 'stock-receipt-details'),
       ],
     ),
   ],
