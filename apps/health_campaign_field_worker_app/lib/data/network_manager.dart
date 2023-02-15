@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
-import 'local_store/secure_store/secure_store.dart';
 
 class NetworkManager {
   final NetworkManagerConfiguration configuration;
@@ -38,12 +38,9 @@ class NetworkManager {
       localRepositories.map((e) => e.getItemsToBeSynced()),
     );
 
-    print('----- Futures --- $futures');
-
     final pendingSyncEntries = futures.expand((e) => e).toList();
     pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
-    print('----- Pending  --- $pendingSyncEntries');
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
@@ -57,7 +54,7 @@ class NetworkManager {
         typeGroupedEntity.key,
         remoteRepositories,
       );
-      print('------ remote is $remote');
+
       final local = _getLocalForType(
         typeGroupedEntity.key,
         localRepositories,
@@ -65,28 +62,24 @@ class NetworkManager {
 
       for (final operationGroupedEntity in groupedOperations.entries) {
         final entities = operationGroupedEntity.value.map((e) {
-          print('---e is $e and ${e.entity}');
           return e.entity;
         }).toList();
 
-        print('----- entities --- $entities');
-        final tok = await storage.read(key: 'access_token');
-        print('====== ====== ====== ====== ====== ====== $tok');
-
-        if (operationGroupedEntity.key == DataOperation.create) {
-          print('---- hjere -------');
-          try {
-            final res = await remote.bulkCreate(entities);
-            print(res);
-          } on Exception catch (e) {
-            print('------ :( $e');
-
+        try {
+          if (operationGroupedEntity.key == DataOperation.create) {
+            await remote.bulkCreate(entities);
+          } else if (operationGroupedEntity.key == DataOperation.update) {
+            await remote.bulkUpdate(entities);
+          } else if (operationGroupedEntity.key == DataOperation.delete) {
+            await remote.bulkDelete(entities);
           }
-        } else if (operationGroupedEntity.key == DataOperation.update) {
-          await remote.bulkUpdate(entities);
-        } else if (operationGroupedEntity.key == DataOperation.delete) {
-          await remote.bulkDelete(entities);
+        } catch (error) {
+          AppLogger.instance.info('$error', title: 'SyncUp Error');
+
+          return;
         }
+
+        return;
 
         for (final syncedEntity in operationGroupedEntity.value) {
           local.markSynced(syncedEntity.copyWith(isSynced: true));
