@@ -107,7 +107,18 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
         onPressed: () async {
-          DigitSyncDialogContent.show(context, type: DigitSyncDialogType.inProgress, label: 'this label', barrierDismissible: true);
+          final router = context.router;
+          DigitSyncDialogContent.show(
+            context,
+            type: DigitSyncDialogType.inProgress,
+            // TODO: Localization pending
+            label: 'Sync in Progress',
+            barrierDismissible: true,
+          );
+
+          router.pop();
+
+          return;
           final dialogContext = context;
           final networkManager = context.read<NetworkManager>();
           final individualLocal = context
@@ -134,21 +145,23 @@ class _HomePageState extends LocalizedState<HomePage> {
               RemoteRepository<ProjectBeneficiaryModel,
                   ProjectBeneficiarySearchModel>>();
 
-          networkManager.syncUp(localRepositories: [
-            individualLocal,
-            householdLocal,
-            householdMemberLocal,
-            projectBeneficiaryLocal,
-          ], remoteRepositories: [
-            individualRemote,
-            householdRemote,
-            householdMemberRemote,
-            projectBeneficiaryRemote,
-          ],);
+          networkManager.syncUp(
+            localRepositories: [
+              individualLocal,
+              householdLocal,
+              householdMemberLocal,
+              projectBeneficiaryLocal,
+            ],
+            remoteRepositories: [
+              individualRemote,
+              householdRemote,
+              householdMemberRemote,
+              projectBeneficiaryRemote,
+            ],
+          );
 
           // await Future.delayed(Duration(milliseconds: 250));
           Navigator.of(context, rootNavigator: true).pop();
-
 
           // Navigator.pop(dialogContext);
         },

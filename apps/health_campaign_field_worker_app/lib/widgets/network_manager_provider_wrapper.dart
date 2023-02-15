@@ -13,6 +13,7 @@ import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
 import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -59,7 +60,10 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         final local = _getLocalRepositories(sql, isar);
 
         return MultiRepositoryProvider(
-          providers: [...local, ...remote],
+          providers: [
+            ...local,
+            ...remote,
+          ],
           child: Provider(
             create: (ctx) => NetworkManager(configuration: configuration),
             child: child,
@@ -118,6 +122,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       final actions = actionMap[value]!;
 
       remoteRepositories.addAll([
+        if (value == DataModelType.user)
+          RepositoryProvider<AuthRepository>(
+            create: (_) => AuthRepository(
+              dio,
+              loginPath: actions[ApiOperation.login] ?? '',
+            ),
+          ),
         if (value == DataModelType.facility)
           RepositoryProvider<
               RemoteRepository<FacilityModel, FacilitySearchModel>>(

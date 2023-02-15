@@ -4,8 +4,9 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'package:intl/intl.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -73,9 +74,9 @@ class _IndividualDetailsPageState
                             tenantId: envConfig.variables.tenantId,
                             rowVersion: 1,
                             clientReferenceId: IdGen.i.identifier,
-                            dateOfBirth: DateFormat('dd/MM/yyyy')
-                                .format(dob!)
-                                .toString(),
+                            dateOfBirth: dob == null
+                                ? null
+                                : DateFormat('dd/MM/yyyy').format(dob),
                             mobileNumber: form.control(_mobileNumberKey).value,
                             name: NameModel(
                               rowVersion: 1,

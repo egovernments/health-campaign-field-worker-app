@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -62,11 +63,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         i18.login.userIdPlaceholder,
                       ),
                       validationMessages: {
-                        "required": (control) {
-                          print("control");
-                          return 'user id is Required';
-                        },
+                        "required": (_) => 'User ID is Required',
                       },
+                      textCapitalization: TextCapitalization.none,
                       formControlName: _userId,
                       isRequired: true,
                       keyboardType: TextInputType.text,
@@ -78,33 +77,38 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       formControlName: _password,
                       keyboardType: TextInputType.text,
                       isRequired: true,
+                      textCapitalization: TextCapitalization.none,
                       obscureText: !passwordVisible,
                       suffix: buildPasswordVisibility(),
                     ),
                     const SizedBox(height: 16),
                     BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, state) => DigitElevatedButton(
-                        onPressed: state.loading
-                            ? null
-                            : () {
-                                form.markAllAsTouched();
-                                if (!form.valid) return;
+                      builder: (context, state) {
+                        return DigitElevatedButton(
+                          onPressed: state.maybeWhen(
+                            orElse: () => () {
+                              form.markAllAsTouched();
+                              if (!form.valid) return;
 
-                                context.read<AuthBloc>().add(
-                                      AuthLoginEvent(
-                                        userId: form.control(_userId).value
-                                            as String,
-                                        password: form.control(_password).value
-                                            as String,
-                                      ),
-                                    );
-                              },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(i18.login.actionLabel),
+                              context.read<AuthBloc>().add(
+                                    AuthLoginEvent(
+                                      userId:
+                                          form.control(_userId).value as String,
+                                      password: form.control(_password).value
+                                          as String,
+                                      tenantId: envConfig.variables.tenantId,
+                                    ),
+                                  );
+                            },
+                            loading: () => null,
                           ),
-                        ),
-                      ),
+                          child: Center(
+                            child: Text(
+                              localizations.translate(i18.login.actionLabel),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     TextButton(
                       onPressed: () => DigitDialog.show(
