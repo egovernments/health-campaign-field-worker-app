@@ -67,6 +67,7 @@ class AuditDetails {
 }
 
 enum DataModelType {
+  user,
   facility,
   household,
   householdMember,
