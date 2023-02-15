@@ -47,6 +47,9 @@ class _SearchBeneficiaryPageState
         individual: context
             .read<NetworkManager>()
             .repository<IndividualModel, IndividualSearchModel>(context),
+        task: context
+            .read<NetworkManager>()
+            .repository<TaskModel, TaskSearchModel>(context),
       ),
       child: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) => Scaffold(

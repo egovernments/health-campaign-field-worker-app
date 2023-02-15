@@ -6,9 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/search_households/search_households.dart';
+import '../blocs/selected_households/selected_households.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../models/data_model.dart';
+import '../models/entities/task_resource.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -37,6 +42,66 @@ class _DeliverInterventionPageState
             header: Column(children: const [
               BackNavigationHelpHeaderWidget(),
             ]),
+            footer:
+                BlocBuilder<SelectedHouseHoldsBloc, SelectedHouseHoldsState>(
+              builder: (context, state) => DigitElevatedButton(
+                onPressed: () {
+                  print(state.task?.clientReferenceId);
+                  context.read<DeliverInterventionBloc>().add(
+                        (DeliverInterventionSubmitEvent(
+                          TaskResourceModel(
+                            clientReferenceId: IdGen.i.identifier,
+                            rowVersion: 1,
+                            tenantId: '',
+                            quantity: form
+                                .control('quantityDistributed')
+                                .value
+                                .toString(),
+                          ),
+                          state.task as TaskModel,
+                        )),
+                      );
+                },
+
+                // DigitDialog.show(
+                //   context,
+                //   options: DigitDialogOptions(
+                //     titleText: localizations
+                //         .translate(i18.deliverIntervention.dialogTitle),
+                //     contentText: localizations
+                //         .translate(i18.deliverIntervention.dialogContent),
+                //     primaryAction: DigitDialogActions(
+                //       label:
+                //           localizations.translate(i18.common.coreCommonSubmit),
+                //       action: (context) {
+                //         context.read<DeliverInterventionBloc>().add(
+                //               (DeliverInterventionSubmitEvent(TaskResourceModel(
+                //                 clientReferenceId: 'wdwed',
+                //                 rowVersion: 1,
+                //                 tenantId: '',
+                //                 quantity:
+                //                     form.control('quantityDistributed').value,
+                //               ))),
+                //             );
+
+                //         Navigator.of(context, rootNavigator: true).pop();
+                //       },
+                //     ),
+                //     secondaryAction: DigitDialogActions(
+                //       label:
+                //           localizations.translate(i18.common.coreCommonCancel),
+                //       action: (context) =>
+                //           Navigator.of(context, rootNavigator: true).pop(),
+                //     ),
+                //   ),
+                // ),
+                child: Center(
+                  child: Text(
+                    localizations.translate(i18.common.coreCommonSubmit),
+                  ),
+                ),
+              ),
+            ),
             children: [
               DigitCard(
                 child: Column(
@@ -158,37 +223,6 @@ class _DeliverInterventionPageState
             ],
           );
         },
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 90,
-        child: DigitCard(
-          child: DigitElevatedButton(
-            onPressed: () => DigitDialog.show(
-              context,
-              options: DigitDialogOptions(
-                titleText: localizations
-                    .translate(i18.deliverIntervention.dialogTitle),
-                contentText: localizations
-                    .translate(i18.deliverIntervention.dialogContent),
-                primaryAction: DigitDialogActions(
-                  label: localizations.translate(i18.common.coreCommonSubmit),
-                  action: (context) =>
-                      Navigator.of(context, rootNavigator: true).pop(),
-                ),
-                secondaryAction: DigitDialogActions(
-                  label: localizations.translate(i18.common.coreCommonCancel),
-                  action: (context) =>
-                      Navigator.of(context, rootNavigator: true).pop(),
-                ),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                localizations.translate(i18.common.coreCommonSubmit),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

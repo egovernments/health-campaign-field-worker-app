@@ -114,7 +114,14 @@ class BeneficiaryRegistrationBloc
         tenantId: envConfig.variables.tenantId,
         rowVersion: 1,
         projectId: '',
-        status: Status.notDelivered.name,
+        resources: [
+          TaskResourceModel(
+            clientReferenceId: IdGen.i.identifier,
+            tenantId: envConfig.variables.tenantId,
+            rowVersion: 1,
+          ),
+        ],
+        status: 'NOT DELIVERED',
         createdDate: DateTime.now().millisecondsSinceEpoch,
         projectBeneficiaryId: individual.clientReferenceId,
         resources: [
