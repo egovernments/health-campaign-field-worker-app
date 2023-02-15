@@ -9,12 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
   final String? tenantId;
-  
+
   TaskResourceSearchModel({
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -24,14 +24,13 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
-  
+
   @override
   final String clientReferenceId;
-  
+
   @override
   final String tenantId;
   final int rowVersion;
-  
 
   TaskResourceModel({
     this.id,
@@ -43,7 +42,7 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
     required this.tenantId,
     required this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }) : super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -55,6 +54,6 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
