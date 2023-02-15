@@ -46,5 +46,22 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
+  FutureOr<void> update(TaskModel entity) async {
+    final taskCompanion = entity.companion;
+
+    await sql.batch((batch) {
+      batch.update(
+        sql.task,
+        taskCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.update(entity);
+  }
+
+  @override
   DataModelType get type => DataModelType.task;
 }
