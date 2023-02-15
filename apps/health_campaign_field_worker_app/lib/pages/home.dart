@@ -72,6 +72,11 @@ class _HomePageState extends LocalizedState<HomePage> {
   List<HomeItemCard> _getItems(BuildContext context) {
     return [
       HomeItemCard(
+        icon: Icons.store_mall_directory,
+        label: i18.home.manageStockLabel,
+        onPressed: () => context.router.push(ManageStocksRoute()),
+      ),
+      HomeItemCard(
         icon: Icons.all_inbox,
         label: i18.home.beneficiaryLabel,
         onPressed: () => context.router.push(SearchBeneficiaryRoute()),
