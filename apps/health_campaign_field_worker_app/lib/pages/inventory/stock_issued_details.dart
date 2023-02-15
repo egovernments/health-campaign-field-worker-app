@@ -1,23 +1,22 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/localized.dart';
-import '../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
+import '../../router/app_router.dart';
 
-class StockReceiptDetailsPage extends LocalizedStatefulWidget {
-  const StockReceiptDetailsPage({
+class StockIssuedDetailsPage extends LocalizedStatefulWidget {
+  const StockIssuedDetailsPage({
     super.key,
     super.appLocalizations,
   });
   @override
-  State<StockReceiptDetailsPage> createState() =>
-      _StockReceiptDetailsPageState();
+  State<StockIssuedDetailsPage> createState() => _StockIssuedDetailsPageState();
 }
 
-class _StockReceiptDetailsPageState
-    extends LocalizedState<StockReceiptDetailsPage> {
+class _StockIssuedDetailsPageState
+    extends LocalizedState<StockIssuedDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -57,9 +56,11 @@ class _StockReceiptDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      localizations.translate(
-                        i18.stockDetails.stockReceiptDetailsLabel,
-                      ),
+                      'Stock Issued',
+
+                      // localizations.translate(
+                      //   i18.stockDetails.stockIssuedDetailsLabel,
+                      // ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -83,12 +84,12 @@ class _StockReceiptDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'receivedFrom',
+                        formControlName: 'destination',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantityReceived',
+                        formControlName: 'quantitySent',
                         label: localizations.translate(
-                          i18.stockDetails.quantityReceived,
+                          i18.stockDetails.quantitySent,
                         ),
                       ),
                       DigitTextFormField(
@@ -134,10 +135,10 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'receivedFrom': FormControl<String>(value: ''),
-        'quantityReceived': FormControl<String>(value: ''),
-        'noOfNetsIndicatedOnThePackingSlip': FormControl<String>(value: ''),
-        'nOOfPackingSlip': FormControl<String>(value: ''),
+        'destination': FormControl<String>(value: ''),
+        'quantitySent': FormControl<String>(value: ''),
+        'quantityIndicatedOnThePackingSlip': FormControl<String>(value: ''),
+        'noOfPackingSlip': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),
       });
