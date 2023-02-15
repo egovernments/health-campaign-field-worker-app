@@ -120,10 +120,6 @@ class AppInitializationState with _$AppInitializationState {
                     ApiOperation? operation;
                     DataModelType? type;
 
-                    // TODO - fix mappings
-                    if (e.action == 'bulk_create') {
-                      e.action = 'bulkCreate';
-                    }
                     operation = ApiOperation.values.firstWhereOrNull((element) {
                       return e.action == element.name;
                     });
