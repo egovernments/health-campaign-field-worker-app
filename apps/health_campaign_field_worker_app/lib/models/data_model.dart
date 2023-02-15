@@ -10,6 +10,7 @@ export 'entities/boundary.dart';
 export 'entities/document.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
+export 'entities/status.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
