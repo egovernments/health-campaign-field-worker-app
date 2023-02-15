@@ -1,42 +1,37 @@
-import 'package:dio/dio.dart';
 import 'dart:async';
-import 'dart:convert';
+
+import 'package:dio/dio.dart';
+
 import '../../../models/auth/auth_model.dart';
-import '../../../utils/environment_config.dart';
 
 class AuthRepository {
   final Dio _client;
+  final String loginPath;
 
-  const AuthRepository(this._client);
+  const AuthRepository(this._client, {required this.loginPath});
 
-  Future<AuthModel> authToken(
-    String apiEndPoint,
-    Map<String, String>? queryParameters,
-    dynamic body,
-  ) async {
+  Future<AuthModel> fetchAuthToken({required LoginModel loginModel}) async {
+    final headers = <String, String>{
+      "content-type": 'application/x-www-form-urlencoded',
+      "Access-Control-Allow-Origin": "*",
+      "authorization": "Basic ZWdvdi11c2VyLWNsaWVudDo=",
+    };
+
+    final formData = FormData.fromMap(loginModel.toJson());
+    final response = await _client.post(
+      loginPath,
+      data: formData,
+      options: Options(headers: headers),
+    );
+
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid response');
+    }
+
     try {
-      var headers = {
-        "content-type": 'application/x-www-form-urlencoded',
-        "Access-Control-Allow-Origin": "*",
-        "authorization": "Basic ZWdvdi11c2VyLWNsaWVudDo=",
-      };
-      print(
-        envConfig.variables.baseUrl + apiEndPoint,
-      );
-      var formData = FormData.fromMap(body);
-      final response = await _client.post(
-        apiEndPoint,
-        data: formData,
-        queryParameters: queryParameters,
-        options: Options(headers: headers),
-      );
-
-      print(response);
-
-      return AuthModel.fromJson(
-        json.decode(response.toString()),
-      );
-    } catch (_) {
+      return AuthModel.fromJson(data);
+    } catch (error) {
       rethrow;
     }
   }

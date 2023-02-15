@@ -70,8 +70,5 @@ class SyncEvent with _$SyncEvent {
 
 @freezed
 class SyncState with _$SyncState {
-  const factory SyncState({
-    @Default(0) int count,
-    @Default(false) bool loading,
-  }) = _SyncState;
+  const factory SyncState({@Default(0) int count}) = _SyncState;
 }

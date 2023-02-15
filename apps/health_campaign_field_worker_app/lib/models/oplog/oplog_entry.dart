@@ -26,6 +26,7 @@ enum DataOperation { create, search, update, delete }
 
 @MappableEnum(caseStyle: CaseStyle.snakeCase)
 enum ApiOperation {
+  login,
   create,
   search,
   update,
