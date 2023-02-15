@@ -114,9 +114,18 @@ class BeneficiaryRegistrationBloc
         tenantId: envConfig.variables.tenantId,
         rowVersion: 1,
         projectId: '',
-        status: 'NOT DELIVERED',
+        status: Status.notDelivered.name,
         createdDate: DateTime.now().millisecondsSinceEpoch,
         projectBeneficiaryId: individual.clientReferenceId,
+        resources: [
+          TaskResourceModel(
+            clientReferenceId: IdGen.i.identifier,
+            rowVersion: 1,
+            isDelivered: false,
+            deliveryComment: null,
+            tenantId: envConfig.variables.tenantId,
+          ),
+        ],
       ));
     } catch (error) {
       rethrow;

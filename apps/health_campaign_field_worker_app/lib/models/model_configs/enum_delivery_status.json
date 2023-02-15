@@ -1,0 +1,14 @@
+{
+    "name": "Status",
+    "enumValues": [
+        {
+            "name": "Delivered",
+            "value": "DELIVERED"
+        },
+        {
+            "name": "Not Delivered",
+            "value": "NOT_DELIVERED"
+        }
+    ],
+    "isEnum": true
+}
