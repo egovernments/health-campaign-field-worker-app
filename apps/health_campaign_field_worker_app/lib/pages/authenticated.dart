@@ -61,6 +61,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   .repository<IndividualModel, IndividualSearchModel>(
                     context,
                   ),
+              context
+                  .read<NetworkManager>()
+                  .repository<IndividualModel, IndividualSearchModel>(
+                    context,
+                  ),
             ),
           ),
         ],
