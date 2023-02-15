@@ -104,10 +104,11 @@ class _IndividualDetailsPageState
                             if (form.control(_idTypeKey).value != null)
                               IdentifierModel(
                                 tenantId: envConfig.variables.tenantId,
-                                type: form.control(_idTypeKey).value,
-                                id: form.control(_idTypeKey).value == 'DEFAULT'
-                                    ? IdGen.i.identifier
-                                    : form.control(_idNumberKey).value,
+                                identifierType: form.control(_idTypeKey).value,
+                                identifierId:
+                                    form.control(_idTypeKey).value == 'DEFAULT'
+                                        ? IdGen.i.identifier
+                                        : form.control(_idNumberKey).value,
                                 clientReferenceId: IdGen.i.identifier,
                                 rowVersion: 1,
                               ),
@@ -185,11 +186,13 @@ class _IndividualDetailsPageState
                               if (form.control(_idTypeKey).value != null)
                                 IdentifierModel(
                                   tenantId: envConfig.variables.tenantId,
-                                  type: form.control(_idTypeKey).value,
-                                  id: form.control(_idTypeKey).value ==
-                                          'DEFAULT'
-                                      ? IdGen.i.identifier
-                                      : form.control(_idNumberKey).value,
+                                  identifierType:
+                                      form.control(_idTypeKey).value,
+                                  identifierId:
+                                      form.control(_idTypeKey).value ==
+                                              'DEFAULT'
+                                          ? IdGen.i.identifier
+                                          : form.control(_idNumberKey).value,
                                   clientReferenceId: IdGen.i.identifier,
                                   rowVersion: 1,
                                 ),
