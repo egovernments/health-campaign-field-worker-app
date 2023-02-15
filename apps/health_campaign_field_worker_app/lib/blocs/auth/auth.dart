@@ -19,27 +19,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   FutureOr<void> _onLogin(AuthLoginEvent event, AuthEmitter emit) async {
-    emit(state.copyWith(loading: true));
+    emit(const AuthState.loading());
+
     await Future.delayed(const Duration(seconds: 1));
+    try {
+      final result = await authRepository.authToken(
+        'user/oauth/token',
+        null,
+        {
+          "username": event.userId.toString(),
+          "password": event.password.toString(),
+          "userType": 'EMPLOYEE',
+          "tenantId": envConfig.variables.tenantId,
+          "scope": "read",
+          "grant_type": "password",
+        },
+      );
+      emit(AuthState.loaded(result.access_token, result.refresh_token));
+    } catch (e) {
+      emit(const AuthState.error());
 
-    final result = await authRepository.authToken(
-      'user/oauth/token',
-      null,
-      {
-        "username": event.userId.toString(),
-        "password": event.password.toString(),
-        "userType": 'EMPLOYEE',
-        "tenantId": envConfig.variables.tenantId,
-        "scope": "read",
-        "grant_type": "password",
-      },
-    );
+      await Future.delayed(const Duration(seconds: 1));
 
-    emit(state.copyWith(accessToken: '', loading: false));
+      emit(const AuthState.initial());
+// Here you can write your code
+    }
   }
 
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
-    emit(state.copyWith(accessToken: null));
+    emit(const AuthState.loaded(null, null));
   }
 }
 
@@ -57,12 +65,11 @@ class AuthEvent with _$AuthEvent {
 class AuthState with _$AuthState {
   const AuthState._();
 
-  const factory AuthState({
-    @Default(false) bool initialized,
-    @Default(false) bool loading,
+  const factory AuthState.initial() = _Initial;
+  const factory AuthState.loading() = _Loading;
+  const factory AuthState.loaded(
     String? accessToken,
     String? refreshToken,
-  }) = _AuthState;
-
-  bool get isAuthenticated => accessToken == null ? false : true;
+  ) = _Loaded;
+  const factory AuthState.error() = _Error;
 }

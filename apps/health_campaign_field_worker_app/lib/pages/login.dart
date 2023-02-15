@@ -1,5 +1,7 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -21,6 +23,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
   static const _userId = 'userId';
   static const _password = 'password';
+  bool isloading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +66,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       ),
                       validationMessages: {
                         "required": (control) {
-                          print("control");
-                          return 'user id is Required';
+                          return '${localizations.translate(i18.login.userIdPlaceholder)} is Required';
                         },
                       },
                       formControlName: _userId,
@@ -75,6 +77,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       label: localizations.translate(
                         i18.login.passwordPlaceholder,
                       ),
+                      validationMessages: {
+                        "required": (control) {
+                          return '${localizations.translate(i18.login.passwordPlaceholder)} is Required';
+                        },
+                      },
                       formControlName: _password,
                       keyboardType: TextInputType.text,
                       isRequired: true,
@@ -83,26 +90,44 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                     ),
                     const SizedBox(height: 16),
                     BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, state) => DigitElevatedButton(
-                        onPressed: state.loading
-                            ? null
-                            : () {
-                                form.markAllAsTouched();
-                                if (!form.valid) return;
+                      builder: (context, state) => state.maybeWhen(
+                        loading: () {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Loaders.showLoadingDialog(context);
+                          });
 
-                                context.read<AuthBloc>().add(
-                                      AuthLoginEvent(
-                                        userId: form.control(_userId).value
-                                            as String,
-                                        password: form.control(_password).value
-                                            as String,
-                                      ),
-                                    );
-                              },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(i18.login.actionLabel),
-                          ),
+                          return Container();
+                        },
+                        error: () {
+                          Future.delayed(Duration.zero, () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          });
+                          return const ToastHelper();
+                        },
+                        orElse: () => Container(),
+                      ),
+                    ),
+                    DigitElevatedButton(
+                      onPressed: isloading
+                          ? null
+                          : () {
+                              form.markAllAsTouched();
+                              if (!form.valid) return;
+
+                              context.read<AuthBloc>().add(
+                                    AuthLoginEvent(
+                                      userId: form.control(_userId).value.trim()
+                                          as String,
+                                      password: form
+                                          .control(_password)
+                                          .value
+                                          .trim() as String,
+                                    ),
+                                  );
+                            },
+                      child: Center(
+                        child: Text(
+                          localizations.translate(i18.login.actionLabel),
                         ),
                       ),
                     ),

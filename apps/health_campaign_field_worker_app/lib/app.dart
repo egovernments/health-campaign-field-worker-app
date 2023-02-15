@@ -50,7 +50,7 @@ class MainApplication extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AuthBloc(
-              const AuthState(),
+              const AuthState.initial(),
               AuthRepository(client),
             ),
           ),
@@ -133,10 +133,13 @@ class MainApplication extends StatelessWidget {
                         appRouter,
                         navigatorObservers: () => [AppRouterObserver()],
                         routes: (handler) => [
-                          if (authState.isAuthenticated)
-                            const AuthenticatedRouteWrapper()
-                          else
-                            const UnauthenticatedRouteWrapper(),
+                          authState.maybeWhen(
+                            initial: () => const UnauthenticatedRouteWrapper(),
+                            loaded:
+                                (String? accessToken, String? refreshToken) =>
+                                    const AuthenticatedRouteWrapper(),
+                            orElse: () => const UnauthenticatedRouteWrapper(),
+                          ),
                         ],
                       ),
                     ),

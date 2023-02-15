@@ -101,6 +101,7 @@ class _HouseholdLocationPageState
                         label: localizations.translate(
                           i18.householdLocation.administrationAreaFormLabel,
                         ),
+                        isRequired: true,
                         validationMessages: {
                           'required': (_) => localizations.translate(
                                 i18.householdLocation
@@ -113,24 +114,29 @@ class _HouseholdLocationPageState
                         label: localizations.translate(
                           i18.householdLocation.householdAddressLine1LabelText,
                         ),
+                        maxLength: 64,
                       ),
                       DigitTextFormField(
                         formControlName: _addressLine2Key,
                         label: localizations.translate(
                           i18.householdLocation.householdAddressLine2LabelText,
                         ),
+                        maxLength: 64,
                       ),
                       DigitTextFormField(
                         formControlName: _landmarkKey,
                         label: localizations.translate(
                           i18.householdLocation.landmarkFormLabel,
                         ),
+                        maxLength: 64,
                       ),
                       DigitTextFormField(
+                        keyboardType: TextInputType.text,
                         formControlName: _postalCodeKey,
                         label: localizations.translate(
                           i18.householdLocation.postalCodeFormLabel,
                         ),
+                        maxLength: 64,
                       ),
                     ]),
                     const SizedBox(height: 16),
