@@ -7,6 +7,7 @@ import '../../data/data_repository.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
+import '../../models/entities/task.dart';
 
 part 'selected_households.freezed.dart';
 
@@ -50,6 +51,7 @@ class SelectedHouseHoldsBloc
       household: event.household,
       individual: event.individual,
       householdMembers: memberList,
+      task: event.task,
     ));
   }
 }
@@ -59,6 +61,7 @@ class SelectedHouseHoldsEvent with _$SelectedHouseHoldsEvent {
   const factory SelectedHouseHoldsEvent.onHouseHoldsSelection({
     required HouseholdModel household,
     required IndividualModel individual,
+    required TaskModel task,
   }) = OnHouseHoldsSelectionEvent;
 }
 
@@ -68,5 +71,6 @@ class SelectedHouseHoldsState with _$SelectedHouseHoldsState {
     HouseholdModel? household,
     IndividualModel? individual,
     List<IndividualModel>? householdMembers,
+    TaskModel? task,
   }) = _SelectedHouseHoldsState;
 }

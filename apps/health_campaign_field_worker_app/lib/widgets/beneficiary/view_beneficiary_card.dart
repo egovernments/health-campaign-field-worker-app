@@ -41,6 +41,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
   HouseholdModel get householdModel => householdMember.household;
   IndividualModel get individualModel => householdMember.individual;
+  TaskModel get taskModel => householdMember.task;
 
   bool _isCardExpanded = false;
 
@@ -87,6 +88,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     bloc.add(OnHouseHoldsSelectionEvent(
                       household: householdModel,
                       individual: individualModel,
+                      task: taskModel,
                     ));
                     context.router.push(HouseholdOverViewRoute());
                   },
