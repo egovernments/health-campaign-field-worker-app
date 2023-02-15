@@ -8,6 +8,14 @@ import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/household.dart';
+import '../data/repositories/local/houshold_member.dart';
+import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/project_beneficiary.dart';
+import '../data/repositories/remote/household.dart';
+import '../data/repositories/remote/household_member.dart';
+import '../data/repositories/remote/individual.dart';
+import '../data/repositories/remote/project_beneficiary.dart';
 import '../models/entities/household.dart';
 import '../models/entities/household_member.dart';
 import '../models/entities/individual.dart';
@@ -68,16 +76,30 @@ class _HomePageState extends LocalizedState<HomePage> {
         footer: const PoweredByDigit(),
         children: [
           const SizedBox(height: kPadding * 2),
-          BlocBuilder<SyncBloc, SyncState>(
+          BlocConsumer<SyncBloc, SyncState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                orElse: () => null,
+                syncInProgress: () => DigitSyncDialogContent.show(
+                  context,
+                  type: DigitSyncDialogType.inProgress,
+                  // TODO: Localization pending
+                  label: 'Sync in Progress', barrierDismissible: false,
+                ),
+              );
+            },
             builder: (context, state) {
-              return DigitInfoCard(
-                icon: Icons.info,
-                backgroundColor: theme.colorScheme.tertiaryContainer,
-                iconColor: theme.colorScheme.surfaceTint,
-                description: localizations
-                    .translate(i18.home.dataSyncInfoContent)
-                    .replaceAll('{}', state.count.toString()),
-                title: localizations.translate(i18.home.dataSyncInfoLabel),
+              return state.maybeWhen(
+                orElse: () => const Offstage(),
+                pendingSync: (count) => DigitInfoCard(
+                  icon: Icons.info,
+                  backgroundColor: theme.colorScheme.tertiaryContainer,
+                  iconColor: theme.colorScheme.surfaceTint,
+                  description: localizations
+                      .translate(i18.home.dataSyncInfoContent)
+                      .replaceAll('{}', count.toString()),
+                  title: localizations.translate(i18.home.dataSyncInfoLabel),
+                ),
               );
             },
           ),
@@ -107,16 +129,22 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
         onPressed: () async {
-          final router = context.router;
-          DigitSyncDialogContent.show(
-            context,
-            type: DigitSyncDialogType.inProgress,
-            // TODO: Localization pending
-            label: 'Sync in Progress',
-            barrierDismissible: true,
-          );
-
-          router.pop();
+          context.read<SyncBloc>().add(
+                SyncSyncUpEvent(
+                  localRepositories: [
+                    context.read<IndividualLocalRepository>(),
+                    context.read<HouseholdLocalRepository>(),
+                    context.read<HouseholdMemberLocalRepository>(),
+                    context.read<ProjectBeneficiaryLocalRepository>(),
+                  ],
+                  remoteRepositories: [
+                    context.read<IndividualRemoteRepository>(),
+                    context.read<HouseholdRemoteRepository>(),
+                    context.read<HouseholdMemberRemoteRepository>(),
+                    context.read<ProjectBeneficiaryRemoteRepository>(),
+                  ],
+                ),
+              );
 
           return;
           final dialogContext = context;
