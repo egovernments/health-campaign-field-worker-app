@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/localization/app_localization.dart';
+import '../blocs/search_households/search_households.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
@@ -42,7 +43,7 @@ part 'app_router.gr.dart';
       children: [
         AutoRoute(page: HomePage, path: ''),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
-        AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
+        AutoRoute(page: HouseholdOverviewPage, path: 'household-overview'),
         AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
         AutoRoute(
           page: BeneficiaryRegistrationWrapperPage,
@@ -55,8 +56,6 @@ part 'app_router.gr.dart';
               path: 'household-location',
               initial: true,
             ),
-            AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
-
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
