@@ -2,7 +2,12 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 
 class ToastHelper extends StatefulWidget {
-  const ToastHelper({super.key});
+  final String message;
+
+  const ToastHelper({
+    super.key,
+    required this.message,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -17,8 +22,10 @@ class ToastHelperState extends State<ToastHelper> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final theme = Theme.of(context);
-      DigitToast.show(context,
-          options: DigitToastOptions('Failed to Login', true, theme));
+      DigitToast.show(
+        context,
+        options: DigitToastOptions(widget.message, true, theme),
+      );
     });
   }
 
