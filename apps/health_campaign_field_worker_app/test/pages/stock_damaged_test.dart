@@ -54,6 +54,7 @@ void main() {
         i18.stockDetails.noOfPackingSlip,
         i18.stockDetails.typeOfTransport,
         i18.stockDetails.vehicleNumber,
+        i18.stockDetails.damagedDuring,
         i18.stockDetails.comments,
         i18.common.coreCommonSubmit,
       ]) {
