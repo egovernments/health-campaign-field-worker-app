@@ -110,7 +110,7 @@ class _SearchBeneficiaryPageState
                 ),
                 onChanged: (value) {
                   final bloc = context.read<SearchHouseholdsBloc>();
-                  if (value.trim().length < 3) {
+                  if (value.trim().length < 2) {
                     bloc.add(const SearchHouseholdsClearEvent());
 
                     return;
