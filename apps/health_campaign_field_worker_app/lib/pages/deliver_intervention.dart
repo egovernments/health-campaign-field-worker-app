@@ -3,8 +3,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
+import '../../router/app_router.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/selected_households/selected_households.dart';
@@ -91,6 +92,7 @@ class _DeliverInterventionPageState
                               );
 
                           Navigator.of(context, rootNavigator: true).pop();
+                          context.router.push(AcknowledgementRoute());
                         },
                       ),
                       secondaryAction: DigitDialogActions(
@@ -126,52 +128,77 @@ class _DeliverInterventionPageState
                         ),
                       ],
                     ),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(i18.deliverIntervention
-                            .dateOfRegistrationLabel): "1 August 2022",
-                      },
-                    ),
-                    DigitTableCard(
-                      color: Theme.of(context).colorScheme.surface,
-                      border: Border.all(
-                        color: Colors.grey,
-                        style: BorderStyle.solid,
-                        width: 1.0,
+                    BlocBuilder<SelectedHouseHoldsBloc,
+                        SelectedHouseHoldsState>(
+                      builder: (context, state) => DigitTableCard(
+                        element: {
+                          localizations.translate(i18
+                                  .deliverIntervention.dateOfRegistrationLabel):
+                              state.household?.auditDetails?.lastModifiedTime,
+                        },
                       ),
-                      padding:
-                          const EdgeInsets.only(left: 8, right: 8, bottom: 16),
-                      element: {
-                        localizations.translate(i18.householdOverView
-                            .householdOverViewHouseholdHeadLabel): "Jose (H)",
-                        localizations.translate(
-                          i18.deliverIntervention.idTypeText,
-                        ): "National ID",
-                        localizations.translate(
-                          i18.deliverIntervention.idNumberText,
-                        ): "JGK87389",
-                        localizations.translate(i18.common.coreCommonAge):
-                            "40 years",
-                        localizations.translate(i18.common.coreCommonGender):
-                            "Male",
-                        localizations.translate(
-                          i18.common.coreCommonMobileNumber,
-                        ): "+258 576478",
-                      },
                     ),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(
-                          i18.deliverIntervention.memberCountText,
-                        ): '05',
-                      },
+                    BlocBuilder<SelectedHouseHoldsBloc,
+                        SelectedHouseHoldsState>(builder: (context, state) {
+                      return DigitTableCard(
+                        color: Theme.of(context).colorScheme.surface,
+                        border: Border.all(
+                          color: Colors.grey,
+                          style: BorderStyle.solid,
+                          width: 1.0,
+                        ),
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          bottom: 16,
+                        ),
+                        element: {
+                          localizations.translate(i18.householdOverView
+                                  .householdOverViewHouseholdHeadLabel):
+                              state.individual?.name?.givenName,
+                          localizations.translate(
+                            i18.deliverIntervention.idTypeText,
+                          ): state
+                              .individual?.identifiers?.first.identifierType,
+                          localizations.translate(
+                            i18.deliverIntervention.idNumberText,
+                          ): state.individual?.identifiers?.first.identifierId,
+                          localizations.translate(i18.common.coreCommonAge):
+                              "${state.individual?.dateOfBirth == null ? '' : (DateTime.now().difference(DateTime.parse(DateFormat(
+                                    'dd/MM/yyyy',
+                                  ).parse(state.individual!.dateOfBirth!).toString())).inDays / 365).round().toStringAsFixed(0)} years",
+                          localizations.translate(i18.common.coreCommonGender):
+                              state.individual?.gender?.name,
+                          localizations.translate(
+                            i18.common.coreCommonMobileNumber,
+                          ): state.individual?.mobileNumber,
+                        },
+                      );
+                    }),
+                    BlocBuilder<SelectedHouseHoldsBloc,
+                        SelectedHouseHoldsState>(
+                      builder: (context, state) => DigitTableCard(
+                        element: {
+                          localizations.translate(
+                            i18.deliverIntervention.memberCountText,
+                          ): state.household?.memberCount,
+                        },
+                      ),
                     ),
                     const DigitDivider(),
-                    DigitTableCard(
-                      element: {
-                        localizations.translate(i18.deliverIntervention
-                            .noOfResourcesForDelivery): "03",
-                      },
+                    BlocBuilder<SelectedHouseHoldsBloc,
+                        SelectedHouseHoldsState>(
+                      builder: (context, state) => DigitTableCard(
+                        element: {
+                          localizations.translate(i18.deliverIntervention
+                                  .noOfResourcesForDelivery):
+                              (state.household?.memberCount != null)
+                                  ? state.household!.memberCount! > 3
+                                      ? 3
+                                      : state.household!.memberCount! * 1.8
+                                  : 0,
+                        },
+                      ),
                     ),
                     const DigitDivider(),
                     DigitDropdown(
