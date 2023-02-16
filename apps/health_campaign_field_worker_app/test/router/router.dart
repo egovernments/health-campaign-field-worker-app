@@ -14,6 +14,8 @@ import 'package:health_campaign_field_worker_app/pages/manage_stocks.dart';
 import 'package:health_campaign_field_worker_app/pages/stock_reconciliation.dart';
 import 'package:health_campaign_field_worker_app/pages/warehouse_details.dart';
 
+import '';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'router.gr.dart';
@@ -23,7 +25,7 @@ part 'router.gr.dart';
   routes: [
     AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
     AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
-    AutoRoute(page: HouseholdOverViewPage, path: 'household-overview'),
+    AutoRoute(page: HouseholdOverviewPage, path: 'household-overview'),
     AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
     AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
     AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),

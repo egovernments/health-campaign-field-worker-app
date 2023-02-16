@@ -35,7 +35,6 @@ class _IndividualDetailsPageState
     extends LocalizedState<IndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _idTypeKey = 'idType';
-  static const _headOfHousehold = 'headOfHousehold';
   static const _idNumberKey = 'idNumber';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
@@ -77,7 +76,7 @@ class _IndividualDetailsPageState
                           final dob = form.control(_dobKey).value as DateTime?;
                           String? dobString;
                           if (dob != null) {
-                            dobString = DateFormat('yyyy/MM/dd').format(dob);
+                            dobString = DateFormat('dd/MM/yyyy').format(dob);
                           }
 
                           IndividualModel individual = previousIndividual ??
@@ -128,21 +127,7 @@ class _IndividualDetailsPageState
                           bloc.add(
                             BeneficiaryRegistrationSaveIndividualDetailsEvent(
                               model: individual,
-                              projectBeneficiary: beneficiaryRegistrationState
-                                      .projectBeneficiary ??
-                                  ProjectBeneficiaryModel(
-                                    tenantId: envConfig.variables.tenantId,
-                                    clientReferenceId: IdGen.i.identifier,
-                                    rowVersion: 1,
-                                    projectId: '13',
-                                    beneficiaryClientReferenceId:
-                                        beneficiaryRegistrationState
-                                            .householdModel?.clientReferenceId,
-                                    dateOfRegistration:
-                                        beneficiaryRegistrationState
-                                            .registrationDate
-                                            ?.millisecondsSinceEpoch,
-                                  ),
+                              isHeadOfHousehold: widget.isHeadOfHousehold,
                             ),
                           );
 
@@ -362,7 +347,6 @@ class _IndividualDetailsPageState
           validators: [Validators.required],
           value: context.read<BeneficiaryRegistrationBloc>().state.searchQuery,
         ),
-        _headOfHousehold: FormControl<bool>(),
         _idTypeKey: FormControl<String>(
           validators: [Validators.required],
         ),
