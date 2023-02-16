@@ -78,6 +78,17 @@ class _StockReceiptDetailsPageState
                       ),
                       DigitDropdown(
                         label: localizations.translate(
+                          i18.stockDetails.damagedDuring,
+                        ),
+                        initialValue: '',
+                        menuItems: [MenuItemModel('', '')],
+                        onChanged: (value) {
+                          // TODO: Complete implementation
+                        },
+                        formControlName: 'damagedDuring',
+                      ),
+                      DigitDropdown(
+                        label: localizations.translate(
                           i18.stockDetails.receivedFrom,
                         ),
                         initialValue: '',
@@ -142,6 +153,7 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
+        'damagedDuring': FormControl<String>(value: ''),
         'returnedFrom': FormControl<String>(value: ''),
         'quantityDamaged': FormControl<String>(value: ''),
         'noIndicatedOnPackingSlip': FormControl<String>(value: ''),
