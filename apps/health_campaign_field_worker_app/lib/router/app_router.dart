@@ -18,6 +18,7 @@ import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
+import '../pages/stock_reconciliation.dart';
 import '../pages/unauthenticated.dart';
 import '../pages/manage_stocks.dart';
 import '../pages/warehouse_details.dart';
@@ -67,6 +68,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: ProjectSelectionPage, path: 'project-selection'),
         /// Inventory Routes
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+        AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
         AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
         AutoRoute(page: StockReceivedDetailsPage, path: 'stock-receipt-details'),
         AutoRoute(page: StockIssuedDetailsPage, path: 'stock-issued-details'),
