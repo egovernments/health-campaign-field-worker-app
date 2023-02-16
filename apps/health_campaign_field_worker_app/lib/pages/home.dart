@@ -7,15 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/network_manager.dart';
-import '../data/repositories/local/household.dart';
-import '../data/repositories/local/houshold_member.dart';
-import '../data/repositories/local/individual.dart';
-import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/remote/household.dart';
-import '../data/repositories/remote/household_member.dart';
-import '../data/repositories/remote/individual.dart';
-import '../data/repositories/remote/project_beneficiary.dart';
 import '../models/entities/household.dart';
 import '../models/entities/household_member.dart';
 import '../models/entities/individual.dart';
@@ -84,22 +75,65 @@ class _HomePageState extends LocalizedState<HomePage> {
                   context,
                   type: DigitSyncDialogType.inProgress,
                   // TODO: Localization pending
-                  label: 'Sync in Progress', barrierDismissible: false,
+                  label: 'Sync in Progress', barrierDismissible: true,
                 ),
+                completedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialogContent.show(
+                    context,
+                    type: DigitSyncDialogType.complete,
+                    // TODO: Localization Pending
+                    label: 'Data Synced',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                      },
+                    ),
+                  );
+                },
+                failedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialogContent.show(
+                    context,
+                    type: DigitSyncDialogType.failed,
+                    // TODO: Localization Pending
+                    label: 'Sync Failed !',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Retry',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                        _attemptSyncUp(context);
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                  );
+                },
               );
             },
             builder: (context, state) {
               return state.maybeWhen(
                 orElse: () => const Offstage(),
-                pendingSync: (count) => DigitInfoCard(
-                  icon: Icons.info,
-                  backgroundColor: theme.colorScheme.tertiaryContainer,
-                  iconColor: theme.colorScheme.surfaceTint,
-                  description: localizations
-                      .translate(i18.home.dataSyncInfoContent)
-                      .replaceAll('{}', count.toString()),
-                  title: localizations.translate(i18.home.dataSyncInfoLabel),
-                ),
+                pendingSync: (count) => count == 0
+                    ? const Offstage()
+                    : DigitInfoCard(
+                        icon: Icons.info,
+                        backgroundColor: theme.colorScheme.tertiaryContainer,
+                        iconColor: theme.colorScheme.surfaceTint,
+                        description: localizations
+                            .translate(i18.home.dataSyncInfoContent)
+                            .replaceAll('{}', count.toString()),
+                        title:
+                            localizations.translate(i18.home.dataSyncInfoLabel),
+                      ),
               );
             },
           ),
@@ -133,71 +167,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
-        onPressed: () async {
-          context.read<SyncBloc>().add(
-                SyncSyncUpEvent(
-                  localRepositories: [
-                    context.read<IndividualLocalRepository>(),
-                    context.read<HouseholdLocalRepository>(),
-                    context.read<HouseholdMemberLocalRepository>(),
-                    context.read<ProjectBeneficiaryLocalRepository>(),
-                  ],
-                  remoteRepositories: [
-                    context.read<IndividualRemoteRepository>(),
-                    context.read<HouseholdRemoteRepository>(),
-                    context.read<HouseholdMemberRemoteRepository>(),
-                    context.read<ProjectBeneficiaryRemoteRepository>(),
-                  ],
-                ),
-              );
-
-          return;
-          final dialogContext = context;
-          final networkManager = context.read<NetworkManager>();
-          final individualLocal = context
-              .read<LocalRepository<IndividualModel, IndividualSearchModel>>();
-          final individualRemote = context
-              .read<RemoteRepository<IndividualModel, IndividualSearchModel>>();
-
-          final householdLocal = context
-              .read<LocalRepository<HouseholdModel, HouseholdSearchModel>>();
-          final householdRemote = context
-              .read<RemoteRepository<HouseholdModel, HouseholdSearchModel>>();
-
-          final householdMemberLocal = context.read<
-              LocalRepository<HouseholdMemberModel,
-                  HouseholdMemberSearchModel>>();
-          final householdMemberRemote = context.read<
-              RemoteRepository<HouseholdMemberModel,
-                  HouseholdMemberSearchModel>>();
-
-          final projectBeneficiaryLocal = context.read<
-              LocalRepository<ProjectBeneficiaryModel,
-                  ProjectBeneficiarySearchModel>>();
-          final projectBeneficiaryRemote = context.read<
-              RemoteRepository<ProjectBeneficiaryModel,
-                  ProjectBeneficiarySearchModel>>();
-
-          networkManager.syncUp(
-            localRepositories: [
-              individualLocal,
-              householdLocal,
-              householdMemberLocal,
-              projectBeneficiaryLocal,
-            ],
-            remoteRepositories: [
-              individualRemote,
-              householdRemote,
-              householdMemberRemote,
-              projectBeneficiaryRemote,
-            ],
-          );
-
-          // await Future.delayed(Duration(milliseconds: 250));
-          Navigator.of(context, rootNavigator: true).pop();
-
-          // Navigator.pop(dialogContext);
-        },
+        onPressed: () => _attemptSyncUp(context),
       ),
       HomeItemCard(
         icon: Icons.call,
@@ -218,5 +188,36 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       ),
     ];
+  }
+
+  void _attemptSyncUp(BuildContext context) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            localRepositories: [
+              context.read<
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+            ],
+            remoteRepositories: [
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+            ],
+          ),
+        );
   }
 }

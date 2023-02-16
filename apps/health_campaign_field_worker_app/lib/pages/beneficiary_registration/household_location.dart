@@ -50,12 +50,13 @@ class _HouseholdLocationPageState
                     if (!form.valid) return;
 
                     final addressLine1 =
-                        form.control(_addressLine1Key).value as String;
+                        form.control(_addressLine1Key).value as String?;
                     final addressLine2 =
-                        form.control(_addressLine2Key).value as String;
-                    final landmark = form.control(_landmarkKey).value as String;
+                        form.control(_addressLine2Key).value as String?;
+                    final landmark =
+                        form.control(_landmarkKey).value as String?;
                     final postalCode =
-                        form.control(_postalCodeKey).value as String;
+                        form.control(_postalCodeKey).value as String?;
 
                     final addressModel = AddressModel(
                       tenantId: envConfig.variables.tenantId,
@@ -155,9 +156,9 @@ class _HouseholdLocationPageState
           value: 'Solimbo',
           validators: [Validators.required],
         ),
-        _addressLine1Key: FormControl<String>(value: ''),
-        _addressLine2Key: FormControl<String>(value: ''),
-        _landmarkKey: FormControl<String>(value: ''),
-        _postalCodeKey: FormControl<String>(value: ''),
+        _addressLine1Key: FormControl<String>(),
+        _addressLine2Key: FormControl<String>(),
+        _landmarkKey: FormControl<String>(),
+        _postalCodeKey: FormControl<String>(),
       });
 }
