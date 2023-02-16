@@ -51,7 +51,6 @@ class SelectedHouseHoldsBloc
       household: event.household,
       individual: event.individual,
       householdMembers: memberList,
-      task: event.task,
     ));
   }
 }
@@ -61,7 +60,6 @@ class SelectedHouseHoldsEvent with _$SelectedHouseHoldsEvent {
   const factory SelectedHouseHoldsEvent.onHouseHoldsSelection({
     required HouseholdModel household,
     required IndividualModel individual,
-    required TaskModel task,
   }) = OnHouseHoldsSelectionEvent;
 }
 
@@ -71,6 +69,5 @@ class SelectedHouseHoldsState with _$SelectedHouseHoldsState {
     HouseholdModel? household,
     IndividualModel? individual,
     List<IndividualModel>? householdMembers,
-    TaskModel? task,
   }) = _SelectedHouseHoldsState;
 }

@@ -12,6 +12,7 @@ import '../blocs/selected_households/selected_households.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/data_model.dart';
 import '../models/entities/task_resource.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -46,19 +47,32 @@ class _DeliverInterventionPageState
                 BlocBuilder<SelectedHouseHoldsBloc, SelectedHouseHoldsState>(
               builder: (context, state) => DigitElevatedButton(
                 onPressed: () {
-                  print(state.task?.clientReferenceId);
                   context.read<DeliverInterventionBloc>().add(
                         (DeliverInterventionSubmitEvent(
-                          TaskResourceModel(
+                          TaskModel(
                             clientReferenceId: IdGen.i.identifier,
+                            tenantId: envConfig.variables.tenantId,
                             rowVersion: 1,
-                            tenantId: '',
-                            quantity: form
-                                .control('quantityDistributed')
-                                .value
-                                .toString(),
+                            projectId: '13',
+                            status: Status.delivered.name,
+                            createdDate: DateTime.now().millisecondsSinceEpoch,
+                            projectBeneficiaryId:
+                                state.individual?.clientReferenceId,
+                            resources: [
+                              TaskResourceModel(
+                                clientReferenceId: IdGen.i.identifier,
+                                rowVersion: 1,
+                                isDelivered: true,
+                                tenantId: envConfig.variables.tenantId,
+                                quantity: form
+                                    .control('quantityDistributed')
+                                    .value
+                                    .toString(),
+                                productVariantId: 'PVAR-2023-02-15-000048',
+                              ),
+                            ],
+                            address: state.household?.address,
                           ),
-                          state.task as TaskModel,
                         )),
                       );
                 },

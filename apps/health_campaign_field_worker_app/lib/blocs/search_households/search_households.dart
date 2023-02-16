@@ -25,13 +25,10 @@ class SearchHouseholdsBloc
 
   final DataRepository<HouseholdModel, HouseholdSearchModel> household;
 
-  final DataRepository<TaskModel, TaskSearchModel> task;
-
   SearchHouseholdsBloc({
     required this.individual,
     required this.householdMember,
     required this.household,
-    required this.task,
   }) : super(const SearchHouseholdsEmptyState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -79,18 +76,12 @@ class SearchHouseholdsBloc
         HouseholdSearchModel(clientReferenceId: e.householdClientReferenceId),
       );
 
-      final taskModel = await task.search(TaskSearchModel(
-        projectId: '',
-      ));
-      if (householdModel.isEmpty ||
-          individualModel.isEmpty ||
-          taskModel.isEmpty) continue;
-      print(taskModel.length);
+      if (householdModel.isEmpty || individualModel.isEmpty) continue;
+
       containers.add(
         HouseholdMemberWrapper(
           household: householdModel.first,
           individual: individualModel.first,
-          task: taskModel.first,
         ),
       );
     }
@@ -138,6 +129,5 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
   const factory HouseholdMemberWrapper({
     required HouseholdModel household,
     required IndividualModel individual,
-    required TaskModel task,
   }) = _HouseholdMemberWrapper;
 }
