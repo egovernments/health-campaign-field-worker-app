@@ -48,7 +48,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   @override
   FutureOr<void> create(TaskModel entity) async {
     final taskCompanion = entity.companion;
-    final addresses = entity.address;
+    final address = entity.address;
     final resources = entity.resources;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
@@ -63,6 +63,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           resourcesCompanions,
           mode: InsertMode.insertOrReplace,
         );
+
+        if (address != null) {
+          batch.insert(sql.address, address.companion);
+        }
+
         await super.create(entity);
       }
     });
@@ -83,23 +88,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     });
 
     await super.update(entity);
-  }
-
-  @override
-  FutureOr<void> update(TaskModel entity) async {
-    final taskCompanion = entity.companion;
-
-    await sql.batch((batch) {
-      batch.update(
-        sql.task,
-        taskCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
-      );
-    });
-
-    return super.update(entity);
   }
 
   @override

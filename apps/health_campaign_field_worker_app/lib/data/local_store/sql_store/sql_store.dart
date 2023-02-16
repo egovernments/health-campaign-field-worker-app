@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../models/entities/address_type.dart';
-import '../../../models/entities/gender.dart';
 import '../../../models/entities/blood_group.dart';
+import '../../../models/entities/gender.dart';
 import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
@@ -32,6 +32,7 @@ import 'tables/project_staff.dart';
 import 'tables/project_type.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
+import 'tables/task_address.dart';
 import 'tables/task_resource.dart';
 
 part 'sql_store.g.dart';
@@ -61,6 +62,7 @@ part 'sql_store.g.dart';
   ProjectType,
   Target,
   Task,
+  TaskAddress,
   TaskResource,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
