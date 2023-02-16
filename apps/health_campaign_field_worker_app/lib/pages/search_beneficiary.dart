@@ -123,7 +123,7 @@ class _SearchBeneficiaryPageState
 
                   bloc.add(
                     SearchHouseholdsSearchByHouseholdHeadEvent(
-                      searchText: value,
+                      searchText: value.trim(),
                     ),
                   );
                 },
