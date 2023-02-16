@@ -127,6 +127,7 @@ class BeneficiaryRegistrationBloc
             tenantId: envConfig.variables.tenantId,
           ),
         ],
+        address: household.address,
       ));
     } catch (error) {
       rethrow;
