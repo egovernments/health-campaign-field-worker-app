@@ -177,6 +177,7 @@ class HouseholdDetails {
 
 class HouseholdOverView {
   const HouseholdOverView();
+
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
 
   String get householdOverViewEditLabel =>
@@ -217,21 +218,30 @@ class HouseholdOverView {
 
 class MemberCard {
   const MemberCard();
+
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
+
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
+
   String get deleteIndividualActionText =>
       'MEMBER_CARD_DELETE_INDIVIDUAL_ACTION_TEXT';
+
   String get deliverInterventionSubmitLabel =>
       'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
+
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
+
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
+
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
+
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 
@@ -247,12 +257,14 @@ class DeliverIntervention {
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
   String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
+
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
 
   String get noOfResourcesForDelivery =>
       'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
 
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
+
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 }
 
@@ -289,24 +301,35 @@ class WarehouseDetails {
 class StockDetails {
   const StockDetails();
 
-  String get stockReceiptDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
+  String get stockReceivedDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
 
   String get stockIssuedDetailsLabel => 'STOCK_ISSUED_DETAILS_LABEL';
 
-  String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
+  String get stockReturnedDetailsLabel => 'STOCK_RETURNED_DETAILS_LABEL';
 
+  String get stockDamagedDetailsLabel => 'STOCK_DAMAGED_DETAILS_LABEL';
+
+  String get stockLostDetailsLabel => 'STOCK_LOST_DETAILS_LABEL';
+
+
+  String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
   String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
 
   String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+  String get waybillNumber => 'STOCK_RECEIPT_DETAILS_WAYBILL_NUMBER';
 
   String get quantitySent => 'STOCK_RECEIPT_DETAILS_QUANTITY_SENT';
 
-  String get noOfNetsIndicatedOnThePackingSlip =>
-      'STOCK_RECEIPT_DETAILS_NO_OF_NETS_INDICATED_ON_THE_PACKAING_SLIP';
+  String get noIndicatedOnWaybill =>
+      'STOCK_RECEIPT_DETAILS_NO_INDICATED_ON_WAYBILL';
 
-  String get nOOfPackingSlip => 'STOCK_RECEIPT_DETAILS_NO_OF_PACKING_SLIP';
+  String get noIndicatedOnThePackingSlip =>
+      'STOCK_RECEIPT_DETAILS_NO_INDICATED_ON_THE_PACKAGING_SLIP';
+
+  String get noOfPackingSlip => 'STOCK_RECEIPT_DETAILS_NO_OF_PACKING_SLIP';
 
   String get typeOfTransport => 'STOCK_RECEIPT_DETAILS_TYPE_OF_TRANSPORT';
 
   String get vehicleNumber => 'STOCK_RECEIPT_DETAILS_VEHICLE_NUMBER';
+  String get comments => 'COMMENTS';
 }

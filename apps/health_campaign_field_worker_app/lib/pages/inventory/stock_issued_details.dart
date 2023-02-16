@@ -1,16 +1,18 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../router/app_router.dart';
 
 class StockIssuedDetailsPage extends LocalizedStatefulWidget {
   const StockIssuedDetailsPage({
     super.key,
     super.appLocalizations,
   });
+
   @override
   State<StockIssuedDetailsPage> createState() => _StockIssuedDetailsPageState();
 }
@@ -56,11 +58,9 @@ class _StockIssuedDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Stock Issued',
-
-                      // localizations.translate(
-                      //   i18.stockDetails.stockIssuedDetailsLabel,
-                      // ),
+                      localizations.translate(
+                        i18.stockDetails.stockIssuedDetailsLabel,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -93,15 +93,15 @@ class _StockIssuedDetailsPageState
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'noOfNetsIndicatedOnThePackingSlip',
+                        formControlName: 'waybillNumber',
                         label: localizations.translate(
-                          i18.stockDetails.noOfNetsIndicatedOnThePackingSlip,
+                          i18.stockDetails.quantitySent,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'nOOfPackingSlip',
+                        formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
-                          i18.stockDetails.nOOfPackingSlip,
+                          i18.stockDetails.noIndicatedOnThePackingSlip,
                         ),
                       ),
                     ]),
@@ -123,6 +123,12 @@ class _StockIssuedDetailsPageState
                         i18.stockDetails.vehicleNumber,
                       ),
                     ),
+                    DigitTextFormField(
+                      formControlName: 'comments',
+                      label: localizations.translate(
+                        i18.stockDetails.comments,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -137,9 +143,10 @@ class _StockIssuedDetailsPageState
         'product': FormControl<String>(value: ''),
         'destination': FormControl<String>(value: ''),
         'quantitySent': FormControl<String>(value: ''),
-        'quantityIndicatedOnThePackingSlip': FormControl<String>(value: ''),
-        'noOfPackingSlip': FormControl<String>(value: ''),
+        'waybillNumber': FormControl<String>(value: ''),
+        'noIndicatedOnWaybill': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),
+        'comments': FormControl<String>(value: ''),
       });
 }
