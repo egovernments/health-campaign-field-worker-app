@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
+import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/selected_households/selected_households.dart';
 import '../blocs/sync/sync.dart';
@@ -18,6 +19,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final networkManager = context.read<NetworkManager>();
+    final task = networkManager.repository<TaskModel, TaskSearchModel>(context);
+
     return Scaffold(
       appBar: AppBar(),
       drawer: Container(
@@ -77,6 +81,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   .repository<IndividualModel, IndividualSearchModel>(
                     context,
                   ),
+            ),
+          ),
+          BlocProvider(
+            create: (_) => DeliverInterventionBloc(
+              const DeliverInterventionState(),
+              taskRepository: task,
             ),
           ),
         ],

@@ -2,8 +2,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 @MappableClass(ignoreNull: true)
 class IdentifierSearchModel extends EntitySearchModel {
@@ -11,32 +11,30 @@ class IdentifierSearchModel extends EntitySearchModel {
   final String? identifierId;
   final String? clientReferenceId;
   final String? tenantId;
-  
+
   IdentifierSearchModel({
     this.identifierType,
     this.identifierId,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
 class IdentifierModel extends EntityModel implements IdentifierSearchModel {
-  
   @override
   final String? identifierType;
-  
+
   @override
   final String? identifierId;
-  
+
   @override
   final String clientReferenceId;
-  
+
   @override
   final String tenantId;
   final int rowVersion;
-  
 
   IdentifierModel({
     this.identifierType,
@@ -45,7 +43,7 @@ class IdentifierModel extends EntityModel implements IdentifierSearchModel {
     required this.tenantId,
     required this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }) : super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
@@ -54,6 +52,6 @@ class IdentifierModel extends EntityModel implements IdentifierSearchModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }

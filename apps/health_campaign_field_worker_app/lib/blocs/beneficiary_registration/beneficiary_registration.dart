@@ -28,6 +28,7 @@ class BeneficiaryRegistrationBloc
       projectBeneficiaryRepository;
 
   final DataRepository<TaskModel, TaskSearchModel> taskRepository;
+
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
