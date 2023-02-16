@@ -59,11 +59,9 @@ class _StockReceiptDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Stock Damaged',
-
-                      // localizations.translate(
-                      //   i18.stockDetails.stockReceiptDetailsLabel,
-                      // ),
+                      localizations.translate(
+                        i18.stockDetails.stockDamagedDetailsLabel,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -87,24 +85,24 @@ class _StockReceiptDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'receivedFrom',
+                        formControlName: 'returnedFrom',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantityReceived',
+                        formControlName: 'quantityDamaged',
                         label: localizations.translate(
                           i18.stockDetails.quantityReceived,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'noOfNetsIndicatedOnThePackingSlip',
+                        formControlName: 'noIndicatedOnPackingSlip',
                         label: localizations.translate(
-                          i18.stockDetails.noOfNetsIndicatedOnThePackingSlip,
+                          i18.stockDetails.noIndicatedOnThePackingSlip,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'nOOfPackingSlip',
+                        formControlName: 'noOfPackingSlip',
                         label: localizations.translate(
-                          i18.stockDetails.nOOfPackingSlip,
+                          i18.stockDetails.noOfPackingSlip,
                         ),
                       ),
                     ]),
@@ -126,6 +124,12 @@ class _StockReceiptDetailsPageState
                         i18.stockDetails.vehicleNumber,
                       ),
                     ),
+                    DigitTextFormField(
+                      formControlName: 'comments',
+                      label: localizations.translate(
+                        i18.stockDetails.comments,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -138,11 +142,12 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'receivedFrom': FormControl<String>(value: ''),
-        'quantityReceived': FormControl<String>(value: ''),
-        'noOfNetsIndicatedOnThePackingSlip': FormControl<String>(value: ''),
-        'nOOfPackingSlip': FormControl<String>(value: ''),
+        'returnedFrom': FormControl<String>(value: ''),
+        'quantityDamaged': FormControl<String>(value: ''),
+        'noIndicatedOnPackingSlip': FormControl<String>(value: ''),
+        'noOfPackingSlip': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),
+        'comments': FormControl<String>(value: ''),
       });
 }
