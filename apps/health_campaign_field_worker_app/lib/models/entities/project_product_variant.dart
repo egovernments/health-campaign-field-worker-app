@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class ProjectProductVariantSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProjectProductVariantSearchModel({
@@ -18,15 +18,11 @@ class ProjectProductVariantSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectProductVariantModel extends EntityModel implements ProjectProductVariantSearchModel {
+class ProjectProductVariantModel extends EntityModel {
   final String? productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

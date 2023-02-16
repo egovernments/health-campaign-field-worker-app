@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class DocumentSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   DocumentSearchModel({
@@ -18,16 +18,12 @@ class DocumentSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class DocumentModel extends EntityModel implements DocumentSearchModel {
+class DocumentModel extends EntityModel {
   final String? id;
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

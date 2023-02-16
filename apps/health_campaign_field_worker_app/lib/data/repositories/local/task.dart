@@ -12,6 +12,15 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   TaskLocalRepository(super.sql, super.opLogManager);
 
   @override
+  Future<List<OpLogEntry<TaskModel>>> getItemsToBeSynced() async {
+    final entries = await super.getItemsToBeSynced();
+
+    return entries
+        .where((element) => element.entity.projectBeneficiaryId != null)
+        .toList();
+  }
+
+  @override
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query,
   ) async {
@@ -27,8 +36,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              sql.task.clientReferenceId.equals(
-                query.clientReferenceId,
+              sql.task.clientReferenceId.isIn(
+                query.clientReferenceId!,
               ),
           ])))
         .get();
