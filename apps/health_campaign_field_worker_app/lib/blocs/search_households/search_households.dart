@@ -7,7 +7,6 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../utils/environment_config.dart';
 
 part 'search_households.freezed.dart';
 
@@ -51,9 +50,7 @@ class SearchHouseholdsBloc
     emit(const SearchHouseholdsLoadingState());
     final results = await individual.search(
       IndividualSearchModel(
-        name: NameSearchModel(
-          givenName: event.searchText,
-        ),
+        name: NameSearchModel(givenName: event.searchText.trim()),
       ),
     );
 
