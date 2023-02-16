@@ -95,13 +95,13 @@ class _StockIssuedDetailsPageState
                       DigitTextFormField(
                         formControlName: 'waybillNumber',
                         label: localizations.translate(
-                          i18.stockDetails.quantitySent,
+                          i18.stockDetails.waybillNumber,
                         ),
                       ),
                       DigitTextFormField(
                         formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
-                          i18.stockDetails.noIndicatedOnThePackingSlip,
+                          i18.stockDetails.noIndicatedOnWaybill,
                         ),
                       ),
                     ]),
