@@ -156,7 +156,7 @@ class _HouseholdOverviewPageState
                   },
                 ),
                 Column(
-                  children: householdMemberWrapper.members!
+                  children: householdMemberWrapper.members
                       .map(
                         (e) => MemberCard(
                           name: e.name?.givenName ?? ' - ',
@@ -185,6 +185,7 @@ class _HouseholdOverviewPageState
                     onPressed: () {
                       context.router.push(
                         BeneficiaryRegistrationWrapperRoute(
+                          householdMemberWrapper: householdMemberWrapper,
                           children: [
                             IndividualDetailsRoute(),
                           ],
@@ -206,8 +207,11 @@ class _HouseholdOverviewPageState
         height: 90,
         child: DigitCard(
           child: DigitElevatedButton(
-            onPressed: () => context.router.push(DeliverInterventionRoute(
-                householdMemberWrapper: householdMemberWrapper)),
+            onPressed: () => context.router.push(
+              DeliverInterventionRoute(
+                householdMemberWrapper: householdMemberWrapper,
+              ),
+            ),
             child: Center(
               child: Text(
                 localizations.translate(

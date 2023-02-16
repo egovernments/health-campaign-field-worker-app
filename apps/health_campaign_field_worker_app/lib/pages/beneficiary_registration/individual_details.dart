@@ -163,7 +163,7 @@ class _IndividualDetailsPageState
                             bloc.add(
                               const BeneficiaryRegistrationSubmitEvent(),
                             );
-                            router.push(AcknowledgementRoute());
+                            // router.push(AcknowledgementRoute());
                           }
                         },
                         child: Center(
