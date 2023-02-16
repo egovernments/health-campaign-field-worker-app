@@ -77,9 +77,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         onPressed: () => context.router.push(ManageStocksRoute()),
       ),
       HomeItemCard(
-        icon: Icons.all_inbox,
-        label: i18.home.beneficiaryLabel,
-        onPressed: () => context.router.push(SearchBeneficiaryRoute()),
+        icon: Icons.menu_book,
+        label: i18.home.reconcileStockLabel,
+        onPressed: () => context.router.push(StockReconciliationRoute()),
       ),
       HomeItemCard(
         icon: Icons.menu_book,
