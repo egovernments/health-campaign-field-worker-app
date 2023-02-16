@@ -1,19 +1,20 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../router/app_router.dart';
 
 class StockLostDetailsPage extends LocalizedStatefulWidget {
   const StockLostDetailsPage({
     super.key,
     super.appLocalizations,
   });
+
   @override
-  State<StockLostDetailsPage> createState() =>
-      _StockReceiptDetailsPageState();
+  State<StockLostDetailsPage> createState() => _StockReceiptDetailsPageState();
 }
 
 class _StockReceiptDetailsPageState
@@ -57,10 +58,9 @@ class _StockReceiptDetailsPageState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Stock Lost',
-                      // localizations.translate(
-                      //   i18.stockDetails.stockReceiptDetailsLabel,
-                      // ),
+                      localizations.translate(
+                        i18.stockDetails.stockLostDetailsLabel,
+                      ),
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
@@ -84,24 +84,24 @@ class _StockReceiptDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'receivedFrom',
+                        formControlName: 'returnedFrom',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantityReceived',
+                        formControlName: 'quantityLost',
                         label: localizations.translate(
                           i18.stockDetails.quantityReceived,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'noOfNetsIndicatedOnThePackingSlip',
+                        formControlName: 'waybillNumber',
                         label: localizations.translate(
-                          i18.stockDetails.noOfNetsIndicatedOnThePackingSlip,
+                          i18.stockDetails.noIndicatedOnThePackingSlip,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'nOOfPackingSlip',
+                        formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
-                          i18.stockDetails.nOOfPackingSlip,
+                          i18.stockDetails.noOfPackingSlip,
                         ),
                       ),
                     ]),
@@ -123,6 +123,12 @@ class _StockReceiptDetailsPageState
                         i18.stockDetails.vehicleNumber,
                       ),
                     ),
+                    DigitTextFormField(
+                      formControlName: 'comments',
+                      label: localizations.translate(
+                        i18.stockDetails.comments,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -135,11 +141,12 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'receivedFrom': FormControl<String>(value: ''),
-        'quantityReceived': FormControl<String>(value: ''),
-        'noOfNetsIndicatedOnThePackingSlip': FormControl<String>(value: ''),
-        'nOOfPackingSlip': FormControl<String>(value: ''),
+        'returnedFrom': FormControl<String>(value: ''),
+        'quantityLost': FormControl<String>(value: ''),
+        'waybillNumber': FormControl<String>(value: ''),
+        'noIndicatedOnWaybill': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),
+        'comments': FormControl<String>(value: ''),
       });
 }
