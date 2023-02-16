@@ -165,18 +165,37 @@ class IndividualLocalRepository
     final nameCompanion = entity.name?.companion;
 
     await sql.batch((batch) async {
-      batch.insert(sql.individual, individualCompanion);
+      batch.insert(
+        sql.individual,
+        individualCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
       if (nameCompanion != null) {
-        batch.insert(sql.name, nameCompanion);
+        batch.insert(
+          sql.name,
+          nameCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+
+        final individualNameMapping = await (sql.individualName.select()
+              ..where((e) => buildAnd([
+                    e.individual.equals(entity.clientReferenceId),
+                    e.name.equals(nameCompanion.clientReferenceId.value),
+                  ])))
+            .get();
+
         batch.insert(
           sql.individualName,
           IndividualNameModel(
-            clientReferenceId: IdGen.i.identifier,
+            clientReferenceId: individualNameMapping.isNotEmpty
+                ? individualNameMapping.first.clientReferenceId
+                : IdGen.i.identifier,
             tenantId: envConfig.variables.tenantId,
             rowVersion: 1,
             name: entity.name,
             individual: entity,
           ).companion,
+          mode: InsertMode.insertOrReplace,
         );
       }
 
