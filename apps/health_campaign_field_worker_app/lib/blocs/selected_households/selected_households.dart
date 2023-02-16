@@ -7,7 +7,6 @@ import '../../data/data_repository.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
-import '../../models/entities/task.dart';
 
 part 'selected_households.freezed.dart';
 
