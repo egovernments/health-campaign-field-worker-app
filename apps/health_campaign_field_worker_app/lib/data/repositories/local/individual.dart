@@ -65,8 +65,8 @@ class IndividualLocalRepository
           ..where(
             buildAnd([
               if (query.clientReferenceId != null)
-                sql.individual.clientReferenceId.equals(
-                  query.clientReferenceId,
+                sql.individual.clientReferenceId.isIn(
+                  query.clientReferenceId!,
                 ),
               if (query.id != null)
                 sql.individual.id.equals(

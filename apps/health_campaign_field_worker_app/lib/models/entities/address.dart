@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class AddressSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   AddressSearchModel({
@@ -18,7 +18,7 @@ class AddressSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AddressModel extends EntityModel implements AddressSearchModel {
+class AddressModel extends EntityModel {
   final String? id;
   final String? doorNo;
   final double? latitude;
@@ -31,11 +31,7 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final BoundaryModel? locality;

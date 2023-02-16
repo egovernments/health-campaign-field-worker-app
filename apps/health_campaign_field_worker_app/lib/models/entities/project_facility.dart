@@ -10,7 +10,7 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? id;
   final String? facilityId;
   final String? projectId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProjectFacilitySearchModel({
@@ -24,21 +24,11 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchModel {
-  
-  @override
+class ProjectFacilityModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? facilityId;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

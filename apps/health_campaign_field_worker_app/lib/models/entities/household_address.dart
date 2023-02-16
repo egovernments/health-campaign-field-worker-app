@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class HouseholdAddressSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   HouseholdAddressSearchModel({
@@ -18,12 +18,8 @@ class HouseholdAddressSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdAddressModel extends EntityModel implements HouseholdAddressSearchModel {
-  
-  @override
+class HouseholdAddressModel extends EntityModel {
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final HouseholdModel? household;

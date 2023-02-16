@@ -14,7 +14,7 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? parent;
   final String? department;
   final String? referenceId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
@@ -48,45 +48,23 @@ class ProjectSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectModel extends EntityModel implements ProjectSearchModel {
-  
-  @override
+class ProjectModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectTypeId;
-  
-  @override
   final String? subProjectTypeId;
-  
-  @override
   final bool? isTaskEnabled;
-  
-  @override
   final String? parent;
-  
-  @override
   final String? department;
   final String? description;
-  
-  @override
   final String? referenceId;
   final String? projectHierarchy;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
   final List<DocumentModel>? documents;
-  
-  @override
   final DateTime? startDateTime;
-  
-  @override
   final DateTime? endDateTime;
   
 
@@ -117,11 +95,9 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  @override
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 

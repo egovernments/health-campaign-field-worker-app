@@ -11,7 +11,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? projectId;
   final String? beneficiaryId;
   final String? beneficiaryClientReferenceId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? dateOfRegistrationTime;
   
@@ -34,28 +34,14 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiarySearchModel {
-  
-  @override
+class ProjectBeneficiaryModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String? beneficiaryId;
-  
-  @override
   final String? beneficiaryClientReferenceId;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
-  
-  @override
   final DateTime? dateOfRegistrationTime;
   
 
@@ -74,7 +60,6 @@ class ProjectBeneficiaryModel extends EntityModel implements ProjectBeneficiaryS
           : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
        super();
 
-  @override
   int?  get dateOfRegistration => dateOfRegistrationTime?.millisecondsSinceEpoch;
   
 

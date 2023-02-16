@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,6 +26,7 @@ class SelectedHouseHoldsBloc
   ) {
     on(_onHouseHoldsSelection);
   }
+
   final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
       householdMember;
 
@@ -41,7 +43,9 @@ class SelectedHouseHoldsBloc
     for (final element in members) {
       List<IndividualModel> r =
           await individualMembers.search(IndividualSearchModel(
-        clientReferenceId: element.individualClientReferenceId,
+        clientReferenceId: [
+          element.individualClientReferenceId,
+        ].whereNotNull().toList(),
       ));
       memberList.add(r.first);
     }

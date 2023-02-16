@@ -12,7 +12,7 @@ class TaskSearchModel extends EntitySearchModel {
   final String? projectBeneficiaryId;
   final String? createdBy;
   final String? status;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
@@ -60,42 +60,20 @@ class TaskSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class TaskModel extends EntityModel implements TaskSearchModel {
-  
-  @override
+class TaskModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String? projectBeneficiaryId;
-  
-  @override
   final String? createdBy;
-  
-  @override
   final String? status;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;
-  
-  @override
   final DateTime? plannedStartDateTime;
-  
-  @override
   final DateTime? plannedEndDateTime;
-  
-  @override
   final DateTime? actualStartDateTime;
-  
-  @override
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
   
@@ -134,23 +112,18 @@ class TaskModel extends EntityModel implements TaskSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
        super();
 
-  @override
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get createdDate => createdDateTime?.millisecondsSinceEpoch;
   
 

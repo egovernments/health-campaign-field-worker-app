@@ -11,7 +11,7 @@ class ProductSearchModel extends EntitySearchModel {
   final String? type;
   final String? name;
   final String? manufacturer;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProductSearchModel({
@@ -26,24 +26,12 @@ class ProductSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProductModel extends EntityModel implements ProductSearchModel {
-  
-  @override
+class ProductModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? type;
-  
-  @override
   final String? name;
-  
-  @override
   final String? manufacturer;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

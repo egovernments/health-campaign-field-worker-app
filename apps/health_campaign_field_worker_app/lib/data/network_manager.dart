@@ -87,13 +87,14 @@ class NetworkManager {
           .expand((element) => element)
           .length;
 
-  Future<void> syncDown() async {
+  Future<void> syncDown({
+    required List<LocalRepository> localRepositories,
+    required List<RemoteRepository> remoteRepositories,
+  }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
-      throw Exception('Sync up is not valid for online only configuration');
+      throw Exception('Sync down is not valid for online only configuration');
     }
-
-    // TODO(naveen): Complete implementation for sync down operation
   }
 
   RemoteRepository _getRemoteForType(
