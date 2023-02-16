@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   BoundarySearchModel({
@@ -18,18 +18,14 @@ class BoundarySearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class BoundaryModel extends EntityModel implements BoundarySearchModel {
+class BoundaryModel extends EntityModel {
   final String? code;
   final String? name;
   final String? label;
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final BoundaryModel? children;

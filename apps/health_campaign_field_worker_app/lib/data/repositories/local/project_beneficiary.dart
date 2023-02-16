@@ -9,6 +9,15 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
   @override
+  Future<List<OpLogEntry<ProjectBeneficiaryModel>>> getItemsToBeSynced() async {
+    final entries = await super.getItemsToBeSynced();
+
+    return entries
+        .where((element) => element.entity.beneficiaryId != null)
+        .toList();
+  }
+
+  @override
   FutureOr<List<ProjectBeneficiaryModel>> search(
     ProjectBeneficiarySearchModel query,
   ) async {
@@ -18,8 +27,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             buildAnd(
               [
                 if (query.clientReferenceId != null)
-                  sql.projectBeneficiary.clientReferenceId.equals(
-                    query.clientReferenceId,
+                  sql.projectBeneficiary.clientReferenceId.isIn(
+                    query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
                   sql.projectBeneficiary.beneficiaryClientReferenceId.equals(

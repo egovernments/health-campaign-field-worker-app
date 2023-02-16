@@ -35,9 +35,8 @@ class HouseholdLocalRepository
             buildAnd(
               [
                 if (query.clientReferenceId != null)
-                  sql.household.clientReferenceId.equals(
-                    query.clientReferenceId,
-                  ),
+                  sql.household.clientReferenceId
+                      .isIn(query.clientReferenceId!),
                 if (query.id != null)
                   sql.household.id.equals(
                     query.id,

@@ -9,7 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ProjectResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProjectResourceSearchModel({
@@ -22,18 +22,10 @@ class ProjectResourceSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectResourceModel extends EntityModel implements ProjectResourceSearchModel {
-  
-  @override
+class ProjectResourceModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final ProjectProductVariantModel? resources;

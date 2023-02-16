@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class ProjectTypeSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProjectTypeSearchModel({
@@ -18,7 +18,7 @@ class ProjectTypeSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
+class ProjectTypeModel extends EntityModel {
   final String? id;
   final String? name;
   final String? code;
@@ -26,11 +26,7 @@ class ProjectTypeModel extends EntityModel implements ProjectTypeSearchModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final List<ProjectProductVariantModel>? resources;

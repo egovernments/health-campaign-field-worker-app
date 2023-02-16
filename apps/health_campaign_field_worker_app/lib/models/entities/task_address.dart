@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class TaskAddressSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   TaskAddressSearchModel({
@@ -18,12 +18,8 @@ class TaskAddressSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class TaskAddressModel extends EntityModel implements TaskAddressSearchModel {
-  
-  @override
+class TaskAddressModel extends EntityModel {
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final TaskModel? task;

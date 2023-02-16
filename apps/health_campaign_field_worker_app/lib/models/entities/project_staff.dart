@@ -10,7 +10,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
   final String? userId;
   final String? projectId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
@@ -40,29 +40,15 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
-  
-  @override
+class ProjectStaffModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? userId;
-  
-  @override
   final String? projectId;
   final String? channel;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
-  
-  @override
   final DateTime? startDateTime;
-  
-  @override
   final DateTime? endDateTime;
   
 
@@ -85,11 +71,9 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  @override
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 

@@ -37,10 +37,10 @@ class AttributeModel {
   final bool nullable;
   final bool isPk;
   final bool isEnum;
+  final bool includeForQuery;
+  final bool includeForEntity;
   final bool createReference;
   final List<TableReferenceModel> references;
-
-  final bool includeForQuery;
 
   const AttributeModel({
     required this.name,
@@ -50,8 +50,9 @@ class AttributeModel {
     this.isPk = false,
     this.isEnum = false,
     this.nullable = true,
-    this.createReference = false,
     this.includeForQuery = false,
+    this.includeForEntity = true,
+    this.createReference = false,
     this.references = const [],
   });
 }

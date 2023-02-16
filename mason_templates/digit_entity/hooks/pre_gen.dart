@@ -11,14 +11,26 @@ void run(HookContext context) {
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
       null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'clientReferenceId',
-        type: 'String',
-        isPk: true,
-        includeForQuery: true,
-        nullable: false,
-      ),
+    model = model.copyWith.attributes.addAll(
+      [
+        AttributeModel(
+          name: 'clientReferenceId',
+          type: 'String',
+          isPk: true,
+          isList: true,
+          includeForQuery: true,
+          includeForEntity: false,
+          nullable: false,
+        ),
+        AttributeModel(
+          name: 'clientReferenceId',
+          type: 'String',
+          isPk: true,
+          includeForQuery: false,
+          includeForEntity: true,
+          nullable: false,
+        ),
+      ],
     );
   }
 
@@ -49,7 +61,7 @@ void run(HookContext context) {
   }
 
   final sqlAttributes = <AttributeModel>[
-    ...model.attributes.map((e) {
+    ...model.attributes.where((element) => element.includeForEntity).map((e) {
       final type = _getSqlType(e.type);
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);

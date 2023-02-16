@@ -11,7 +11,7 @@ class FacilitySearchModel extends EntitySearchModel {
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   FacilitySearchModel({
@@ -26,24 +26,12 @@ class FacilitySearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class FacilityModel extends EntityModel implements FacilitySearchModel {
-  
-  @override
+class FacilityModel extends EntityModel {
   final String? id;
-  
-  @override
   final bool? isPermanent;
-  
-  @override
   final String? usage;
-  
-  @override
   final int? storageCapacity;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final AddressModel? address;

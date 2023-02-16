@@ -9,7 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class IdentifierSearchModel extends EntitySearchModel {
   final String? identifierType;
   final String? identifierId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   IdentifierSearchModel({
@@ -22,18 +22,10 @@ class IdentifierSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class IdentifierModel extends EntityModel implements IdentifierSearchModel {
-  
-  @override
+class IdentifierModel extends EntityModel {
   final String? identifierType;
-  
-  @override
   final String? identifierId;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class TaskResourceSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   TaskResourceSearchModel({
@@ -18,17 +18,13 @@ class TaskResourceSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
+class TaskResourceModel extends EntityModel {
   final String? id;
   final String? productVariantId;
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   
