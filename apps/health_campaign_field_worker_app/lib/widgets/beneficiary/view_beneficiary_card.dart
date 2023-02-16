@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/selected_households/selected_households.dart';
 import '../../models/data_model.dart';
@@ -40,7 +41,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   }
 
   HouseholdModel get householdModel => householdMember.household;
+
   IndividualModel get individualModel => householdMember.individual;
+
   TaskModel get taskModel => householdMember.task;
 
   bool _isCardExpanded = false;
@@ -135,14 +138,16 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       ),
                     ),
                     TableData(
-                      (DateTime.now()
-                                  .difference(DateTime.parse(
-                                    individualModel.dateOfBirth!,
-                                  ))
-                                  .inDays /
-                              365)
-                          .round()
-                          .toStringAsFixed(0),
+                      individualModel.dateOfBirth == null
+                          ? ''
+                          : (DateTime.now()
+                                      .difference(DateTime.parse(
+                                        individualModel.dateOfBirth!,
+                                      ))
+                                      .inDays /
+                                  365)
+                              .round()
+                              .toStringAsFixed(0),
                       cellKey: 'age',
                     ),
                     TableData(
