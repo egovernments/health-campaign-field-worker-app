@@ -94,7 +94,11 @@ class HouseholdLocalRepository
     ).companion;
 
     await sql.batch((batch) async {
-      batch.insert(sql.household, householdCompanion);
+      batch.insert(
+        sql.household,
+        householdCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
 
       if (addressCompanion != null) {
         batch.insert(
@@ -102,7 +106,11 @@ class HouseholdLocalRepository
           addressCompanion,
           mode: InsertMode.insertOrReplace,
         );
-        batch.insert(sql.householdAddress, householdAddressCompanion);
+        batch.insert(
+          sql.householdAddress,
+          householdAddressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
       }
     });
 
