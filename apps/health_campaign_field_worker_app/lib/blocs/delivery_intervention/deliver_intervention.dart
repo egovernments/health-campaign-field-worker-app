@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
+import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../models/entities/task_resource.dart';
 import '../../utils/environment_config.dart';
@@ -30,23 +31,7 @@ class DeliverInterventionBloc
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      await taskRepository.update(TaskModel(
-        clientReferenceId: event.task.clientReferenceId,
-        tenantId: envConfig.variables.tenantId,
-        rowVersion: 1,
-        projectId: '',
-        resources: [
-          TaskResourceModel(
-            clientReferenceId: event.taskResource.clientReferenceId,
-            tenantId: envConfig.variables.tenantId,
-            rowVersion: 1,
-            productVariantId: event.taskResource.productVariantId,
-          ),
-        ],
-        status: 'DELIVERED',
-        createdDate: DateTime.now().millisecondsSinceEpoch,
-        // projectBeneficiaryId: individual.clientReferenceId,
-      ));
+      await taskRepository.create(event.task);
     } catch (error) {
       rethrow;
     } finally {
@@ -58,7 +43,6 @@ class DeliverInterventionBloc
 @freezed
 class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSubmit(
-    TaskResourceModel taskResource,
     TaskModel task,
   ) = DeliverInterventionSubmitEvent;
 }
