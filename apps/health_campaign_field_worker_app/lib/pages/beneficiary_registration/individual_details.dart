@@ -74,6 +74,7 @@ class _IndividualDetailsPageState
                     onPressed: () async {
                       form.markAllAsTouched();
                       if (!form.valid) return;
+                      final dob = form.control(_dobKey).value as DateTime?;
 
                       state.maybeWhen(
                         orElse: () {
@@ -93,37 +94,96 @@ class _IndividualDetailsPageState
                             oldIndividual: null,
                           );
 
-                          bloc.add(
-                            BeneficiaryRegistrationSaveIndividualDetailsEvent(
-                              model: individual,
-                              isHeadOfHousehold: widget.isHeadOfHousehold,
+                        final individualModel = IndividualModel(
+                          tenantId: envConfig.variables.tenantId,
+                          rowVersion: 1,
+                          clientReferenceId: IdGen.i.identifier,
+                          dateOfBirth: dob == null
+                              ? null
+                              : DateFormat('dd/MM/yyyy').format(dob),
+                          mobileNumber: form.control(_mobileNumberKey).value,
+                          name: NameModel(
+                            rowVersion: 1,
+                            tenantId: envConfig.variables.tenantId,
+                            clientReferenceId: IdGen.i.identifier,
+                            givenName: form.control(_individualNameKey).value,
+                          ),
+                          gender: form.control(_genderKey).value == null
+                              ? null
+                              : Gender.values.byName(form
+                                  .control(_genderKey)
+                                  .value
+                                  .toString()
+                                  .toLowerCase()),
+                          identifiers: [
+                            if (form.control(_idTypeKey).value != null)
+                              IdentifierModel(
+                                tenantId: envConfig.variables.tenantId,
+                                identifierType: form.control(_idTypeKey).value,
+                                identifierId:
+                                    form.control(_idTypeKey).value == 'DEFAULT'
+                                        ? IdGen.i.identifier
+                                        : form.control(_idNumberKey).value,
+                                clientReferenceId: IdGen.i.identifier,
+                                rowVersion: 1,
+                              ),
+                          ],
+                        );
+
+                        final bloc = BlocProvider.of<SelectedHouseHoldsBloc>(
+                          context,
+                        );
+                        final household = bloc.state.household;
+
+                        /// todo - fix address being null issue in model
+                        try {
+                          await individualRepo
+                              .create(individualModel.copyWith(address: [
+                            household?.address ??
+                                AddressModel(
+                                  clientReferenceId: IdGen.i.identifier,
+                                  tenantId: IdGen.i.identifier,
+                                  rowVersion: 1,
+                                ),
+                          ]));
+                          await householdMemberRepo.create(
+                            HouseholdMemberModel(
+                              householdClientReferenceId:
+                                  household?.clientReferenceId ?? 'new',
+                              individualClientReferenceId:
+                                  individualModel.clientReferenceId,
+                              isHeadOfHousehold: false,
+                              tenantId: envConfig.variables.tenantId,
+                              rowVersion: 1,
+                              clientReferenceId: IdGen.i.identifier,
                             ),
                           );
 
-                          final submit = await DigitDialog.show<bool>(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(
-                                i18.deliverIntervention.dialogTitle,
-                              ),
-                              contentText: localizations.translate(
-                                i18.deliverIntervention.dialogContent,
-                              ),
-                              primaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonSubmit),
-                                action: (context) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(true);
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonCancel),
-                                action: (context) =>
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop(false),
-                              ),
+                        return;
+                      }
+
+                      /// ---- end of unrefactored block
+
+                      final router = context.router;
+                      final bloc = BlocProvider.of<BeneficiaryRegistrationBloc>(
+                        context,
+                      );
+
+                      bloc.add(
+                        BeneficiaryRegistrationSaveIndividualDetailsEvent(
+                          IndividualModel(
+                            tenantId: envConfig.variables.tenantId,
+                            rowVersion: 1,
+                            clientReferenceId: IdGen.i.identifier,
+                            dateOfBirth: dob == null
+                                ? null
+                                : DateFormat('dd/MM/yyyy').format(dob),
+                            mobileNumber: form.control(_mobileNumberKey).value,
+                            name: NameModel(
+                              rowVersion: 1,
+                              tenantId: envConfig.variables.tenantId,
+                              clientReferenceId: IdGen.i.identifier,
+                              givenName: form.control(_individualNameKey).value,
                             ),
                           );
 
