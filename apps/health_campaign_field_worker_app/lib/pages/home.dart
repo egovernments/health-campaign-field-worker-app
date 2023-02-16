@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
@@ -201,7 +202,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           }
           debugPrint('deleted: $count');
 
-          await isar.writeTxn(() async => await isar.clear());
+          await isar.writeTxn(() async => await isar.opLogs.clear());
         },
       ),
     ];

@@ -68,7 +68,7 @@ class _SearchBeneficiaryPageState
                 ),
               ),
               StreamBuilder(
-                initialData: [],
+                initialData: const [],
                 stream: sql.select(sql.taskResource).watch(),
                 builder: (context, taskSnapshot) {
                   final taskCount = taskSnapshot.data?.length ?? 0;
@@ -161,10 +161,12 @@ class _SearchBeneficiaryPageState
                     final onPressed = state.maybeMap(
                       orElse: () => null,
                       results: (value) => () => context.router.push(
-                            const BeneficiaryRegistrationWrapperRoute(),
+                            BeneficiaryRegistrationWrapperRoute(),
                           ),
                       notFound: (value) => () => context.router.push(
-                            const BeneficiaryRegistrationWrapperRoute(),
+                            BeneficiaryRegistrationWrapperRoute(
+                              searchQuery: value.searchQuery,
+                            ),
                           ),
                     );
 

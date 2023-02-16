@@ -91,7 +91,7 @@ class SearchHouseholdsBloc
     }
 
     if (containers.isEmpty) {
-      emit(const SearchHouseholdsNotFoundState());
+      emit(SearchHouseholdsNotFoundState(searchQuery: event.searchText));
     } else {
       emit(SearchHouseholdsResultsState(householdMembers: containers));
     }
@@ -118,12 +118,14 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 class SearchHouseholdsState with _$SearchHouseholdsState {
   const factory SearchHouseholdsState.loading() = SearchHouseholdsLoadingState;
 
-  const factory SearchHouseholdsState.notFound() =
-      SearchHouseholdsNotFoundState;
+  const factory SearchHouseholdsState.notFound({
+    String? searchQuery,
+  }) = SearchHouseholdsNotFoundState;
 
   const factory SearchHouseholdsState.empty() = SearchHouseholdsEmptyState;
 
   const factory SearchHouseholdsState.results({
+    String? searchQuery,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
   }) = SearchHouseholdsResultsState;
 }
