@@ -1,8 +1,10 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
@@ -178,6 +180,23 @@ class _HomePageState extends LocalizedState<HomePage> {
               ),
             ),
           );
+        },
+      ),
+      HomeItemCard(
+        icon: Icons.delete_forever,
+        label: 'Delete all',
+        onPressed: () async {
+          final sql = context.read<LocalSqlDataStore>();
+          final isar = context.read<Isar>();
+          int count = 0;
+          for (var element in sql.allTables) {
+            final selector = sql.delete(element)
+              ..where((_) => const Constant(true));
+            count += await selector.go();
+          }
+          debugPrint('deleted: $count');
+
+          await isar.writeTxn(() async => await isar.clear());
         },
       ),
     ];

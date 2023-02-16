@@ -1,6 +1,5 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -30,17 +29,6 @@ void main() async {
 
   final sql = LocalSqlDataStore();
   Dio client = Client().init();
-
-  if (false) {
-    int count = 0;
-    for (var element in sql.allTables) {
-      final selector = sql.delete(element)..where((_) => const Constant(true));
-      count += await selector.go();
-    }
-    debugPrint('deleted: $count');
-
-    await isar.writeTxn(() async => await isar.clear());
-  }
 
   runApp(
     MainApplication(
