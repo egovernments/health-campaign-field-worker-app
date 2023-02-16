@@ -44,19 +44,21 @@ abstract class OpLogManager<T extends EntityModel> {
         .toList();
   }
 
-  FutureOr<void> markSynced(OpLogEntry<T> entry) async {
+  FutureOr<void> markSynced(OpLogEntry<EntityModel> entry) async {
     final id = entry.id;
     if (id == null) return;
-    await isar.opLogs.put(
-      OpLog()
-        ..id = id
-        ..operation = entry.operation
-        ..isSynced = entry.isSynced
-        ..entityType = entry.type
-        ..createdOn = entry.dateCreated
-        ..syncedOn = DateTime.now()
-        ..entityString = entry.entity.toJson(),
-    );
+    await isar.writeTxn(() async {
+      await isar.opLogs.put(
+        OpLog()
+          ..id = id
+          ..operation = entry.operation
+          ..isSynced = entry.isSynced
+          ..entityType = entry.type
+          ..createdOn = entry.dateCreated
+          ..syncedOn = DateTime.now()
+          ..entityString = entry.entity.toJson(),
+      );
+    });
   }
 }
 

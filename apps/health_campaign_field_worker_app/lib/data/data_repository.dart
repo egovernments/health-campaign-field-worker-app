@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/data_model.dart';
+import '../utils/constants.dart';
 import 'local_store/sql_store/sql_store.dart';
 import 'repositories/oplog/oplog.dart';
 
@@ -36,7 +37,9 @@ abstract class RemoteRepository<D extends EntityModel,
 
   String get searchPath => actionMap[ApiOperation.search] ?? '';
 
-  String get bulkCreatePath => actionMap[ApiOperation.bulkCreate] ?? '';
+  String get bulkCreatePath {
+    return actionMap[ApiOperation.bulkCreate] ?? '';
+  }
 
   String get bulkUpdatePath => actionMap[ApiOperation.bulkUpdate] ?? '';
 
@@ -107,9 +110,9 @@ abstract class RemoteRepository<D extends EntityModel,
     );
   }
 
-  FutureOr<Response> bulkCreate(List<D> entities) async {
+  FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
     List<dynamic> jsonString = [];
-    for (var e in entities) {
+    for (EntityModel e in entities) {
       jsonString.add(e.toJson());
     }
 
@@ -117,17 +120,16 @@ abstract class RemoteRepository<D extends EntityModel,
       "content-type": 'application/json',
     };
 
-    final data = entities.map((e) => Mapper.toJson(e)).toString();
+    final data = entities.map((e) => Mapper.toMap(e)).toList();
 
     final res = await dio.post(
       bulkCreatePath,
       options: Options(headers: headers),
-      data: jsonEncode({
-        ('${entityName}s').toString():
-            json.decode(entities.map((e) => e.toJson()).toList().toString()),
-      }),
+      data: {
+        EntityPlurals.getPluralForEntityName(entityName): data,
+      },
     );
-    print(res);
+
     return res;
   }
 
@@ -196,11 +198,11 @@ abstract class LocalRepository<D extends EntityModel,
         type,
       );
 
-  Future<List<OpLogEntry>> getItemsToBeSynced() async {
+  Future<List<OpLogEntry<D>>> getItemsToBeSynced() async {
     return opLogManager.getPendingSyncedEntries(type);
   }
 
-  FutureOr<void> markSynced(OpLogEntry<D> entry) async {
+  FutureOr<void> markSynced(OpLogEntry<EntityModel> entry) async {
     return opLogManager.markSynced(entry);
   }
 }

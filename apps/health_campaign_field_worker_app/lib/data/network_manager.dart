@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -65,21 +64,14 @@ class NetworkManager {
           return e.entity;
         }).toList();
 
-        try {
-          if (operationGroupedEntity.key == DataOperation.create) {
-            await remote.bulkCreate(entities);
-          } else if (operationGroupedEntity.key == DataOperation.update) {
-            await remote.bulkUpdate(entities);
-          } else if (operationGroupedEntity.key == DataOperation.delete) {
-            await remote.bulkDelete(entities);
-          }
-        } catch (error) {
-          AppLogger.instance.info('$error', title: 'SyncUp Error');
-
-          return;
+        if (operationGroupedEntity.key == DataOperation.create) {
+          debugPrint('Syncing: ${entities.map((e) => e.toJson()).toString()}');
+          await remote.bulkCreate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.update) {
+          await remote.bulkUpdate(entities);
+        } else if (operationGroupedEntity.key == DataOperation.delete) {
+          await remote.bulkDelete(entities);
         }
-
-        return;
 
         for (final syncedEntity in operationGroupedEntity.value) {
           local.markSynced(syncedEntity.copyWith(isSynced: true));

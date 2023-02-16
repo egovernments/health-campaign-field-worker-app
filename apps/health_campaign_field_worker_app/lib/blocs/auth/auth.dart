@@ -12,10 +12,8 @@ part 'auth.freezed.dart';
 typedef AuthEmitter = Emitter<AuthState>;
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  @visibleForTesting
   static const accessTokenKey = 'accessTokenKey';
 
-  @visibleForTesting
   static const refreshTokenKey = 'refreshTokenKey';
 
   final AuthRepository authRepository;
