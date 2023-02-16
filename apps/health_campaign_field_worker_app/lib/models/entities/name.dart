@@ -10,7 +10,7 @@ class NameSearchModel extends EntitySearchModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   NameSearchModel({
@@ -24,21 +24,11 @@ class NameSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class NameModel extends EntityModel implements NameSearchModel {
-  
-  @override
+class NameModel extends EntityModel {
   final String? givenName;
-  
-  @override
   final String? familyName;
-  
-  @override
   final String? otherNames;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

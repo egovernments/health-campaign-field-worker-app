@@ -9,7 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
   final int? memberCount;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   HouseholdSearchModel({
@@ -22,18 +22,10 @@ class HouseholdSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdModel extends EntityModel implements HouseholdSearchModel {
-  
-  @override
+class HouseholdModel extends EntityModel {
   final String? id;
-  
-  @override
   final int? memberCount;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   final AddressModel? address;

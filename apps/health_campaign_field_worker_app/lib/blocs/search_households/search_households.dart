@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -67,10 +68,16 @@ class SearchHouseholdsBloc
     final containers = <HouseholdMemberWrapper>[];
     for (var e in householdMembers) {
       final individualModel = await individual.search(
-        IndividualSearchModel(clientReferenceId: e.individualClientReferenceId),
+        IndividualSearchModel(
+          clientReferenceId:
+              [e.individualClientReferenceId].whereNotNull().toList(),
+        ),
       );
       final householdModel = await household.search(
-        HouseholdSearchModel(clientReferenceId: e.householdClientReferenceId),
+        HouseholdSearchModel(
+          clientReferenceId:
+              [e.householdClientReferenceId].whereNotNull().toList(),
+        ),
       );
 
       if (householdModel.isEmpty || individualModel.isEmpty) continue;

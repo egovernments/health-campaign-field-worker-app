@@ -13,7 +13,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? individualId;
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   HouseholdMemberSearchModel({
@@ -30,30 +30,14 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchModel {
-  
-  @override
+class HouseholdMemberModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? householdId;
-  
-  @override
   final String? householdClientReferenceId;
-  
-  @override
   final String? individualId;
-  
-  @override
   final String? individualClientReferenceId;
-  
-  @override
   final bool? isHeadOfHousehold;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   

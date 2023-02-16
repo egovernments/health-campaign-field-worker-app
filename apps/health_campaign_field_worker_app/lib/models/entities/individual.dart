@@ -9,7 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class IndividualSearchModel extends EntitySearchModel {
   final String? id;
   final String? dateOfBirth;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final NameSearchModel? name;
   final Gender? gender;
@@ -28,13 +28,9 @@ class IndividualSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class IndividualModel extends EntityModel implements IndividualSearchModel {
-  
-  @override
+class IndividualModel extends EntityModel {
   final String? id;
   final String? userId;
-  
-  @override
   final String? dateOfBirth;
   final String? mobileNumber;
   final String? altContactNumber;
@@ -42,23 +38,13 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   final String? fatherName;
   final String? husbandName;
   final String? photo;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
-  
-  @override
   final NameModel? name;
   final BloodGroup? bloodGroup;
   final List<AddressModel>? address;
-  
-  @override
   final Gender? gender;
-  
-  @override
   final List<IdentifierModel>? identifiers;
   
 

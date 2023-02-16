@@ -11,7 +11,7 @@ class ProductVariantSearchModel extends EntitySearchModel {
   final String? productId;
   final String? sku;
   final String? variation;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   
   ProductVariantSearchModel({
@@ -26,24 +26,12 @@ class ProductVariantSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProductVariantModel extends EntityModel implements ProductVariantSearchModel {
-  
-  @override
+class ProductVariantModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? productId;
-  
-  @override
   final String? sku;
-  
-  @override
   final String? variation;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
   final String tenantId;
   final int rowVersion;
   
