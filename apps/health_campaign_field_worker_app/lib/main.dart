@@ -31,7 +31,7 @@ void main() async {
   final sql = LocalSqlDataStore();
   Dio client = Client().init();
 
-  if (false) {
+  if (true) {
     int count = 0;
     for (var element in sql.allTables) {
       final selector = sql.delete(element)..where((_) => const Constant(true));
