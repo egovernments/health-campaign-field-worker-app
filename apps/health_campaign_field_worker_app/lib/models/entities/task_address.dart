@@ -6,11 +6,11 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class TaskResourceSearchModel extends EntitySearchModel {
+class TaskAddressSearchModel extends EntitySearchModel {
   final String? clientReferenceId;
   final String? tenantId;
   
-  TaskResourceSearchModel({
+  TaskAddressSearchModel({
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -18,12 +18,7 @@ class TaskResourceSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
-  final String? id;
-  final String? productVariantId;
-  final String? quantity;
-  final bool? isDelivered;
-  final String? deliveryComment;
+class TaskAddressModel extends EntityModel implements TaskAddressSearchModel {
   
   @override
   final String clientReferenceId;
@@ -31,30 +26,26 @@ class TaskResourceModel extends EntityModel implements TaskResourceSearchModel {
   @override
   final String tenantId;
   final int rowVersion;
+  final TaskModel? task;
+  final AddressModel? address;
   
 
-  TaskResourceModel({
-    this.id,
-    this.productVariantId,
-    this.quantity,
-    this.isDelivered,
-    this.deliveryComment,
+  TaskAddressModel({
     required this.clientReferenceId,
     required this.tenantId,
     required this.rowVersion,
+    this.task,
+    this.address,
     super.auditDetails,
   }):  super();
 
-  TaskResourceCompanion get companion {
-    return TaskResourceCompanion(
-      id: Value(id),
-      productVariantId: Value(productVariantId),
-      quantity: Value(quantity),
-      isDelivered: Value(isDelivered),
-      deliveryComment: Value(deliveryComment),
+  TaskAddressCompanion get companion {
+    return TaskAddressCompanion(
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+      task: Value(task?.clientReferenceId),
+    address: Value(address?.clientReferenceId),
+    );
   }
 }

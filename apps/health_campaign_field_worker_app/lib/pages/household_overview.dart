@@ -1,10 +1,10 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../blocs/selected_households/selected_households.dart';
-import '../utils/i18_key_constants.dart' as i18;
 import '../router/app_router.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -86,12 +86,14 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewPrimaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
                                         },
                                       ),
                                       secondaryAction: DigitDialogActions(
@@ -99,9 +101,10 @@ class _HouseholdOverViewPageState
                                             .householdOverView
                                             .householdOverViewSecondaryActionLabel),
                                         action: (context) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
                                         },
                                       ),
                                     ),
