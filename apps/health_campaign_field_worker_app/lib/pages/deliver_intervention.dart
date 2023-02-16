@@ -7,11 +7,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/delivery_intervention/deliver_intervention.dart';
-import '../blocs/search_households/search_households.dart';
 import '../blocs/selected_households/selected_households.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/data_model.dart';
-import '../models/entities/task_resource.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -47,68 +45,63 @@ class _DeliverInterventionPageState
                 BlocBuilder<SelectedHouseHoldsBloc, SelectedHouseHoldsState>(
               builder: (context, state) => DigitElevatedButton(
                 onPressed: () {
-                  context.read<DeliverInterventionBloc>().add(
-                        (DeliverInterventionSubmitEvent(
-                          TaskModel(
-                            clientReferenceId: IdGen.i.identifier,
-                            tenantId: envConfig.variables.tenantId,
-                            rowVersion: 1,
-                            projectId: '13',
-                            status: Status.delivered.name,
-                            createdDate: DateTime.now().millisecondsSinceEpoch,
-                            projectBeneficiaryId:
-                                state.individual?.clientReferenceId,
-                            resources: [
-                              TaskResourceModel(
-                                clientReferenceId: IdGen.i.identifier,
-                                rowVersion: 1,
-                                isDelivered: true,
-                                tenantId: envConfig.variables.tenantId,
-                                quantity: form
-                                    .control('quantityDistributed')
-                                    .value
-                                    .toString(),
-                                productVariantId: 'PVAR-2023-02-15-000048',
-                              ),
-                            ],
-                            address: state.household?.address,
-                          ),
-                        )),
-                      );
+                  DigitDialog.show(
+                    context,
+                    options: DigitDialogOptions(
+                      titleText: localizations
+                          .translate(i18.deliverIntervention.dialogTitle),
+                      contentText: localizations
+                          .translate(i18.deliverIntervention.dialogContent),
+                      primaryAction: DigitDialogActions(
+                        label: localizations
+                            .translate(i18.common.coreCommonSubmit),
+                        action: (ctx) {
+                          context.read<DeliverInterventionBloc>().add(
+                                (DeliverInterventionSubmitEvent(
+                                  TaskModel(
+                                    clientReferenceId: IdGen.i.identifier,
+                                    tenantId: envConfig.variables.tenantId,
+                                    rowVersion: 1,
+                                    projectId: '13',
+                                    status: Status.delivered.name,
+                                    createdDate:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                    projectBeneficiaryId:
+                                        state.individual?.clientReferenceId,
+                                    resources: [
+                                      TaskResourceModel(
+                                        clientReferenceId: IdGen.i.identifier,
+                                        rowVersion: 1,
+                                        isDelivered: true,
+                                        tenantId: envConfig.variables.tenantId,
+                                        quantity: form
+                                            .control('quantityDistributed')
+                                            .value
+                                            .toString(),
+                                        productVariantId:
+                                            'PVAR-2023-02-15-000048',
+                                        deliveryComment: form
+                                            .control('deliveryComment')
+                                            .value,
+                                      ),
+                                    ],
+                                    address: state.household?.address,
+                                  ),
+                                )),
+                              );
+
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                      ),
+                      secondaryAction: DigitDialogActions(
+                        label: localizations
+                            .translate(i18.common.coreCommonCancel),
+                        action: (context) =>
+                            Navigator.of(context, rootNavigator: true).pop(),
+                      ),
+                    ),
+                  );
                 },
-
-                // DigitDialog.show(
-                //   context,
-                //   options: DigitDialogOptions(
-                //     titleText: localizations
-                //         .translate(i18.deliverIntervention.dialogTitle),
-                //     contentText: localizations
-                //         .translate(i18.deliverIntervention.dialogContent),
-                //     primaryAction: DigitDialogActions(
-                //       label:
-                //           localizations.translate(i18.common.coreCommonSubmit),
-                //       action: (context) {
-                //         context.read<DeliverInterventionBloc>().add(
-                //               (DeliverInterventionSubmitEvent(TaskResourceModel(
-                //                 clientReferenceId: 'wdwed',
-                //                 rowVersion: 1,
-                //                 tenantId: '',
-                //                 quantity:
-                //                     form.control('quantityDistributed').value,
-                //               ))),
-                //             );
-
-                //         Navigator.of(context, rootNavigator: true).pop();
-                //       },
-                //     ),
-                //     secondaryAction: DigitDialogActions(
-                //       label:
-                //           localizations.translate(i18.common.coreCommonCancel),
-                //       action: (context) =>
-                //           Navigator.of(context, rootNavigator: true).pop(),
-                //     ),
-                //   ),
-                // ),
                 child: Center(
                   child: Text(
                     localizations.translate(i18.common.coreCommonSubmit),
@@ -242,8 +235,8 @@ class _DeliverInterventionPageState
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        'resourceDelivered': FormControl<String>(value: ''),
+        'resourceDelivered': FormControl<String>(),
         'quantityDistributed': FormControl<int>(value: 1),
-        'deliveryComment': FormControl<String>(value: ''),
+        'deliveryComment': FormControl<String>(),
       });
 }
