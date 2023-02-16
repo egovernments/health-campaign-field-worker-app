@@ -2,12 +2,12 @@
   "name": "identifier",
   "attributes": [
     {
-      "name": "type",
+      "name": "identifierType",
       "type": "String",
       "includeForQuery": true
     },
     {
-      "name": "id",
+      "name": "identifierId",
       "type": "String",
       "includeForQuery": true
     }

@@ -10,8 +10,7 @@ import '../blocs/selected_households/selected_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/network_manager.dart';
-import '../models/entities/household_member.dart';
-import '../models/entities/individual.dart';
+import '../models/data_model.dart';
 import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -30,13 +29,25 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           BlocProvider(
             create: (context) {
               final isar = context.read<Isar>();
-              final bloc = SyncBloc(isar: isar)..add(const SyncRefreshEvent());
+              final bloc = SyncBloc(
+                isar: isar,
+                networkManager: context.read(),
+              )..add(const SyncRefreshEvent());
 
-              isar.opLogs
-                  .filter()
-                  .isSyncedEqualTo(false)
-                  .watch()
-                  .listen((event) => bloc.add(const SyncRefreshEvent()));
+              isar.opLogs.filter().isSyncedEqualTo(false).watch().listen(
+                    (event) => bloc.add(
+                      SyncRefreshEvent(event.where((element) {
+                        switch (element.entityType) {
+                          case DataModelType.household:
+                          case DataModelType.individual:
+                          case DataModelType.task:
+                            return true;
+                          default:
+                            return false;
+                        }
+                      }).length),
+                    ),
+                  );
 
               return bloc;
             },

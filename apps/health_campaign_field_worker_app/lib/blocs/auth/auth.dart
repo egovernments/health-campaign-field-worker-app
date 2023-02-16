@@ -3,51 +3,61 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
-import '../../utils/environment_config.dart';
+import '../../models/auth/auth_model.dart';
 
 part 'auth.freezed.dart';
 
 typedef AuthEmitter = Emitter<AuthState>;
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  static const accessTokenKey = 'accessTokenKey';
+
+  static const refreshTokenKey = 'refreshTokenKey';
+
   final AuthRepository authRepository;
 
-  AuthBloc(super.initialState, this.authRepository) {
+  AuthBloc({required this.authRepository})
+      : super(const AuthUnauthenticatedState()) {
     on<AuthLoginEvent>(_onLogin);
     on<AuthLogoutEvent>(_onLogout);
   }
 
   FutureOr<void> _onLogin(AuthLoginEvent event, AuthEmitter emit) async {
-    emit(const AuthState.loading());
+    emit(const AuthLoadingState());
 
-    await Future.delayed(const Duration(seconds: 1));
     try {
-      final result = await authRepository.authToken(
-        'user/oauth/token',
-        null,
-        {
-          "username": event.userId.toString(),
-          "password": event.password.toString(),
-          "userType": 'EMPLOYEE',
-          "tenantId": envConfig.variables.tenantId,
-          "scope": "read",
-          "grant_type": "password",
-        },
+      final AuthModel result = await authRepository.fetchAuthToken(
+        loginModel: LoginModel(
+          username: event.userId,
+          password: event.password,
+          tenantId: event.tenantId,
+        ),
       );
-      emit(AuthState.loaded(result.access_token, result.refresh_token));
-    } catch (e) {
-      emit(const AuthState.error());
 
-      await Future.delayed(const Duration(seconds: 1));
-
-      emit(const AuthState.initial());
-// Here you can write your code
+      await storage.write(key: accessTokenKey, value: result.accessToken);
+      await storage.write(key: refreshTokenKey, value: result.refreshToken);
+      emit(
+        AuthAuthenticatedState(
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        ),
+      );
+    } catch (error) {
+      emit(const AuthUnauthenticatedState());
+      rethrow;
     }
   }
 
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
-    emit(const AuthState.loaded(null, null));
+    try {
+      emit(const AuthLoadingState());
+      await storage.deleteAll();
+    } catch (error) {
+      emit(const AuthUnauthenticatedState());
+      rethrow;
+    }
   }
 }
 
@@ -56,6 +66,7 @@ class AuthEvent with _$AuthEvent {
   const factory AuthEvent.login({
     required String userId,
     required String password,
+    required String tenantId,
   }) = AuthLoginEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
@@ -65,11 +76,12 @@ class AuthEvent with _$AuthEvent {
 class AuthState with _$AuthState {
   const AuthState._();
 
-  const factory AuthState.initial() = _Initial;
-  const factory AuthState.loading() = _Loading;
-  const factory AuthState.loaded(
-    String? accessToken,
-    String? refreshToken,
-  ) = _Loaded;
-  const factory AuthState.error() = _Error;
+  const factory AuthState.unauthenticated() = AuthUnauthenticatedState;
+
+  const factory AuthState.loading() = AuthLoadingState;
+
+  const factory AuthState.authenticated({
+    required String accessToken,
+    required String refreshToken,
+  }) = AuthAuthenticatedState;
 }

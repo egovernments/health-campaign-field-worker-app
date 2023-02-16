@@ -1,10 +1,16 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/sync/sync.dart';
+import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../models/entities/household.dart';
+import '../models/entities/household_member.dart';
+import '../models/entities/individual.dart';
+import '../models/entities/project_beneficiary.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -61,16 +67,73 @@ class _HomePageState extends LocalizedState<HomePage> {
         footer: const PoweredByDigit(),
         children: [
           const SizedBox(height: kPadding * 2),
-          BlocBuilder<SyncBloc, SyncState>(
+          BlocConsumer<SyncBloc, SyncState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                orElse: () => null,
+                syncInProgress: () => DigitSyncDialogContent.show(
+                  context,
+                  type: DigitSyncDialogType.inProgress,
+                  // TODO: Localization pending
+                  label: 'Sync in Progress', barrierDismissible: true,
+                ),
+                completedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialogContent.show(
+                    context,
+                    type: DigitSyncDialogType.complete,
+                    // TODO: Localization Pending
+                    label: 'Data Synced',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                      },
+                    ),
+                  );
+                },
+                failedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialogContent.show(
+                    context,
+                    type: DigitSyncDialogType.failed,
+                    // TODO: Localization Pending
+                    label: 'Sync Failed !',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Retry',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                        _attemptSyncUp(context);
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                  );
+                },
+              );
+            },
             builder: (context, state) {
-              return DigitInfoCard(
-                icon: Icons.info,
-                backgroundColor: theme.colorScheme.tertiaryContainer,
-                iconColor: theme.colorScheme.surfaceTint,
-                description: localizations
-                    .translate(i18.home.dataSyncInfoContent)
-                    .replaceAll('{}', state.count.toString()),
-                title: localizations.translate(i18.home.dataSyncInfoLabel),
+              return state.maybeWhen(
+                orElse: () => const Offstage(),
+                pendingSync: (count) => count == 0
+                    ? const Offstage()
+                    : DigitInfoCard(
+                        icon: Icons.info,
+                        backgroundColor: theme.colorScheme.tertiaryContainer,
+                        iconColor: theme.colorScheme.surfaceTint,
+                        description: localizations
+                            .translate(i18.home.dataSyncInfoContent)
+                            .replaceAll('{}', count.toString()),
+                        title:
+                            localizations.translate(i18.home.dataSyncInfoLabel),
+                      ),
               );
             },
           ),
@@ -99,7 +162,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
-        onPressed: null,
+        onPressed: () => _attemptSyncUp(context),
       ),
       HomeItemCard(
         icon: Icons.call,
@@ -120,5 +183,36 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       ),
     ];
+  }
+
+  void _attemptSyncUp(BuildContext context) {
+    context.read<SyncBloc>().add(
+          SyncSyncUpEvent(
+            localRepositories: [
+              context.read<
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<
+                  LocalRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+            ],
+            remoteRepositories: [
+              context.read<
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
+              context.read<
+                  RemoteRepository<ProjectBeneficiaryModel,
+                      ProjectBeneficiarySearchModel>>(),
+            ],
+          ),
+        );
   }
 }

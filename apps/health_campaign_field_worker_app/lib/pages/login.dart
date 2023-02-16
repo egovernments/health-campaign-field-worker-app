@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -69,6 +70,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           return '${localizations.translate(i18.login.userIdPlaceholder)} is Required';
                         },
                       },
+                      textCapitalization: TextCapitalization.none,
                       formControlName: _userId,
                       isRequired: true,
                       keyboardType: TextInputType.text,
@@ -85,51 +87,38 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       formControlName: _password,
                       keyboardType: TextInputType.text,
                       isRequired: true,
+                      textCapitalization: TextCapitalization.none,
                       obscureText: !passwordVisible,
                       suffix: buildPasswordVisibility(),
                     ),
                     const SizedBox(height: 16),
                     BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, state) => state.maybeWhen(
-                        loading: () {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Loaders.showLoadingDialog(context);
-                          });
-
-                          return Container();
-                        },
-                        error: () {
-                          Future.delayed(Duration.zero, () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          });
-                          return const ToastHelper();
-                        },
-                        orElse: () => Container(),
-                      ),
-                    ),
-                    DigitElevatedButton(
-                      onPressed: isloading
-                          ? null
-                          : () {
+                      builder: (context, state) {
+                        return DigitElevatedButton(
+                          onPressed: state.maybeWhen(
+                            orElse: () => () {
                               form.markAllAsTouched();
                               if (!form.valid) return;
 
                               context.read<AuthBloc>().add(
                                     AuthLoginEvent(
-                                      userId: form.control(_userId).value.trim()
+                                      userId:
+                                          form.control(_userId).value as String,
+                                      password: form.control(_password).value
                                           as String,
-                                      password: form
-                                          .control(_password)
-                                          .value
-                                          .trim() as String,
+                                      tenantId: envConfig.variables.tenantId,
                                     ),
                                   );
                             },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(i18.login.actionLabel),
-                        ),
-                      ),
+                            loading: () => null,
+                          ),
+                          child: Center(
+                            child: Text(
+                              localizations.translate(i18.login.actionLabel),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     TextButton(
                       onPressed: () => DigitDialog.show(
@@ -170,7 +159,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        _userId: FormControl<String>(validators: [Validators.required]),
-        _password: FormControl<String>(validators: [Validators.required]),
+        _userId: FormControl<String>(
+          validators: [Validators.required],
+          value: 'registrar',
+        ),
+        _password: FormControl<String>(
+          validators: [Validators.required],
+          value: 'eGov@4321',
+        ),
       });
 }
