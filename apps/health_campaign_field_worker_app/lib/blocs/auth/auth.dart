@@ -20,8 +20,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.authRepository})
       : super(const AuthUnauthenticatedState()) {
-    on<AuthLoginEvent>(_onLogin);
-    on<AuthLogoutEvent>(_onLogout);
+    on(_onLogin);
+    on(_onLogout);
+    on(_onAutoLogin);
+  }
+
+  FutureOr<void> _onAutoLogin(
+    AuthAutoLoginEvent event,
+    AuthEmitter emit,
+  ) async {
+    emit(const AuthLoadingState());
+
+    try {
+      final accessToken = await storage.read(key: accessTokenKey);
+      final refreshToken = await storage.read(key: refreshTokenKey);
+
+      if (accessToken == null || refreshToken == null) {
+        emit(const AuthUnauthenticatedState());
+      } else {
+        emit(AuthAuthenticatedState(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        ));
+      }
+    } catch (_) {
+      emit(const AuthUnauthenticatedState());
+      rethrow;
+    }
   }
 
   FutureOr<void> _onLogin(AuthLoginEvent event, AuthEmitter emit) async {
@@ -69,6 +94,10 @@ class AuthEvent with _$AuthEvent {
     required String password,
     required String tenantId,
   }) = AuthLoginEvent;
+
+  const factory AuthEvent.autoLogin({
+    required String tenantId,
+  }) = AuthAutoLoginEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
 }

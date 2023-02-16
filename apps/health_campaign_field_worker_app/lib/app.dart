@@ -16,6 +16,7 @@ import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
+import 'utils/environment_config.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
@@ -54,9 +55,10 @@ class MainApplication extends StatelessWidget {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (ctx) => AuthBloc(
-                  authRepository: ctx.read(),
-                ),
+                create: (ctx) => AuthBloc(authRepository: ctx.read())
+                  ..add(AuthAutoLoginEvent(
+                    tenantId: envConfig.variables.tenantId,
+                  )),
               ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
