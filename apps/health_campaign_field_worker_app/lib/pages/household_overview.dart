@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../blocs/selected_households/selected_households.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -152,18 +153,27 @@ class _HouseholdOverViewPageState
                           .map(
                             (ele) => MemberCard(
                               name: ele.name!.givenName!.toString(),
-                              age: int.parse((DateTime.now()
-                                          .difference(DateTime.parse(DateFormat(
-                                            'dd/MM/yyyy',
-                                          )
-                                              .parse(state
-                                                  .individual!.dateOfBirth!)
-                                              .toString()))
-                                          .inDays /
-                                      365)
-                                  .round()
-                                  .toStringAsFixed(0)),
-                              gender: ele.gender!.name,
+                              age: (state.individual == null ||
+                                          state.individual!.dateOfBirth == null
+                                      ? null
+                                      : int.tryParse((DateTime.now()
+                                                  .difference(
+                                                    DateTime.parse(
+                                                      DateFormat(
+                                                        'dd/MM/yyyy',
+                                                      )
+                                                          .parse(state
+                                                              .individual!
+                                                              .dateOfBirth!)
+                                                          .toString(),
+                                                    ),
+                                                  )
+                                                  .inDays /
+                                              365)
+                                          .round()
+                                          .toStringAsFixed(0))) ??
+                                  0,
+                              gender: ele.gender?.name ?? '',
                               isDelivered: false,
                               localizations: localizations,
                             ),
