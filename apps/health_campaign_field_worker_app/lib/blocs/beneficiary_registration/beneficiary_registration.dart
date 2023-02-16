@@ -64,7 +64,7 @@ class BeneficiaryRegistrationBloc
     emit(
       state.copyWith(
         individualModel: event.model,
-        projectBeneficiary: event.projectBeneficiary,
+        isHeadOfHousehold: event.isHeadOfHousehold,
       ),
     );
   }
@@ -100,7 +100,7 @@ class BeneficiaryRegistrationBloc
             dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
             // TODO(naveen): Please add project ID here
             projectId: '13',
-            beneficiaryClientReferenceId: individual.clientReferenceId,
+            beneficiaryClientReferenceId: household.clientReferenceId,
           ),
         );
         await householdMemberRepository.create(
@@ -135,7 +135,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
 
   const factory BeneficiaryRegistrationEvent.saveIndividualDetails({
     required IndividualModel model,
-    required ProjectBeneficiaryModel projectBeneficiary,
+    @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.submit() =
@@ -148,7 +148,6 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     IndividualModel? individualModel,
     HouseholdModel? householdModel,
-    ProjectBeneficiaryModel? projectBeneficiary,
     DateTime? registrationDate,
     String? searchQuery,
     @Default(false) bool isEditing,
