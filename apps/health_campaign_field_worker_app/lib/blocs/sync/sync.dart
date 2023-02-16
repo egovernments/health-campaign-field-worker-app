@@ -73,7 +73,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         remoteRepositories: event.remoteRepositories,
       );
       emit(const SyncCompletedState());
-    } catch (_) {
+    } catch (error) {
+      emit(const SyncFailedState());
       rethrow;
     } finally {
       add(const SyncRefreshEvent());
@@ -110,4 +111,6 @@ class SyncState with _$SyncState {
       SyncPendingState;
 
   const factory SyncState.completedSync() = SyncCompletedState;
+
+  const factory SyncState.failedSync() = SyncFailedState;
 }
