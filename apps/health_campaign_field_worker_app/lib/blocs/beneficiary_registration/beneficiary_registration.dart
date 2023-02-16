@@ -92,7 +92,7 @@ class BeneficiaryRegistrationBloc
           clientReferenceId: IdGen.i.identifier,
           dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
           // TODO(naveen): Please add project ID here
-          projectId: '',
+          projectId: '13',
           beneficiaryClientReferenceId: individual.clientReferenceId,
         ),
       );
