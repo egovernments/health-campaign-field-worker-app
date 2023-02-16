@@ -34,86 +34,100 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
       body: ReactiveFormBuilder(
         form: buildForm,
         builder: (context, form, child) {
-          return ScrollableContent(
-            header: Column(children: const [
-              BackNavigationHelpHeaderWidget(),
-            ]),
-            footer: SizedBox(
-              height: 90,
-              child: DigitCard(
-                child: DigitElevatedButton(
-                  onPressed: () {
-                    form.markAllAsTouched();
-                    if (!form.valid) return;
+          return BlocBuilder<BeneficiaryRegistrationBloc,
+              BeneficiaryRegistrationState>(
+            builder: (context, beneficiaryRegistrationState) {
+              return ScrollableContent(
+                header: Column(children: const [
+                  BackNavigationHelpHeaderWidget(),
+                ]),
+                footer: SizedBox(
+                  height: 90,
+                  child: DigitCard(
+                    child: DigitElevatedButton(
+                      onPressed: () {
+                        form.markAllAsTouched();
+                        if (!form.valid) return;
 
-                    final memberCount =
-                        form.control(_memberCountKey).value as int;
+                        final memberCount =
+                            form.control(_memberCountKey).value as int;
 
-                    final dateOfRegistration =
-                        form.control(_dateOfRegistrationKey).value as DateTime;
+                        final dateOfRegistration = form
+                            .control(_dateOfRegistrationKey)
+                            .value as DateTime;
 
-                    final bloc = context.read<BeneficiaryRegistrationBloc>();
-                    final household = HouseholdModel(
-                      tenantId: envConfig.variables.tenantId,
-                      clientReferenceId: IdGen.i.identifier,
-                      memberCount: memberCount,
-                      address: bloc.state.addressModel,
-                      rowVersion: 1,
-                    );
+                        final bloc =
+                            context.read<BeneficiaryRegistrationBloc>();
+                        final household =
+                            (beneficiaryRegistrationState.householdModel ??
+                                    HouseholdModel(
+                                      tenantId: envConfig.variables.tenantId,
+                                      clientReferenceId: IdGen.i.identifier,
+                                      rowVersion: 1,
+                                    ))
+                                .copyWith(
+                          memberCount: memberCount,
+                          address: bloc.state.addressModel,
+                        );
 
-                    bloc.add(
-                      BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                        household: household,
-                        registrationDate: dateOfRegistration,
+                        bloc.add(
+                          BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                            household: household,
+                            registrationDate: dateOfRegistration,
+                          ),
+                        );
+
+                        context.router.push(
+                          IndividualDetailsRoute(isHeadOfHousehold: true),
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          localizations
+                              .translate(i18.householdDetails.actionLabel),
+                        ),
                       ),
-                    );
-
-                    context.router.push(IndividualDetailsRoute(isHeadOfHousehold:true));
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations.translate(i18.householdDetails.actionLabel),
                     ),
                   ),
                 ),
-              ),
-            ),
-            children: [
-              DigitCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      localizations.translate(
-                        i18.householdDetails.householdDetailsLabel,
-                      ),
-                      style: theme.textTheme.displayMedium,
+                children: [
+                  DigitCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          localizations.translate(
+                            i18.householdDetails.householdDetailsLabel,
+                          ),
+                          style: theme.textTheme.displayMedium,
+                        ),
+                        Column(children: [
+                          DigitDateFormPicker(
+                            isEnabled: false,
+                            formControlName: _dateOfRegistrationKey,
+                            label: localizations.translate(
+                              i18.householdDetails.dateOfRegistrationLabel,
+                            ),
+                            isRequired: false,
+                          ),
+                          DigitIntegerFormPicker(
+                            minimum: 0,
+                            form: form,
+                            formControlName: _memberCountKey,
+                            label: localizations.translate(
+                              i18.householdDetails.noOfMembersCountLabel,
+                            ),
+                            incrementer: true,
+                          ),
+                        ]),
+                        const SizedBox(height: 16),
+                      ],
                     ),
-                    Column(children: [
-                      DigitDateFormPicker(
-                        isEnabled: false,
-                        formControlName: _dateOfRegistrationKey,
-                        label: localizations.translate(
-                          i18.householdDetails.dateOfRegistrationLabel,
-                        ),
-                        isRequired: false,
-                      ),
-                      DigitIntegerFormPicker(
-                        minimum: 0,
-                        form: form,
-                        formControlName: _memberCountKey,
-                        label: localizations.translate(
-                          i18.householdDetails.noOfMembersCountLabel,
-                        ),
-                        incrementer: true,
-                      ),
-                    ]),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

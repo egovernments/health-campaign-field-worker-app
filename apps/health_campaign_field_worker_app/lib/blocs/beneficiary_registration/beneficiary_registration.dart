@@ -61,7 +61,12 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationSaveIndividualDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(state.copyWith(individualModel: event.model));
+    emit(
+      state.copyWith(
+        individualModel: event.model,
+        projectBeneficiary: event.projectBeneficiary,
+      ),
+    );
   }
 
   FutureOr<void> _handleSubmit(
@@ -86,27 +91,29 @@ class BeneficiaryRegistrationBloc
           .create(individual.copyWith(address: [address]));
       await householdRepository.create(household.copyWith(address: address));
 
-      await projectBeneficiaryRepository.create(
-        ProjectBeneficiaryModel(
-          rowVersion: 1,
-          tenantId: envConfig.variables.tenantId,
-          clientReferenceId: IdGen.i.identifier,
-          dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
-          // TODO(naveen): Please add project ID here
-          projectId: '13',
-          beneficiaryClientReferenceId: individual.clientReferenceId,
-        ),
-      );
-      await householdMemberRepository.create(
-        HouseholdMemberModel(
-          householdClientReferenceId: household.clientReferenceId,
-          individualClientReferenceId: individual.clientReferenceId,
-          isHeadOfHousehold: state.isHeadOfHousehold,
-          tenantId: envConfig.variables.tenantId,
-          rowVersion: 1,
-          clientReferenceId: IdGen.i.identifier,
-        ),
-      );
+      if (!state.isEditing) {
+        await projectBeneficiaryRepository.create(
+          ProjectBeneficiaryModel(
+            rowVersion: 1,
+            tenantId: envConfig.variables.tenantId,
+            clientReferenceId: IdGen.i.identifier,
+            dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
+            // TODO(naveen): Please add project ID here
+            projectId: '13',
+            beneficiaryClientReferenceId: individual.clientReferenceId,
+          ),
+        );
+        await householdMemberRepository.create(
+          HouseholdMemberModel(
+            householdClientReferenceId: household.clientReferenceId,
+            individualClientReferenceId: individual.clientReferenceId,
+            isHeadOfHousehold: state.isHeadOfHousehold,
+            tenantId: envConfig.variables.tenantId,
+            rowVersion: 1,
+            clientReferenceId: IdGen.i.identifier,
+          ),
+        );
+      }
     } catch (error) {
       rethrow;
     } finally {
@@ -126,9 +133,10 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required DateTime registrationDate,
   }) = BeneficiaryRegistrationSaveHouseholdDetailsEvent;
 
-  const factory BeneficiaryRegistrationEvent.saveIndividualDetails(
-    IndividualModel model,
-  ) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
+  const factory BeneficiaryRegistrationEvent.saveIndividualDetails({
+    required IndividualModel model,
+    required ProjectBeneficiaryModel projectBeneficiary,
+  }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.submit() =
       BeneficiaryRegistrationSubmitEvent;
@@ -140,7 +148,10 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     IndividualModel? individualModel,
     HouseholdModel? householdModel,
+    ProjectBeneficiaryModel? projectBeneficiary,
     DateTime? registrationDate,
+    String? searchQuery,
+    @Default(false) bool isEditing,
     @Default(false) bool isHeadOfHousehold,
     @Default(false) bool loading,
   }) = _BeneficiaryRegistrationState;

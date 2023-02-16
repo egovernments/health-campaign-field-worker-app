@@ -5,7 +5,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitDobPicker extends StatelessWidget {
   final String datePickerFormControl;
-  final String ageInputFormControl;
 
   final bool isVerified;
 
@@ -17,7 +16,6 @@ class DigitDobPicker extends StatelessWidget {
   const DigitDobPicker({
     super.key,
     required this.datePickerFormControl,
-    required this.ageInputFormControl,
     this.isVerified = false,
     this.valueAccessor,
     required this.datePickerLabel,
