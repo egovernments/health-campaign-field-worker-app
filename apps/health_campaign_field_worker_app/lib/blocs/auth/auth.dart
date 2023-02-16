@@ -45,6 +45,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     } catch (error) {
+      emit(const AuthErrorState());
       emit(const AuthUnauthenticatedState());
       rethrow;
     }
@@ -74,8 +75,6 @@ class AuthEvent with _$AuthEvent {
 
 @freezed
 class AuthState with _$AuthState {
-  const AuthState._();
-
   const factory AuthState.unauthenticated() = AuthUnauthenticatedState;
 
   const factory AuthState.loading() = AuthLoadingState;
@@ -84,4 +83,6 @@ class AuthState with _$AuthState {
     required String accessToken,
     required String refreshToken,
   }) = AuthAuthenticatedState;
+
+  const factory AuthState.error([String? error]) = AuthErrorState;
 }
