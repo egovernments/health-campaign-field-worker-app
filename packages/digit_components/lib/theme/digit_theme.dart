@@ -59,6 +59,7 @@ class DigitTheme {
         outline: colors.quillGray,
         shadow: colors.davyGray,
         tertiary: colors.paleRose,
+        onTertiaryContainer: colors.curiousBlue,
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(

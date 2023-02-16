@@ -15,6 +15,7 @@ const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
+const stockReconciliationDetails = StockReconciliationDetails();
 
 class Common {
   const Common();
@@ -78,6 +79,8 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get manageStockLabel => 'MANAGE_STOCK_LABEL';
+
+  String get reconcileStockLabel => 'RECONCILE_STOCK_LABEL';
 }
 
 class SearchBeneficiary {
@@ -298,6 +301,33 @@ class WarehouseDetails {
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
 }
 
+class StockReconciliationDetails {
+  const StockReconciliationDetails();
+
+  String get reconciliationPageLabel => 'STOCK_RECONCILIATION';
+  String get warehouseLabel => 'WAREHOUSE_LABEL';
+
+  String get productLabel => 'PRODUCT_LABEL';
+
+  String get dateOfReconciliation => 'DATE_OF_RECONCILIATION';
+
+  String get stockReceived => 'STOCK_RECEIVED';
+
+  String get stockIssued => 'STOCK_ISSUED';
+
+  String get stockReturned => 'STOCK_RETURNED';
+
+  String get stockLost => 'STOCK_LOST';
+
+  String get stockDamaged => 'STOCK_DAMAGED';
+
+  String get stockOnHand => 'STOCK_ON_HAND';
+
+  String get manualCount => 'MANUAL_STOCK_COUNT';
+
+  String get comments => 'COMMENTS';
+}
+
 class StockDetails {
   const StockDetails();
 
@@ -311,11 +341,12 @@ class StockDetails {
 
   String get stockLostDetailsLabel => 'STOCK_LOST_DETAILS_LABEL';
 
-
   String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
+
   String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
 
   String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+
   String get waybillNumber => 'STOCK_RECEIPT_DETAILS_WAYBILL_NUMBER';
 
   String get quantitySent => 'STOCK_RECEIPT_DETAILS_QUANTITY_SENT';
@@ -331,5 +362,6 @@ class StockDetails {
   String get typeOfTransport => 'STOCK_RECEIPT_DETAILS_TYPE_OF_TRANSPORT';
 
   String get vehicleNumber => 'STOCK_RECEIPT_DETAILS_VEHICLE_NUMBER';
+
   String get comments => 'COMMENTS';
 }
