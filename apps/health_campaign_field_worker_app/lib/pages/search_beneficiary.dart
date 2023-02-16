@@ -68,28 +68,39 @@ class _SearchBeneficiaryPageState
                 ),
               ),
               StreamBuilder(
-                initialData: const [],
-                // TODO: Needs to have a remote API counterpart
-                stream: sql.select(sql.household).watch(),
-                builder: (context, householdSnapshot) {
-                  return BeneficiaryStatisticsCard(
-                    beneficiaryStatistics: BeneficiaryStatisticsWrapperModel(
-                      beneficiaryStatisticsList: [
-                        BeneficiaryStatisticsModel(
-                          title:
-                              (householdSnapshot.data?.length ?? 0).toString(),
-                          content: localizations.translate(
-                            i18.searchBeneficiary.noOfHouseholdsRegistered,
-                          ),
+                initialData: [],
+                stream: sql.select(sql.taskResource).watch(),
+                builder: (context, taskSnapshot) {
+                  final taskCount = taskSnapshot.data?.length ?? 0;
+
+                  return StreamBuilder(
+                    initialData: const [],
+                    // TODO: Needs to have a remote API counterpart
+                    stream: sql.select(sql.household).watch(),
+                    builder: (context, householdSnapshot) {
+                      final householdCount =
+                          householdSnapshot.data?.length ?? 0;
+
+                      return BeneficiaryStatisticsCard(
+                        beneficiaryStatistics:
+                            BeneficiaryStatisticsWrapperModel(
+                          beneficiaryStatisticsList: [
+                            BeneficiaryStatisticsModel(
+                              title: householdCount.toString(),
+                              content: localizations.translate(
+                                i18.searchBeneficiary.noOfHouseholdsRegistered,
+                              ),
+                            ),
+                            BeneficiaryStatisticsModel(
+                              title: taskCount.toString(),
+                              content: localizations.translate(
+                                i18.searchBeneficiary.noOfResourcesDelivered,
+                              ),
+                            ),
+                          ],
                         ),
-                        BeneficiaryStatisticsModel(
-                          title: '756',
-                          content: localizations.translate(
-                            i18.searchBeneficiary.noOfResourcesDelivered,
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               ),
@@ -149,8 +160,12 @@ class _SearchBeneficiaryPageState
                   builder: (context, state) {
                     final onPressed = state.maybeMap(
                       orElse: () => null,
-                      notFound: (value) => () => context.router
-                          .push(const BeneficiaryRegistrationWrapperRoute()),
+                      results: (value) => () => context.router.push(
+                            const BeneficiaryRegistrationWrapperRoute(),
+                          ),
+                      notFound: (value) => () => context.router.push(
+                            const BeneficiaryRegistrationWrapperRoute(),
+                          ),
                     );
 
                     return DigitElevatedButton(
