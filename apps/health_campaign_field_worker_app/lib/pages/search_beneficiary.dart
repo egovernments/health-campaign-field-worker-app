@@ -34,6 +34,11 @@ class _SearchBeneficiaryPageState
 
     return BlocProvider(
       create: (context) => SearchHouseholdsBloc(
+        projectBeneficiaryMember: context
+            .read<NetworkManager>()
+            .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(
+              context,
+            ),
         householdMember: context
             .read<NetworkManager>()
             .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(

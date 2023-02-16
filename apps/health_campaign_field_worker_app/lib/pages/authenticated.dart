@@ -7,7 +7,6 @@ import 'package:location/location.dart';
 
 import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/household_details/household_details.dart';
-import '../blocs/selected_households/selected_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/network_manager.dart';
@@ -64,26 +63,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
-          ),
-          BlocProvider(
-            create: (_) => SelectedHouseHoldsBloc(
-              const SelectedHouseHoldsState(),
-              context
-                  .read<NetworkManager>()
-                  .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
-                    context,
-                  ),
-              context
-                  .read<NetworkManager>()
-                  .repository<IndividualModel, IndividualSearchModel>(
-                    context,
-                  ),
-              context
-                  .read<NetworkManager>()
-                  .repository<IndividualModel, IndividualSearchModel>(
-                    context,
-                  ),
-            ),
           ),
           BlocProvider(
             create: (_) => DeliverInterventionBloc(

@@ -2,11 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
 import '../../blocs/search_households/search_households.dart';
-import '../../blocs/selected_households/selected_households.dart';
-import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
@@ -40,10 +38,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  HouseholdModel get householdModel => householdMember.household;
-
-  IndividualModel get individualModel => householdMember.individual;
-
   bool _isCardExpanded = false;
 
   bool get isCardExpanded => _isCardExpanded;
@@ -65,18 +59,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 width: MediaQuery.of(context).size.width / 1.7,
                 child: BeneficiaryCard(
                   description: [
-                    householdModel.address?.doorNo,
-                    householdModel.address?.addressLine1,
-                    householdModel.address?.addressLine2,
-                    householdModel.address?.landmark,
-                    householdModel.address?.city,
-                    householdModel.address?.pincode,
+                    householdMember.household.address?.doorNo,
+                    householdMember.household.address?.addressLine1,
+                    householdMember.household.address?.addressLine2,
+                    householdMember.household.address?.landmark,
+                    householdMember.household.address?.city,
+                    householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
-                  subtitle: '${householdModel.memberCount ?? 1} Members',
+                  subtitle:
+                      '${householdMember.household.memberCount ?? 1} Members',
                   status: 'Not Delivered',
                   title: [
-                    individualModel.name?.givenName,
-                    individualModel.name?.familyName,
+                    householdMember.headOfHousehold.name?.givenName,
+                    householdMember.headOfHousehold.name?.familyName,
                   ].whereNotNull().join(''),
                 ),
               ),
@@ -84,14 +79,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 child: DigitOutLineButton(
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: () {
-                    final bloc = context.read<SelectedHouseHoldsBloc>();
-                    bloc.add(OnHouseHoldsSelectionEvent(
-                      household: householdModel,
-                      individual: individualModel,
-                    ));
-                    context.router.push(HouseholdOverViewRoute());
-                  },
+                  onPressed: () => context.router.push(
+                    HouseholdOverviewRoute(
+                      householdMemberWrapper: householdMember,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -117,45 +109,45 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   cellKey: 'gender',
                 ),
               ],
-              tableData: [
-                TableDataRow(
-                  [
-                    TableData(
+              tableData: householdMember.members
+                  .map(
+                    (e) => TableDataRow(
                       [
-                        individualModel.name?.givenName,
-                        individualModel.name?.familyName,
-                      ].whereNotNull().join('-'),
-                      cellKey: 'beneficiary',
+                        TableData(
+                          [
+                            e.name?.givenName,
+                            e.name?.familyName,
+                          ].whereNotNull().join('-'),
+                          cellKey: 'beneficiary',
+                        ),
+                        TableData(
+                          'Not Delivered',
+                          cellKey: 'delivery',
+                          style: TextStyle(
+                            color: theme.colorScheme.error,
+                          ),
+                        ),
+                        TableData(
+                          e.dateOfBirth == null
+                              ? ''
+                              : (DateTime.now()
+                                          .difference(DateTime.parse(DateFormat(
+                                            'dd/MM/yyyy',
+                                          ).parse(e.dateOfBirth!).toString()))
+                                          .inDays /
+                                      365)
+                                  .round()
+                                  .toStringAsFixed(0),
+                          cellKey: 'age',
+                        ),
+                        TableData(
+                          e.gender?.name ?? '',
+                          cellKey: 'gender',
+                        ),
+                      ],
                     ),
-                    TableData(
-                      'Not Delivered',
-                      cellKey: 'delivery',
-                      style: TextStyle(
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                    TableData(
-                      individualModel.dateOfBirth == null
-                          ? ''
-                          : (DateTime.now()
-                                      .difference(DateTime.parse(DateFormat(
-                                        'dd/MM/yyyy',
-                                      )
-                                          .parse(individualModel.dateOfBirth!)
-                                          .toString()))
-                                      .inDays /
-                                  365)
-                              .round()
-                              .toStringAsFixed(0),
-                      cellKey: 'age',
-                    ),
-                    TableData(
-                      individualModel.gender?.name ?? '',
-                      cellKey: 'gender',
-                    ),
-                  ],
-                ),
-              ],
+                  )
+                  .toList(),
               leftColumnWidth: 110,
               rightColumnWidth: 45 * 8,
               height: 170,
