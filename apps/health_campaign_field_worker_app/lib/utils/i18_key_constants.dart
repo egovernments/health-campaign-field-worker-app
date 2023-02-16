@@ -346,6 +346,8 @@ class StockDetails {
   String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
 
   String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+  String get quantityReturned => 'STOCK_RECEIPT_DETAILS_QUANTITY_RETURNED';
+  String get quantityLost => 'STOCK_RECEIPT_DETAILS_QUANTITY_LOST';
 
   String get waybillNumber => 'STOCK_RECEIPT_DETAILS_WAYBILL_NUMBER';
 

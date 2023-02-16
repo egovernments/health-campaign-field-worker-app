@@ -89,19 +89,19 @@ class _StockReceiptDetailsPageState
                       DigitTextFormField(
                         formControlName: 'quantityLost',
                         label: localizations.translate(
-                          i18.stockDetails.quantityReceived,
+                          i18.stockDetails.quantityLost,
                         ),
                       ),
                       DigitTextFormField(
                         formControlName: 'waybillNumber',
                         label: localizations.translate(
-                          i18.stockDetails.noIndicatedOnThePackingSlip,
+                          i18.stockDetails.waybillNumber,
                         ),
                       ),
                       DigitTextFormField(
                         formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
-                          i18.stockDetails.noOfPackingSlip,
+                          i18.stockDetails.noIndicatedOnWaybill,
                         ),
                       ),
                     ]),
