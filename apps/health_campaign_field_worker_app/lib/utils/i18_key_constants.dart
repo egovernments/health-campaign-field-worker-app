@@ -305,6 +305,7 @@ class StockReconciliationDetails {
   const StockReconciliationDetails();
 
   String get reconciliationPageLabel => 'STOCK_RECONCILIATION';
+
   String get warehouseLabel => 'WAREHOUSE_LABEL';
 
   String get productLabel => 'PRODUCT_LABEL';
@@ -343,10 +344,16 @@ class StockDetails {
 
   String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
 
+  String get damagedDuring => 'STOCK_DAMAGED_DURING';
+
+  String get lostDuring => 'STOCK_LOST_DURING';
+
   String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
 
   String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+
   String get quantityReturned => 'STOCK_RECEIPT_DETAILS_QUANTITY_RETURNED';
+
   String get quantityLost => 'STOCK_RECEIPT_DETAILS_QUANTITY_LOST';
 
   String get waybillNumber => 'STOCK_RECEIPT_DETAILS_WAYBILL_NUMBER';
