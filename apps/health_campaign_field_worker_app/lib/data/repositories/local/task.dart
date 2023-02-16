@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/task_address.dart';
+import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -49,7 +51,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   @override
   FutureOr<void> create(TaskModel entity) async {
     final taskCompanion = entity.companion;
-    final address = entity.address;
+    final addresses = entity.address;
     final resources = entity.resources;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
@@ -65,8 +67,28 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           mode: InsertMode.insertOrReplace,
         );
 
-        if (address != null) {
-          batch.insert(sql.address, address.companion);
+        if (addresses != null) {
+          final addressCompanions = addresses.companion;
+
+          batch.insert(
+            sql.address,
+            addressCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
+
+          batch.insertAll(
+            sql.taskAddress,
+            [
+              TaskAddressModel(
+                clientReferenceId: IdGen.i.identifier,
+                tenantId: envConfig.variables.tenantId,
+                rowVersion: 1,
+                task: entity,
+                address: addresses,
+              ).companion,
+            ],
+            mode: InsertMode.insertOrReplace,
+          );
         }
 
         await super.create(entity);
