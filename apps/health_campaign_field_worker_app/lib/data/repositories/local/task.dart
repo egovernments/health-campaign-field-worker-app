@@ -38,7 +38,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         clientReferenceId: task.clientReferenceId,
         rowVersion: task.rowVersion,
         tenantId: task.tenantId,
-        projectId: '',
+        // TODO: Remove this hardcoded project
+        projectId: '13',
         projectBeneficiaryId: task.projectBeneficiaryId,
         createdDate: task.createdDate,
       );
