@@ -72,6 +72,7 @@ class _IndividualDetailsPageState
                     onPressed: () async {
                       form.markAllAsTouched();
                       if (!form.valid) return;
+                      final dob = form.control(_dobKey).value as DateTime?;
 
                       /// TODO - refactor this
                       if (!widget.isHeadOfHousehold) {
@@ -86,7 +87,9 @@ class _IndividualDetailsPageState
                           tenantId: envConfig.variables.tenantId,
                           rowVersion: 1,
                           clientReferenceId: IdGen.i.identifier,
-                          dateOfBirth: form.control(_dobKey).value.toString(),
+                          dateOfBirth: dob == null
+                              ? null
+                              : DateFormat('dd/MM/yyyy').format(dob),
                           mobileNumber: form.control(_mobileNumberKey).value,
                           name: NameModel(
                             rowVersion: 1,
@@ -158,9 +161,6 @@ class _IndividualDetailsPageState
                       final bloc = BlocProvider.of<BeneficiaryRegistrationBloc>(
                         context,
                       );
-
-                      // final age = form.control(_ageKey).value as int?;
-                      final dob = form.control(_dobKey).value as DateTime?;
 
                       bloc.add(
                         BeneficiaryRegistrationSaveIndividualDetailsEvent(
