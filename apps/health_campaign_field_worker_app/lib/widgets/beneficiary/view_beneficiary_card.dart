@@ -150,7 +150,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       cellKey: 'age',
                     ),
                     TableData(
-                      individualModel.gender!.name,
+                      individualModel.gender?.name ?? '',
                       cellKey: 'gender',
                     ),
                   ],
