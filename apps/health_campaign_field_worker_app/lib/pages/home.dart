@@ -7,10 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../models/entities/household.dart';
-import '../models/entities/household_member.dart';
-import '../models/entities/individual.dart';
-import '../models/entities/project_beneficiary.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -131,8 +128,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                         description: localizations
                             .translate(i18.home.dataSyncInfoContent)
                             .replaceAll('{}', count.toString()),
-                        title:
-                            localizations.translate(i18.home.dataSyncInfoLabel),
+                        title: localizations.translate(
+                          i18.home.dataSyncInfoLabel,
+                        ),
                       ),
               );
             },
@@ -204,6 +202,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   LocalRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
+              context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -216,6 +215,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   RemoteRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
+              context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
             ],
           ),
         );
