@@ -77,7 +77,11 @@ class _HouseholdOverviewPageState
                                             action: () async {
                                               final bloc = context.read<
                                                   HouseholdOverviewBloc>();
-                                              await context.router.push(
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop();
+                                              await context.router.root.push(
                                                 BeneficiaryRegistrationWrapperRoute(
                                                   isEditing: true,
                                                   householdMemberWrapper: state
@@ -181,6 +185,32 @@ class _HouseholdOverviewPageState
                                 children: state.householdMemberWrapper.members
                                     .map(
                                       (e) => MemberCard(
+                                        secondaryAction: () async {
+                                          final bloc =
+                                              ctx.read<HouseholdOverviewBloc>();
+
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+
+                                          await context.router.root.push(
+                                            BeneficiaryRegistrationWrapperRoute(
+                                              children: [
+                                                IndividualDetailsRoute(
+                                                  isHeadOfHousehold: false,
+                                                ),
+                                              ],
+                                              householdMemberWrapper:
+                                                  state.householdMemberWrapper,
+                                              isEditing: true,
+                                            ),
+                                          );
+
+                                          bloc.add(
+                                            const HouseholdOverviewReloadEvent(),
+                                          );
+                                        },
                                         primaryAction: () {
                                           ctx.read<HouseholdOverviewBloc>().add(
                                                 HouseholdOverviewSetAsHeadEvent(
@@ -199,19 +229,9 @@ class _HouseholdOverviewPageState
                                         name: e.name?.givenName ?? ' - ',
                                         age: (e.dateOfBirth == null
                                                 ? null
-                                                : int.tryParse(
-                                                    (DateTime.now()
-                                                                .difference(
-                                                                  DateFormat(
-                                                                    'dd/MM/yyyy',
-                                                                  ).parse(e
-                                                                      .dateOfBirth!),
-                                                                )
-                                                                .inDays /
-                                                            365)
-                                                        .round()
-                                                        .toStringAsFixed(0),
-                                                  )) ??
+                                                : DateFormat('dd/MM/yyyy')
+                                                    .parse(e.dateOfBirth!)
+                                                    .age) ??
                                             0,
                                         gender: e.gender?.name ?? ' - ',
                                         isDelivered: false,
