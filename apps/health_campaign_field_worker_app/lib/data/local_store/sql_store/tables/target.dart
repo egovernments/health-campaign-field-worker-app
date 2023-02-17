@@ -10,6 +10,7 @@ class Target extends Table {
   TextColumn get target => text().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer()();
   
 

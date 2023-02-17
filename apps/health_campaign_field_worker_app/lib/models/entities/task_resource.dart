@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   TaskResourceSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -26,6 +28,7 @@ class TaskResourceModel extends EntityModel {
   final String? deliveryComment;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -37,6 +40,7 @@ class TaskResourceModel extends EntityModel {
     this.deliveryComment,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -50,6 +54,7 @@ class TaskResourceModel extends EntityModel {
       deliveryComment: Value(deliveryComment),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

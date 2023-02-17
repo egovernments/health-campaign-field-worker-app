@@ -12,6 +12,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? projectId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -21,6 +22,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
     this.projectId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -47,6 +49,7 @@ class ProjectStaffModel extends EntityModel {
   final String? channel;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
@@ -59,6 +62,7 @@ class ProjectStaffModel extends EntityModel {
     this.channel,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     int? startDate,
     int? endDate,
@@ -85,6 +89,7 @@ class ProjectStaffModel extends EntityModel {
       channel: Value(channel),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

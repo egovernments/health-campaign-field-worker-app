@@ -13,6 +13,7 @@ class ProductSearchModel extends EntitySearchModel {
   final String? manufacturer;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProductSearchModel({
     this.id,
@@ -21,6 +22,7 @@ class ProductSearchModel extends EntitySearchModel {
     this.manufacturer,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -33,6 +35,7 @@ class ProductModel extends EntityModel {
   final String? manufacturer;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -43,6 +46,7 @@ class ProductModel extends EntityModel {
     this.manufacturer,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -55,6 +59,7 @@ class ProductModel extends EntityModel {
       manufacturer: Value(manufacturer),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
