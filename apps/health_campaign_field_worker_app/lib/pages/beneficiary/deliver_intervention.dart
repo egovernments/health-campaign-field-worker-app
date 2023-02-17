@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recase/recase.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -212,21 +215,33 @@ class _DeliverInterventionPageState
                                   ): () {
                                     final dob = householdMemberWrapper
                                         .headOfHousehold.dateOfBirth;
-                                    if (dob == null || dob.isEmpty) {}
+                                    if (dob == null || dob.isEmpty) {
+                                      return '';
+                                    }
+
+                                    final date =
+                                        DateFormat('dd/MM/yyyy').parse(dob);
+
+                                    return date.age.toString();
                                   }(),
                                   localizations.translate(
                                     i18.common.coreCommonGender,
-                                  ): "Male",
+                                  ): householdMemberWrapper.headOfHousehold
+                                          .gender?.name.sentenceCase ??
+                                      '',
                                   localizations.translate(
                                     i18.common.coreCommonMobileNumber,
-                                  ): "+258 576478",
+                                  ): householdMemberWrapper
+                                      .headOfHousehold.mobileNumber,
                                 },
                               ),
                               DigitTableCard(
                                 element: {
                                   localizations.translate(
                                     i18.deliverIntervention.memberCountText,
-                                  ): '05',
+                                  ): householdMemberWrapper
+                                          .household.memberCount ??
+                                      householdMemberWrapper.members.length,
                                 },
                               ),
                               const DigitDivider(),
@@ -234,7 +249,13 @@ class _DeliverInterventionPageState
                                 element: {
                                   localizations.translate(i18
                                       .deliverIntervention
-                                      .noOfResourcesForDelivery): "03",
+                                      .noOfResourcesForDelivery): () {
+                                    final count = householdMemberWrapper
+                                            .household.memberCount ??
+                                        householdMemberWrapper.members.length;
+
+                                    return min(count * 1.8, 3).round();
+                                  }(),
                                 },
                               ),
                               const DigitDivider(),
