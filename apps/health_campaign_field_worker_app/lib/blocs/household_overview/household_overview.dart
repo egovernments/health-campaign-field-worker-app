@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -36,6 +37,94 @@ class HouseholdOverviewBloc
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
     on(_handleSetAsHead);
+    on(_handleReloadMember);
+  }
+
+  FutureOr<void> _handleReloadMember(
+    HouseholdOverviewReloadEvent event,
+    Emitter<HouseholdOverviewState> emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    final members = await householdMemberRepository.search(
+      HouseholdMemberSearchModel(
+        householdClientReferenceId:
+            state.householdMemberWrapper.household.clientReferenceId,
+      ),
+    );
+
+    final groupedHouseholds = members.groupListsBy(
+      (element) => element.householdClientReferenceId,
+    );
+
+    final householdId =
+        state.householdMemberWrapper.household.clientReferenceId;
+
+    if (!groupedHouseholds.containsKey(householdId)) {
+      emit(state.copyWith(loading: false));
+
+      return;
+    }
+
+    final householdMemberList = groupedHouseholds[householdId]!;
+
+    final individualIds = householdMemberList
+        .map((e) => e.individualClientReferenceId)
+        .whereNotNull()
+        .toList();
+
+    final households = await householdRepository.search(
+      HouseholdSearchModel(clientReferenceId: [householdId]),
+    );
+
+    if (households.isEmpty) {
+      emit(state.copyWith(loading: false));
+
+      return;
+    }
+
+    final resultHousehold = households.first;
+    final individuals = await individualRepository.search(
+      IndividualSearchModel(clientReferenceId: individualIds),
+    );
+
+    final head = individuals.firstWhereOrNull(
+      (i) =>
+          i.clientReferenceId ==
+          householdMemberList
+              .firstWhereOrNull((h) => h.isHeadOfHousehold)
+              ?.individualClientReferenceId,
+    );
+
+    if (head == null) {
+      emit(state.copyWith(loading: false));
+
+      return;
+    }
+
+    final projectBeneficiaries = await projectBeneficiaryRepository.search(
+      ProjectBeneficiarySearchModel(
+        beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
+        projectId: '13',
+      ),
+    );
+
+    if (projectBeneficiaries.isEmpty) {
+      emit(state.copyWith(loading: false));
+
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        householdMemberWrapper: HouseholdMemberWrapper(
+          household: resultHousehold,
+          headOfHousehold: head,
+          members: individuals,
+          projectBeneficiary: projectBeneficiaries.first,
+        ),
+        loading: false,
+      ),
+    );
   }
 
   FutureOr<void> _handleDeleteHousehold(
@@ -69,6 +158,8 @@ class HouseholdOverviewBloc
         rowVersion: event.projectBeneficiaryModel.rowVersion + 1,
       ),
     );
+
+    add(const HouseholdOverviewReloadEvent());
   }
 
   FutureOr<void> _handleDeleteIndividual(
@@ -90,6 +181,8 @@ class HouseholdOverviewBloc
         ),
       );
     }
+
+    add(const HouseholdOverviewReloadEvent());
   }
 
   FutureOr<void> _handleSetAsHead(
@@ -132,6 +225,8 @@ class HouseholdOverviewBloc
         ),
       );
     }
+
+    add(const HouseholdOverviewReloadEvent());
   }
 }
 
@@ -152,11 +247,14 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required IndividualModel individualModel,
     required HouseholdModel householdModel,
   }) = HouseholdOverviewSetAsHeadEvent;
+
+  const factory HouseholdOverviewEvent.reload() = HouseholdOverviewReloadEvent;
 }
 
 @freezed
 class HouseholdOverviewState with _$HouseholdOverviewState {
   const factory HouseholdOverviewState({
+    @Default(false) bool loading,
     required HouseholdMemberWrapper householdMemberWrapper,
   }) = _HouseholdOverviewState;
 }
