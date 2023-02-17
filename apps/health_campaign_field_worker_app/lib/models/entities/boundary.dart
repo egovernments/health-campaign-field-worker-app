@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class BoundarySearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   BoundarySearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -27,6 +29,7 @@ class BoundaryModel extends EntityModel {
   final String? materializedPath;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final BoundaryModel? children;
   
@@ -40,6 +43,7 @@ class BoundaryModel extends EntityModel {
     this.materializedPath,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.children,
     super.auditDetails,
@@ -55,6 +59,7 @@ class BoundaryModel extends EntityModel {
       materializedPath: Value(materializedPath),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       children: Value(children?.clientReferenceId),
     );

@@ -11,6 +11,7 @@ class IndividualSearchModel extends EntitySearchModel {
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final NameSearchModel? name;
   final Gender? gender;
   final List<IdentifierSearchModel>? identifiers;
@@ -20,6 +21,7 @@ class IndividualSearchModel extends EntitySearchModel {
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.name,
     this.gender,
     this.identifiers,
@@ -40,6 +42,7 @@ class IndividualModel extends EntityModel {
   final String? photo;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final NameModel? name;
   final BloodGroup? bloodGroup;
@@ -60,6 +63,7 @@ class IndividualModel extends EntityModel {
     this.photo,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.name,
     this.bloodGroup,
@@ -82,6 +86,7 @@ class IndividualModel extends EntityModel {
       photo: Value(photo),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),

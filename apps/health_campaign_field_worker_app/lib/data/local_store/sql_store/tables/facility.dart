@@ -10,6 +10,7 @@ class Facility extends Table {
   IntColumn get storageCapacity => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer()();
   
 
