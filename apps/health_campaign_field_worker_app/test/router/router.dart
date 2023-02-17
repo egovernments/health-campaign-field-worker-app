@@ -8,6 +8,8 @@ import 'package:health_campaign_field_worker_app/pages/beneficiary_registration/
 
 import '';
 
+import '';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'router.gr.dart';

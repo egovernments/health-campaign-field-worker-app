@@ -69,16 +69,8 @@ class SearchHouseholdsBloc
           isHeadOfHousehold: true,
         ),
       );
-
-      for (final member in members) {
-        final allHouseholdMembers = await householdMember.search(
-          HouseholdMemberSearchModel(
-            householdClientReferenceId: member.householdClientReferenceId,
-          ),
-        );
-
-        householdMembers.addAll(allHouseholdMembers);
-      }
+      if (members.isEmpty) continue;
+      householdMembers.addAll(members);
     }
 
     final containers = <HouseholdMemberWrapper>[];
