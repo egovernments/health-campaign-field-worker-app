@@ -33,6 +33,10 @@ class HouseholdMemberLocalRepository
                   sql.householdMember.individualId.equals(
                     query.individualId,
                   ),
+                if (query.isHeadOfHousehold != null)
+                  sql.householdMember.isHeadOfHousehold.equals(
+                    query.isHeadOfHousehold,
+                  ),
               ],
             ),
           ))

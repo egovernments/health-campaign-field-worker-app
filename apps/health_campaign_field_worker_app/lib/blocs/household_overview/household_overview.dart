@@ -103,20 +103,26 @@ class HouseholdOverviewBloc
     );
 
     final updatedMembers = members.map((i) {
-      return i.individualClientReferenceId ==
-              event.individualModel.clientReferenceId
-          ? (i.isHeadOfHousehold ?? true)
-              ? i
-              : i.copyWith(
-                  isHeadOfHousehold: true,
-                  rowVersion: i.rowVersion + 1,
-                )
-          : (i.isHeadOfHousehold ?? false)
-              ? i
-              : i.copyWith(
-                  isHeadOfHousehold: false,
-                  rowVersion: i.rowVersion + 1,
-                );
+      final individualId = event.individualModel.clientReferenceId;
+      final memberId = i.individualClientReferenceId;
+
+      if (individualId == memberId) {
+        if (!i.isHeadOfHousehold) {
+          return i.copyWith(
+            isHeadOfHousehold: true,
+            rowVersion: i.rowVersion + 1,
+          );
+        }
+      } else {
+        if (i.isHeadOfHousehold) {
+          return i.copyWith(
+            isHeadOfHousehold: false,
+            rowVersion: i.rowVersion + 1,
+          );
+        }
+      }
+
+      return i;
     }).toList();
 
     for (final element in updatedMembers) {
