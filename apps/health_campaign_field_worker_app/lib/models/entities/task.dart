@@ -10,6 +10,7 @@ class TaskSearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
+  final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
   final List<String>? clientReferenceId;
@@ -24,6 +25,7 @@ class TaskSearchModel extends EntitySearchModel {
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
+    this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
     this.clientReferenceId,
@@ -66,6 +68,7 @@ class TaskModel extends EntityModel {
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
+  final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
   final String clientReferenceId;
@@ -85,6 +88,7 @@ class TaskModel extends EntityModel {
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
+    this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
     required this.clientReferenceId,
@@ -136,6 +140,7 @@ class TaskModel extends EntityModel {
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
+      projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
       createdBy: Value(createdBy),
       status: Value(status),
       clientReferenceId: Value(clientReferenceId),
