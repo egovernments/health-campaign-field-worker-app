@@ -9,14 +9,10 @@ import '../../models/data_model.dart';
 
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
   final String? searchQuery;
-  final bool isEditing;
-  final HouseholdMemberWrapper? householdMemberWrapper;
 
   const BeneficiaryRegistrationWrapperPage({
     Key? key,
     this.searchQuery,
-    this.isEditing = false,
-    this.householdMemberWrapper,
   }) : super(key: key);
 
   @override
@@ -36,15 +32,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(
-        BeneficiaryRegistrationState(
-          searchQuery: searchQuery,
-          householdModel: householdMemberWrapper?.household,
-          individualModel: householdMemberWrapper?.headOfHousehold,
-          isEditing: isEditing,
-          registrationDate:
-              householdMemberWrapper?.projectBeneficiary.dateOfRegistrationTime,
-          addressModel: householdMemberWrapper?.household.address,
-        ),
+        BeneficiaryRegistrationState(searchQuery: searchQuery),
         individualRepository: individual,
         householdRepository: household,
         householdMemberRepository: householdMember,
