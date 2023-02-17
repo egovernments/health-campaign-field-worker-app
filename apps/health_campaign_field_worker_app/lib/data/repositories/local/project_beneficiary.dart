@@ -12,9 +12,11 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   Future<List<OpLogEntry<ProjectBeneficiaryModel>>> getItemsToBeSynced() async {
     final entries = await super.getItemsToBeSynced();
 
-    return entries
-        .where((element) => element.entity.beneficiaryId != null)
-        .toList();
+    return entries;
+    //   return entries
+    //       .where((element) => element.entity.beneficiaryId != null)
+    //       .toList();
+    // }
   }
 
   @override

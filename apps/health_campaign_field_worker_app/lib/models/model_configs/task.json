@@ -18,6 +18,11 @@
       "includeForQuery": true
     },
     {
+      "name": "projectBeneficiaryClientReferenceId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "createdBy",
       "type": "String",
       "includeForQuery": true
