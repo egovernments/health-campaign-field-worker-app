@@ -38,7 +38,7 @@ class HouseholdMemberModel extends EntityModel {
   final String? householdClientReferenceId;
   final String? individualId;
   final String? individualClientReferenceId;
-  final bool? isHeadOfHousehold;
+  final bool isHeadOfHousehold;
   final String clientReferenceId;
   final String tenantId;
   final bool? isDeleted;
@@ -51,7 +51,7 @@ class HouseholdMemberModel extends EntityModel {
     this.householdClientReferenceId,
     this.individualId,
     this.individualClientReferenceId,
-    this.isHeadOfHousehold,
+    required this.isHeadOfHousehold,
     required this.clientReferenceId,
     required this.tenantId,
     this.isDeleted,
