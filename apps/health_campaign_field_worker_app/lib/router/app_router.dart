@@ -48,8 +48,6 @@ part 'app_router.gr.dart';
       children: [
         AutoRoute(page: HomePage, path: ''),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
-        AutoRoute(page: HouseholdOverviewPage, path: 'household-overview'),
-        AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
         AutoRoute(
           page: BeneficiaryRegistrationWrapperPage,
           path: 'beneficiary-registration',
@@ -60,6 +58,21 @@ part 'app_router.gr.dart';
               page: HouseholdLocationPage,
               path: 'household-location',
               initial: true,
+            ),
+          ],
+        ),
+        AutoRoute(
+          page: BeneficiaryWrapperPage,
+          path: 'beneficiary',
+          children: [
+            AutoRoute(
+              page: HouseholdOverviewPage,
+              path: 'overview',
+              initial: true,
+            ),
+            AutoRoute(
+              page: DeliverInterventionPage,
+              path: 'deliver-intervention',
             ),
           ],
         ),

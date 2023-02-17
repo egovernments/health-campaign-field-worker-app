@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import '../blocs/selected_households/selected_households.dart';
 import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/sync/sync.dart';
