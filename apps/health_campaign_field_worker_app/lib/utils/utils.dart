@@ -33,3 +33,9 @@ class IdGen {
 
   String get identifier => uuid.v1();
 }
+
+extension DateAgeExtension on DateTime {
+  int get age {
+    return (DateTime.now().difference(this).inDays / 365).round();
+  }
+}
