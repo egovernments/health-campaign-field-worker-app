@@ -7,6 +7,7 @@ class Task extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get projectBeneficiaryId => text().nullable()();
+  TextColumn get projectBeneficiaryClientReferenceId => text().nullable()();
   TextColumn get createdBy => text().nullable()();
   TextColumn get status => text().nullable()();
   TextColumn get clientReferenceId => text()();

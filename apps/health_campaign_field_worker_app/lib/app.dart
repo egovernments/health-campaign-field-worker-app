@@ -55,10 +55,7 @@ class MainApplication extends StatelessWidget {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read())
-                  ..add(AuthAutoLoginEvent(
-                    tenantId: envConfig.variables.tenantId,
-                  )),
+                create: (ctx) => AuthBloc(authRepository: ctx.read()),
               ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
