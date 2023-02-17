@@ -12,6 +12,7 @@ class MemberCard extends StatelessWidget {
   final bool isHead;
   final bool isDelivered;
   final VoidCallback primaryAction;
+  final VoidCallback secondaryAction;
   final AppLocalizations localizations;
 
   const MemberCard({
@@ -19,6 +20,7 @@ class MemberCard extends StatelessWidget {
     required this.name,
     required this.gender,
     required this.age,
+    required this.secondaryAction,
     this.isHead = false,
     required this.localizations,
     required this.isDelivered,
@@ -99,9 +101,7 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.editIndividualDetails,
                           ),
-                          action: () {
-                            // TODO: Complete implementation
-                          },
+                          action: secondaryAction,
                         ),
                         ActionCardModel(
                           icon: Icons.delete,
