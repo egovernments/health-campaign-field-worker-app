@@ -44,49 +44,61 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 footer: SizedBox(
                   height: 90,
                   child: DigitCard(
-                    child: DigitElevatedButton(
-                      onPressed: () {
-                        form.markAllAsTouched();
-                        if (!form.valid) return;
+                    child: BlocBuilder<BeneficiaryRegistrationBloc,
+                        BeneficiaryRegistrationState>(
+                      builder: (context, beneficiaryRegistrationState) {
+                        return DigitElevatedButton(
+                          onPressed: () {
+                            form.markAllAsTouched();
+                            if (!form.valid) return;
 
-                        final memberCount =
-                            form.control(_memberCountKey).value as int;
+                            final memberCount =
+                                form.control(_memberCountKey).value as int;
 
-                        final dateOfRegistration = form
-                            .control(_dateOfRegistrationKey)
-                            .value as DateTime;
+                            final dateOfRegistration = form
+                                .control(_dateOfRegistrationKey)
+                                .value as DateTime;
 
-                        final bloc =
-                            context.read<BeneficiaryRegistrationBloc>();
-                        final household =
-                            (beneficiaryRegistrationState.householdModel ??
-                                    HouseholdModel(
-                                      tenantId: envConfig.variables.tenantId,
-                                      clientReferenceId: IdGen.i.identifier,
-                                      rowVersion: 1,
-                                    ))
-                                .copyWith(
-                          memberCount: memberCount,
-                          address: bloc.state.addressModel,
-                        );
+                            final bloc =
+                                context.read<BeneficiaryRegistrationBloc>();
+                            final household =
+                                (beneficiaryRegistrationState.householdModel ??
+                                        HouseholdModel(
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          clientReferenceId: IdGen.i.identifier,
+                                          rowVersion: 1,
+                                        ))
+                                    .copyWith(
+                              memberCount: memberCount,
+                              address: bloc.state.addressModel,
+                            );
 
-                        bloc.add(
-                          BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                            household: household,
-                            registrationDate: dateOfRegistration,
+                            bloc.add(
+                              BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                                household: household,
+                                registrationDate: dateOfRegistration,
+                              ),
+                            );
+
+                            if (beneficiaryRegistrationState.isEditing) {
+                              bloc.add(
+                                const BeneficiaryRegistrationSubmitEvent(),
+                              );
+                            } else {
+                              context.router.push(
+                                IndividualDetailsRoute(isHeadOfHousehold: true),
+                              );
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.householdDetails.actionLabel),
+                            ),
                           ),
                         );
-
-                        context.router.push(
-                          IndividualDetailsRoute(isHeadOfHousehold: true),
-                        );
                       },
-                      child: Center(
-                        child: Text(
-                          localizations
-                              .translate(i18.householdDetails.actionLabel),
-                        ),
-                      ),
                     ),
                   ),
                 ),

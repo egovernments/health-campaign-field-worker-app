@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../blocs/search_households/search_households.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -77,7 +80,16 @@ class _HouseholdOverviewPageState
                                     .householdOverViewEditLabel,
                               ),
                               action: () {
-                                // TODO: Complete implementation
+                                context.router.push(
+                                  BeneficiaryRegistrationWrapperRoute(
+                                    isEditing: true,
+                                    householdMemberWrapper:
+                                        householdMemberWrapper,
+                                    children: [
+                                      HouseholdLocationRoute(),
+                                    ],
+                                  ),
+                                );
                               },
                             ),
                             ActionCardModel(
@@ -185,7 +197,16 @@ class _HouseholdOverviewPageState
                     onPressed: () {
                       context.router.push(
                         BeneficiaryRegistrationWrapperRoute(
-                          householdMemberWrapper: householdMemberWrapper,
+                          householdMemberWrapper:
+                              householdMemberWrapper.copyWith(
+                            members: [],
+                            headOfHousehold: IndividualModel(
+                              clientReferenceId: IdGen.i.identifier,
+                              tenantId: envConfig.variables.tenantId,
+                              rowVersion: 1,
+                            ),
+                          ),
+                          isEditing: true,
                           children: [
                             IndividualDetailsRoute(),
                           ],
