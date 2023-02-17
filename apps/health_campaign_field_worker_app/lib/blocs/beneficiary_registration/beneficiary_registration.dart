@@ -103,17 +103,17 @@ class BeneficiaryRegistrationBloc
             beneficiaryClientReferenceId: household.clientReferenceId,
           ),
         );
-        await householdMemberRepository.create(
-          HouseholdMemberModel(
-            householdClientReferenceId: household.clientReferenceId,
-            individualClientReferenceId: individual.clientReferenceId,
-            isHeadOfHousehold: state.isHeadOfHousehold,
-            tenantId: envConfig.variables.tenantId,
-            rowVersion: 1,
-            clientReferenceId: IdGen.i.identifier,
-          ),
-        );
       }
+      await householdMemberRepository.create(
+        HouseholdMemberModel(
+          householdClientReferenceId: household.clientReferenceId,
+          individualClientReferenceId: individual.clientReferenceId,
+          isHeadOfHousehold: state.isHeadOfHousehold,
+          tenantId: envConfig.variables.tenantId,
+          rowVersion: 1,
+          clientReferenceId: IdGen.i.identifier,
+        ),
+      );
     } catch (error) {
       rethrow;
     } finally {
