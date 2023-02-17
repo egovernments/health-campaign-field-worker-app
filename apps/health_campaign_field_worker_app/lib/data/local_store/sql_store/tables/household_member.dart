@@ -9,7 +9,7 @@ class HouseholdMember extends Table {
   TextColumn get householdClientReferenceId => text().nullable()();
   TextColumn get individualId => text().nullable()();
   TextColumn get individualClientReferenceId => text().nullable()();
-  BoolColumn get isHeadOfHousehold => boolean().nullable()();
+  BoolColumn get isHeadOfHousehold => boolean()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
   BoolColumn get isDeleted => boolean().nullable()();
