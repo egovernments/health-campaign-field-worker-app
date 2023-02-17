@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class AddressSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   AddressSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -33,6 +35,7 @@ class AddressModel extends EntityModel {
   final String? street;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final BoundaryModel? locality;
   final AddressType? type;
@@ -53,6 +56,7 @@ class AddressModel extends EntityModel {
     this.street,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.locality,
     this.type,
@@ -75,6 +79,7 @@ class AddressModel extends EntityModel {
       street: Value(street),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       type: Value(type),
       locality: Value(locality?.clientReferenceId),

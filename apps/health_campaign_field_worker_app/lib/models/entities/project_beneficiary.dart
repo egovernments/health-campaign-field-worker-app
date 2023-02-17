@@ -13,6 +13,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? beneficiaryClientReferenceId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? dateOfRegistrationTime;
   
   ProjectBeneficiarySearchModel({
@@ -22,6 +23,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.beneficiaryClientReferenceId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? dateOfRegistration,
     super.boundaryCode,
   }): dateOfRegistrationTime = dateOfRegistration == null
@@ -41,6 +43,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? beneficiaryClientReferenceId;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final DateTime? dateOfRegistrationTime;
   
@@ -52,6 +55,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.beneficiaryClientReferenceId,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     int? dateOfRegistration,
     super.auditDetails,
@@ -71,6 +75,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       beneficiaryClientReferenceId: Value(beneficiaryClientReferenceId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       dateOfRegistration: Value(dateOfRegistration),
       );

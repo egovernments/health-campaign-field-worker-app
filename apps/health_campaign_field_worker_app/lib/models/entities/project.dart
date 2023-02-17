@@ -16,6 +16,7 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? referenceId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -29,6 +30,7 @@ class ProjectSearchModel extends EntitySearchModel {
     this.referenceId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -60,6 +62,7 @@ class ProjectModel extends EntityModel {
   final String? projectHierarchy;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
@@ -80,6 +83,7 @@ class ProjectModel extends EntityModel {
     this.projectHierarchy,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.address,
     this.targets,
@@ -114,6 +118,7 @@ class ProjectModel extends EntityModel {
       projectHierarchy: Value(projectHierarchy),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

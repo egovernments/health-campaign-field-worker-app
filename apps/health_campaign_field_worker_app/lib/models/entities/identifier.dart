@@ -11,12 +11,14 @@ class IdentifierSearchModel extends EntitySearchModel {
   final String? identifierId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   IdentifierSearchModel({
     this.identifierType,
     this.identifierId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -27,6 +29,7 @@ class IdentifierModel extends EntityModel {
   final String? identifierId;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -35,6 +38,7 @@ class IdentifierModel extends EntityModel {
     this.identifierId,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -45,6 +49,7 @@ class IdentifierModel extends EntityModel {
       identifierId: Value(identifierId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

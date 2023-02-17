@@ -13,6 +13,7 @@ class FacilitySearchModel extends EntitySearchModel {
   final int? storageCapacity;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   FacilitySearchModel({
     this.id,
@@ -21,6 +22,7 @@ class FacilitySearchModel extends EntitySearchModel {
     this.storageCapacity,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -33,6 +35,7 @@ class FacilityModel extends EntityModel {
   final int? storageCapacity;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final AddressModel? address;
   
@@ -44,6 +47,7 @@ class FacilityModel extends EntityModel {
     this.storageCapacity,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.address,
     super.auditDetails,
@@ -57,6 +61,7 @@ class FacilityModel extends EntityModel {
       storageCapacity: Value(storageCapacity),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

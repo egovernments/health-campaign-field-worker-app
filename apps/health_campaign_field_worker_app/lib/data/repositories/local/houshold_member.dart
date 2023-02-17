@@ -38,21 +38,26 @@ class HouseholdMemberLocalRepository
           ))
         .get();
 
-    return results.map((e) {
-      final householdMember = e.readTable(sql.householdMember);
+    return results
+        .map((e) {
+          final householdMember = e.readTable(sql.householdMember);
 
-      return HouseholdMemberModel(
-        householdId: householdMember.householdId,
-        householdClientReferenceId: householdMember.householdClientReferenceId,
-        individualId: householdMember.individualId,
-        individualClientReferenceId:
-            householdMember.individualClientReferenceId,
-        isHeadOfHousehold: householdMember.isHeadOfHousehold,
-        tenantId: householdMember.tenantId,
-        rowVersion: householdMember.rowVersion,
-        clientReferenceId: householdMember.clientReferenceId,
-      );
-    }).toList();
+          return HouseholdMemberModel(
+            householdId: householdMember.householdId,
+            householdClientReferenceId:
+                householdMember.householdClientReferenceId,
+            individualId: householdMember.individualId,
+            individualClientReferenceId:
+                householdMember.individualClientReferenceId,
+            isHeadOfHousehold: householdMember.isHeadOfHousehold,
+            isDeleted: householdMember.isDeleted,
+            tenantId: householdMember.tenantId,
+            rowVersion: householdMember.rowVersion,
+            clientReferenceId: householdMember.clientReferenceId,
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
@@ -80,6 +85,25 @@ class HouseholdMemberLocalRepository
     });
 
     await super.update(entity);
+  }
+
+  @override
+  FutureOr<void> delete(HouseholdMemberModel entity) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion + 1,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.householdMember,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override

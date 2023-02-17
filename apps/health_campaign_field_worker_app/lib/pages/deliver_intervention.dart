@@ -91,7 +91,8 @@ class _DeliverInterventionPageState
                                       tenantId: envConfig.variables.tenantId,
                                       quantity: form
                                           .control('quantityDistributed')
-                                          .value,
+                                          .value
+                                          .toString(),
                                       productVariantId:
                                           'PVAR-2023-02-15-000048',
                                       deliveryComment:

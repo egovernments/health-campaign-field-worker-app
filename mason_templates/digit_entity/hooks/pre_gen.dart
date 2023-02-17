@@ -48,6 +48,20 @@ void run(HookContext context) {
   }
 
   if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'isDeleted') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'isDeleted',
+        type: 'bool',
+        includeForQuery: true,
+        includeForEntity: true,
+        nullable: true,
+      ),
+    );
+  }
+
+  if (model.attributes
           .firstWhereOrNull((element) => element.name == 'rowVersion') ==
       null) {
     model = model.copyWith.attributes.add(

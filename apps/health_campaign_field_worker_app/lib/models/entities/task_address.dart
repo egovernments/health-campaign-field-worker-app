@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskAddressSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   TaskAddressSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -21,6 +23,7 @@ class TaskAddressSearchModel extends EntitySearchModel {
 class TaskAddressModel extends EntityModel {
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final TaskModel? task;
   final AddressModel? address;
@@ -29,6 +32,7 @@ class TaskAddressModel extends EntityModel {
   TaskAddressModel({
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.task,
     this.address,
@@ -39,6 +43,7 @@ class TaskAddressModel extends EntityModel {
     return TaskAddressCompanion(
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       task: Value(task?.clientReferenceId),
     address: Value(address?.clientReferenceId),

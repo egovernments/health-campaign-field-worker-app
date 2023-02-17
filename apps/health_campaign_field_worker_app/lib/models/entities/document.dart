@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class DocumentSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   DocumentSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -25,6 +27,7 @@ class DocumentModel extends EntityModel {
   final String? documentUid;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -35,6 +38,7 @@ class DocumentModel extends EntityModel {
     this.documentUid,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -47,6 +51,7 @@ class DocumentModel extends EntityModel {
       documentUid: Value(documentUid),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

@@ -42,20 +42,23 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           ])))
         .get();
 
-    return results.map((e) {
-      final task = e.readTable(sql.task);
+    return results
+        .map((e) {
+          final task = e.readTable(sql.task);
 
-      return TaskModel(
-        clientReferenceId: task.clientReferenceId,
-        rowVersion: task.rowVersion,
-        tenantId: task.tenantId,
-        // TODO: Remove this hardcoded project
-        projectId: '',
-
-        projectBeneficiaryId: task.projectBeneficiaryId,
-        createdDate: task.createdDate,
-      );
-    }).toList();
+          return TaskModel(
+            clientReferenceId: task.clientReferenceId,
+            rowVersion: task.rowVersion,
+            tenantId: task.tenantId,
+            isDeleted: task.isDeleted,
+            // TODO: Remove this hardcoded project
+            projectId: '13',
+            projectBeneficiaryId: task.projectBeneficiaryId,
+            createdDate: task.createdDate,
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
@@ -121,6 +124,25 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     });
 
     await super.update(entity);
+  }
+
+  @override
+  FutureOr<void> delete(TaskModel entity) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion + 1,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.task,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override

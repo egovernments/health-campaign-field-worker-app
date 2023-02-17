@@ -14,6 +14,7 @@ class TaskSearchModel extends EntitySearchModel {
   final String? status;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
@@ -27,6 +28,7 @@ class TaskSearchModel extends EntitySearchModel {
     this.status,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
@@ -68,6 +70,7 @@ class TaskModel extends EntityModel {
   final String? status;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;
@@ -86,6 +89,7 @@ class TaskModel extends EntityModel {
     this.status,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.resources,
     this.address,
@@ -136,6 +140,7 @@ class TaskModel extends EntityModel {
       status: Value(status),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       plannedStartDate: Value(plannedStartDate),
       plannedEndDate: Value(plannedEndDate),

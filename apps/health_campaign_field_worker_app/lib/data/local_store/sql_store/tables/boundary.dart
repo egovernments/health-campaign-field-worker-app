@@ -13,6 +13,7 @@ class Boundary extends Table {
   TextColumn get materializedPath => text().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer()();
   
   TextColumn get children => text().nullable().references(Boundary, #clientReferenceId)();

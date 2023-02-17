@@ -12,6 +12,7 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? projectId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProjectFacilitySearchModel({
     this.id,
@@ -19,6 +20,7 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
     this.projectId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -30,6 +32,7 @@ class ProjectFacilityModel extends EntityModel {
   final String? projectId;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -39,6 +42,7 @@ class ProjectFacilityModel extends EntityModel {
     this.projectId,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -50,6 +54,7 @@ class ProjectFacilityModel extends EntityModel {
       projectId: Value(projectId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

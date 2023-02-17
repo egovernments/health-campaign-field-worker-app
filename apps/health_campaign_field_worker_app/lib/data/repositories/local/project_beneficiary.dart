@@ -55,21 +55,25 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           ))
         .get();
 
-    return results.map((e) {
-      final projectBeneficiary = e.readTable(sql.projectBeneficiary);
+    return results
+        .map((e) {
+          final projectBeneficiary = e.readTable(sql.projectBeneficiary);
 
-      return ProjectBeneficiaryModel(
-        clientReferenceId: projectBeneficiary.clientReferenceId,
-        tenantId: projectBeneficiary.tenantId,
-        rowVersion: projectBeneficiary.rowVersion,
-        id: projectBeneficiary.id,
-        beneficiaryClientReferenceId:
-            projectBeneficiary.beneficiaryClientReferenceId,
-        beneficiaryId: projectBeneficiary.beneficiaryId,
-        dateOfRegistration: projectBeneficiary.dateOfRegistration,
-        projectId: projectBeneficiary.projectId,
-      );
-    }).toList();
+          return ProjectBeneficiaryModel(
+            clientReferenceId: projectBeneficiary.clientReferenceId,
+            tenantId: projectBeneficiary.tenantId,
+            rowVersion: projectBeneficiary.rowVersion,
+            id: projectBeneficiary.id,
+            isDeleted: projectBeneficiary.isDeleted,
+            beneficiaryClientReferenceId:
+                projectBeneficiary.beneficiaryClientReferenceId,
+            beneficiaryId: projectBeneficiary.beneficiaryId,
+            dateOfRegistration: projectBeneficiary.dateOfRegistration,
+            projectId: projectBeneficiary.projectId,
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
@@ -97,6 +101,25 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     });
 
     return super.update(entity);
+  }
+
+  @override
+  FutureOr<void> delete(ProjectBeneficiaryModel entity) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion + 1,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.projectBeneficiary,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override
