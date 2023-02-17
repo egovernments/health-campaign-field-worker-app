@@ -11,12 +11,14 @@ class ProjectResourceSearchModel extends EntitySearchModel {
   final String? projectId;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProjectResourceSearchModel({
     this.id,
     this.projectId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -27,6 +29,7 @@ class ProjectResourceModel extends EntityModel {
   final String? projectId;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final ProjectProductVariantModel? resources;
   
@@ -36,6 +39,7 @@ class ProjectResourceModel extends EntityModel {
     this.projectId,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.resources,
     super.auditDetails,
@@ -47,6 +51,7 @@ class ProjectResourceModel extends EntityModel {
       projectId: Value(projectId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

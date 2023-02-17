@@ -12,6 +12,7 @@ class NameSearchModel extends EntitySearchModel {
   final String? otherNames;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   NameSearchModel({
     this.givenName,
@@ -19,6 +20,7 @@ class NameSearchModel extends EntitySearchModel {
     this.otherNames,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -30,6 +32,7 @@ class NameModel extends EntityModel {
   final String? otherNames;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -39,6 +42,7 @@ class NameModel extends EntityModel {
     this.otherNames,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -50,6 +54,7 @@ class NameModel extends EntityModel {
       otherNames: Value(otherNames),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

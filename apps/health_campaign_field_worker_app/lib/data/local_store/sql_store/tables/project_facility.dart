@@ -9,6 +9,7 @@ class ProjectFacility extends Table {
   TextColumn get projectId => text().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer()();
   
 

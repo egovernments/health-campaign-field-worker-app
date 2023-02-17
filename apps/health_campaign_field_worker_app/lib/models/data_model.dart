@@ -10,7 +10,6 @@ export 'entities/boundary.dart';
 export 'entities/document.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
-export 'entities/status.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -25,6 +24,7 @@ export 'entities/project_product_variant.dart';
 export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
+export 'entities/status.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
@@ -40,9 +40,8 @@ abstract class DataModel {
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
-  final bool isDeleted;
 
-  const EntityModel({this.auditDetails, this.isDeleted = false});
+  const EntityModel({this.auditDetails});
 }
 
 @MappableClass()

@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class IndividualNameSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   IndividualNameSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -21,6 +23,7 @@ class IndividualNameSearchModel extends EntitySearchModel {
 class IndividualNameModel extends EntityModel {
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final IndividualModel? individual;
   final NameModel? name;
@@ -29,6 +32,7 @@ class IndividualNameModel extends EntityModel {
   IndividualNameModel({
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.individual,
     this.name,
@@ -39,6 +43,7 @@ class IndividualNameModel extends EntityModel {
     return IndividualNameCompanion(
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       individual: Value(individual?.clientReferenceId),
     name: Value(name?.clientReferenceId),

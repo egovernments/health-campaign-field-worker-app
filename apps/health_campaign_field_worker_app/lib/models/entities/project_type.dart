@@ -9,10 +9,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ProjectTypeSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProjectTypeSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -28,6 +30,7 @@ class ProjectTypeModel extends EntityModel {
   final List<String>? taskProcedure;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   final List<ProjectProductVariantModel>? resources;
   
@@ -42,6 +45,7 @@ class ProjectTypeModel extends EntityModel {
     this.taskProcedure,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     this.resources,
     super.auditDetails,
@@ -58,6 +62,7 @@ class ProjectTypeModel extends EntityModel {
       taskProcedure: Value(taskProcedure?.toString()),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

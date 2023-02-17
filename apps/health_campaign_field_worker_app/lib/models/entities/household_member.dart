@@ -15,6 +15,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final bool? isHeadOfHousehold;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   HouseholdMemberSearchModel({
     this.id,
@@ -25,6 +26,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
@@ -39,6 +41,7 @@ class HouseholdMemberModel extends EntityModel {
   final bool? isHeadOfHousehold;
   final String clientReferenceId;
   final String tenantId;
+  final bool? isDeleted;
   final int rowVersion;
   
 
@@ -51,6 +54,7 @@ class HouseholdMemberModel extends EntityModel {
     this.isHeadOfHousehold,
     required this.clientReferenceId,
     required this.tenantId,
+    this.isDeleted,
     required this.rowVersion,
     super.auditDetails,
   }):  super();
@@ -65,6 +69,7 @@ class HouseholdMemberModel extends EntityModel {
       isHeadOfHousehold: Value(isHeadOfHousehold),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
