@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../action_card/action_card.dart';
@@ -10,6 +11,7 @@ class MemberCard extends StatelessWidget {
   final int age;
   final bool isHead;
   final bool isDelivered;
+  final VoidCallback primaryAction;
   final AppLocalizations localizations;
 
   const MemberCard({
@@ -20,6 +22,7 @@ class MemberCard extends StatelessWidget {
     this.isHead = false,
     required this.localizations,
     required this.isDelivered,
+    required this.primaryAction,
   });
 
   @override
@@ -89,9 +92,7 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.assignAsHouseholdhead,
                           ),
-                          action: () {
-                            // TODO: Complete implementation
-                          },
+                          action: primaryAction,
                         ),
                         ActionCardModel(
                           icon: Icons.edit,
