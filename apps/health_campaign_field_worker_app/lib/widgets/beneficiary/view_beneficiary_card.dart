@@ -80,7 +80,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: () => context.router.push(
-                    BeneficiaryWrapperRoute(wrapper: householdMember),
+                    HouseholdOverviewRoute(
+                      householdMemberWrapper: householdMember,
+                    ),
                   ),
                 ),
               ),
