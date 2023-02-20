@@ -79,7 +79,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<void> create(ProjectBeneficiaryModel entity) async {
+  FutureOr<void> create(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {
       batch.insert(sql.projectBeneficiary, projectBeneficiaryCompanion);
@@ -89,7 +92,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<void> update(ProjectBeneficiaryModel entity) async {
+  FutureOr<void> update(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
     final projectBeneficiaryCompanion = entity.companion;
 
     await sql.batch((batch) {
@@ -106,7 +112,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<void> delete(ProjectBeneficiaryModel entity) async {
+  FutureOr<void> delete(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion + 1,
