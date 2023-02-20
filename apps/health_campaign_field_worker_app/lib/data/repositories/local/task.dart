@@ -15,9 +15,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   Future<List<OpLogEntry<TaskModel>>> getItemsToBeSynced() async {
     final entries = await super.getItemsToBeSynced();
 
-    return entries
-        .where((element) => element.entity.projectBeneficiaryId != null)
-        .toList();
+    return entries;
+    // .where((element) => element.entity.projectBeneficiaryId != null)
+    // .toList();
   }
 
   @override
