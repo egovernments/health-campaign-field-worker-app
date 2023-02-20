@@ -272,13 +272,6 @@ class _IndividualDetailsPageState
                                   },
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  localizations.translate(
-                                    i18.individualDetails
-                                        .idNumberSuggestionText,
-                                  ),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
                               ],
                             ),
                             DigitDobPicker(
