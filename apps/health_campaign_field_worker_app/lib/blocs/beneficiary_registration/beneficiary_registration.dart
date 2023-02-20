@@ -38,6 +38,8 @@ class BeneficiaryRegistrationBloc
     on(_handleSaveHouseholdDetails);
     on(_handleSaveIndividualDetails);
     on(_handleSubmit);
+    on(_handleUpdateHousehold);
+    on(_handleUpdateIndividual);
   }
 
   FutureOr<void> _handleSaveAddress(
@@ -120,6 +122,38 @@ class BeneficiaryRegistrationBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _handleUpdateHousehold(
+    BeneficiaryRegistrationUpdateHouseholdDetailsEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    final address = event.addressModel;
+    final household = event.household;
+
+    emit(state.copyWith(loading: true));
+    try {
+      await householdRepository.update(household.copyWith(address: address));
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
+
+  FutureOr<void> _handleUpdateIndividual(
+    BeneficiaryRegistrationUpdateIndividualDetailsEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    final individual = event.model;
+    emit(state.copyWith(loading: true));
+    try {
+      await individualRepository.update(individual);
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
 }
 
 @freezed
@@ -137,6 +171,15 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required IndividualModel model,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
+
+  const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({
+    required HouseholdModel household,
+    AddressModel? addressModel,
+  }) = BeneficiaryRegistrationUpdateHouseholdDetailsEvent;
+
+  const factory BeneficiaryRegistrationEvent.updateIndividualDetails({
+    required IndividualModel model,
+  }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.submit() =
       BeneficiaryRegistrationSubmitEvent;
