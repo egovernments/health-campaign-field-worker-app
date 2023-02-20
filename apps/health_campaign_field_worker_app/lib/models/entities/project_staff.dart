@@ -10,7 +10,6 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
   final String? userId;
   final String? projectId;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final DateTime? startDateTime;
@@ -20,7 +19,6 @@ class ProjectStaffSearchModel extends EntitySearchModel {
     this.id,
     this.userId,
     this.projectId,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     int? startDate,
@@ -43,11 +41,10 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectStaffModel extends EntityModel {
-  final String? id;
+  final String id;
   final String? userId;
   final String? projectId;
   final String? channel;
-  final String clientReferenceId;
   final String tenantId;
   final bool? isDeleted;
   final int rowVersion;
@@ -56,11 +53,10 @@ class ProjectStaffModel extends EntityModel {
   
 
   ProjectStaffModel({
-    this.id,
+    required this.id,
     this.userId,
     this.projectId,
     this.channel,
-    required this.clientReferenceId,
     required this.tenantId,
     this.isDeleted,
     required this.rowVersion,
@@ -87,7 +83,6 @@ class ProjectStaffModel extends EntityModel {
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
