@@ -335,17 +335,34 @@ class _IndividualDetailsPageState
     );
   }
 
-  FormGroup buildForm(BuildContext context) => fb.group(<String, Object>{
-        _individualNameKey: FormControl<String>(
-          validators: [Validators.required],
-          value: context.read<BeneficiaryRegistrationBloc>().state.searchQuery,
-        ),
-        _idTypeKey: FormControl<String>(
-          validators: [Validators.required],
-        ),
-        _idNumberKey: FormControl<String>(),
-        _dobKey: FormControl<DateTime>(),
-        _genderKey: FormControl<String>(),
-        _mobileNumberKey: FormControl<String>(),
-      });
+  FormGroup buildForm(BuildContext context) {
+    final state = context.read<BeneficiaryRegistrationBloc>().state;
+
+    return fb.group(<String, Object>{
+      _individualNameKey: FormControl<String>(
+        validators: [Validators.required],
+        value: state.individualModel?.name?.givenName ?? state.searchQuery,
+      ),
+      _idTypeKey: FormControl<String>(
+        validators: [Validators.required],
+        value: state.individualModel?.identifiers?.firstOrNull?.identifierType,
+      ),
+      _idNumberKey: FormControl<String>(
+        value: state.individualModel?.identifiers?.firstOrNull?.identifierId,
+      ),
+      _dobKey: FormControl<DateTime>(
+        value: state.individualModel?.dateOfBirth != null
+            ? DateFormat('dd/MM/yyyy').parse(
+                state.individualModel!.dateOfBirth!,
+              )
+            : null,
+      ),
+      _genderKey: FormControl<String>(
+        value: state.individualModel?.gender?.name,
+      ),
+      _mobileNumberKey: FormControl<String>(
+        value: state.individualModel?.mobileNumber,
+      ),
+    });
+  }
 }

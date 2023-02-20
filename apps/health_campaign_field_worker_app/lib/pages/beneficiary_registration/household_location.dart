@@ -53,7 +53,15 @@ class _HouseholdLocationPageState
                 form.control(_lngKey).value = lng;
                 form.control(_accuracyKey).value = accuracy;
               },
-              listenWhen: (previous, current) => true,
+              listenWhen: (previous, current) {
+                final lat = form.control(_latKey).value;
+                final lng = form.control(_lngKey).value;
+                final accuracy = form.control(_accuracyKey).value;
+
+                return lat != null || lng != null || accuracy != null
+                    ? false
+                    : true;
+              },
               bloc: context.read<LocationBloc>()
                 ..add(const LoadLocationEvent()),
               child: ScrollableContent(
@@ -76,7 +84,7 @@ class _HouseholdLocationPageState
                         final postalCode =
                             form.control(_postalCodeKey).value as String?;
 
-                        final addressModel =
+                        AddressModel addressModel =
                             (beneficiaryRegistrationState.addressModel ??
                                     AddressModel(
                                       tenantId: envConfig.variables.tenantId,
@@ -94,13 +102,19 @@ class _HouseholdLocationPageState
                           locationAccuracy: form.control(_accuracyKey).value,
                         );
 
-                        context.read<BeneficiaryRegistrationBloc>().add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
+                        if (beneficiaryRegistrationState.isEditing) {
+                          addressModel = addressModel.copyWith(
+                            rowVersion: addressModel.rowVersion + 1,
+                          );
+                        }
 
-                        context.router.push(HouseHoldDetailsRoute());
+                        context
+                          ..read<BeneficiaryRegistrationBloc>().add(
+                            BeneficiaryRegistrationSaveAddressEvent(
+                              addressModel,
+                            ),
+                          )
+                          ..router.push(HouseHoldDetailsRoute());
                       },
                       child: Center(
                         child: Text(
@@ -187,12 +201,54 @@ class _HouseholdLocationPageState
           value: 'Solimbo',
           validators: [Validators.required],
         ),
-        _addressLine1Key: FormControl<String>(),
-        _addressLine2Key: FormControl<String>(),
-        _landmarkKey: FormControl<String>(),
-        _postalCodeKey: FormControl<String>(),
-        _latKey: FormControl<double>(),
-        _lngKey: FormControl<double>(),
-        _accuracyKey: FormControl<double>(),
+        _addressLine1Key: FormControl<String>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.addressLine1,
+        ),
+        _addressLine2Key: FormControl<String>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.addressLine2,
+        ),
+        _landmarkKey: FormControl<String>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.landmark,
+        ),
+        _postalCodeKey: FormControl<String>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.pincode,
+        ),
+        _latKey: FormControl<double>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.latitude,
+        ),
+        _lngKey: FormControl<double>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.longitude,
+        ),
+        _accuracyKey: FormControl<double>(
+          value: context
+              .read<BeneficiaryRegistrationBloc>()
+              .state
+              .addressModel
+              ?.locationAccuracy,
+        ),
       });
 }
