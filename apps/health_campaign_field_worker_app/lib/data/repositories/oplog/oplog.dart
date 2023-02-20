@@ -82,3 +82,7 @@ class ProjectBeneficiaryOpLogManager
 class TaskOpLogManager extends OpLogManager<TaskModel> {
   TaskOpLogManager(super.isar);
 }
+
+class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
+  ProjectStaffOpLogManager(super.isar);
+}
