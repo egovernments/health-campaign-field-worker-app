@@ -1,11 +1,15 @@
 {
   "name": "projectStaff",
   "createRepository": true,
+  "ignoreFields": ["clientReferenceId"],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "isPk": true,
+      "includeForEntity": true,
+      "nullable": false
     },
     {
       "name": "userId",

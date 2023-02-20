@@ -74,6 +74,12 @@ void run(HookContext context) {
     );
   }
 
+  model = model.copyWith(
+    attributes: model.attributes
+        .where((e) => !model.ignoreFields.contains(e.name))
+        .toList(),
+  );
+
   final sqlAttributes = <AttributeModel>[
     ...model.attributes.where((element) => element.includeForEntity).map((e) {
       final type = _getSqlType(e.type);
