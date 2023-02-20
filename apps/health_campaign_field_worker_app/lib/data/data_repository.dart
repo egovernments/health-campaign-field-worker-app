@@ -53,11 +53,12 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(R query) async {
-    final response = await dio.post(createPath, data: {
+    final response = await dio.post(searchPath, data: {
       entityName: query.toMap(),
     });
+    print((response.data).toString());
+    final responseMap = (response.data);
 
-    final responseMap = json.decode(response.data);
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
         data: query.toMap(),
