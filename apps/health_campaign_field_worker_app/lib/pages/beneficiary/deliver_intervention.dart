@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../../router/app_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -71,6 +72,10 @@ class _DeliverInterventionPageState
                                           TaskModel(
                                             clientReferenceId:
                                                 IdGen.i.identifier,
+                                            projectBeneficiaryClientReferenceId:
+                                                householdMemberWrapper
+                                                    .projectBeneficiary
+                                                    .clientReferenceId,
                                             tenantId:
                                                 envConfig.variables.tenantId,
                                             rowVersion: 1,
@@ -78,9 +83,6 @@ class _DeliverInterventionPageState
                                             status: Status.delivered.name,
                                             createdDate: DateTime.now()
                                                 .millisecondsSinceEpoch,
-                                            projectBeneficiaryId:
-                                                householdMemberWrapper.household
-                                                    .clientReferenceId,
                                             resources: [
                                               TaskResourceModel(
                                                 clientReferenceId:
@@ -96,7 +98,7 @@ class _DeliverInterventionPageState
                                                     .value
                                                     .toString(),
                                                 productVariantId:
-                                                    'PVAR-2023-02-15-000048',
+                                                    'PVAR-2022-12-26-000011',
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
@@ -110,6 +112,7 @@ class _DeliverInterventionPageState
 
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
+                                  context.router.push(AcknowledgementRoute());
                                 },
                               ),
                               secondaryAction: DigitDialogActions(
