@@ -92,18 +92,33 @@ class _StockReceiptDetailsPageState
                         label: localizations.translate(
                           i18.stockDetails.quantityReturned,
                         ),
+                        maxLength: 200,
+                        isRequired: true,
+                        validationMessages: {
+                          'required': (object) =>
+                              'Quantity returned is required',
+                        },
                       ),
                       DigitTextFormField(
                         formControlName: 'waybillNumber',
                         label: localizations.translate(
                           i18.stockDetails.waybillNumber,
                         ),
+                        maxLength: 200,
+                        isRequired: true,
+                        validationMessages: {
+                          'required': (object) => 'Waybill number is required',
+                        },
                       ),
                       DigitTextFormField(
                         formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
                           i18.stockDetails.noIndicatedOnWaybill,
                         ),
+                        validationMessages: {
+                          'required': (object) =>
+                              'Number Indicated on waybill is required',
+                        },
                       ),
                     ]),
                     const SizedBox(height: 16),
@@ -123,12 +138,22 @@ class _StockReceiptDetailsPageState
                       label: localizations.translate(
                         i18.stockDetails.vehicleNumber,
                       ),
+                      maxLength: 200,
+                      isRequired: true,
+                      validationMessages: {
+                        'required': (object) => 'Vehicle number is required',
+                      },
                     ),
                     DigitTextFormField(
                       formControlName: 'comments',
                       label: localizations.translate(
                         i18.stockDetails.comments,
                       ),
+                      maxLength: 200,
+                      isRequired: true,
+                      validationMessages: {
+                        'required': (object) => 'Comments are required',
+                      },
                     ),
                   ],
                 ),
