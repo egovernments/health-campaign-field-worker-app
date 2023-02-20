@@ -122,6 +122,8 @@ class _IndividualDetailsPageState
                             ],
                           );
 
+                          final router = context.router;
+
                           final bloc =
                               context.read<BeneficiaryRegistrationBloc>();
                           bloc.add(
@@ -131,39 +133,50 @@ class _IndividualDetailsPageState
                             ),
                           );
 
-                          final router = context.router;
-                          final submit = await DigitDialog.show<bool>(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(
-                                i18.deliverIntervention.dialogTitle,
-                              ),
-                              contentText: localizations.translate(
-                                i18.deliverIntervention.dialogContent,
-                              ),
-                              primaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonSubmit),
-                                action: (context) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(true);
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonCancel),
-                                action: (context) =>
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop(false),
-                              ),
-                            ),
-                          );
-
-                          if (submit ?? false) {
+                          if (beneficiaryRegistrationState.isEditing) {
                             bloc.add(
-                              const BeneficiaryRegistrationSubmitEvent(),
+                              BeneficiaryRegistrationUpdateIndividualDetailsEvent(
+                                model: individual.copyWith(
+                                  rowVersion: individual.rowVersion + 1,
+                                ),
+                              ),
                             );
-                            router.push(AcknowledgementRoute());
+
+                            (router.parent() as StackRouter).pop();
+                          } else {
+                            final submit = await DigitDialog.show<bool>(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18.deliverIntervention.dialogTitle,
+                                ),
+                                contentText: localizations.translate(
+                                  i18.deliverIntervention.dialogContent,
+                                ),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations
+                                      .translate(i18.common.coreCommonSubmit),
+                                  action: (context) {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop(true);
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations
+                                      .translate(i18.common.coreCommonCancel),
+                                  action: (context) =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop(false),
+                                ),
+                              ),
+                            );
+
+                            if (submit ?? false) {
+                              bloc.add(
+                                const BeneficiaryRegistrationSubmitEvent(),
+                              );
+                              router.push(AcknowledgementRoute());
+                            }
                           }
                         },
                         child: Center(
@@ -358,7 +371,19 @@ class _IndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(
-        value: state.individualModel?.gender?.name,
+        value: context.read<AppInitializationBloc>().state.maybeWhen(
+              orElse: () => null,
+              initialized: (appConfiguration, serviceRegistryList) {
+                final options =
+                    appConfiguration.genderOptions ?? <GenderOptions>[];
+
+                return options
+                    .map((e) => localizations.translate(e.code))
+                    .firstWhereOrNull((element) =>
+                        element == state.individualModel?.gender?.name);
+              },
+            ),
+        // value: state.individualModel?.gender?.name,
       ),
       _mobileNumberKey: FormControl<String>(
         value: state.individualModel?.mobileNumber,
