@@ -5,6 +5,7 @@ export 'models.mapper.g.dart';
 @MappableClass()
 class ConfigModel {
   final String name;
+  final List<String> ignoreFields;
   final List<EnumValues> enumValues;
   final List<AttributeModel> attributes;
   final List<AttributeModel> customAttributes;
@@ -17,6 +18,7 @@ class ConfigModel {
 
   const ConfigModel({
     required this.name,
+    this.ignoreFields = const [],
     this.enumValues = const [],
     this.attributes = const [],
     this.customAttributes = const [],
