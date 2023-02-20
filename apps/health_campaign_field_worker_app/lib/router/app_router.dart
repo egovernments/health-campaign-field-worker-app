@@ -73,7 +73,7 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ProjectSelectionPage, path: 'project-selection'),
+        AutoRoute(page: ProjectSelectionPage, path: 'ProjectSelectionBloc'),
       ],
     ),
   ],

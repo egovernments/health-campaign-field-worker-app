@@ -16,6 +16,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   static const refreshTokenKey = 'refreshTokenKey';
 
+  static const uuid = 'uuid';
+
   final AuthRepository authRepository;
 
   AuthBloc({required this.authRepository})
@@ -63,6 +65,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       await storage.write(key: accessTokenKey, value: result.accessToken);
       await storage.write(key: refreshTokenKey, value: result.refreshToken);
+      await storage.write(key: uuid, value: result.userRequestModel.uuid);
       emit(
         AuthAuthenticatedState(
           accessToken: result.accessToken,
