@@ -61,7 +61,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                             final bloc =
                                 context.read<BeneficiaryRegistrationBloc>();
-                            final household =
+                            HouseholdModel household =
                                 (beneficiaryRegistrationState.householdModel ??
                                         HouseholdModel(
                                           tenantId:
@@ -71,21 +71,32 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         ))
                                     .copyWith(
                               memberCount: memberCount,
-                              address: bloc.state.addressModel,
-                            );
-
-                            bloc.add(
-                              BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                                household: household,
-                                registrationDate: dateOfRegistration,
-                              ),
+                              address:
+                                  beneficiaryRegistrationState.addressModel,
                             );
 
                             if (beneficiaryRegistrationState.isEditing) {
-                              bloc.add(
-                                const BeneficiaryRegistrationSubmitEvent(),
+                              household = household.copyWith(
+                                rowVersion: household.rowVersion + 1,
                               );
+
+                              bloc.add(
+                                BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+                                  household: household,
+                                  addressModel:
+                                      beneficiaryRegistrationState.addressModel,
+                                ),
+                              );
+
+                              final router = context.router;
+                              (router.parent() as StackRouter).pop();
                             } else {
+                              bloc.add(
+                                BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                                  household: household,
+                                  registrationDate: dateOfRegistration,
+                                ),
+                              );
                               context.router.push(
                                 IndividualDetailsRoute(isHeadOfHousehold: true),
                               );
@@ -147,7 +158,20 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        _dateOfRegistrationKey: FormControl<DateTime>(value: DateTime.now()),
-        _memberCountKey: FormControl<int>(value: 1),
+        _dateOfRegistrationKey: FormControl<DateTime>(
+          value: context
+                  .read<BeneficiaryRegistrationBloc>()
+                  .state
+                  .registrationDate ??
+              DateTime.now(),
+        ),
+        _memberCountKey: FormControl<int>(
+          value: context
+                  .read<BeneficiaryRegistrationBloc>()
+                  .state
+                  .householdModel
+                  ?.memberCount ??
+              1,
+        ),
       });
 }
