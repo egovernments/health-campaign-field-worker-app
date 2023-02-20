@@ -177,8 +177,8 @@ class _HouseholdOverviewPageState
                                   ): 'Solimbo',
                                   localizations.translate(
                                     i18.deliverIntervention.memberCountText,
-                                  ): state
-                                      .householdMemberWrapper.members.length,
+                                  ): state.householdMemberWrapper.household
+                                      .memberCount,
                                 },
                               ),
                               Column(
@@ -266,6 +266,8 @@ class _HouseholdOverviewPageState
                                         ],
                                       ),
                                     );
+
+                                    if (bloc.isClosed) return;
 
                                     bloc.add(
                                       const HouseholdOverviewReloadEvent(),
