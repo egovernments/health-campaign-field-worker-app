@@ -162,7 +162,10 @@ class IndividualLocalRepository
   }
 
   @override
-  FutureOr<void> create(IndividualModel entity) async {
+  FutureOr<void> create(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final addresses = entity.address;
     final identifiers = entity.identifiers;
 
@@ -257,7 +260,10 @@ class IndividualLocalRepository
   }
 
   @override
-  FutureOr<void> update(IndividualModel entity) async {
+  FutureOr<void> update(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final individualCompanion = entity.companion;
 
     final nameCompanion = entity.name?.companion;
@@ -298,7 +304,10 @@ class IndividualLocalRepository
   }
 
   @override
-  FutureOr<void> delete(IndividualModel entity) async {
+  FutureOr<void> delete(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion + 1,

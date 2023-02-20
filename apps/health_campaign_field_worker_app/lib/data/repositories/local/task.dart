@@ -62,7 +62,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
-  FutureOr<void> create(TaskModel entity) async {
+  FutureOr<void> create(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final taskCompanion = entity.companion;
     final addresses = entity.address;
     final resources = entity.resources;
@@ -110,7 +113,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
-  FutureOr<void> update(TaskModel entity) async {
+  FutureOr<void> update(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final taskCompanion = entity.companion;
 
     await sql.batch((batch) {
@@ -127,7 +133,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
-  FutureOr<void> delete(TaskModel entity) async {
+  FutureOr<void> delete(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion + 1,

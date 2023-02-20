@@ -174,20 +174,20 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> create(D entity) async {
-    await createOplogEntry(entity, DataOperation.create);
+  FutureOr<void> create(D entity, {bool createOpLog = true}) async {
+    if (createOpLog) await createOplogEntry(entity, DataOperation.create);
   }
 
   @override
   @mustCallSuper
-  FutureOr<void> update(D entity) async {
-    await createOplogEntry(entity, DataOperation.update);
+  FutureOr<void> update(D entity, {bool createOpLog = true}) async {
+    if (createOpLog) await createOplogEntry(entity, DataOperation.update);
   }
 
   @override
   @mustCallSuper
-  FutureOr<void> delete(D entity) async {
-    await createOplogEntry(entity, DataOperation.delete);
+  FutureOr<void> delete(D entity, {bool createOpLog = true}) async {
+    if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
   }
 
   FutureOr<void> createOplogEntry(

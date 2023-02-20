@@ -65,7 +65,10 @@ class HouseholdMemberLocalRepository
   }
 
   @override
-  FutureOr<void> create(HouseholdMemberModel entity) async {
+  FutureOr<void> create(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {
       batch.insert(sql.householdMember, householdMemberCompanion);
@@ -75,7 +78,10 @@ class HouseholdMemberLocalRepository
   }
 
   @override
-  FutureOr<void> update(HouseholdMemberModel entity) async {
+  FutureOr<void> update(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdMemberCompanion = entity.companion;
 
     await sql.batch((batch) {
@@ -92,7 +98,10 @@ class HouseholdMemberLocalRepository
   }
 
   @override
-  FutureOr<void> delete(HouseholdMemberModel entity) async {
+  FutureOr<void> delete(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion + 1,

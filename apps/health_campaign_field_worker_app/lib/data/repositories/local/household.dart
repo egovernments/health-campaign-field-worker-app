@@ -86,7 +86,10 @@ class HouseholdLocalRepository
   }
 
   @override
-  FutureOr<void> create(HouseholdModel entity) async {
+  FutureOr<void> create(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 
@@ -123,7 +126,10 @@ class HouseholdLocalRepository
   }
 
   @override
-  FutureOr<void> update(HouseholdModel entity) async {
+  FutureOr<void> update(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 
@@ -151,7 +157,10 @@ class HouseholdLocalRepository
   }
 
   @override
-  FutureOr<void> delete(HouseholdModel entity) async {
+  FutureOr<void> delete(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion + 1,
