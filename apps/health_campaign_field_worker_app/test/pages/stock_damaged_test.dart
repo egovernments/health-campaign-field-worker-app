@@ -55,6 +55,7 @@ void main() {
         i18.stockDetails.typeOfTransport,
         i18.stockDetails.vehicleNumber,
         i18.stockDetails.damagedDuring,
+        i18.stockDetails.quantityDamaged,
         i18.stockDetails.comments,
         i18.common.coreCommonSubmit,
       ]) {
@@ -132,7 +133,7 @@ void main() {
         expect(
           find.widgetWithText(
             DigitTextFormField,
-            i18.stockDetails.quantityReceived,
+            i18.stockDetails.quantityDamaged,
           ),
           findsOneWidget,
         );
@@ -140,14 +141,14 @@ void main() {
         expect(
           find.widgetWithText(
             DigitTextFormField,
-            i18.stockDetails.noIndicatedOnThePackingSlip,
+            i18.stockDetails.noIndicatedOnWaybill,
           ),
           findsOneWidget,
         );
         expect(
           find.widgetWithText(
             DigitTextFormField,
-            i18.stockDetails.noOfPackingSlip,
+            i18.stockDetails.waybillNumber,
           ),
           findsOneWidget,
         );
