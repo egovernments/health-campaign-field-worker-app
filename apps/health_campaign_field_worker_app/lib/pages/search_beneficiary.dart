@@ -113,6 +113,7 @@ class _SearchBeneficiaryPageState
                 hintText: localizations.translate(
                   i18.searchBeneficiary.beneficiarySearchHintText,
                 ),
+                textCapitalization: TextCapitalization.words,
                 onChanged: (value) {
                   final bloc = context.read<SearchHouseholdsBloc>();
                   if (value.trim().length < 2) {
