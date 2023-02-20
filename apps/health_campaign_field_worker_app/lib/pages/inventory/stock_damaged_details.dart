@@ -101,20 +101,26 @@ class _StockReceiptDetailsPageState
                       DigitTextFormField(
                         formControlName: 'quantityDamaged',
                         label: localizations.translate(
-                          i18.stockDetails.quantityReceived,
+                          i18.stockDetails.quantityDamaged,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'noIndicatedOnPackingSlip',
+                        formControlName: 'waybillNumber',
                         label: localizations.translate(
-                          i18.stockDetails.noIndicatedOnThePackingSlip,
+                          i18.stockDetails.waybillNumber,
                         ),
                       ),
                       DigitTextFormField(
-                        formControlName: 'noOfPackingSlip',
+                        formControlName: 'noIndicatedOnWaybill',
                         label: localizations.translate(
-                          i18.stockDetails.noOfPackingSlip,
+                          i18.stockDetails.noIndicatedOnWaybill,
                         ),
+                        maxLength: 200,
+                        isRequired: true,
+                        validationMessages: {
+                          'required': (object) =>
+                              'Number Indicated on waybill is required',
+                        },
                       ),
                     ]),
                     const SizedBox(height: 16),
@@ -134,12 +140,22 @@ class _StockReceiptDetailsPageState
                       label: localizations.translate(
                         i18.stockDetails.vehicleNumber,
                       ),
+                      maxLength: 200,
+                      isRequired: true,
+                      validationMessages: {
+                        'required': (object) => 'Vehicle number is required',
+                      },
                     ),
                     DigitTextFormField(
                       formControlName: 'comments',
                       label: localizations.translate(
                         i18.stockDetails.comments,
                       ),
+                      maxLength: 200,
+                      isRequired: true,
+                      validationMessages: {
+                        'required': (object) => 'Comments are required',
+                      },
                     ),
                   ],
                 ),
@@ -156,7 +172,8 @@ class _StockReceiptDetailsPageState
         'damagedDuring': FormControl<String>(value: ''),
         'returnedFrom': FormControl<String>(value: ''),
         'quantityDamaged': FormControl<String>(value: ''),
-        'noIndicatedOnPackingSlip': FormControl<String>(value: ''),
+        'waybillNumber': FormControl<String>(value: ''),
+        'noIndicatedOnWaybill': FormControl<String>(value: ''),
         'noOfPackingSlip': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),

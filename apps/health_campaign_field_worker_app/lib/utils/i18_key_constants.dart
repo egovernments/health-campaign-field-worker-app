@@ -351,6 +351,7 @@ class StockDetails {
   String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
 
   String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
+  String get quantityDamaged => 'STOCK_RECEIPT_DETAILS_QUANTITY_DAMAGED';
 
   String get quantityReturned => 'STOCK_RECEIPT_DETAILS_QUANTITY_RETURNED';
 
