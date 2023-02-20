@@ -134,6 +134,7 @@ class IndividualLocalRepository
                       doorNo: address.doorNo,
                       latitude: address.latitude,
                       longitude: address.longitude,
+                      landmark: address.landmark,
                       locationAccuracy: address.locationAccuracy,
                       addressLine1: address.addressLine1,
                       addressLine2: address.addressLine2,
