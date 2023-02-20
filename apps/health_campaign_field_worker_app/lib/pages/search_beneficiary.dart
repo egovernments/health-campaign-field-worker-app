@@ -27,32 +27,34 @@ class SearchBeneficiaryPage extends LocalizedStatefulWidget {
 
 class _SearchBeneficiaryPageState
     extends LocalizedState<SearchBeneficiaryPage> {
+  final TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final sql = context.read<LocalSqlDataStore>();
 
     return BlocProvider(
-      create: (context) => SearchHouseholdsBloc(
-        projectBeneficiaryMember: context
-            .read<NetworkManager>()
-            .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(
-              context,
-            ),
-        householdMember: context
-            .read<NetworkManager>()
-            .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
-              context,
-            ),
-        household: context
-            .read<NetworkManager>()
-            .repository<HouseholdModel, HouseholdSearchModel>(
-              context,
-            ),
-        individual: context
-            .read<NetworkManager>()
-            .repository<IndividualModel, IndividualSearchModel>(context),
-      ),
+      create: (context) {
+        final networkManager = context.read<NetworkManager>();
+
+        return SearchHouseholdsBloc(
+          projectBeneficiary: networkManager.repository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>(
+            context,
+          ),
+          householdMember: networkManager
+              .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
+            context,
+          ),
+          household:
+              networkManager.repository<HouseholdModel, HouseholdSearchModel>(
+            context,
+          ),
+          individual: networkManager
+              .repository<IndividualModel, IndividualSearchModel>(context),
+        );
+      },
       child: KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) => Scaffold(
           body: ScrollableContent(
@@ -110,6 +112,7 @@ class _SearchBeneficiaryPageState
                 },
               ),
               DigitSearchBar(
+                controller: searchController,
                 hintText: localizations.translate(
                   i18.searchBeneficiary.beneficiarySearchHintText,
                 ),
@@ -149,7 +152,23 @@ class _SearchBeneficiaryPageState
                     results: (value) => Column(
                       children: [
                         for (final i in value.householdMembers)
-                          ViewBeneficiaryCard(householdMember: i),
+                          ViewBeneficiaryCard(
+                            householdMember: i,
+                            onOpenPressed: () async {
+                              final bloc = context.read<SearchHouseholdsBloc>();
+                              await context.router.push(
+                                BeneficiaryWrapperRoute(
+                                  wrapper: i,
+                                ),
+                              );
+
+                              bloc.add(
+                                SearchHouseholdsSearchByHouseholdHeadEvent(
+                                  searchText: searchController.text,
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                   );

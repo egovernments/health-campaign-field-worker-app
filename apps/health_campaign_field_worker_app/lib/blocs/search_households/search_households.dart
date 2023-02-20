@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
 
@@ -19,21 +19,16 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
-  final DataRepository<IndividualModel, IndividualSearchModel> individual;
-
-  final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMember;
-
-  final DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-      projectBeneficiaryMember;
-
-  final DataRepository<HouseholdModel, HouseholdSearchModel> household;
+  final IndividualDataRepository individual;
+  final HouseholdDataRepository household;
+  final HouseholdMemberDataRepository householdMember;
+  final ProjectBeneficiaryDataRepository projectBeneficiary;
 
   SearchHouseholdsBloc({
     required this.individual,
     required this.householdMember,
     required this.household,
-    required this.projectBeneficiaryMember,
+    required this.projectBeneficiary,
   }) : super(const SearchHouseholdsEmptyState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -111,14 +106,14 @@ class SearchHouseholdsBloc
             element.clientReferenceId ==
             entry.value
                 .firstWhereOrNull(
-                  (element) => element.isHeadOfHousehold == true,
+                  (element) => element.isHeadOfHousehold,
                 )
                 ?.individualClientReferenceId,
       );
 
       if (head == null) continue;
 
-      final projectBeneficiaries = await projectBeneficiaryMember.search(
+      final projectBeneficiaries = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
           beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
           projectId: '13',

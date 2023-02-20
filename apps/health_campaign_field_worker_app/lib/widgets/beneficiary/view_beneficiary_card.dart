@@ -5,18 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../blocs/search_households/search_households.dart';
-import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 import 'beneficiary_card.dart';
 
 class ViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdMemberWrapper householdMember;
+  final VoidCallback? onOpenPressed;
 
   const ViewBeneficiaryCard({
     Key? key,
     super.appLocalizations,
     required this.householdMember,
+    this.onOpenPressed,
   }) : super(key: key);
 
   @override
@@ -79,11 +80,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 child: DigitOutLineButton(
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: () => context.router.push(
-                    BeneficiaryWrapperRoute(
-                      wrapper: householdMember,
-                    ),
-                  ),
+                  onPressed: widget.onOpenPressed,
                 ),
               ),
             ],

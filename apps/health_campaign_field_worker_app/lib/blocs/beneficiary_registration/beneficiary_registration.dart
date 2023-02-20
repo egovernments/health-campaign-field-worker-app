@@ -4,9 +4,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
 
 part 'beneficiary_registration.freezed.dart';
@@ -15,17 +15,13 @@ typedef BeneficiaryRegistrationEmitter = Emitter<BeneficiaryRegistrationState>;
 
 class BeneficiaryRegistrationBloc
     extends Bloc<BeneficiaryRegistrationEvent, BeneficiaryRegistrationState> {
-  final DataRepository<IndividualModel, IndividualSearchModel>
-      individualRepository;
+  final IndividualDataRepository individualRepository;
 
-  final DataRepository<HouseholdModel, HouseholdSearchModel>
-      householdRepository;
+  final HouseholdDataRepository householdRepository;
 
-  final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMemberRepository;
+  final HouseholdMemberDataRepository householdMemberRepository;
 
-  final DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-      projectBeneficiaryRepository;
+  final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
   BeneficiaryRegistrationBloc(
     super.initialState, {
@@ -144,10 +140,9 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationUpdateIndividualDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    final individual = event.model;
     emit(state.copyWith(loading: true));
     try {
-      await individualRepository.update(individual);
+      await individualRepository.update(event.model);
     } catch (error) {
       rethrow;
     } finally {

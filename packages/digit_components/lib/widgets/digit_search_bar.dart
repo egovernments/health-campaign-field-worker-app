@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DigitSearchBar extends StatelessWidget {
+  final TextEditingController? controller;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
   final String? hintText;
@@ -11,6 +12,7 @@ class DigitSearchBar extends StatelessWidget {
 
   const DigitSearchBar({
     super.key,
+    this.controller,
     this.padding,
     this.margin,
     this.hintText,
@@ -33,6 +35,7 @@ class DigitSearchBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: TextField(
+          controller: controller,
           onChanged: onChanged,
           textCapitalization: textCapitalization,
           decoration: InputDecoration(

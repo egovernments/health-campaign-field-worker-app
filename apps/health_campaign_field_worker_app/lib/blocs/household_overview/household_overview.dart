@@ -5,8 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
@@ -15,17 +15,10 @@ typedef HouseholdOverviewEmitter = Emitter<HouseholdOverviewState>;
 
 class HouseholdOverviewBloc
     extends Bloc<HouseholdOverviewEvent, HouseholdOverviewState> {
-  final DataRepository<IndividualModel, IndividualSearchModel>
-      individualRepository;
-
-  final DataRepository<HouseholdModel, HouseholdSearchModel>
-      householdRepository;
-
-  final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMemberRepository;
-
-  final DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-      projectBeneficiaryRepository;
+  final IndividualDataRepository individualRepository;
+  final HouseholdDataRepository householdRepository;
+  final HouseholdMemberDataRepository householdMemberRepository;
+  final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
