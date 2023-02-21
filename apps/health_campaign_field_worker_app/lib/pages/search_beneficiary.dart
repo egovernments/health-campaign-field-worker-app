@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -76,14 +79,30 @@ class _SearchBeneficiaryPageState
               ),
               StreamBuilder(
                 initialData: const [],
-                stream: sql.select(sql.taskResource).watch(),
+                stream: (sql.select(sql.taskResource)
+                      ..where((tbl) => buildOr([
+                            tbl.isDeleted.equals(null),
+                            tbl.isDeleted.equals(false),
+                          ])))
+                    .watch(),
                 builder: (context, taskSnapshot) {
                   final taskCount = taskSnapshot.data?.length ?? 0;
 
                   return StreamBuilder(
                     initialData: const [],
                     // TODO: Needs to have a remote API counterpart
-                    stream: sql.select(sql.household).watch(),
+                    stream: sql.select(sql.household).watch().transform(
+                      StreamTransformer<List<HouseholdData>,
+                          List<HouseholdData>>.fromHandlers(
+                        handleData: (data, sink) {
+                          sink.add(
+                            data
+                                .where((element) => element.isDeleted != true)
+                                .toList(),
+                          );
+                        },
+                      ),
+                    ),
                     builder: (context, householdSnapshot) {
                       final householdCount =
                           householdSnapshot.data?.length ?? 0;

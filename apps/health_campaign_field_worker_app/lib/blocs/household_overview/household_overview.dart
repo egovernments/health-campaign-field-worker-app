@@ -151,8 +151,6 @@ class HouseholdOverviewBloc
         rowVersion: event.projectBeneficiaryModel.rowVersion + 1,
       ),
     );
-
-    add(const HouseholdOverviewReloadEvent());
   }
 
   FutureOr<void> _handleDeleteIndividual(

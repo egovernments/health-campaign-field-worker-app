@@ -11,8 +11,9 @@ class MemberCard extends StatelessWidget {
   final int age;
   final bool isHead;
   final bool isDelivered;
-  final VoidCallback primaryAction;
-  final VoidCallback secondaryAction;
+  final VoidCallback setAsHeadAction;
+  final VoidCallback editMemberAction;
+  final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
 
   const MemberCard({
@@ -20,11 +21,12 @@ class MemberCard extends StatelessWidget {
     required this.name,
     required this.gender,
     required this.age,
-    required this.secondaryAction,
     this.isHead = false,
     required this.localizations,
     required this.isDelivered,
-    required this.primaryAction,
+    required this.setAsHeadAction,
+    required this.editMemberAction,
+    required this.deleteMemberAction,
   });
 
   @override
@@ -94,48 +96,21 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.assignAsHouseholdhead,
                           ),
-                          action: primaryAction,
+                          action: setAsHeadAction,
                         ),
                         ActionCardModel(
                           icon: Icons.edit,
                           label: localizations.translate(
                             i18.memberCard.editIndividualDetails,
                           ),
-                          action: secondaryAction,
+                          action: editMemberAction,
                         ),
                         ActionCardModel(
                           icon: Icons.delete,
                           label: localizations.translate(
                             i18.memberCard.deleteIndividualActionText,
                           ),
-                          action: () {
-                            DigitDialog.show(
-                              context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(i18
-                                    .householdOverView
-                                    .householdOverViewActionCardTitle),
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(i18
-                                      .householdOverView
-                                      .householdOverViewPrimaryActionLabel),
-                                  action: (context) {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(i18
-                                      .householdOverView
-                                      .householdOverViewSecondaryActionLabel),
-                                  action: (context) {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                ),
-                              ),
-                            );
-                          },
+                          action: deleteMemberAction,
                         ),
                       ],
                     ),
