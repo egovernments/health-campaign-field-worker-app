@@ -86,3 +86,7 @@ class TaskOpLogManager extends OpLogManager<TaskModel> {
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
   ProjectStaffOpLogManager(super.isar);
 }
+
+class ProjectOpLogManager extends OpLogManager<ProjectModel> {
+  ProjectOpLogManager(super.isar);
+}

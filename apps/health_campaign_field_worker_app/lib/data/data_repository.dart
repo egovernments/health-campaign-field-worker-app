@@ -27,6 +27,7 @@ abstract class RemoteRepository<D extends EntityModel,
     R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
   final String entityName;
+  final bool isPlural;
 
   final Map<ApiOperation, String> actionMap;
 
@@ -48,12 +49,14 @@ abstract class RemoteRepository<D extends EntityModel,
     this.dio, {
     required this.actionMap,
     required this.entityName,
+    this.isPlural = false,
   });
 
   @override
   FutureOr<List<D>> search(R query) async {
     final response = await dio.post(searchPath, data: {
-      entityName: query.toMap(),
+      isPlural ? EntityPlurals.getPluralForEntityName(entityName) : entityName:
+          isPlural ? [query.toMap()] : query.toMap(),
     });
 
     final responseMap = (response.data);

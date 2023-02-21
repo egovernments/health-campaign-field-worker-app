@@ -51,6 +51,8 @@ class EntityPlurals {
         return 'Facilities';
       case 'ProjectFacility':
         return 'ProjectFacilities';
+      case 'Project':
+        return 'Projects';
       default:
         return '${entity}s';
     }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/project_staff.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -40,7 +39,7 @@ class ProjectStaffLocalRepository
       final data = e.readTable(sql.projectStaff);
 
       return ProjectStaffModel(
-        clientReferenceId: data.clientReferenceId,
+        id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
       );
