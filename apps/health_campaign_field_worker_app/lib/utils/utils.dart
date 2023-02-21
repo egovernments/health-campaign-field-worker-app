@@ -39,3 +39,13 @@ extension DateAgeExtension on DateTime {
     return (DateTime.now().difference(this).inDays / 365).round();
   }
 }
+
+extension IntIncrementer on int? {
+  int get increment {
+    return incrementBy(1);
+  }
+
+  int incrementBy(int value) {
+    return (this ?? value) + value;
+  }
+}

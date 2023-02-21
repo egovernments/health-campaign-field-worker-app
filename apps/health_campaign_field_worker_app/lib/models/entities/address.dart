@@ -33,10 +33,9 @@ class AddressModel extends EntityModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final BoundaryModel? locality;
   final AddressType? type;
   
@@ -54,13 +53,13 @@ class AddressModel extends EntityModel {
     this.pincode,
     this.buildingName,
     this.street,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.locality,
     this.type,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   AddressCompanion get companion {
@@ -77,7 +76,6 @@ class AddressModel extends EntityModel {
       pincode: Value(pincode),
       buildingName: Value(buildingName),
       street: Value(street),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

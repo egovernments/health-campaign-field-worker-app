@@ -33,6 +33,11 @@ class NetworkManager {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
+    await getServerGeneratedIds(
+      localRepositories: localRepositories,
+      remoteRepositories: remoteRepositories,
+    );
+
     final futures = await Future.wait(
       localRepositories.map((e) => e.getItemsToBeSynced()),
     );
@@ -75,6 +80,105 @@ class NetworkManager {
 
         for (final syncedEntity in operationGroupedEntity.value) {
           local.markSynced(syncedEntity.copyWith(isSynced: true));
+        }
+      }
+    }
+  }
+
+  FutureOr<void> getServerGeneratedIds({
+    required List<LocalRepository> localRepositories,
+    required List<RemoteRepository> remoteRepositories,
+  }) async {
+    if (configuration.persistenceConfig ==
+        PersistenceConfiguration.onlineOnly) {
+      throw Exception('Sync up is not valid for online only configuration');
+    }
+
+    final futures = await Future.wait(
+      localRepositories.map((e) => e.getSyncedCreateEntities()),
+    );
+
+    final pendingSyncEntries = futures.expand((e) => e).toList();
+    pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
+
+    final groupedEntries = pendingSyncEntries.groupListsBy(
+      (element) => element.type,
+    );
+
+    for (final typeGroupedEntity in groupedEntries.entries) {
+      final groupedOperations = typeGroupedEntity.value.groupListsBy(
+        (element) => element.operation,
+      );
+
+      final remote = _getRemoteForType(
+        typeGroupedEntity.key,
+        remoteRepositories,
+      );
+
+      final local = _getLocalForType(
+        typeGroupedEntity.key,
+        localRepositories,
+      );
+
+      for (final operationGroupedEntity in groupedOperations.entries) {
+        final entities = operationGroupedEntity.value.map((e) {
+          return e.entity;
+        }).toList();
+
+        List<EntityModel> responseEntities = [];
+
+        switch (typeGroupedEntity.key) {
+          case DataModelType.household:
+            responseEntities = await remote.search(HouseholdSearchModel(
+              clientReferenceId: entities
+                  .whereType<HouseholdModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+            break;
+          case DataModelType.householdMember:
+            responseEntities = await remote.search(HouseholdMemberSearchModel(
+              clientReferenceId: entities
+                  .whereType<HouseholdMemberModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+            break;
+          case DataModelType.individual:
+            responseEntities = await remote.search(IndividualSearchModel(
+              clientReferenceId: entities
+                  .whereType<IndividualModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+            break;
+          case DataModelType.projectBeneficiary:
+            responseEntities = await remote.search(ProjectSearchModel(
+              clientReferenceId: entities
+                  .whereType<ProjectModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+            break;
+          case DataModelType.task:
+            responseEntities = await remote.search(TaskSearchModel(
+              clientReferenceId: entities
+                  .whereType<TaskModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+            break;
+          default:
+            continue;
+        }
+
+        for (var element in responseEntities) {
+          debugPrint(element.toJson());
         }
       }
     }

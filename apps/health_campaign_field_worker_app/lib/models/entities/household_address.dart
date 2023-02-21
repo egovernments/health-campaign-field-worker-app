@@ -21,27 +21,25 @@ class HouseholdAddressSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class HouseholdAddressModel extends EntityModel {
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final HouseholdModel? household;
   final AddressModel? address;
   
 
   HouseholdAddressModel({
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.household,
     this.address,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   HouseholdAddressCompanion get companion {
     return HouseholdAddressCompanion(
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

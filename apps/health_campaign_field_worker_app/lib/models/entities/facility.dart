@@ -33,10 +33,9 @@ class FacilityModel extends EntityModel {
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final AddressModel? address;
   
 
@@ -45,12 +44,12 @@ class FacilityModel extends EntityModel {
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.address,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   FacilityCompanion get companion {
@@ -59,7 +58,6 @@ class FacilityModel extends EntityModel {
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

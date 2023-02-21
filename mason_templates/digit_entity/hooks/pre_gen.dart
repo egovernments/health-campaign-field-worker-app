@@ -20,6 +20,7 @@ void run(HookContext context) {
           isList: true,
           includeForQuery: true,
           includeForEntity: false,
+          includeForTable: false,
           nullable: false,
         ),
         AttributeModel(
@@ -27,7 +28,8 @@ void run(HookContext context) {
           type: 'String',
           isPk: true,
           includeForQuery: false,
-          includeForEntity: true,
+          includeForEntity: false,
+          includeForTable: true,
           nullable: false,
         ),
       ],
@@ -42,7 +44,7 @@ void run(HookContext context) {
         name: 'tenantId',
         type: 'String',
         includeForQuery: true,
-        nullable: false,
+        nullable: true,
       ),
     );
   }
@@ -69,7 +71,7 @@ void run(HookContext context) {
         name: 'rowVersion',
         type: 'int',
         includeForQuery: false,
-        nullable: false,
+        nullable: true,
       ),
     );
   }
@@ -81,7 +83,7 @@ void run(HookContext context) {
   );
 
   final sqlAttributes = <AttributeModel>[
-    ...model.attributes.where((element) => element.includeForEntity).map((e) {
+    ...model.attributes.where((element) => element.includeForTable).map((e) {
       final type = _getSqlType(e.type);
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);

@@ -25,10 +25,9 @@ class DocumentModel extends EntityModel {
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   DocumentModel({
@@ -36,11 +35,11 @@ class DocumentModel extends EntityModel {
     this.documentType,
     this.fileStoreId,
     this.documentUid,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   DocumentCompanion get companion {
@@ -49,7 +48,6 @@ class DocumentModel extends EntityModel {
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),
       documentUid: Value(documentUid),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

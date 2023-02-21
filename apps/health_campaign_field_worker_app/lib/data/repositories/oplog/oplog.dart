@@ -44,6 +44,28 @@ abstract class OpLogManager<T extends EntityModel> {
         .toList();
   }
 
+  FutureOr<List<OpLogEntry<T>>> getSyncedCreateEntries(
+    DataModelType type,
+  ) async {
+    final entries = await isar.opLogs
+        .filter()
+        .isSyncedEqualTo(true)
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.create)
+        .findAll();
+
+    return entries
+        .map((e) => OpLogEntry<T>(
+              Mapper.fromJson<T>(e.entityString),
+              e.operation,
+              dateCreated: e.createdOn,
+              id: e.id,
+              type: e.entityType,
+              isSynced: e.isSynced,
+            ))
+        .toList();
+  }
+
   FutureOr<void> markSynced(OpLogEntry<EntityModel> entry) async {
     final id = entry.id;
     if (id == null) return;

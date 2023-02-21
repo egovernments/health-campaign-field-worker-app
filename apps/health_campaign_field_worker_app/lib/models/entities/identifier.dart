@@ -27,27 +27,25 @@ class IdentifierSearchModel extends EntitySearchModel {
 class IdentifierModel extends EntityModel {
   final String? identifierType;
   final String? identifierId;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   IdentifierModel({
     this.identifierType,
     this.identifierId,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

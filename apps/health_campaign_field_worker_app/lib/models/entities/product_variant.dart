@@ -33,10 +33,9 @@ class ProductVariantModel extends EntityModel {
   final String? productId;
   final String? sku;
   final String? variation;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   ProductVariantModel({
@@ -44,11 +43,11 @@ class ProductVariantModel extends EntityModel {
     this.productId,
     this.sku,
     this.variation,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   ProductVariantCompanion get companion {
@@ -57,7 +56,6 @@ class ProductVariantModel extends EntityModel {
       productId: Value(productId),
       sku: Value(sku),
       variation: Value(variation),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

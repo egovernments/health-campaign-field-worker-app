@@ -40,10 +40,9 @@ class IndividualModel extends EntityModel {
   final String? fatherName;
   final String? husbandName;
   final String? photo;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final NameModel? name;
   final BloodGroup? bloodGroup;
   final List<AddressModel>? address;
@@ -61,16 +60,16 @@ class IndividualModel extends EntityModel {
     this.fatherName,
     this.husbandName,
     this.photo,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.name,
     this.bloodGroup,
     this.address,
     this.gender,
     this.identifiers,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   IndividualCompanion get companion {
@@ -84,7 +83,6 @@ class IndividualModel extends EntityModel {
       fatherName: Value(fatherName),
       husbandName: Value(husbandName),
       photo: Value(photo),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
