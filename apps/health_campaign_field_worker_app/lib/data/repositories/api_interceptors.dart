@@ -19,7 +19,7 @@ class ApiInterceptors extends Interceptor {
     final authToken = await storage.read(key: AuthBloc.accessTokenKey);
 
     if (options.data is Map) {
-      AppLogger.instance.debug(json.encode(options.data), title: options.path);
+      AppLogger.instance.info(json.encode(options.data), title: options.path);
 
       options.data = {
         ...options.data,

@@ -13,6 +13,7 @@ class ConfigModel {
   final List<AttributeModel> sqlAttributes;
   final List<AttributeModel> referenceAttributes;
   final bool isPlural;
+  final bool isSearchResponsePlural;
 
   final bool createRepository;
   final bool isEnum;
@@ -29,6 +30,7 @@ class ConfigModel {
     this.isEnum = false,
     this.createRepository = false,
     this.isPlural = false,
+    this.isSearchResponsePlural = false,
   });
 }
 
