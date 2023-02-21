@@ -27,29 +27,27 @@ class HouseholdSearchModel extends EntitySearchModel {
 class HouseholdModel extends EntityModel {
   final String? id;
   final int? memberCount;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final AddressModel? address;
   
 
   HouseholdModel({
     this.id,
     this.memberCount,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.address,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
       id: Value(id),
       memberCount: Value(memberCount),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../models/data_model.dart';
 import '../utils/constants.dart';
+import '../utils/environment_config.dart';
 import 'local_store/sql_store/sql_store.dart';
 import 'local_store/sql_store/tables/project.dart';
 import 'repositories/oplog/oplog.dart';
@@ -55,10 +56,19 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(R query) async {
-    final response = await dio.post(searchPath, data: {
-      isPlural ? EntityPlurals.getPluralForEntityName(entityName) : entityName:
-          isPlural ? [query.toMap()] : query.toMap(),
-    });
+    final response = await dio.post(
+      searchPath,
+      queryParameters: {
+        'offset': 0,
+        'limit': 100,
+        'tenantId': envConfig.variables.tenantId,
+      },
+      data: {
+        isPlural
+            ? EntityPlurals.getPluralForEntityName(entityName)
+            : entityName: isPlural ? [query.toMap()] : query.toMap(),
+      },
+    );
 
     final responseMap = (response.data);
     if (responseMap is! Map<String, dynamic>) {
@@ -192,6 +202,12 @@ abstract class LocalRepository<D extends EntityModel,
   @mustCallSuper
   FutureOr<void> delete(D entity, {bool createOpLog = true}) async {
     if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
+  }
+
+  Future<List<OpLogEntry<D>>> getSyncedCreateEntities() async {
+    final entries = await opLogManager.getSyncedCreateEntries(type);
+
+    return entries;
   }
 
   FutureOr<void> createOplogEntry(

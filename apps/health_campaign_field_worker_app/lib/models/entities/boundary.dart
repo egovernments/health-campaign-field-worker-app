@@ -27,10 +27,9 @@ class BoundaryModel extends EntityModel {
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final BoundaryModel? children;
   
 
@@ -41,12 +40,12 @@ class BoundaryModel extends EntityModel {
     this.latitude,
     this.longitude,
     this.materializedPath,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.children,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   BoundaryCompanion get companion {
@@ -57,7 +56,6 @@ class BoundaryModel extends EntityModel {
       latitude: Value(latitude),
       longitude: Value(longitude),
       materializedPath: Value(materializedPath),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

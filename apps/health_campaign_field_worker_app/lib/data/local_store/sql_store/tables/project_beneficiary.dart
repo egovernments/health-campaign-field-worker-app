@@ -9,9 +9,9 @@ class ProjectBeneficiary extends Table {
   TextColumn get beneficiaryId => text().nullable()();
   TextColumn get beneficiaryClientReferenceId => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfRegistration => integer().nullable()();
   
 

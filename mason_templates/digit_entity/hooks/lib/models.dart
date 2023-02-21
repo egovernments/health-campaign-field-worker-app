@@ -43,6 +43,7 @@ class AttributeModel {
   final bool isEnum;
   final bool includeForQuery;
   final bool includeForEntity;
+  final bool includeForTable;
   final bool createReference;
   final List<TableReferenceModel> references;
 
@@ -54,6 +55,7 @@ class AttributeModel {
     this.isPk = false,
     this.isEnum = false,
     this.nullable = true,
+    this.includeForTable = true,
     this.includeForQuery = false,
     this.includeForEntity = true,
     this.createReference = false,
