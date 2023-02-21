@@ -58,9 +58,9 @@ class ProjectModel extends EntityModel {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
   final List<DocumentModel>? documents;
@@ -78,15 +78,16 @@ class ProjectModel extends EntityModel {
     this.description,
     this.referenceId,
     this.projectHierarchy,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.address,
     this.targets,
     this.documents,
     int? startDate,
     int? endDate,
     super.auditDetails,
+    super.clientReferenceId,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),

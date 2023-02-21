@@ -13,9 +13,9 @@ class Project extends Table {
   TextColumn get description => text().nullable()();
   TextColumn get referenceId => text().nullable()();
   TextColumn get projectHierarchy => text().nullable()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   IntColumn get startDate => integer().nullable()();
   IntColumn get endDate => integer().nullable()();
   
