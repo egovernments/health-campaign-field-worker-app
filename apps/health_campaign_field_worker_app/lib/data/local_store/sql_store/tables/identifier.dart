@@ -7,9 +7,9 @@ class Identifier extends Table {
   TextColumn get identifierType => text().nullable()();
   TextColumn get identifierId => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

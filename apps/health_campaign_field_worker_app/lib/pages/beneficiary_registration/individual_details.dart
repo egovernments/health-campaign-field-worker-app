@@ -137,7 +137,7 @@ class _IndividualDetailsPageState
                             bloc.add(
                               BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                                 model: individual.copyWith(
-                                  rowVersion: individual.rowVersion + 1,
+                                  rowVersion: individual.rowVersion.increment,
                                 ),
                               ),
                             );

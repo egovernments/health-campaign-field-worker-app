@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
+import '../../utils/utils.dart';
 import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
@@ -54,7 +55,7 @@ class HouseholdOverviewBloc
     final householdId =
         state.householdMemberWrapper.household.clientReferenceId;
 
-    if (!groupedHouseholds.containsKey(householdId)) {
+    if (!groupedHouseholds.containsKey(householdId) || householdId == null) {
       emit(state.copyWith(loading: false));
 
       return;
@@ -134,7 +135,7 @@ class HouseholdOverviewBloc
   ) async {
     await householdRepository.delete(
       event.householdModel.copyWith(
-        rowVersion: event.householdModel.rowVersion + 1,
+        rowVersion: event.householdModel.rowVersion.increment,
       ),
     );
     for (final i in event.members) {
@@ -148,7 +149,7 @@ class HouseholdOverviewBloc
       for (final j in householdMember) {
         await householdMemberRepository.delete(
           j.copyWith(
-            rowVersion: j.rowVersion + 1,
+            rowVersion: j.rowVersion.increment,
           ),
         );
       }
@@ -156,7 +157,7 @@ class HouseholdOverviewBloc
 
     await projectBeneficiaryRepository.delete(
       event.projectBeneficiaryModel.copyWith(
-        rowVersion: event.projectBeneficiaryModel.rowVersion + 1,
+        rowVersion: event.projectBeneficiaryModel.rowVersion.increment,
       ),
     );
   }
@@ -176,7 +177,7 @@ class HouseholdOverviewBloc
     for (final i in householdMembers) {
       await householdMemberRepository.delete(
         i.copyWith(
-          rowVersion: i.rowVersion + 1,
+          rowVersion: i.rowVersion.increment,
         ),
       );
     }
@@ -202,14 +203,14 @@ class HouseholdOverviewBloc
         if (!i.isHeadOfHousehold) {
           return i.copyWith(
             isHeadOfHousehold: true,
-            rowVersion: i.rowVersion + 1,
+            rowVersion: i.rowVersion.increment,
           );
         }
       } else {
         if (i.isHeadOfHousehold) {
           return i.copyWith(
             isHeadOfHousehold: false,
-            rowVersion: i.rowVersion + 1,
+            rowVersion: i.rowVersion.increment,
           );
         }
       }
@@ -220,7 +221,7 @@ class HouseholdOverviewBloc
     for (final element in updatedMembers) {
       await householdMemberRepository.update(
         element.copyWith(
-          rowVersion: element.rowVersion + 1,
+          rowVersion: element.rowVersion.increment,
         ),
       );
     }

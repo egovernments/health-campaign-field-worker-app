@@ -26,10 +26,9 @@ class TaskResourceModel extends EntityModel {
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   TaskResourceModel({
@@ -38,11 +37,11 @@ class TaskResourceModel extends EntityModel {
     this.quantity,
     this.isDelivered,
     this.deliveryComment,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   TaskResourceCompanion get companion {
@@ -52,7 +51,6 @@ class TaskResourceModel extends EntityModel {
       quantity: Value(quantity),
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

@@ -8,9 +8,9 @@ class Name extends Table {
   TextColumn get familyName => text().nullable()();
   TextColumn get otherNames => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

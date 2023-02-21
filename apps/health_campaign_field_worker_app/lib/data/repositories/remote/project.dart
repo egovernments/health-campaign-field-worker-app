@@ -8,7 +8,6 @@ class ProjectRemoteRepository extends RemoteRepository<ProjectModel, ProjectSear
     super.dio, {
     required super.actionMap,
     super.entityName = 'Project',
-    super.isPlural = true,
   });
 
   @override

@@ -30,21 +30,20 @@ class ProjectFacilityModel extends EntityModel {
   final String? id;
   final String? facilityId;
   final String? projectId;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   ProjectFacilityModel({
     this.id,
     this.facilityId,
     this.projectId,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   ProjectFacilityCompanion get companion {
@@ -52,7 +51,6 @@ class ProjectFacilityModel extends EntityModel {
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
