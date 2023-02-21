@@ -270,10 +270,6 @@ class _DeliverInterventionPageState
                                 initialValue: 'BEDNETS',
                                 menuItems: [
                                   MenuItemModel(
-                                    "DOLO",
-                                    "DOLO",
-                                  ),
-                                  MenuItemModel(
                                     "BEDNETS",
                                     "BEDNETS",
                                   ),
