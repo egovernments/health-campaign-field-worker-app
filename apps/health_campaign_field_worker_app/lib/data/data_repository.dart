@@ -55,9 +55,8 @@ abstract class RemoteRepository<D extends EntityModel,
     final response = await dio.post(searchPath, data: {
       entityName: query.toMap(),
     });
-    print((response.data).toString());
-    final responseMap = (response.data);
 
+    final responseMap = (response.data);
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -104,51 +103,54 @@ abstract class RemoteRepository<D extends EntityModel,
     return await dio.post(
       createPath,
       data: {
-        entityName: [entity.toMap()],
+        EntityPlurals.getPluralForEntityName(entityName): [entity.toMap()],
         "apiOperation": "DELETE",
       },
     );
   }
 
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
-    List<dynamic> jsonString = [];
-    for (EntityModel e in entities) {
-      jsonString.add(e.toJson());
-    }
-
-    final headers = {
-      "content-type": 'application/json',
-    };
-
-    final data = entities.map((e) => Mapper.toMap(e)).toList();
-
     final res = await dio.post(
       bulkCreatePath,
-      options: Options(headers: headers),
+      options: Options(headers: {
+        "content-type": 'application/json',
+      }),
       data: {
-        EntityPlurals.getPluralForEntityName(entityName): data,
+        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
       },
     );
 
     return res;
   }
 
-  FutureOr<Response> bulkUpdate(List<D> entities) async {
-    return await dio.post(bulkUpdatePath, data: {
-      entityName: entities,
-      "apiOperation": "UPDATE",
-    });
+  FutureOr<Response> bulkUpdate(List<EntityModel> entities) async {
+    return await dio.post(
+      bulkUpdatePath,
+      options: Options(headers: {
+        "content-type": 'application/json',
+      }),
+      data: {
+        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+        "apiOperation": "UPDATE",
+      },
+    );
   }
 
-  FutureOr<Response> bulkDelete(List<D> entities) async {
-    return await dio.post(bulkDeletePath, data: {
-      entityName: entities,
-      "apiOperation": "DELETE",
-    });
+  FutureOr<Response> bulkDelete(List<EntityModel> entities) async {
+    return await dio.post(
+      bulkDeletePath,
+      options: Options(headers: {
+        "content-type": 'application/json',
+      }),
+      data: {
+        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+        "apiOperation": "DELETE",
+      },
+    );
   }
 
   @override
-  FutureOr<Response> update(D entity) async {
+  FutureOr<Response> update(EntityModel entity) async {
     return await dio.post(
       updatePath,
       data: {
@@ -156,6 +158,10 @@ abstract class RemoteRepository<D extends EntityModel,
         "apiOperation": "UPDATE",
       },
     );
+  }
+
+  List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
+    return entities.map((e) => Mapper.toMap(e)).toList();
   }
 }
 
