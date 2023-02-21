@@ -136,16 +136,9 @@ class NetworkManager {
                   .whereNotNull()
                   .toList(),
             ));
+
             break;
-          case DataModelType.householdMember:
-            responseEntities = await remote.search(HouseholdMemberSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdMemberModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-            break;
+
           case DataModelType.individual:
             responseEntities = await remote.search(IndividualSearchModel(
               clientReferenceId: entities
@@ -179,7 +172,7 @@ class NetworkManager {
         }
 
         for (var element in responseEntities) {
-          debugPrint(element.toJson());
+          await local.update(element);
         }
       }
     }
