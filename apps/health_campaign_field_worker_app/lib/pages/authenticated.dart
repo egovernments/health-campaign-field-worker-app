@@ -22,7 +22,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final networkManager = context.read<NetworkManager>();
-    final task = networkManager.repository<TaskModel, TaskSearchModel>(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -64,12 +63,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
-          ),
-          BlocProvider(
-            create: (_) => DeliverInterventionBloc(
-              const DeliverInterventionState(),
-              taskRepository: task,
-            ),
           ),
         ],
         child: const AutoRouter(),
