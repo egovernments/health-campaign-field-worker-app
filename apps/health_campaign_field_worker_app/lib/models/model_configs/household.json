@@ -1,6 +1,7 @@
 {
   "name": "household",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
