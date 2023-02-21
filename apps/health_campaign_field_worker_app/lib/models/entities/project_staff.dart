@@ -45,9 +45,9 @@ class ProjectStaffModel extends EntityModel {
   final String? userId;
   final String? projectId;
   final String? channel;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -57,12 +57,13 @@ class ProjectStaffModel extends EntityModel {
     this.userId,
     this.projectId,
     this.channel,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     int? startDate,
     int? endDate,
     super.auditDetails,
+    super.clientReferenceId,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),

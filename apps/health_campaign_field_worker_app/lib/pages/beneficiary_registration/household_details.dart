@@ -85,7 +85,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                             if (beneficiaryRegistrationState.isEditing) {
                               household = household.copyWith(
-                                rowVersion: household.rowVersion + 1,
+                                rowVersion: household.rowVersion.increment,
                               );
 
                               bloc.add(

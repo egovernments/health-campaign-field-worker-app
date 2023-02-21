@@ -21,27 +21,25 @@ class IndividualNameSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class IndividualNameModel extends EntityModel {
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final IndividualModel? individual;
   final NameModel? name;
   
 
   IndividualNameModel({
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.individual,
     this.name,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   IndividualNameCompanion get companion {
     return IndividualNameCompanion(
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

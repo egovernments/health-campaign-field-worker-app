@@ -33,10 +33,9 @@ class ProductModel extends EntityModel {
   final String? type;
   final String? name;
   final String? manufacturer;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   ProductModel({
@@ -44,11 +43,11 @@ class ProductModel extends EntityModel {
     this.type,
     this.name,
     this.manufacturer,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   ProductCompanion get companion {
@@ -57,7 +56,6 @@ class ProductModel extends EntityModel {
       type: Value(type),
       name: Value(name),
       manufacturer: Value(manufacturer),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

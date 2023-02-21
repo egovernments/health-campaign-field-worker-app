@@ -30,21 +30,20 @@ class NameModel extends EntityModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
-  final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   
 
   NameModel({
     this.givenName,
     this.familyName,
     this.otherNames,
-    required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     super.auditDetails,
+    super.clientReferenceId,
   }):  super();
 
   NameCompanion get companion {
@@ -52,7 +51,6 @@ class NameModel extends EntityModel {
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

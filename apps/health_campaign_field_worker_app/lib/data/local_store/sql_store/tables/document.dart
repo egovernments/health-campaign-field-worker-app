@@ -9,9 +9,9 @@ class Document extends Table {
   TextColumn get fileStoreId => text().nullable()();
   TextColumn get documentUid => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override
