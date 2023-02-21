@@ -15,8 +15,6 @@ class ApiInterceptors extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    print(options.path);
-    print("--------");
     AppLogger.instance.info(options.path, title: 'onRequest');
     final authToken = await storage.read(key: AuthBloc.accessTokenKey);
 
