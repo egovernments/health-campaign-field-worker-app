@@ -64,6 +64,8 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
 
 @freezed
 class DeliverInterventionState with _$DeliverInterventionState {
-  const factory DeliverInterventionState({@Default(false) bool loading}) =
-      _DeliverInterventionState;
+  const factory DeliverInterventionState({
+    @Default(false) bool loading,
+    @Default(false) bool isEditing,
+  }) = _DeliverInterventionState;
 }
