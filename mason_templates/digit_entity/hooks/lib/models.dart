@@ -12,6 +12,7 @@ class ConfigModel {
   final List<AttributeModel> dateTimeAttributes;
   final List<AttributeModel> sqlAttributes;
   final List<AttributeModel> referenceAttributes;
+  final bool isPlural;
 
   final bool createRepository;
   final bool isEnum;
@@ -27,6 +28,7 @@ class ConfigModel {
     this.referenceAttributes = const [],
     this.isEnum = false,
     this.createRepository = false,
+    this.isPlural = false,
   });
 }
 

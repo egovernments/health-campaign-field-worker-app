@@ -14,12 +14,11 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? parent;
   final String? department;
   final String? referenceId;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-
+  
   ProjectSearchModel({
     this.id,
     this.projectTypeId,
@@ -28,23 +27,24 @@ class ProjectSearchModel extends EntitySearchModel {
     this.parent,
     this.department,
     this.referenceId,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
-  })  : startDateTime = startDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(startDate),
-        endDateTime = endDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(endDate),
-        super();
+  }): startDateTime = startDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super();
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  
 
   int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass(ignoreNull: true)
@@ -58,7 +58,6 @@ class ProjectModel extends EntityModel {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
-  final String clientReferenceId;
   final String tenantId;
   final bool? isDeleted;
   final int rowVersion;
@@ -67,6 +66,7 @@ class ProjectModel extends EntityModel {
   final List<DocumentModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
+  
 
   ProjectModel({
     this.id,
@@ -78,7 +78,6 @@ class ProjectModel extends EntityModel {
     this.description,
     this.referenceId,
     this.projectHierarchy,
-    required this.clientReferenceId,
     required this.tenantId,
     this.isDeleted,
     required this.rowVersion,
@@ -88,17 +87,19 @@ class ProjectModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
-  })  : startDateTime = startDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(startDate),
-        endDateTime = endDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(endDate),
-        super();
+  }): startDateTime = startDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(startDate),
+      endDateTime = endDate == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(endDate),
+       super();
 
-  int? get startDate => startDateTime?.millisecondsSinceEpoch;
+  int?  get startDate => startDateTime?.millisecondsSinceEpoch;
+  
 
-  int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  int?  get endDate => endDateTime?.millisecondsSinceEpoch;
+  
 
   ProjectCompanion get companion {
     return ProjectCompanion(
@@ -111,12 +112,11 @@ class ProjectModel extends EntityModel {
       description: Value(description),
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
-    );
+      );
   }
 }

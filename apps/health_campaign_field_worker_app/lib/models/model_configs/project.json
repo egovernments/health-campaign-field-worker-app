@@ -1,6 +1,8 @@
 {
   "name": "project",
   "createRepository": true,
+  "isPlural": true,
+  "ignoreFields": ["clientReferenceId"],
   "attributes": [
     {
       "name": "id",
