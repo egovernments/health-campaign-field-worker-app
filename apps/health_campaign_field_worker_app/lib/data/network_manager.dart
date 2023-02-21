@@ -156,9 +156,10 @@ class NetworkManager {
             ));
             break;
           case DataModelType.projectBeneficiary:
-            responseEntities = await remote.search(ProjectSearchModel(
+            responseEntities =
+                await remote.search(ProjectBeneficiarySearchModel(
               clientReferenceId: entities
-                  .whereType<ProjectModel>()
+                  .whereType<ProjectBeneficiaryModel>()
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
