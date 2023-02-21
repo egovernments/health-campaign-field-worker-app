@@ -14,6 +14,7 @@ import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
+import 'data/repositories/remote/project.dart';
 import 'data/repositories/remote/project_staff.dart';
 import 'models/oplog/oplog_entry.dart';
 import 'router/app_navigator_observer.dart';
@@ -124,6 +125,15 @@ class MainApplication extends StatelessWidget {
                                     '/project/staff/v1/_search?limit=100&offset=0&tenantId=default',
                               },
                             ),
+                            projectRemoteRepository: ProjectRemoteRepository(
+                              client,
+                              actionMap: {
+                                ApiOperation.search:
+                                    '/project/v1/_search?limit=5&offset=0&tenantId=default&lastChangedSince=&includeDeleted=true&includeDescendants=true',
+                              },
+                            ),
+                            isar: isar,
+                            sql: sql,
                           ),
                         ),
                       ],
