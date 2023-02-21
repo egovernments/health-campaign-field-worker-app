@@ -45,7 +45,6 @@ class ProjectLocalRepository
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
-        clientReferenceId: data.id.toString(),
       );
     }).toList();
   }
