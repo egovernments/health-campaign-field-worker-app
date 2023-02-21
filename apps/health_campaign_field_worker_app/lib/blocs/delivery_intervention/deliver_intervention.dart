@@ -4,11 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
-import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
-import '../../models/entities/task_resource.dart';
-import '../../utils/environment_config.dart';
-import '../../utils/utils.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -23,6 +19,7 @@ class DeliverInterventionBloc
     required this.taskRepository,
   }) {
     on(_handleSubmit);
+    on(_handleUpdate);
   }
 
   FutureOr<void> _handleSubmit(
@@ -38,6 +35,20 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _handleUpdate(
+    DeliverInterventionUpdateEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      await taskRepository.update(event.task);
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
 }
 
 @freezed
@@ -45,6 +56,10 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSubmit(
     TaskModel task,
   ) = DeliverInterventionSubmitEvent;
+
+  const factory DeliverInterventionEvent.handleUpdate(
+    TaskModel task,
+  ) = DeliverInterventionUpdateEvent;
 }
 
 @freezed
