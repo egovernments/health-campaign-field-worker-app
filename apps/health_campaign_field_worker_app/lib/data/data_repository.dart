@@ -7,7 +7,6 @@ import '../models/data_model.dart';
 import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import 'local_store/sql_store/sql_store.dart';
-import 'local_store/sql_store/tables/project.dart';
 import 'repositories/oplog/oplog.dart';
 
 abstract class DataRepository<D extends EntityModel,
@@ -30,8 +29,12 @@ abstract class RemoteRepository<D extends EntityModel,
   final Dio dio;
   final String entityName;
   final bool isPlural;
+  final bool isSearchResponsePlural;
 
   final Map<ApiOperation, String> actionMap;
+
+  String get entityNamePlural =>
+      EntityPlurals.getPluralForEntityName(entityName);
 
   String get createPath => actionMap[ApiOperation.create] ?? '';
 
@@ -52,6 +55,7 @@ abstract class RemoteRepository<D extends EntityModel,
     required this.actionMap,
     required this.entityName,
     this.isPlural = false,
+    this.isSearchResponsePlural = false,
   });
 
   @override
@@ -64,9 +68,8 @@ abstract class RemoteRepository<D extends EntityModel,
         'tenantId': envConfig.variables.tenantId,
       },
       data: {
-        isPlural
-            ? EntityPlurals.getPluralForEntityName(entityName)
-            : entityName: isPlural ? [query.toMap()] : query.toMap(),
+        isPlural ? entityNamePlural : entityName:
+            isPlural ? [query.toMap()] : query.toMap(),
       },
     );
 
@@ -79,7 +82,8 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    if (!responseMap.containsKey(entityName)) {
+    if (!responseMap
+        .containsKey(isSearchResponsePlural ? entityNamePlural : entityName)) {
       throw InvalidApiResponseException(
         data: query.toMap(),
         path: searchPath,
@@ -87,7 +91,8 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    final entityResponse = await responseMap[entityName];
+    final entityResponse = await responseMap[
+        isSearchResponsePlural ? entityNamePlural : entityName];
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
         data: query.toMap(),

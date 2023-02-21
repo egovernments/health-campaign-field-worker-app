@@ -8,7 +8,8 @@ class {{name.pascalCase()}}RemoteRepository extends RemoteRepository<{{name.pasc
     super.dio, {
     required super.actionMap,
     super.entityName = '{{name.pascalCase()}}',{{#isPlural}}
-    super.isPlural = true,{{/isPlural}}
+    super.isPlural = true,{{/isPlural}}{{#isSearchResponsePlural}}
+    super.isSearchResponsePlural = true,{{/isSearchResponsePlural}}
   });
 
   @override
