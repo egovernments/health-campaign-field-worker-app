@@ -20,7 +20,6 @@ class DeliverInterventionBloc
     required this.taskRepository,
   }) {
     on(_handleSubmit);
-    on(_handleUpdate);
     on(_handleSearch);
   }
 
@@ -30,7 +29,11 @@ class DeliverInterventionBloc
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      await taskRepository.create(event.task);
+      if (event.isEditing) {
+        await taskRepository.update(event.task);
+      } else {
+        await taskRepository.create(event.task);
+      }
     } catch (error) {
       rethrow;
     } finally {
@@ -53,31 +56,14 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
-
-  FutureOr<void> _handleUpdate(
-    DeliverInterventionUpdateEvent event,
-    BeneficiaryRegistrationEmitter emit,
-  ) async {
-    emit(state.copyWith(loading: true));
-    try {
-      print(await taskRepository.update(event.task));
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
-  }
 }
 
 @freezed
 class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSubmit(
     TaskModel task,
+    bool isEditing,
   ) = DeliverInterventionSubmitEvent;
-
-  const factory DeliverInterventionEvent.handleUpdate(
-    TaskModel task,
-  ) = DeliverInterventionUpdateEvent;
 
   const factory DeliverInterventionEvent.handleSearch(
     TaskSearchModel taskSearch,
