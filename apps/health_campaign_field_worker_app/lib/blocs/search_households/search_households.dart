@@ -23,12 +23,14 @@ class SearchHouseholdsBloc
   final HouseholdDataRepository household;
   final HouseholdMemberDataRepository householdMember;
   final ProjectBeneficiaryDataRepository projectBeneficiary;
+  final TaskDataRepository taskDataRepository;
 
   SearchHouseholdsBloc({
     required this.individual,
     required this.householdMember,
     required this.household,
     required this.projectBeneficiary,
+    required this.taskDataRepository,
   }) : super(const SearchHouseholdsEmptyState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -121,6 +123,10 @@ class SearchHouseholdsBloc
       );
 
       if (projectBeneficiaries.isEmpty) continue;
+      final tasks = await taskDataRepository.search(TaskSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.first.clientReferenceId,
+      ));
 
       containers.add(
         HouseholdMemberWrapper(
@@ -128,6 +134,7 @@ class SearchHouseholdsBloc
           headOfHousehold: head,
           members: individuals,
           projectBeneficiary: projectBeneficiaries.first,
+          task: tasks.isEmpty ? null : tasks.first,
         ),
       );
     }
@@ -179,5 +186,6 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required IndividualModel headOfHousehold,
     required List<IndividualModel> members,
     required ProjectBeneficiaryModel projectBeneficiary,
+    TaskModel? task,
   }) = _HouseholdMemberWrapper;
 }

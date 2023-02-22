@@ -56,6 +56,8 @@ class _SearchBeneficiaryPageState
           ),
           individual: networkManager
               .repository<IndividualModel, IndividualSearchModel>(context),
+          taskDataRepository:
+              networkManager.repository<TaskModel, TaskSearchModel>(context),
         );
       },
       child: KeyboardVisibilityBuilder(
