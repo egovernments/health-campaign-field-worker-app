@@ -36,34 +36,69 @@ class BeneficiaryRegistrationBloc
     on(_handleCreate);
     on(_handleUpdateHousehold);
     on(_handleUpdateIndividual);
+    on(_handleAddMember);
   }
 
   FutureOr<void> _handleSaveAddress(
     BeneficiaryRegistrationSaveAddressEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(state.copyWith(addressModel: event.model));
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      editHousehold: (value) {
+        emit(value.copyWith(addressModel: event.model));
+      },
+      create: (value) {
+        emit(value.copyWith(addressModel: event.model));
+      },
+    );
+
+    throw InvalidRegistrationStateException();
   }
 
   FutureOr<void> _handleSaveHouseholdDetails(
     BeneficiaryRegistrationSaveHouseholdDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(state.copyWith(
-      householdModel: event.household,
-      registrationDate: event.registrationDate,
-    ));
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      editHousehold: (value) {
+        emit(value.copyWith(
+          householdModel: event.household,
+        ));
+      },
+      create: (value) {
+        emit(value.copyWith(
+          householdModel: event.household,
+          registrationDate: event.registrationDate,
+        ));
+      },
+    );
   }
 
   FutureOr<void> _handleSaveIndividualDetails(
     BeneficiaryRegistrationSaveIndividualDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(
-      state.copyWith(
-        individualModel: event.model,
-        isHeadOfHousehold: event.isHeadOfHousehold,
-      ),
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      create: (value) {
+        emit(value.copyWith(
+          isHeadOfHousehold: event.isHeadOfHousehold,
+          individualModel: event.model,
+        ));
+      },
+      editIndividual: (value) {
+        emit(value.copyWith(
+          individualModel: event.model,
+        ));
+      },
     );
   }
 
@@ -71,100 +106,168 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationCreateEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    final individual = state.individualModel;
-    final household = state.householdModel;
-    final address = state.addressModel;
-    final dateOfRegistration = state.registrationDate;
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      create: (value) async {
+        final individual = value.individualModel;
+        final household = value.householdModel;
+        final address = value.addressModel;
+        final dateOfRegistration = value.registrationDate;
 
-    if (individual == null) throw Exception('Individual cannot be null');
-    if (household == null) throw Exception('Household cannot be null');
-    if (address == null) throw Exception('Address cannot be null');
-    if (dateOfRegistration == null) {
-      throw Exception('Registration date cannot be null');
-    }
+        if (individual == null) throw Exception('Individual cannot be null');
+        if (household == null) throw Exception('Household cannot be null');
+        if (address == null) throw Exception('Address cannot be null');
+        if (dateOfRegistration == null) {
+          throw Exception('Registration date cannot be null');
+        }
 
-    emit(state.copyWith(loading: true));
-    try {
-      await individualRepository.create(
-        individual.copyWith(
-          address: [
-            address.copyWith(
-              relatedClientReferenceId: individual.clientReferenceId,
+        emit(value.copyWith(loading: true));
+
+        try {
+          await individualRepository.create(
+            individual.copyWith(
+              address: [
+                address.copyWith(
+                  relatedClientReferenceId: individual.clientReferenceId,
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-      await householdRepository.create(
-        household.copyWith(
-          address: address.copyWith(
-            relatedClientReferenceId: household.clientReferenceId,
-          ),
-        ),
-      );
+          );
+          await householdRepository.create(
+            household.copyWith(
+              address: address.copyWith(
+                relatedClientReferenceId: household.clientReferenceId,
+              ),
+            ),
+          );
 
-      if (!state.isEditing) {
-        await projectBeneficiaryRepository.create(
-          ProjectBeneficiaryModel(
-            rowVersion: 1,
-            tenantId: envConfig.variables.tenantId,
-            clientReferenceId: IdGen.i.identifier,
-            dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
-            // TODO(naveen): Please add project ID here
-            projectId: '13',
-            beneficiaryClientReferenceId: household.clientReferenceId,
-          ),
-        );
-      }
-      await householdMemberRepository.create(
-        HouseholdMemberModel(
-          householdClientReferenceId: household.clientReferenceId,
-          individualClientReferenceId: individual.clientReferenceId,
-          isHeadOfHousehold: state.isHeadOfHousehold,
-          tenantId: envConfig.variables.tenantId,
-          rowVersion: 1,
-          clientReferenceId: IdGen.i.identifier,
-        ),
-      );
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
+          await projectBeneficiaryRepository.create(
+            ProjectBeneficiaryModel(
+              rowVersion: 1,
+              tenantId: envConfig.variables.tenantId,
+              clientReferenceId: IdGen.i.identifier,
+              dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
+              // TODO(naveen): Please add project ID here
+              projectId: '13',
+              beneficiaryClientReferenceId: household.clientReferenceId,
+            ),
+          );
+
+          await householdMemberRepository.create(
+            HouseholdMemberModel(
+              householdClientReferenceId: household.clientReferenceId,
+              individualClientReferenceId: individual.clientReferenceId,
+              isHeadOfHousehold: value.isHeadOfHousehold,
+              tenantId: envConfig.variables.tenantId,
+              rowVersion: 1,
+              clientReferenceId: IdGen.i.identifier,
+            ),
+          );
+        } catch (error) {
+          rethrow;
+        } finally {
+          emit(value.copyWith(loading: false));
+        }
+      },
+    );
   }
 
   FutureOr<void> _handleUpdateHousehold(
     BeneficiaryRegistrationUpdateHouseholdDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    final address = event.addressModel;
-    final household = event.household;
-
-    emit(state.copyWith(loading: true));
-    try {
-      await householdRepository.update(household.copyWith(
-        address: address?.copyWith(
-          relatedClientReferenceId: household.clientReferenceId,
-        ),
-      ));
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      editHousehold: (value) async {
+        emit(value.copyWith(loading: true));
+        try {
+          await householdRepository.update(value.householdModel.copyWith(
+            address: value.addressModel.copyWith(
+              relatedClientReferenceId: value.householdModel.clientReferenceId,
+            ),
+          ));
+        } catch (error) {
+          rethrow;
+        } finally {
+          emit(value.copyWith(loading: false));
+        }
+      },
+    );
   }
 
   FutureOr<void> _handleUpdateIndividual(
     BeneficiaryRegistrationUpdateIndividualDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
-    try {
-      await individualRepository.update(event.model);
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      editIndividual: (value) async {
+        emit(value.copyWith(loading: true));
+        try {
+          await individualRepository.update(value.individualModel.copyWith(
+            address: [
+              value.addressModel.copyWith(
+                relatedClientReferenceId:
+                    value.individualModel.clientReferenceId,
+              ),
+            ],
+          ));
+        } catch (error) {
+          rethrow;
+        } finally {
+          emit(value.copyWith(loading: false));
+        }
+      },
+    );
+  }
+
+  FutureOr<void> _handleAddMember(
+    BeneficiaryRegistrationAddMemberEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    state.maybeMap(
+      orElse: () {
+        throw InvalidRegistrationStateException();
+      },
+      addMember: (value) async {
+        emit(value.copyWith(loading: true));
+        try {
+          await individualRepository.create(
+            event.individualModel.copyWith(
+              address: [
+                value.addressModel.copyWith(
+                  relatedClientReferenceId:
+                      event.individualModel.clientReferenceId,
+                ),
+              ],
+            ),
+          );
+
+          await householdMemberRepository.create(
+            HouseholdMemberModel(
+              householdClientReferenceId:
+                  value.householdModel.clientReferenceId,
+              individualClientReferenceId:
+                  event.individualModel.clientReferenceId,
+              isHeadOfHousehold: false,
+              tenantId: envConfig.variables.tenantId,
+              rowVersion: 1,
+              clientReferenceId: IdGen.i.identifier,
+            ),
+          );
+        } catch (error) {
+          rethrow;
+        } finally {
+          emit(value.copyWith(loading: false));
+        }
+      },
+    );
   }
 }
 
@@ -184,6 +287,12 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSaveIndividualDetailsEvent;
 
+  const factory BeneficiaryRegistrationEvent.addMember({
+    required HouseholdModel householdModel,
+    required IndividualModel individualModel,
+    required AddressModel addressModel,
+  }) = BeneficiaryRegistrationAddMemberEvent;
+
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({
     required HouseholdModel household,
     AddressModel? addressModel,
@@ -191,6 +300,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
 
   const factory BeneficiaryRegistrationEvent.updateIndividualDetails({
     required IndividualModel model,
+    required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.create() =
@@ -199,14 +309,33 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
 
 @freezed
 class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
-  const factory BeneficiaryRegistrationState({
+  const factory BeneficiaryRegistrationState.create({
     AddressModel? addressModel,
-    IndividualModel? individualModel,
     HouseholdModel? householdModel,
+    IndividualModel? individualModel,
     DateTime? registrationDate,
     String? searchQuery,
-    @Default(false) bool isEditing,
-    @Default(false) bool isHeadOfHousehold,
     @Default(false) bool loading,
-  }) = _BeneficiaryRegistrationState;
+    @Default(false) bool isHeadOfHousehold,
+  }) = BeneficiaryRegistrationCreateState;
+
+  const factory BeneficiaryRegistrationState.editHousehold({
+    required AddressModel addressModel,
+    required HouseholdModel householdModel,
+    @Default(false) bool loading,
+  }) = BeneficiaryRegistrationEditHouseholdState;
+
+  const factory BeneficiaryRegistrationState.editIndividual({
+    required IndividualModel individualModel,
+    required AddressModel addressModel,
+    @Default(false) bool loading,
+  }) = BeneficiaryRegistrationEditIndividualState;
+
+  const factory BeneficiaryRegistrationState.addMember({
+    required AddressModel addressModel,
+    required HouseholdModel householdModel,
+    @Default(false) bool loading,
+  }) = BeneficiaryRegistrationAddMemberState;
 }
+
+class InvalidRegistrationStateException implements Exception {}
