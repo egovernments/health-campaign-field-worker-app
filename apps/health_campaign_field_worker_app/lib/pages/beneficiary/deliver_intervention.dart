@@ -22,9 +22,11 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
 class DeliverInterventionPage extends LocalizedStatefulWidget {
+  final bool isEditing;
   const DeliverInterventionPage({
     super.key,
     super.appLocalizations,
+    this.isEditing = false,
   });
 
   @override
@@ -76,8 +78,13 @@ class _DeliverInterventionPageState
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           TaskModel(
-                                            clientReferenceId:
-                                                IdGen.i.identifier,
+                                            clientReferenceId: state
+                                                        .householdMemberWrapper
+                                                        .task ==
+                                                    null
+                                                ? IdGen.i.identifier
+                                                : state.householdMemberWrapper
+                                                    .task!.clientReferenceId,
                                             projectBeneficiaryClientReferenceId:
                                                 householdMemberWrapper
                                                     .projectBeneficiary
@@ -91,8 +98,17 @@ class _DeliverInterventionPageState
                                                 .millisecondsSinceEpoch,
                                             taskResource: [
                                               TaskResourceModel(
-                                                clientReferenceId:
-                                                    IdGen.i.identifier,
+                                                clientReferenceId: state
+                                                            .householdMemberWrapper
+                                                            .task ==
+                                                        null
+                                                    ? IdGen.i.identifier
+                                                    : state
+                                                        .householdMemberWrapper
+                                                        .task!
+                                                        .taskResource!
+                                                        .first
+                                                        .clientReferenceId,
                                                 rowVersion: 1,
                                                 isDelivered: true,
                                                 tenantId: envConfig
@@ -113,6 +129,10 @@ class _DeliverInterventionPageState
                                             address: householdMemberWrapper
                                                 .household.address,
                                           ),
+                                          state.householdMemberWrapper.task ==
+                                                  null
+                                              ? false
+                                              : true,
                                         ),
                                       );
 
@@ -338,10 +358,6 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-
-    print(
-      state.householdMemberWrapper.task?.taskResource?.first.deliveryComment,
-    );
 
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<String>(
