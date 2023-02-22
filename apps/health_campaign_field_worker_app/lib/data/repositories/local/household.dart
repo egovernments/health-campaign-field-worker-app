@@ -110,7 +110,9 @@ class HouseholdLocalRepository
     bool createOpLog = true,
   }) async {
     final householdCompanion = entity.companion;
-    final addressCompanion = entity.address?.companion;
+    final addressCompanion = entity.address
+        ?.copyWith(relatedClientReferenceId: entity.clientReferenceId)
+        .companion;
 
     await sql.batch((batch) async {
       batch.update(

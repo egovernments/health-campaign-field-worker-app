@@ -197,7 +197,9 @@ class IndividualLocalRepository
 
     final nameCompanion = entity.name?.companion;
     final addressCompanions = entity.address?.map((e) {
-          return e.companion;
+          return e
+              .copyWith(relatedClientReferenceId: entity.clientReferenceId)
+              .companion;
         }).toList() ??
         [];
 
