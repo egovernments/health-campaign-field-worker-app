@@ -33,7 +33,7 @@ class BeneficiaryRegistrationBloc
     on(_handleSaveAddress);
     on(_handleSaveHouseholdDetails);
     on(_handleSaveIndividualDetails);
-    on(_handleSubmit);
+    on(_handleCreate);
     on(_handleUpdateHousehold);
     on(_handleUpdateIndividual);
   }
@@ -67,8 +67,8 @@ class BeneficiaryRegistrationBloc
     );
   }
 
-  FutureOr<void> _handleSubmit(
-    BeneficiaryRegistrationSubmitEvent event,
+  FutureOr<void> _handleCreate(
+    BeneficiaryRegistrationCreateEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
     final individual = state.individualModel;
@@ -193,8 +193,8 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required IndividualModel model,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
-  const factory BeneficiaryRegistrationEvent.submit() =
-      BeneficiaryRegistrationSubmitEvent;
+  const factory BeneficiaryRegistrationEvent.create() =
+      BeneficiaryRegistrationCreateEvent;
 }
 
 @freezed
