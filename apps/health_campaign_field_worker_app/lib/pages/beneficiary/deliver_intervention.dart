@@ -34,6 +34,10 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
 
 class _DeliverInterventionPageState
     extends LocalizedState<DeliverInterventionPage> {
+  static const _resourceDeliveredKey = 'resourceDelivered';
+  static const _quantityDistributedKey = 'quantityDistributed';
+  static const _deliveryCommentKey = 'deliveryComment';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -46,7 +50,7 @@ class _DeliverInterventionPageState
           body: state.loading
               ? const Center(child: CircularProgressIndicator())
               : ReactiveFormBuilder(
-                  form: buildForm,
+                  form: () => buildForm(context),
                   builder: (context, form, child) {
                     return ScrollableContent(
                       header: Column(children: const [
@@ -327,9 +331,18 @@ class _DeliverInterventionPageState
     );
   }
 
-  FormGroup buildForm() => fb.group(<String, Object>{
-        'resourceDelivered': FormControl<String>(),
-        'quantityDistributed': FormControl<int>(value: 1),
-        'deliveryComment': FormControl<String>(),
-      });
+  FormGroup buildForm(BuildContext context) {
+    final state = context.read<HouseholdOverviewBloc>().state;
+
+    print(state.householdMemberWrapper.task?.resources);
+
+    return fb.group(<String, Object>{
+      _resourceDeliveredKey: FormControl<String>(),
+      _quantityDistributedKey: FormControl<int>(value: 1),
+      _deliveryCommentKey: FormControl<String>(
+        value:
+            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
+      ),
+    });
+  }
 }
