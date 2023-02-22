@@ -7,9 +7,9 @@ import 'task_resource.dart';
 
 class TaskToResource extends Table {
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
+  TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer()();
+  IntColumn get rowVersion => integer().nullable()();
   
   TextColumn get task => text().nullable().references(Task, #clientReferenceId)();
   TextColumn get taskResource => text().nullable().references(TaskResource, #clientReferenceId)();

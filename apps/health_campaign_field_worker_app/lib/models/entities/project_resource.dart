@@ -28,9 +28,9 @@ class ProjectResourceModel extends EntityModel {
   final String? id;
   final String? projectId;
   final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final ProjectProductVariantModel resources;
   
 
@@ -38,9 +38,9 @@ class ProjectResourceModel extends EntityModel {
     this.id,
     this.projectId,
     required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     required this.resources,
     super.auditDetails,
   }):  super();

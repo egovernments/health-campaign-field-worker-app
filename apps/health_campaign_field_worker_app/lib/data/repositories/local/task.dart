@@ -68,7 +68,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final addresses = entity.address?.copyWith(
       relatedClientReferenceId: entity.clientReferenceId,
     );
-    final resources = entity.resources;
+    final resources = entity.taskResource;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
 
