@@ -2,17 +2,17 @@
 
 import 'package:drift/drift.dart';
 
-import 'project_product_variant.dart';
+import 'task.dart';
+import 'task_resource.dart';
 
-class ProjectResource extends Table {
-  TextColumn get id => text().nullable()();
-  TextColumn get projectId => text().nullable()();
+class TaskToResource extends Table {
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer()();
   
-  TextColumn get resources => text().references(ProjectProductVariant, #clientReferenceId)();
+  TextColumn get task => text().nullable().references(Task, #clientReferenceId)();
+  TextColumn get taskResource => text().nullable().references(TaskResource, #clientReferenceId)();
 
   @override
   Set<Column> get primaryKey => { clientReferenceId,  };

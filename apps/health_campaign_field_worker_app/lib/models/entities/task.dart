@@ -75,7 +75,7 @@ class TaskModel extends EntityModel {
   final String tenantId;
   final bool? isDeleted;
   final int rowVersion;
-  final List<TaskResourceModel>? resources;
+  final List<TaskResourceModel>? taskResource;
   final AddressModel? address;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
@@ -95,7 +95,7 @@ class TaskModel extends EntityModel {
     required this.tenantId,
     this.isDeleted,
     required this.rowVersion,
-    this.resources,
+    this.taskResource,
     this.address,
     int? plannedStartDate,
     int? plannedEndDate,

@@ -1,5 +1,5 @@
 {
-  "name": "task_resource",
+  "name": "TaskResource",
   "attributes": [
     {
       "name": "id",
