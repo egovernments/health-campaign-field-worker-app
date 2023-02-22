@@ -157,6 +157,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }) async {
     final taskCompanion = entity.companion;
 
+    final taskResourceCompanions = entity.taskResource?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
+
     await sql.batch((batch) {
       batch.update(
         sql.task,
@@ -165,6 +170,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           entity.clientReferenceId,
         ),
       );
+      batch.insertAllOnConflictUpdate(sql.taskResource, taskResourceCompanions);
     });
 
     await super.update(entity);
