@@ -40,12 +40,8 @@ abstract class DataModel {
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
-  final String? clientReferenceId;
 
-  const EntityModel({
-    this.auditDetails,
-    this.clientReferenceId,
-  });
+  const EntityModel({this.auditDetails});
 }
 
 @MappableClass()

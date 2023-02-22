@@ -7,18 +7,18 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class NameSearchModel extends EntitySearchModel {
+  final String? id;
   final String? givenName;
   final String? familyName;
   final String? otherNames;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
   NameSearchModel({
+    this.id,
     this.givenName,
     this.familyName,
     this.otherNames,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -27,6 +27,8 @@ class NameSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class NameModel extends EntityModel {
+  final String? id;
+  final String? individualClientReferenceId;
   final String? givenName;
   final String? familyName;
   final String? otherNames;
@@ -36,6 +38,8 @@ class NameModel extends EntityModel {
   
 
   NameModel({
+    this.id,
+    this.individualClientReferenceId,
     this.givenName,
     this.familyName,
     this.otherNames,
@@ -43,11 +47,12 @@ class NameModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   NameCompanion get companion {
     return NameCompanion(
+      id: Value(id),
+      individualClientReferenceId: Value(individualClientReferenceId),
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),

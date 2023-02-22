@@ -7,16 +7,16 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class IdentifierSearchModel extends EntitySearchModel {
+  final String? id;
   final String? identifierType;
   final String? identifierId;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
   IdentifierSearchModel({
+    this.id,
     this.identifierType,
     this.identifierId,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -25,6 +25,8 @@ class IdentifierSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class IdentifierModel extends EntityModel {
+  final String? id;
+  final String? individualClientReferenceId;
   final String? identifierType;
   final String? identifierId;
   final String? tenantId;
@@ -33,17 +35,20 @@ class IdentifierModel extends EntityModel {
   
 
   IdentifierModel({
+    this.id,
+    this.individualClientReferenceId,
     this.identifierType,
     this.identifierId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
+      id: Value(id),
+      individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
       tenantId: Value(tenantId),

@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/household_address.dart';
-import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -17,15 +15,9 @@ class HouseholdLocalRepository
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
-          sql.householdAddress,
-          sql.householdAddress.household.equalsExp(
-            sql.household.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
           sql.address,
-          sql.address.clientReferenceId.equalsExp(
-            sql.householdAddress.address,
+          sql.address.relatedClientReferenceId.equalsExp(
+            sql.household.clientReferenceId,
           ),
         ),
       ],
@@ -65,8 +57,8 @@ class HouseholdLocalRepository
             address: address == null
                 ? null
                 : AddressModel(
+                    relatedClientReferenceId: household.clientReferenceId,
                     tenantId: address.tenantId,
-                    clientReferenceId: address.clientReferenceId,
                     doorNo: address.doorNo,
                     latitude: address.latitude,
                     longitude: address.longitude,
@@ -93,14 +85,6 @@ class HouseholdLocalRepository
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 
-    final householdAddressCompanion = HouseholdAddressModel(
-      clientReferenceId: IdGen.i.identifier,
-      tenantId: envConfig.variables.tenantId,
-      rowVersion: 1,
-      address: entity.address,
-      household: entity,
-    ).companion;
-
     await sql.batch((batch) async {
       batch.insert(
         sql.household,
@@ -112,11 +96,6 @@ class HouseholdLocalRepository
         batch.insert(
           sql.address,
           addressCompanion,
-          mode: InsertMode.insertOrReplace,
-        );
-        batch.insert(
-          sql.householdAddress,
-          householdAddressCompanion,
           mode: InsertMode.insertOrReplace,
         );
       }
@@ -146,8 +125,8 @@ class HouseholdLocalRepository
         batch.update(
           sql.address,
           addressCompanion,
-          where: (table) => table.clientReferenceId.equals(
-            addressCompanion.clientReferenceId.value,
+          where: (table) => table.relatedClientReferenceId.equals(
+            addressCompanion.relatedClientReferenceId.value,
           ),
         );
       }

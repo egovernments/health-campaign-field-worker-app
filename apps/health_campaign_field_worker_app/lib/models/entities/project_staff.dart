@@ -63,7 +63,6 @@ class ProjectStaffModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
-    super.clientReferenceId,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),

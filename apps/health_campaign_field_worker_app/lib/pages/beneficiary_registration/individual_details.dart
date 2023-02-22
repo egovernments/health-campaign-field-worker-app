@@ -89,7 +89,8 @@ class _IndividualDetailsPageState
                           individual = individual.copyWith(
                             name: (previousIndividual?.name ??
                                     NameModel(
-                                      clientReferenceId: IdGen.i.identifier,
+                                      individualClientReferenceId:
+                                          individual.clientReferenceId,
                                       tenantId: envConfig.variables.tenantId,
                                       rowVersion: 1,
                                     ))
@@ -109,7 +110,8 @@ class _IndividualDetailsPageState
                               ((previousIndividual?.identifiers?.isEmpty ??
                                           true)
                                       ? IdentifierModel(
-                                          clientReferenceId: IdGen.i.identifier,
+                                          individualClientReferenceId:
+                                              individual.clientReferenceId,
                                           tenantId:
                                               envConfig.variables.tenantId,
                                           rowVersion: 1,
