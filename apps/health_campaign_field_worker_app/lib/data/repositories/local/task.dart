@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../models/entities/task_address.dart';
+import '../../../models/entities/task_to_resource.dart';
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   TaskLocalRepository(super.sql, super.opLogManager);
@@ -22,11 +25,21 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query,
   ) async {
-    final selectQuery = sql.select(sql.task).join([]);
+    final selectQuery = sql.select(sql.task).join([
+      leftOuterJoin(
+        sql.taskToResource,
+        sql.taskToResource.task.equalsExp(
+          sql.task.clientReferenceId,
+        ),
+      ),
+      leftOuterJoin(
+        sql.taskResource,
+        sql.taskResource.clientReferenceId.equalsExp(
+          sql.taskToResource.taskResource,
+        ),
+      ),
+    ]);
 
-    print(
-      query.projectBeneficiaryClientReferenceId,
-    );
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.projectBeneficiaryClientReferenceId != null)
@@ -41,6 +54,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     return results
         .map((e) {
           final task = e.readTable(sql.task);
+          final taskResource = e.readTableOrNull(sql.taskResource);
 
           return TaskModel(
             clientReferenceId: task.clientReferenceId,
@@ -52,6 +66,18 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
             createdDate: task.createdDate,
+            taskResource: [
+              taskResource == null
+                  ? null
+                  : TaskResourceModel(
+                      clientReferenceId: taskResource.clientReferenceId,
+                      tenantId: taskResource.tenantId,
+                      rowVersion: taskResource.rowVersion,
+                      productVariantId: taskResource.productVariantId,
+                      quantity: taskResource.quantity,
+                      deliveryComment: taskResource.deliveryComment,
+                    ),
+            ].whereNotNull().toList(),
           );
         })
         .where((element) => element.isDeleted != true)
@@ -65,7 +91,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }) async {
     final taskCompanion = entity.companion;
     final addresses = entity.address;
-    final resources = entity.resources;
+    final resources = entity.taskResource;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
 
@@ -77,6 +103,21 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         batch.insertAll(
           sql.taskResource,
           resourcesCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
+
+        batch.insertAll(
+          sql.taskToResource,
+          resources.map((e) {
+            return TaskToResourceModel(
+              clientReferenceId: IdGen.i.identifier,
+              tenantId: envConfig.variables.tenantId,
+              isDeleted: false,
+              rowVersion: 1,
+              task: entity,
+              taskResource: e,
+            ).companion;
+          }),
           mode: InsertMode.insertOrReplace,
         );
 

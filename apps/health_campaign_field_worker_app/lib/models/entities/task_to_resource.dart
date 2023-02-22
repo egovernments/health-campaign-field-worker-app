@@ -6,16 +6,12 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProjectResourceSearchModel extends EntitySearchModel {
-  final String? id;
-  final String? projectId;
+class TaskToResourceSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
-  ProjectResourceSearchModel({
-    this.id,
-    this.projectId,
+  TaskToResourceSearchModel({
     this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
@@ -24,36 +20,33 @@ class ProjectResourceSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectResourceModel extends EntityModel {
-  final String? id;
-  final String? projectId;
+class TaskToResourceModel extends EntityModel {
   final String clientReferenceId;
   final String tenantId;
   final bool? isDeleted;
   final int rowVersion;
-  final ProjectProductVariantModel resources;
+  final TaskModel? task;
+  final TaskResourceModel? taskResource;
   
 
-  ProjectResourceModel({
-    this.id,
-    this.projectId,
+  TaskToResourceModel({
     required this.clientReferenceId,
     required this.tenantId,
     this.isDeleted,
     required this.rowVersion,
-    required this.resources,
+    this.task,
+    this.taskResource,
     super.auditDetails,
   }):  super();
 
-  ProjectResourceCompanion get companion {
-    return ProjectResourceCompanion(
-      id: Value(id),
-      projectId: Value(projectId),
+  TaskToResourceCompanion get companion {
+    return TaskToResourceCompanion(
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      resources: Value(resources.clientReferenceId),
+      task: Value(task?.clientReferenceId),
+    taskResource: Value(taskResource?.clientReferenceId),
     );
   }
 }

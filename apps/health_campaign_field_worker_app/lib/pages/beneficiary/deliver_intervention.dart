@@ -58,6 +58,8 @@ class _DeliverInterventionPageState
                       ]),
                       footer: DigitElevatedButton(
                         onPressed: () {
+                          form.markAllAsTouched();
+                          if (!form.valid) return;
                           DigitDialog.show(
                             context,
                             options: DigitDialogOptions(
@@ -87,7 +89,7 @@ class _DeliverInterventionPageState
                                             status: Status.delivered.name,
                                             createdDate: DateTime.now()
                                                 .millisecondsSinceEpoch,
-                                            resources: [
+                                            taskResource: [
                                               TaskResourceModel(
                                                 clientReferenceId:
                                                     IdGen.i.identifier,
@@ -275,9 +277,12 @@ class _DeliverInterventionPageState
                                 menuItems: [
                                   MenuItemModel(
                                     "BEDNETS",
-                                    "BEDNETS",
+                                    "PVAR-2022-12-26-000011",
                                   ),
                                 ],
+                                validationMessages: {
+                                  'required': (object) => 'Field is required',
+                                },
                                 formControlName: 'resourceDelivered',
                               ),
                               DigitIntegerFormPicker(
@@ -334,14 +339,27 @@ class _DeliverInterventionPageState
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
 
-    print(state.householdMemberWrapper.task?.resources);
+    print(
+      state.householdMemberWrapper.task?.taskResource?.first.deliveryComment,
+    );
 
     return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<String>(),
-      _quantityDistributedKey: FormControl<int>(value: 1),
-      _deliveryCommentKey: FormControl<String>(
+      _resourceDeliveredKey: FormControl<String>(
+        value: state
+            .householdMemberWrapper.task?.taskResource?.first.productVariantId,
+        validators: [Validators.required],
+      ),
+      _quantityDistributedKey: FormControl<int>(
         value:
-            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
+            state.householdMemberWrapper.task?.taskResource?.first.quantity !=
+                    null
+                ? int.tryParse(state
+                    .householdMemberWrapper.task!.taskResource!.first.quantity!)
+                : 1,
+      ),
+      _deliveryCommentKey: FormControl<String>(
+        value: state
+            .householdMemberWrapper.task?.taskResource?.first.deliveryComment,
       ),
     });
   }

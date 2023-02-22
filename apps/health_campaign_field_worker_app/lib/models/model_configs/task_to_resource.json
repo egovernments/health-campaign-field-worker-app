@@ -1,0 +1,16 @@
+{
+  "name": "TaskToResource",
+  "attributes": [],
+  "customAttributes": [
+    {
+      "name": "task",
+      "type": "task",
+      "createReference": true
+    },
+    {
+      "name": "taskResource",
+      "type": "TaskResource",
+      "createReference": true
+    }
+  ]
+}
