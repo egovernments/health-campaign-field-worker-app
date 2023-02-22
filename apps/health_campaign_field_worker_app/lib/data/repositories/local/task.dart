@@ -16,31 +16,27 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final entries = await super.getItemsToBeSynced();
 
     return entries;
-    // .where((element) => element.entity.projectBeneficiaryId != null)
-    // .toList();
   }
 
   @override
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query,
   ) async {
-    final selectQuery = sql.select(sql.projectBeneficiary).join([
-      leftOuterJoin(
-        sql.task,
-        sql.task.projectId.equalsExp(
-          sql.task.projectId,
-        ),
-      ),
-    ]);
+    final selectQuery = sql.select(sql.task).join([]);
 
+    print(
+      query.projectBeneficiaryClientReferenceId,
+    );
     final results = await (selectQuery
           ..where(buildAnd([
-            if (query.clientReferenceId != null)
-              sql.task.clientReferenceId.isIn(
-                query.clientReferenceId!,
+            if (query.projectBeneficiaryClientReferenceId != null)
+              sql.task.projectBeneficiaryClientReferenceId.equals(
+                query.projectBeneficiaryClientReferenceId,
               ),
           ])))
         .get();
+
+    print(results);
 
     return results
         .map((e) {
@@ -51,8 +47,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             rowVersion: task.rowVersion,
             tenantId: task.tenantId,
             isDeleted: task.isDeleted,
+            status: task.status,
             // TODO: Remove this hardcoded project
-            projectId: '13',
+            projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
             createdDate: task.createdDate,
           );
