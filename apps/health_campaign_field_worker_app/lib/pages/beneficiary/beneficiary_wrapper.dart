@@ -47,6 +47,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             householdRepository: household,
             householdMemberRepository: householdMember,
             projectBeneficiaryRepository: projectBeneficiary,
+            taskDataRepository: task,
           ),
         ),
         BlocProvider(
@@ -58,7 +59,25 @@ class BeneficiaryWrapperPage extends StatelessWidget {
           ),
         ),
       ],
-      child: const AutoRouter(),
+      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+        builder: (context, houseHoldOverviewState) {
+          return BlocProvider(
+            lazy: false,
+            create: (_) => DeliverInterventionBloc(
+              DeliverInterventionState(
+                isEditing: isEditing,
+              ),
+              taskRepository: task,
+            )..add(DeliverInterventionSearchEvent(TaskSearchModel(
+                projectBeneficiaryClientReferenceId: houseHoldOverviewState
+                    .householdMemberWrapper
+                    .projectBeneficiary
+                    .clientReferenceId,
+              ))),
+            child: const AutoRouter(),
+          );
+        },
+      ),
     );
     ;
   }

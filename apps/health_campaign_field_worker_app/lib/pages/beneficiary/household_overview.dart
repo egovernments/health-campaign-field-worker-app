@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -169,18 +170,31 @@ class _HouseholdOverviewPageState
                                   ),
                                 ],
                               ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: DigitIconButton(
-                                  icon: Icons.check_circle,
-                                  iconText: localizations.translate(
-                                    i18.householdOverView
-                                        .householdOverViewDeliveredIconLabel,
+                              BlocBuilder<DeliverInterventionBloc,
+                                  DeliverInterventionState>(
+                                builder: (ctx, state) => Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DigitIconButton(
+                                    icon: state.task?.status == 'delivered'
+                                        ? Icons.check_circle
+                                        : Icons.error_outline_rounded,
+                                    iconText: localizations.translate(
+                                      state.task?.status == 'delivered'
+                                          ? i18.householdOverView
+                                              .householdOverViewDeliveredIconLabel
+                                          : i18.householdOverView
+                                              .householdOverViewNotDeliveredIconLabel,
+                                    ),
+                                    iconTextColor: state.task?.status ==
+                                            'delivered'
+                                        ? DigitTheme.instance.colorScheme
+                                            .onSurfaceVariant
+                                        : DigitTheme.instance.colorScheme.error,
+                                    iconColor: state.task?.status == 'delivered'
+                                        ? DigitTheme.instance.colorScheme
+                                            .onSurfaceVariant
+                                        : DigitTheme.instance.colorScheme.error,
                                   ),
-                                  iconTextColor: DigitTheme
-                                      .instance.colorScheme.onSurfaceVariant,
-                                  iconColor: DigitTheme
-                                      .instance.colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               DigitTableCard(
@@ -353,21 +367,30 @@ class _HouseholdOverviewPageState
                 ),
           bottomNavigationBar: SizedBox(
             height: 90,
-            child: DigitCard(
-              child: DigitElevatedButton(
-                onPressed: () async {
-                  final bloc = ctx.read<HouseholdOverviewBloc>();
-                  await context.router.push(DeliverInterventionRoute());
+            child:
+                BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
+              builder: (ctx, state) => DigitCard(
+                child: state.task?.status == 'delivered'
+                    ? DigitOutLineButton(
+                        label: localizations.translate(
+                          i18.memberCard.deliverDetailsUpdateLabel,
+                        ),
+                      )
+                    : DigitElevatedButton(
+                        onPressed: () async {
+                          final bloc = ctx.read<HouseholdOverviewBloc>();
+                          await context.router.push(DeliverInterventionRoute());
 
-                  bloc.add(const HouseholdOverviewReloadEvent());
-                },
-                child: Center(
-                  child: Text(
-                    localizations.translate(
-                      i18.householdOverView.householdOverViewActionText,
-                    ),
-                  ),
-                ),
+                          bloc.add(const HouseholdOverviewReloadEvent());
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.householdOverView.householdOverViewActionText,
+                            ),
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),
