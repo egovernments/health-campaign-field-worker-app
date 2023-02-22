@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -28,158 +27,126 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _memberCountKey = 'memberCount';
 
   @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bloc = context.read<BeneficiaryRegistrationBloc>();
+    final registrationState = bloc.state;
+    final router = context.router;
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: buildForm,
-        builder: (context, form, child) {
-          return BlocBuilder<BeneficiaryRegistrationBloc,
-              BeneficiaryRegistrationState>(
-            builder: (context, beneficiaryRegistrationState) {
-              return ScrollableContent(
-                header: Column(children: const [
-                  BackNavigationHelpHeaderWidget(),
-                ]),
-                footer: SizedBox(
-                  height: 90,
-                  child: DigitCard(
-                    child: BlocBuilder<BeneficiaryRegistrationBloc,
-                        BeneficiaryRegistrationState>(
-                      builder: (context, beneficiaryRegistrationState) {
-                        return DigitElevatedButton(
-                          onPressed: () {
-                            form.markAllAsTouched();
-                            if (!form.valid) return;
+        form: () => buildForm(registrationState),
+        builder: (context, form, child) => ScrollableContent(
+          header: Column(children: const [
+            BackNavigationHelpHeaderWidget(),
+          ]),
+          footer: SizedBox(
+            height: 90,
+            child: DigitCard(
+              child: DigitElevatedButton(
+                onPressed: () {
+                  form.markAllAsTouched();
+                  if (!form.valid) return;
 
-                            final memberCount =
-                                form.control(_memberCountKey).value as int;
+                  final memberCount =
+                      form.control(_memberCountKey).value as int;
 
-                            final dateOfRegistration = form
-                                .control(_dateOfRegistrationKey)
-                                .value as DateTime;
+                  final dateOfRegistration =
+                      form.control(_dateOfRegistrationKey).value as DateTime;
 
-                            final bloc =
-                                context.read<BeneficiaryRegistrationBloc>();
-                            HouseholdModel household =
-                                (beneficiaryRegistrationState.householdModel ??
-                                        HouseholdModel(
-                                          tenantId:
-                                              envConfig.variables.tenantId,
-                                          clientReferenceId: IdGen.i.identifier,
-                                          rowVersion: 1,
-                                        ))
-                                    .copyWith(
-                              memberCount: memberCount,
-                              address:
-                                  beneficiaryRegistrationState.addressModel,
-                            );
+                  var household = registrationState.householdModel;
+                  household ??= HouseholdModel(
+                    tenantId: envConfig.variables.tenantId,
+                    clientReferenceId: IdGen.i.identifier,
+                    rowVersion: 1,
+                  );
 
-                            if (beneficiaryRegistrationState.isEditing) {
-                              household = household.copyWith(
-                                rowVersion: household.rowVersion.increment,
-                              );
+                  household = household.copyWith(
+                    memberCount: memberCount,
+                    address: registrationState.addressModel,
+                  );
 
-                              bloc.add(
-                                BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
-                                  household: household,
-                                  addressModel:
-                                      beneficiaryRegistrationState.addressModel,
-                                ),
-                              );
+                  if (registrationState.isEditing) {
+                    household = household.copyWith(
+                      rowVersion: household.rowVersion.increment,
+                    );
 
-                              final router = context.router;
-                              (router.parent() as StackRouter).pop();
-                            } else {
-                              bloc.add(
-                                BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                                  household: household,
-                                  registrationDate: dateOfRegistration,
-                                ),
-                              );
-                              context.router.push(
-                                IndividualDetailsRoute(isHeadOfHousehold: true),
-                              );
-                            }
-                          },
-                          child: Center(
-                            child: Text(
-                              localizations
-                                  .translate(i18.householdDetails.actionLabel),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    bloc.add(
+                      BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+                        household: household,
+                        addressModel: registrationState.addressModel,
+                      ),
+                    );
+
+                    (router.parent() as StackRouter).pop();
+                  } else {
+                    bloc.add(
+                      BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                        household: household,
+                        registrationDate: dateOfRegistration,
+                      ),
+                    );
+                    context.router.push(
+                      IndividualDetailsRoute(isHeadOfHousehold: true),
+                    );
+                  }
+                },
+                child: Center(
+                  child: Text(
+                    localizations.translate(i18.householdDetails.actionLabel),
                   ),
                 ),
+              ),
+            ),
+          ),
+          children: [
+            DigitCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          localizations.translate(
-                            i18.householdDetails.householdDetailsLabel,
-                          ),
-                          style: theme.textTheme.displayMedium,
-                        ),
-                        Column(children: [
-                          DigitDateFormPicker(
-                            isEnabled: false,
-                            formControlName: _dateOfRegistrationKey,
-                            label: localizations.translate(
-                              i18.householdDetails.dateOfRegistrationLabel,
-                            ),
-                            isRequired: false,
-                          ),
-                          DigitIntegerFormPicker(
-                            minimum: 0,
-                            form: form,
-                            formControlName: _memberCountKey,
-                            label: localizations.translate(
-                              i18.householdDetails.noOfMembersCountLabel,
-                            ),
-                            incrementer: true,
-                          ),
-                        ]),
-                        const SizedBox(height: 16),
-                      ],
+                  Text(
+                    localizations.translate(
+                      i18.householdDetails.householdDetailsLabel,
                     ),
+                    style: theme.textTheme.displayMedium,
                   ),
+                  Column(children: [
+                    DigitDateFormPicker(
+                      isEnabled: false,
+                      formControlName: _dateOfRegistrationKey,
+                      label: localizations.translate(
+                        i18.householdDetails.dateOfRegistrationLabel,
+                      ),
+                      isRequired: false,
+                    ),
+                    DigitIntegerFormPicker(
+                      minimum: 0,
+                      form: form,
+                      formControlName: _memberCountKey,
+                      label: localizations.translate(
+                        i18.householdDetails.noOfMembersCountLabel,
+                      ),
+                      incrementer: true,
+                    ),
+                  ]),
+                  const SizedBox(height: 16),
                 ],
-              );
-            },
-          );
-        },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  FormGroup buildForm() => fb.group(<String, Object>{
+  FormGroup buildForm(BeneficiaryRegistrationState state) =>
+      fb.group(<String, Object>{
         _dateOfRegistrationKey: FormControl<DateTime>(
-          value: context
-                  .read<BeneficiaryRegistrationBloc>()
-                  .state
-                  .registrationDate ??
-              DateTime.now(),
+          value: state.registrationDate ?? DateTime.now(),
         ),
         _memberCountKey: FormControl<int>(
-          value: context
-                  .read<BeneficiaryRegistrationBloc>()
-                  .state
-                  .householdModel
-                  ?.memberCount ??
-              1,
+          value: state.householdModel?.memberCount ?? 1,
         ),
       });
 }
