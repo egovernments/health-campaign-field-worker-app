@@ -25,6 +25,7 @@ class TargetModel extends EntityModel {
   final String? beneficiaryType;
   final String? baseline;
   final String? target;
+  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -35,11 +36,11 @@ class TargetModel extends EntityModel {
     this.beneficiaryType,
     this.baseline,
     this.target,
+    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   TargetCompanion get companion {
@@ -48,6 +49,7 @@ class TargetModel extends EntityModel {
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),
+      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

@@ -28,7 +28,7 @@ void run(HookContext context) {
           type: 'String',
           isPk: true,
           includeForQuery: false,
-          includeForEntity: false,
+          includeForEntity: true,
           includeForTable: true,
           nullable: false,
         ),
