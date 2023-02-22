@@ -69,7 +69,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} Members',
-                  status: 'Not Delivered',
+                  status: householdMember.task?.status != null
+                      ? 'delivered'
+                      : 'Not Delivered',
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
@@ -93,10 +95,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   'Beneficiary',
                   cellKey: 'beneficiary',
                 ),
-                TableHeader(
-                  'Delivery',
-                  cellKey: 'delivery',
-                ),
+                // TableHeader(
+                //   'Delivery',
+                //   cellKey: 'delivery',
+                // ),
                 TableHeader(
                   'Age',
                   cellKey: 'age',
@@ -117,13 +119,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                           ].whereNotNull().join('-'),
                           cellKey: 'beneficiary',
                         ),
-                        TableData(
-                          'Not Delivered',
-                          cellKey: 'delivery',
-                          style: TextStyle(
-                            color: theme.colorScheme.error,
-                          ),
-                        ),
+                        // TableData(
+                        //   'Not Delivered',
+                        //   cellKey: 'delivery',
+                        //   style: TextStyle(
+                        //     color: theme.colorScheme.error,
+                        //   ),
+                        // ),
                         TableData(
                           e.dateOfBirth == null
                               ? ''
