@@ -28,6 +28,7 @@ class ProjectTypeModel extends EntityModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
+  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -42,12 +43,12 @@ class ProjectTypeModel extends EntityModel {
     this.beneficiaryType,
     this.eligibilityCriteria,
     this.taskProcedure,
+    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     this.resources,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   ProjectTypeCompanion get companion {
@@ -59,6 +60,7 @@ class ProjectTypeModel extends EntityModel {
       beneficiaryType: Value(beneficiaryType),
       eligibilityCriteria: Value(eligibilityCriteria?.toString()),
       taskProcedure: Value(taskProcedure?.toString()),
+      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

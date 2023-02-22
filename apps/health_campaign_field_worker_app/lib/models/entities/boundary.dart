@@ -7,12 +7,10 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
   BoundarySearchModel({
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -30,7 +28,6 @@ class BoundaryModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final BoundaryModel? children;
   
 
   BoundaryModel({
@@ -43,9 +40,7 @@ class BoundaryModel extends EntityModel {
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
-    this.children,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   BoundaryCompanion get companion {
@@ -59,7 +54,6 @@ class BoundaryModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      children: Value(children?.clientReferenceId),
-    );
+      );
   }
 }
