@@ -34,12 +34,19 @@ class BeneficiaryCard extends StatelessWidget {
         ),
         Offstage(
           offstage: status == null,
-          child: DigitIconButton(
-            icon: Icons.info_rounded,
-            iconText: status,
-            iconTextColor: theme.errorColor,
-            iconColor: theme.errorColor,
-          ),
+          child: status == 'delivered'
+              ? DigitIconButton(
+                  icon: Icons.check_circle,
+                  iconText: status,
+                  iconTextColor: theme.colorScheme.onSurfaceVariant,
+                  iconColor: theme.colorScheme.onSurfaceVariant,
+                )
+              : DigitIconButton(
+                  icon: Icons.info_rounded,
+                  iconText: status,
+                  iconTextColor: theme.colorScheme.error,
+                  iconColor: theme.colorScheme.error,
+                ),
         ),
         Padding(
           padding: const EdgeInsets.all(4),

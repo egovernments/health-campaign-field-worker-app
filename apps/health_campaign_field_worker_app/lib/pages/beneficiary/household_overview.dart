@@ -177,7 +177,7 @@ class _HouseholdOverviewPageState
                                   child: DigitIconButton(
                                     icon: state.task?.status == 'delivered'
                                         ? Icons.check_circle
-                                        : Icons.error_outline_rounded,
+                                        : Icons.info_rounded,
                                     iconText: localizations.translate(
                                       state.task?.status == 'delivered'
                                           ? i18.householdOverView
@@ -375,6 +375,10 @@ class _HouseholdOverviewPageState
                         label: localizations.translate(
                           i18.memberCard.deliverDetailsUpdateLabel,
                         ),
+                        onPressed: () async {
+                          final bloc = ctx.read<HouseholdOverviewBloc>();
+                          await context.router.push(DeliverInterventionRoute());
+                        },
                       )
                     : DigitElevatedButton(
                         onPressed: () async {

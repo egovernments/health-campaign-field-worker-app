@@ -120,7 +120,7 @@ class HouseholdOverviewBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          task: tasks.first,
+          task: tasks.isEmpty ? null : tasks.first,
           projectBeneficiary: projectBeneficiaries.first,
         ),
         loading: false,
