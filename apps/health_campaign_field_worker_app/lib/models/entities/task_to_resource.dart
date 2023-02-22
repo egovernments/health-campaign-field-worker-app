@@ -22,18 +22,18 @@ class TaskToResourceSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class TaskToResourceModel extends EntityModel {
   final String clientReferenceId;
-  final String tenantId;
+  final String? tenantId;
   final bool? isDeleted;
-  final int rowVersion;
+  final int? rowVersion;
   final TaskModel? task;
   final TaskResourceModel? taskResource;
   
 
   TaskToResourceModel({
     required this.clientReferenceId,
-    required this.tenantId,
+    this.tenantId,
     this.isDeleted,
-    required this.rowVersion,
+    this.rowVersion,
     this.task,
     this.taskResource,
     super.auditDetails,
