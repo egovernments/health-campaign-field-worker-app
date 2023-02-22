@@ -16,7 +16,9 @@
   "customAttributes": [
     {
       "name": "resources",
-      "type": "ProjectProductVariant"
+      "type": "ProjectProductVariant",
+      "nullable": false,
+      "createReference": true
     }
   ],
   "isEnum": false

@@ -35,9 +35,10 @@
   ],
   "customAttributes": [
     {
-      "name": "resources",
-      "type": "taskResource",
+      "name": "taskResource",
+      "type": "TaskResource",
       "isList": true
+
     },
     {
       "name": "address",

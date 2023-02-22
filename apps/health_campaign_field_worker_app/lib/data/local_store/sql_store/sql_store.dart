@@ -34,6 +34,7 @@ import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_address.dart';
 import 'tables/task_resource.dart';
+import 'tables/task_to_resource.dart';
 
 part 'sql_store.g.dart';
 
@@ -65,6 +66,7 @@ part 'sql_store.g.dart';
   Task,
   TaskAddress,
   TaskResource,
+  TaskToResource,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
