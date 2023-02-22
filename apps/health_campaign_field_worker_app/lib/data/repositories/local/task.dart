@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
@@ -42,7 +43,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     return results
         .map((e) {
-          final task = e.readTable(sql.task);
+          final task = e.readTableOrNull(sql.task);
+
+          if (task == null) return null;
 
           return TaskModel(
             clientReferenceId: task.clientReferenceId,
@@ -55,6 +58,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             createdDate: task.createdDate,
           );
         })
+        .whereNotNull()
         .where((element) => element.isDeleted != true)
         .toList();
   }
