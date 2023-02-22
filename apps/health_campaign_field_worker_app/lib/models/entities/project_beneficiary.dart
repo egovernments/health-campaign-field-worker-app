@@ -41,6 +41,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? projectId;
   final String? beneficiaryId;
   final String? beneficiaryClientReferenceId;
+  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -52,12 +53,12 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.projectId,
     this.beneficiaryId,
     this.beneficiaryClientReferenceId,
+    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     int? dateOfRegistration,
     super.auditDetails,
-    super.clientReferenceId,
   }): dateOfRegistrationTime = dateOfRegistration == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
@@ -72,6 +73,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),
       beneficiaryClientReferenceId: Value(beneficiaryClientReferenceId),
+      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

@@ -8,7 +8,6 @@ import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -92,7 +91,6 @@ class _HouseholdLocationPageState
                               (beneficiaryRegistrationState.addressModel ??
                                       AddressModel(
                                         tenantId: envConfig.variables.tenantId,
-                                        clientReferenceId: IdGen.i.identifier,
                                         rowVersion: 1,
                                       ))
                                   .copyWith(

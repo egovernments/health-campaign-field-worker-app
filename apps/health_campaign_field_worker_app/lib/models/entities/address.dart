@@ -7,12 +7,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class AddressSearchModel extends EntitySearchModel {
-  final List<String>? clientReferenceId;
+  final String? id;
   final String? tenantId;
   final bool? isDeleted;
   
   AddressSearchModel({
-    this.clientReferenceId,
+    this.id,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -22,6 +22,7 @@ class AddressSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class AddressModel extends EntityModel {
   final String? id;
+  final String? relatedClientReferenceId;
   final String? doorNo;
   final double? latitude;
   final double? longitude;
@@ -36,12 +37,12 @@ class AddressModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final BoundaryModel? locality;
   final AddressType? type;
   
 
   AddressModel({
     this.id,
+    this.relatedClientReferenceId,
     this.doorNo,
     this.latitude,
     this.longitude,
@@ -56,15 +57,14 @@ class AddressModel extends EntityModel {
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
-    this.locality,
     this.type,
     super.auditDetails,
-    super.clientReferenceId,
   }):  super();
 
   AddressCompanion get companion {
     return AddressCompanion(
       id: Value(id),
+      relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),
       latitude: Value(latitude),
       longitude: Value(longitude),
@@ -80,7 +80,6 @@ class AddressModel extends EntityModel {
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       type: Value(type),
-      locality: Value(locality?.clientReferenceId),
-    );
+      );
   }
 }

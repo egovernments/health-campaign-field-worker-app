@@ -4,10 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/individual_address.dart';
-import '../../../models/entities/individual_identifier.dart';
-import '../../../models/entities/individual_name.dart';
-import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -23,39 +19,21 @@ class IndividualLocalRepository
     final selectQuery = sql.select(sql.individual).join(
       [
         leftOuterJoin(
-          sql.individualName,
-          sql.individualName.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualAddress,
-          sql.individualAddress.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualIdentifier,
-          sql.individualIdentifier.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
           sql.address,
-          sql.address.clientReferenceId.equalsExp(
-            sql.individualAddress.address,
+          sql.address.relatedClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.name,
-          sql.name.clientReferenceId.equalsExp(
-            sql.individualName.name,
+          sql.name.individualClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.identifier,
-          sql.identifier.clientReferenceId.equalsExp(
-            sql.individualIdentifier.identifier,
+          sql.identifier.individualClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
       ],
@@ -117,7 +95,7 @@ class IndividualLocalRepository
             name: name == null
                 ? null
                 : NameModel(
-                    clientReferenceId: name.clientReferenceId,
+                    individualClientReferenceId: individual.clientReferenceId,
                     familyName: name.familyName,
                     givenName: name.givenName,
                     otherNames: name.otherNames,
@@ -129,8 +107,8 @@ class IndividualLocalRepository
               address == null
                   ? null
                   : AddressModel(
+                      relatedClientReferenceId: individual.clientReferenceId,
                       tenantId: address.tenantId,
-                      clientReferenceId: address.clientReferenceId,
                       doorNo: address.doorNo,
                       latitude: address.latitude,
                       longitude: address.longitude,
@@ -148,8 +126,8 @@ class IndividualLocalRepository
             identifiers: [
               if (identifier != null)
                 IdentifierModel(
+                  individualClientReferenceId: individual.clientReferenceId,
                   identifierType: identifier.identifierType,
-                  clientReferenceId: identifier.clientReferenceId,
                   identifierId: identifier.identifierId,
                   rowVersion: identifier.rowVersion,
                   tenantId: identifier.tenantId,
@@ -184,27 +162,6 @@ class IndividualLocalRepository
           nameCompanion,
           mode: InsertMode.insertOrReplace,
         );
-
-        final individualNameMapping = await (sql.individualName.select()
-              ..where((e) => buildAnd([
-                    e.individual.equals(entity.clientReferenceId),
-                    e.name.equals(nameCompanion.clientReferenceId.value),
-                  ])))
-            .get();
-
-        batch.insert(
-          sql.individualName,
-          IndividualNameModel(
-            clientReferenceId: individualNameMapping.isNotEmpty
-                ? individualNameMapping.first.clientReferenceId
-                : IdGen.i.identifier,
-            tenantId: envConfig.variables.tenantId,
-            rowVersion: 1,
-            name: entity.name,
-            individual: entity,
-          ).companion,
-          mode: InsertMode.insertOrReplace,
-        );
       }
 
       if (addresses != null) {
@@ -217,21 +174,6 @@ class IndividualLocalRepository
           addressCompanions,
           mode: InsertMode.insertOrReplace,
         );
-
-        batch.insertAll(
-          sql.individualAddress,
-          addresses.map(
-            (e) {
-              return IndividualAddressModel(
-                clientReferenceId: IdGen.i.identifier,
-                tenantId: envConfig.variables.tenantId,
-                rowVersion: 1,
-                individual: entity,
-                address: e,
-              ).companion;
-            },
-          ),
-        );
       }
 
       if (identifiers != null) {
@@ -240,19 +182,6 @@ class IndividualLocalRepository
         }).toList();
 
         batch.insertAll(sql.identifier, identifierCompanions);
-
-        batch.insertAll(
-          sql.individualIdentifier,
-          identifiers.map(
-            (e) => IndividualIdentifierModel(
-              clientReferenceId: IdGen.i.identifier,
-              tenantId: envConfig.variables.tenantId,
-              rowVersion: 1,
-              individual: entity,
-              identifier: e,
-            ).companion,
-          ),
-        );
       }
     });
 
@@ -282,8 +211,8 @@ class IndividualLocalRepository
         batch.update(
           sql.name,
           nameCompanion,
-          where: (table) => table.clientReferenceId.equals(
-            nameCompanion.clientReferenceId.value,
+          where: (table) => table.individualClientReferenceId.equals(
+            nameCompanion.individualClientReferenceId.value,
           ),
         );
       }
