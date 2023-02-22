@@ -6,6 +6,7 @@ import '../data_model.dart';
 class OpLogEntry<T extends EntityModel> {
   final int? id;
   final T entity;
+  final String? serverGeneratedId;
   final DataModelType type;
   final DataOperation operation;
   final bool isSynced;
@@ -18,6 +19,7 @@ class OpLogEntry<T extends EntityModel> {
     required this.type,
     this.isSynced = false,
     required this.dateCreated,
+    this.serverGeneratedId,
   });
 }
 
