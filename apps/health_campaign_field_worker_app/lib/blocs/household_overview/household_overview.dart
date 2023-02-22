@@ -19,6 +19,7 @@ class HouseholdOverviewBloc
   final HouseholdDataRepository householdRepository;
   final HouseholdMemberDataRepository householdMemberRepository;
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
+  final TaskDataRepository taskDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -26,6 +27,7 @@ class HouseholdOverviewBloc
     required this.householdRepository,
     required this.individualRepository,
     required this.householdMemberRepository,
+    required this.taskDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -107,12 +109,18 @@ class HouseholdOverviewBloc
       return;
     }
 
+    final tasks = await taskDataRepository.search(TaskSearchModel(
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaries.first.clientReferenceId,
+    ));
+
     emit(
       state.copyWith(
         householdMemberWrapper: HouseholdMemberWrapper(
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
+          task: tasks.first,
           projectBeneficiary: projectBeneficiaries.first,
         ),
         loading: false,
