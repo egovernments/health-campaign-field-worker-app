@@ -79,7 +79,7 @@ class _IndividualDetailsPageState
                         ) async {
                           final individual = _getIndividualModel(
                             form,
-                            oldIndividual: individualModel,
+                            oldIndividual: null,
                           );
 
                           bloc.add(
