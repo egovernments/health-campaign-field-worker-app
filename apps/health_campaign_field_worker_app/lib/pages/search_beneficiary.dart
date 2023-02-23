@@ -209,22 +209,24 @@ class _SearchBeneficiaryPageState
 
                     final onPressed = state.mapOrNull(
                       notFound: (value) {
-                        router.push(
-                          BeneficiaryRegistrationWrapperRoute(
-                            initialState: BeneficiaryRegistrationCreateState(
-                              searchQuery: value.searchQuery,
-                            ),
-                          ),
-                        );
+                        return () => router.push(
+                              BeneficiaryRegistrationWrapperRoute(
+                                initialState:
+                                    BeneficiaryRegistrationCreateState(
+                                  searchQuery: value.searchQuery,
+                                ),
+                              ),
+                            );
                       },
                       results: (value) {
-                        router.push(
-                          BeneficiaryRegistrationWrapperRoute(
-                            initialState: BeneficiaryRegistrationCreateState(
-                              searchQuery: value.searchQuery,
-                            ),
-                          ),
-                        );
+                        return () => router.push(
+                              BeneficiaryRegistrationWrapperRoute(
+                                initialState:
+                                    BeneficiaryRegistrationCreateState(
+                                  searchQuery: value.searchQuery,
+                                ),
+                              ),
+                            );
                       },
                     );
 
