@@ -149,7 +149,7 @@ class _IndividualDetailsPageState
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                               addressModel: addressModel,
                               model: individual.copyWith(
-                                rowVersion: rowversion + 1,
+                                rowVersion: rowversion,
                               ),
                             ),
                           );
