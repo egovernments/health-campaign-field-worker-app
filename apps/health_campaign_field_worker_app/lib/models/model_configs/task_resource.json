@@ -2,8 +2,34 @@
   "name": "TaskResource",
   "attributes": [
     {
+      "name": "clientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "nullable": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "taskId",
+      "type": "String",
+      "nullable": true,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
+      "name": "taskClientReferenceId",
+      "type": "String",
+      "nullable": false,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
       "name": "id",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true,
+      "isPk": true,
+      "includeForEntity": true,
+      "nullable": false
     },
     {
       "name": "productVariantId",

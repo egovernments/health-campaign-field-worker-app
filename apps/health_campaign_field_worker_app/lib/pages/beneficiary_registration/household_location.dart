@@ -124,6 +124,7 @@ class _HouseholdLocationPageState
                           editHousehold: (
                             address,
                             householdModel,
+                            individuals,
                             registrationDate,
                             loading,
                           ) {
