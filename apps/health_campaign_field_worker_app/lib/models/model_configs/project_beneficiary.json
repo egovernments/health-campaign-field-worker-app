@@ -28,7 +28,8 @@
     {
       "name": "dateOfRegistration",
       "type": "DateTime",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false
     }
   ],
   "isEnum": false
