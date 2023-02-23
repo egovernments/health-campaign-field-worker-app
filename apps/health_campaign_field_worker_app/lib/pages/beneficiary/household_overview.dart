@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../models/data_model.dart';
+import '../../blocs/search_households/search_households.dart';
 import '../../router/app_router.dart';
-import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
@@ -82,11 +82,32 @@ class _HouseholdOverviewPageState
                                                 context,
                                                 rootNavigator: true,
                                               ).pop();
+
+                                              HouseholdMemberWrapper wrapper =
+                                                  state.householdMemberWrapper;
+
+                                              final timestamp = wrapper
+                                                  .projectBeneficiary
+                                                  .dateOfRegistration;
+                                              final date = DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                timestamp,
+                                              );
+
+                                              final address =
+                                                  wrapper.household.address;
+
+                                              if (address == null) return;
+
                                               await context.router.root.push(
                                                 BeneficiaryRegistrationWrapperRoute(
-                                                  isEditing: true,
-                                                  householdMemberWrapper: state
-                                                      .householdMemberWrapper,
+                                                  initialState:
+                                                      BeneficiaryRegistrationEditHouseholdState(
+                                                    addressModel: address,
+                                                    householdModel:
+                                                        wrapper.household,
+                                                    registrationDate: date,
+                                                  ),
                                                   children: [
                                                     HouseholdLocationRoute(),
                                                   ],
@@ -226,17 +247,25 @@ class _HouseholdOverviewPageState
                                             rootNavigator: true,
                                           ).pop();
 
+                                          final wrapper =
+                                              state.householdMemberWrapper;
+                                          final address = e.address;
+                                          if (address == null ||
+                                              address.isEmpty) {
+                                            return;
+                                          }
                                           await context.router.root.push(
                                             BeneficiaryRegistrationWrapperRoute(
+                                              initialState:
+                                                  BeneficiaryRegistrationEditIndividualState(
+                                                individualModel: e,
+                                                addressModel: address.first,
+                                              ),
                                               children: [
                                                 IndividualDetailsRoute(
                                                   isHeadOfHousehold: false,
                                                 ),
                                               ],
-                                              householdMemberWrapper: state
-                                                  .householdMemberWrapper
-                                                  .copyWith(headOfHousehold: e),
-                                              isEditing: true,
                                             ),
                                           );
 
@@ -326,21 +355,19 @@ class _HouseholdOverviewPageState
                                     final bloc =
                                         context.read<HouseholdOverviewBloc>();
 
+                                    final wrapper =
+                                        state.householdMemberWrapper;
+                                    final address = wrapper.household.address;
+
+                                    if (address == null) return;
+
                                     await context.router.push(
                                       BeneficiaryRegistrationWrapperRoute(
-                                        householdMemberWrapper: state
-                                            .householdMemberWrapper
-                                            .copyWith(
-                                          members: [],
-                                          headOfHousehold: IndividualModel(
-                                            clientReferenceId:
-                                                IdGen.i.identifier,
-                                            tenantId:
-                                                envConfig.variables.tenantId,
-                                            rowVersion: 1,
-                                          ),
+                                        initialState:
+                                            BeneficiaryRegistrationAddMemberState(
+                                          addressModel: address,
+                                          householdModel: wrapper.household,
                                         ),
-                                        isEditing: false,
                                         children: [
                                           IndividualDetailsRoute(),
                                         ],

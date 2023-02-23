@@ -45,7 +45,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime? dateOfRegistrationTime;
+  final DateTime dateOfRegistrationTime;
   
 
   ProjectBeneficiaryModel({
@@ -57,14 +57,12 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
-    int? dateOfRegistration,
+    required int dateOfRegistration,
     super.auditDetails,
-  }): dateOfRegistrationTime = dateOfRegistration == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
+  }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
        super();
 
-  int?  get dateOfRegistration => dateOfRegistrationTime?.millisecondsSinceEpoch;
+  int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
   
 
   ProjectBeneficiaryCompanion get companion {
