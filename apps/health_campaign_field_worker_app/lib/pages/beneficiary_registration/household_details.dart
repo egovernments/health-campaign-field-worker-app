@@ -183,7 +183,8 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
     );
 
     return fb.group(<String, Object>{
-      _dateOfRegistrationKey: FormControl<DateTime>(value: registrationDate),
+      _dateOfRegistrationKey:
+          FormControl<DateTime>(value: registrationDate, validators: []),
       _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
     });
   }

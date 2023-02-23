@@ -366,9 +366,11 @@ class _DeliverInterventionPageState
             : 1,
       ),
       _deliveryCommentKey: FormControl<String>(
-        value:
-            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
-      ),
+          value: state
+              .householdMemberWrapper.task?.resources?.first.deliveryComment,
+          validators: [
+            CustomValidator.requiredMin,
+          ]),
     });
   }
 }

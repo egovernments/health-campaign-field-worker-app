@@ -403,7 +403,7 @@ class _IndividualDetailsPageState
 
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
-        validators: [Validators.required],
+        validators: [Validators.required, CustomValidator.requiredMin],
         value: individual?.name?.givenName ?? searchQuery,
       ),
       _idTypeKey: FormControl<String>(
