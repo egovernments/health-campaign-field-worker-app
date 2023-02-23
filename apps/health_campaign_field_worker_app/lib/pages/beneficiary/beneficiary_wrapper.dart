@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
@@ -14,6 +15,7 @@ import '../../models/entities/task.dart';
 class BeneficiaryWrapperPage extends StatelessWidget {
   final HouseholdMemberWrapper wrapper;
   final bool isEditing;
+
   const BeneficiaryWrapperPage({
     Key? key,
     required this.wrapper,
@@ -79,6 +81,5 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         },
       ),
     );
-    ;
   }
 }
