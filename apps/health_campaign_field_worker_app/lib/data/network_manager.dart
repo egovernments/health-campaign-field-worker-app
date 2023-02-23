@@ -218,7 +218,10 @@ class NetworkManager {
                   responseEntities.whereType<TaskModel>().firstWhereOrNull(
                         (e) => e.clientReferenceId == entity.clientReferenceId,
                       );
-              final updatedEntity = entity.copyWith(id: responseEntity?.id);
+              final updatedEntity = entity.copyWith(
+                id: responseEntity?.id,
+              );
+
               await local.opLogManager.update(
                 element.copyWith(entity: updatedEntity),
               );
