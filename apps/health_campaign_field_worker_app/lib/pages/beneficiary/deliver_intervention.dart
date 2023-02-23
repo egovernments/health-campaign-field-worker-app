@@ -76,16 +76,16 @@ class _DeliverInterventionPageState
                                 label: localizations
                                     .translate(i18.common.coreCommonSubmit),
                                 action: (ctx) {
+                                  final taskClientReferenceId =
+                                      state.householdMemberWrapper.task == null
+                                          ? IdGen.i.identifier
+                                          : state.householdMemberWrapper.task!
+                                              .clientReferenceId;
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           TaskModel(
-                                            clientReferenceId: state
-                                                        .householdMemberWrapper
-                                                        .task ==
-                                                    null
-                                                ? IdGen.i.identifier
-                                                : state.householdMemberWrapper
-                                                    .task!.clientReferenceId,
+                                            clientReferenceId:
+                                                taskClientReferenceId,
                                             projectBeneficiaryClientReferenceId:
                                                 householdMemberWrapper
                                                     .projectBeneficiary
@@ -99,17 +99,9 @@ class _DeliverInterventionPageState
                                                 .millisecondsSinceEpoch,
                                             resources: [
                                               TaskResourceModel(
-                                                clientReferenceId: state
-                                                            .householdMemberWrapper
-                                                            .task ==
-                                                        null
-                                                    ? IdGen.i.identifier
-                                                    : state
-                                                        .householdMemberWrapper
-                                                        .task!
-                                                        .resources!
-                                                        .first
-                                                        .clientReferenceId,
+                                                taskClientReferenceId:
+                                                    taskClientReferenceId,
+                                                id: IdGen.i.identifier,
                                                 rowVersion: 1,
                                                 isDelivered: true,
                                                 tenantId: envConfig
