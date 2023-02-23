@@ -350,7 +350,6 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-    print(state.householdMemberWrapper.task?.resources?.length);
 
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<String>(
