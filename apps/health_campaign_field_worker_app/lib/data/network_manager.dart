@@ -70,7 +70,6 @@ class NetworkManager {
         }).toList();
 
         if (operationGroupedEntity.key == DataOperation.create) {
-          debugPrint('Syncing: ${entities.map((e) => e.toJson()).toString()}');
           await remote.bulkCreate(entities);
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);
