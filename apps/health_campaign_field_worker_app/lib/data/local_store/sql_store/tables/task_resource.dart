@@ -17,5 +17,5 @@ class TaskResource extends Table {
   
 
   @override
-  Set<Column> get primaryKey => { id,  };
+  Set<Column> get primaryKey => { taskClientReferenceId,  };
 }
