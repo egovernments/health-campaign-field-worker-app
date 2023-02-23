@@ -8,6 +8,7 @@ import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -240,21 +241,25 @@ class _HouseholdLocationPageState
         value: 'Solimbo',
         validators: [Validators.required],
       ),
-      _addressLine1Key: FormControl<String>(
-        value: addressModel?.addressLine1,
-      ),
+      _addressLine1Key:
+          FormControl<String>(value: addressModel?.addressLine1, validators: [
+        CustomValidator.requiredMin,
+      ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
+        validators: [CustomValidator.requiredMin],
       ),
-      _landmarkKey: FormControl<String>(
-        value: addressModel?.landmark,
-      ),
-      _postalCodeKey: FormControl<String>(
-        value: addressModel?.pincode,
-      ),
-      _latKey: FormControl<double>(
-        value: addressModel?.latitude,
-      ),
+      _landmarkKey:
+          FormControl<String>(value: addressModel?.landmark, validators: [
+        CustomValidator.requiredMin,
+      ]),
+      _postalCodeKey:
+          FormControl<String>(value: addressModel?.pincode, validators: [
+        CustomValidator.requiredMin,
+      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
+        CustomValidator.requiredMin,
+      ]),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),
