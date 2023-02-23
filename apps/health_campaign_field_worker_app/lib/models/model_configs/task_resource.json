@@ -20,6 +20,7 @@
       "name": "taskClientReferenceId",
       "type": "String",
       "nullable": false,
+      "isPk": true,
       "includeForEntity": true,
       "includeForTable": true
     },
@@ -27,7 +28,6 @@
       "name": "id",
       "type": "String",
       "includeForQuery": true,
-      "isPk": true,
       "includeForEntity": true,
       "nullable": false
     },

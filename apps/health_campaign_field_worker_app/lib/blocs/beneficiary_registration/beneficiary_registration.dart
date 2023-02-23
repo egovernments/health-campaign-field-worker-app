@@ -226,11 +226,10 @@ class BeneficiaryRegistrationBloc
       editIndividual: (value) async {
         emit(value.copyWith(loading: true));
         try {
-          final individual = value.individualModel.copyWith(
+          final individual = event.model.copyWith(
             address: [
-              value.addressModel.copyWith(
-                relatedClientReferenceId:
-                    value.individualModel.clientReferenceId,
+              event.addressModel.copyWith(
+                relatedClientReferenceId: event.model.clientReferenceId,
               ),
             ],
           );
