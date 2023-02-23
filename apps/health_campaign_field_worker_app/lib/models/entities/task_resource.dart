@@ -7,12 +7,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class TaskResourceSearchModel extends EntitySearchModel {
-  final List<String>? clientReferenceId;
+  final String? id;
   final String? tenantId;
   final bool? isDeleted;
   
   TaskResourceSearchModel({
-    this.clientReferenceId,
+    this.id,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -21,24 +21,26 @@ class TaskResourceSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel {
-  final String? id;
+  final String? taskId;
+  final String taskClientReferenceId;
+  final String id;
   final String? productVariantId;
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
-  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
   
 
   TaskResourceModel({
-    this.id,
+    this.taskId,
+    required this.taskClientReferenceId,
+    required this.id,
     this.productVariantId,
     this.quantity,
     this.isDelivered,
     this.deliveryComment,
-    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -47,12 +49,13 @@ class TaskResourceModel extends EntityModel {
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
+      taskId: Value(taskId),
+      taskClientReferenceId: Value(taskClientReferenceId),
       id: Value(id),
       productVariantId: Value(productVariantId),
       quantity: Value(quantity),
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

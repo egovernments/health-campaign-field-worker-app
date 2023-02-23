@@ -95,6 +95,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         editHousehold: (
                           addressModel,
                           householdModel,
+                          individuals,
                           registrationDate,
                           loading,
                         ) {
