@@ -86,6 +86,7 @@ class IndividualLocalRepository
           final identifier = e.readTableOrNull(sql.identifier);
 
           return IndividualModel(
+            id: individual.id,
             tenantId: individual.tenantId,
             clientReferenceId: individual.clientReferenceId,
             dateOfBirth: individual.dateOfBirth,
