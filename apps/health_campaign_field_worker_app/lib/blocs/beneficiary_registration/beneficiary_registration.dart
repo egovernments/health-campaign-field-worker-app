@@ -322,6 +322,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationState.editHousehold({
     required AddressModel addressModel,
     required HouseholdModel householdModel,
+    required DateTime registrationDate,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditHouseholdState;
 

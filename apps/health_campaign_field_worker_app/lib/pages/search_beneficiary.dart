@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
+import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
@@ -204,16 +205,27 @@ class _SearchBeneficiaryPageState
               child: DigitCard(
                 child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
                   builder: (context, state) {
-                    final onPressed = state.maybeMap(
-                      orElse: () => null,
-                      results: (value) => () => context.router.push(
-                            BeneficiaryRegistrationWrapperRoute(),
-                          ),
-                      notFound: (value) => () => context.router.push(
-                            BeneficiaryRegistrationWrapperRoute(
+                    final router = context.router;
+
+                    final onPressed = state.mapOrNull(
+                      notFound: (value) {
+                        router.push(
+                          BeneficiaryRegistrationWrapperRoute(
+                            initialState: BeneficiaryRegistrationCreateState(
                               searchQuery: value.searchQuery,
                             ),
                           ),
+                        );
+                      },
+                      results: (value) {
+                        router.push(
+                          BeneficiaryRegistrationWrapperRoute(
+                            initialState: BeneficiaryRegistrationCreateState(
+                              searchQuery: value.searchQuery,
+                            ),
+                          ),
+                        );
+                      },
                     );
 
                     return DigitElevatedButton(

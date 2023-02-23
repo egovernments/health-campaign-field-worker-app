@@ -3,20 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/search_households/search_households.dart';
 import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
 
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
-  final String? searchQuery;
-  final bool isEditing;
-  final HouseholdMemberWrapper? householdMemberWrapper;
+  final BeneficiaryRegistrationState initialState;
 
   const BeneficiaryRegistrationWrapperPage({
     Key? key,
-    this.searchQuery,
-    this.isEditing = false,
-    this.householdMemberWrapper,
+    required this.initialState,
   }) : super(key: key);
 
   @override
@@ -36,15 +31,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(
-        BeneficiaryRegistrationState(
-          searchQuery: searchQuery,
-          householdModel: householdMemberWrapper?.household,
-          individualModel: householdMemberWrapper?.headOfHousehold,
-          isEditing: isEditing,
-          registrationDate:
-              householdMemberWrapper?.projectBeneficiary.dateOfRegistrationTime,
-          addressModel: householdMemberWrapper?.household.address,
-        ),
+        initialState,
         individualRepository: individual,
         householdRepository: household,
         householdMemberRepository: householdMember,

@@ -12,7 +12,7 @@ class ProjectBeneficiary extends Table {
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-  IntColumn get dateOfRegistration => integer().nullable()();
+  IntColumn get dateOfRegistration => integer()();
   
 
   @override
