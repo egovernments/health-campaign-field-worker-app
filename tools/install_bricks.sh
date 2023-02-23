@@ -18,4 +18,4 @@ done
 cd "$home" || exit
 echo "$PWD"
 
-melos bootstrap
+#melos bootstrap

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
-import 'local_store/no_sql/schema/oplog.dart';
 
 class NetworkManager {
   final NetworkManagerConfiguration configuration;
@@ -138,28 +137,19 @@ class NetworkManager {
                   .toList(),
             ));
 
-            final isar = local.opLogManager.isar;
-            await isar.writeTxn(() async {
-              for (var element in typeGroupedEntity.value) {
-                final entity = element.entity as HouseholdModel;
-                final responseEntity = responseEntities
-                    .whereType<HouseholdModel>()
-                    .firstWhereOrNull(
-                      (e) => e.clientReferenceId == entity.clientReferenceId,
-                    );
-                final updatedEntity = entity.copyWith(id: responseEntity?.id);
-                final oplog = OpLog()
-                  ..id = element.id
-                  ..serverGeneratedId = updatedEntity.id
-                  ..operation = element.operation
-                  ..isSynced = element.isSynced
-                  ..entityType = element.type
-                  ..createdOn = element.dateCreated
-                  ..entityString = updatedEntity.toJson();
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as HouseholdModel;
+              final responseEntity =
+                  responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+              final updatedEntity = entity.copyWith(id: responseEntity?.id);
 
-                await isar.opLogs.put(oplog);
-              }
-            });
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
 
             break;
 
@@ -172,28 +162,20 @@ class NetworkManager {
                   .toList(),
             ));
 
-            final isar = local.opLogManager.isar;
-            await isar.writeTxn(() async {
-              for (var element in typeGroupedEntity.value) {
-                final entity = element.entity as IndividualModel;
-                final responseEntity = responseEntities
-                    .whereType<IndividualModel>()
-                    .firstWhereOrNull(
-                      (e) => e.clientReferenceId == entity.clientReferenceId,
-                    );
-                final updatedEntity = entity.copyWith(id: responseEntity?.id);
-                final oplog = OpLog()
-                  ..id = element.id
-                  ..serverGeneratedId = updatedEntity.id
-                  ..operation = element.operation
-                  ..isSynced = element.isSynced
-                  ..entityType = element.type
-                  ..createdOn = element.dateCreated
-                  ..entityString = updatedEntity.toJson();
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as IndividualModel;
+              final responseEntity = responseEntities
+                  .whereType<IndividualModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+              final updatedEntity = entity.copyWith(id: responseEntity?.id);
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
 
-                await isar.opLogs.put(oplog);
-              }
-            });
             break;
           case DataModelType.projectBeneficiary:
             responseEntities =
@@ -205,28 +187,20 @@ class NetworkManager {
                   .toList(),
             ));
 
-            final isar = local.opLogManager.isar;
-            await isar.writeTxn(() async {
-              for (var element in typeGroupedEntity.value) {
-                final entity = element.entity as ProjectBeneficiaryModel;
-                final responseEntity = responseEntities
-                    .whereType<ProjectBeneficiaryModel>()
-                    .firstWhereOrNull(
-                      (e) => e.clientReferenceId == entity.clientReferenceId,
-                    );
-                final updatedEntity = entity.copyWith(id: responseEntity?.id);
-                final oplog = OpLog()
-                  ..id = element.id
-                  ..serverGeneratedId = updatedEntity.id
-                  ..operation = element.operation
-                  ..isSynced = element.isSynced
-                  ..entityType = element.type
-                  ..createdOn = element.dateCreated
-                  ..entityString = updatedEntity.toJson();
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as ProjectBeneficiaryModel;
+              final responseEntity = responseEntities
+                  .whereType<ProjectBeneficiaryModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+              final updatedEntity = entity.copyWith(id: responseEntity?.id);
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
 
-                await isar.opLogs.put(oplog);
-              }
-            });
             break;
           case DataModelType.task:
             responseEntities = await remote.search(TaskSearchModel(
@@ -237,35 +211,27 @@ class NetworkManager {
                   .toList(),
             ));
 
-            final isar = local.opLogManager.isar;
-            await isar.writeTxn(() async {
-              for (var element in typeGroupedEntity.value) {
-                final entity = element.entity as TaskModel;
-                final responseEntity =
-                    responseEntities.whereType<TaskModel>().firstWhereOrNull(
-                          (e) =>
-                              e.clientReferenceId == entity.clientReferenceId,
-                        );
-                final updatedEntity = entity.copyWith(id: responseEntity?.id);
-                final oplog = OpLog()
-                  ..id = element.id
-                  ..serverGeneratedId = updatedEntity.id
-                  ..operation = element.operation
-                  ..isSynced = element.isSynced
-                  ..entityType = element.type
-                  ..createdOn = element.dateCreated
-                  ..entityString = updatedEntity.toJson();
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as TaskModel;
+              final responseEntity =
+                  responseEntities.whereType<TaskModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+              final updatedEntity = entity.copyWith(id: responseEntity?.id);
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
 
-                await isar.opLogs.put(oplog);
-              }
-            });
             break;
+
           default:
             continue;
         }
 
         for (var element in responseEntities) {
-          await local.update(element);
+          await local.update(element, createOpLog: false);
         }
       }
     }

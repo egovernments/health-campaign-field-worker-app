@@ -94,7 +94,7 @@ class HouseholdMemberLocalRepository
       );
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override

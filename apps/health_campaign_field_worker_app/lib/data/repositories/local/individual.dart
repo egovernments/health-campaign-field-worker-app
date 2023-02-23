@@ -231,7 +231,7 @@ class IndividualLocalRepository
       batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override

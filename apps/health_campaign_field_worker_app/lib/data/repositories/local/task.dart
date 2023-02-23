@@ -72,7 +72,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final addresses = entity.address?.copyWith(
       relatedClientReferenceId: entity.clientReferenceId,
     );
-    final resources = entity.taskResource;
+    final resources = entity.resources;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
 
@@ -119,7 +119,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       );
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override

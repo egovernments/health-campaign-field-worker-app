@@ -108,7 +108,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       );
     });
 
-    return super.update(entity);
+    return super.update(entity, createOpLog: createOpLog);
   }
 
   @override

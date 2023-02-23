@@ -6,7 +6,6 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../router/app_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -15,6 +14,7 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
+import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -23,6 +23,7 @@ import '../../widgets/localized.dart';
 
 class DeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
+
   const DeliverInterventionPage({
     super.key,
     super.appLocalizations,
@@ -96,7 +97,7 @@ class _DeliverInterventionPageState
                                             status: Status.delivered.name,
                                             createdDate: DateTime.now()
                                                 .millisecondsSinceEpoch,
-                                            taskResource: [
+                                            resources: [
                                               TaskResourceModel(
                                                 clientReferenceId: state
                                                             .householdMemberWrapper
@@ -106,7 +107,7 @@ class _DeliverInterventionPageState
                                                     : state
                                                         .householdMemberWrapper
                                                         .task!
-                                                        .taskResource!
+                                                        .resources!
                                                         .first
                                                         .clientReferenceId,
                                                 rowVersion: 1,
@@ -120,7 +121,7 @@ class _DeliverInterventionPageState
                                                     .value
                                                     .toString(),
                                                 productVariantId:
-                                                    'PVAR-2022-12-26-000011',
+                                                    'PVAR-2023-01-11-000045',
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
@@ -184,7 +185,6 @@ class _DeliverInterventionPageState
                                       .dateOfRegistrationLabel): () {
                                     final date = householdMemberWrapper
                                         .projectBeneficiary.dateOfRegistration;
-                                    if (date == null) return '';
 
                                     final registrationDate =
                                         DateTime.fromMillisecondsSinceEpoch(
@@ -297,7 +297,7 @@ class _DeliverInterventionPageState
                                 menuItems: [
                                   MenuItemModel(
                                     "BEDNETS",
-                                    "PVAR-2022-12-26-000011",
+                                    "PVAR-2023-01-11-000045",
                                   ),
                                 ],
                                 validationMessages: {
@@ -362,20 +362,20 @@ class _DeliverInterventionPageState
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<String>(
         value: state
-            .householdMemberWrapper.task?.taskResource?.first.productVariantId,
+            .householdMemberWrapper.task?.resources?.first.productVariantId,
         validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(
-        value:
-            state.householdMemberWrapper.task?.taskResource?.first.quantity !=
-                    null
-                ? int.tryParse(state
-                    .householdMemberWrapper.task!.taskResource!.first.quantity!)
-                : 1,
+        value: state.householdMemberWrapper.task?.resources?.first.quantity !=
+                null
+            ? int.tryParse(
+                state.householdMemberWrapper.task!.resources!.first.quantity!,
+              )
+            : 1,
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: state
-            .householdMemberWrapper.task?.taskResource?.first.deliveryComment,
+        value:
+            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
       ),
     });
   }

@@ -54,8 +54,6 @@ class BeneficiaryRegistrationBloc
         emit(value.copyWith(addressModel: event.model));
       },
     );
-
-    throw InvalidRegistrationStateException();
   }
 
   FutureOr<void> _handleSaveHouseholdDetails(
@@ -106,7 +104,7 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationCreateEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw InvalidRegistrationStateException();
       },
@@ -169,6 +167,9 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
+          emit(
+            const BeneficiaryRegistrationPersistedState(navigateToRoot: false),
+          );
         }
       },
     );
@@ -178,7 +179,7 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationUpdateHouseholdDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw InvalidRegistrationStateException();
       },
@@ -194,6 +195,7 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
+          emit(const BeneficiaryRegistrationPersistedState());
         }
       },
     );
@@ -203,25 +205,27 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationUpdateIndividualDetailsEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw InvalidRegistrationStateException();
       },
       editIndividual: (value) async {
         emit(value.copyWith(loading: true));
         try {
-          await individualRepository.update(value.individualModel.copyWith(
+          final individual = value.individualModel.copyWith(
             address: [
               value.addressModel.copyWith(
                 relatedClientReferenceId:
                     value.individualModel.clientReferenceId,
               ),
             ],
-          ));
+          );
+          await individualRepository.update(individual);
         } catch (error) {
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
+          emit(const BeneficiaryRegistrationPersistedState());
         }
       },
     );
@@ -231,7 +235,7 @@ class BeneficiaryRegistrationBloc
     BeneficiaryRegistrationAddMemberEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw InvalidRegistrationStateException();
       },
@@ -265,6 +269,7 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
+          emit(const BeneficiaryRegistrationPersistedState());
         }
       },
     );
@@ -337,6 +342,10 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationAddMemberState;
+
+  const factory BeneficiaryRegistrationState.persisted({
+    @Default(true) bool navigateToRoot,
+  }) = BeneficiaryRegistrationPersistedState;
 }
 
 class InvalidRegistrationStateException implements Exception {}

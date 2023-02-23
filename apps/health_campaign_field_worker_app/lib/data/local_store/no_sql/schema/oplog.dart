@@ -6,10 +6,8 @@ part 'oplog.g.dart';
 
 @Collection()
 class OpLog {
-  Id? id;
+  Id id = Isar.autoIncrement;
   late String entityString;
-
-  String? serverGeneratedId;
 
   @ignore
   T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);

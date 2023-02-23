@@ -134,7 +134,7 @@ class HouseholdLocalRepository
       }
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override

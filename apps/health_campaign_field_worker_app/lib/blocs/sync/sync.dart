@@ -24,7 +24,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   }) : super(const SyncPendingState()) {
     on(_handleRefresh);
     on(_handleSyncUp);
-    on(_handleSyncDown);
   }
 
   FutureOr<void> _handleRefresh(
@@ -44,6 +43,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         switch (element.entityType) {
           case DataModelType.household:
           case DataModelType.individual:
+          case DataModelType.householdMember:
+          case DataModelType.projectBeneficiary:
           case DataModelType.task:
             return true;
           default:
@@ -61,11 +62,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     SyncSyncUpEvent event,
     SyncEmitter emit,
   ) async {
-    final previousCount = state.maybeWhen(
-      pendingSync: (count) => count,
-      orElse: () => 0,
-    );
-
     try {
       emit(const SyncInProgressState());
       await networkManager.syncUp(
@@ -80,13 +76,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       add(const SyncRefreshEvent());
     }
   }
-
-  FutureOr<void> _handleSyncDown(
-    SyncSyncDownEvent event,
-    SyncEmitter emit,
-  ) async {
-    // handle logic for syncDown here
-  }
 }
 
 @freezed
@@ -97,8 +86,6 @@ class SyncEvent with _$SyncEvent {
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) = SyncSyncUpEvent;
-
-  const factory SyncEvent.syncDown() = SyncSyncDownEvent;
 }
 
 @freezed
