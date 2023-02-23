@@ -186,11 +186,25 @@ class BeneficiaryRegistrationBloc
       editHousehold: (value) async {
         emit(value.copyWith(loading: true));
         try {
-          await householdRepository.update(value.householdModel.copyWith(
-            address: value.addressModel.copyWith(
-              relatedClientReferenceId: value.householdModel.clientReferenceId,
+          await householdRepository.update(
+            value.householdModel.copyWith(
+              address: value.addressModel.copyWith(
+                relatedClientReferenceId:
+                    value.householdModel.clientReferenceId,
+              ),
             ),
-          ));
+          );
+          for (var element in value.individualModel) {
+            await individualRepository.update(
+              element.copyWith(
+                address: [
+                  value.addressModel.copyWith(
+                    relatedClientReferenceId: element.clientReferenceId,
+                  ),
+                ],
+              ),
+            );
+          }
         } catch (error) {
           rethrow;
         } finally {
@@ -327,6 +341,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationState.editHousehold({
     required AddressModel addressModel,
     required HouseholdModel householdModel,
+    required List<IndividualModel> individualModel,
     required DateTime registrationDate,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditHouseholdState;

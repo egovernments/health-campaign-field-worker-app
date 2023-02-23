@@ -104,6 +104,8 @@ class _HouseholdOverviewPageState
                                                   initialState:
                                                       BeneficiaryRegistrationEditHouseholdState(
                                                     addressModel: address,
+                                                    individualModel:
+                                                        wrapper.members,
                                                     householdModel:
                                                         wrapper.household,
                                                     registrationDate: date,
