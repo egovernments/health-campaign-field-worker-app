@@ -1,6 +1,7 @@
 {
   "name": "task",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -35,7 +36,7 @@
   ],
   "customAttributes": [
     {
-      "name": "taskResource",
+      "name": "resources",
       "type": "TaskResource",
       "isList": true
 

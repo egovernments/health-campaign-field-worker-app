@@ -49,8 +49,19 @@ class _IndividualDetailsPageState
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
-        builder: (context, form, child) => BlocBuilder<
+        builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              persisted: (navigateToRoot) {
+                if (navigateToRoot) {
+                  (router.parent() as StackRouter).pop();
+                } else {
+                  router.push(AcknowledgementRoute());
+                }
+              },
+            );
+          },
           builder: (context, state) {
             return ScrollableContent(
               header: Column(children: const [
@@ -120,7 +131,6 @@ class _IndividualDetailsPageState
                             bloc.add(
                               const BeneficiaryRegistrationCreateEvent(),
                             );
-                            router.push(AcknowledgementRoute());
                           }
                         },
                         editIndividual: (
@@ -142,8 +152,6 @@ class _IndividualDetailsPageState
                               ),
                             ),
                           );
-
-                          (router.parent() as StackRouter).pop();
                         },
                         addMember: (
                           addressModel,
