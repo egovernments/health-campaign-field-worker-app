@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/project.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
