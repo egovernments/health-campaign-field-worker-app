@@ -143,8 +143,7 @@ class _IndividualDetailsPageState
                             oldIndividual: individualModel,
                           );
 
-                          final rowversion =
-                              individualModel.rowVersion.increment;
+                          final rowversion = individualModel.rowVersion;
                           bloc.add(
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                               addressModel: addressModel,
