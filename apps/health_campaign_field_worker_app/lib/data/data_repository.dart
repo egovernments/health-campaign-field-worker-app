@@ -209,6 +209,8 @@ abstract class LocalRepository<D extends EntityModel,
     if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
   }
 
+  // FutureOr<void> update(D entity, {bool createOpLog = true});
+
   Future<List<OpLogEntry<D>>> getSyncedCreateEntities() async {
     final entries = await opLogManager.getSyncedCreateEntries(type);
 
