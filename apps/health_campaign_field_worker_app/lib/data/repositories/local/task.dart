@@ -26,7 +26,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.taskResource,
-        sql.taskResource.taskClientReferenceId.equalsExp(
+        sql.taskResource.clientReferenceId.equalsExp(
           sql.task.clientReferenceId,
         ),
       ),
@@ -48,6 +48,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           if (task == null) return null;
 
           return TaskModel(
+            id: task.id,
             clientReferenceId: task.clientReferenceId,
             rowVersion: task.rowVersion,
             tenantId: task.tenantId,
@@ -61,12 +62,13 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 ? null
                 : [
                     TaskResourceModel(
-                      taskClientReferenceId: resources.taskClientReferenceId,
+                      clientReferenceId: resources.clientReferenceId,
                       id: resources.id,
                       productVariantId: resources.productVariantId,
                       taskId: resources.taskId,
                       deliveryComment: resources.deliveryComment,
                       quantity: resources.quantity,
+                      rowVersion: resources.rowVersion,
                     ),
                   ],
           );
@@ -124,7 +126,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     final resourcesCompanions = entity.resources?.map((e) {
           return e
-              .copyWith(taskClientReferenceId: entity.clientReferenceId)
+              .copyWith(clientReferenceId: entity.clientReferenceId)
               .companion;
         }).toList() ??
         [];
@@ -150,7 +152,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      rowVersion: entity.rowVersion.increment,
+      rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
       batch.update(

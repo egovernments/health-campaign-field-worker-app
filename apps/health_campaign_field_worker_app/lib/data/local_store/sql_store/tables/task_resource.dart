@@ -4,9 +4,9 @@ import 'package:drift/drift.dart';
 
 
 class TaskResource extends Table {
+  TextColumn get clientReferenceId => text()();
   TextColumn get taskId => text().nullable()();
-  TextColumn get taskClientReferenceId => text()();
-  TextColumn get id => text()();
+  TextColumn get id => text().nullable()();
   TextColumn get productVariantId => text().nullable()();
   TextColumn get quantity => text().nullable()();
   BoolColumn get isDelivered => boolean().nullable()();
@@ -17,5 +17,5 @@ class TaskResource extends Table {
   
 
   @override
-  Set<Column> get primaryKey => { taskClientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

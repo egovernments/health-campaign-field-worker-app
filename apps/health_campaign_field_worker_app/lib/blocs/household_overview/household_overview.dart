@@ -135,7 +135,7 @@ class HouseholdOverviewBloc
   ) async {
     await householdRepository.delete(
       event.householdModel.copyWith(
-        rowVersion: event.householdModel.rowVersion.increment,
+        rowVersion: event.householdModel.rowVersion,
       ),
     );
     for (final i in event.members) {
@@ -149,7 +149,7 @@ class HouseholdOverviewBloc
       for (final j in householdMember) {
         await householdMemberRepository.delete(
           j.copyWith(
-            rowVersion: j.rowVersion.increment,
+            rowVersion: j.rowVersion,
           ),
         );
       }
@@ -157,7 +157,7 @@ class HouseholdOverviewBloc
 
     await projectBeneficiaryRepository.delete(
       event.projectBeneficiaryModel.copyWith(
-        rowVersion: event.projectBeneficiaryModel.rowVersion.increment,
+        rowVersion: event.projectBeneficiaryModel.rowVersion,
       ),
     );
   }
@@ -177,7 +177,7 @@ class HouseholdOverviewBloc
     for (final i in householdMembers) {
       await householdMemberRepository.delete(
         i.copyWith(
-          rowVersion: i.rowVersion.increment,
+          rowVersion: i.rowVersion,
         ),
       );
     }
@@ -203,14 +203,14 @@ class HouseholdOverviewBloc
         if (!i.isHeadOfHousehold) {
           return i.copyWith(
             isHeadOfHousehold: true,
-            rowVersion: i.rowVersion.increment,
+            rowVersion: i.rowVersion,
           );
         }
       } else {
         if (i.isHeadOfHousehold) {
           return i.copyWith(
             isHeadOfHousehold: false,
-            rowVersion: i.rowVersion.increment,
+            rowVersion: i.rowVersion,
           );
         }
       }
@@ -221,7 +221,7 @@ class HouseholdOverviewBloc
     for (final element in updatedMembers) {
       await householdMemberRepository.update(
         element.copyWith(
-          rowVersion: element.rowVersion.increment,
+          rowVersion: element.rowVersion,
         ),
       );
     }
