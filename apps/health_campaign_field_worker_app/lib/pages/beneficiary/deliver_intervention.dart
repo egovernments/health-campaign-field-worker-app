@@ -76,7 +76,7 @@ class _DeliverInterventionPageState
                                 label: localizations
                                     .translate(i18.common.coreCommonSubmit),
                                 action: (ctx) {
-                                  final taskClientReferenceId =
+                                  final clientReferenceId =
                                       state.householdMemberWrapper.task == null
                                           ? IdGen.i.identifier
                                           : state.householdMemberWrapper.task!
@@ -85,7 +85,7 @@ class _DeliverInterventionPageState
                                         DeliverInterventionSubmitEvent(
                                           TaskModel(
                                             clientReferenceId:
-                                                taskClientReferenceId,
+                                                clientReferenceId,
                                             projectBeneficiaryClientReferenceId:
                                                 householdMemberWrapper
                                                     .projectBeneficiary
@@ -99,9 +99,8 @@ class _DeliverInterventionPageState
                                                 .millisecondsSinceEpoch,
                                             resources: [
                                               TaskResourceModel(
-                                                taskClientReferenceId:
-                                                    taskClientReferenceId,
-                                                id: IdGen.i.identifier,
+                                                clientReferenceId:
+                                                    clientReferenceId,
                                                 rowVersion: 1,
                                                 isDelivered: true,
                                                 tenantId: envConfig
@@ -366,11 +365,9 @@ class _DeliverInterventionPageState
             : 1,
       ),
       _deliveryCommentKey: FormControl<String>(
-          value: state
-              .householdMemberWrapper.task?.resources?.first.deliveryComment,
-          validators: [
-            CustomValidator.requiredMin,
-          ]),
+        value:
+            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
+      ),
     });
   }
 }

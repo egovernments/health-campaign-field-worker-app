@@ -57,6 +57,7 @@ class HouseholdLocalRepository
             address: address == null
                 ? null
                 : AddressModel(
+                    id: address.id,
                     relatedClientReferenceId: household.clientReferenceId,
                     tenantId: address.tenantId,
                     doorNo: address.doorNo,
@@ -144,7 +145,7 @@ class HouseholdLocalRepository
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      rowVersion: entity.rowVersion.increment,
+      rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
       batch.update(

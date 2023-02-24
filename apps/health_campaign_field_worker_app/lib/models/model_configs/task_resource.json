@@ -5,9 +5,10 @@
       "name": "clientReferenceId",
       "type": "String",
       "includeForQuery": false,
-      "nullable": true,
-      "includeForEntity": false,
-      "includeForTable": false
+      "nullable": false,
+      "isPk": true,
+      "includeForEntity": true,
+      "includeForTable": true
     },
     {
       "name": "taskId",
@@ -17,19 +18,9 @@
       "includeForTable": true
     },
     {
-      "name": "taskClientReferenceId",
-      "type": "String",
-      "nullable": false,
-      "isPk": true,
-      "includeForEntity": true,
-      "includeForTable": true
-    },
-    {
       "name": "id",
       "type": "String",
-      "includeForQuery": true,
-      "includeForEntity": true,
-      "nullable": false
+      "includeForQuery": true
     },
     {
       "name": "productVariantId",

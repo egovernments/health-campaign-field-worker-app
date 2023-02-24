@@ -21,9 +21,9 @@ class TaskResourceSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel {
+  final String clientReferenceId;
   final String? taskId;
-  final String taskClientReferenceId;
-  final String id;
+  final String? id;
   final String? productVariantId;
   final String? quantity;
   final bool? isDelivered;
@@ -34,9 +34,9 @@ class TaskResourceModel extends EntityModel {
   
 
   TaskResourceModel({
+    required this.clientReferenceId,
     this.taskId,
-    required this.taskClientReferenceId,
-    required this.id,
+    this.id,
     this.productVariantId,
     this.quantity,
     this.isDelivered,
@@ -49,8 +49,8 @@ class TaskResourceModel extends EntityModel {
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
+      clientReferenceId: Value(clientReferenceId),
       taskId: Value(taskId),
-      taskClientReferenceId: Value(taskClientReferenceId),
       id: Value(id),
       productVariantId: Value(productVariantId),
       quantity: Value(quantity),

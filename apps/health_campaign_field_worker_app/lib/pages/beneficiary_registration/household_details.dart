@@ -102,7 +102,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           var household = householdModel.copyWith(
                             memberCount: memberCount,
                             address: addressModel,
-                            rowVersion: householdModel.rowVersion.increment,
+                            rowVersion: householdModel.rowVersion,
                           );
 
                           bloc.add(
