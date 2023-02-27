@@ -25,6 +25,7 @@ export 'project_product_variant.dart';
 export 'project_resource.dart';
 export 'project_staff.dart';
 export 'project_type.dart';
+export 'stock.dart';
 export 'target.dart';
 export 'task.dart';
 export 'task_resource.dart';
@@ -79,5 +80,6 @@ enum DataModelType {
   projectStaff,
   projectResource,
   projectType,
+  stock,
   task,
 }
