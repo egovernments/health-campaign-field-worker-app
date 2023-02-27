@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'tables/stock.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -59,6 +60,7 @@ part 'sql_store.g.dart';
   ProjectResource,
   ProjectStaff,
   ProjectType,
+  Stock,
   Target,
   Task,
   TaskResource,
