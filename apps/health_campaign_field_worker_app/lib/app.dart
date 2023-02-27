@@ -9,7 +9,7 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
-import 'blocs/project_selection/project_selection.dart';
+import 'blocs/project/project.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -114,21 +114,19 @@ class MainApplication extends StatelessWidget {
                                   ),
                         ),
                         BlocProvider(
-                          create: (_) => ProjectSelectionBloc(
-                            const ProjectSelectionState(),
+                          create: (_) => ProjectBloc(
                             projectStaffRemoteRepository:
                                 ProjectStaffRemoteRepository(
                               client,
                               actionMap: {
                                 ApiOperation.search:
-                                    '/project/staff/v1/_search?limit=100&offset=0&tenantId=default',
+                                    '/project/staff/v1/_search',
                               },
                             ),
                             projectRemoteRepository: ProjectRemoteRepository(
                               client,
                               actionMap: {
-                                ApiOperation.search:
-                                    '/project/v1/_search?limit=5&offset=0&tenantId=default&lastChangedSince=&includeDeleted=true&includeDescendants=true',
+                                ApiOperation.search: '/project/v1/_search',
                               },
                             ),
                             isar: isar,

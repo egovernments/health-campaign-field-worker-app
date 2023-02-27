@@ -43,7 +43,7 @@ part 'app_router.gr.dart';
       page: AuthenticatedPageWrapper,
       path: '/',
       children: [
-        AutoRoute(page: HomePage, path: ''),
+        AutoRoute(page: HomePage, path: 'home'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(
           page: BeneficiaryRegistrationWrapperPage,
@@ -74,7 +74,7 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ProjectSelectionPage, path: 'ProjectSelectionBloc'),
+        AutoRoute(page: ProjectSelectionPage, path: ''),
       ],
     ),
   ],

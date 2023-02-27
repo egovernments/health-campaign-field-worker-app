@@ -159,11 +159,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.announcement,
         label: i18.home.fileComplaint,
-        onPressed: () {
-          context.read<ProjectSelectionBloc>().add(
-                const ProjectSelectionProjectInitEvent(),
-              );
-        },
+        onPressed: () {},
       ),
       HomeItemCard(
         icon: Icons.sync_alt,
