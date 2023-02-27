@@ -16,6 +16,8 @@ class Stock extends Table {
   TextColumn get quantity => text().nullable()();
   TextColumn get waybillNumber => text().nullable()();
   TextColumn get clientReferenceId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override
