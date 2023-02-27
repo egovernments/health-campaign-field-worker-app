@@ -11,6 +11,13 @@
       "includeForEntity": true,
       "nullable": false
     },
+    
+    {
+      "name": "staffId",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    },
     {
       "name": "userId",
       "type": "String",

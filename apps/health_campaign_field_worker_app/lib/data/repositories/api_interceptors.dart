@@ -29,12 +29,11 @@ class ApiInterceptors extends Interceptor {
           ts: RequestInfoData.ts,
           action: options.path.split('/').last,
           did: RequestInfoData.did,
-          key: RequestInfoData.key,
+          key: "1",
           authToken: authToken,
         ).toJson(),
       };
     }
-
     super.onRequest(options, handler);
   }
 }
