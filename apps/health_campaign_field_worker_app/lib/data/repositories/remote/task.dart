@@ -8,6 +8,7 @@ class TaskRemoteRepository extends RemoteRepository<TaskModel, TaskSearchModel> 
     super.dio, {
     required super.actionMap,
     super.entityName = 'Task',
+    super.isSearchResponsePlural = true,
   });
 
   @override

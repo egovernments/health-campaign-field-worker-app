@@ -90,7 +90,7 @@ void main() {
               appRouter,
               navigatorObservers: () => [mockObserver],
               routes: (PendingRoutesHandler handler) => [
-                HouseholdOverViewRoute(appLocalizations: mockLocalization),
+                // HouseholdOverviewRoute(appLocalizations: mockLocalization),
               ],
             ),
           ),

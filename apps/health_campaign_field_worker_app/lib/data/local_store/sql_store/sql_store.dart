@@ -5,22 +5,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
-import '../../../models/address_type.dart';
-import '../../../models/gender.dart';
-import '../../../models/blood_group.dart';
+import '../../../models/entities/address_type.dart';
+import '../../../models/entities/blood_group.dart';
+import '../../../models/entities/gender.dart';
 import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/facility.dart';
 import 'tables/household.dart';
-import 'tables/household_address.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
 import 'tables/individual.dart';
-import 'tables/individual_address.dart';
-import 'tables/individual_identifier.dart';
-import 'tables/individual_name.dart';
 import 'tables/name.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -44,13 +41,9 @@ part 'sql_store.g.dart';
   Document,
   Facility,
   Household,
-  HouseholdAddress,
   HouseholdMember,
   Identifier,
   Individual,
-  IndividualAddress,
-  IndividualIdentifier,
-  IndividualName,
   Product,
   ProductVariant,
   Project,

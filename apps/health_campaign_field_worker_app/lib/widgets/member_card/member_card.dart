@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../action_card/action_card.dart';
@@ -10,6 +11,9 @@ class MemberCard extends StatelessWidget {
   final int age;
   final bool isHead;
   final bool isDelivered;
+  final VoidCallback setAsHeadAction;
+  final VoidCallback editMemberAction;
+  final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
 
   const MemberCard({
@@ -20,6 +24,9 @@ class MemberCard extends StatelessWidget {
     this.isHead = false,
     required this.localizations,
     required this.isDelivered,
+    required this.setAsHeadAction,
+    required this.editMemberAction,
+    required this.deleteMemberAction,
   });
 
   @override
@@ -89,52 +96,21 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.assignAsHouseholdhead,
                           ),
-                          action: () {
-                            // TODO: Complete implementation
-                          },
+                          action: setAsHeadAction,
                         ),
                         ActionCardModel(
                           icon: Icons.edit,
                           label: localizations.translate(
                             i18.memberCard.editIndividualDetails,
                           ),
-                          action: () {
-                            // TODO: Complete implementation
-                          },
+                          action: editMemberAction,
                         ),
                         ActionCardModel(
                           icon: Icons.delete,
                           label: localizations.translate(
                             i18.memberCard.deleteIndividualActionText,
                           ),
-                          action: () {
-                            DigitDialog.show(
-                              context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(i18
-                                    .householdOverView
-                                    .householdOverViewActionCardTitle),
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(i18
-                                      .householdOverView
-                                      .householdOverViewPrimaryActionLabel),
-                                  action: (context) {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(i18
-                                      .householdOverView
-                                      .householdOverViewSecondaryActionLabel),
-                                  action: (context) {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                ),
-                              ),
-                            );
-                          },
+                          action: deleteMemberAction,
                         ),
                       ],
                     ),
@@ -148,52 +124,58 @@ class MemberCard extends StatelessWidget {
             ),
           ],
         ),
-        isDelivered
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: DigitIconButton(
-                  icon: Icons.info_rounded,
-                  iconText: localizations.translate(i18.householdOverView
-                      .householdOverViewNotDeliveredIconLabel),
-                  iconTextColor: theme.errorColor,
-                  iconColor: theme.errorColor,
-                ),
-              )
-            : Align(
-                alignment: Alignment.centerLeft,
-                child: DigitIconButton(
-                  icon: Icons.check_circle,
-                  iconText: localizations.translate(
-                    i18.householdOverView.householdOverViewDeliveredIconLabel,
+        Offstage(
+          offstage: true,
+          child: !isDelivered
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: DigitIconButton(
+                    icon: Icons.info_rounded,
+                    iconText: localizations.translate(i18.householdOverView
+                        .householdOverViewNotDeliveredIconLabel),
+                    iconTextColor: theme.errorColor,
+                    iconColor: theme.errorColor,
                   ),
-                  iconTextColor:
-                      DigitTheme.instance.colorScheme.onSurfaceVariant,
-                  iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
-                ),
-              ),
-        isDelivered
-            ? DigitElevatedButton(
-                onPressed: () {
-                  // TODO: Complete implementation
-                },
-                child: Center(
-                  child: Text(
-                    localizations.translate(
-                      i18.memberCard.deliverInterventionSubmitLabel,
+                )
+              : Align(
+                  alignment: Alignment.centerLeft,
+                  child: DigitIconButton(
+                    icon: Icons.check_circle,
+                    iconText: localizations.translate(
+                      i18.householdOverView.householdOverViewDeliveredIconLabel,
                     ),
+                    iconTextColor:
+                        DigitTheme.instance.colorScheme.onSurfaceVariant,
+                    iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              )
-            : SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: DigitOutLineButton(
-                  label: localizations
-                      .translate(i18.memberCard.deliverDetailsUpdateLabel),
+        ),
+        Offstage(
+          offstage: true,
+          child: isDelivered
+              ? DigitElevatedButton(
                   onPressed: () {
                     // TODO: Complete implementation
                   },
+                  child: Center(
+                    child: Text(
+                      localizations.translate(
+                        i18.memberCard.deliverInterventionSubmitLabel,
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: DigitOutLineButton(
+                    label: localizations
+                        .translate(i18.memberCard.deliverDetailsUpdateLabel),
+                    onPressed: () {
+                      // TODO: Complete implementation
+                    },
+                  ),
                 ),
-              ),
+        ),
       ]),
     );
   }

@@ -37,3 +37,24 @@ class RequestInfoData {
 class Modules {
   static const String localizationModule = "LOCALIZATION_MODULE";
 }
+
+class EntityPlurals {
+  static String getPluralForEntityName(String entity) {
+    switch (entity) {
+      case 'Beneficiary':
+        return 'Beneficiaries';
+      case 'ProjectBeneficiary':
+        return 'ProjectBeneficiaries';
+      case 'Address':
+        return 'Addresses';
+      case 'Facility':
+        return 'Facilities';
+      case 'ProjectFacility':
+        return 'ProjectFacilities';
+      case 'Project':
+        return 'Projects';
+      default:
+        return '${entity}s';
+    }
+  }
+}

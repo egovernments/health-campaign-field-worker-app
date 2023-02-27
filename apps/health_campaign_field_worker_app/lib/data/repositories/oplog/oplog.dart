@@ -44,19 +44,44 @@ abstract class OpLogManager<T extends EntityModel> {
         .toList();
   }
 
-  FutureOr<void> markSynced(OpLogEntry<T> entry) async {
+  FutureOr<List<OpLogEntry<T>>> getSyncedCreateEntries(
+    DataModelType type,
+  ) async {
+    final entries = await isar.opLogs
+        .filter()
+        .isSyncedEqualTo(true)
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.create)
+        .findAll();
+
+    return entries
+        .map((e) => OpLogEntry<T>(
+              Mapper.fromJson<T>(e.entityString),
+              e.operation,
+              dateCreated: e.createdOn,
+              id: e.id,
+              type: e.entityType,
+              isSynced: e.isSynced,
+            ))
+        .where((element) => element.id != null)
+        .toList();
+  }
+
+  FutureOr<void> update(OpLogEntry<EntityModel> entry) async {
     final id = entry.id;
     if (id == null) return;
-    await isar.opLogs.put(
-      OpLog()
-        ..id = id
-        ..operation = entry.operation
-        ..isSynced = entry.isSynced
-        ..entityType = entry.type
-        ..createdOn = entry.dateCreated
-        ..syncedOn = DateTime.now()
-        ..entityString = entry.entity.toJson(),
-    );
+    await isar.writeTxn(() async {
+      await isar.opLogs.put(
+        OpLog()
+          ..id = id
+          ..operation = entry.operation
+          ..isSynced = entry.isSynced
+          ..entityType = entry.type
+          ..createdOn = entry.dateCreated
+          ..syncedOn = entry.syncedOn
+          ..entityString = entry.entity.toJson(),
+      );
+    });
   }
 }
 
@@ -70,4 +95,21 @@ class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
 
 class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
   HouseholdMemberOpLogManager(super.isar);
+}
+
+class ProjectBeneficiaryOpLogManager
+    extends OpLogManager<ProjectBeneficiaryModel> {
+  ProjectBeneficiaryOpLogManager(super.isar);
+}
+
+class TaskOpLogManager extends OpLogManager<TaskModel> {
+  TaskOpLogManager(super.isar);
+}
+
+class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
+  ProjectStaffOpLogManager(super.isar);
+}
+
+class ProjectOpLogManager extends OpLogManager<ProjectModel> {
+  ProjectOpLogManager(super.isar);
 }

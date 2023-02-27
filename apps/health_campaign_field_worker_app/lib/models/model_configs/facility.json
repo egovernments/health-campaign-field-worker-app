@@ -8,11 +8,6 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "isPermanent",
       "type": "bool",
       "includeForQuery": true
@@ -26,10 +21,6 @@
       "name": "storageCapacity",
       "type": "int",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "customAttributes": [
