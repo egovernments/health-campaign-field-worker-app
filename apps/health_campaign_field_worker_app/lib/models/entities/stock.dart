@@ -2,10 +2,10 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data/local_store/sql_store/sql_store.dart';
-import 'data_model.dart';
+import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 class StockSearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? facilityId;
@@ -16,7 +16,8 @@ class StockSearchModel extends EntitySearchModel {
   final String? transactionReason;
   final String? transactingPartyId;
   final String? transactingPartyType;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
+  final bool? isDeleted;
   
   StockSearchModel({
     this.tenantId,
@@ -29,44 +30,27 @@ class StockSearchModel extends EntitySearchModel {
     this.transactingPartyId,
     this.transactingPartyType,
     this.clientReferenceId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
-@MappableClass()
-class StockModel extends EntityModel implements StockSearchModel {
-  
-  @override
+@MappableClass(ignoreNull: true)
+class StockModel extends EntityModel {
   final String? tenantId;
-  
-  @override
   final String? facilityId;
-  
-  @override
   final String? productVariantId;
-  
-  @override
   final String? referenceId;
-  
-  @override
   final String? referenceIdType;
-  
-  @override
   final String? transactionType;
-  
-  @override
   final String? transactionReason;
-  
-  @override
   final String? transactingPartyId;
-  
-  @override
   final String? transactingPartyType;
   final String? quantity;
   final String? waybillNumber;
-  
-  @override
   final String clientReferenceId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   StockModel({
@@ -82,6 +66,8 @@ class StockModel extends EntityModel implements StockSearchModel {
     this.quantity,
     this.waybillNumber,
     required this.clientReferenceId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -99,6 +85,8 @@ class StockModel extends EntityModel implements StockSearchModel {
       quantity: Value(quantity),
       waybillNumber: Value(waybillNumber),
       clientReferenceId: Value(clientReferenceId),
+      isDeleted: Value(isDeleted),
+      rowVersion: Value(rowVersion),
       );
   }
 }
