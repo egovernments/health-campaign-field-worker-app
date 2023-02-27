@@ -74,6 +74,7 @@ abstract class RemoteRepository<D extends EntityModel,
     );
 
     final responseMap = (response.data);
+
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
         data: query.toMap(),

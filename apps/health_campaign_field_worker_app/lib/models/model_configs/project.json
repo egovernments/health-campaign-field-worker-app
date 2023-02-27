@@ -16,6 +16,12 @@
       "includeForQuery": true
     },
     {
+      "name": "projectNumber",
+      "type": "String",
+      "includeForQuery": true
+    },
+    
+    {
       "name": "subProjectTypeId",
       "type": "String",
       "includeForQuery": true
@@ -29,6 +35,11 @@
       "name": "parent",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": false
     },
     {
       "name": "department",
