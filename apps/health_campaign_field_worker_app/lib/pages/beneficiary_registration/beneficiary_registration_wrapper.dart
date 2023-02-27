@@ -7,7 +7,12 @@ import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
 
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
-  const BeneficiaryRegistrationWrapperPage({Key? key}) : super(key: key);
+  final BeneficiaryRegistrationState initialState;
+
+  const BeneficiaryRegistrationWrapperPage({
+    Key? key,
+    required this.initialState,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(
-        const BeneficiaryRegistrationState(),
+        initialState,
         individualRepository: individual,
         householdRepository: household,
         householdMemberRepository: householdMember,

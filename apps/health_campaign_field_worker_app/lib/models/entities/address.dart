@@ -7,19 +7,22 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class AddressSearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
+  final String? id;
   final String? tenantId;
+  final bool? isDeleted;
   
   AddressSearchModel({
-    this.clientReferenceId,
+    this.id,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class AddressModel extends EntityModel implements AddressSearchModel {
+class AddressModel extends EntityModel {
   final String? id;
+  final String? relatedClientReferenceId;
   final String? doorNo;
   final double? latitude;
   final double? longitude;
@@ -31,19 +34,15 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
-  
-  @override
-  final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
-  final BoundaryModel? locality;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final AddressType? type;
   
 
   AddressModel({
     this.id,
+    this.relatedClientReferenceId,
     this.doorNo,
     this.latitude,
     this.longitude,
@@ -55,10 +54,9 @@ class AddressModel extends EntityModel implements AddressSearchModel {
     this.pincode,
     this.buildingName,
     this.street,
-    required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
-    this.locality,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     this.type,
     super.auditDetails,
   }):  super();
@@ -66,6 +64,7 @@ class AddressModel extends EntityModel implements AddressSearchModel {
   AddressCompanion get companion {
     return AddressCompanion(
       id: Value(id),
+      relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),
       latitude: Value(latitude),
       longitude: Value(longitude),
@@ -77,11 +76,10 @@ class AddressModel extends EntityModel implements AddressSearchModel {
       pincode: Value(pincode),
       buildingName: Value(buildingName),
       street: Value(street),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       type: Value(type),
-      locality: Value(locality?.clientReferenceId),
-    );
+      );
   }
 }

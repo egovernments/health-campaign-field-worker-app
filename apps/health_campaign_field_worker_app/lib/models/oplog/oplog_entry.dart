@@ -10,6 +10,7 @@ class OpLogEntry<T extends EntityModel> {
   final DataOperation operation;
   final bool isSynced;
   final DateTime dateCreated;
+  final DateTime? syncedOn;
 
   const OpLogEntry(
     this.entity,
@@ -18,6 +19,7 @@ class OpLogEntry<T extends EntityModel> {
     required this.type,
     this.isSynced = false,
     required this.dateCreated,
+    this.syncedOn,
   });
 }
 

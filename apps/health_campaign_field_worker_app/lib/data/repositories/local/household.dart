@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/household_address.dart';
-import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -17,15 +15,9 @@ class HouseholdLocalRepository
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
-          sql.householdAddress,
-          sql.householdAddress.household.equalsExp(
-            sql.household.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
           sql.address,
-          sql.address.clientReferenceId.equalsExp(
-            sql.householdAddress.address,
+          sql.address.relatedClientReferenceId.equalsExp(
+            sql.household.clientReferenceId,
           ),
         ),
       ],
@@ -35,9 +27,8 @@ class HouseholdLocalRepository
             buildAnd(
               [
                 if (query.clientReferenceId != null)
-                  sql.household.clientReferenceId.equals(
-                    query.clientReferenceId,
-                  ),
+                  sql.household.clientReferenceId
+                      .isIn(query.clientReferenceId!),
                 if (query.id != null)
                   sql.household.id.equals(
                     query.id,
@@ -51,51 +42,56 @@ class HouseholdLocalRepository
           ))
         .get();
 
-    return results.map((e) {
-      final household = e.readTable(sql.household);
-      final address = e.readTableOrNull(sql.address);
+    return results
+        .map((e) {
+          final household = e.readTable(sql.household);
+          final address = e.readTableOrNull(sql.address);
 
-      return HouseholdModel(
-        id: household.id,
-        tenantId: household.tenantId,
-        clientReferenceId: household.clientReferenceId,
-        memberCount: household.memberCount,
-        rowVersion: household.rowVersion,
-        address: address == null
-            ? null
-            : AddressModel(
-                tenantId: address.tenantId,
-                clientReferenceId: address.clientReferenceId,
-                doorNo: address.doorNo,
-                latitude: address.latitude,
-                longitude: address.longitude,
-                locationAccuracy: address.locationAccuracy,
-                addressLine1: address.addressLine1,
-                addressLine2: address.addressLine2,
-                city: address.city,
-                pincode: address.pincode,
-                type: address.type,
-                rowVersion: address.rowVersion,
-              ),
-      );
-    }).toList();
+          return HouseholdModel(
+            id: household.id,
+            tenantId: household.tenantId,
+            clientReferenceId: household.clientReferenceId,
+            memberCount: household.memberCount,
+            rowVersion: household.rowVersion,
+            isDeleted: household.isDeleted,
+            address: address == null
+                ? null
+                : AddressModel(
+                    id: address.id,
+                    relatedClientReferenceId: household.clientReferenceId,
+                    tenantId: address.tenantId,
+                    doorNo: address.doorNo,
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    landmark: address.landmark,
+                    locationAccuracy: address.locationAccuracy,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2,
+                    city: address.city,
+                    pincode: address.pincode,
+                    type: address.type,
+                    rowVersion: address.rowVersion,
+                  ),
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(HouseholdModel entity) async {
+  FutureOr<void> create(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 
-    final householdAddressCompanion = HouseholdAddressModel(
-      clientReferenceId: IdGen.i.identifier,
-      tenantId: envConfig.variables.tenantId,
-      rowVersion: 1,
-      address: entity.address,
-      household: entity,
-    ).companion;
-
     await sql.batch((batch) async {
-      batch.insert(sql.household, householdCompanion);
+      batch.insert(
+        sql.household,
+        householdCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
 
       if (addressCompanion != null) {
         batch.insert(
@@ -103,7 +99,6 @@ class HouseholdLocalRepository
           addressCompanion,
           mode: InsertMode.insertOrReplace,
         );
-        batch.insert(sql.householdAddress, householdAddressCompanion);
       }
     });
 
@@ -111,9 +106,14 @@ class HouseholdLocalRepository
   }
 
   @override
-  FutureOr<void> update(HouseholdModel entity) async {
+  FutureOr<void> update(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
     final householdCompanion = entity.companion;
-    final addressCompanion = entity.address?.companion;
+    final addressCompanion = entity.address
+        ?.copyWith(relatedClientReferenceId: entity.clientReferenceId)
+        .companion;
 
     await sql.batch((batch) async {
       batch.update(
@@ -128,14 +128,36 @@ class HouseholdLocalRepository
         batch.update(
           sql.address,
           addressCompanion,
-          where: (table) => table.clientReferenceId.equals(
-            addressCompanion.clientReferenceId.value,
+          where: (table) => table.relatedClientReferenceId.equals(
+            addressCompanion.relatedClientReferenceId.value,
           ),
         );
       }
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> delete(
+    HouseholdModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.household,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override

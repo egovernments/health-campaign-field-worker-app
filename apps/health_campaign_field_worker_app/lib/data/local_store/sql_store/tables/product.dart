@@ -9,8 +9,9 @@ class Product extends Table {
   TextColumn get name => text().nullable()();
   TextColumn get manufacturer => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

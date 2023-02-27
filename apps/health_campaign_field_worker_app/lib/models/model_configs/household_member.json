@@ -1,6 +1,7 @@
 {
   "name": "householdMember",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -30,7 +31,8 @@
     {
       "name": "isHeadOfHousehold",
       "type": "bool",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false
     }
   ],
   "isEnum": false

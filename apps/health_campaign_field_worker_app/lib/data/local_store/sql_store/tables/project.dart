@@ -13,13 +13,13 @@ class Project extends Table {
   TextColumn get description => text().nullable()();
   TextColumn get referenceId => text().nullable()();
   TextColumn get projectHierarchy => text().nullable()();
-  TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   IntColumn get startDate => integer().nullable()();
   IntColumn get endDate => integer().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => {  };
 }

@@ -3,10 +3,10 @@
 import 'package:drift/drift.dart';
 
 import '../../../../models/entities/address_type.dart';
-import 'boundary.dart';
 
 class Address extends Table {
   TextColumn get id => text().nullable()();
+  TextColumn get relatedClientReferenceId => text().nullable()();
   TextColumn get doorNo => text().nullable()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
@@ -18,13 +18,12 @@ class Address extends Table {
   TextColumn get pincode => text().nullable()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
-  TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
-  TextColumn get locality => text().nullable().references(Boundary, #clientReferenceId)();
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { relatedClientReferenceId,  };
 }

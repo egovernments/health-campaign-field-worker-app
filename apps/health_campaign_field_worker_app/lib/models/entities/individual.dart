@@ -9,8 +9,9 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class IndividualSearchModel extends EntitySearchModel {
   final String? id;
   final String? dateOfBirth;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final NameSearchModel? name;
   final Gender? gender;
   final List<IdentifierSearchModel>? identifiers;
@@ -20,6 +21,7 @@ class IndividualSearchModel extends EntitySearchModel {
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.name,
     this.gender,
     this.identifiers,
@@ -28,13 +30,9 @@ class IndividualSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class IndividualModel extends EntityModel implements IndividualSearchModel {
-  
-  @override
+class IndividualModel extends EntityModel {
   final String? id;
   final String? userId;
-  
-  @override
   final String? dateOfBirth;
   final String? mobileNumber;
   final String? altContactNumber;
@@ -42,23 +40,14 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
   final String? fatherName;
   final String? husbandName;
   final String? photo;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
-  
-  @override
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final NameModel? name;
   final BloodGroup? bloodGroup;
   final List<AddressModel>? address;
-  
-  @override
   final Gender? gender;
-  
-  @override
   final List<IdentifierModel>? identifiers;
   
 
@@ -73,8 +62,9 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
     this.husbandName,
     this.photo,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     this.name,
     this.bloodGroup,
     this.address,
@@ -96,6 +86,7 @@ class IndividualModel extends EntityModel implements IndividualSearchModel {
       photo: Value(photo),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),

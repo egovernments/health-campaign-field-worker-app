@@ -11,8 +11,9 @@ class ProductSearchModel extends EntitySearchModel {
   final String? type;
   final String? name;
   final String? manufacturer;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProductSearchModel({
     this.id,
@@ -21,31 +22,21 @@ class ProductSearchModel extends EntitySearchModel {
     this.manufacturer,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProductModel extends EntityModel implements ProductSearchModel {
-  
-  @override
+class ProductModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? type;
-  
-  @override
   final String? name;
-  
-  @override
   final String? manufacturer;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   ProductModel({
@@ -54,8 +45,9 @@ class ProductModel extends EntityModel implements ProductSearchModel {
     this.name,
     this.manufacturer,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -67,6 +59,7 @@ class ProductModel extends EntityModel implements ProductSearchModel {
       manufacturer: Value(manufacturer),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

@@ -1,6 +1,7 @@
 {
   "name": "task",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -18,6 +19,11 @@
       "includeForQuery": true
     },
     {
+      "name": "projectBeneficiaryClientReferenceId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "createdBy",
       "type": "String",
       "includeForQuery": true
@@ -31,8 +37,9 @@
   "customAttributes": [
     {
       "name": "resources",
-      "type": "taskResource",
+      "type": "TaskResource",
       "isList": true
+
     },
     {
       "name": "address",

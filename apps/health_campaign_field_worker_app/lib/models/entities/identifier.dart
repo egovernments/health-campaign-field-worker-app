@@ -7,52 +7,52 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class IdentifierSearchModel extends EntitySearchModel {
+  final String? id;
   final String? identifierType;
   final String? identifierId;
-  final String? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   IdentifierSearchModel({
+    this.id,
     this.identifierType,
     this.identifierId,
-    this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class IdentifierModel extends EntityModel implements IdentifierSearchModel {
-  
-  @override
+class IdentifierModel extends EntityModel {
+  final String? id;
+  final String? individualClientReferenceId;
   final String? identifierType;
-  
-  @override
   final String? identifierId;
-  
-  @override
-  final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   IdentifierModel({
+    this.id,
+    this.individualClientReferenceId,
     this.identifierType,
     this.identifierId,
-    required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
+      id: Value(id),
+      individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

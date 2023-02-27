@@ -16,8 +16,9 @@ class Individual extends Table {
   TextColumn get husbandName => text().nullable()();
   TextColumn get photo => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
   IntColumn get gender => intEnum<Gender>().nullable()();
   

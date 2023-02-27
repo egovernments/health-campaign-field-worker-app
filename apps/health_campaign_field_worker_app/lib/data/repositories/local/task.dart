@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/task_address.dart';
-import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -12,14 +11,23 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   TaskLocalRepository(super.sql, super.opLogManager);
 
   @override
+  Future<List<OpLogEntry<TaskModel>>> getItemsToBeSynced() async {
+    final entries = await super.getItemsToBeSynced();
+
+    return entries;
+    // .where((element) => element.entity.projectBeneficiaryId != null)
+    // .toList();
+  }
+
+  @override
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query,
   ) async {
-    final selectQuery = sql.select(sql.projectBeneficiary).join([
+    final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
-        sql.task,
-        sql.task.projectId.equalsExp(
-          sql.task.projectId,
+        sql.taskResource,
+        sql.taskResource.clientReferenceId.equalsExp(
+          sql.task.clientReferenceId,
         ),
       ),
     ]);
@@ -27,32 +35,58 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              sql.task.clientReferenceId.equals(
-                query.clientReferenceId,
+              sql.task.clientReferenceId.isIn(
+                query.clientReferenceId!,
               ),
           ])))
         .get();
 
-    return results.map((e) {
-      final task = e.readTable(sql.task);
+    return results
+        .map((e) {
+          final task = e.readTableOrNull(sql.task);
+          final resources = e.readTableOrNull(sql.taskResource);
+          if (task == null) return null;
 
-      return TaskModel(
-        clientReferenceId: task.clientReferenceId,
-        rowVersion: task.rowVersion,
-        tenantId: task.tenantId,
-        // TODO: Remove this hardcoded project
-        projectId: '',
-
-        projectBeneficiaryId: task.projectBeneficiaryId,
-        createdDate: task.createdDate,
-      );
-    }).toList();
+          return TaskModel(
+            id: task.id,
+            clientReferenceId: task.clientReferenceId,
+            rowVersion: task.rowVersion,
+            tenantId: task.tenantId,
+            isDeleted: task.isDeleted,
+            // TODO: Remove this hardcoded project
+            projectId: '13',
+            projectBeneficiaryId: task.projectBeneficiaryId,
+            createdDate: task.createdDate,
+            status: task.status,
+            resources: resources == null
+                ? null
+                : [
+                    TaskResourceModel(
+                      clientReferenceId: resources.clientReferenceId,
+                      id: resources.id,
+                      productVariantId: resources.productVariantId,
+                      taskId: resources.taskId,
+                      deliveryComment: resources.deliveryComment,
+                      quantity: resources.quantity,
+                      rowVersion: resources.rowVersion,
+                    ),
+                  ],
+          );
+        })
+        .whereNotNull()
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(TaskModel entity) async {
+  FutureOr<void> create(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final taskCompanion = entity.companion;
-    final addresses = entity.address;
+    final addresses = entity.address?.copyWith(
+      relatedClientReferenceId: entity.clientReferenceId,
+    );
     final resources = entity.resources;
     await sql.batch((batch) async {
       batch.insert(sql.task, taskCompanion);
@@ -76,20 +110,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             addressCompanions,
             mode: InsertMode.insertOrReplace,
           );
-
-          batch.insertAll(
-            sql.taskAddress,
-            [
-              TaskAddressModel(
-                clientReferenceId: IdGen.i.identifier,
-                tenantId: envConfig.variables.tenantId,
-                rowVersion: 1,
-                task: entity,
-                address: addresses,
-              ).companion,
-            ],
-            mode: InsertMode.insertOrReplace,
-          );
         }
 
         await super.create(entity);
@@ -98,8 +118,18 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
-  FutureOr<void> update(TaskModel entity) async {
+  FutureOr<void> update(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final taskCompanion = entity.companion;
+
+    final resourcesCompanions = entity.resources?.map((e) {
+          return e
+              .copyWith(clientReferenceId: entity.clientReferenceId)
+              .companion;
+        }).toList() ??
+        [];
 
     await sql.batch((batch) {
       batch.update(
@@ -109,9 +139,32 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           entity.clientReferenceId,
         ),
       );
+      batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> delete(
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.task,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override

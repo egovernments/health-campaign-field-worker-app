@@ -1,6 +1,7 @@
 {
   "name": "projectBeneficiary",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -27,7 +28,8 @@
     {
       "name": "dateOfRegistration",
       "type": "DateTime",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false
     }
   ],
   "isEnum": false

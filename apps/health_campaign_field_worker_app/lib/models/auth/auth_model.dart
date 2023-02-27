@@ -10,6 +10,7 @@ class AuthModel with _$AuthModel {
     @JsonKey(name: 'token_type') required String tokenType,
     @JsonKey(name: 'refresh_token') required String refreshToken,
     @JsonKey(name: 'expires_in') required int expiresIn,
+    @JsonKey(name: 'UserRequest') required UserRequestModel userRequestModel,
   }) = _AuthModel;
 
   factory AuthModel.fromJson(Map<String, dynamic> json) =>
@@ -29,4 +30,14 @@ class LoginModel with _$LoginModel {
 
   factory LoginModel.fromJson(Map<String, dynamic> json) =>
       _$LoginModelFromJson(json);
+}
+
+@freezed
+class UserRequestModel with _$UserRequestModel {
+  const factory UserRequestModel({
+    @JsonKey(name: 'uuid') required String uuid,
+  }) = _UserRequestModel;
+
+  factory UserRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$UserRequestModelFromJson(json);
 }

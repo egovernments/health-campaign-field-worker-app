@@ -9,6 +9,17 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
   @override
+  Future<List<OpLogEntry<ProjectBeneficiaryModel>>> getItemsToBeSynced() async {
+    final entries = await super.getItemsToBeSynced();
+
+    return entries;
+    //   return entries
+    //       .where((element) => element.entity.beneficiaryId != null)
+    //       .toList();
+    // }
+  }
+
+  @override
   FutureOr<List<ProjectBeneficiaryModel>> search(
     ProjectBeneficiarySearchModel query,
   ) async {
@@ -18,8 +29,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             buildAnd(
               [
                 if (query.clientReferenceId != null)
-                  sql.projectBeneficiary.clientReferenceId.equals(
-                    query.clientReferenceId,
+                  sql.projectBeneficiary.clientReferenceId.isIn(
+                    query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
                   sql.projectBeneficiary.beneficiaryClientReferenceId.equals(
@@ -46,25 +57,32 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           ))
         .get();
 
-    return results.map((e) {
-      final projectBeneficiary = e.readTable(sql.projectBeneficiary);
+    return results
+        .map((e) {
+          final projectBeneficiary = e.readTable(sql.projectBeneficiary);
 
-      return ProjectBeneficiaryModel(
-        clientReferenceId: projectBeneficiary.clientReferenceId,
-        tenantId: projectBeneficiary.tenantId,
-        rowVersion: projectBeneficiary.rowVersion,
-        id: projectBeneficiary.id,
-        beneficiaryClientReferenceId:
-            projectBeneficiary.beneficiaryClientReferenceId,
-        beneficiaryId: projectBeneficiary.beneficiaryId,
-        dateOfRegistration: projectBeneficiary.dateOfRegistration,
-        projectId: projectBeneficiary.projectId,
-      );
-    }).toList();
+          return ProjectBeneficiaryModel(
+            clientReferenceId: projectBeneficiary.clientReferenceId,
+            tenantId: projectBeneficiary.tenantId,
+            rowVersion: projectBeneficiary.rowVersion,
+            id: projectBeneficiary.id,
+            isDeleted: projectBeneficiary.isDeleted,
+            beneficiaryClientReferenceId:
+                projectBeneficiary.beneficiaryClientReferenceId,
+            beneficiaryId: projectBeneficiary.beneficiaryId,
+            dateOfRegistration: projectBeneficiary.dateOfRegistration,
+            projectId: projectBeneficiary.projectId,
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(ProjectBeneficiaryModel entity) async {
+  FutureOr<void> create(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {
       batch.insert(sql.projectBeneficiary, projectBeneficiaryCompanion);
@@ -74,7 +92,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<void> update(ProjectBeneficiaryModel entity) async {
+  FutureOr<void> update(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
     final projectBeneficiaryCompanion = entity.companion;
 
     await sql.batch((batch) {
@@ -87,7 +108,29 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       );
     });
 
-    return super.update(entity);
+    return super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> delete(
+    ProjectBeneficiaryModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion.increment,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.projectBeneficiary,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override

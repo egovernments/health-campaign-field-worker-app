@@ -11,14 +11,28 @@ void run(HookContext context) {
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
       null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'clientReferenceId',
-        type: 'String',
-        isPk: true,
-        includeForQuery: true,
-        nullable: false,
-      ),
+    model = model.copyWith.attributes.addAll(
+      [
+        AttributeModel(
+          name: 'clientReferenceId',
+          type: 'String',
+          isPk: true,
+          isList: true,
+          includeForQuery: true,
+          includeForEntity: false,
+          includeForTable: false,
+          nullable: false,
+        ),
+        AttributeModel(
+          name: 'clientReferenceId',
+          type: 'String',
+          isPk: true,
+          includeForQuery: false,
+          includeForEntity: true,
+          includeForTable: true,
+          nullable: false,
+        ),
+      ],
     );
   }
 
@@ -30,7 +44,21 @@ void run(HookContext context) {
         name: 'tenantId',
         type: 'String',
         includeForQuery: true,
-        nullable: false,
+        nullable: true,
+      ),
+    );
+  }
+
+  if (model.attributes
+          .firstWhereOrNull((element) => element.name == 'isDeleted') ==
+      null) {
+    model = model.copyWith.attributes.add(
+      AttributeModel(
+        name: 'isDeleted',
+        type: 'bool',
+        includeForQuery: true,
+        includeForEntity: true,
+        nullable: true,
       ),
     );
   }
@@ -43,13 +71,19 @@ void run(HookContext context) {
         name: 'rowVersion',
         type: 'int',
         includeForQuery: false,
-        nullable: false,
+        nullable: true,
       ),
     );
   }
 
+  model = model.copyWith(
+    attributes: model.attributes
+        .where((e) => !model.ignoreFields.contains(e.name))
+        .toList(),
+  );
+
   final sqlAttributes = <AttributeModel>[
-    ...model.attributes.map((e) {
+    ...model.attributes.where((element) => element.includeForTable).map((e) {
       final type = _getSqlType(e.type);
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);

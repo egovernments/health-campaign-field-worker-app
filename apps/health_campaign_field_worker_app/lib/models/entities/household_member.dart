@@ -13,8 +13,9 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? individualId;
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   HouseholdMemberSearchModel({
     this.id,
@@ -25,37 +26,23 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchModel {
-  
-  @override
+class HouseholdMemberModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? householdId;
-  
-  @override
   final String? householdClientReferenceId;
-  
-  @override
   final String? individualId;
-  
-  @override
   final String? individualClientReferenceId;
-  
-  @override
-  final bool? isHeadOfHousehold;
-  
-  @override
+  final bool isHeadOfHousehold;
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   HouseholdMemberModel({
@@ -64,10 +51,11 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
     this.householdClientReferenceId,
     this.individualId,
     this.individualClientReferenceId,
-    this.isHeadOfHousehold,
+    required this.isHeadOfHousehold,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -81,6 +69,7 @@ class HouseholdMemberModel extends EntityModel implements HouseholdMemberSearchM
       isHeadOfHousehold: Value(isHeadOfHousehold),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

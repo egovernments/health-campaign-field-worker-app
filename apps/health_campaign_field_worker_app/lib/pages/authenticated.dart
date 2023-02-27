@@ -5,12 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
-import '../blocs/delivery_intervention/deliver_intervention.dart';
 import '../blocs/household_details/household_details.dart';
-import '../blocs/selected_households/selected_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
-import '../data/network_manager.dart';
 import '../models/data_model.dart';
 import '../widgets/sidebar/side_bar.dart';
 
@@ -19,9 +16,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final networkManager = context.read<NetworkManager>();
-    final task = networkManager.repository<TaskModel, TaskSearchModel>(context);
-
     return Scaffold(
       appBar: AppBar(),
       drawer: Container(
@@ -45,6 +39,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           case DataModelType.household:
                           case DataModelType.individual:
                           case DataModelType.task:
+                          case DataModelType.householdMember:
+                          case DataModelType.projectBeneficiary:
                             return true;
                           default:
                             return false;
@@ -62,32 +58,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
-          ),
-          BlocProvider(
-            create: (_) => SelectedHouseHoldsBloc(
-              const SelectedHouseHoldsState(),
-              context
-                  .read<NetworkManager>()
-                  .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
-                    context,
-                  ),
-              context
-                  .read<NetworkManager>()
-                  .repository<IndividualModel, IndividualSearchModel>(
-                    context,
-                  ),
-              context
-                  .read<NetworkManager>()
-                  .repository<IndividualModel, IndividualSearchModel>(
-                    context,
-                  ),
-            ),
-          ),
-          BlocProvider(
-            create: (_) => DeliverInterventionBloc(
-              const DeliverInterventionState(),
-              taskRepository: task,
-            ),
           ),
         ],
         child: const AutoRouter(),

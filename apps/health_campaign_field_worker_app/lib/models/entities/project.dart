@@ -14,8 +14,8 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? parent;
   final String? department;
   final String? referenceId;
-  final String? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -27,8 +27,8 @@ class ProjectSearchModel extends EntitySearchModel {
     this.parent,
     this.department,
     this.referenceId,
-    this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -48,45 +48,23 @@ class ProjectSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectModel extends EntityModel implements ProjectSearchModel {
-  
-  @override
+class ProjectModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectTypeId;
-  
-  @override
   final String? subProjectTypeId;
-  
-  @override
   final bool? isTaskEnabled;
-  
-  @override
   final String? parent;
-  
-  @override
   final String? department;
   final String? description;
-  
-  @override
   final String? referenceId;
   final String? projectHierarchy;
-  
-  @override
-  final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
   final List<DocumentModel>? documents;
-  
-  @override
   final DateTime? startDateTime;
-  
-  @override
   final DateTime? endDateTime;
   
 
@@ -100,9 +78,9 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
     this.description,
     this.referenceId,
     this.projectHierarchy,
-    required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     this.address,
     this.targets,
     this.documents,
@@ -117,11 +95,9 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  @override
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 
@@ -136,8 +112,8 @@ class ProjectModel extends EntityModel implements ProjectSearchModel {
       description: Value(description),
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

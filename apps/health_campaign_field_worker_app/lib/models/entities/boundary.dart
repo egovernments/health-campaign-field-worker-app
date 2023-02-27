@@ -7,32 +7,27 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
-  final String? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   BoundarySearchModel({
-    this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class BoundaryModel extends EntityModel implements BoundarySearchModel {
+class BoundaryModel extends EntityModel {
   final String? code;
   final String? name;
   final String? label;
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
-  
-  @override
-  final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
-  final BoundaryModel? children;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   BoundaryModel({
@@ -42,10 +37,9 @@ class BoundaryModel extends EntityModel implements BoundarySearchModel {
     this.latitude,
     this.longitude,
     this.materializedPath,
-    required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
-    this.children,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -57,10 +51,9 @@ class BoundaryModel extends EntityModel implements BoundarySearchModel {
       latitude: Value(latitude),
       longitude: Value(longitude),
       materializedPath: Value(materializedPath),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      children: Value(children?.clientReferenceId),
-    );
+      );
   }
 }

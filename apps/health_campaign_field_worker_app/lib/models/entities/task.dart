@@ -10,10 +10,12 @@ class TaskSearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
+  final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? plannedStartDateTime;
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
@@ -23,10 +25,12 @@ class TaskSearchModel extends EntitySearchModel {
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
+    this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
@@ -60,42 +64,22 @@ class TaskSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class TaskModel extends EntityModel implements TaskSearchModel {
-  
-  @override
+class TaskModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String? projectBeneficiaryId;
-  
-  @override
+  final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
-  
-  @override
   final String? status;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final List<TaskResourceModel>? resources;
   final AddressModel? address;
-  
-  @override
   final DateTime? plannedStartDateTime;
-  
-  @override
   final DateTime? plannedEndDateTime;
-  
-  @override
   final DateTime? actualStartDateTime;
-  
-  @override
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
   
@@ -104,11 +88,13 @@ class TaskModel extends EntityModel implements TaskSearchModel {
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
+    this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     this.resources,
     this.address,
     int? plannedStartDate,
@@ -134,23 +120,18 @@ class TaskModel extends EntityModel implements TaskSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
        super();
 
-  @override
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get createdDate => createdDateTime?.millisecondsSinceEpoch;
   
 
@@ -159,10 +140,12 @@ class TaskModel extends EntityModel implements TaskSearchModel {
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
+      projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
       createdBy: Value(createdBy),
       status: Value(status),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       plannedStartDate: Value(plannedStartDate),
       plannedEndDate: Value(plannedEndDate),

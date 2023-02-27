@@ -11,8 +11,9 @@ class FacilitySearchModel extends EntitySearchModel {
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   FacilitySearchModel({
     this.id,
@@ -21,31 +22,21 @@ class FacilitySearchModel extends EntitySearchModel {
     this.storageCapacity,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class FacilityModel extends EntityModel implements FacilitySearchModel {
-  
-  @override
+class FacilityModel extends EntityModel {
   final String? id;
-  
-  @override
   final bool? isPermanent;
-  
-  @override
   final String? usage;
-  
-  @override
   final int? storageCapacity;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final AddressModel? address;
   
 
@@ -55,8 +46,9 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
     this.usage,
     this.storageCapacity,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     this.address,
     super.auditDetails,
   }):  super();
@@ -69,6 +61,7 @@ class FacilityModel extends EntityModel implements FacilitySearchModel {
       storageCapacity: Value(storageCapacity),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

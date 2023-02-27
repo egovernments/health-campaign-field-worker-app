@@ -1,12 +1,13 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
 
@@ -18,16 +19,18 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
-  final DataRepository<IndividualModel, IndividualSearchModel> individual;
-  final DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMember;
-
-  final DataRepository<HouseholdModel, HouseholdSearchModel> household;
+  final IndividualDataRepository individual;
+  final HouseholdDataRepository household;
+  final HouseholdMemberDataRepository householdMember;
+  final ProjectBeneficiaryDataRepository projectBeneficiary;
+  final TaskDataRepository taskDataRepository;
 
   SearchHouseholdsBloc({
     required this.individual,
     required this.householdMember,
     required this.household,
+    required this.projectBeneficiary,
+    required this.taskDataRepository,
   }) : super(const SearchHouseholdsEmptyState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -48,6 +51,7 @@ class SearchHouseholdsBloc
       return;
     }
     emit(const SearchHouseholdsLoadingState());
+
     final results = await individual.search(
       IndividualSearchModel(
         name: NameSearchModel(givenName: event.searchText.trim()),
@@ -56,35 +60,87 @@ class SearchHouseholdsBloc
 
     final householdMembers = <HouseholdMemberModel>[];
     for (final element in results) {
-      final members = await householdMember.search(HouseholdMemberSearchModel(
-        individualClientReferenceId: element.clientReferenceId,
-        isHeadOfHousehold: true,
-      ));
-      if (members.isEmpty) continue;
-      householdMembers.add(members.first);
+      final members = await householdMember.search(
+        HouseholdMemberSearchModel(
+          individualClientReferenceId: element.clientReferenceId,
+          isHeadOfHousehold: true,
+        ),
+      );
+
+      for (final member in members) {
+        final allHouseholdMembers = await householdMember.search(
+          HouseholdMemberSearchModel(
+            householdClientReferenceId: member.householdClientReferenceId,
+          ),
+        );
+
+        householdMembers.addAll(allHouseholdMembers);
+      }
     }
 
     final containers = <HouseholdMemberWrapper>[];
-    for (var e in householdMembers) {
-      final individualModel = await individual.search(
-        IndividualSearchModel(clientReferenceId: e.individualClientReferenceId),
-      );
-      final householdModel = await household.search(
-        HouseholdSearchModel(clientReferenceId: e.householdClientReferenceId),
+    final groupedHouseholds = householdMembers
+        .groupListsBy((element) => element.householdClientReferenceId);
+
+    for (final entry in groupedHouseholds.entries) {
+      final householdId = entry.key;
+      final individualIds = entry.value
+          .map((element) => element.individualClientReferenceId)
+          .whereNotNull()
+          .toList();
+
+      if (householdId == null) continue;
+
+      final households = await household.search(
+        HouseholdSearchModel(clientReferenceId: [householdId]),
       );
 
-      if (householdModel.isEmpty || individualModel.isEmpty) continue;
+      if (households.isEmpty) continue;
+
+      final resultHousehold = households.first;
+
+      final individuals = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualIds),
+      );
+
+      final head = individuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            entry.value
+                .firstWhereOrNull(
+                  (element) => element.isHeadOfHousehold,
+                )
+                ?.individualClientReferenceId,
+      );
+
+      if (head == null) continue;
+
+      final projectBeneficiaries = await projectBeneficiary.search(
+        ProjectBeneficiarySearchModel(
+          beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
+          projectId: '13',
+        ),
+      );
+
+      if (projectBeneficiaries.isEmpty) continue;
+      final tasks = await taskDataRepository.search(TaskSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.first.clientReferenceId,
+      ));
 
       containers.add(
         HouseholdMemberWrapper(
-          household: householdModel.first,
-          individual: individualModel.first,
+          household: resultHousehold,
+          headOfHousehold: head,
+          members: individuals,
+          projectBeneficiary: projectBeneficiaries.first,
+          task: tasks.isEmpty ? null : tasks.first,
         ),
       );
     }
 
     if (containers.isEmpty) {
-      emit(const SearchHouseholdsNotFoundState());
+      emit(SearchHouseholdsNotFoundState(searchQuery: event.searchText));
     } else {
       emit(SearchHouseholdsResultsState(householdMembers: containers));
     }
@@ -111,12 +167,14 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 class SearchHouseholdsState with _$SearchHouseholdsState {
   const factory SearchHouseholdsState.loading() = SearchHouseholdsLoadingState;
 
-  const factory SearchHouseholdsState.notFound() =
-      SearchHouseholdsNotFoundState;
+  const factory SearchHouseholdsState.notFound({
+    String? searchQuery,
+  }) = SearchHouseholdsNotFoundState;
 
   const factory SearchHouseholdsState.empty() = SearchHouseholdsEmptyState;
 
   const factory SearchHouseholdsState.results({
+    String? searchQuery,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
   }) = SearchHouseholdsResultsState;
 }
@@ -125,6 +183,9 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
 class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
   const factory HouseholdMemberWrapper({
     required HouseholdModel household,
-    required IndividualModel individual,
+    required IndividualModel headOfHousehold,
+    required List<IndividualModel> members,
+    required ProjectBeneficiaryModel projectBeneficiary,
+    TaskModel? task,
   }) = _HouseholdMemberWrapper;
 }

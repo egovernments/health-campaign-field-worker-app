@@ -26,21 +26,15 @@ class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class {{name.pascalCase()}}Model extends EntityModel implements {{name.pascalCase()}}SearchModel {
-  {{#attributes}}{{#includeForQuery}}
-  @override
-  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/attributes}}{{#customAttributes}}{{#includeForQuery}}
-  @override
-  {{/includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}
-  @override
-  {{/includeForQuery}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
+class {{name.pascalCase()}}Model extends EntityModel {
+  {{#attributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/includeForEntity}}{{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Model({
-    {{#attributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
-    {{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
+    {{#attributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
+    {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
@@ -48,14 +42,13 @@ class {{name.pascalCase()}}Model extends EntityModel implements {{name.pascalCas
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
       {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
 
-  @override
   int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}}.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Companion get companion {
     return {{name.pascalCase()}}Companion(
-      {{#sqlAttributes}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
-      {{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.clientReferenceId),
+      {{#sqlAttributes}}{{#includeForEntity}}{{#includeForTable}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
+      {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.clientReferenceId),
     {{/references}}{{/referenceAttributes}});
   }
 }

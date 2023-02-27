@@ -8,8 +8,9 @@ class ProjectFacility extends Table {
   TextColumn get facilityId => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

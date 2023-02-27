@@ -11,8 +11,9 @@ class ProductVariantSearchModel extends EntitySearchModel {
   final String? productId;
   final String? sku;
   final String? variation;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProductVariantSearchModel({
     this.id,
@@ -21,31 +22,21 @@ class ProductVariantSearchModel extends EntitySearchModel {
     this.variation,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProductVariantModel extends EntityModel implements ProductVariantSearchModel {
-  
-  @override
+class ProductVariantModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? productId;
-  
-  @override
   final String? sku;
-  
-  @override
   final String? variation;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   ProductVariantModel({
@@ -54,8 +45,9 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
     this.sku,
     this.variation,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -67,6 +59,7 @@ class ProductVariantModel extends EntityModel implements ProductVariantSearchMod
       variation: Value(variation),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

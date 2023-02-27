@@ -10,8 +10,8 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
   final String? userId;
   final String? projectId;
-  final String? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -19,8 +19,8 @@ class ProjectStaffSearchModel extends EntitySearchModel {
     this.id,
     this.userId,
     this.projectId,
-    this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
@@ -40,40 +40,26 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
-  
-  @override
-  final String? id;
-  
-  @override
+class ProjectStaffModel extends EntityModel {
+  final String id;
   final String? userId;
-  
-  @override
   final String? projectId;
   final String? channel;
-  
-  @override
-  final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
-  
-  @override
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   final DateTime? startDateTime;
-  
-  @override
   final DateTime? endDateTime;
   
 
   ProjectStaffModel({
-    this.id,
+    required this.id,
     this.userId,
     this.projectId,
     this.channel,
-    required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     int? startDate,
     int? endDate,
     super.auditDetails,
@@ -85,11 +71,9 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
           : DateTime.fromMillisecondsSinceEpoch(endDate),
        super();
 
-  @override
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
-  @override
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 
@@ -99,8 +83,8 @@ class ProjectStaffModel extends EntityModel implements ProjectStaffSearchModel {
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

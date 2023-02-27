@@ -12,8 +12,9 @@ class ProjectType extends Table {
   TextColumn get eligibilityCriteria => text().nullable()();
   TextColumn get taskProcedure => text().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

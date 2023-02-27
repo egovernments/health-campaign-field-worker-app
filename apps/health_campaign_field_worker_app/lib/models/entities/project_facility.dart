@@ -10,8 +10,9 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? id;
   final String? facilityId;
   final String? projectId;
-  final String? clientReferenceId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
+  final bool? isDeleted;
   
   ProjectFacilitySearchModel({
     this.id,
@@ -19,28 +20,20 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
     this.projectId,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
   }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchModel {
-  
-  @override
+class ProjectFacilityModel extends EntityModel {
   final String? id;
-  
-  @override
   final String? facilityId;
-  
-  @override
   final String? projectId;
-  
-  @override
   final String clientReferenceId;
-  
-  @override
-  final String tenantId;
-  final int rowVersion;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
   
 
   ProjectFacilityModel({
@@ -48,8 +41,9 @@ class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchM
     this.facilityId,
     this.projectId,
     required this.clientReferenceId,
-    required this.tenantId,
-    required this.rowVersion,
+    this.tenantId,
+    this.isDeleted,
+    this.rowVersion,
     super.auditDetails,
   }):  super();
 
@@ -60,6 +54,7 @@ class ProjectFacilityModel extends EntityModel implements ProjectFacilitySearchM
       projectId: Value(projectId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

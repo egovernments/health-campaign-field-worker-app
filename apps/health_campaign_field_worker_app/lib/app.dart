@@ -9,14 +9,17 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
+import 'blocs/project_selection/project_selection.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
+import 'data/repositories/remote/project.dart';
+import 'data/repositories/remote/project_staff.dart';
+import 'models/oplog/oplog_entry.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
-import 'utils/environment_config.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
@@ -55,10 +58,7 @@ class MainApplication extends StatelessWidget {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read())
-                  ..add(AuthAutoLoginEvent(
-                    tenantId: envConfig.variables.tenantId,
-                  )),
+                create: (ctx) => AuthBloc(authRepository: ctx.read()),
               ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -112,6 +112,28 @@ class MainApplication extends StatelessWidget {
                                     LocalizationRepository(client, isar),
                                     isar,
                                   ),
+                        ),
+                        BlocProvider(
+                          create: (_) => ProjectSelectionBloc(
+                            const ProjectSelectionState(),
+                            projectStaffRemoteRepository:
+                                ProjectStaffRemoteRepository(
+                              client,
+                              actionMap: {
+                                ApiOperation.search:
+                                    '/project/staff/v1/_search?limit=100&offset=0&tenantId=default',
+                              },
+                            ),
+                            projectRemoteRepository: ProjectRemoteRepository(
+                              client,
+                              actionMap: {
+                                ApiOperation.search:
+                                    '/project/v1/_search?limit=5&offset=0&tenantId=default&lastChangedSince=&includeDeleted=true&includeDescendants=true',
+                              },
+                            ),
+                            isar: isar,
+                            sql: sql,
+                          ),
                         ),
                       ],
                       child: MaterialApp.router(
