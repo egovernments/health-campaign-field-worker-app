@@ -9,6 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ProjectSearchModel extends EntitySearchModel {
   final String? id;
   final String? projectTypeId;
+  final String? projectNumber;
   final String? subProjectTypeId;
   final bool? isTaskEnabled;
   final String? parent;
@@ -22,6 +23,7 @@ class ProjectSearchModel extends EntitySearchModel {
   ProjectSearchModel({
     this.id,
     this.projectTypeId,
+    this.projectNumber,
     this.subProjectTypeId,
     this.isTaskEnabled,
     this.parent,
@@ -51,9 +53,11 @@ class ProjectSearchModel extends EntitySearchModel {
 class ProjectModel extends EntityModel {
   final String? id;
   final String? projectTypeId;
+  final String? projectNumber;
   final String? subProjectTypeId;
   final bool? isTaskEnabled;
   final String? parent;
+  final String name;
   final String? department;
   final String? description;
   final String? referenceId;
@@ -71,9 +75,11 @@ class ProjectModel extends EntityModel {
   ProjectModel({
     this.id,
     this.projectTypeId,
+    this.projectNumber,
     this.subProjectTypeId,
     this.isTaskEnabled,
     this.parent,
+    required this.name,
     this.department,
     this.description,
     this.referenceId,
@@ -105,9 +111,11 @@ class ProjectModel extends EntityModel {
     return ProjectCompanion(
       id: Value(id),
       projectTypeId: Value(projectTypeId),
+      projectNumber: Value(projectNumber),
       subProjectTypeId: Value(subProjectTypeId),
       isTaskEnabled: Value(isTaskEnabled),
       parent: Value(parent),
+      name: Value(name),
       department: Value(department),
       description: Value(description),
       referenceId: Value(referenceId),

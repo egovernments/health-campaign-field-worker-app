@@ -8,6 +8,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
+  final String? staffId;
   final String? userId;
   final String? projectId;
   final String? tenantId;
@@ -17,6 +18,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   
   ProjectStaffSearchModel({
     this.id,
+    this.staffId,
     this.userId,
     this.projectId,
     this.tenantId,
@@ -42,6 +44,7 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class ProjectStaffModel extends EntityModel {
   final String id;
+  final String? staffId;
   final String? userId;
   final String? projectId;
   final String? channel;
@@ -54,6 +57,7 @@ class ProjectStaffModel extends EntityModel {
 
   ProjectStaffModel({
     required this.id,
+    this.staffId,
     this.userId,
     this.projectId,
     this.channel,
@@ -80,6 +84,7 @@ class ProjectStaffModel extends EntityModel {
   ProjectStaffCompanion get companion {
     return ProjectStaffCompanion(
       id: Value(id),
+      staffId: Value(staffId),
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),

@@ -242,7 +242,7 @@ class IndividualLocalRepository
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      rowVersion: entity.rowVersion.increment,
+      rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
       batch.update(
