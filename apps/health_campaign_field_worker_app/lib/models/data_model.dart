@@ -27,6 +27,7 @@ export 'entities/project_type.dart';
 export 'entities/status.dart';
 export 'entities/target.dart';
 export 'entities/stock.dart';
+export 'entities/stock_reconciliation.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'oplog/oplog_entry.dart';
@@ -82,5 +83,6 @@ enum DataModelType {
   projectResource,
   projectType,
   stock,
+  stockReconciliation,
   task,
 }
