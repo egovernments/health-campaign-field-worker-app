@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -26,6 +27,8 @@ import 'tables/project_product_variant.dart';
 import 'tables/project_resource.dart';
 import 'tables/project_staff.dart';
 import 'tables/project_type.dart';
+import 'tables/stock.dart';
+import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
@@ -52,6 +55,7 @@ part 'sql_store.g.dart';
   ProjectStaff,
   ProjectType,
   Stock,
+  StockReconciliation,
   Target,
   Task,
   TaskResource,
