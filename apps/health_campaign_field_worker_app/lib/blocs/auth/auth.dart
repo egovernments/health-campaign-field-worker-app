@@ -12,16 +12,14 @@ part 'auth.freezed.dart';
 typedef AuthEmitter = Emitter<AuthState>;
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  static const accessTokenKey = 'accessTokenKey';
-
-  static const refreshTokenKey = 'refreshTokenKey';
-
-  static const uuid = 'uuid';
-
+  final LocalSecureStore localSecureStore;
   final AuthRepository authRepository;
 
-  AuthBloc({required this.authRepository})
-      : super(const AuthUnauthenticatedState()) {
+  AuthBloc({
+    required this.authRepository,
+    LocalSecureStore? localSecureStore,
+  })  : localSecureStore = LocalSecureStore.instance,
+        super(const AuthUnauthenticatedState()) {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
@@ -34,15 +32,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthLoadingState());
 
     try {
-      final accessToken = await storage.read(key: accessTokenKey);
-      final refreshToken = await storage.read(key: refreshTokenKey);
+      final accessToken = await localSecureStore.accessToken;
+      final refreshToken = await localSecureStore.refreshToken;
+      final userObject = await localSecureStore.userRequestModel;
 
-      if (accessToken == null || refreshToken == null) {
+      if (accessToken == null || refreshToken == null || userObject == null) {
         emit(const AuthUnauthenticatedState());
       } else {
         emit(AuthAuthenticatedState(
           accessToken: accessToken,
           refreshToken: refreshToken,
+          userModel: userObject,
         ));
       }
     } catch (_) {
@@ -63,13 +63,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
 
-      await storage.write(key: accessTokenKey, value: result.accessToken);
-      await storage.write(key: refreshTokenKey, value: result.refreshToken);
-      await storage.write(key: uuid, value: result.userRequestModel.uuid);
+      await localSecureStore.setAuthCredentials(result);
+
       emit(
         AuthAuthenticatedState(
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
+          userModel: result.userRequestModel,
         ),
       );
     } catch (error) {
@@ -82,7 +82,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     try {
       emit(const AuthLoadingState());
-      await storage.deleteAll();
+      await localSecureStore.deleteAll();
     } catch (error) {
       emit(const AuthUnauthenticatedState());
       rethrow;
@@ -114,6 +114,7 @@ class AuthState with _$AuthState {
   const factory AuthState.authenticated({
     required String accessToken,
     required String refreshToken,
+    required UserRequestModel userModel,
   }) = AuthAuthenticatedState;
 
   const factory AuthState.error([String? error]) = AuthErrorState;
