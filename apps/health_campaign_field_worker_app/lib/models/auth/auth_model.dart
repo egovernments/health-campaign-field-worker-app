@@ -35,9 +35,37 @@ class LoginModel with _$LoginModel {
 @freezed
 class UserRequestModel with _$UserRequestModel {
   const factory UserRequestModel({
-    @JsonKey(name: 'uuid') required String uuid,
+    required String uuid,
+    String? userName,
+    String? name,
+    String? mobileNumber,
+    String? emailId,
+    String? locale,
+    bool? active,
+    String? tenantId,
+    String? permanentCity,
+    @Default([]) List<UserRoleModel> roles,
   }) = _UserRequestModel;
 
   factory UserRequestModel.fromJson(Map<String, dynamic> json) =>
       _$UserRequestModelFromJson(json);
+}
+
+@freezed
+class UserRoleModel with _$UserRoleModel {
+  const factory UserRoleModel({
+    required String name,
+    required UserRoleCodeEnum code,
+    String? tenantId,
+  }) = _UserRoleModel;
+
+  factory UserRoleModel.fromJson(Map<String, dynamic> json) =>
+      _$UserRoleModelFromJson(json);
+}
+
+enum UserRoleCodeEnum {
+  @JsonValue('REGISTRAR')
+  registrar,
+  @JsonValue('WAREHOUSE_MANAGER')
+  warehouseManager,
 }
