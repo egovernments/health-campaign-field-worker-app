@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
+import '../blocs/auth/auth.dart';
 import '../blocs/project_selection/project_selection.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -145,67 +147,111 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 
   List<HomeItemCard> _getItems(BuildContext context) {
-    return [
-      HomeItemCard(
-        icon: Icons.all_inbox,
-        label: i18.home.beneficiaryLabel,
-        onPressed: () => context.router.push(SearchBeneficiaryRoute()),
-      ),
-      HomeItemCard(
-        icon: Icons.menu_book,
-        label: i18.home.viewReportsLabel,
-        onPressed: null,
-      ),
-      HomeItemCard(
-        icon: Icons.announcement,
-        label: i18.home.fileComplaint,
-        onPressed: () {
-          context.read<ProjectSelectionBloc>().add(
-                const ProjectSelectionProjectInitEvent(),
-              );
-        },
-      ),
-      HomeItemCard(
-        icon: Icons.sync_alt,
-        label: i18.home.syncDataLabel,
-        onPressed: () => _attemptSyncUp(context),
-      ),
-      HomeItemCard(
-        icon: Icons.call,
-        label: i18.home.callbackLabel,
-        onPressed: null,
-      ),
-      HomeItemCard(
-        icon: Icons.table_chart,
-        label: 'DB',
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
-              ),
+    final state = context.read<AuthBloc>().state;
+    if (state is! AuthAuthenticatedState) {
+      return [];
+    }
+
+    final roles = state.userModel.roles.map((e) {
+      return e.code;
+    });
+
+    final homeItems = <HomeItemCard>[];
+
+    for (final roleModel in roles) {
+      switch (roleModel) {
+        case UserRoleCodeEnum.registrar:
+          homeItems.add(
+            HomeItemCard(
+              icon: Icons.all_inbox,
+              label: i18.home.beneficiaryLabel,
+              onPressed: () {
+                context.router.push(
+                  SearchBeneficiaryRoute(),
+                );
+              },
             ),
           );
-        },
-      ),
-      HomeItemCard(
-        icon: Icons.delete_forever,
-        label: 'Delete all',
-        onPressed: () async {
-          final sql = context.read<LocalSqlDataStore>();
-          final isar = context.read<Isar>();
-          int count = 0;
-          for (var element in sql.allTables) {
-            final selector = sql.delete(element)
-              ..where((_) => const Constant(true));
-            count += await selector.go();
-          }
-          debugPrint('deleted: $count');
+          break;
+        case UserRoleCodeEnum.warehouseManager:
+          homeItems.addAll(
+            [
+              HomeItemCard(
+                icon: Icons.store_mall_directory,
+                label: i18.home.manageStockLabel,
+                onPressed: null,
+              ),
+              HomeItemCard(
+                icon: Icons.menu_book,
+                label: i18.home.stockReconciliationLabel,
+                onPressed: null,
+              ),
+            ],
+          );
+          break;
+      }
+    }
 
-          await isar.writeTxn(() async => await isar.opLogs.clear());
-        },
-      ),
-    ];
+    homeItems.addAll(
+      [
+        HomeItemCard(
+          icon: Icons.menu_book,
+          label: i18.home.viewReportsLabel,
+          onPressed: null,
+        ),
+        HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () {
+            context.read<ProjectSelectionBloc>().add(
+                  const ProjectSelectionProjectInitEvent(),
+                );
+          },
+        ),
+        HomeItemCard(
+          icon: Icons.sync_alt,
+          label: i18.home.syncDataLabel,
+          onPressed: () => _attemptSyncUp(context),
+        ),
+        HomeItemCard(
+          icon: Icons.call,
+          label: i18.home.callbackLabel,
+          onPressed: null,
+        ),
+        HomeItemCard(
+          icon: Icons.table_chart,
+          label: 'DB',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
+          },
+        ),
+        HomeItemCard(
+          icon: Icons.delete_forever,
+          label: 'Delete all',
+          onPressed: () async {
+            final sql = context.read<LocalSqlDataStore>();
+            final isar = context.read<Isar>();
+            int count = 0;
+            for (var element in sql.allTables) {
+              final selector = sql.delete(element)
+                ..where((_) => const Constant(true));
+              count += await selector.go();
+            }
+            debugPrint('deleted: $count');
+
+            await isar.writeTxn(() async => await isar.opLogs.clear());
+          },
+        ),
+      ],
+    );
+
+    return homeItems;
   }
 
   void _attemptSyncUp(BuildContext context) {
