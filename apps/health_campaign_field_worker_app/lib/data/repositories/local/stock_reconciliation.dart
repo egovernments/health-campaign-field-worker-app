@@ -4,50 +4,49 @@ import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
-class StockLocalRepository
-    extends LocalRepository<StockModel, StockSearchModel> {
-  StockLocalRepository(super.sql, super.opLogManager);
+class StockReconciliationLocalRepository extends LocalRepository<
+    StockReconciliationModel, StockReconciliationSearchModel> {
+  StockReconciliationLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
-    StockModel entity, {
+    StockReconciliationModel entity, {
     bool createOpLog = true,
   }) async {
-    final stockCompanion = entity.companion;
+    final stockReconCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.stock, stockCompanion);
+      batch.insert(sql.stockReconciliation, stockReconCompanion);
     });
     await super.create(entity);
   }
 
   @override
-  FutureOr<List<StockModel>> search(StockSearchModel query) async {
-    final selectQuery = sql.select(sql.stock).join([]);
+  FutureOr<List<StockReconciliationModel>> search(
+      StockReconciliationSearchModel query,) async {
+    final selectQuery = sql.select(sql.stockReconciliation).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              sql.stock.id.equals(
+              sql.stockReconciliation.id.equals(
                 query.id,
               ),
           ])))
         .get();
 
     return results.map((e) {
-      final data = e.readTable(sql.stock);
+      final data = e.readTable(sql.stockReconciliation);
 
-      return StockModel(
+      return StockReconciliationModel(
         id: data.id,
         tenantId: data.tenantId,
         facilityId: data.facilityId,
         productVariantId: data.productVariantId,
         referenceId: data.referenceId,
         referenceIdType: data.referenceIdType,
-        transactionType: data.transactionType,
-        transactionReason: data.transactionReason,
-        transactingPartyId: data.transactingPartyId,
-        transactingPartyType: data.transactingPartyType,
-        quantity: data.quantity,
-        waybillNumber: data.waybillNumber,
+        physicalCount: data.physicalCount,
+        calculatedCount: data.calculatedCount,
+        commentsOnReconciliation: data.commentsOnReconciliation,
+        dateOfReconciliation: data.dateOfReconciliation,
         clientReferenceId: data.clientReferenceId,
         isDeleted: data.isDeleted,
         rowVersion: data.rowVersion,
