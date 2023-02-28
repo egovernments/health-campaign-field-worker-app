@@ -7,13 +7,11 @@ import 'package:isar/isar.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
-import '../../data/repositories/local/project.dart';
 import '../../data/repositories/local/project_staff.dart';
 import '../../data/repositories/oplog/oplog.dart';
 import '../../data/repositories/remote/project.dart';
 import '../../data/repositories/remote/project_staff.dart';
 import '../../models/data_model.dart';
-import '../auth/auth.dart';
 
 part 'project_selection.freezed.dart';
 
@@ -21,17 +19,20 @@ typedef ProjectSelectionEmitter = Emitter<ProjectSelectionState>;
 
 class ProjectSelectionBloc
     extends Bloc<ProjectSelectionEvent, ProjectSelectionState> {
-  ProjectStaffRemoteRepository projectStaffRemoteRepository;
-  ProjectRemoteRepository projectRemoteRepository;
+  final ProjectStaffRemoteRepository projectStaffRemoteRepository;
+  final ProjectRemoteRepository projectRemoteRepository;
+  final LocalSecureStore localSecureStore;
   final Isar isar;
   final LocalSqlDataStore sql;
+
   ProjectSelectionBloc(
     super.initialState, {
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
     required this.sql,
     required this.isar,
-  }) {
+    LocalSecureStore? localSecureStore,
+  }) : localSecureStore = localSecureStore ?? LocalSecureStore.instance {
     on(_handleProjectInit);
   }
 
@@ -39,11 +40,12 @@ class ProjectSelectionBloc
     ProjectSelectionProjectInitEvent event,
     ProjectSelectionEmitter emit,
   ) async {
-    final uuid = await storage.read(
-      key: AuthBloc.uuid,
-    );
+    final user = await localSecureStore.userRequestModel;
+    final uuid = user?.uuid;
+
     final projectStaff = await projectStaffRemoteRepository
         .search(ProjectStaffSearchModel(userId: uuid));
+
     await ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar))
         .create(
       ProjectStaffModel(

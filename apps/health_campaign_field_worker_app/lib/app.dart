@@ -162,7 +162,7 @@ class MainApplication extends StatelessWidget {
                             orElse: () => [
                               const UnauthenticatedRouteWrapper(),
                             ],
-                            authenticated: (_, __) => [
+                            authenticated: (_, __, ___) => [
                               const AuthenticatedRouteWrapper(),
                             ],
                           ),
