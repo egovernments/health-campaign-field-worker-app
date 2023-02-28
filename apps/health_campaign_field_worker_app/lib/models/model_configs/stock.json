@@ -3,6 +3,11 @@
   "createRepository": true,
   "attributes": [
     {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "tenantId",
       "type": "String",
       "includeForQuery": true

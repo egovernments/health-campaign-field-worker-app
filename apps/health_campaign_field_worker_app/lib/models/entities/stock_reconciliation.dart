@@ -2,29 +2,32 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class StockReconciliationSearchModel extends EntitySearchModel {
+  final String? id;
   final String? tenantId;
   final String? facilityId;
   final String? productVariantId;
   final List<String>? clientReferenceId;
   final bool? isDeleted;
-
+  
   StockReconciliationSearchModel({
+    this.id,
     this.tenantId,
     this.facilityId,
     this.productVariantId,
     this.clientReferenceId,
     this.isDeleted,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
 class StockReconciliationModel extends EntityModel {
+  final String? id;
   final String? tenantId;
   final String? facilityId;
   final String? productVariantId;
@@ -37,8 +40,10 @@ class StockReconciliationModel extends EntityModel {
   final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
+  
 
   StockReconciliationModel({
+    this.id,
     this.tenantId,
     this.facilityId,
     this.productVariantId,
@@ -53,8 +58,8 @@ class StockReconciliationModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
   })  : dateOfReconciliation = dateOfReconciliation == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
         super();
 
   int? get dateOfReconciliationTime =>
@@ -62,6 +67,7 @@ class StockReconciliationModel extends EntityModel {
 
   StockReconciliationCompanion get companion {
     return StockReconciliationCompanion(
+      id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),
       productVariantId: Value(productVariantId),
@@ -74,6 +80,6 @@ class StockReconciliationModel extends EntityModel {
       clientReferenceId: Value(clientReferenceId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }
