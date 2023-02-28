@@ -7,6 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class StockSearchModel extends EntitySearchModel {
+  final String? id;
   final String? tenantId;
   final String? facilityId;
   final String? productVariantId;
@@ -20,6 +21,7 @@ class StockSearchModel extends EntitySearchModel {
   final bool? isDeleted;
   
   StockSearchModel({
+    this.id,
     this.tenantId,
     this.facilityId,
     this.productVariantId,
@@ -37,6 +39,7 @@ class StockSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class StockModel extends EntityModel {
+  final String? id;
   final String? tenantId;
   final String? facilityId;
   final String? productVariantId;
@@ -54,6 +57,7 @@ class StockModel extends EntityModel {
   
 
   StockModel({
+    this.id,
     this.tenantId,
     this.facilityId,
     this.productVariantId,
@@ -73,6 +77,7 @@ class StockModel extends EntityModel {
 
   StockCompanion get companion {
     return StockCompanion(
+      id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),
       productVariantId: Value(productVariantId),
