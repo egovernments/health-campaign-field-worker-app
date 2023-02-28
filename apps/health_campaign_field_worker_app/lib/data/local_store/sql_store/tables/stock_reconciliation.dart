@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 
 class StockReconciliation extends Table {
+  TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();
   TextColumn get facilityId => text().nullable()();
   TextColumn get productVariantId => text().nullable()();
