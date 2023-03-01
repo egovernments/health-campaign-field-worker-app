@@ -9,9 +9,7 @@
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true,
-      "nullable": false,
-      "isPk": true
+      "includeForQuery": true
     },
     {
       "name": "projectTypeId",
