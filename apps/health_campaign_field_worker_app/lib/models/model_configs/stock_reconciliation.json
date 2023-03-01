@@ -41,10 +41,14 @@
     {
       "name": "commentsOnReconciliation",
       "type": "String"
-    },
+    }
+  ],
+  "dateTimeAttributes": [
     {
       "name": "dateOfReconciliation",
-      "type": "DateTime"
+      "type": "DateTime",
+      "includeForQuery": true,
+      "nullable": false
     }
   ],
   "isEnum": false

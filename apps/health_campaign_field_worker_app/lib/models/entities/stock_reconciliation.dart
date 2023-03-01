@@ -13,6 +13,7 @@ class StockReconciliationSearchModel extends EntitySearchModel {
   final String? productVariantId;
   final List<String>? clientReferenceId;
   final bool? isDeleted;
+  final DateTime? dateOfReconciliationTime;
   
   StockReconciliationSearchModel({
     this.id,
@@ -21,8 +22,15 @@ class StockReconciliationSearchModel extends EntitySearchModel {
     this.productVariantId,
     this.clientReferenceId,
     this.isDeleted,
+    int? dateOfReconciliation,
     super.boundaryCode,
-  }):  super();
+  }): dateOfReconciliationTime = dateOfReconciliation == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
+   super();
+
+  int? get dateOfReconciliation => dateOfReconciliationTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass(ignoreNull: true)
@@ -36,10 +44,10 @@ class StockReconciliationModel extends EntityModel {
   final int? physicalCount;
   final int? calculatedCount;
   final String? commentsOnReconciliation;
-  final DateTime? dateOfReconciliation;
   final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
+  final DateTime dateOfReconciliationTime;
   
 
   StockReconciliationModel({
@@ -52,18 +60,16 @@ class StockReconciliationModel extends EntityModel {
     this.physicalCount,
     this.calculatedCount,
     this.commentsOnReconciliation,
-    int? dateOfReconciliation,
     required this.clientReferenceId,
     this.isDeleted,
     this.rowVersion,
+    required int dateOfReconciliation,
     super.auditDetails,
-  })  : dateOfReconciliation = dateOfReconciliation == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
-        super();
+  }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
+       super();
 
-  int? get dateOfReconciliationTime =>
-      dateOfReconciliation?.millisecondsSinceEpoch;
+  int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
+  
 
   StockReconciliationCompanion get companion {
     return StockReconciliationCompanion(
@@ -76,10 +82,10 @@ class StockReconciliationModel extends EntityModel {
       physicalCount: Value(physicalCount),
       calculatedCount: Value(calculatedCount),
       commentsOnReconciliation: Value(commentsOnReconciliation),
-      dateOfReconciliation: Value(dateOfReconciliationTime),
       clientReferenceId: Value(clientReferenceId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      dateOfReconciliation: Value(dateOfReconciliation),
       );
   }
 }
