@@ -13,10 +13,10 @@ class StockReconciliation extends Table {
   IntColumn get physicalCount => integer().nullable()();
   IntColumn get calculatedCount => integer().nullable()();
   TextColumn get commentsOnReconciliation => text().nullable()();
-  IntColumn get dateOfReconciliation => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get dateOfReconciliation => integer()();
   
 
   @override
