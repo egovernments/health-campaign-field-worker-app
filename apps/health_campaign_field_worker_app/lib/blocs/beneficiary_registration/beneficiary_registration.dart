@@ -45,7 +45,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       editHousehold: (value) {
         emit(value.copyWith(addressModel: event.model));
@@ -62,7 +62,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       editHousehold: (value) {
         emit(value.copyWith(
@@ -84,7 +84,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       create: (value) {
         emit(value.copyWith(
@@ -106,7 +106,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     await state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       create: (value) async {
         final individual = value.individualModel;
@@ -114,11 +114,22 @@ class BeneficiaryRegistrationBloc
         final address = value.addressModel;
         final dateOfRegistration = value.registrationDate;
 
-        if (individual == null) throw Exception('Individual cannot be null');
-        if (household == null) throw Exception('Household cannot be null');
-        if (address == null) throw Exception('Address cannot be null');
-        if (dateOfRegistration == null) {
-          throw Exception('Registration date cannot be null');
+        if (individual == null) {
+          throw const InvalidRegistrationStateException(
+            'Individual cannot be null',
+          );
+        } else if (household == null) {
+          throw const InvalidRegistrationStateException(
+            'Household cannot be null',
+          );
+        } else if (address == null) {
+          throw const InvalidRegistrationStateException(
+            'Address cannot be null',
+          );
+        } else if (dateOfRegistration == null) {
+          throw const InvalidRegistrationStateException(
+            'Registration date cannot be null',
+          );
         }
 
         emit(value.copyWith(loading: true));
@@ -181,7 +192,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     await state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       editHousehold: (value) async {
         emit(value.copyWith(loading: true));
@@ -221,7 +232,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     await state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       editIndividual: (value) async {
         emit(value.copyWith(loading: true));
@@ -250,7 +261,7 @@ class BeneficiaryRegistrationBloc
   ) async {
     await state.maybeMap(
       orElse: () {
-        throw InvalidRegistrationStateException();
+        throw const InvalidRegistrationStateException();
       },
       addMember: (value) async {
         emit(value.copyWith(loading: true));
@@ -362,4 +373,8 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   }) = BeneficiaryRegistrationPersistedState;
 }
 
-class InvalidRegistrationStateException implements Exception {}
+class InvalidRegistrationStateException implements Exception {
+  final String? message;
+
+  const InvalidRegistrationStateException([this.message]);
+}

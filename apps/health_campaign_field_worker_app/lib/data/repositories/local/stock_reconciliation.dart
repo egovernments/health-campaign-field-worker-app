@@ -22,7 +22,8 @@ class StockReconciliationLocalRepository extends LocalRepository<
 
   @override
   FutureOr<List<StockReconciliationModel>> search(
-      StockReconciliationSearchModel query,) async {
+    StockReconciliationSearchModel query,
+  ) async {
     final selectQuery = sql.select(sql.stockReconciliation).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
@@ -55,6 +56,5 @@ class StockReconciliationLocalRepository extends LocalRepository<
   }
 
   @override
-  // TODO: implement type
-  DataModelType get type => throw UnimplementedError();
+  DataModelType get type => DataModelType.stockReconciliation;
 }

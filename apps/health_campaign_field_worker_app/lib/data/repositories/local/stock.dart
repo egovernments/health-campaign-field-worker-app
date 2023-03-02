@@ -56,6 +56,5 @@ class StockLocalRepository
   }
 
   @override
-  // TODO: implement type
-  DataModelType get type => throw UnimplementedError();
+  DataModelType get type => DataModelType.stock;
 }
