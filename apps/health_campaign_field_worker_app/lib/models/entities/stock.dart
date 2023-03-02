@@ -13,12 +13,12 @@ class StockSearchModel extends EntitySearchModel {
   final String? productVariantId;
   final String? referenceId;
   final String? referenceIdType;
-  final String? transactionType;
-  final String? transactionReason;
   final String? transactingPartyId;
   final String? transactingPartyType;
   final List<String>? clientReferenceId;
   final bool? isDeleted;
+  final TransactionType? transactionType;
+  final TransactionReason? transactionReason;
   
   StockSearchModel({
     this.id,
@@ -27,12 +27,12 @@ class StockSearchModel extends EntitySearchModel {
     this.productVariantId,
     this.referenceId,
     this.referenceIdType,
-    this.transactionType,
-    this.transactionReason,
     this.transactingPartyId,
     this.transactingPartyType,
     this.clientReferenceId,
     this.isDeleted,
+    this.transactionType,
+    this.transactionReason,
     super.boundaryCode,
   }):  super();
 }
@@ -45,8 +45,6 @@ class StockModel extends EntityModel {
   final String? productVariantId;
   final String? referenceId;
   final String? referenceIdType;
-  final String? transactionType;
-  final String? transactionReason;
   final String? transactingPartyId;
   final String? transactingPartyType;
   final String? quantity;
@@ -54,6 +52,8 @@ class StockModel extends EntityModel {
   final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
+  final TransactionType? transactionType;
+  final TransactionReason? transactionReason;
   
 
   StockModel({
@@ -63,8 +63,6 @@ class StockModel extends EntityModel {
     this.productVariantId,
     this.referenceId,
     this.referenceIdType,
-    this.transactionType,
-    this.transactionReason,
     this.transactingPartyId,
     this.transactingPartyType,
     this.quantity,
@@ -72,6 +70,8 @@ class StockModel extends EntityModel {
     required this.clientReferenceId,
     this.isDeleted,
     this.rowVersion,
+    this.transactionType,
+    this.transactionReason,
     super.auditDetails,
   }):  super();
 
@@ -83,8 +83,6 @@ class StockModel extends EntityModel {
       productVariantId: Value(productVariantId),
       referenceId: Value(referenceId),
       referenceIdType: Value(referenceIdType),
-      transactionType: Value(transactionType),
-      transactionReason: Value(transactionReason),
       transactingPartyId: Value(transactingPartyId),
       transactingPartyType: Value(transactingPartyType),
       quantity: Value(quantity),
@@ -92,6 +90,8 @@ class StockModel extends EntityModel {
       clientReferenceId: Value(clientReferenceId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      transactionType: Value(transactionType),
+      transactionReason: Value(transactionReason),
       );
   }
 }
