@@ -78,7 +78,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   context,
                   type: DigitSyncDialogType.inProgress,
                   // TODO: Localization pending
-                  label: 'Sync in Progress', barrierDismissible: true,
+                  label: 'Sync in Progress', barrierDismissible: false,
                 ),
                 completedSync: () {
                   Navigator.of(context, rootNavigator: true).pop();
