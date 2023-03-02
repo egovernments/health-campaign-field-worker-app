@@ -33,16 +33,6 @@
       "includeForQuery": true
     },
     {
-      "name": "transactionType",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "transactionReason",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "transactingPartyId",
       "type": "String",
       "includeForQuery": true
@@ -59,6 +49,20 @@
     {
       "name": "waybillNumber",
       "type": "String"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "transactionType",
+      "type": "transactionType",
+      "isEnum": true,
+      "includeForQuery": true
+    },
+    {
+      "name": "transactionReason",
+      "type": "transactionReason",
+      "isEnum": true,
+      "includeForQuery": true
     }
   ],
   "isEnum": false
