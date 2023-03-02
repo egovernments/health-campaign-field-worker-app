@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -9,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import '../../../models/entities/address_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
+import '../../../models/entities/transaction_reason.dart';
+import '../../../models/entities/transaction_type.dart';
 import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';

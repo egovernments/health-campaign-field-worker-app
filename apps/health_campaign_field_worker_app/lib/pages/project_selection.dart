@@ -1,6 +1,5 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,9 +23,7 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   @override
   void initState() {
-    context.read<ProjectBloc>().add(
-          const ProjectInitEvent(),
-        );
+    context.read<ProjectBloc>().add(const ProjectInitializeEvent());
     super.initState();
   }
 
@@ -53,9 +50,24 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   style: theme.textTheme.displayMedium,
                 ),
               ),
-              BlocBuilder<ProjectBloc, ProjectState>(
+              BlocConsumer<ProjectBloc, ProjectState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () {
+                      return;
+                    },
+                    fetched: (projects, selectedProject) {
+                      if (selectedProject != null) {
+                        context.router.replace(HomeRoute());
+                      }
+                    },
+                  );
+                },
                 builder: (context, state) {
                   return state.map(
+                    uninitialized: (value) => const Center(
+                      child: Text('Project list not fetched'),
+                    ),
                     loading: (value) => const Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -63,18 +75,18 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     fetched: (ProjectSelectionFetchedState value) {
                       return Column(
                         children: value.projects
-                            .map((element) => DigitProjectCell(
-                                  projectText: element.name,
-                                  onTap: () => DigitSyncDialogContent.show(
-                                    context,
-                                    barrierDismissible: true,
-                                    type: DigitSyncDialogType.inProgress,
-                                    label: localizations.translate(
-                                      i18.projectSelection
-                                          .syncInProgressTitleText,
-                                    ),
-                                  ),
-                                ))
+                            .map(
+                              (element) => DigitProjectCell(
+                                projectText: element.name,
+                                onTap: () {
+                                  context.read<ProjectBloc>().add(
+                                        ProjectSelectProjectEvent(element),
+                                      );
+
+                                  context.router.push(HomeRoute());
+                                },
+                              ),
+                            )
                             .toList(),
                       );
                     },

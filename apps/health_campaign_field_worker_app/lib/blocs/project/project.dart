@@ -13,96 +13,108 @@ import '../../data/repositories/oplog/oplog.dart';
 import '../../data/repositories/remote/project.dart';
 import '../../data/repositories/remote/project_staff.dart';
 import '../../models/data_model.dart';
-import '../auth/auth.dart';
 
 part 'project.freezed.dart';
 
 typedef ProjectEmitter = Emitter<ProjectState>;
 
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
-  ProjectStaffRemoteRepository projectStaffRemoteRepository;
-  ProjectRemoteRepository projectRemoteRepository;
+  final LocalSecureStore localSecureStore;
+
+  final ProjectStaffRemoteRepository projectStaffRemoteRepository;
+  final ProjectRemoteRepository projectRemoteRepository;
+
   final Isar isar;
   final LocalSqlDataStore sql;
+
   ProjectBloc({
+    LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
     required this.sql,
     required this.isar,
-  }) : super(const ProjectsEmptyState()) {
+  })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
+        super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
+    on(_handleProjectSelection);
   }
 
   FutureOr<void> _handleProjectInit(
-    ProjectInitEvent event,
+    ProjectInitializeEvent event,
     ProjectEmitter emit,
   ) async {
     emit(const ProjectLoadingState());
-    final uuid = await storage.read(
-      key: AuthBloc.uuid,
+    final userObject = await localSecureStore.userRequestModel;
+    final uuid = userObject?.uuid;
+
+    final projectStaffList = await projectStaffRemoteRepository.search(
+      ProjectStaffSearchModel(staffId: uuid),
     );
 
-    final projectStaff = await projectStaffRemoteRepository
-        .search(ProjectStaffSearchModel(staffId: uuid));
-    if (projectStaff.isNotEmpty) {
+    if (projectStaffList.isEmpty) {
+      emit(const ProjectsEmptyState());
+    } else {
+      final projectStaff = projectStaffList.first;
+
       await ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar))
           .create(
-        ProjectStaffModel(
-          rowVersion: 1,
-          tenantId: projectStaff.first.tenantId,
-          id: projectStaff.first.id,
-          projectId: projectStaff.first.projectId,
-          startDate: projectStaff.first.startDate,
-          endDate: projectStaff.first.endDate,
-          channel: projectStaff.first.channel,
-        ),
+        projectStaff,
         createOpLog: false,
       );
-      final projects = await projectRemoteRepository.search(ProjectSearchModel(
-        id: projectStaff.first.projectId,
-        tenantId: projectStaff.first.tenantId,
-      ));
 
-      for (var element in projects) {
-        await ProjectLocalRepository(sql, ProjectOpLogManager(isar))
-            .create(ProjectModel(
-          id: element.id,
-          projectTypeId: element.projectTypeId,
-          subProjectTypeId: element.subProjectTypeId,
-          isTaskEnabled: element.isTaskEnabled,
-          parent: element.parent,
-          department: element.department,
-          description: element.description,
-          referenceId: element.referenceId,
-          projectHierarchy: element.projectHierarchy,
-          tenantId: element.tenantId,
-          isDeleted: element.isDeleted,
-          rowVersion: element.rowVersion,
-          address: element.address,
-          targets: element.targets,
-          documents: element.documents,
-          startDate: element.startDate,
-          endDate: element.endDate,
-          name: element.name,
-        ));
+      final projects = await projectRemoteRepository.search(
+        ProjectSearchModel(
+          id: projectStaff.projectId,
+          tenantId: projectStaff.tenantId,
+        ),
+      );
+
+      for (final project in projects) {
+        await ProjectLocalRepository(
+          sql,
+          ProjectOpLogManager(isar),
+        ).create(
+          project,
+          createOpLog: false,
+        );
       }
       emit(ProjectSelectionFetchedState(projects: projects));
     }
+  }
 
-    // handle logic for projectInit here
+  Future<void> _handleProjectSelection(
+    ProjectSelectProjectEvent event,
+    ProjectEmitter emit,
+  ) async {
+    state.maybeMap(
+      orElse: () {
+        return;
+      },
+      fetched: (value) {
+        emit(value.copyWith(selectedProject: event.model));
+      },
+    );
   }
 }
 
 @freezed
 class ProjectEvent with _$ProjectEvent {
-  const factory ProjectEvent.projectInit() = ProjectInitEvent;
+  const factory ProjectEvent.initialize() = ProjectInitializeEvent;
+
+  const factory ProjectEvent.selectProject(ProjectModel model) =
+      ProjectSelectProjectEvent;
 }
 
 @freezed
 class ProjectState with _$ProjectState {
+  const factory ProjectState.uninitialized() = ProjectUninitializedState;
+
   const factory ProjectState.loading() = ProjectLoadingState;
+
   const factory ProjectState.empty() = ProjectsEmptyState;
+
   const factory ProjectState.fetched({
     required List<ProjectModel> projects,
+    ProjectModel? selectedProject,
   }) = ProjectSelectionFetchedState;
 }

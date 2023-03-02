@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -60,18 +62,65 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(R query) async {
-    final response = await dio.post(
-      searchPath,
-      queryParameters: {
-        'offset': 0,
-        'limit': 100,
-        'tenantId': envConfig.variables.tenantId,
-      },
-      data: {
-        isPlural ? entityNamePlural : entityName:
-            isPlural ? [query.toMap()] : query.toMap(),
-      },
-    );
+    Response response;
+    try {
+      response = await dio.post(
+        searchPath,
+        queryParameters: {
+          'offset': 0,
+          'limit': 100,
+          'tenantId': envConfig.variables.tenantId,
+        },
+        data: {
+          isPlural ? entityNamePlural : entityName:
+              isPlural ? [query.toMap()] : query.toMap(),
+        },
+      );
+    } on DioError catch (error) {
+      const encoder = JsonEncoder.withIndent('  ');
+
+      String? errorResponse;
+      String? requestBody;
+
+      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
+
+      try {
+        errorResponse = encoder.convert(
+          error.response?.data,
+        );
+      } catch (_) {
+        errorResponse = 'Could not parse error';
+      }
+
+      try {
+        requestBody = encoder.convert(error.requestOptions.data);
+      } catch (_) {
+        requestBody = 'Could not parse request body';
+      }
+
+      AppLogger.instance.debug(
+        requestBody,
+        title: runtimeType.toString(),
+      );
+
+      AppLogger.instance.error(
+        message: '${error.error}\n$errorResponse',
+        title: '${runtimeType.toString()} | DIO_ERROR',
+      );
+
+      debugPrint(
+        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
+      );
+
+      return [];
+    } catch (error) {
+      AppLogger.instance.error(
+        message: error.toString(),
+        title: runtimeType.toString(),
+      );
+
+      return [];
+    }
 
     final responseMap = (response.data);
 

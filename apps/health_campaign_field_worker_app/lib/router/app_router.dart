@@ -82,7 +82,27 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ProjectSelectionPage, path: ''),
+
+        /// Inventory Routes
+        AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+        AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
+        AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
+        AutoRoute(
+          page: StockReceivedDetailsPage,
+          path: 'stock-receipt-details',
+        ),
+        AutoRoute(page: StockIssuedDetailsPage, path: 'stock-issued-details'),
+        AutoRoute(
+          page: StockReturnedDetailsPage,
+          path: 'stock-returned-details',
+        ),
+        AutoRoute(page: StockDamagedDetailsPage, path: 'stock-damaged-details'),
+        AutoRoute(page: StockLostDetailsPage, path: 'stock-lost-details'),
+        AutoRoute(
+          page: ProjectSelectionPage,
+          path: 'select-project',
+          initial: true,
+        ),
       ],
     ),
   ],

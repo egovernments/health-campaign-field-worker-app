@@ -63,6 +63,7 @@ class Home {
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
+
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
   String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
@@ -80,10 +81,6 @@ class Home {
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
-
-  String get manageStockLabel => 'MANAGE_STOCK_LABEL';
-
-  String get reconcileStockLabel => 'RECONCILE_STOCK_LABEL';
 }
 
 class SearchBeneficiary {
