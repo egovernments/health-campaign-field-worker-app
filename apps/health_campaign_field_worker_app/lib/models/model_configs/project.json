@@ -7,7 +7,9 @@
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false,
+      "isPk": true
     },
 
     {

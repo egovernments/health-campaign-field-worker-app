@@ -24,11 +24,10 @@ class ProjectLocalRepository
       );
     });
 
-    await super.create(entity);
+    await super.create(entity, createOpLog: createOpLog);
   }
 
   @override
-  // TODO: implement type
   DataModelType get type => DataModelType.project;
 
   @override
