@@ -2,24 +2,23 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
-class StockReceivedDetailsPage extends LocalizedStatefulWidget {
-  const StockReceivedDetailsPage({
+class StockLostDetailsPage extends LocalizedStatefulWidget {
+  const StockLostDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<StockReceivedDetailsPage> createState() =>
-      _StockReceiptDetailsPageState();
+  State<StockLostDetailsPage> createState() => _StockReceiptDetailsPageState();
 }
 
 class _StockReceiptDetailsPageState
-    extends LocalizedState<StockReceivedDetailsPage> {
+    extends LocalizedState<StockLostDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,7 +59,7 @@ class _StockReceiptDetailsPageState
                   children: [
                     Text(
                       localizations.translate(
-                        i18.stockDetails.stockReceivedDetailsLabel,
+                        i18.stockDetails.stockLostDetailsLabel,
                       ),
                       style: theme.textTheme.displayMedium,
                     ),
@@ -78,6 +77,17 @@ class _StockReceiptDetailsPageState
                       ),
                       DigitDropdown(
                         label: localizations.translate(
+                          i18.stockDetails.lostDuring,
+                        ),
+                        initialValue: '',
+                        menuItems: [MenuItemModel('', '')],
+                        onChanged: (value) {
+                          // TODO: Complete implementation
+                        },
+                        formControlName: 'lostDuring',
+                      ),
+                      DigitDropdown(
+                        label: localizations.translate(
                           i18.stockDetails.receivedFrom,
                         ),
                         initialValue: '',
@@ -85,18 +95,17 @@ class _StockReceiptDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'receivedFrom',
+                        formControlName: 'returnedFrom',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantityReceived',
+                        formControlName: 'quantityLost',
                         label: localizations.translate(
-                          i18.stockDetails.quantityReceived,
+                          i18.stockDetails.quantityLost,
                         ),
                         maxLength: 200,
                         isRequired: true,
                         validationMessages: {
-                          'required': (object) =>
-                              'Quantity received is required',
+                          'required': (object) => 'Quantity lost is required',
                         },
                       ),
                       DigitTextFormField(
@@ -169,8 +178,9 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'receivedFrom': FormControl<String>(value: ''),
-        'quantityReceived': FormControl<String>(value: ''),
+        'lostDuring': FormControl<String>(value: ''),
+        'returnedFrom': FormControl<String>(value: ''),
+        'quantityLost': FormControl<String>(value: ''),
         'waybillNumber': FormControl<String>(value: ''),
         'noIndicatedOnWaybill': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),

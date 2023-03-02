@@ -29,10 +29,20 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockSaveWarehouseDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    emit(RecordStockCreateState(
-      dateOfRecord: event.dateOfRecord,
-      facilityModel: event.facilityModel,
-    ));
+    state.when(
+      create: (entryType, loading, dateOfRecord, facilityModel, stockModel) {
+        emit(
+          RecordStockCreateState(
+            entryType: entryType,
+            dateOfRecord: event.dateOfRecord,
+            facilityModel: event.facilityModel,
+          ),
+        );
+      },
+      persisted: () {
+        throw const InvalidRecordStockStateException();
+      },
+    );
   }
 
   FutureOr<void> _handleSaveStockDetails(
@@ -117,6 +127,7 @@ class RecordStockEvent with _$RecordStockEvent {
 @freezed
 class RecordStockState with _$RecordStockState {
   const factory RecordStockState.create({
+    required StockRecordEntryType entryType,
     @Default(false) bool loading,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
@@ -130,4 +141,12 @@ class InvalidRecordStockStateException implements Exception {
   final String? message;
 
   const InvalidRecordStockStateException([this.message]);
+}
+
+enum StockRecordEntryType {
+  receipt,
+  dispatch,
+  returned,
+  loss,
+  damaged,
 }
