@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
 import '../blocs/auth/auth.dart';
-import '../blocs/project/project.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -203,9 +202,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
           onPressed: () {
-            context.read<ProjectBloc>().add(
-                  const ProjectInitializeEvent(),
-                );
+            context.router.push(ManageStocksRoute());
           },
         ),
         HomeItemCard(

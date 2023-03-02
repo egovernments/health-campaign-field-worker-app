@@ -113,3 +113,7 @@ class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
 class ProjectOpLogManager extends OpLogManager<ProjectModel> {
   ProjectOpLogManager(super.isar);
 }
+
+class StockOpLogManager extends OpLogManager<StockModel> {
+  StockOpLogManager(super.isar);
+}
