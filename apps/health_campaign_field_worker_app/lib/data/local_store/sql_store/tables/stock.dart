@@ -2,6 +2,8 @@
 
 import 'package:drift/drift.dart';
 
+import '../../../../models/entities/transaction_type.dart';
+import '../../../../models/entities/transaction_reason.dart';
 
 class Stock extends Table {
   TextColumn get id => text().nullable()();
@@ -10,8 +12,6 @@ class Stock extends Table {
   TextColumn get productVariantId => text().nullable()();
   TextColumn get referenceId => text().nullable()();
   TextColumn get referenceIdType => text().nullable()();
-  TextColumn get transactionType => text().nullable()();
-  TextColumn get transactionReason => text().nullable()();
   TextColumn get transactingPartyId => text().nullable()();
   TextColumn get transactingPartyType => text().nullable()();
   TextColumn get quantity => text().nullable()();
@@ -19,6 +19,8 @@ class Stock extends Table {
   TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get transactionType => intEnum<TransactionType>().nullable()();
+  IntColumn get transactionReason => intEnum<TransactionReason>().nullable()();
   
 
   @override
