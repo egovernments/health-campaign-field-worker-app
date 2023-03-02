@@ -2,24 +2,23 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
-class StockReturnedDetailsPage extends LocalizedStatefulWidget {
-  const StockReturnedDetailsPage({
+class StockIssuedDetailsPage extends LocalizedStatefulWidget {
+  const StockIssuedDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<StockReturnedDetailsPage> createState() =>
-      _StockReceiptDetailsPageState();
+  State<StockIssuedDetailsPage> createState() => _StockIssuedDetailsPageState();
 }
 
-class _StockReceiptDetailsPageState
-    extends LocalizedState<StockReturnedDetailsPage> {
+class _StockIssuedDetailsPageState
+    extends LocalizedState<StockIssuedDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,7 +59,7 @@ class _StockReceiptDetailsPageState
                   children: [
                     Text(
                       localizations.translate(
-                        i18.stockDetails.stockReturnedDetailsLabel,
+                        i18.stockDetails.stockIssuedDetailsLabel,
                       ),
                       style: theme.textTheme.displayMedium,
                     ),
@@ -85,18 +84,17 @@ class _StockReceiptDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'returnedFrom',
+                        formControlName: 'destination',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantityReturned',
+                        formControlName: 'quantitySent',
                         label: localizations.translate(
-                          i18.stockDetails.quantityReturned,
+                          i18.stockDetails.quantitySent,
                         ),
                         maxLength: 200,
                         isRequired: true,
                         validationMessages: {
-                          'required': (object) =>
-                              'Quantity returned is required',
+                          'required': (object) => 'Quantity sent is required',
                         },
                       ),
                       DigitTextFormField(
@@ -115,6 +113,8 @@ class _StockReceiptDetailsPageState
                         label: localizations.translate(
                           i18.stockDetails.noIndicatedOnWaybill,
                         ),
+                        maxLength: 200,
+                        isRequired: true,
                         validationMessages: {
                           'required': (object) =>
                               'Number Indicated on waybill is required',
@@ -167,8 +167,8 @@ class _StockReceiptDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'returnedFrom': FormControl<String>(value: ''),
-        'quantityReturned': FormControl<String>(value: ''),
+        'destination': FormControl<String>(value: ''),
+        'quantitySent': FormControl<String>(value: ''),
         'waybillNumber': FormControl<String>(value: ''),
         'noIndicatedOnWaybill': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
