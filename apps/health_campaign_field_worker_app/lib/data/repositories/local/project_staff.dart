@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -15,7 +17,11 @@ class ProjectStaffLocalRepository
   }) async {
     final projectstaffCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.projectStaff, projectstaffCompanion);
+      batch.insert(
+        sql.projectStaff,
+        projectstaffCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
     });
 
     await super.create(entity);

@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
-import '../../utils/utils.dart';
 import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
