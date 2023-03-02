@@ -51,7 +51,7 @@ class ProjectSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectModel extends EntityModel {
-  final String? id;
+  final String id;
   final String? projectTypeId;
   final String? projectNumber;
   final String? subProjectTypeId;
@@ -73,7 +73,7 @@ class ProjectModel extends EntityModel {
   
 
   ProjectModel({
-    this.id,
+    required this.id,
     this.projectTypeId,
     this.projectNumber,
     this.subProjectTypeId,

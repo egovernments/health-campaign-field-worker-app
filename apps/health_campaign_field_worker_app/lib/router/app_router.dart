@@ -98,7 +98,11 @@ part 'app_router.gr.dart';
         ),
         AutoRoute(page: StockDamagedDetailsPage, path: 'stock-damaged-details'),
         AutoRoute(page: StockLostDetailsPage, path: 'stock-lost-details'),
-        AutoRoute(page: ProjectSelectionPage, path: ''),
+        AutoRoute(
+          page: ProjectSelectionPage,
+          path: 'select-project',
+          initial: true,
+        ),
       ],
     ),
   ],
