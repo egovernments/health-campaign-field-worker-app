@@ -15,18 +15,19 @@ import '../pages/beneficiary_registration/household_location.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/home.dart';
 import '../pages/inventory/stock_damaged_details.dart';
+import '../pages/inventory/stock_issued_details.dart';
 import '../pages/inventory/stock_lost_details.dart';
+import '../pages/inventory/stock_received_details.dart';
 import '../pages/inventory/stock_returned_details.dart';
+import '../pages/inventory/warehouse_details.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/manage_stocks.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/stock_reconciliation.dart';
 import '../pages/unauthenticated.dart';
-import '../pages/manage_stocks.dart';
-import '../pages/warehouse_details.dart';
-import '../pages/inventory/stock_received_details.dart';
-import '../pages/inventory/stock_issued_details.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -81,13 +82,20 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
+
         /// Inventory Routes
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
         AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
         AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
-        AutoRoute(page: StockReceivedDetailsPage, path: 'stock-receipt-details'),
+        AutoRoute(
+          page: StockReceivedDetailsPage,
+          path: 'stock-receipt-details',
+        ),
         AutoRoute(page: StockIssuedDetailsPage, path: 'stock-issued-details'),
-        AutoRoute(page: StockReturnedDetailsPage, path: 'stock-returned-details'),
+        AutoRoute(
+          page: StockReturnedDetailsPage,
+          path: 'stock-returned-details',
+        ),
         AutoRoute(page: StockDamagedDetailsPage, path: 'stock-damaged-details'),
         AutoRoute(page: StockLostDetailsPage, path: 'stock-lost-details'),
         AutoRoute(page: ProjectSelectionPage, path: 'ProjectSelectionBloc'),

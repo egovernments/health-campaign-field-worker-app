@@ -10,11 +10,9 @@ import 'package:health_campaign_field_worker_app/pages/inventory/stock_issued_de
 import 'package:health_campaign_field_worker_app/pages/inventory/stock_lost_details.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/stock_received_details.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/stock_returned_details.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/warehouse_details.dart';
 import 'package:health_campaign_field_worker_app/pages/manage_stocks.dart';
 import 'package:health_campaign_field_worker_app/pages/stock_reconciliation.dart';
-import 'package:health_campaign_field_worker_app/pages/warehouse_details.dart';
-
-import '';
 
 import '';
 
