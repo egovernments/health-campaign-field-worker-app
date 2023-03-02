@@ -2,17 +2,13 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
-import '../manage_stocks.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
 class WarehouseDetailsPage extends LocalizedStatefulWidget {
-  final StockDetailsPage stockDetailsPage;
-
   const WarehouseDetailsPage({
-    required this.stockDetailsPage,
     super.key,
     super.appLocalizations,
   });
@@ -39,28 +35,11 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
               child: DigitCard(
                 child: DigitElevatedButton(
                   onPressed: () {
-                    if (form.valid) {
-                      // TODO: Complete implementation
-                      switch (widget.stockDetailsPage) {
-                        case StockDetailsPage.received:
-                          context.router.push(StockReceivedDetailsRoute());
-                          break;
-                        case StockDetailsPage.issued:
-                          context.router.push(StockIssuedDetailsRoute());
-                          break;
-                        case StockDetailsPage.returned:
-                          context.router.push(StockReturnedDetailsRoute());
-                          break;
-                        case StockDetailsPage.damaged:
-                          context.router.push(StockDamagedDetailsRoute());
-                          break;
-                        case StockDetailsPage.lost:
-                          context.router.push(StockLostDetailsRoute());
-                          break;
-                      }
-                    } else {
-                      form.markAllAsTouched();
+                    form.markAllAsTouched();
+                    if (!form.valid) {
+                      return;
                     }
+                    context.router.push(StockReceivedDetailsRoute());
                   },
                   child: Center(
                     child: Text(localizations

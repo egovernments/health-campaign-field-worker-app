@@ -1,10 +1,11 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../router/app_router.dart';
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/localized.dart';
-enum StockDetailsPage { received, issued, returned, damaged, lost }
+import '../../blocs/record_stock/record_stock.dart';
+import '../../router/app_router.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
+
 class ManageStocksPage extends LocalizedStatefulWidget {
   const ManageStocksPage({
     super.key,
@@ -48,9 +49,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       'Create records for stock received at the warehouse',
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(WarehouseDetailsRoute(
-                    stockDetailsPage: StockDetailsPage.received,
-                  )),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperRoute(
+                      type: StockRecordEntryType.receipt,
+                    ),
+                  ),
                 ),
                 DigitListView(
                   title: 'Record Stock Issued',
@@ -58,9 +61,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       'Create records for stock sent out from the warehouse',
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(WarehouseDetailsRoute(
-                    stockDetailsPage: StockDetailsPage.issued,
-                  )),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperRoute(
+                      type: StockRecordEntryType.dispatch,
+                    ),
+                  ),
                 ),
                 DigitListView(
                   title: 'Stock Returned',
@@ -68,9 +73,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       'Create records for the stock returned to the warehouse',
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(WarehouseDetailsRoute(
-                    stockDetailsPage: StockDetailsPage.returned,
-                  )),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperRoute(
+                      type: StockRecordEntryType.returned,
+                    ),
+                  ),
                 ),
                 DigitListView(
                   title: 'Stock Damaged',
@@ -78,9 +85,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       'Record the list of resources damaged during campaign operations',
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(WarehouseDetailsRoute(
-                    stockDetailsPage: StockDetailsPage.damaged,
-                  )),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperRoute(
+                      type: StockRecordEntryType.damaged,
+                    ),
+                  ),
                 ),
                 DigitListView(
                   title: 'Stock Loss',
@@ -88,9 +97,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       'Record the list of resources lost during campaign operations',
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(WarehouseDetailsRoute(
-                    stockDetailsPage: StockDetailsPage.lost,
-                  )),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperRoute(
+                      type: StockRecordEntryType.loss,
+                    ),
+                  ),
                 ),
               ]),
               const SizedBox(height: 16),

@@ -54,7 +54,7 @@ class HouseholdOverviewBloc
     final householdId =
         state.householdMemberWrapper.household.clientReferenceId;
 
-    if (!groupedHouseholds.containsKey(householdId) || householdId == null) {
+    if (!groupedHouseholds.containsKey(householdId)) {
       emit(state.copyWith(loading: false));
 
       return;

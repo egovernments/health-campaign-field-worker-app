@@ -2,23 +2,24 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
-class StockIssuedDetailsPage extends LocalizedStatefulWidget {
-  const StockIssuedDetailsPage({
+class StockDamagedDetailsPage extends LocalizedStatefulWidget {
+  const StockDamagedDetailsPage({
     super.key,
     super.appLocalizations,
   });
 
   @override
-  State<StockIssuedDetailsPage> createState() => _StockIssuedDetailsPageState();
+  State<StockDamagedDetailsPage> createState() =>
+      _StockReceiptDetailsPageState();
 }
 
-class _StockIssuedDetailsPageState
-    extends LocalizedState<StockIssuedDetailsPage> {
+class _StockReceiptDetailsPageState
+    extends LocalizedState<StockDamagedDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -59,7 +60,7 @@ class _StockIssuedDetailsPageState
                   children: [
                     Text(
                       localizations.translate(
-                        i18.stockDetails.stockIssuedDetailsLabel,
+                        i18.stockDetails.stockDamagedDetailsLabel,
                       ),
                       style: theme.textTheme.displayMedium,
                     ),
@@ -77,6 +78,17 @@ class _StockIssuedDetailsPageState
                       ),
                       DigitDropdown(
                         label: localizations.translate(
+                          i18.stockDetails.damagedDuring,
+                        ),
+                        initialValue: '',
+                        menuItems: [MenuItemModel('', '')],
+                        onChanged: (value) {
+                          // TODO: Complete implementation
+                        },
+                        formControlName: 'damagedDuring',
+                      ),
+                      DigitDropdown(
+                        label: localizations.translate(
                           i18.stockDetails.receivedFrom,
                         ),
                         initialValue: '',
@@ -84,29 +96,19 @@ class _StockIssuedDetailsPageState
                         onChanged: (value) {
                           // TODO: Complete implementation
                         },
-                        formControlName: 'destination',
+                        formControlName: 'returnedFrom',
                       ),
                       DigitTextFormField(
-                        formControlName: 'quantitySent',
+                        formControlName: 'quantityDamaged',
                         label: localizations.translate(
-                          i18.stockDetails.quantitySent,
+                          i18.stockDetails.quantityDamaged,
                         ),
-                        maxLength: 200,
-                        isRequired: true,
-                        validationMessages: {
-                          'required': (object) => 'Quantity sent is required',
-                        },
                       ),
                       DigitTextFormField(
                         formControlName: 'waybillNumber',
                         label: localizations.translate(
                           i18.stockDetails.waybillNumber,
                         ),
-                        maxLength: 200,
-                        isRequired: true,
-                        validationMessages: {
-                          'required': (object) => 'Waybill number is required',
-                        },
                       ),
                       DigitTextFormField(
                         formControlName: 'noIndicatedOnWaybill',
@@ -167,10 +169,12 @@ class _StockIssuedDetailsPageState
 
   FormGroup buildForm() => fb.group(<String, Object>{
         'product': FormControl<String>(value: ''),
-        'destination': FormControl<String>(value: ''),
-        'quantitySent': FormControl<String>(value: ''),
+        'damagedDuring': FormControl<String>(value: ''),
+        'returnedFrom': FormControl<String>(value: ''),
+        'quantityDamaged': FormControl<String>(value: ''),
         'waybillNumber': FormControl<String>(value: ''),
         'noIndicatedOnWaybill': FormControl<String>(value: ''),
+        'noOfPackingSlip': FormControl<String>(value: ''),
         'typeOfTransport': FormControl<String>(value: ''),
         'vehicleNumber': FormControl<String>(value: ''),
         'comments': FormControl<String>(value: ''),
