@@ -7,11 +7,10 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class FacilitySearchModel extends EntitySearchModel {
-  final String? id;
+  final List<String>? id;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
@@ -20,7 +19,6 @@ class FacilitySearchModel extends EntitySearchModel {
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -29,11 +27,10 @@ class FacilitySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class FacilityModel extends EntityModel {
-  final String? id;
+  final String id;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
-  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -41,11 +38,10 @@ class FacilityModel extends EntityModel {
   
 
   FacilityModel({
-    this.id,
+    required this.id,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
-    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -59,7 +55,6 @@ class FacilityModel extends EntityModel {
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

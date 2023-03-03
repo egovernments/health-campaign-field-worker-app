@@ -2,7 +2,9 @@
   "name": "project",
   "createRepository": true,
   "isPlural": true,
-  "ignoreFields": ["clientReferenceId"],
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
@@ -11,7 +13,6 @@
       "nullable": false,
       "isPk": true
     },
-
     {
       "name": "projectTypeId",
       "type": "String",
@@ -22,7 +23,6 @@
       "type": "String",
       "includeForQuery": true
     },
-    
     {
       "name": "subProjectTypeId",
       "type": "String",
