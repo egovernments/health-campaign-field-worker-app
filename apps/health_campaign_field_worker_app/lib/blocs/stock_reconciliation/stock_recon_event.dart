@@ -8,14 +8,17 @@ class InitializeStockRecon extends StockReconEvent{
   InitializeStockRecon();
 }
 
-// class UpdateAnswer extends StockReconEvent {
-//   int index;
-//   bool option;
-//   String reason;
-//
-//   UpdateAnswer({required this.index, required this.option, this.reason = ''});
-// }
 
+class CaptureProductVariant extends StockReconEvent{
+  String? productVariantId;
+  CaptureProductVariant({required this.productVariantId});
+}
+
+class CaptureWarehouseDetails extends StockReconEvent{
+  String? warehouseId;
+  CaptureWarehouseDetails({required this.warehouseId});
+
+}
 
 class SubmitStockReconUpdate extends StockReconEvent{
   SubmitStockReconUpdate();
