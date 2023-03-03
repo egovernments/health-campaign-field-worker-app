@@ -1,5 +1,9 @@
+import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import '../../models/entities/facility.dart';
+import '../../models/entities/product_variant.dart';
 
 part 'stock_recon_event.dart';
 
@@ -7,10 +11,34 @@ part 'stock_recon_state.dart';
 
 typedef StockReconEmitter = Emitter<StockReconState>;
 
+/// Dummy data -
+final prodsDummyData = [
+  ProductVariantModel(
+    clientReferenceId: 'clientReferenceId',
+    productId: '123',
+    sku: 'Product 1',
+  ),
+  ProductVariantModel(
+    clientReferenceId: 'clientReferenceId',
+    productId: '321',
+    sku: 'Product 2',
+  ),
+];
+
+final facilityDummyData = [
+  FacilityModel(clientReferenceId: 'id1', id: 'Facility A'),
+  FacilityModel(clientReferenceId: 'id2', id: 'Facility b'),
+];
+
 class StockReconBloc extends Bloc<StockReconEvent, StockReconState> {
   late StockReconModel stockReconModel;
   String? _productVariantId = "";
   String? _warehouseId = "";
+  List<ProductVariantModel> _products = [];
+  List<FacilityModel> _facilities = [];
+
+  List<MenuItemModel> productMenuItems = [];
+  List<MenuItemModel> facilityMenuItems = [];
 
   StockReconBloc() : super(InitialStockReconState()) {
     on<InitializeStockRecon>(_onInitializeStockRecon);
@@ -78,6 +106,20 @@ class StockReconBloc extends Bloc<StockReconEvent, StockReconState> {
   ) async {
     emit(StockReconLoadingState());
     makeStocksZero();
+
+    /// TODO - get prods and facilities from the API
+    /// it will be initialized only once
+    _products = prodsDummyData;
+    _facilities = facilityDummyData;
+
+    productMenuItems = [];
+    facilityMenuItems = [];
+    for (var prod in _products) {
+      productMenuItems.add(MenuItemModel(prod.sku!, prod.productId!));
+    }
+    for (var facility in _facilities) {
+      facilityMenuItems.add(MenuItemModel(facility.id!, facility.id!));
+    }
     emit(StockReconLoadedState(
       stockReconModel: stockReconModel,
     ));
@@ -104,7 +146,7 @@ class StockReconModel {
   int stockLost;
   int stockDamaged;
   final _dateOfReconciliation = DateTime.now();
-
+  
   String get dateOfRecon =>
       DateFormat('dd MMMM yyyy').format(_dateOfReconciliation);
 
