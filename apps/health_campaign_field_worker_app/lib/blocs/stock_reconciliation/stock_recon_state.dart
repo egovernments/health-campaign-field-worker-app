@@ -10,9 +10,13 @@ class StockReconLoadingState extends StockReconState {}
 
 class StockReconLoadedState extends StockReconState {
   final StockReconModel stockReconModel;
+  // final List<MenuItemModel> productMenuItems;
+  // final List<MenuItemModel> facilityMenuItems;
 
 
   StockReconLoadedState({
     required this.stockReconModel,
+    // required this.productMenuItems,
+    // required this.facilityMenuItems,
   });
 }
