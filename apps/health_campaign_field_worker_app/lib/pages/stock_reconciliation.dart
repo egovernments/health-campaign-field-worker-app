@@ -40,6 +40,8 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
             }
             if (state is StockReconLoadedState) {
               stockReconModel = state.stockReconModel;
+              // productMenuItems = state.productMenuItems;
+              // facilityMenuItems = state.facilityMenuItems;
 
               return ReactiveFormBuilder(
                 form: buildForm,
@@ -82,26 +84,27 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
                             ),
                             DigitDropdown(
                               label: localizations.translate(
-                                i18.stockReconciliationDetails.productLabel,
+                                i18.stockReconciliationDetails.warehouseLabel,
                               ),
                               initialValue: '',
-                              menuItems: [MenuItemModel('warehouseC', 'warehouseC'), MenuItemModel('warehouseD', 'warehouseD')],
+                              menuItems: bloc.productMenuItems,
                               onChanged: (value) {
-                                bloc.add(CaptureWarehouseDetails( warehouseId: value));
+                                bloc.add(CaptureProductVariant( productVariantId: value));
                               },
-                              formControlName: 'warehouse',
+                              formControlName: 'product',
                             ),
+
                             const SizedBox(height: 16),
                             DigitDropdown(
                               label: localizations.translate(
                                 i18.stockReconciliationDetails.productLabel,
                               ),
                               initialValue: '',
-                              menuItems: [MenuItemModel('product1', 'product1'), MenuItemModel('product2', 'product2')],
+                              menuItems: bloc.facilityMenuItems,
                               onChanged: (value) {
-                                bloc.add(CaptureProductVariant( productVariantId: value));
+                                bloc.add(CaptureWarehouseDetails( warehouseId: value));
                               },
-                              formControlName: 'product',
+                              formControlName: 'warehouse',
                             ),
                             DigitTableCard(
                               element: {
