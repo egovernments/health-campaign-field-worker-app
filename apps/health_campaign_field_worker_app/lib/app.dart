@@ -10,13 +10,13 @@ import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'data/repositories/remote/project.dart';
-import 'data/repositories/remote/project_staff.dart';
-import 'models/oplog/oplog_entry.dart';
+import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
@@ -114,23 +114,45 @@ class MainApplication extends StatelessWidget {
                                   ),
                         ),
                         BlocProvider(
-                          create: (_) => ProjectBloc(
-                            projectStaffRemoteRepository:
-                                ProjectStaffRemoteRepository(
-                              client,
-                              actionMap: {
-                                ApiOperation.search:
-                                    '/project/staff/v1/_search',
-                              },
-                            ),
+                          create: (ctx) => ProjectBloc(
+                            facilityLocalRepository: ctx.read<
+                                LocalRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            facilityRemoteRepository: ctx.read<
+                                RemoteRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            projectFacilityLocalRepository: ctx.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                            projectFacilityRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                            projectLocalRepository: ctx.read<
+                                LocalRepository<ProjectModel,
+                                    ProjectSearchModel>>(),
+                            projectStaffLocalRepository: ctx.read<
+                                LocalRepository<ProjectStaffModel,
+                                    ProjectStaffSearchModel>>(),
+                            // projectRemoteRepository: ctx.read<
+                            //     RemoteRepository<ProjectModel,
+                            //         ProjectSearchModel>>(),
+                            projectStaffRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectStaffModel,
+                                    ProjectStaffSearchModel>>(),
+                            // projectStaffRemoteRepository:
+                            //     ProjectStaffRemoteRepository(
+                            //   client,
+                            //   actionMap: {
+                            //     ApiOperation.search:
+                            //         '/project/staff/v1/_search',
+                            //   },
+                            // ),
                             projectRemoteRepository: ProjectRemoteRepository(
                               client,
                               actionMap: {
                                 ApiOperation.search: '/project/v1/_search',
                               },
                             ),
-                            isar: isar,
-                            sql: sql,
                           ),
                         ),
                       ],

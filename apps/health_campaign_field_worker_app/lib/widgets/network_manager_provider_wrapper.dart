@@ -8,10 +8,14 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/project.dart';
 import '../data/repositories/local/project_beneficiary.dart';
+import '../data/repositories/local/project_facility.dart';
+import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
@@ -88,6 +92,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           IndividualOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<FacilityModel, FacilitySearchModel>>(
+        create: (_) => FacilityLocalRepository(
+          sql,
+          FacilityOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
@@ -101,12 +111,32 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           HouseholdOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<ProjectModel, ProjectSearchModel>>(
+        create: (_) => ProjectLocalRepository(
+          sql,
+          ProjectOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<ProjectBeneficiaryModel,
               ProjectBeneficiarySearchModel>>(
         create: (_) => ProjectBeneficiaryLocalRepository(
           sql,
           ProjectBeneficiaryOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>(
+        create: (_) => ProjectFacilityLocalRepository(
+          sql,
+          ProjectFacilityOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
+        create: (_) => ProjectStaffLocalRepository(
+          sql,
+          ProjectStaffOpLogManager(isar),
         ),
       ),
       RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
