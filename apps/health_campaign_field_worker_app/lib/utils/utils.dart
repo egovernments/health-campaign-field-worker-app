@@ -23,6 +23,7 @@ Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
 
 class IdGen {
   static const IdGen _instance = IdGen._internal();
+
   static IdGen get instance => _instance;
 
   /// Shorthand for [instance]
@@ -48,6 +49,14 @@ extension IntIncrementer on int? {
 
   int incrementBy(int value) {
     return (this ?? value) + value;
+  }
+}
+
+extension UniqueListItem<E> on List<E> {
+  void removeDuplicates<I>(I Function(E element) constraintMapper) {
+    final distinctList = map(constraintMapper).toSet();
+
+    retainWhere((element) => distinctList.remove(constraintMapper(element)));
   }
 }
 
