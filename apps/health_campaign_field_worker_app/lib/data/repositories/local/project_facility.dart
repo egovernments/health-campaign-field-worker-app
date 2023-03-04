@@ -46,7 +46,7 @@ class ProjectFacilityLocalRepository
   @override
   FutureOr<void> create(
     ProjectFacilityModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     await sql.batch((batch) async {
       batch.insert(
