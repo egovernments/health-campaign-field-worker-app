@@ -13,7 +13,7 @@ class ProjectLocalRepository
   @override
   FutureOr<void> create(
     ProjectModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final projectCompanion = entity.companion;
     await sql.batch((batch) {
