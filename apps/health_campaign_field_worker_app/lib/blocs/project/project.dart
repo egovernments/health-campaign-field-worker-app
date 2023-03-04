@@ -3,15 +3,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
 
+import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../data/local_store/sql_store/sql_store.dart';
-import '../../data/repositories/local/project.dart';
-import '../../data/repositories/local/project_staff.dart';
-import '../../data/repositories/oplog/oplog.dart';
-import '../../data/repositories/remote/project.dart';
-import '../../data/repositories/remote/project_staff.dart';
 import '../../models/data_model.dart';
 
 part 'project.freezed.dart';
@@ -21,18 +15,40 @@ typedef ProjectEmitter = Emitter<ProjectState>;
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
 
-  final ProjectStaffRemoteRepository projectStaffRemoteRepository;
-  final ProjectRemoteRepository projectRemoteRepository;
+  /// Project Staff Repositories
+  final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
+      projectStaffRemoteRepository;
+  final LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>
+      projectStaffLocalRepository;
 
-  final Isar isar;
-  final LocalSqlDataStore sql;
+  /// Project Repositories
+  final RemoteRepository<ProjectModel, ProjectSearchModel>
+      projectRemoteRepository;
+  final LocalRepository<ProjectModel, ProjectSearchModel>
+      projectLocalRepository;
+
+  /// Project Facility Repositories
+  final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
+      projectFacilityRemoteRepository;
+  final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
+      projectFacilityLocalRepository;
+
+  /// Facility Repositories
+  final RemoteRepository<FacilityModel, FacilitySearchModel>
+      facilityRemoteRepository;
+  final LocalRepository<FacilityModel, FacilitySearchModel>
+      facilityLocalRepository;
 
   ProjectBloc({
     LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
-    required this.sql,
-    required this.isar,
+    required this.projectStaffLocalRepository,
+    required this.projectLocalRepository,
+    required this.projectFacilityRemoteRepository,
+    required this.projectFacilityLocalRepository,
+    required this.facilityRemoteRepository,
+    required this.facilityLocalRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
@@ -47,37 +63,66 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
-    final projectStaffList = await projectStaffRemoteRepository.search(
+    List<ProjectStaffModel> projectStaffList =
+        await projectStaffRemoteRepository.search(
       ProjectStaffSearchModel(staffId: uuid),
     );
+
+    projectStaffList = projectStaffList.toSet().toList();
 
     if (projectStaffList.isEmpty) {
       emit(const ProjectsEmptyState());
     } else {
-      final projectStaff = projectStaffList.first;
+      List<ProjectModel> projects = [];
 
-      await ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar))
-          .create(
-        projectStaff,
-        createOpLog: false,
-      );
+      for (final projectStaff in projectStaffList) {
+        await projectStaffLocalRepository.create(
+          projectStaff,
+          createOpLog: false,
+        );
 
-      final projects = await projectRemoteRepository.search(
-        ProjectSearchModel(
-          id: projectStaff.projectId,
-          tenantId: projectStaff.tenantId,
-        ),
-      );
+        final staffProjects = await projectRemoteRepository.search(
+          ProjectSearchModel(
+            id: projectStaff.projectId,
+            tenantId: projectStaff.tenantId,
+          ),
+        );
+
+        projects.addAll(staffProjects);
+      }
 
       for (final project in projects) {
-        await ProjectLocalRepository(
-          sql,
-          ProjectOpLogManager(isar),
-        ).create(
+        await projectLocalRepository.create(
           project,
           createOpLog: false,
         );
       }
+
+      if (projects.isNotEmpty) {
+        final projectFacilities = await projectFacilityRemoteRepository.search(
+          ProjectFacilitySearchModel(
+            projectId: projects.map((e) => e.id).toList(),
+          ),
+        );
+
+        for (final projectFacility in projectFacilities) {
+          await projectFacilityLocalRepository.create(
+            projectFacility,
+            createOpLog: false,
+          );
+
+          final facilities = await facilityRemoteRepository.search(
+            FacilitySearchModel(
+              id: [projectFacility.facilityId],
+            ),
+          );
+
+          for (final facility in facilities) {
+            await facilityLocalRepository.create(facility);
+          }
+        }
+      }
+
       emit(ProjectSelectionFetchedState(projects: projects));
     }
   }

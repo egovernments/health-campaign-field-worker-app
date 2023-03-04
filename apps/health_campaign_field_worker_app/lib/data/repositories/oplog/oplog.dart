@@ -93,6 +93,10 @@ class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
   HouseholdOpLogManager(super.isar);
 }
 
+class FacilityOpLogManager extends OpLogManager<FacilityModel> {
+  FacilityOpLogManager(super.isar);
+}
+
 class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
   HouseholdMemberOpLogManager(super.isar);
 }
@@ -100,6 +104,10 @@ class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
 class ProjectBeneficiaryOpLogManager
     extends OpLogManager<ProjectBeneficiaryModel> {
   ProjectBeneficiaryOpLogManager(super.isar);
+}
+
+class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
+  ProjectFacilityOpLogManager(super.isar);
 }
 
 class TaskOpLogManager extends OpLogManager<TaskModel> {
