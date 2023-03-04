@@ -15,11 +15,11 @@ class ProjectStaffLocalRepository
     ProjectStaffModel entity, {
     bool createOpLog = true,
   }) async {
-    final projectstaffCompanion = entity.companion;
+    final companion = entity.companion;
     await sql.batch((batch) {
       batch.insert(
         sql.projectStaff,
-        projectstaffCompanion,
+        companion,
         mode: InsertMode.insertOrReplace,
       );
     });
@@ -48,11 +48,17 @@ class ProjectStaffLocalRepository
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
+        projectId: data.projectId,
+        channel: data.channel,
+        endDate: data.endDate,
+        isDeleted: data.isDeleted,
+        staffId: data.staffId,
+        startDate: data.startDate,
+        userId: data.userId,
       );
     }).toList();
   }
 
   @override
-  // TODO: implement type
   DataModelType get type => DataModelType.projectStaff;
 }
