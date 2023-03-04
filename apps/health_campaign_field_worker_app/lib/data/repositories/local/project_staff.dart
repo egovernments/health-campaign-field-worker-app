@@ -13,7 +13,7 @@ class ProjectStaffLocalRepository
   @override
   FutureOr<void> create(
     ProjectStaffModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final companion = entity.companion;
     await sql.batch((batch) {
@@ -24,7 +24,10 @@ class ProjectStaffLocalRepository
       );
     });
 
-    await super.create(entity);
+    await super.create(
+      entity,
+      createOpLog: createOpLog,
+    );
   }
 
   @override

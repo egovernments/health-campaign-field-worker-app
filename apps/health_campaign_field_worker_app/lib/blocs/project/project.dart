@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
+import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
 
@@ -90,6 +91,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
         projects.addAll(staffProjects);
       }
+
+      projects = projects.toSet().toList();
+      projects.removeDuplicates(
+        (element) => element.id,
+      );
 
       for (final project in projects) {
         await projectLocalRepository.create(
