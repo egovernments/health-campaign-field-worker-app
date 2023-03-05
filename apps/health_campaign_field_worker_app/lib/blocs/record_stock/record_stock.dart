@@ -29,18 +29,19 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockSaveWarehouseDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    state.when(
-      create: (entryType, loading, dateOfRecord, facilityModel, stockModel) {
+    state.maybeMap(
+      orElse: () {
+        throw const InvalidRecordStockStateException();
+      },
+      create: (value) {
         emit(
-          RecordStockCreateState(
-            entryType: entryType,
+          value.copyWith(
+            entryType: value.entryType,
             dateOfRecord: event.dateOfRecord,
             facilityModel: event.facilityModel,
+            loading: false,
           ),
         );
-      },
-      persisted: () {
-        throw const InvalidRecordStockStateException();
       },
     );
   }
@@ -129,6 +130,7 @@ class RecordStockState with _$RecordStockState {
   const factory RecordStockState.create({
     required StockRecordEntryType entryType,
     @Default(false) bool loading,
+    required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
     StockModel? stockModel,

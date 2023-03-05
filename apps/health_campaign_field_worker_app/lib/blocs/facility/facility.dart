@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../models/entities/facility.dart';
+import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
 part 'facility.freezed.dart';
@@ -10,35 +10,48 @@ typedef FacilityStateEmitter = Emitter<FacilityState>;
 
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
   final FacilityDataRepository facilityDataRepository;
+  final ProjectFacilityDataRepository projectFacilityDataRepository;
 
   FacilityBloc({
     required this.facilityDataRepository,
+    required this.projectFacilityDataRepository,
   }) : super(const FacilityEmptyState()) {
-    on(_handleLoadFacilities);
+    on(_handleLoadFacilitiesForProjectId);
   }
 
-  Future<void> _handleLoadFacilities(
-    FacilityLoadEvent event,
+  Future<void> _handleLoadFacilitiesForProjectId(
+    FacilityLoadForProjectEvent event,
     FacilityStateEmitter emit,
   ) async {
     emit(const FacilityLoadingState());
-    final results = await facilityDataRepository.search(
-      FacilitySearchModel(),
+
+    final projectFacilities = await projectFacilityDataRepository.search(
+      ProjectFacilitySearchModel(projectId: [event.projectId]),
     );
 
-    if (results.isEmpty) {
+    List<FacilityModel> facilities = [];
+
+    for (final projectFacility in projectFacilities) {
+      final results = await facilityDataRepository.search(
+        FacilitySearchModel(id: [projectFacility.facilityId]),
+      );
+
+      facilities.addAll(results);
+    }
+
+    if (facilities.isEmpty) {
       emit(const FacilityEmptyState());
     } else {
-      emit(FacilityFetchedState(facilities: results));
+      emit(FacilityFetchedState(facilities: facilities));
     }
   }
 }
 
 @freezed
 class FacilityEvent with _$FacilityEvent {
-  const factory FacilityEvent.load({
-    required FacilitySearchModel facilitySearchModel,
-  }) = FacilityLoadEvent;
+  const factory FacilityEvent.loadForProjectId({
+    required String projectId,
+  }) = FacilityLoadForProjectEvent;
 }
 
 @freezed
@@ -49,6 +62,5 @@ class FacilityState with _$FacilityState {
 
   const factory FacilityState.fetched({
     required List<FacilityModel> facilities,
-    FacilityModel? selectedFacilities,
   }) = FacilityFetchedState;
 }

@@ -68,4 +68,6 @@ enum UserRoleCodeEnum {
   registrar,
   @JsonValue('WAREHOUSE_MANAGER')
   warehouseManager,
+  @JsonValue('SYSTEM_ADMINISTRATOR')
+  systemAdministrator,
 }

@@ -44,11 +44,11 @@ extension DateAgeExtension on DateTime {
 
 extension IntIncrementer on int? {
   int get increment {
-    return incrementBy(1);
+    return _incrementBy(1);
   }
 
-  int incrementBy(int value) {
-    return (this ?? value) + value;
+  int _incrementBy(int value) {
+    return this == null ? value : (this! + value);
   }
 }
 

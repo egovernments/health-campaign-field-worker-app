@@ -69,7 +69,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ProjectStaffSearchModel(staffId: uuid),
     );
 
-    projectStaffList = projectStaffList.toSet().toList();
+    projectStaffList.removeDuplicates((e) => e.id);
 
     if (projectStaffList.isEmpty) {
       emit(const ProjectsEmptyState());
@@ -92,7 +92,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         projects.addAll(staffProjects);
       }
 
-      projects = projects.toSet().toList();
+      projects.removeDuplicates((e) => e.id);
       projects.removeDuplicates(
         (element) => element.id,
       );

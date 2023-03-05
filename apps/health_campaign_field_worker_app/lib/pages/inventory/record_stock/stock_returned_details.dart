@@ -65,28 +65,28 @@ class _StockReceiptDetailsPageState
                       style: theme.textTheme.displayMedium,
                     ),
                     Column(children: [
-                      DigitDropdown(
-                        label: localizations.translate(
-                          i18.stockDetails.selectProduct,
-                        ),
-                        initialValue: '',
-                        menuItems: [MenuItemModel('', '')],
-                        onChanged: (value) {
-                          // TODO: Complete implementation
-                        },
-                        formControlName: 'product',
-                      ),
-                      DigitDropdown(
-                        label: localizations.translate(
-                          i18.stockDetails.receivedFrom,
-                        ),
-                        initialValue: '',
-                        menuItems: [MenuItemModel('', '')],
-                        onChanged: (value) {
-                          // TODO: Complete implementation
-                        },
-                        formControlName: 'returnedFrom',
-                      ),
+                      // DigitDropdown(
+                      //   label: localizations.translate(
+                      //     i18.stockDetails.selectProduct,
+                      //   ),
+                      //   initialValue: '',
+                      //   menuItems: [MenuItemModel('', '')],
+                      //   onChanged: (value) {
+                      //     // TODO: Complete implementation
+                      //   },
+                      //   formControlName: 'product',
+                      // ),
+                      // DigitDropdown(
+                      //   label: localizations.translate(
+                      //     i18.stockDetails.receivedFrom,
+                      //   ),
+                      //   initialValue: '',
+                      //   menuItems: [MenuItemModel('', '')],
+                      //   onChanged: (value) {
+                      //     // TODO: Complete implementation
+                      //   },
+                      //   formControlName: 'returnedFrom',
+                      // ),
                       DigitTextFormField(
                         formControlName: 'quantityReturned',
                         label: localizations.translate(
@@ -122,17 +122,17 @@ class _StockReceiptDetailsPageState
                       ),
                     ]),
                     const SizedBox(height: 16),
-                    DigitDropdown(
-                      label: localizations.translate(
-                        i18.stockDetails.typeOfTransport,
-                      ),
-                      initialValue: '',
-                      menuItems: [MenuItemModel('', '')],
-                      onChanged: (value) {
-                        // TODO: Complete implementation
-                      },
-                      formControlName: 'typeOfTransport',
-                    ),
+                    // DigitDropdown(
+                    //   label: localizations.translate(
+                    //     i18.stockDetails.typeOfTransport,
+                    //   ),
+                    //   initialValue: '',
+                    //   menuItems: [MenuItemModel('', '')],
+                    //   onChanged: (value) {
+                    //     // TODO: Complete implementation
+                    //   },
+                    //   formControlName: 'typeOfTransport',
+                    // ),
                     DigitTextFormField(
                       formControlName: 'vehicleNumber',
                       label: localizations.translate(
