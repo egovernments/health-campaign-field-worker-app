@@ -74,11 +74,14 @@ class _WarehouseDetailsPageState
                     ]),
                     const SizedBox(height: 16),
                     DigitDropdown(
+                      valueMapper: (value) {
+                        return '';
+                      },
                       label: localizations.translate(
                         i18.stockReconciliationDetails.productLabel,
                       ),
                       initialValue: '',
-                      menuItems: [MenuItemModel('', '')],
+                      menuItems: const [],
                       onChanged: (value) {
                         // TODO: Complete implementation
                       },

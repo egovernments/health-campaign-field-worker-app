@@ -281,11 +281,12 @@ class _IndividualDetailsPageState
                                     appConfiguration.idTypeOptions ??
                                         <IdTypeOptions>[];
 
-                                return DigitDropdown(
+                                return DigitDropdown<String>(
                                   isRequired: true,
                                   label: localizations.translate(
                                     i18.individualDetails.idTypeLabelText,
                                   ),
+                                  valueMapper: (e) => e,
                                   onChanged: (value) {
                                     setState(() {
                                       form.control(_idNumberKey).setValidators(
@@ -297,12 +298,11 @@ class _IndividualDetailsPageState
                                     });
                                   },
                                   initialValue: idTypeOptions.firstOrNull?.name,
-                                  menuItems: idTypeOptions
-                                      .map((e) => MenuItemModel(
-                                            e.code,
-                                            localizations.translate(e.name),
-                                          ))
-                                      .toList(),
+                                  menuItems: idTypeOptions.map(
+                                    (e) {
+                                      return localizations.translate(e.name);
+                                    },
+                                  ).toList(),
                                   formControlName: _idTypeKey,
                                   validationMessages: {
                                     'required': (object) =>
@@ -354,17 +354,17 @@ class _IndividualDetailsPageState
                                     appConfiguration.genderOptions ??
                                         <GenderOptions>[];
 
-                                return DigitDropdown(
+                                return DigitDropdown<String>(
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
+                                  valueMapper: (value) => value,
                                   initialValue: genderOptions.firstOrNull?.name,
-                                  menuItems: genderOptions
-                                      .map((e) => MenuItemModel(
-                                            e.code,
-                                            localizations.translate(e.name),
-                                          ))
-                                      .toList(),
+                                  menuItems: genderOptions.map(
+                                    (e) {
+                                      return localizations.translate(e.name);
+                                    },
+                                  ).toList(),
                                   formControlName: _genderKey,
                                 );
                               },

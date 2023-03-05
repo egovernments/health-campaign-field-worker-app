@@ -188,6 +188,31 @@ class _HomePageState extends LocalizedState<HomePage> {
             ],
           );
           break;
+        case UserRoleCodeEnum.systemAdministrator:
+          homeItems.addAll(
+            [
+              HomeItemCard(
+                icon: Icons.store_mall_directory,
+                label: i18.home.manageStockLabel,
+                onPressed: null,
+              ),
+              HomeItemCard(
+                icon: Icons.menu_book,
+                label: i18.home.stockReconciliationLabel,
+                onPressed: null,
+              ),
+              HomeItemCard(
+                icon: Icons.all_inbox,
+                label: i18.home.beneficiaryLabel,
+                onPressed: () {
+                  context.router.push(
+                    SearchBeneficiaryRoute(),
+                  );
+                },
+              ),
+            ],
+          );
+          break;
       }
     }
 
