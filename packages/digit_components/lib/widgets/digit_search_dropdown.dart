@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:reactive_flutter_typeahead/reactive_flutter_typeahead.dart';
 
 class DigitSearchDropdown<T> extends StatelessWidget {
-  final List<T> Function(List<T> items, String pattern) suggestionsCallback;
+  final Iterable<T> Function(Iterable<T> items, String pattern)
+      suggestionsCallback;
   final String label;
   final T? initialValue;
-  final List<T> menuItems;
+  final Iterable<T> menuItems;
   final String formControlName;
   final bool isRequired;
   final ValueChanged<T>? onChanged;

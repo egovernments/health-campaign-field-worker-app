@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
-import '../../utils/utils.dart';
 
 part 'record_stock.freezed.dart';
 
@@ -36,10 +35,8 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
       create: (value) {
         emit(
           value.copyWith(
-            entryType: value.entryType,
             dateOfRecord: event.dateOfRecord,
             facilityModel: event.facilityModel,
-            loading: false,
           ),
         );
       },
@@ -64,7 +61,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockCreateStockEntryEvent event,
     RecordStockEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
       },
@@ -94,16 +91,22 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
             stockModel.copyWith(
               facilityId: facilityModel.id,
               rowVersion: 1,
-              referenceId: '13',
-              referenceIdType: 'PROJECT',
               tenantId: envConfig.variables.tenantId,
-              clientReferenceId: IdGen.i.identifier,
+            ),
+          );
+
+          emit(
+            RecordStockPersistedState(
+              entryType: value.entryType,
+              projectId: value.projectId,
+              stockModel: value.stockModel,
+              facilityModel: value.facilityModel,
+              dateOfRecord: value.dateOfRecord,
             ),
           );
         } catch (error) {
+          emit(value.copyWith(loading: false));
           rethrow;
-        } finally {
-          emit(const RecordStockPersistedState());
         }
       },
     );
@@ -136,7 +139,13 @@ class RecordStockState with _$RecordStockState {
     StockModel? stockModel,
   }) = RecordStockCreateState;
 
-  const factory RecordStockState.persisted() = RecordStockPersistedState;
+  const factory RecordStockState.persisted({
+    required StockRecordEntryType entryType,
+    required String projectId,
+    DateTime? dateOfRecord,
+    FacilityModel? facilityModel,
+    StockModel? stockModel,
+  }) = RecordStockPersistedState;
 }
 
 class InvalidRecordStockStateException implements Exception {

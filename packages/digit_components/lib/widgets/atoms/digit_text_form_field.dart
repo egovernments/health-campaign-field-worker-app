@@ -9,6 +9,7 @@ class DigitTextFormField extends StatelessWidget {
   final Widget? suffix;
   final bool isRequired;
   final int minLines;
+  final int maxLines;
   final int? maxLength;
   final TextInputType keyboardType;
   final FocusNode? focusNode;
@@ -29,6 +30,7 @@ class DigitTextFormField extends StatelessWidget {
     this.hint,
     this.suffix,
     this.minLines = 1,
+    this.maxLines = 1,
     this.valueAccessor,
     this.maxLength,
     this.onTap,
@@ -53,6 +55,7 @@ class DigitTextFormField extends StatelessWidget {
           autofocus: false,
           textCapitalization: textCapitalization,
           minLines: minLines,
+          maxLines: maxLines,
           obscureText: obscureText,
           focusNode: focusNode,
           keyboardType: keyboardType,

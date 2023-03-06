@@ -291,6 +291,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   LocalRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<LocalRepository<StockModel, StockSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -304,6 +305,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   RemoteRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context.read<RemoteRepository<StockModel, StockSearchModel>>(),
             ],
           ),
         );

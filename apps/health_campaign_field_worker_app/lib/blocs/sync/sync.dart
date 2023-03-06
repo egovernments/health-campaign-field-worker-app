@@ -46,6 +46,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           case DataModelType.householdMember:
           case DataModelType.projectBeneficiary:
           case DataModelType.task:
+          case DataModelType.stock:
+          case DataModelType.stockReconciliation:
             return true;
           default:
             return false;
