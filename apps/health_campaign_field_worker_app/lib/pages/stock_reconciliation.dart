@@ -56,8 +56,15 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
                       child: DigitCard(
                         child: DigitElevatedButton(
                           onPressed: () {
+                            form.invalid;
                             if (form.valid) {
                               /// todo - add bloc logic here
+                              final manualStockCount =
+                                  form.control('manualStockCount').value;
+                              final comments = form.control('comments').value;
+                              bloc.add(SubmitStockReconUpdate(
+                                  manualStockCount: manualStockCount,
+                                  comments: comments,));
                               context.router.push(AcknowledgementRoute());
                             } else {
                               form.markAllAsTouched();
@@ -247,6 +254,11 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
                               label: localizations.translate(
                                 i18.stockReconciliationDetails.comments,
                               ),
+                              validationMessages: {
+                                "required": (control) {
+                                  return '${localizations.translate(i18.stockDetails.comments)} is Required';
+                                },
+                              },
                             ),
                           ],
                         ),

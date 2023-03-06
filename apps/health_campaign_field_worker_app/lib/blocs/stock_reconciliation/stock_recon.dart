@@ -77,6 +77,7 @@ class StockReconBloc extends Bloc<StockReconEvent, StockReconState> {
     StockReconEmitter emit,
   ) {
     makeStocksZero();
+    _productVariantId = "";
     productMenuItems = [];
 
     _warehouseId = event.warehouseId ?? "";
