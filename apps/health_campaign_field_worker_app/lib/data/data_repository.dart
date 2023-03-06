@@ -232,6 +232,58 @@ abstract class RemoteRepository<D extends EntityModel,
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
     return entities.map((e) => Mapper.toMap(e)).toList();
   }
+
+  FutureOr<T> _executeFuture<T>({
+    required Future<T> Function() future,
+  }) async {
+    try {
+      return await future();
+    } on DioError catch (error) {
+      const encoder = JsonEncoder.withIndent('  ');
+
+      String? errorResponse;
+      String? requestBody;
+
+      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
+
+      try {
+        errorResponse = encoder.convert(
+          error.response?.data,
+        );
+      } catch (_) {
+        errorResponse = 'Could not parse error';
+      }
+
+      try {
+        requestBody = encoder.convert(error.requestOptions.data);
+      } catch (_) {
+        requestBody = 'Could not parse request body';
+      }
+
+      AppLogger.instance.debug(
+        requestBody,
+        title: runtimeType.toString(),
+      );
+
+      AppLogger.instance.error(
+        message: '${error.error}\n$errorResponse',
+        title: '${runtimeType.toString()} | DIO_ERROR',
+      );
+
+      debugPrint(
+        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
+      );
+
+      rethrow;
+    } catch (error) {
+      AppLogger.instance.error(
+        message: error.toString(),
+        title: runtimeType.toString(),
+      );
+
+      rethrow;
+    }
+  }
 }
 
 abstract class LocalRepository<D extends EntityModel,
