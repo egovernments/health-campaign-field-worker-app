@@ -6,11 +6,6 @@ import 'package:health_campaign_field_worker_app/pages/beneficiary/household_ove
 import 'package:health_campaign_field_worker_app/pages/beneficiary_registration/household_details.dart';
 import 'package:health_campaign_field_worker_app/pages/beneficiary_registration/individual_details.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/manage_stocks.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/stock_damaged_details.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/stock_issued_details.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/stock_lost_details.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/stock_received_details.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/stock_returned_details.dart';
 import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/warehouse_details.dart';
 import 'package:health_campaign_field_worker_app/pages/stock_reconciliation.dart';
 
@@ -30,11 +25,6 @@ part 'router.gr.dart';
     AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
     AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
     AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
-    AutoRoute(page: StockReceivedDetailsPage, path: 'stock-receipt-details'),
-    AutoRoute(page: StockIssuedDetailsPage, path: 'stock-issued-details'),
-    AutoRoute(page: StockReturnedDetailsPage, path: 'stock-returned-details'),
-    AutoRoute(page: StockDamagedDetailsPage, path: 'stock-damaged-details'),
-    AutoRoute(page: StockLostDetailsPage, path: 'stock-lost-details'),
   ],
 )
 class AppRouter extends _$AppRouter {}

@@ -124,7 +124,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
 
           for (final facility in facilities) {
-            await facilityLocalRepository.create(facility);
+            await facilityLocalRepository.create(
+              facility,
+              createOpLog: false,
+            );
           }
         }
       }

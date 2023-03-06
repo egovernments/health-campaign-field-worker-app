@@ -17,7 +17,7 @@ import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/home.dart';
 import '../pages/inventory/manage_stocks.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
-import '../pages/inventory/record_stock/stock_received_details.dart';
+import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -93,7 +93,7 @@ part 'app_router.gr.dart';
               path: 'warehouse-details',
               initial: true,
             ),
-            AutoRoute(page: StockReceivedDetailsPage, path: 'entry'),
+            AutoRoute(page: StockDetailsPage, path: 'details'),
           ],
         ),
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
