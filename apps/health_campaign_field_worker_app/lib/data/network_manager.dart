@@ -228,6 +228,62 @@ class NetworkManager {
 
             break;
 
+          case DataModelType.stock:
+            responseEntities = await remote.search(StockSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockModel;
+              final responseEntity =
+                  responseEntities.whereType<StockModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+              final updatedEntity = entity.copyWith(
+                id: responseEntity?.id,
+              );
+
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
+
+            break;
+
+          case DataModelType.stockReconciliation:
+            responseEntities =
+                await remote.search(StockReconciliationSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockReconciliationModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockReconciliationModel;
+              final responseEntity = responseEntities
+                  .whereType<StockReconciliationModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+              final updatedEntity = entity.copyWith(
+                id: responseEntity?.id,
+              );
+
+              await local.opLogManager.update(
+                element.copyWith(entity: updatedEntity),
+              );
+            }
+
+            break;
+
           default:
             continue;
         }
