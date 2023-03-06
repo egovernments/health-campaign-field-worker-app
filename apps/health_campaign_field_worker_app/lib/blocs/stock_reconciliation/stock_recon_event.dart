@@ -21,5 +21,10 @@ class CaptureWarehouseDetails extends StockReconEvent{
 }
 
 class SubmitStockReconUpdate extends StockReconEvent{
-  SubmitStockReconUpdate();
+  String manualStockCount;
+  String comments;
+  SubmitStockReconUpdate({
+    required this.manualStockCount,
+    required this.comments,
+});
 }
