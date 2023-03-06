@@ -332,46 +332,64 @@ class StockReconciliationDetails {
 class StockDetails {
   const StockDetails();
 
-  String get stockReceivedDetailsLabel => 'STOCK_RECEIPT_DETAILS_LABEL';
+  /// Page Title Keys
+  String get receivedPageTitle => 'RECEIVED_STOCK_DETAILS';
 
-  String get stockIssuedDetailsLabel => 'STOCK_ISSUED_DETAILS_LABEL';
+  String get issuedPageTitle => 'ISSUED_STOCK_DETAILS';
 
-  String get stockReturnedDetailsLabel => 'STOCK_RETURNED_DETAILS_LABEL';
+  String get returnedPageTitle => 'RETURNED_STOCK_DETAILS';
 
-  String get stockDamagedDetailsLabel => 'STOCK_DAMAGED_DETAILS_LABEL';
+  String get lostPageTitle => 'LOST_STOCK_DETAILS';
 
-  String get stockLostDetailsLabel => 'STOCK_LOST_DETAILS_LABEL';
+  String get damagedPageTitle => 'DAMAGED_STOCK_DETAILS';
 
-  String get selectProduct => 'STOCK_RECEIPT_DETAILS_SELECT_PRODUCT';
+  /// Select Product label
+  String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
 
-  String get damagedDuring => 'STOCK_DAMAGED_DURING';
+  /// Select Transacting party label
+  String get selectTransactingPartyReceived => 'STOCK_DETAILS_RECEIVED_FROM';
 
-  String get lostDuring => 'STOCK_LOST_DURING';
+  String get selectTransactingPartyIssued => 'STOCK_DETAILS_ISSUED_TO';
 
-  String get receivedFrom => 'STOCK_RECEIPT_DETAILS_RECEIVED_FROM';
+  String get selectTransactingPartyReturned => 'STOCK_DETAILS_RETURNED_TO';
 
-  String get quantityReceived => 'STOCK_RECEIPT_DETAILS_QUANTITY_RECEIVED';
-  String get quantityDamaged => 'STOCK_RECEIPT_DETAILS_QUANTITY_DAMAGED';
+  String get selectTransactingPartyReceivedFromDamaged {
+    return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';
+  }
 
-  String get quantityReturned => 'STOCK_RECEIPT_DETAILS_QUANTITY_RETURNED';
+  String get selectTransactingPartyReceivedFromLost {
+    return 'STOCK_DETAILS_RECEIVED_FROM_LOST';
+  }
 
-  String get quantityLost => 'STOCK_RECEIPT_DETAILS_QUANTITY_LOST';
+  /// Quantity sent/received/lost/damaged label
+  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED';
 
-  String get waybillNumber => 'STOCK_RECEIPT_DETAILS_WAYBILL_NUMBER';
+  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT';
 
-  String get quantitySent => 'STOCK_RECEIPT_DETAILS_QUANTITY_SENT';
+  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED';
 
-  String get noIndicatedOnWaybill =>
-      'STOCK_RECEIPT_DETAILS_NO_INDICATED_ON_WAYBILL';
+  String get quantityLostLabel => 'STOCK_DETAILS_QUANTITY_LOST';
 
-  String get noIndicatedOnThePackingSlip =>
-      'STOCK_RECEIPT_DETAILS_NO_INDICATED_ON_THE_PACKAGING_SLIP';
+  String get quantityDamagedLabel => 'STOCK_DETAILS_QUANTITY_DAMAGED';
 
-  String get noOfPackingSlip => 'STOCK_RECEIPT_DETAILS_NO_OF_PACKING_SLIP';
+  /// Waybill number label
+  String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
 
-  String get typeOfTransport => 'STOCK_RECEIPT_DETAILS_TYPE_OF_TRANSPORT';
+  /// Number of product indicated on waybill title
+  String get quantityOfProductIndicatedOnWaybillLabel {
+    return 'STOCK_DETAILS_WAYBILL_QUANTITY';
+  }
 
-  String get vehicleNumber => 'STOCK_RECEIPT_DETAILS_VEHICLE_NUMBER';
+  /// Lost/Damaged during label
+  String get transactionReasonLost => 'STOCK_DETAILS_LOST_DURING';
 
-  String get comments => 'COMMENTS';
+  String get transactionReasonDamaged => 'STOCK_DETAILS_DAMAGED_DURING';
+
+  String get vehicleNumberLabel => 'STOCK_DETAILS_VEHICLE_NUMBER';
+
+  String get commentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
+
+  String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
+
+  String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
 }

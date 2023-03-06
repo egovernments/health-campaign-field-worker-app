@@ -70,7 +70,10 @@ class FacilityLocalRepository
   }
 
   @override
-  FutureOr<void> create(FacilityModel entity, {bool createOpLog = true}) async {
+  FutureOr<void> create(
+    FacilityModel entity, {
+    bool createOpLog = false,
+  }) async {
     final facilityCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;
 

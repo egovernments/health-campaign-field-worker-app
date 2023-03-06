@@ -5,7 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
-import '../../../data/network_manager.dart';
+import '../../../blocs/record_stock/record_stock.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -27,6 +27,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
 
+  FormGroup buildForm() => fb.group(<String, Object>{
+        _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
+        _administrativeUnitKey: FormControl<String>(value: 'Solimbo'),
+        _warehouseKey: FormControl<FacilityModel>(
+          validators: [Validators.required],
+        ),
+      });
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectBloc, ProjectState>(
@@ -40,169 +48,150 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           fetched: (projects, selectedProject) {
             final theme = Theme.of(context);
 
-            if (selectedProject == null) {
-              return const Center(
-                child: Text('Project not selected'),
-              );
-            }
-
-            final facilityRepository = context
-                .read<NetworkManager>()
-                .repository<FacilityModel, FacilitySearchModel>(context);
-
-            final projectFacilityRepository = context
-                .read<NetworkManager>()
-                .repository<ProjectFacilityModel, ProjectFacilitySearchModel>(
-                  context,
-                );
-
-            return BlocProvider(
-              create: (context) => FacilityBloc(
-                facilityDataRepository: facilityRepository,
-                projectFacilityDataRepository: projectFacilityRepository,
-              )..add(
-                  FacilityLoadForProjectEvent(projectId: selectedProject.id),
-                ),
-              child: BlocConsumer<FacilityBloc, FacilityState>(
-                listener: (context, state) {
-                  state.whenOrNull(
-                    empty: () {
-                      DigitDialog.show(
-                        context,
-                        options: DigitDialogOptions(
-                          titleIcon: Icon(
-                            Icons.warning,
-                            color: theme.colorScheme.error,
-                          ),
-                          titleText: 'No facilities assigned',
-                          contentText: 'Please select another boundary or '
-                              'contact the system administrator to assign '
-                              'a facility.',
-                          primaryAction: DigitDialogActions(
-                            label: 'Close',
-                            action: (dialogContext) {
-                              Navigator.of(context, rootNavigator: true).pop();
-                              context.router.pop();
-                            },
-                          ),
+            return BlocConsumer<FacilityBloc, FacilityState>(
+              listener: (context, state) {
+                state.whenOrNull(
+                  empty: () {
+                    DigitDialog.show(
+                      context,
+                      options: DigitDialogOptions(
+                        titleIcon: Icon(
+                          Icons.warning,
+                          color: theme.colorScheme.error,
                         ),
-                      );
+                        titleText: 'No facilities assigned',
+                        contentText: 'Please select another boundary or '
+                            'contact the system administrator to assign '
+                            'a facility.',
+                        primaryAction: DigitDialogActions(
+                          label: 'Close',
+                          action: (dialogContext) {
+                            Navigator.of(context, rootNavigator: true).pop();
+                            context.router.pop();
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              builder: (ctx, facilityState) {
+                return Scaffold(
+                  body: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
                     },
-                  );
-                },
-                builder: (ctx, facilityState) {
-                  return Scaffold(
-                    body: GestureDetector(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: ReactiveFormBuilder(
-                        form: buildForm,
-                        builder: (context, form, child) {
-                          return ScrollableContent(
-                            header: Column(children: const [
-                              BackNavigationHelpHeaderWidget(),
-                            ]),
-                            footer: SizedBox(
-                              height: 90,
-                              child: DigitCard(
-                                child: ReactiveFormConsumer(
-                                  builder: (context, form, child) {
-                                    return DigitElevatedButton(
-                                      onPressed: !form.valid
-                                          ? null
-                                          : () {
-                                              form.markAllAsTouched();
-                                              if (!form.valid) {
-                                                return;
-                                              }
-                                              context.router.push(
-                                                StockReceivedDetailsRoute(),
-                                              );
-                                            },
-                                      child: child!,
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdDetails.actionLabel,
-                                      ),
+                    child: ReactiveFormBuilder(
+                      form: buildForm,
+                      builder: (context, form, child) {
+                        return ScrollableContent(
+                          header: Column(children: const [
+                            BackNavigationHelpHeaderWidget(),
+                          ]),
+                          footer: SizedBox(
+                            height: 90,
+                            child: DigitCard(
+                              child: ReactiveFormConsumer(
+                                builder: (context, form, child) {
+                                  return DigitElevatedButton(
+                                    onPressed: !form.valid
+                                        ? null
+                                        : () {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) {
+                                              return;
+                                            }
+                                            final dateOfRecord = form
+                                                .control(_dateOfEntryKey)
+                                                .value as DateTime;
+
+                                            final facility = form
+                                                .control(_warehouseKey)
+                                                .value as FacilityModel;
+
+                                            context.read<RecordStockBloc>().add(
+                                                  RecordStockSaveWarehouseDetailsEvent(
+                                                    dateOfRecord: dateOfRecord,
+                                                    facilityModel: facility,
+                                                  ),
+                                                );
+                                            context.router.push(
+                                              StockDetailsRoute(),
+                                            );
+                                          },
+                                    child: child!,
+                                  );
+                                },
+                                child: Center(
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.householdDetails.actionLabel,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            children: [
-                              DigitCard(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      localizations.translate(
-                                        i18.warehouseDetails
-                                            .warehouseDetailsLabel,
-                                      ),
-                                      style: theme.textTheme.displayMedium,
+                          ),
+                          children: [
+                            DigitCard(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                      i18.warehouseDetails
+                                          .warehouseDetailsLabel,
                                     ),
-                                    Column(children: [
-                                      DigitDateFormPicker(
-                                        isEnabled: false,
-                                        formControlName: _dateOfEntryKey,
-                                        label: localizations.translate(
-                                          i18.warehouseDetails.dateOfReceipt,
-                                        ),
-                                        isRequired: false,
-                                      ),
-                                      DigitTextFormField(
-                                        formControlName: _administrativeUnitKey,
-                                        label: localizations.translate(
-                                          i18.warehouseDetails
-                                              .administrativeUnit,
-                                        ),
-                                      ),
-                                    ]),
-                                    DigitSearchDropdown<FacilityModel>(
-                                      valueMapper: (value) => value.id,
-                                      formControlName: _warehouseKey,
-                                      menuItems: facilityState.maybeWhen(
-                                        orElse: () => [],
-                                        fetched: (facilities) => facilities,
-                                      ),
+                                    style: theme.textTheme.displayMedium,
+                                  ),
+                                  Column(children: [
+                                    DigitDateFormPicker(
+                                      isEnabled: false,
+                                      formControlName: _dateOfEntryKey,
                                       label: localizations.translate(
-                                        i18.warehouseDetails.warehouseNameId,
+                                        i18.warehouseDetails.dateOfReceipt,
                                       ),
-                                      suggestionsCallback: (items, pattern) =>
-                                          items
-                                              .where(
-                                                (e) => e.id.contains(pattern),
-                                              )
-                                              .toList(),
+                                      isRequired: false,
                                     ),
-                                  ],
-                                ),
+                                    DigitTextFormField(
+                                      formControlName: _administrativeUnitKey,
+                                      label: localizations.translate(
+                                        i18.warehouseDetails.administrativeUnit,
+                                      ),
+                                    ),
+                                  ]),
+                                  DigitSearchDropdown<FacilityModel>(
+                                    valueMapper: (value) => value.id,
+                                    formControlName: _warehouseKey,
+                                    menuItems: facilityState.maybeWhen(
+                                      orElse: () => [],
+                                      fetched: (facilities) => facilities,
+                                    ),
+                                    label: localizations.translate(
+                                      i18.warehouseDetails.warehouseNameId,
+                                    ),
+                                    suggestionsCallback: (items, pattern) =>
+                                        items
+                                            .where(
+                                              (e) => e.id.contains(pattern),
+                                            )
+                                            .toList(),
+                                  ),
+                                ],
                               ),
-                            ],
-                          );
-                        },
-                      ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           },
         );
       },
     );
   }
-
-  FormGroup buildForm() => fb.group(<String, Object>{
-        _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
-        _administrativeUnitKey: FormControl<String>(value: 'Solimbo'),
-        _warehouseKey: FormControl<FacilityModel>(
-          validators: [Validators.required],
-        ),
-      });
 }
