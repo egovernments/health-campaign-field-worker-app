@@ -92,92 +92,101 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                 },
                 builder: (ctx, facilityState) {
                   return Scaffold(
-                    body: ReactiveFormBuilder(
-                      form: buildForm,
-                      builder: (context, form, child) {
-                        return ScrollableContent(
-                          header: Column(children: const [
-                            BackNavigationHelpHeaderWidget(),
-                          ]),
-                          footer: SizedBox(
-                            height: 90,
-                            child: DigitCard(
-                              child: ReactiveFormConsumer(
-                                builder: (context, form, child) {
-                                  return DigitElevatedButton(
-                                    onPressed: !form.valid
-                                        ? null
-                                        : () {
-                                            form.markAllAsTouched();
-                                            if (!form.valid) {
-                                              return;
-                                            }
-                                            context.router.push(
-                                              StockReceivedDetailsRoute(),
-                                            );
-                                          },
-                                    child: child!,
-                                  );
-                                },
-                                child: Center(
-                                  child: Text(
-                                    localizations.translate(
-                                      i18.householdDetails.actionLabel,
+                    body: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: ReactiveFormBuilder(
+                        form: buildForm,
+                        builder: (context, form, child) {
+                          return ScrollableContent(
+                            header: Column(children: const [
+                              BackNavigationHelpHeaderWidget(),
+                            ]),
+                            footer: SizedBox(
+                              height: 90,
+                              child: DigitCard(
+                                child: ReactiveFormConsumer(
+                                  builder: (context, form, child) {
+                                    return DigitElevatedButton(
+                                      onPressed: !form.valid
+                                          ? null
+                                          : () {
+                                              form.markAllAsTouched();
+                                              if (!form.valid) {
+                                                return;
+                                              }
+                                              context.router.push(
+                                                StockReceivedDetailsRoute(),
+                                              );
+                                            },
+                                      child: child!,
+                                    );
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.householdDetails.actionLabel,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          children: [
-                            DigitCard(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    localizations.translate(
-                                      i18.warehouseDetails
-                                          .warehouseDetailsLabel,
-                                    ),
-                                    style: theme.textTheme.displayMedium,
-                                  ),
-                                  Column(children: [
-                                    DigitDateFormPicker(
-                                      isEnabled: false,
-                                      formControlName: _dateOfEntryKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.dateOfReceipt,
+                            children: [
+                              DigitCard(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      localizations.translate(
+                                        i18.warehouseDetails
+                                            .warehouseDetailsLabel,
                                       ),
-                                      isRequired: false,
+                                      style: theme.textTheme.displayMedium,
                                     ),
-                                    DigitTextFormField(
-                                      formControlName: _administrativeUnitKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.administrativeUnit,
+                                    Column(children: [
+                                      DigitDateFormPicker(
+                                        isEnabled: false,
+                                        formControlName: _dateOfEntryKey,
+                                        label: localizations.translate(
+                                          i18.warehouseDetails.dateOfReceipt,
+                                        ),
+                                        isRequired: false,
                                       ),
+                                      DigitTextFormField(
+                                        formControlName: _administrativeUnitKey,
+                                        label: localizations.translate(
+                                          i18.warehouseDetails
+                                              .administrativeUnit,
+                                        ),
+                                      ),
+                                    ]),
+                                    DigitSearchDropdown<FacilityModel>(
+                                      valueMapper: (value) => value.id,
+                                      formControlName: _warehouseKey,
+                                      menuItems: facilityState.maybeWhen(
+                                        orElse: () => [],
+                                        fetched: (facilities) => facilities,
+                                      ),
+                                      label: localizations.translate(
+                                        i18.warehouseDetails.warehouseNameId,
+                                      ),
+                                      suggestionsCallback: (items, pattern) =>
+                                          items
+                                              .where(
+                                                (e) => e.id.contains(pattern),
+                                              )
+                                              .toList(),
                                     ),
-                                  ]),
-                                  const SizedBox(height: 16),
-                                  DigitDropdown<FacilityModel>(
-                                    label: localizations.translate(
-                                      i18.warehouseDetails.warehouseNameId,
-                                    ),
-                                    valueMapper: (value) {
-                                      return value.id;
-                                    },
-                                    menuItems: facilityState.maybeWhen(
-                                      orElse: () => [],
-                                      fetched: (facilities) => facilities,
-                                    ),
-                                    formControlName: _warehouseKey,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   );
                 },
