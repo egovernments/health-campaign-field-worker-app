@@ -113,3 +113,12 @@ class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
 class ProjectOpLogManager extends OpLogManager<ProjectModel> {
   ProjectOpLogManager(super.isar);
 }
+
+class ServiceDefinitionOpLogManager
+    extends OpLogManager<ServiceDefinitionModel> {
+  ServiceDefinitionOpLogManager(super.isar);
+}
+
+class ServiceOpLogManager extends OpLogManager<ServiceModel> {
+  ServiceOpLogManager(super.isar);
+}

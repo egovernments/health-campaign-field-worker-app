@@ -28,3 +28,7 @@ typedef ProjectStaffDataRepository
 typedef ProjectTypeDataRepository
     = DataRepository<ProjectTypeModel, ProjectTypeSearchModel>;
 typedef TaskDataRepository = DataRepository<TaskModel, TaskSearchModel>;
+typedef ServiceDefinitionDataRepository
+    = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;
+typedef ServiceDataRepository
+    = DataRepository<ServiceModel, ServiceSearchModel>;

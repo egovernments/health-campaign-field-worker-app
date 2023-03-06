@@ -7,6 +7,7 @@ void run(HookContext context) {
   final variables = context.vars;
 
   ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
+  model = model.copyWith(entityName: model.entityName ?? model.name);
 
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==

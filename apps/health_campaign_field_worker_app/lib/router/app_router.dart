@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../blocs/service_definition/service_definition.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/search_households.dart';
 import '../pages/acknowledgement.dart';
@@ -19,7 +20,9 @@ import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-
+import '../pages/checklist/checklist.dart';
+import '../pages/checklist/checklist_view.dart';
+import '../pages/checklist/checklist_wrapper.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -73,8 +76,15 @@ part 'app_router.gr.dart';
             ),
           ],
         ),
+        AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
+          AutoRoute(
+            page: ChecklistPage,
+            path: '',
+          ),
+          AutoRoute(page: ChecklistViewPage, path: 'view'),
+        ]),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ProjectSelectionPage, path: 'ProjectSelectionBloc'),
+        AutoRoute(page: ProjectSelectionPage, path: 'project-selection'),
       ],
     ),
   ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
@@ -26,9 +28,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             ),
             onPressed: () => context.router.pop(),
             child: Row(
-              children: const [
-                Icon(Icons.arrow_left_sharp),
-                Text('Back'),
+              children: [
+                const Icon(Icons.arrow_left_sharp),
+                Text(AppLocalizations.of(context)
+                    .translate(i18.common.corecommonBack)),
               ],
             ),
           ),
@@ -39,9 +42,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: null,
             child: Row(
-              children: const [
-                Text('Help'),
-                Icon(Icons.help_outline_outlined),
+              children: [
+                Text(AppLocalizations.of(context)
+                    .translate(i18.common.corecommonHelp)),
+                const Icon(Icons.help_outline_outlined),
               ],
             ),
           ),

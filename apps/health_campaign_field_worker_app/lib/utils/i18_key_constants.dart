@@ -13,6 +13,7 @@ const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
+const checklist = Checklist();
 
 class Common {
   const Common();
@@ -25,6 +26,8 @@ class Common {
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
+  String get corecommonBack => 'CORE_COMMON_BACK';
+  String get corecommonHelp => 'CORE_COMMON_HELP';
 }
 
 class Login {
@@ -71,6 +74,8 @@ class Home {
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
+
+  String get myCheckList => 'MY_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {
@@ -258,4 +263,9 @@ class ProjectSelection {
   String get retryButtonText => 'RETRY';
 
   String get dismissButtonText => 'DISMISS';
+}
+
+class Checklist {
+  const Checklist();
+  String get checklistlabel => 'CHECKLIST_LABEL';
 }

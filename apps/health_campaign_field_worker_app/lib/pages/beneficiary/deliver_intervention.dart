@@ -112,7 +112,7 @@ class _DeliverInterventionPageState
                                                     .value
                                                     .toString(),
                                                 productVariantId:
-                                                    'PVAR-2023-01-11-000045',
+                                                    'PVAR-2023-03-01-000049',
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
@@ -274,7 +274,7 @@ class _DeliverInterventionPageState
                                             .household.memberCount ??
                                         householdMemberWrapper.members.length;
 
-                                    return min(count * 1.8, 3).round();
+                                    return min((count / 1.8).round(), 3);
                                   }(),
                                 },
                               ),
@@ -288,7 +288,7 @@ class _DeliverInterventionPageState
                                 menuItems: [
                                   MenuItemModel(
                                     "BEDNETS",
-                                    "PVAR-2023-01-11-000045",
+                                    "PVAR-2023-03-01-000049",
                                   ),
                                 ],
                                 validationMessages: {

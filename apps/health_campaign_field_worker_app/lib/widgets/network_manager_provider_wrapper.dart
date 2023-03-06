@@ -12,6 +12,7 @@ import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
 import '../data/repositories/local/project_beneficiary.dart';
+import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
@@ -28,7 +29,9 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/task.dart';
+import '../data/repositories/local/service.dart';
 import '../models/data_model.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -111,6 +114,26 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
+          sql,
+          ServiceDefinitionOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
+          sql,
+          ServiceOpLogManager(isar),
         ),
       ),
     ];
@@ -234,6 +257,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.serviceDefinition)
+          RepositoryProvider<
+              RemoteRepository<ServiceDefinitionModel,
+                  ServiceDefinitionSearchModel>>(
+            create: (_) => ServiceDefinitionRemoteRepository(
               dio,
               actionMap: actions,
             ),

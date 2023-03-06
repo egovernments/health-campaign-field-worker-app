@@ -10,12 +10,15 @@ import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project_selection/project_selection.dart';
+import 'blocs/service_definition/service_definition_remote.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'data/repositories/remote/project.dart';
 import 'data/repositories/remote/project_staff.dart';
+import 'data/repositories/remote/service_definition.dart';
+import 'models/entities/service_definition.dart';
 import 'models/oplog/oplog_entry.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -82,6 +85,7 @@ class MainApplication extends StatelessWidget {
                     final localizationModulesList = appConfig.backendInterface;
                     final firstLanguage = appConfig.languages?.first.value;
                     final languages = appConfig.languages;
+                    final networkManager = context.read<NetworkManager>();
 
                     return MultiBlocProvider(
                       providers: [
@@ -133,6 +137,21 @@ class MainApplication extends StatelessWidget {
                             ),
                             isar: isar,
                             sql: sql,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (_) => ServiceDefinitionRemoteBloc(
+                            serviceDefinitionremoteRepository:
+                                ServiceDefinitionRemoteRepository(
+                              client,
+                              actionMap: {
+                                ApiOperation.search:
+                                    '/service-request/service/definition/v1/_search',
+                              },
+                            ),
+                            isar: isar,
+                            sql: sql,
+                            const ServiceDefinitionEmptyState(),
                           ),
                         ),
                       ],

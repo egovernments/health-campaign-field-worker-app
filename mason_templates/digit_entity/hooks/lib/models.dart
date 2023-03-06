@@ -5,6 +5,7 @@ export 'models.mapper.g.dart';
 @MappableClass()
 class ConfigModel {
   final String name;
+  final String? entityName;
   final List<String> ignoreFields;
   final List<EnumValues> enumValues;
   final List<AttributeModel> attributes;
@@ -14,12 +15,12 @@ class ConfigModel {
   final List<AttributeModel> referenceAttributes;
   final bool isPlural;
   final bool isSearchResponsePlural;
-
   final bool createRepository;
   final bool isEnum;
 
   const ConfigModel({
     required this.name,
+    this.entityName,
     this.ignoreFields = const [],
     this.enumValues = const [],
     this.attributes = const [],

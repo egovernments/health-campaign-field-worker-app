@@ -28,6 +28,10 @@ export 'entities/status.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
+export 'entities/attributes.dart';
+export 'entities/service.dart';
+export 'entities/service_definition.dart';
+export 'entities/service_attributes.dart';
 export 'oplog/oplog_entry.dart';
 
 @MappableClass()
@@ -81,4 +85,8 @@ enum DataModelType {
   projectResource,
   projectType,
   task,
+  attributes,
+  serviceDefinition,
+  service,
+  serviceAttributes
 }

@@ -68,8 +68,11 @@ abstract class RemoteRepository<D extends EntityModel,
         'tenantId': envConfig.variables.tenantId,
       },
       data: {
-        isPlural ? entityNamePlural : entityName:
-            isPlural ? [query.toMap()] : query.toMap(),
+        isPlural
+            ? entityNamePlural
+            : entityName == 'ServiceDefinition'
+                ? 'ServiceDefinitionCriteria'
+                : entityName: isPlural ? [query.toMap()] : query.toMap(),
       },
     );
 
@@ -82,8 +85,12 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    if (!responseMap
-        .containsKey(isSearchResponsePlural ? entityNamePlural : entityName)) {
+    print(entityNamePlural);
+    if (!responseMap.containsKey(
+      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+          ? entityNamePlural
+          : entityName,
+    )) {
       throw InvalidApiResponseException(
         data: query.toMap(),
         path: searchPath,
@@ -92,7 +99,9 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityResponse = await responseMap[
-        isSearchResponsePlural ? entityNamePlural : entityName];
+        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+            ? entityNamePlural
+            : entityName];
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -129,6 +138,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
+    print(entities);
     final res = await dio.post(
       bulkCreatePath,
       options: Options(headers: {

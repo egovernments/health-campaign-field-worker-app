@@ -5,8 +5,9 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
 import '../blocs/project_selection/project_selection.dart';
+import '../blocs/service_definition/service_definition.dart';
+import '../blocs/service_definition/service_definition_remote.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -160,9 +161,19 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.announcement,
         label: i18.home.fileComplaint,
         onPressed: () {
-          context.read<ProjectSelectionBloc>().add(
-                const ProjectSelectionProjectInitEvent(),
-              );
+          context
+              .read<ServiceDefinitionRemoteBloc>()
+              .add(const ServiceDefinitionInitEvent());
+          // context.read<ProjectSelectionBloc>().add(
+          //       const ProjectSelectionProjectInitEvent(),
+          //     );
+        },
+      ),
+      HomeItemCard(
+        icon: Icons.fact_check,
+        label: i18.home.myCheckList,
+        onPressed: () {
+          context.router.push(ChecklistWrapperRoute());
         },
       ),
       HomeItemCard(

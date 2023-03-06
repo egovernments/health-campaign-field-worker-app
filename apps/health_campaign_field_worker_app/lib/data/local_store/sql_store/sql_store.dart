@@ -29,7 +29,10 @@ import 'tables/project_type.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
-
+import 'tables/service_definition.dart';
+import 'tables/attributes.dart';
+import 'tables/service_attributes.dart';
+import 'tables/service.dart';
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
@@ -54,6 +57,10 @@ part 'sql_store.g.dart';
   Target,
   Task,
   TaskResource,
+  ServiceDefinition,
+  Attributes,
+  Service,
+  ServiceAttributes,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
