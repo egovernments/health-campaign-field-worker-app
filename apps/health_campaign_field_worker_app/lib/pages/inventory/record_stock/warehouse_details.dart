@@ -102,14 +102,22 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                           footer: SizedBox(
                             height: 90,
                             child: DigitCard(
-                              child: DigitElevatedButton(
-                                onPressed: () {
-                                  form.markAllAsTouched();
-                                  if (!form.valid) {
-                                    return;
-                                  }
-                                  context.router
-                                      .push(StockReceivedDetailsRoute());
+                              child: ReactiveFormConsumer(
+                                builder: (context, form, child) {
+                                  return DigitElevatedButton(
+                                    onPressed: !form.valid
+                                        ? null
+                                        : () {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) {
+                                              return;
+                                            }
+                                            context.router.push(
+                                              StockReceivedDetailsRoute(),
+                                            );
+                                          },
+                                    child: child!,
+                                  );
                                 },
                                 child: Center(
                                   child: Text(
@@ -184,6 +192,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(value: 'Solimbo'),
-        _warehouseKey: FormControl<FacilityModel>(),
+        _warehouseKey: FormControl<FacilityModel>(
+          validators: [Validators.required],
+        ),
       });
 }
