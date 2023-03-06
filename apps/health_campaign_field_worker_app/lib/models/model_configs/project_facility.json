@@ -4,6 +4,7 @@
   "ignoreFields": [
     "clientReferenceId"
   ],
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",

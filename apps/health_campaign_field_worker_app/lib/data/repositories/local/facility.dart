@@ -34,7 +34,8 @@ class FacilityLocalRepository
             ),
           ))
         .get();
-    throw results.map((e) {
+
+    return results.map((e) {
       final facility = e.readTable(sql.facility);
       final address = e.readTableOrNull(sql.address);
 
