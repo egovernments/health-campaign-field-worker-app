@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../data/network_manager.dart';
@@ -38,14 +39,44 @@ class RecordStockWrapperPage extends StatelessWidget {
               return noProjectSelected;
             }
 
-            return BlocProvider(
-              create: (context) => RecordStockBloc(
-                RecordStockCreateState(
-                  entryType: type,
-                  projectId: projectId,
+            if (selectedProject == null) {
+              return const Center(
+                child: Text('Project not selected'),
+              );
+            }
+
+            final facilityRepository = context
+                .read<NetworkManager>()
+                .repository<FacilityModel, FacilitySearchModel>(context);
+
+            final projectFacilityRepository = context
+                .read<NetworkManager>()
+                .repository<ProjectFacilityModel, ProjectFacilitySearchModel>(
+                  context,
+                );
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_) => FacilityBloc(
+                    facilityDataRepository: facilityRepository,
+                    projectFacilityDataRepository: projectFacilityRepository,
+                  )..add(
+                      FacilityLoadForProjectEvent(
+                        projectId: selectedProject.id,
+                      ),
+                    ),
                 ),
-                stockRepository: stockRepository,
-              ),
+                BlocProvider(
+                  create: (_) => RecordStockBloc(
+                    RecordStockCreateState(
+                      entryType: type,
+                      projectId: projectId,
+                    ),
+                    stockRepository: stockRepository,
+                  ),
+                ),
+              ],
               child: const AutoRouter(),
             );
           },

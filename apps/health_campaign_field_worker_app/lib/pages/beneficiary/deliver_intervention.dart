@@ -279,16 +279,16 @@ class _DeliverInterventionPageState
                                 },
                               ),
                               const DigitDivider(),
-                              DigitDropdown<String>(
-                                valueMapper: (value) => value,
+                              DigitDropdown<MenuItemModel>(
                                 label: localizations.translate(
                                   i18.deliverIntervention
                                       .resourceDeliveredLabel,
                                 ),
-                                initialValue: 'BEDNETS',
-                                menuItems: const [
-                                  "PVAR-2023-01-11-000045",
-                                ],
+                                valueMapper: (value) {
+                                  return localizations.translate(value.code);
+                                },
+                                initialValue: tempProductVariants.firstOrNull,
+                                menuItems: tempProductVariants,
                                 validationMessages: {
                                   'required': (object) => 'Field is required',
                                 },
