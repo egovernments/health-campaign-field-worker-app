@@ -49,57 +49,6 @@ class StockReconBloc extends Bloc<StockReconEvent, StockReconState> {
     stockReconModel = StockReconModel();
   }
 
-  _onCaptureWarehouseDetails(
-    CaptureWarehouseDetails event,
-    StockReconEmitter emit,
-  ) {
-    _warehouseId = event.warehouseId ?? "";
-    if (_warehouseId == "" || _productVariantId == "") {
-      makeStocksZero();
-      emit(StockReconLoadedState(
-        stockReconModel: stockReconModel,
-      ));
-    } else {
-      fetchData();
-    }
-  }
-
-  _onCaptureProductVariant(
-    CaptureProductVariant event,
-    StockReconEmitter emit,
-  ) {
-    _productVariantId = event.productVariantId ?? "";
-    if (_productVariantId == "" || _warehouseId == "") {
-      makeStocksZero();
-      emit(StockReconLoadedState(
-        stockReconModel: stockReconModel,
-      ));
-    } else {
-      fetchData();
-    }
-  }
-
-  fetchData() {
-    /// TODO - Implement Following API Calls
-    ///   1. Fetch stockReceived
-    ///   2. Fetch stockIssued
-    ///   3. Fetch stockReturned
-    ///   4. Fetch stockLost
-    ///   5. Fetch stockDamaged
-    ///
-
-    /// TODO - update the values from API Calls
-    stockReconModel.stockReceived = 321;
-    stockReconModel.stockIssued = 111;
-    stockReconModel.stockReturned = 222;
-    stockReconModel.stockLost = 333;
-    stockReconModel.stockDamaged = 44;
-
-    emit(StockReconLoadedState(
-      stockReconModel: stockReconModel,
-    ));
-  }
-
   _onInitializeStockRecon(
     InitializeStockRecon event,
     StockReconEmitter emit,
@@ -109,20 +58,78 @@ class StockReconBloc extends Bloc<StockReconEvent, StockReconState> {
 
     /// TODO - get prods and facilities from the API
     /// it will be initialized only once
-    _products = prodsDummyData;
     _facilities = facilityDummyData;
 
-    productMenuItems = [];
     facilityMenuItems = [];
-    for (var prod in _products) {
-      productMenuItems.add(MenuItemModel(prod.sku!, prod.productId!));
-    }
+
     for (var facility in _facilities) {
       facilityMenuItems.add(MenuItemModel(facility.id!, facility.id!));
     }
     emit(StockReconLoadedState(
       stockReconModel: stockReconModel,
+      productMenuItems: productMenuItems,
+      facilityMenuItems: facilityMenuItems,
     ));
+  }
+
+  _onCaptureWarehouseDetails(
+    CaptureWarehouseDetails event,
+    StockReconEmitter emit,
+  ) {
+    makeStocksZero();
+    productMenuItems = [];
+
+    _warehouseId = event.warehouseId ?? "";
+    if (_warehouseId != "") {
+      /// todo - make API Call to get products in a particular facility
+      _products = prodsDummyData;
+      for (var prod in _products) {
+        productMenuItems.add(MenuItemModel(prod.sku!, prod.productId!));
+      }
+    }
+
+    emit(StockReconLoadedState(
+      stockReconModel: stockReconModel,
+      productMenuItems: productMenuItems,
+      facilityMenuItems: facilityMenuItems,
+      resetProductDropDown: true,
+    ));
+  }
+
+  _onCaptureProductVariant(
+    CaptureProductVariant event,
+    StockReconEmitter emit,
+  ) {
+    if (_productVariantId != event.productVariantId) {
+      makeStocksZero();
+      emit(StockReconLoadedState(
+        stockReconModel: stockReconModel,
+        productMenuItems: productMenuItems,
+        facilityMenuItems: facilityMenuItems,
+      ));
+      _productVariantId = event.productVariantId;
+
+      /// TODO - Implement Following API Calls
+      ///   1. Fetch stockReceived
+      ///   2. Fetch stockIssued
+      ///   3. Fetch stockReturned
+      ///   4. Fetch stockLost
+      ///   5. Fetch stockDamaged
+      ///
+
+      /// TODO - update the values from API Calls
+      stockReconModel.stockReceived = 321;
+      stockReconModel.stockIssued = 111;
+      stockReconModel.stockReturned = 222;
+      stockReconModel.stockLost = 333;
+      stockReconModel.stockDamaged = 44;
+
+      emit(StockReconLoadedState(
+        stockReconModel: stockReconModel,
+        productMenuItems: productMenuItems,
+        facilityMenuItems: facilityMenuItems,
+      ));
+    }
   }
 
   _onSubmitStockReconUpdate(
@@ -146,7 +153,7 @@ class StockReconModel {
   int stockLost;
   int stockDamaged;
   final _dateOfReconciliation = DateTime.now();
-  
+
   String get dateOfRecon =>
       DateFormat('dd MMMM yyyy').format(_dateOfReconciliation);
 

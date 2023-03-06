@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/stock_reconciliation/stock_recon.dart';
-import '../data/local_store/sql_store/tables/product_variant.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -40,12 +39,14 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
             }
             if (state is StockReconLoadedState) {
               stockReconModel = state.stockReconModel;
-              // productMenuItems = state.productMenuItems;
-              // facilityMenuItems = state.facilityMenuItems;
 
               return ReactiveFormBuilder(
                 form: buildForm,
                 builder: (context, form, child) {
+                  if (state.resetProductDropDown) {
+                    form.control('product').value = '';
+                  }
+
                   return ScrollableContent(
                     header: Column(children: const [
                       BackNavigationHelpHeaderWidget(),
@@ -87,30 +88,34 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
                                 i18.stockReconciliationDetails.warehouseLabel,
                               ),
                               initialValue: '',
-                              menuItems: bloc.productMenuItems,
+                              menuItems: state.facilityMenuItems,
                               onChanged: (value) {
-                                bloc.add(CaptureProductVariant( productVariantId: value));
+                                bloc.add(CaptureWarehouseDetails(
+                                  warehouseId: value,
+                                ));
                               },
-                              formControlName: 'product',
+                              formControlName: 'warehouse',
                             ),
-
                             const SizedBox(height: 16),
                             DigitDropdown(
                               label: localizations.translate(
                                 i18.stockReconciliationDetails.productLabel,
                               ),
                               initialValue: '',
-                              menuItems: bloc.facilityMenuItems,
+                              menuItems: state.productMenuItems,
                               onChanged: (value) {
-                                bloc.add(CaptureWarehouseDetails( warehouseId: value));
+                                bloc.add(CaptureProductVariant(
+                                  productVariantId: value,
+                                ));
                               },
-                              formControlName: 'warehouse',
+                              formControlName: 'product',
                             ),
                             DigitTableCard(
                               element: {
                                 localizations.translate(i18
-                                    .stockReconciliationDetails
-                                    .dateOfReconciliation): stockReconModel.dateOfRecon,
+                                        .stockReconciliationDetails
+                                        .dateOfReconciliation):
+                                    stockReconModel.dateOfRecon,
                               },
                             ),
                             const DigitDivider(),
@@ -206,7 +211,8 @@ class _StockReconPageState extends LocalizedState<StockReconciliationPage> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 8,),
+                                                  left: 8,
+                                                ),
                                                 child: Text(
                                                   'Info',
                                                   style: theme
