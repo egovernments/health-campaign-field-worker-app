@@ -178,12 +178,13 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.store_mall_directory,
                 label: i18.home.manageStockLabel,
-                onPressed: null,
+                onPressed: () {
+                  context.router.push(ManageStocksRoute());
+                },
               ),
               HomeItemCard(
                 icon: Icons.menu_book,
                 label: i18.home.stockReconciliationLabel,
-                onPressed: null,
               ),
             ],
           );
@@ -194,12 +195,10 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.store_mall_directory,
                 label: i18.home.manageStockLabel,
-                onPressed: null,
               ),
               HomeItemCard(
                 icon: Icons.menu_book,
                 label: i18.home.stockReconciliationLabel,
-                onPressed: null,
               ),
               HomeItemCard(
                 icon: Icons.all_inbox,
@@ -221,14 +220,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.viewReportsLabel,
-          onPressed: null,
         ),
         HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () {
-            context.router.push(ManageStocksRoute());
-          },
         ),
         HomeItemCard(
           icon: Icons.sync_alt,
@@ -238,7 +233,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.call,
           label: i18.home.callbackLabel,
-          onPressed: null,
         ),
         HomeItemCard(
           icon: Icons.table_chart,
