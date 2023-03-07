@@ -212,67 +212,67 @@ class _IndividualDetailsPageState
                               value: widget.isHeadOfHousehold,
                             ),
                           ),
-                          // BlocBuilder<AppInitializationBloc,
-                          //     AppInitializationState>(
-                          //   builder: (context, state) => state.maybeWhen(
-                          //     orElse: () => const Offstage(),
-                          //     initialized: (appConfiguration, _) {
-                          //       final idTypeOptions =
-                          //           appConfiguration.idTypeOptions ??
-                          //               <IdTypeOptions>[];
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) => state.maybeWhen(
+                              orElse: () => const Offstage(),
+                              initialized: (appConfiguration, _) {
+                                final idTypeOptions =
+                                    appConfiguration.idTypeOptions ??
+                                        <IdTypeOptions>[];
 
-                          //       return DigitDropdown(
-                          //         isRequired: true,
-                          //         label: localizations.translate(
-                          //           i18.individualDetails.idTypeLabelText,
-                          //         ),
-                          //         onChanged: (value) {
-                          //           setState(() {
-                          //             form.control(_idNumberKey).setValidators(
-                          //               [
-                          //                 if (value == 'DEFAULT')
-                          //                   Validators.required,
-                          //               ],
-                          //             );
-                          //           });
-                          //         },
-                          //         initialValue: idTypeOptions.firstOrNull?.name,
-                          //         menuItems: idTypeOptions
-                          //             .map((e) => MenuItemModel(
-                          //                   e.code,
-                          //                   localizations.translate(e.name),
-                          //                 ))
-                          //             .toList(),
-                          //         formControlName: _idTypeKey,
-                          //         validationMessages: {
-                          //           'required': (object) =>
-                          //               'ID Type is required',
-                          //         },
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     ReactiveFormConsumer(
-                          //       builder: (context, formGroup, child) {
-                          //         return DigitTextFormField(
-                          //           isRequired: true,
-                          //           formControlName: _idNumberKey,
-                          //           label: localizations.translate(
-                          //             i18.individualDetails.idNumberLabelText,
-                          //           ),
-                          //           validationMessages: {
-                          //             'required': (object) =>
-                          //                 'ID Number is required',
-                          //           },
-                          //         );
-                          //       },
-                          //     ),
-                          //     const SizedBox(height: 4),
-                          //   ],
-                          // ),
+                                return DigitDropdown(
+                                  isRequired: true,
+                                  label: localizations.translate(
+                                    i18.individualDetails.idTypeLabelText,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      form.control(_idNumberKey).setValidators(
+                                        [
+                                          if (value == 'DEFAULT')
+                                            Validators.required,
+                                        ],
+                                      );
+                                    });
+                                  },
+                                  initialValue: idTypeOptions.firstOrNull?.name,
+                                  menuItems: idTypeOptions
+                                      .map((e) => MenuItemModel(
+                                            e.code,
+                                            localizations.translate(e.name),
+                                          ))
+                                      .toList(),
+                                  formControlName: _idTypeKey,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        'ID Type is required',
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ReactiveFormConsumer(
+                                builder: (context, formGroup, child) {
+                                  return DigitTextFormField(
+                                    isRequired: true,
+                                    formControlName: _idNumberKey,
+                                    label: localizations.translate(
+                                      i18.individualDetails.idNumberLabelText,
+                                    ),
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          'ID Number is required',
+                                    },
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 4),
+                            ],
+                          ),
                           DigitDobPicker(
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(

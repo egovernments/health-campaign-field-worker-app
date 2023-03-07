@@ -42,5 +42,5 @@ enum ApiOperation {
   bulkCreate,
   bulkUpdate,
   bulkDelete,
-  oneCreate
+  singleCreate
 }

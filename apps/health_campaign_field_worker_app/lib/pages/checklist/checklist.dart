@@ -62,7 +62,44 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                           serviceDefinition: e,
                                         ),
                                       );
-                                  context.router.push(ChecklistViewRoute());
+
+                                  DigitDialog.show(
+                                    context,
+                                    options: DigitDialogOptions(
+                                      titleText: localizations.translate(i18
+                                          .householdOverView
+                                          .householdOverViewActionCardTitle),
+                                      primaryAction: DigitDialogActions(
+                                        label: localizations.translate(i18
+                                            .householdOverView
+                                            .householdOverViewPrimaryActionLabel),
+                                        action: (ctx) {
+                                          Navigator.of(
+                                            ctx,
+                                            rootNavigator: true,
+                                          )
+                                            ..pop()
+                                            ..pop();
+
+                                          (context.router.parent()
+                                                  as StackRouter)
+                                              .pop();
+                                        },
+                                      ),
+                                      secondaryAction: DigitDialogActions(
+                                        label: localizations.translate(i18
+                                            .householdOverView
+                                            .householdOverViewSecondaryActionLabel),
+                                        action: (context) {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                  // context.router.push(ChecklistViewRoute());
                                 },
                               ))
                           .toList(),
