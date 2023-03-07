@@ -2,11 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
+import '../../../widgets/facility_wrapper/facility_wrapper.dart';
 
 class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
@@ -55,29 +55,17 @@ class RecordStockWrapperPage extends StatelessWidget {
                   context,
                 );
 
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (_) => FacilityBloc(
-                    facilityDataRepository: facilityRepository,
-                    projectFacilityDataRepository: projectFacilityRepository,
-                  )..add(
-                      FacilityLoadForProjectEvent(
-                        projectId: selectedProject.id,
-                      ),
-                    ),
-                ),
-                BlocProvider(
-                  create: (_) => RecordStockBloc(
-                    RecordStockCreateState(
-                      entryType: type,
-                      projectId: projectId,
-                    ),
-                    stockRepository: stockRepository,
+            return FacilityBlocWrapper(
+              child: BlocProvider(
+                create: (_) => RecordStockBloc(
+                  RecordStockCreateState(
+                    entryType: type,
+                    projectId: projectId,
                   ),
+                  stockRepository: stockRepository,
                 ),
-              ],
-              child: const AutoRouter(),
+                child: const AutoRouter(),
+              ),
             );
           },
         );

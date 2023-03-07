@@ -125,3 +125,8 @@ class ProjectOpLogManager extends OpLogManager<ProjectModel> {
 class StockOpLogManager extends OpLogManager<StockModel> {
   StockOpLogManager(super.isar);
 }
+
+class StockReconciliationOpLogManager
+    extends OpLogManager<StockReconciliationModel> {
+  StockReconciliationOpLogManager(super.isar);
+}

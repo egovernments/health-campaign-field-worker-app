@@ -185,6 +185,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.menu_book,
                 label: i18.home.stockReconciliationLabel,
+                onPressed: () {
+                  context.router.push(StockReconciliationRoute());
+                },
               ),
             ],
           );
