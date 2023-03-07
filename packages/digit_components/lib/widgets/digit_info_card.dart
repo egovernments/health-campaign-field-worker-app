@@ -8,6 +8,7 @@ class DigitInfoCard extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
   final EdgeInsets? padding;
+  final EdgeInsets? margin;
 
   const DigitInfoCard({
     super.key,
@@ -17,6 +18,7 @@ class DigitInfoCard extends StatelessWidget {
     this.iconColor,
     this.icon,
     this.padding,
+    this.margin,
   });
 
   @override
@@ -24,7 +26,7 @@ class DigitInfoCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: DigitTheme.instance.containerMargin,
+      margin: margin ?? DigitTheme.instance.containerMargin,
       padding: padding ?? const EdgeInsets.all(8),
       decoration: ShapeDecoration(
         shape: const RoundedRectangleBorder(
@@ -45,9 +47,11 @@ class DigitInfoCard extends StatelessWidget {
                   color: iconColor ?? theme.colorScheme.surfaceTint,
                 ),
               ),
-              Text(
-                title,
-                style: theme.textTheme.headlineMedium,
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.headlineMedium,
+                ),
               )
             ],
           ),

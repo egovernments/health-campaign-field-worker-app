@@ -25,10 +25,13 @@ class StockLocalRepository
     final selectQuery = sql.select(sql.stock).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
+            if (query.id != null) sql.stock.id.equals(query.id),
+            if (query.facilityId != null)
+              sql.stock.facilityId.equals(query.facilityId),
+            if (query.productVariantId != null)
+              sql.stock.productVariantId.equals(query.productVariantId),
             if (query.clientReferenceId != null)
-              sql.stock.id.equals(
-                query.id,
-              ),
+              sql.stock.clientReferenceId.isIn(query.clientReferenceId!),
           ])))
         .get();
 

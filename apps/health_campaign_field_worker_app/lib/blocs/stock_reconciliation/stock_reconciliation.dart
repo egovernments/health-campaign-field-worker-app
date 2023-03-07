@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
 part 'stock_reconciliation.freezed.dart';
@@ -68,7 +69,16 @@ class StockReconciliationBloc
     StockReconciliationCreateEvent event,
     StockReconciliationEmitter emit,
   ) async {
-    // handle logic for create here
+    emit(state.copyWith(loading: true));
+    stockReconciliationRepository.create(
+      event.stockReconciliationModel.copyWith(
+        tenantId: envConfig.variables.tenantId,
+        referenceId: state.projectId,
+        referenceIdType: 'PROJECT',
+        rowVersion: 1,
+      ),
+    );
+    emit(state.copyWith(loading: false));
   }
 }
 
@@ -96,6 +106,7 @@ class StockReconciliationState with _$StockReconciliationState {
 
   factory StockReconciliationState({
     @Default(false) bool loading,
+    required String projectId,
     required DateTime dateOfReconciliation,
     FacilityModel? facilityModel,
     String? productVariantId,

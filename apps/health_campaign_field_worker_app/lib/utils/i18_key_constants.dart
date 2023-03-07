@@ -389,7 +389,16 @@ class StockReconciliationDetails {
 
   String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
 
-  String get manualCount => 'STOCK_RECONCILIATION_MANUAL_STOCK_COUNT';
+  String get manualCountLabel =>
+      'STOCK_RECONCILIATION_MANUAL_STOCK_COUNT_LABEL';
 
-  String get comments => 'STOCK_RECONCILIATION_COMMENTS';
+  String get commentsLabel => 'STOCK_RECONCILIATION_COMMENTS_LABEL';
+
+  String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
+
+  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT';
+
+  String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
+
+  String get dialogContent => 'STOCK_RECONCILIATION_DIALOG_CONTENT';
 }

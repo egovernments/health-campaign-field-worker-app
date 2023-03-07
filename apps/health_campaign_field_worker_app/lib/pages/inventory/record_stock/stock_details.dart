@@ -49,7 +49,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(validators: [Validators.number]),
+      _waybillQuantityKey: FormControl<String>(
+        validators: [Validators.number],
+        value: '0',
+      ),
       _vehicleNumberKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
     });
@@ -78,6 +81,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           String quantityCountLabel;
           String? transactionReasonLabel;
           TransactionType transactionType;
+          TransactionReason? transactionReason;
 
           List<TransactionReason>? reasons;
 
@@ -98,7 +102,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               pageTitle = module.returnedPageTitle;
               transactionPartyLabel = module.selectTransactingPartyReturned;
               quantityCountLabel = module.quantityReturnedLabel;
-              transactionType = TransactionType.dispatched;
+              transactionType = TransactionType.received;
               break;
             case StockRecordEntryType.loss:
               pageTitle = module.lostPageTitle;
@@ -154,22 +158,22 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     .control(_productVariantKey)
                                     .value as MenuItemModel;
 
-                                TransactionReason reason;
-
                                 switch (entryType) {
                                   case StockRecordEntryType.receipt:
-                                    reason = TransactionReason.received;
+                                    transactionReason =
+                                        TransactionReason.received;
                                     break;
                                   case StockRecordEntryType.dispatch:
-                                    reason = TransactionReason.received;
+                                    transactionReason = null;
                                     break;
                                   case StockRecordEntryType.returned:
-                                    reason = TransactionReason.returned;
+                                    transactionReason =
+                                        TransactionReason.returned;
                                     break;
                                   default:
-                                    reason = form
+                                    transactionReason = form
                                         .control(_transactionReasonKey)
-                                        .value as TransactionReason;
+                                        .value as TransactionReason?;
                                     break;
                                 }
 
@@ -202,7 +206,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   transactingPartyId: transactingParty.id,
                                   transactingPartyType: 'WAREHOUSE',
                                   transactionType: transactionType,
-                                  transactionReason: reason,
+                                  transactionReason: transactionReason,
                                   referenceId: stockState.projectId,
                                   referenceIdType: 'PROJECT',
                                   quantity: quantity.toString(),
