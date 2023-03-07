@@ -12,6 +12,7 @@ class StockReconciliationLocalRepository extends LocalRepository<
   FutureOr<void> create(
     StockReconciliationModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final stockReconCompanion = entity.companion;
     await sql.batch((batch) {
