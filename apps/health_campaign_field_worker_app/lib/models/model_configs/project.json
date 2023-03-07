@@ -2,16 +2,24 @@
   "name": "project",
   "createRepository": true,
   "isPlural": true,
-  "ignoreFields": ["clientReferenceId"],
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false,
+      "isPk": true
     },
-
     {
       "name": "projectTypeId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "projectNumber",
       "type": "String",
       "includeForQuery": true
     },
@@ -29,6 +37,11 @@
       "name": "parent",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": false
     },
     {
       "name": "department",

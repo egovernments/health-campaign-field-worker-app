@@ -11,7 +11,7 @@ class HomeItemCard extends StatelessWidget {
   const HomeItemCard({
     required this.icon,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     super.key,
   });
 

@@ -22,6 +22,7 @@ class HouseholdLocalRepository
         ),
       ],
     );
+
     final results = await (selectQuery
           ..where(
             buildAnd(

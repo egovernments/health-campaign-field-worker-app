@@ -112,7 +112,7 @@ class _DeliverInterventionPageState
                                                     .value
                                                     .toString(),
                                                 productVariantId:
-                                                    'PVAR-2023-03-01-000049',
+                                                    'PVAR-2023-01-11-000045',
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
@@ -274,23 +274,22 @@ class _DeliverInterventionPageState
                                             .household.memberCount ??
                                         householdMemberWrapper.members.length;
 
-                                    return min((count / 1.8).round(), 3);
+                                    return min(count * 1.8, 3).round();
                                   }(),
                                 },
                               ),
                               const DigitDivider(),
-                              DigitDropdown(
+                              DigitDropdown<String>(
                                 label: localizations.translate(
                                   i18.deliverIntervention
                                       .resourceDeliveredLabel,
                                 ),
-                                initialValue: 'BEDNETS',
-                                menuItems: [
-                                  MenuItemModel(
-                                    "BEDNETS",
-                                    "PVAR-2023-03-01-000049",
-                                  ),
-                                ],
+                                valueMapper: (value) {
+                                  return localizations.translate(value);
+                                },
+                                menuItems: tempProductVariants
+                                    .map((e) => e.code)
+                                    .toList(),
                                 validationMessages: {
                                   'required': (object) => 'Field is required',
                                 },
@@ -318,18 +317,16 @@ class _DeliverInterventionPageState
                                           .deliveryCommentOptions ??
                                       <DeliveryCommentOptions>[];
 
-                                  return DigitDropdown(
+                                  return DigitDropdown<String>(
                                     label: localizations.translate(
                                       i18.deliverIntervention
                                           .deliveryCommentLabel,
                                     ),
+                                    valueMapper: (value) => value,
                                     initialValue: deliveryCommentOptions
                                         .firstOrNull?.name,
                                     menuItems: deliveryCommentOptions.map((e) {
-                                      return MenuItemModel(
-                                        e.code,
-                                        localizations.translate(e.name),
-                                      );
+                                      return localizations.translate(e.name);
                                     }).toList(),
                                     formControlName: 'deliveryComment',
                                   );

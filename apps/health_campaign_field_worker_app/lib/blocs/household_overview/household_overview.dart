@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
-import '../../utils/utils.dart';
 import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
@@ -55,7 +54,7 @@ class HouseholdOverviewBloc
     final householdId =
         state.householdMemberWrapper.household.clientReferenceId;
 
-    if (!groupedHouseholds.containsKey(householdId) || householdId == null) {
+    if (!groupedHouseholds.containsKey(householdId)) {
       emit(state.copyWith(loading: false));
 
       return;

@@ -14,10 +14,6 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     final entries = await super.getItemsToBeSynced();
 
     return entries;
-    //   return entries
-    //       .where((element) => element.entity.beneficiaryId != null)
-    //       .toList();
-    // }
   }
 
   @override
@@ -120,7 +116,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      rowVersion: entity.rowVersion.increment,
+      rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
       batch.update(
