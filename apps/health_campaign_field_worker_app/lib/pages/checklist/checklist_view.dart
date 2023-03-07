@@ -106,7 +106,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                               ),
                             ),
                           ] else if (e.dataType == 'SingleValueList') ...[
-                            Text(e.code.toString()),
                             Align(
                               alignment: Alignment.topLeft,
                               child: Padding(
@@ -119,13 +118,32 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                               ),
                             ),
-                            Column(
-                              children: e.values!
-                                  .map((e) => DigitCheckboxTile(
-                                        label: e,
-                                        value: true,
-                                      ))
-                                  .toList(),
+                            BlocBuilder<ServiceBloc, ServiceState>(
+                              builder: (context, state) {
+                                return Column(
+                                  children: e.values!
+                                      .map((e) => DigitCheckboxTile(
+                                            label: e,
+                                            value: controller[i].text == e,
+                                            onChanged: (value) {
+                                              controller[i].value =
+                                                  TextEditingController
+                                                      .fromValue(
+                                                TextEditingValue(
+                                                  text: e.toString(),
+                                                ),
+                                              ).value;
+
+                                              context.read<ServiceBloc>().add(
+                                                    ServiceChecklistEvent(
+                                                      value: e.toString(),
+                                                    ),
+                                                  );
+                                            },
+                                          ))
+                                      .toList(),
+                                );
+                              },
                             ),
                           ] else if (e.dataType == 'MultiValueList') ...[
                             Column(

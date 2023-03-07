@@ -46,6 +46,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
     ServiceDefinitionSearchModel query, {
     bool createOpLog = false,
   }) async {
+    print(query);
     final selectQuery = sql.select(sql.serviceDefinition).join([]);
 
     final results = await (selectQuery
@@ -64,12 +65,13 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
       final val = await (selectattributeQuery
             ..where(buildAnd([
-              if (query.id != null)
-                sql.attributes.referenceId.equals(
-                  data.id,
-                ),
+              sql.attributes.referenceId.equals(
+                data.id,
+              ),
             ])))
           .get();
+
+      print(val.length);
 
       final res = val.map((e) {
         final resull = e.readTableOrNull(sql.attributes);

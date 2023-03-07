@@ -36,25 +36,19 @@ class ServiceDefinitionRemoteBloc
   ) async {
     final serviceDefinition = await serviceDefinitionremoteRepository
         .search(ServiceDefinitionSearchModel(
-      id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
+      // id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
       tenantId: envConfig.variables.tenantId,
     ));
 
-    await ServiceDefinitionLocalRepository(
-      sql,
-      ServiceDefinitionOpLogManager(isar),
-    ).create(
-      serviceDefinition.first,
-      createOpLog: false,
-    );
-
-    // final serviceDefinitionData = await serviceDefinitionDataRepository
-    //     .search(ServiceDefinitionSearchModel(
-    //   id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
-    //   tenantId: envConfig.variables.tenantId,
-    // ));
-
-    // handle logic for init here
+    serviceDefinition.forEach((element) async {
+      await ServiceDefinitionLocalRepository(
+        sql,
+        ServiceDefinitionOpLogManager(isar),
+      ).create(
+        element,
+        createOpLog: false,
+      );
+    });
   }
 }
 

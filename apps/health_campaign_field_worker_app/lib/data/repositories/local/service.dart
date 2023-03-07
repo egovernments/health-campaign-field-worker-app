@@ -58,7 +58,7 @@ class ServiceLocalRepository
                 isDeleted: e.isDeleted,
                 auditDetails: e.auditDetails,
               )
-            : e.dataType == 'MultiValueList'
+            : e.dataType == 'MultiValueList' || e.dataType == 'SingleValueList'
                 ? ServiceAttributesModel(
                     value: [e.value],
                     attributeCode: e.attributeCode,
