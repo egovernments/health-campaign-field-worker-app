@@ -45,16 +45,6 @@ class RecordStockWrapperPage extends StatelessWidget {
               );
             }
 
-            final facilityRepository = context
-                .read<NetworkManager>()
-                .repository<FacilityModel, FacilitySearchModel>(context);
-
-            final projectFacilityRepository = context
-                .read<NetworkManager>()
-                .repository<ProjectFacilityModel, ProjectFacilitySearchModel>(
-                  context,
-                );
-
             return FacilityBlocWrapper(
               child: BlocProvider(
                 create: (_) => RecordStockBloc(
