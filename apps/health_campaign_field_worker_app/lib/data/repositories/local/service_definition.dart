@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
+
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import 'package:drift/drift.dart';
 
 class ServiceDefinitionLocalRepository extends LocalRepository<
     ServiceDefinitionModel, ServiceDefinitionSearchModel> {
@@ -46,7 +46,6 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
     ServiceDefinitionSearchModel query, {
     bool createOpLog = false,
   }) async {
-    print(query);
     final selectQuery = sql.select(sql.serviceDefinition).join([]);
 
     final results = await (selectQuery
@@ -70,8 +69,6 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               ),
             ])))
           .get();
-
-      print(val.length);
 
       final res = val.map((e) {
         final resull = e.readTableOrNull(sql.attributes);

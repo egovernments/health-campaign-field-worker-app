@@ -16,8 +16,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ;
-
     return Scaffold(
       appBar: AppBar(),
       drawer: Container(

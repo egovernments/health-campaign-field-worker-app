@@ -1,19 +1,13 @@
-import 'dart:ffi';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recase/recase.dart';
-import '../../router/app_router.dart';
+
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
-import '../../blocs/service_definition/service_definition_remote.dart';
-import '../../data/local_store/sql_store/sql_store.dart';
-import '../../data/local_store/sql_store/tables/service.dart';
 import '../../models/entities/service.dart';
 import '../../models/entities/service_attributes.dart';
-import '../../utils/i18_key_constants.dart' as i18;
+import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -33,8 +27,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: ScrollableContent(
         header: Column(children: const [
@@ -99,6 +91,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       ? null
                                       : 'Regex Mismatch';
                                 }
+
+                                return null;
                               },
                               controller: controller[i++],
                               label: localizations.translate(

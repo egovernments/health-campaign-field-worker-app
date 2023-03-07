@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../blocs/localization/app_localization.dart';
-import '../../blocs/localization/app_localizations_delegate.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
@@ -49,8 +48,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return DigitCard(
       child: Column(
         children: [

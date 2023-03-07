@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
-import '../models/oplog/oplog_entry.dart';
 import 'data_repository.dart';
 
 class NetworkManager {

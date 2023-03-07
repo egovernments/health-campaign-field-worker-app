@@ -84,7 +84,6 @@ class MainApplication extends StatelessWidget {
                     final localizationModulesList = appConfig.backendInterface;
                     final firstLanguage = appConfig.languages?.first.value;
                     final languages = appConfig.languages;
-                    final networkManager = context.read<NetworkManager>();
 
                     return MultiBlocProvider(
                       providers: [
