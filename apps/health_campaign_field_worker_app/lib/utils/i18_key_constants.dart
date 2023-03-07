@@ -301,34 +301,6 @@ class WarehouseDetails {
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
 }
 
-class StockReconciliationDetails {
-  const StockReconciliationDetails();
-
-  String get reconciliationPageLabel => 'STOCK_RECONCILIATION';
-
-  String get warehouseLabel => 'WAREHOUSE_LABEL';
-
-  String get productLabel => 'PRODUCT_LABEL';
-
-  String get dateOfReconciliation => 'DATE_OF_RECONCILIATION';
-
-  String get stockReceived => 'STOCK_RECEIVED';
-
-  String get stockIssued => 'STOCK_ISSUED';
-
-  String get stockReturned => 'STOCK_RETURNED';
-
-  String get stockLost => 'STOCK_LOST';
-
-  String get stockDamaged => 'STOCK_DAMAGED';
-
-  String get stockOnHand => 'STOCK_ON_HAND';
-
-  String get manualCount => 'MANUAL_STOCK_COUNT';
-
-  String get comments => 'COMMENTS';
-}
-
 class StockDetails {
   const StockDetails();
 
@@ -392,4 +364,32 @@ class StockDetails {
   String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
+}
+
+class StockReconciliationDetails {
+  const StockReconciliationDetails();
+
+  String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
+
+  String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+
+  String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
+
+  String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
+
+  String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
+
+  String get stockIssued => 'STOCK_RECONCILIATION_STOCK_ISSUED';
+
+  String get stockReturned => 'STOCK_RECONCILIATION_STOCK_RETURNED';
+
+  String get stockLost => 'STOCK_RECONCILIATION_STOCK_LOST';
+
+  String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
+
+  String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
+
+  String get manualCount => 'STOCK_RECONCILIATION_MANUAL_STOCK_COUNT';
+
+  String get comments => 'STOCK_RECONCILIATION_COMMENTS';
 }
