@@ -279,18 +279,16 @@ class _DeliverInterventionPageState
                                 },
                               ),
                               const DigitDivider(),
-                              DigitDropdown(
+                              DigitDropdown<MenuItemModel>(
                                 label: localizations.translate(
                                   i18.deliverIntervention
                                       .resourceDeliveredLabel,
                                 ),
-                                initialValue: 'BEDNETS',
-                                menuItems: [
-                                  MenuItemModel(
-                                    "BEDNETS",
-                                    "PVAR-2023-01-11-000045",
-                                  ),
-                                ],
+                                valueMapper: (value) {
+                                  return localizations.translate(value.code);
+                                },
+                                initialValue: tempProductVariants.firstOrNull,
+                                menuItems: tempProductVariants,
                                 validationMessages: {
                                   'required': (object) => 'Field is required',
                                 },
@@ -318,18 +316,16 @@ class _DeliverInterventionPageState
                                           .deliveryCommentOptions ??
                                       <DeliveryCommentOptions>[];
 
-                                  return DigitDropdown(
+                                  return DigitDropdown<String>(
                                     label: localizations.translate(
                                       i18.deliverIntervention
                                           .deliveryCommentLabel,
                                     ),
+                                    valueMapper: (value) => value,
                                     initialValue: deliveryCommentOptions
                                         .firstOrNull?.name,
                                     menuItems: deliveryCommentOptions.map((e) {
-                                      return MenuItemModel(
-                                        e.code,
-                                        localizations.translate(e.name),
-                                      );
+                                      return localizations.translate(e.name);
                                     }).toList(),
                                     formControlName: 'deliveryComment',
                                   );

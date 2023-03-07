@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -11,18 +13,21 @@ class ProjectLocalRepository
   @override
   FutureOr<void> create(
     ProjectModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final projectCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.project, projectCompanion);
+      batch.insert(
+        sql.project,
+        projectCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
     });
 
-    await super.create(entity);
+    await super.create(entity, createOpLog: createOpLog);
   }
 
   @override
-  // TODO: implement type
   DataModelType get type => DataModelType.project;
 
   @override
@@ -44,6 +49,7 @@ class ProjectLocalRepository
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
+        name: data.name,
       );
     }).toList();
   }

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -60,20 +62,31 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(R query) async {
-    final response = await dio.post(
-      searchPath,
-      queryParameters: {
-        'offset': 0,
-        'limit': 100,
-        'tenantId': envConfig.variables.tenantId,
-      },
-      data: {
-        isPlural ? entityNamePlural : entityName:
-            isPlural ? [query.toMap()] : query.toMap(),
-      },
-    );
+    Response response;
+
+    try {
+      response = await _executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': 0,
+              'limit': 100,
+              'tenantId': envConfig.variables.tenantId,
+            },
+            data: {
+              isPlural ? entityNamePlural : entityName:
+                  isPlural ? [query.toMap()] : query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      return [];
+    }
 
     final responseMap = (response.data);
+
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -108,79 +121,153 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<Response> create(D entity) async {
-    return await dio.post(
-      createPath,
-      data: {
-        entityName: [entity.toMap()],
-        "apiOperation": "CREATE",
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          createPath,
+          data: {
+            entityName: [entity.toMap()],
+            "apiOperation": "CREATE",
+          },
+        );
       },
     );
   }
 
   @override
   FutureOr<Response> delete(D entity) async {
-    return await dio.post(
-      createPath,
-      data: {
-        EntityPlurals.getPluralForEntityName(entityName): [entity.toMap()],
-        "apiOperation": "DELETE",
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          createPath,
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): [entity.toMap()],
+            "apiOperation": "DELETE",
+          },
+        );
       },
     );
   }
 
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
-    final res = await dio.post(
-      bulkCreatePath,
-      options: Options(headers: {
-        "content-type": 'application/json',
-      }),
-      data: {
-        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          bulkCreatePath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+          },
+        );
       },
     );
-
-    return res;
   }
 
   FutureOr<Response> bulkUpdate(List<EntityModel> entities) async {
-    return await dio.post(
-      bulkUpdatePath,
-      options: Options(headers: {
-        "content-type": 'application/json',
-      }),
-      data: {
-        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
-        "apiOperation": "UPDATE",
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          bulkUpdatePath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+            "apiOperation": "UPDATE",
+          },
+        );
       },
     );
   }
 
   FutureOr<Response> bulkDelete(List<EntityModel> entities) async {
-    return await dio.post(
-      bulkDeletePath,
-      options: Options(headers: {
-        "content-type": 'application/json',
-      }),
-      data: {
-        EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
-        "apiOperation": "DELETE",
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          bulkDeletePath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): _getMap(entities),
+            "apiOperation": "DELETE",
+          },
+        );
       },
     );
   }
 
   @override
   FutureOr<Response> update(EntityModel entity) async {
-    return await dio.post(
-      updatePath,
-      data: {
-        entityName: [entity.toMap()],
-        "apiOperation": "UPDATE",
+    return _executeFuture(
+      future: () async {
+        return await dio.post(
+          updatePath,
+          data: {
+            entityName: [entity.toMap()],
+            "apiOperation": "UPDATE",
+          },
+        );
       },
     );
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
     return entities.map((e) => Mapper.toMap(e)).toList();
+  }
+
+  FutureOr<T> _executeFuture<T>({
+    required Future<T> Function() future,
+  }) async {
+    try {
+      return await future();
+    } on DioError catch (error) {
+      const encoder = JsonEncoder.withIndent('  ');
+
+      String? errorResponse;
+      String? requestBody;
+
+      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
+
+      try {
+        errorResponse = encoder.convert(
+          error.response?.data,
+        );
+      } catch (_) {
+        errorResponse = 'Could not parse error';
+      }
+
+      try {
+        requestBody = encoder.convert(error.requestOptions.data);
+      } catch (_) {
+        requestBody = 'Could not parse request body';
+      }
+
+      AppLogger.instance.debug(
+        requestBody,
+        title: runtimeType.toString(),
+      );
+
+      AppLogger.instance.error(
+        message: '${error.error}\n$errorResponse',
+        title: '${runtimeType.toString()} | DIO_ERROR',
+      );
+
+      debugPrint(
+        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
+      );
+
+      rethrow;
+    } catch (error) {
+      AppLogger.instance.error(
+        message: error.toString(),
+        title: runtimeType.toString(),
+      );
+
+      rethrow;
+    }
   }
 }
 
@@ -208,8 +295,6 @@ abstract class LocalRepository<D extends EntityModel,
   FutureOr<void> delete(D entity, {bool createOpLog = true}) async {
     if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
   }
-
-  // FutureOr<void> update(D entity, {bool createOpLog = true});
 
   Future<List<OpLogEntry<D>>> getSyncedCreateEntities() async {
     final entries = await opLogManager.getSyncedCreateEntries(type);

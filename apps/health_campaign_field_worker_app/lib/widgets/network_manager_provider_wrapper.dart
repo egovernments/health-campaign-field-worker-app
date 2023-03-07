@@ -8,10 +8,16 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/project.dart';
 import '../data/repositories/local/project_beneficiary.dart';
+import '../data/repositories/local/project_facility.dart';
+import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/stock.dart';
+import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
@@ -28,6 +34,8 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/stock.dart';
+import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
 
@@ -86,6 +94,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           IndividualOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<FacilityModel, FacilitySearchModel>>(
+        create: (_) => FacilityLocalRepository(
+          sql,
+          FacilityOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
@@ -99,6 +113,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           HouseholdOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<ProjectModel, ProjectSearchModel>>(
+        create: (_) => ProjectLocalRepository(
+          sql,
+          ProjectOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<ProjectBeneficiaryModel,
               ProjectBeneficiarySearchModel>>(
@@ -107,10 +127,38 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectBeneficiaryOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>(
+        create: (_) => ProjectFacilityLocalRepository(
+          sql,
+          ProjectFacilityOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
+        create: (_) => ProjectStaffLocalRepository(
+          sql,
+          ProjectStaffOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
+        create: (_) => StockLocalRepository(
+          sql,
+          StockOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<StockReconciliationModel,
+              StockReconciliationSearchModel>>(
+        create: (_) => StockReconciliationLocalRepository(
+          sql,
+          StockReconciliationOpLogManager(isar),
         ),
       ),
     ];
@@ -231,9 +279,25 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.stock)
+          RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
+            create: (_) => StockRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.stockReconciliation)
+          RepositoryProvider<
+              RemoteRepository<StockReconciliationModel,
+                  StockReconciliationSearchModel>>(
+            create: (_) => StockReconciliationRemoteRepository(
               dio,
               actionMap: actions,
             ),

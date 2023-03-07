@@ -1,11 +1,28 @@
 {
   "name": "facility",
   "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": false,
+      "nullable": false,
+      "isPk": true,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "isList": false
     },
     {
       "name": "isPermanent",

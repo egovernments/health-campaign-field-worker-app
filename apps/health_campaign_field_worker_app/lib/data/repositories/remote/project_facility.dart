@@ -8,6 +8,7 @@ class ProjectFacilityRemoteRepository extends RemoteRepository<ProjectFacilityMo
     super.dio, {
     required super.actionMap,
     super.entityName = 'ProjectFacility',
+    super.isSearchResponsePlural = true,
   });
 
   @override

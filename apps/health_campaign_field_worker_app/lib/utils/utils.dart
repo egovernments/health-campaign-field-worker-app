@@ -23,6 +23,7 @@ Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
 
 class IdGen {
   static const IdGen _instance = IdGen._internal();
+
   static IdGen get instance => _instance;
 
   /// Shorthand for [instance]
@@ -43,11 +44,19 @@ extension DateAgeExtension on DateTime {
 
 extension IntIncrementer on int? {
   int get increment {
-    return incrementBy(1);
+    return _incrementBy(1);
   }
 
-  int incrementBy(int value) {
-    return (this ?? value) + value;
+  int _incrementBy(int value) {
+    return this == null ? value : (this! + value);
+  }
+}
+
+extension UniqueListItem<E> on List<E> {
+  void removeDuplicates<I>(I Function(E element) constraintMapper) {
+    final distinctList = map(constraintMapper).toSet();
+
+    retainWhere((element) => distinctList.remove(constraintMapper(element)));
   }
 }
 

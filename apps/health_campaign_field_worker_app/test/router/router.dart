@@ -5,8 +5,9 @@ import 'package:health_campaign_field_worker_app/pages/beneficiary/deliver_inter
 import 'package:health_campaign_field_worker_app/pages/beneficiary/household_overview.dart';
 import 'package:health_campaign_field_worker_app/pages/beneficiary_registration/household_details.dart';
 import 'package:health_campaign_field_worker_app/pages/beneficiary_registration/individual_details.dart';
-
-import '';
+import 'package:health_campaign_field_worker_app/pages/inventory/manage_stocks.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/record_stock/warehouse_details.dart';
+import 'package:health_campaign_field_worker_app/pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 
 import '';
 
@@ -21,6 +22,9 @@ part 'router.gr.dart';
     AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
     AutoRoute(page: HouseholdOverviewPage, path: 'household-overview'),
     AutoRoute(page: DeliverInterventionPage, path: 'deliver-intervention'),
+    AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+    AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
+    AutoRoute(page: WarehouseDetailsPage, path: 'warehouse-details'),
   ],
 )
 class AppRouter extends _$AppRouter {}
