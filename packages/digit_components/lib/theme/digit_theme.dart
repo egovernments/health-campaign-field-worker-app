@@ -30,7 +30,7 @@ class DigitTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.background,
       textTheme: mobileTypography.textTheme,
-      appBarTheme: const AppBarTheme(elevation: 0),
+      appBarTheme: AppBarTheme(elevation: 0, color: colorScheme.secondary),
       textButtonTheme: textButtonTheme,
       elevatedButtonTheme: elevatedButtonTheme,
       cardTheme: cardTheme,
@@ -42,9 +42,9 @@ class DigitTheme {
 
   ColorScheme get colorScheme => ColorScheme(
         brightness: Brightness.light,
-        primary: colors.burningOrange,
+        primary: colors.regalBlue,
         onPrimary: colors.white,
-        secondary: colors.burningOrange,
+        secondary: colors.regalBlue,
         onSecondary: colors.white,
         error: colors.lavaRed,
         onError: colors.white,
