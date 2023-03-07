@@ -24,7 +24,13 @@ class OpLogEntry<T extends EntityModel> {
 }
 
 @MappableEnum()
-enum DataOperation { create, search, update, delete }
+enum DataOperation {
+  create,
+  search,
+  update,
+  delete,
+  singleCreate,
+}
 
 @MappableEnum(caseStyle: CaseStyle.snakeCase)
 enum ApiOperation {
@@ -35,5 +41,6 @@ enum ApiOperation {
   delete,
   bulkCreate,
   bulkUpdate,
-  bulkDelete
+  bulkDelete,
+  oneCreate
 }

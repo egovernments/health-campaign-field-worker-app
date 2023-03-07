@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
+import '../../../../models/oplog/oplog_entry.dart';
 
 part 'oplog.g.dart';
 

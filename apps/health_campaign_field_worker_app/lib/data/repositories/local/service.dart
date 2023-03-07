@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/service.dart';
+
 import '../../data_repository.dart';
 
 class ServiceLocalRepository
@@ -13,7 +13,8 @@ class ServiceLocalRepository
   @override
   FutureOr<void> create(
     ServiceModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.singleCreate,
   }) async {
     final serviceCompanion = entity.companion;
     final attributes = entity.attributes;
@@ -36,7 +37,53 @@ class ServiceLocalRepository
       }
     });
 
-    await super.create(entity);
+    final newEntity = ServiceModel(
+      id: entity.id,
+      clientId: entity.clientId,
+      serviceDefId: entity.serviceDefId,
+      isActive: entity.isActive,
+      accountId: entity.accountId,
+      additionalDetails: entity.additionalDetails,
+      tenantId: entity.tenantId,
+      isDeleted: entity.isDeleted,
+      rowVersion: entity.rowVersion,
+      attributes: entity.attributes?.map((e) {
+        return e.dataType == 'Number'
+            ? ServiceAttributesModel(
+                value: int.parse(e.value),
+                attributeCode: e.attributeCode,
+                tenantId: e.tenantId,
+                clientReferenceId: e.clientReferenceId,
+                additionalDetails: e.additionalDetails,
+                isDeleted: e.isDeleted,
+                auditDetails: e.auditDetails,
+              )
+            : e.dataType == 'MultiValueList'
+                ? ServiceAttributesModel(
+                    value: [e.value],
+                    attributeCode: e.attributeCode,
+                    tenantId: e.tenantId,
+                    clientReferenceId: e.clientReferenceId,
+                    additionalDetails: e.additionalDetails,
+                    isDeleted: e.isDeleted,
+                    auditDetails: e.auditDetails,
+                  )
+                : ServiceAttributesModel(
+                    value: e.value,
+                    attributeCode: e.attributeCode,
+                    tenantId: e.tenantId,
+                    clientReferenceId: e.clientReferenceId,
+                    additionalDetails: e.additionalDetails,
+                    isDeleted: e.isDeleted,
+                    auditDetails: e.auditDetails,
+                  );
+      }).toList(),
+    );
+
+    await super.create(
+      newEntity,
+      dataOperation: DataOperation.singleCreate,
+    );
   }
 
   @override

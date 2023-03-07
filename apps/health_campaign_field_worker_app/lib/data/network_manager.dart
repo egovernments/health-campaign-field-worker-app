@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
+import '../models/oplog/oplog_entry.dart';
 import 'data_repository.dart';
 
 class NetworkManager {
@@ -75,6 +76,11 @@ class NetworkManager {
           await remote.bulkUpdate(entities);
         } else if (operationGroupedEntity.key == DataOperation.delete) {
           await remote.bulkDelete(entities);
+        }
+        if (operationGroupedEntity.key == DataOperation.singleCreate) {
+          for (var element in entities) {
+            await remote.singleCreate(element);
+          }
         }
 
         for (final syncedEntity in operationGroupedEntity.value) {

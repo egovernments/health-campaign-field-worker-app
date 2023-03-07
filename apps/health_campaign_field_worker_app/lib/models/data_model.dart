@@ -32,6 +32,7 @@ export 'entities/attributes.dart';
 export 'entities/service.dart';
 export 'entities/service_definition.dart';
 export 'entities/service_attributes.dart';
+
 export 'oplog/oplog_entry.dart';
 
 @MappableClass()
@@ -88,5 +89,5 @@ enum DataModelType {
   attributes,
   serviceDefinition,
   service,
-  serviceAttributes
+  serviceAttributes,
 }

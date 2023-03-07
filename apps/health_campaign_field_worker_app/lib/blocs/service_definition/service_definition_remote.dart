@@ -43,7 +43,10 @@ class ServiceDefinitionRemoteBloc
     await ServiceDefinitionLocalRepository(
       sql,
       ServiceDefinitionOpLogManager(isar),
-    ).create(serviceDefinition.first);
+    ).create(
+      serviceDefinition.first,
+      createOpLog: false,
+    );
 
     // final serviceDefinitionData = await serviceDefinitionDataRepository
     //     .search(ServiceDefinitionSearchModel(

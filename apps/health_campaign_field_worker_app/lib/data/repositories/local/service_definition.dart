@@ -15,7 +15,10 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
   FutureOr<void> create(
     ServiceDefinitionModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
+    print("---createOpLog---");
+    print(createOpLog);
     final serviceDefinitionCompanion = entity.companion;
     final attributes = entity.attributes;
     await sql.batch((batch) {
@@ -37,13 +40,14 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
       }
     });
 
-    await super.create(entity);
+    await super.create(entity, createOpLog: false);
   }
 
   @override
   FutureOr<List<ServiceDefinitionModel>> search(
-    ServiceDefinitionSearchModel query,
-  ) async {
+    ServiceDefinitionSearchModel query, {
+    bool createOpLog = false,
+  }) async {
     final selectQuery = sql.select(sql.serviceDefinition).join([]);
 
     final results = await (selectQuery

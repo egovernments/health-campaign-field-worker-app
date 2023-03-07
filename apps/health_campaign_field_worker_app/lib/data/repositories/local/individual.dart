@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/oplog/oplog_entry.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -144,6 +145,7 @@ class IndividualLocalRepository
   FutureOr<void> create(
     IndividualModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final addresses = entity.address;
     final identifiers = entity.identifiers;

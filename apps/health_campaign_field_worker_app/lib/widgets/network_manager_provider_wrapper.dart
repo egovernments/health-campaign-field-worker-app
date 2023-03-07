@@ -29,10 +29,12 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/local/service.dart';
 import '../models/data_model.dart';
+import '../models/oplog/oplog_entry.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -127,7 +129,9 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               ServiceDefinitionSearchModel>>(
         create: (_) => ServiceDefinitionLocalRepository(
           sql,
-          ServiceDefinitionOpLogManager(isar),
+          ServiceDefinitionOpLogManager(
+            isar,
+          ),
         ),
       ),
       RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
@@ -266,6 +270,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<ServiceDefinitionModel,
                   ServiceDefinitionSearchModel>>(
             create: (_) => ServiceDefinitionRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.service)
+          RepositoryProvider<
+              RemoteRepository<ServiceModel, ServiceSearchModel>>(
+            create: (_) => ServiceRemoteRepository(
               dio,
               actionMap: actions,
             ),

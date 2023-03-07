@@ -82,6 +82,7 @@ class HouseholdLocalRepository
   FutureOr<void> create(
     HouseholdModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;

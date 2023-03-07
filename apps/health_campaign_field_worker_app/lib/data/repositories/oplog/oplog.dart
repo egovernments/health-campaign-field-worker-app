@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/oplog/oplog_entry.dart';
 import '../../local_store/no_sql/schema/oplog.dart';
 
 abstract class OpLogManager<T extends EntityModel> {

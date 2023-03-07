@@ -12,6 +12,7 @@ class ProjectLocalRepository
   FutureOr<void> create(
     ProjectModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectCompanion = entity.companion;
     await sql.batch((batch) {

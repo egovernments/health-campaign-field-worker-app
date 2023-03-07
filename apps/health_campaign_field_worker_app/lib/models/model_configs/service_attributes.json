@@ -1,5 +1,6 @@
 {
     "name": "ServiceAttributes",
+    "entityName": "attributes",
     "createRepository": true,
     "attributes": [
         {
@@ -8,6 +9,10 @@
         },
         {
             "name": "value",
+            "type": "String"
+        },
+        {
+            "name": "dataType",
             "type": "String"
         },
         {

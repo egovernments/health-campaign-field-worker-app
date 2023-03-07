@@ -10,6 +10,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/data_model.dart';
+import '../../models/oplog/oplog_entry.dart';
 import '../../utils/environment_config.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 
@@ -55,6 +56,15 @@ class AppInitializationBloc
 
     await mdmsRepository.writeToRegistryDB(result, isar);
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
+    serviceRegistryList.add(ServiceRegistry()
+      ..id = 18
+      ..service = 'Service'
+      ..actions = [
+        Actions()
+          ..action = 'create'
+          ..entityName = 'service'
+          ..path = 'service-request/service/v1/_create',
+      ]);
 
     final configResult = await mdmsRepository.searchAppConfig(
       envConfig.variables.mdmsApiPath,

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/data_model.dart';
+
 import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import 'local_store/sql_store/sql_store.dart';
@@ -85,7 +86,6 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    print(entityNamePlural);
     if (!responseMap.containsKey(
       (isSearchResponsePlural || entityName == 'ServiceDefinition')
           ? entityNamePlural
@@ -115,6 +115,16 @@ abstract class RemoteRepository<D extends EntityModel,
     return entityList.map((e) => Mapper.fromMap<D>(e)).toList();
   }
 
+  FutureOr<Response> singleCreate(D entity) async {
+    return await dio.post(
+      createPath,
+      data: {
+        'Service': entity.toMap(),
+        "apiOperation": "CREATE",
+      },
+    );
+  }
+
   @override
   FutureOr<Response> create(D entity) async {
     return await dio.post(
@@ -138,7 +148,6 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
-    print(entities);
     final res = await dio.post(
       bulkCreatePath,
       options: Options(headers: {
@@ -203,8 +212,12 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> create(D entity, {bool createOpLog = true}) async {
-    if (createOpLog) await createOplogEntry(entity, DataOperation.create);
+  FutureOr<void> create(
+    D entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
   @override
@@ -218,8 +231,6 @@ abstract class LocalRepository<D extends EntityModel,
   FutureOr<void> delete(D entity, {bool createOpLog = true}) async {
     if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
   }
-
-  // FutureOr<void> update(D entity, {bool createOpLog = true});
 
   Future<List<OpLogEntry<D>>> getSyncedCreateEntities() async {
     final entries = await opLogManager.getSyncedCreateEntries(type);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../models/data_model.dart';
+import '../../../models/oplog/oplog_entry.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -82,6 +83,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   FutureOr<void> create(
     ProjectBeneficiaryModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {

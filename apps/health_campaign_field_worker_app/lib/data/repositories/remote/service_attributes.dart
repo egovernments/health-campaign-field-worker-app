@@ -3,12 +3,11 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ServiceAttributesRemoteRepository extends RemoteRepository<
-    ServiceAttributesModel, ServiceAttributesSearchModel> {
+class ServiceAttributesRemoteRepository extends RemoteRepository<ServiceAttributesModel, ServiceAttributesSearchModel> {
   ServiceAttributesRemoteRepository(
     super.dio, {
     required super.actionMap,
-    super.entityName = 'attributes',
+    super.entityName = 'Attributes',
   });
 
   @override
