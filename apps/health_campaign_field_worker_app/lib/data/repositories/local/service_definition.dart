@@ -17,8 +17,6 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
     bool createOpLog = false,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    print("---createOpLog---");
-    print(createOpLog);
     final serviceDefinitionCompanion = entity.companion;
     final attributes = entity.attributes;
     await sql.batch((batch) {

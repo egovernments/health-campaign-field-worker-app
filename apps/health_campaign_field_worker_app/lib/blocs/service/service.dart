@@ -31,7 +31,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ServiceCreateEvent event,
     ServiceEmitter emit,
   ) async {
-    print("create event Triggered");
     await serviceDataRepository.create(event.serviceModel);
   }
 }

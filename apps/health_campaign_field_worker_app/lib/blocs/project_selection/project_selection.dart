@@ -63,18 +63,16 @@ class ProjectSelectionBloc
       tenantId: projectStaff.first.tenantId,
     ));
 
-    // for (var element in projects) {
-    //   print(element);
-    //   await ProjectLocalRepository(sql, ProjectOpLogManager(isar))
-    //       .create(ProjectModel(
-    //     clientReferenceId: element.clientReferenceId,
-    //     rowVersion: 1,
-    //     tenantId: element.tenantId,
-    //     projectTypeId: element.projectTypeId,
-    //     id: element.id,
-    //     subProjectTypeId: element.subProjectTypeId,
-    //   ));
-    // }
+    for (var element in projects) {
+      await ProjectLocalRepository(sql, ProjectOpLogManager(isar))
+          .create(ProjectModel(
+        rowVersion: 1,
+        tenantId: element.tenantId,
+        projectTypeId: element.projectTypeId,
+        id: element.id,
+        subProjectTypeId: element.subProjectTypeId,
+      ));
+    }
 
     // handle logic for projectInit here
   }

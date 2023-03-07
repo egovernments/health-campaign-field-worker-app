@@ -38,7 +38,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      print(length);
       length ??= (await isar.opLogs.filter().isSyncedEqualTo(false).findAll())
           .where((element) {
         switch (element.entityType) {
