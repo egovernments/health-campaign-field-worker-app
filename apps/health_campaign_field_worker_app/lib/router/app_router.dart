@@ -19,11 +19,11 @@ import '../pages/inventory/manage_stocks.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
 import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
+import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
-import '../pages/stock_reconciliation.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -97,7 +97,7 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
-        AutoRoute(page: StockReconciliationPage, path: 'reconcile-stocks'),
+        AutoRoute(page: StockReconciliationPage, path: 'stock-reconciliation'),
 
         /// Project Selection
         AutoRoute(

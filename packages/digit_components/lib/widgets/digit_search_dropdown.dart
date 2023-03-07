@@ -10,7 +10,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
   final Iterable<T> menuItems;
   final String formControlName;
   final bool isRequired;
-  final ValueChanged<T>? onChanged;
+  final VoidCallback? onChanged;
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
 

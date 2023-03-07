@@ -17,6 +17,7 @@ import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/stock.dart';
+import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
@@ -34,6 +35,7 @@ import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/stock.dart';
+import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
 
@@ -149,6 +151,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<StockReconciliationModel,
+              StockReconciliationSearchModel>>(
+        create: (_) => StockReconciliationLocalRepository(
+          sql,
+          StockReconciliationOpLogManager(isar),
         ),
       ),
     ];
@@ -279,6 +289,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.stockReconciliation)
+          RepositoryProvider<
+              RemoteRepository<StockReconciliationModel,
+                  StockReconciliationSearchModel>>(
+            create: (_) => StockReconciliationRemoteRepository(
               dio,
               actionMap: actions,
             ),
