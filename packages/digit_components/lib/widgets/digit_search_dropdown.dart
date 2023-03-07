@@ -2,9 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_flutter_typeahead/reactive_flutter_typeahead.dart';
 
+import 'digit_reactive_type_ahead.dart';
+
 class DigitSearchDropdown<T> extends StatelessWidget {
   final Iterable<T> Function(Iterable<T> items, String pattern)
       suggestionsCallback;
+  final SuggestionSelectionCallback<T>? onSuggestionSelected;
   final String label;
   final T? initialValue;
   final Iterable<T> menuItems;
@@ -17,6 +20,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
   const DigitSearchDropdown({
     Key? key,
     required this.suggestionsCallback,
+    this.onSuggestionSelected,
     required this.label,
     required this.menuItems,
     required this.formControlName,
@@ -39,9 +43,10 @@ class DigitSearchDropdown<T> extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 8),
-          ReactiveTypeAhead(
+          DigitReactiveTypeAhead<T, T>(
             formControlName: formControlName,
             stringify: valueMapper,
+            onSuggestionSelected: onSuggestionSelected,
             debounceDuration: const Duration(milliseconds: 100),
             suggestionsCallback: (pattern) => suggestionsCallback(
               menuItems,

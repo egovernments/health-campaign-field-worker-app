@@ -12,7 +12,7 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
     Map<String, ValidationMessageFunction>? validationMessages,
     ControlValueAccessor<T, V>? valueAccessor,
     ShowErrorsFunction? showErrors,
-    SuggestionSelectionCallback<T>? onSuggestionSelected,
+    SuggestionSelectionCallback<V>? onSuggestionSelected,
     required this.stringify,
     V Function(String)? viewDataTypeFromTextEditingValue,
     required SuggestionsCallback<V> suggestionsCallback,
@@ -78,6 +78,8 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
               onSuggestionSelected: (value) {
                 controller.text = stringify(value);
                 field.didChange(value);
+
+                onSuggestionSelected?.call(value);
               },
               textFieldConfiguration: textFieldConfiguration.copyWith(
                 focusNode: textFieldConfiguration.focusNode ?? state.focusNode,

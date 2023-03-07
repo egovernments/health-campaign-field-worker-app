@@ -103,45 +103,44 @@ class StockReconciliationState with _$StockReconciliationState {
     StockReconciliationModel? stockReconciliationModel,
   }) = _StockReconciliationState;
 
-  num get stockReceived => stockModels
-      .where((e) => e.transactionType == TransactionType.received)
-      .fold<num>(
+  num get stockReceived => _getQuantityCount(
+        stockModels.where((e) =>
+            e.transactionType == TransactionType.received &&
+            e.transactionReason == TransactionReason.received),
+      );
+
+  num get stockIssued => _getQuantityCount(
+        stockModels.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            e.transactionReason == null),
+      );
+
+  num get stockReturned => _getQuantityCount(
+        stockModels.where((e) =>
+            e.transactionType == TransactionType.received &&
+            e.transactionReason == TransactionReason.returned),
+      );
+
+  num get stockLost => _getQuantityCount(
+        stockModels.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            (e.transactionReason == TransactionReason.lostInTransit ||
+                e.transactionReason == TransactionReason.lostInStorage)),
+      );
+
+  num get stockDamaged => _getQuantityCount(
+        stockModels.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            (e.transactionReason == TransactionReason.damagedInTransit ||
+                e.transactionReason == TransactionReason.damagedInStorage)),
+      );
+
+  num get stockInHand =>
+      (stockReceived + stockReturned) -
+      (stockIssued + stockDamaged + stockLost);
+
+  num _getQuantityCount(Iterable<StockModel> stocks) => stocks.fold<num>(
         0.0,
         (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
       );
-
-  num get stockIssued => 0.0;
-
-  num get stockReturned => stockModels
-      .where((e) =>
-          e.transactionType == TransactionType.dispatched &&
-          e.transactionReason == TransactionReason.returned)
-      .fold<num>(
-        0.0,
-        (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
-      );
-
-  num get stockLost => stockModels
-      .where((e) =>
-          e.transactionReason == TransactionReason.lostInTransit ||
-          e.transactionReason == TransactionReason.lostInStorage)
-      .fold<num>(
-        0.0,
-        (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
-      );
-
-  num get stockDamaged => stockModels
-      .where((e) =>
-          e.transactionReason == TransactionReason.damagedInTransit ||
-          e.transactionReason == TransactionReason.damagedInStorage)
-      .fold<num>(
-        0.0,
-        (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
-      );
-
-  num get stockConsumed {
-    return stockIssued + stockReturned + stockLost + stockDamaged;
-  }
-
-  num get stockInHand => stockReceived - stockConsumed;
 }
