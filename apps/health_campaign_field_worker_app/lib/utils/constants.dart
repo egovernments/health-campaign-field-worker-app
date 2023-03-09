@@ -1,7 +1,15 @@
 import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+
+const List<MenuItemModel> tempProductVariants = [
+  MenuItemModel(
+    name: "BEDNETS",
+    code: "PVAR-2023-01-11-000045",
+  ),
+];
 
 class Constants {
   static const String localizationApiPath = 'localization/messages/v1/_search';
@@ -36,4 +44,27 @@ class RequestInfoData {
 
 class Modules {
   static const String localizationModule = "LOCALIZATION_MODULE";
+}
+
+class EntityPlurals {
+  static String getPluralForEntityName(String entity) {
+    switch (entity) {
+      case 'Beneficiary':
+        return 'Beneficiaries';
+      case 'ProjectBeneficiary':
+        return 'ProjectBeneficiaries';
+      case 'Address':
+        return 'Addresses';
+      case 'Facility':
+        return 'Facilities';
+      case 'ProjectFacility':
+        return 'ProjectFacilities';
+      case 'Project':
+        return 'Projects';
+      case 'Stock':
+        return 'Stock';
+      default:
+        return '${entity}s';
+    }
+  }
 }

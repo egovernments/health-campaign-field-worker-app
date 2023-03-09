@@ -5,18 +5,22 @@ export 'models.mapper.g.dart';
 @MappableClass()
 class ConfigModel {
   final String name;
+  final List<String> ignoreFields;
   final List<EnumValues> enumValues;
   final List<AttributeModel> attributes;
   final List<AttributeModel> customAttributes;
   final List<AttributeModel> dateTimeAttributes;
   final List<AttributeModel> sqlAttributes;
   final List<AttributeModel> referenceAttributes;
+  final bool isPlural;
+  final bool isSearchResponsePlural;
 
   final bool createRepository;
   final bool isEnum;
 
   const ConfigModel({
     required this.name,
+    this.ignoreFields = const [],
     this.enumValues = const [],
     this.attributes = const [],
     this.customAttributes = const [],
@@ -25,6 +29,8 @@ class ConfigModel {
     this.referenceAttributes = const [],
     this.isEnum = false,
     this.createRepository = false,
+    this.isPlural = false,
+    this.isSearchResponsePlural = false,
   });
 }
 
@@ -37,10 +43,11 @@ class AttributeModel {
   final bool nullable;
   final bool isPk;
   final bool isEnum;
+  final bool includeForQuery;
+  final bool includeForEntity;
+  final bool includeForTable;
   final bool createReference;
   final List<TableReferenceModel> references;
-
-  final bool includeForQuery;
 
   const AttributeModel({
     required this.name,
@@ -50,8 +57,10 @@ class AttributeModel {
     this.isPk = false,
     this.isEnum = false,
     this.nullable = true,
-    this.createReference = false,
+    this.includeForTable = true,
     this.includeForQuery = false,
+    this.includeForEntity = true,
+    this.createReference = false,
     this.references = const [],
   });
 }

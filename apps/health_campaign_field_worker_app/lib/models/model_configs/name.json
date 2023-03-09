@@ -2,6 +2,25 @@
   "name": "name",
   "attributes": [
     {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    },
+    {
+      "name": "individualClientReferenceId",
+      "type": "String",
+      "isPk": true
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "nullable": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
       "name": "givenName",
       "type": "String",
       "includeForQuery": true

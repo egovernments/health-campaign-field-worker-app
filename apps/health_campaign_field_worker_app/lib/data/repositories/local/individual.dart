@@ -1,12 +1,11 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class IndividualLocalRepository
     extends LocalRepository<IndividualModel, IndividualSearchModel> {
@@ -20,39 +19,21 @@ class IndividualLocalRepository
     final selectQuery = sql.select(sql.individual).join(
       [
         leftOuterJoin(
-          sql.individualName,
-          sql.individualName.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualAddress,
-          sql.individualAddress.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualIdentifier,
-          sql.individualIdentifier.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
           sql.address,
-          sql.address.clientReferenceId.equalsExp(
-            sql.individualAddress.address,
+          sql.address.relatedClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.name,
-          sql.name.clientReferenceId.equalsExp(
-            sql.individualName.name,
+          sql.name.individualClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.identifier,
-          sql.identifier.clientReferenceId.equalsExp(
-            sql.individualIdentifier.identifier,
+          sql.identifier.individualClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
       ],
@@ -62,8 +43,8 @@ class IndividualLocalRepository
           ..where(
             buildAnd([
               if (query.clientReferenceId != null)
-                sql.individual.clientReferenceId.equals(
-                  query.clientReferenceId,
+                sql.individual.clientReferenceId.isIn(
+                  query.clientReferenceId!,
                 ),
               if (query.id != null)
                 sql.individual.id.equals(
@@ -82,8 +63,8 @@ class IndividualLocalRepository
                   query.gender?.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.equals(
-                  query.name!.givenName,
+                sql.name.givenName.contains(
+                  query.name!.givenName!,
                 ),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
@@ -97,121 +78,129 @@ class IndividualLocalRepository
           ))
         .get();
 
-    return results.map((e) {
-      final individual = e.readTable(sql.individual);
-      final name = e.readTable(sql.name);
-      final address = e.readTable(sql.address);
-      final identifier = e.readTableOrNull(sql.identifier);
+    return results
+        .map((e) {
+          final individual = e.readTable(sql.individual);
+          final name = e.readTableOrNull(sql.name);
+          final address = e.readTableOrNull(sql.address);
+          final identifier = e.readTableOrNull(sql.identifier);
 
-      return IndividualModel(
-        tenantId: individual.tenantId,
-        clientReferenceId: individual.clientReferenceId,
-        dateOfBirth: individual.dateOfBirth,
-        mobileNumber: individual.mobileNumber,
-        rowVersion: individual.rowVersion,
-        name: NameModel(
-          clientReferenceId: name.clientReferenceId,
-          familyName: name.familyName,
-          givenName: name.givenName,
-          otherNames: name.otherNames,
-        ),
-        bloodGroup: individual.bloodGroup,
-        address: [
-          AddressModel(
-            tenantId: address.tenantId,
-            clientReferenceId: address.clientReferenceId,
-            doorNo: address.doorNo,
-            latitude: address.latitude,
-            longitude: address.longitude,
-            locationAccuracy: address.locationAccuracy,
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            pincode: address.pincode,
-            locality: BoundaryModel(
-              clientReferenceId: '',
-              code: '',
-              name: '',
-            ),
-            type: address.type,
-          ),
-        ],
-        gender: individual.gender,
-        identifiers: [
-          if (identifier != null)
-            IdentifierModel(
-              type: identifier.type,
-              clientReferenceId: identifier.clientReferenceId,
-              id: identifier.id,
-            ),
-        ],
-      );
-    }).toList();
+          return IndividualModel(
+            id: individual.id,
+            tenantId: individual.tenantId,
+            clientReferenceId: individual.clientReferenceId,
+            dateOfBirth: individual.dateOfBirth,
+            mobileNumber: individual.mobileNumber,
+            isDeleted: individual.isDeleted,
+            rowVersion: individual.rowVersion,
+            name: name == null
+                ? null
+                : NameModel(
+                    individualClientReferenceId: individual.clientReferenceId,
+                    familyName: name.familyName,
+                    givenName: name.givenName,
+                    otherNames: name.otherNames,
+                    rowVersion: name.rowVersion,
+                    tenantId: name.tenantId,
+                  ),
+            bloodGroup: individual.bloodGroup,
+            address: [
+              address == null
+                  ? null
+                  : AddressModel(
+                      relatedClientReferenceId: individual.clientReferenceId,
+                      tenantId: address.tenantId,
+                      doorNo: address.doorNo,
+                      latitude: address.latitude,
+                      longitude: address.longitude,
+                      landmark: address.landmark,
+                      locationAccuracy: address.locationAccuracy,
+                      addressLine1: address.addressLine1,
+                      addressLine2: address.addressLine2,
+                      city: address.city,
+                      pincode: address.pincode,
+                      type: address.type,
+                      rowVersion: address.rowVersion,
+                    ),
+            ].whereNotNull().toList(),
+            gender: individual.gender,
+            identifiers: [
+              if (identifier != null)
+                IdentifierModel(
+                  individualClientReferenceId: individual.clientReferenceId,
+                  identifierType: identifier.identifierType,
+                  identifierId: identifier.identifierId,
+                  rowVersion: identifier.rowVersion,
+                  tenantId: identifier.tenantId,
+                ),
+            ],
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(IndividualModel entity) async {
+  FutureOr<void> create(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final addresses = entity.address;
+    final identifiers = entity.identifiers;
+
     final individualCompanion = entity.companion;
-
     final nameCompanion = entity.name?.companion;
-    final addressCompanions = entity.address?.map((e) {
-          return e.companion;
-        }).toList() ??
-        [];
-
-    final identifierCompanions = entity.identifiers?.map((e) {
-          return e.companion;
-        }).toList() ??
-        [];
 
     await sql.batch((batch) async {
-      batch.insert(sql.individual, individualCompanion);
-      if (nameCompanion != null) batch.insert(sql.name, nameCompanion);
-      batch.insertAll(sql.address, addressCompanions);
-      batch.insertAll(sql.identifier, identifierCompanions);
-
       batch.insert(
-        sql.individualName,
-        IndividualNameCompanion.insert(
-          clientReferenceId: const Uuid().v1(),
-          individual: Value(individualCompanion.clientReferenceId.value),
-          name: Value(nameCompanion?.clientReferenceId.value),
-        ),
+        sql.individual,
+        individualCompanion,
+        mode: InsertMode.insertOrReplace,
       );
+      if (nameCompanion != null) {
+        batch.insert(
+          sql.name,
+          nameCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
 
-      batch.insertAll(
-        sql.individualAddress,
-        addressCompanions.map(
-          (e) => IndividualAddressCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: Value(individualCompanion.clientReferenceId.value),
-            address: Value(e.clientReferenceId.value),
-          ),
-        ),
-      );
+      if (addresses != null) {
+        final addressCompanions = addresses.map((e) {
+          return e.companion;
+        }).toList();
 
-      batch.insertAll(
-        sql.individualIdentifier,
-        identifierCompanions.map(
-          (e) => IndividualIdentifierCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: Value(individualCompanion.clientReferenceId.value),
-            identifier: Value(e.clientReferenceId.value),
-          ),
-        ),
-      );
+        batch.insertAll(
+          sql.address,
+          addressCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      if (identifiers != null) {
+        final identifierCompanions = identifiers.map((e) {
+          return e.companion;
+        }).toList();
+
+        batch.insertAll(sql.identifier, identifierCompanions);
+      }
     });
 
     await super.create(entity);
   }
 
   @override
-  FutureOr<void> update(IndividualModel entity) async {
+  FutureOr<void> update(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final individualCompanion = entity.companion;
 
     final nameCompanion = entity.name?.companion;
     final addressCompanions = entity.address?.map((e) {
-          return e.companion;
+          return e
+              .copyWith(relatedClientReferenceId: entity.clientReferenceId)
+              .companion;
         }).toList() ??
         [];
 
@@ -225,8 +214,8 @@ class IndividualLocalRepository
         batch.update(
           sql.name,
           nameCompanion,
-          where: (table) => table.clientReferenceId.equals(
-            nameCompanion.clientReferenceId.value,
+          where: (table) => table.individualClientReferenceId.equals(
+            nameCompanion.individualClientReferenceId.value,
           ),
         );
       }
@@ -243,6 +232,28 @@ class IndividualLocalRepository
       batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> delete(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.individual,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 }

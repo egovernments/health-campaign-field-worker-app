@@ -1,14 +1,10 @@
 {
   "name": "task",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "tenantId",
       "type": "String",
       "includeForQuery": true
     },
@@ -23,13 +19,14 @@
       "includeForQuery": true
     },
     {
-      "name": "createdBy",
+      "name": "projectBeneficiaryClientReferenceId",
       "type": "String",
       "includeForQuery": true
     },
     {
-      "name": "rowVersion",
-      "type": "int"
+      "name": "createdBy",
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "status",
@@ -40,8 +37,9 @@
   "customAttributes": [
     {
       "name": "resources",
-      "type": "taskResource",
+      "type": "TaskResource",
       "isList": true
+
     },
     {
       "name": "address",

@@ -101,7 +101,7 @@ void main() {
               appRouter,
               navigatorObservers: () => [mockObserver],
               routes: (PendingRoutesHandler handler) => [
-                DeliverInterventionRoute(appLocalizations: mockLocalization),
+                // DeliverInterventionRoute(appLocalizations: mockLocalization),
               ],
             ),
           ),

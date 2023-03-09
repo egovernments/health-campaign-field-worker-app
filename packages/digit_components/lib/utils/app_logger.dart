@@ -13,17 +13,35 @@ class AppLogger {
   void info(dynamic input, {String? title}) =>
       _printMessage(input, title: title, level: Level.INFO);
 
-  void error({required String title, required StackTrace stackTrace}) =>
-      _printError(title: title, stackTrace: stackTrace);
+  void error({
+    required String title,
+    String? message,
+    StackTrace? stackTrace,
+  }) =>
+      _printError(
+        message: message,
+        title: title,
+        stackTrace: stackTrace,
+      );
 
   void _printError({
     required String title,
-    required StackTrace stackTrace,
-  }) =>
+    String? message,
+    StackTrace? stackTrace,
+  }) {
+    if (stackTrace != null) {
       debugPrintStack(
         label: title,
         stackTrace: stackTrace,
       );
+    } else {
+      _printMessage(
+        message,
+        title: title,
+        level: Level.SEVERE,
+      );
+    }
+  }
 
   void _printMessage(
     dynamic input, {

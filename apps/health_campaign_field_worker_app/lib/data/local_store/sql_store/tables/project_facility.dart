@@ -4,14 +4,14 @@ import 'package:drift/drift.dart';
 
 
 class ProjectFacility extends Table {
-  TextColumn get id => text().nullable()();
+  TextColumn get id => text()();
+  TextColumn get facilityId => text()();
+  TextColumn get projectId => text()();
   TextColumn get tenantId => text().nullable()();
-  TextColumn get facilityId => text().nullable()();
-  TextColumn get projectId => text().nullable()();
-  TextColumn get rowVersion => text().nullable()();
-  TextColumn get clientReferenceId => text()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { id,  };
 }

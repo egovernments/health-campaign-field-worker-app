@@ -17,23 +17,28 @@ class DigitToast {
     required DigitToastOptions options,
   }) {
     ftoast.init(context);
-    final theme = Theme.of(context);
+
     return ftoast.showToast(
       child: Container(
+        color: options.isError
+            ? options.theme.colorScheme.error
+            : options.theme.colorScheme.surfaceVariant,
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: options.isError
-              ? theme.colorScheme.onError
-              : theme.colorScheme.surfaceVariant,
-        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check),
+            Icon(
+              options.isError ? Icons.info_outline_rounded : Icons.check,
+              color: Colors.white,
+            ),
             const SizedBox(
               width: 12.0,
             ),
-            Expanded(child: Text(options.message)),
+            Expanded(
+                child: Text(
+              options.message,
+              style: const TextStyle(color: Colors.white),
+            )),
           ],
         ),
       ),
@@ -46,5 +51,7 @@ class DigitToast {
 class DigitToastOptions {
   final String message;
   final bool isError;
-  const DigitToastOptions(this.message, this.isError);
+  ThemeData theme;
+
+  DigitToastOptions(this.message, this.isError, this.theme);
 }

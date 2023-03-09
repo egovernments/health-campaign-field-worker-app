@@ -1,0 +1,70 @@
+{
+  "name": "stock",
+  "createRepository": true,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "facilityId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "productVariantId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "referenceId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "referenceIdType",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "transactingPartyId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "transactingPartyType",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "quantity",
+      "type": "String"
+    },
+    {
+      "name": "waybillNumber",
+      "type": "String"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "transactionType",
+      "type": "transactionType",
+      "isEnum": true,
+      "includeForQuery": true
+    },
+    {
+      "name": "transactionReason",
+      "type": "transactionReason",
+      "isEnum": true,
+      "includeForQuery": true
+    }
+  ],
+  "isEnum": false
+}
+

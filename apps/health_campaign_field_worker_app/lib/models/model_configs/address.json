@@ -3,11 +3,22 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
     },
     {
-      "name": "tenantId",
-      "type": "String"
+      "name": "relatedClientReferenceId",
+      "type": "String",
+      "isPk": true
+    },
+    {
+      "name": "clientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "nullable": true,
+      "includeForEntity": false,
+      "includeForTable": false
     },
     {
       "name": "doorNo",
@@ -55,11 +66,6 @@
     }
   ],
   "customAttributes": [
-    {
-      "name": "locality",
-      "type": "boundary",
-      "createReference": true
-    },
     {
       "name": "type",
       "type": "AddressType",
