@@ -1,0 +1,14 @@
+{
+  "name": "TransactionType",
+  "enumValues": [
+    {
+      "name": "received",
+      "value": "RECEIVED"
+    },
+    {
+      "name": "dispatched",
+      "value": "DISPATCHED"
+    }
+  ],
+  "isEnum": true
+}

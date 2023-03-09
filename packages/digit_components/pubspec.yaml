@@ -24,6 +24,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   fluttertoast: ^8.1.2
+  flutter_spinkit: ^5.1.0
+  reactive_flutter_typeahead: ^0.7.0
+  flutter_typeahead: ^4.3.7
 
 dev_dependencies:
   flutter_test:

@@ -1,19 +1,25 @@
 {
   "name": "project",
   "createRepository": true,
+  "isPlural": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "nullable": false,
+      "isPk": true
     },
     {
-      "name": "tenantId",
+      "name": "projectTypeId",
       "type": "String",
       "includeForQuery": true
     },
     {
-      "name": "projectTypeId",
+      "name": "projectNumber",
       "type": "String",
       "includeForQuery": true
     },
@@ -33,6 +39,11 @@
       "includeForQuery": true
     },
     {
+      "name": "name",
+      "type": "String",
+      "nullable": false
+    },
+    {
       "name": "department",
       "type": "String",
       "includeForQuery": true
@@ -49,10 +60,6 @@
     {
       "name": "projectHierarchy",
       "type": "String"
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "customAttributes": [

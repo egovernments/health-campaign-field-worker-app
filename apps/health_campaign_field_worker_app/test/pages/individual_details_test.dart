@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
+import 'package:health_campaign_field_worker_app/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/app_configuration.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
+import 'package:health_campaign_field_worker_app/utils/typedefs.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../router/router.dart';
@@ -47,6 +49,17 @@ class MockAppInitializationBloc extends Mock implements AppInitializationBloc {
     );
   }
 }
+
+class MockIndividualRepository extends Mock
+    implements IndividualDataRepository {}
+
+class MockHouseholdRepository extends Mock implements HouseholdDataRepository {}
+
+class MockHouseholdMemberRepository extends Mock
+    implements HouseholdMemberDataRepository {}
+
+class MockProjectBeneficiaryRepository extends Mock
+    implements ProjectBeneficiaryDataRepository {}
 
 class MockAppLocalization extends Mock implements AppLocalizations {}
 
@@ -120,8 +133,20 @@ void main() {
 
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(
-        BlocProvider.value(
-          value: appInitializationBloc,
+        MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: appInitializationBloc),
+            BlocProvider(
+              create: (context) => BeneficiaryRegistrationBloc(
+                const BeneficiaryRegistrationCreateState(),
+                individualRepository: MockIndividualRepository(),
+                householdRepository: MockHouseholdRepository(),
+                householdMemberRepository: MockHouseholdMemberRepository(),
+                projectBeneficiaryRepository:
+                    MockProjectBeneficiaryRepository(),
+              ),
+            ),
+          ],
           child: MaterialApp.router(
             routerDelegate: AutoRouterDelegate.declarative(
               appRouter,
@@ -161,6 +186,7 @@ void main() {
         expect(find.byType(DigitCard), findsNWidgets(2));
       },
     );
+
     testWidgets(
       'Ensure that all static components are initialized and rendered correctly',
       (widgetTester) async {

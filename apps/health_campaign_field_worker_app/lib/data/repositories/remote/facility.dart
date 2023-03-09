@@ -8,6 +8,7 @@ class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilityS
     super.dio, {
     required super.actionMap,
     super.entityName = 'Facility',
+    super.isSearchResponsePlural = true,
   });
 
   @override
