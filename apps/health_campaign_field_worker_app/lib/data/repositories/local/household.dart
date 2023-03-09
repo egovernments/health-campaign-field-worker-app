@@ -50,6 +50,8 @@ class HouseholdLocalRepository
 
           return HouseholdModel(
             id: household.id,
+            createdBy: household.createdBy,
+            createdAt: household.createdAt,
             tenantId: household.tenantId,
             clientReferenceId: household.clientReferenceId,
             memberCount: household.memberCount,
@@ -59,6 +61,8 @@ class HouseholdLocalRepository
                 ? null
                 : AddressModel(
                     id: address.id,
+                    createdBy: address.createdBy,
+                    createdAt: address.createdAt,
                     relatedClientReferenceId: household.clientReferenceId,
                     tenantId: address.tenantId,
                     doorNo: address.doorNo,
