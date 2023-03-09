@@ -2,10 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
+import '../../models/entities/service.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../widgets/action_card/action_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -63,43 +65,53 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                         ),
                                       );
 
-                                  DigitDialog.show(
+                                  DigitActionDialog.show(
                                     context,
-                                    options: DigitDialogOptions(
-                                      titleText: localizations.translate(i18
-                                          .householdOverView
-                                          .householdOverViewActionCardTitle),
-                                      primaryAction: DigitDialogActions(
-                                        label: localizations.translate(i18
-                                            .householdOverView
-                                            .householdOverViewPrimaryActionLabel),
-                                        action: (ctx) {
-                                          Navigator.of(
-                                            ctx,
-                                            rootNavigator: true,
-                                          )
-                                            ..pop()
-                                            ..pop();
-
-                                          (context.router.parent()
-                                                  as StackRouter)
-                                              .pop();
-                                        },
-                                      ),
-                                      secondaryAction: DigitDialogActions(
-                                        label: localizations.translate(i18
-                                            .householdOverView
-                                            .householdOverViewSecondaryActionLabel),
-                                        action: (context) {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
-                                        },
-                                      ),
+                                    widget: ActionCard(
+                                      items: [
+                                        ActionCardModel(
+                                          icon: Icons.edit_calendar,
+                                          label: localizations.translate(
+                                            i18.checklist
+                                                .checklistCreateActionLabel,
+                                          ),
+                                          action: () {
+                                            context.router.push(
+                                              ChecklistBoundaryViewRoute(),
+                                            );
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          },
+                                        ),
+                                        ActionCardModel(
+                                          icon: Icons.visibility,
+                                          label: localizations.translate(
+                                            i18.checklist
+                                                .checklistViewActionLabel,
+                                          ),
+                                          action: () {
+                                            context.read<ServiceBloc>().add(
+                                                  ServiceSearchEvent(
+                                                    serviceSearchModel:
+                                                        ServiceSearchModel(
+                                                      id: e.id,
+                                                    ),
+                                                  ),
+                                                );
+                                            context.router.push(
+                                              ChecklistPreviewRoute(),
+                                            );
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   );
-                                  // context.router.push(ChecklistViewRoute());
                                 },
                               ))
                           .toList(),

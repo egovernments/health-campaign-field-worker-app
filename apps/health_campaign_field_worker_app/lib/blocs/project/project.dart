@@ -3,10 +3,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart';
 
 import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -40,6 +42,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionremoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceLocalremoteRepository;
+
   ProjectBloc({
     LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
@@ -50,6 +57,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.serviceDefinitionremoteRepository,
+    required this.serviceLocalremoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
@@ -129,6 +138,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               createOpLog: false,
             );
           }
+        }
+
+        final serviceDefinition = await serviceDefinitionremoteRepository
+            .search(ServiceDefinitionSearchModel(
+          // id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
+          tenantId: envConfig.variables.tenantId,
+        ));
+
+        for (var element in serviceDefinition) {
+          await serviceLocalremoteRepository.create(
+            element,
+            createOpLog: false,
+          );
         }
       }
 

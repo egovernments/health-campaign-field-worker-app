@@ -31,7 +31,8 @@ class Constants {
 }
 
 /// By using this key, we can push pages without context
-final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>(debugLabel: 'scaffoldMessager');
 
 class RequestInfoData {
   static const String apiId = 'hcm';

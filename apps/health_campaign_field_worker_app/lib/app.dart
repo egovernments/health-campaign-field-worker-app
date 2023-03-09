@@ -155,10 +155,7 @@ class MainApplication extends StatelessWidget {
                                 ApiOperation.search: '/project/v1/_search',
                               },
                             ),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (_) => ServiceDefinitionRemoteBloc(
+
                             serviceDefinitionremoteRepository:
                                 ServiceDefinitionRemoteRepository(
                               client,
@@ -167,9 +164,9 @@ class MainApplication extends StatelessWidget {
                                     '/service-request/service/definition/v1/_search',
                               },
                             ),
-                            isar: isar,
-                            sql: sql,
-                            const ServiceDefinitionEmptyState(),
+                            serviceLocalremoteRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
                           ),
                         ),
                       ],

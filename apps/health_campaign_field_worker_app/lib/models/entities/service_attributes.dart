@@ -24,7 +24,8 @@ class ServiceAttributesModel extends EntityModel {
   final String? attributeCode;
   final dynamic value;
   final String? dataType;
-  final String? additionalDetails;
+  final String? referenceId;
+  final dynamic additionalDetails;
   final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
@@ -34,6 +35,7 @@ class ServiceAttributesModel extends EntityModel {
     this.attributeCode,
     this.value,
     this.dataType,
+    this.referenceId,
     this.additionalDetails,
     required this.clientReferenceId,
     this.tenantId,
@@ -47,6 +49,7 @@ class ServiceAttributesModel extends EntityModel {
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
+      referenceId: Value(referenceId),
       additionalDetails: Value(additionalDetails),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),

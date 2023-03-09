@@ -19,6 +19,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }) {
     on(_handleCreate);
     on(_multichecklistChanged);
+    on(_handleSearch);
+    on(_handleSelect);
   }
 
   FutureOr<void> _multichecklistChanged(
@@ -34,6 +36,26 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   ) async {
     await serviceDataRepository.create(event.serviceModel);
   }
+
+  FutureOr<void> _handleSearch(
+    ServiceSearchEvent event,
+    ServiceEmitter emit,
+  ) async {
+    final results =
+        await serviceDataRepository.search(event.serviceSearchModel);
+    emit(ServiceSearchState(serviceList: results));
+  }
+
+  FutureOr<void> _handleSelect(
+    ServiceSelectionEvent event,
+    ServiceEmitter emit,
+  ) async {
+    state.mapOrNull(
+      serviceSearch: (value) => emit(value.copyWith(
+        selectedService: event.service,
+      )),
+    );
+  }
 }
 
 @freezed
@@ -41,8 +63,15 @@ class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.create({required ServiceModel serviceModel}) =
       ServiceCreateEvent;
 
+  const factory ServiceEvent.search({
+    required ServiceSearchModel serviceSearchModel,
+  }) = ServiceSearchEvent;
+
   const factory ServiceEvent.multichecklistChanged({required String value}) =
       ServiceChecklistEvent;
+  const factory ServiceEvent.selectService({
+    required ServiceModel service,
+  }) = ServiceSelectionEvent;
 }
 
 @freezed
@@ -61,4 +90,10 @@ class ServiceState with _$ServiceState {
     @Default(false) bool loading,
     @Default(false) bool isEditing,
   }) = ServiceCreateState;
+
+  const factory ServiceState.serviceSearch({
+    required List<ServiceModel> serviceList,
+    ServiceModel? selectedService,
+    @Default(false) bool loading,
+  }) = ServiceSearchState;
 }
