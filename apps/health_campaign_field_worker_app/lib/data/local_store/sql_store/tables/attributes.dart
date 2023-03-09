@@ -19,5 +19,5 @@ class Attributes extends Table {
   
 
   @override
-  Set<Column> get primaryKey => {  };
+  Set<Column> get primaryKey => { id,  };
 }

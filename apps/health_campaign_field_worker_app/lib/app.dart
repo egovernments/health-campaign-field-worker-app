@@ -10,7 +10,6 @@ import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
-import 'blocs/service_definition/service_definition_remote.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';

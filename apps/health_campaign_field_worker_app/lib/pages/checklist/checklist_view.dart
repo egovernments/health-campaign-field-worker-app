@@ -257,40 +257,71 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             if (!isValid!) {
                               return;
                             }
-                            final referenceId = IdGen.i.identifier;
-                            List<ServiceAttributesModel> attributes = [];
-                            for (i = 0; i < controller.length; i++) {
-                              final attribute =
-                                  value.selectedServiceDefinition!.attributes!;
-                              attributes.add(ServiceAttributesModel(
-                                attributeCode: '${attribute[i].code}',
-                                dataType: attribute[i].dataType,
-                                clientReferenceId: IdGen.i.identifier,
-                                referenceId: referenceId,
-                                value: controller[i].text.toString(),
-                                rowVersion: 1,
-                                tenantId: attribute[i].tenantId,
-                                additionalDetails:
-                                    additionalController[i].text.toString(),
-                              ));
-                            }
 
-                            context.read<ServiceBloc>().add(
-                                  ServiceCreateEvent(
-                                    serviceModel: ServiceModel(
-                                      tenantId: value
-                                          .selectedServiceDefinition!.tenantId,
-                                      clientId: referenceId,
-                                      serviceDefId:
-                                          value.selectedServiceDefinition?.id,
-                                      attributes: attributes,
-                                      rowVersion: 1,
-                                      accountId: IdGen.i.identifier,
-                                    ),
-                                  ),
-                                );
+                            DigitDialog.show(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18.checklist.checklistDialogLabel,
+                                ),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(i18
+                                      .checklist.checklistDialogPrimaryAction),
+                                  action: (ctx) {
+                                    final referenceId = IdGen.i.identifier;
+                                    List<ServiceAttributesModel> attributes =
+                                        [];
+                                    for (i = 0; i < controller.length; i++) {
+                                      final attribute = value
+                                          .selectedServiceDefinition!
+                                          .attributes!;
+                                      attributes.add(ServiceAttributesModel(
+                                        attributeCode: '${attribute[i].code}',
+                                        dataType: attribute[i].dataType,
+                                        clientReferenceId: IdGen.i.identifier,
+                                        referenceId: referenceId,
+                                        value: controller[i].text.toString(),
+                                        rowVersion: 1,
+                                        tenantId: attribute[i].tenantId,
+                                        additionalDetails:
+                                            additionalController[i]
+                                                .text
+                                                .toString(),
+                                      ));
+                                    }
 
-                            context.router.push(AcknowledgementRoute());
+                                    context.read<ServiceBloc>().add(
+                                          ServiceCreateEvent(
+                                            serviceModel: ServiceModel(
+                                              tenantId: value
+                                                  .selectedServiceDefinition!
+                                                  .tenantId,
+                                              clientId: referenceId,
+                                              serviceDefId: value
+                                                  .selectedServiceDefinition
+                                                  ?.id,
+                                              attributes: attributes,
+                                              rowVersion: 1,
+                                              accountId: IdGen.i.identifier,
+                                            ),
+                                          ),
+                                        );
+
+                                    context.router.push(AcknowledgementRoute());
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(i18.checklist
+                                      .checklistDialogSecondaryAction),
+                                  action: (context) {
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop();
+                                  },
+                                ),
+                              ),
+                            );
                           },
                           child: Text(
                             localizations

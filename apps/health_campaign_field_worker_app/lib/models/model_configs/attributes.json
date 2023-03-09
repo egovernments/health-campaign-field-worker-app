@@ -6,6 +6,7 @@
         {
             "name": "id",
             "type": "String",
+            "isPk": true,
             "includeForQuery": true,
             "nullable": true
         },

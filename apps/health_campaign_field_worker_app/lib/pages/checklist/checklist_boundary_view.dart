@@ -31,9 +31,9 @@ class _ChecklistBoundaryViewPageState
         footer: DigitCard(
           child: DigitElevatedButton(
             onPressed: () => context.router.push(ChecklistViewRoute()),
-            child: const Text(
-              'Next',
-            ),
+            child: Text(localizations.translate(
+              i18.common.coreCommonContinue,
+            )),
           ),
         ),
         children: [
@@ -49,9 +49,9 @@ class _ChecklistBoundaryViewPageState
                   style: theme.textTheme.displayMedium,
                 ),
                 DigitTextField(
-                  isDisabled: true,
+                  readOnly: true,
                   label: localizations.translate(
-                    i18.householdLocation.householdLocationLabelText,
+                    i18.checklist.checklistdate,
                   ),
                   suffixIcon: const Padding(
                     padding: EdgeInsets.all(8),
@@ -67,7 +67,7 @@ class _ChecklistBoundaryViewPageState
                   label: localizations.translate(
                     i18.householdLocation.administrationAreaFormLabel,
                   ),
-                  controller: TextEditingController(text: 'Bangalore'),
+                  controller: TextEditingController(text: ''),
                 ),
               ],
             ),

@@ -300,9 +300,23 @@ class Checklist {
   const Checklist();
 
   String get checklistlabel => 'CHECKLIST_LABEL';
+
   String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
+
   String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
+
   String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+
+  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
+
+  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
+
+  String get checklistDialogSecondaryAction =>
+      'CHECKLIST_DIALOG_SECONDARY_ACTION';
+
+  String get checklistdate => 'CHECKLIST_DATE';
 }
 
 class WarehouseDetails {

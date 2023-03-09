@@ -5,9 +5,7 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
 import '../blocs/auth/auth.dart';
-import '../blocs/service_definition/service_definition_remote.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -224,6 +222,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.viewReportsLabel,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
         HomeItemCard(
           icon: Icons.announcement,
