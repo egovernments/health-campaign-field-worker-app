@@ -56,8 +56,8 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                     Column(
                       children: value.serviceDefinitionList
                           .map((e) => DigitProjectCell(
-                                projectText: '${e.code}',
-                                // ignore: no-empty-block
+                                projectText:
+                                    localizations.translate('${e.code}'),
                                 onTap: () {
                                   context.read<ServiceDefinitionBloc>().add(
                                         ServiceDefinitionSelectionEvent(
