@@ -1,7 +1,6 @@
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
-import '../../../../models/oplog/oplog_entry.dart';
 
 part 'oplog.g.dart';
 
@@ -12,6 +11,7 @@ class OpLog {
 
   @ignore
   T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();
   }

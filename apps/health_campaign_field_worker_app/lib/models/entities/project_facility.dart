@@ -8,9 +8,8 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectFacilitySearchModel extends EntitySearchModel {
   final String? id;
-  final String? facilityId;
-  final String? projectId;
-  final List<String>? clientReferenceId;
+  final List<String>? facilityId;
+  final List<String>? projectId;
   final String? tenantId;
   final bool? isDeleted;
   
@@ -18,7 +17,6 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
     this.id,
     this.facilityId,
     this.projectId,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -27,20 +25,18 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectFacilityModel extends EntityModel {
-  final String? id;
-  final String? facilityId;
-  final String? projectId;
-  final String clientReferenceId;
+  final String id;
+  final String facilityId;
+  final String projectId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
   
 
   ProjectFacilityModel({
-    this.id,
-    this.facilityId,
-    this.projectId,
-    required this.clientReferenceId,
+    required this.id,
+    required this.facilityId,
+    required this.projectId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -52,7 +48,6 @@ class ProjectFacilityModel extends EntityModel {
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

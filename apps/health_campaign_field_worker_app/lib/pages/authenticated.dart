@@ -16,8 +16,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ;
-
     return Scaffold(
       appBar: AppBar(),
       drawer: Container(
@@ -44,6 +42,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           case DataModelType.householdMember:
                           case DataModelType.projectBeneficiary:
                           case DataModelType.service:
+                          case DataModelType.stock:
+                          case DataModelType.stockReconciliation:
                             return true;
                           default:
                             return false;

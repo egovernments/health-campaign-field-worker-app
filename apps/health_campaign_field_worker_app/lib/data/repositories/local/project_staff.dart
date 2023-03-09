@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -11,15 +13,22 @@ class ProjectStaffLocalRepository
   @override
   FutureOr<void> create(
     ProjectStaffModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    final projectstaffCompanion = entity.companion;
+    final companion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.projectStaff, projectstaffCompanion);
+      batch.insert(
+        sql.projectStaff,
+        companion,
+        mode: InsertMode.insertOrReplace,
+      );
     });
 
-    await super.create(entity);
+    await super.create(
+      entity,
+      createOpLog: createOpLog,
+    );
   }
 
   @override
@@ -43,11 +52,17 @@ class ProjectStaffLocalRepository
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
+        projectId: data.projectId,
+        channel: data.channel,
+        endDate: data.endDate,
+        isDeleted: data.isDeleted,
+        staffId: data.staffId,
+        startDate: data.startDate,
+        userId: data.userId,
       );
     }).toList();
   }
 
   @override
-  // TODO: implement type
   DataModelType get type => DataModelType.projectStaff;
 }

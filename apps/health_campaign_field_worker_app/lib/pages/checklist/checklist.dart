@@ -1,13 +1,13 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/service_definition/service_definition.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../router/app_router.dart';
-import 'package:digit_components/widgets/digit_project_cell.dart';
 
 class ChecklistPage extends LocalizedStatefulWidget {
   const ChecklistPage({

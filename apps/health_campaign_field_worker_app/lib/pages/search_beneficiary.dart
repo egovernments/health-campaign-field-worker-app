@@ -7,7 +7,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_households.dart';
-import '../blocs/service_definition/service_definition_remote.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';

@@ -4,11 +4,13 @@ import 'package:drift/drift.dart';
 
 
 class Project extends Table {
-  TextColumn get id => text().nullable()();
+  TextColumn get id => text()();
   TextColumn get projectTypeId => text().nullable()();
+  TextColumn get projectNumber => text().nullable()();
   TextColumn get subProjectTypeId => text().nullable()();
   BoolColumn get isTaskEnabled => boolean().nullable()();
   TextColumn get parent => text().nullable()();
+  TextColumn get name => text()();
   TextColumn get department => text().nullable()();
   TextColumn get description => text().nullable()();
   TextColumn get referenceId => text().nullable()();
@@ -21,5 +23,5 @@ class Project extends Table {
   
 
   @override
-  Set<Column> get primaryKey => {  };
+  Set<Column> get primaryKey => { id,  };
 }

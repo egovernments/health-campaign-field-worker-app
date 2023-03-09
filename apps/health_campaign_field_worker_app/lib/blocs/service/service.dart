@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../../models/entities/service.dart';
 import '../../utils/typedefs.dart';
-import '../../utils/utils.dart';
 
 part 'service.freezed.dart';
 
@@ -12,6 +12,7 @@ typedef ServiceEmitter = Emitter<ServiceState>;
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceDataRepository serviceDataRepository;
+
   ServiceBloc(
     super.initialState, {
     required this.serviceDataRepository,
@@ -47,10 +48,13 @@ class ServiceEvent with _$ServiceEvent {
 @freezed
 class ServiceState with _$ServiceState {
   const factory ServiceState.empty() = ServiceEmptyState;
+
   const factory ServiceState.isloading() = ServiceIsloadingState;
+
   const factory ServiceState.multichecklistChanged({
     @Default('') String value,
   }) = ServiceMultichecklistChangedState;
+
   const factory ServiceState.serviceCreate({
     required ServiceModel serviceList,
     ServiceModel? selectedService,

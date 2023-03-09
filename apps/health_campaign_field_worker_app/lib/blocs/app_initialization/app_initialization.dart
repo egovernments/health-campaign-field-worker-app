@@ -10,7 +10,6 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/data_model.dart';
-import '../../models/oplog/oplog_entry.dart';
 import '../../utils/environment_config.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 

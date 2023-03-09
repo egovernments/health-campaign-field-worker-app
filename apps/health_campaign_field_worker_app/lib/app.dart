@@ -9,17 +9,16 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
-import 'blocs/project_selection/project_selection.dart';
+import 'blocs/project/project.dart';
 import 'blocs/service_definition/service_definition_remote.dart';
+import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'data/repositories/remote/project.dart';
-import 'data/repositories/remote/project_staff.dart';
 import 'data/repositories/remote/service_definition.dart';
-import 'models/entities/service_definition.dart';
-import 'models/oplog/oplog_entry.dart';
+import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
@@ -85,7 +84,6 @@ class MainApplication extends StatelessWidget {
                     final localizationModulesList = appConfig.backendInterface;
                     final firstLanguage = appConfig.languages?.first.value;
                     final languages = appConfig.languages;
-                    final networkManager = context.read<NetworkManager>();
 
                     return MultiBlocProvider(
                       providers: [
@@ -118,25 +116,45 @@ class MainApplication extends StatelessWidget {
                                   ),
                         ),
                         BlocProvider(
-                          create: (_) => ProjectSelectionBloc(
-                            const ProjectSelectionState(),
-                            projectStaffRemoteRepository:
-                                ProjectStaffRemoteRepository(
-                              client,
-                              actionMap: {
-                                ApiOperation.search:
-                                    '/project/staff/v1/_search?limit=100&offset=0&tenantId=default',
-                              },
-                            ),
+                          create: (ctx) => ProjectBloc(
+                            facilityLocalRepository: ctx.read<
+                                LocalRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            facilityRemoteRepository: ctx.read<
+                                RemoteRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            projectFacilityLocalRepository: ctx.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                            projectFacilityRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                            projectLocalRepository: ctx.read<
+                                LocalRepository<ProjectModel,
+                                    ProjectSearchModel>>(),
+                            projectStaffLocalRepository: ctx.read<
+                                LocalRepository<ProjectStaffModel,
+                                    ProjectStaffSearchModel>>(),
+                            // projectRemoteRepository: ctx.read<
+                            //     RemoteRepository<ProjectModel,
+                            //         ProjectSearchModel>>(),
+                            projectStaffRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectStaffModel,
+                                    ProjectStaffSearchModel>>(),
+                            // projectStaffRemoteRepository:
+                            //     ProjectStaffRemoteRepository(
+                            //   client,
+                            //   actionMap: {
+                            //     ApiOperation.search:
+                            //         '/project/staff/v1/_search',
+                            //   },
+                            // ),
                             projectRemoteRepository: ProjectRemoteRepository(
                               client,
                               actionMap: {
-                                ApiOperation.search:
-                                    '/project/v1/_search?limit=5&offset=0&tenantId=default&lastChangedSince=&includeDeleted=true&includeDescendants=true',
+                                ApiOperation.search: '/project/v1/_search',
                               },
                             ),
-                            isar: isar,
-                            sql: sql,
                           ),
                         ),
                         BlocProvider(
@@ -181,7 +199,7 @@ class MainApplication extends StatelessWidget {
                             orElse: () => [
                               const UnauthenticatedRouteWrapper(),
                             ],
-                            authenticated: (_, __) => [
+                            authenticated: (_, __, ___) => [
                               const AuthenticatedRouteWrapper(),
                             ],
                           ),

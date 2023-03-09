@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/oplog/oplog_entry.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -244,7 +243,7 @@ class IndividualLocalRepository
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      rowVersion: entity.rowVersion.increment,
+      rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
       batch.update(
