@@ -1,6 +1,7 @@
 {
   "name": "household",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -8,18 +9,9 @@
       "includeForQuery": true
     },
     {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
       "name": "memberCount",
       "type": "int",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "customAttributes": [

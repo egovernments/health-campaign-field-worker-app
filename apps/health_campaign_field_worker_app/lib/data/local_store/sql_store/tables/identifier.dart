@@ -4,11 +4,15 @@ import 'package:drift/drift.dart';
 
 
 class Identifier extends Table {
-  TextColumn get type => text().nullable()();
   TextColumn get id => text().nullable()();
-  TextColumn get clientReferenceId => text()();
+  TextColumn get individualClientReferenceId => text().nullable()();
+  TextColumn get identifierType => text().nullable()();
+  TextColumn get identifierId => text().nullable()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { individualClientReferenceId,  };
 }
