@@ -77,6 +77,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               ? resull.values!
                   .replaceFirst('[', '')
                   .replaceFirst(']', '')
+                  .replaceAll(" ", '')
                   .split(',')
               : [];
           if (list.isEmpty) list.removeRange(0, list.length);

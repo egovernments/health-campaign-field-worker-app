@@ -1,14 +1,17 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../router/app_router.dart';
+import 'package:intl/intl.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../models/entities/service.dart';
 import '../../models/entities/service_attributes.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -51,15 +54,28 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               return state.maybeMap(
                 orElse: () => Text(state.runtimeType.toString()),
                 serviceDefinitionFetch: (value) {
-                  var i = 0;
+                  var i = -1;
+                  i++;
+                  var submitTriggered = false;
 
                   return Form(
                     key: abcKey, //assigning key to form
                     child: DigitCard(
                       child: Column(children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            localizations.translate(i18.checklist.checklist),
+                            style: theme.textTheme.displayMedium,
+                          ),
+                        ),
                         ...value.selectedServiceDefinition!.attributes!.map((
                           e,
                         ) {
+                          int index = value
+                              .selectedServiceDefinition!.attributes!
+                              .indexOf(e);
+
                           return Column(children: [
                             if (e.dataType == 'String') ...[
                               DigitTextField(
@@ -67,7 +83,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   abcKey.currentState?.validate();
                                 },
                                 isRequired: false,
-                                controller: controller[i++],
+                                controller: controller[index],
                                 inputFormatter: [
                                   FilteringTextInputFormatter.allow(RegExp(
                                     "[a-zA-Z0-9]",
@@ -113,21 +129,25 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             .translate("${e.code}_REGEX");
                                   }
                                 },
-                                controller: controller[i++],
+                                controller: controller[i],
                                 label: localizations.translate(
                                   '${value.selectedServiceDefinition?.code}.${e.code}',
                                 ),
                               ),
-                            ] else if (e.dataType == 'SingleValueList') ...[
+                            ] else if (e.dataType == 'MultiValueList') ...[
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    localizations.translate(
-                                      '${value.selectedServiceDefinition?.code}.${e.code}',
-                                    ),
-                                    style: theme.textTheme.headlineSmall,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.${e.code}',
+                                        )} ${e.required == true ? '*' : ''}',
+                                        style: theme.textTheme.headlineSmall,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -137,7 +157,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     children: e.values!
                                         .map((e) => DigitCheckboxTile(
                                               label: e,
-                                              value: controller[i]
+                                              value: controller[index]
                                                   .text
                                                   .split('.')
                                                   .contains(e),
@@ -145,10 +165,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 context.read<ServiceBloc>().add(
                                                       ServiceChecklistEvent(
                                                         value: e.toString(),
+                                                        submitTriggered:
+                                                            submitTriggered,
                                                       ),
                                                     );
                                                 final String ele;
-                                                var val = controller[i]
+                                                var val = controller[index]
                                                     .text
                                                     .split('.');
                                                 if (val.contains(e)) {
@@ -158,7 +180,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                   ele =
                                                       "${controller[i].text}.$e";
                                                 }
-                                                controller[i].value =
+                                                controller[index].value =
                                                     TextEditingController
                                                         .fromValue(
                                                   TextEditingValue(
@@ -171,7 +193,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   );
                                 },
                               ),
-                            ] else if (e.dataType == 'MultiValueList') ...[
+                            ] else if (e.dataType == 'SingleValueList') ...[
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -179,57 +201,54 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     alignment: Alignment.topLeft,
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 8),
-                                      child: Text(
-                                        localizations.translate(
-                                          '${value.selectedServiceDefinition?.code}.${e.code}',
-                                        ),
-                                        style: theme.textTheme.headlineSmall,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '${localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.${e.code}',
+                                            )} ${e.required == true ? '*' : ''}',
+                                            style:
+                                                theme.textTheme.headlineSmall,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  ...e.values!.map((ele) {
-                                    final element = ele.trim();
-                                    final contol = controller[i];
-
-                                    return BlocBuilder<ServiceBloc,
-                                        ServiceState>(
-                                      builder: (context, state) {
-                                        return Column(
-                                          children: [
-                                            ListTile(
-                                              title: Text(localizations
-                                                  .translate(element)),
-                                              leading: Radio(
-                                                value: element,
-                                                groupValue: contol.text.trim(),
-                                                onChanged: (item) {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceChecklistEvent(
-                                                          value:
-                                                              item.toString(),
-                                                        ),
-                                                      );
-                                                  contol.value =
-                                                      TextEditingController
-                                                          .fromValue(
-                                                    TextEditingValue(
-                                                      text: item.toString(),
-                                                    ),
-                                                  ).value;
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }).toList(),
                                   BlocBuilder<ServiceBloc, ServiceState>(
                                     builder: (context, state) {
-                                      return (e.values?.length == 3 &&
-                                              controller[i].text ==
+                                      return RadioGroup<String>.builder(
+                                        groupValue:
+                                            controller[index].text.trim(),
+                                        onChanged: (value) {
+                                          context.read<ServiceBloc>().add(
+                                                ServiceChecklistEvent(
+                                                  value: controller[index]
+                                                      .text
+                                                      .trim(),
+                                                  submitTriggered:
+                                                      submitTriggered,
+                                                ),
+                                              );
+                                          controller[index].value =
+                                              TextEditingController.fromValue(
+                                            TextEditingValue(
+                                              text: value!,
+                                            ),
+                                          ).value;
+                                        },
+                                        items:
+                                            e.values != null ? e.values! : [],
+                                        itemBuilder: (item) =>
+                                            RadioButtonBuilder(
+                                          item.trim(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      return (e.values?.length == 2 &&
+                                              controller[index].text ==
                                                   e.values?[1].trim())
                                           ? Padding(
                                               padding: const EdgeInsets.only(
@@ -237,7 +256,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               ),
                                               child: DigitTextField(
                                                 controller:
-                                                    additionalController[i],
+                                                    additionalController[index],
                                                 label: localizations.translate(
                                                   '${value.selectedServiceDefinition?.code}.${e.code}.ADDITIONAL_FIELD',
                                                 ),
@@ -246,6 +265,31 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                           : const SizedBox();
                                     },
                                   ),
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      return Offstage(
+                                        offstage: e.required == null ||
+                                            e.required == true &&
+                                                controller[index]
+                                                    .text
+                                                    .trim()
+                                                    .isNotEmpty ||
+                                            !submitTriggered,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            ),
+                                            style: TextStyle(
+                                              color: theme.colorScheme.error,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const DigitDivider(),
                                 ],
                               ),
                             ],
@@ -253,9 +297,25 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         }).toList(),
                         DigitElevatedButton(
                           onPressed: () {
+                            submitTriggered = true;
+
+                            context.read<ServiceBloc>().add(
+                                  const ServiceChecklistEvent(
+                                    value: '',
+                                    submitTriggered: true,
+                                  ),
+                                );
                             final isValid = abcKey.currentState?.validate();
                             if (!isValid!) {
                               return;
+                            }
+                            final itemsAttributes =
+                                value.selectedServiceDefinition!.attributes;
+                            for (i = 0; i < controller.length; i++) {
+                              if (itemsAttributes?[i].required == true &&
+                                  (controller[i].text == '')) {
+                                return;
+                              }
                             }
 
                             DigitDialog.show(
@@ -264,6 +324,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 titleText: localizations.translate(
                                   i18.checklist.checklistDialogLabel,
                                 ),
+                                content: Text(localizations.translate(
+                                  i18.checklist.checklistDialogDescription,
+                                )),
                                 primaryAction: DigitDialogActions(
                                   label: localizations.translate(i18
                                       .checklist.checklistDialogPrimaryAction),
@@ -293,6 +356,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     context.read<ServiceBloc>().add(
                                           ServiceCreateEvent(
                                             serviceModel: ServiceModel(
+                                              createdAt:
+                                                  DateFormat('dd/MM/yyyy')
+                                                      .format(DateTime.now()),
                                               tenantId: value
                                                   .selectedServiceDefinition!
                                                   .tenantId,
@@ -306,6 +372,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             ),
                                           ),
                                         );
+
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop();
 
                                     context.router.push(AcknowledgementRoute());
                                   },

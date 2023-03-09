@@ -1,6 +1,10 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../../router/app_router.dart';
+import '../../blocs/service_definition/service_definition.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/service/service.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -26,6 +30,27 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
         header: Column(children: const [
           BackNavigationHelpHeaderWidget(),
         ]),
+        footer: BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+              orElse: () => const Offstage(),
+              serviceSearch: (value1, value2, value3) {
+                return value2 != null
+                    ? DigitCard(
+                        child: DigitElevatedButton(
+                          onPressed: () {
+                            context.router.pop();
+                          },
+                          child: Text(
+                            localizations.translate(i18.common.corecommonclose),
+                          ),
+                        ),
+                      )
+                    : const Offstage();
+              },
+            );
+          },
+        ),
         children: [
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
@@ -41,6 +66,18 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            DateFormat('dd MMMM yyyy').format(
+                                              DateFormat('dd/MM/yyyy').parse(
+                                                e.createdAt.toString(),
+                                              ),
+                                            ),
+                                            style:
+                                                theme.textTheme.headlineMedium,
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -69,49 +106,77 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                 : const Offstage())
                             .toList(),
                       )
-                    : DigitCard(
-                        child: Column(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.all(8),
+                    : BlocBuilder<ServiceDefinitionBloc,
+                        ServiceDefinitionState>(builder: (context, state) {
+                        return state.maybeWhen(
+                          serviceDefinitionFetch: (item1, item2) {
+                            return DigitCard(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: value2.attributes!
-                                    .map(
-                                      (e) => Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                localizations.translate(
-                                                  e.attributeCode!,
-                                                ),
-                                                style: theme
-                                                    .textTheme.headlineSmall,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      localizations
+                                          .translate(i18.checklist.checklist),
+                                      style: theme.textTheme.displayMedium,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: value2.attributes!
+                                          .map(
+                                            (e) => Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      localizations.translate(
+                                                        "${item2?.code}.${e.attributeCode!}",
+                                                      ),
+                                                      style: theme.textTheme
+                                                          .headlineSmall,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only()
+                                                            .copyWith(
+                                                      top: kPadding,
+                                                      bottom: kPadding,
+                                                    ),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        localizations
+                                                            .translate(e.value),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const DigitDivider(),
+                                                ],
                                               ),
                                             ),
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                localizations
-                                                    .translate(e.value),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      );
+                            );
+                          },
+                          orElse: () => const Offstage(),
+                        );
+                      });
               },
             );
           }),

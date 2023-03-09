@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 
 import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -140,10 +141,38 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           }
         }
 
+        List<String> codes = [];
+        for (var elements in userObject!.roles) {
+          switch (elements.code) {
+            case UserRoleCodeEnum.warehouseManager:
+              codes = projects
+                  .map((ele) => '${ele.name}.WAREHOUSE.${'WAREHOUSE_MANAGER'}')
+                  .toList();
+              break;
+            case UserRoleCodeEnum.registrar:
+              codes = projects
+                  .map((ele) => '${ele.name}.WAREHOUSE.${'REGISTRAR'}')
+                  .toList();
+              break;
+            case UserRoleCodeEnum.systemAdministrator:
+              codes = projects
+                  .map((ele) =>
+                      '${ele.name}.WAREHOUSE.${'SYSTEM_ADMINISTRATOR'}')
+                  .toList();
+              break;
+            case UserRoleCodeEnum.supervisor:
+              codes = projects
+                  .map((ele) => '${ele.name}.WAREHOUSE.${'SUPERVISOR'}')
+                  .toList();
+
+              break;
+          }
+        }
+
         final serviceDefinition = await serviceDefinitionremoteRepository
             .search(ServiceDefinitionSearchModel(
-          // id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
           tenantId: envConfig.variables.tenantId,
+          code: codes,
         ));
 
         for (var element in serviceDefinition) {

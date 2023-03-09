@@ -11,6 +11,7 @@ class ServiceSearchModel extends EntitySearchModel {
   final String? clientId;
   final String? serviceDefId;
   final String? accountId;
+  final String? createdAt;
   final String? tenantId;
   final bool? isDeleted;
   
@@ -19,6 +20,7 @@ class ServiceSearchModel extends EntitySearchModel {
     this.clientId,
     this.serviceDefId,
     this.accountId,
+    this.createdAt,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -33,6 +35,7 @@ class ServiceModel extends EntityModel {
   final bool? isActive;
   final String? accountId;
   final String? additionalDetails;
+  final String? createdAt;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -46,6 +49,7 @@ class ServiceModel extends EntityModel {
     this.isActive,
     this.accountId,
     this.additionalDetails,
+    this.createdAt,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -61,6 +65,7 @@ class ServiceModel extends EntityModel {
       isActive: Value(isActive),
       accountId: Value(accountId),
       additionalDetails: Value(additionalDetails),
+      createdAt: Value(createdAt),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

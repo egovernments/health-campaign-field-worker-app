@@ -36,6 +36,10 @@ class Common {
   String get corecommonBack => 'CORE_COMMON_BACK';
 
   String get corecommonHelp => 'CORE_COMMON_HELP';
+
+  String get corecommonRequired => 'CORE_COMMON_REQUIRED';
+
+  String get corecommonclose => 'CORE_COMMON_CLOSE';
 }
 
 class Login {
@@ -299,6 +303,7 @@ class ProjectSelection {
 class Checklist {
   const Checklist();
 
+  String get checklist => 'CHECKLIST';
   String get checklistlabel => 'CHECKLIST_LABEL';
 
   String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';

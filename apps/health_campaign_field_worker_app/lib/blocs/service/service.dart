@@ -27,7 +27,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ServiceChecklistEvent event,
     ServiceEmitter emit,
   ) async {
-    emit(ServiceState.multichecklistChanged(value: event.value));
+    emit(ServiceState.multichecklistChanged(
+      value: event.value,
+      submitTriggered: event.submitTriggered,
+    ));
   }
 
   FutureOr<void> _handleCreate(
@@ -67,8 +70,10 @@ class ServiceEvent with _$ServiceEvent {
     required ServiceSearchModel serviceSearchModel,
   }) = ServiceSearchEvent;
 
-  const factory ServiceEvent.multichecklistChanged({required String value}) =
-      ServiceChecklistEvent;
+  const factory ServiceEvent.multichecklistChanged({
+    required String value,
+    required bool submitTriggered,
+  }) = ServiceChecklistEvent;
   const factory ServiceEvent.selectService({
     required ServiceModel service,
   }) = ServiceSelectionEvent;
@@ -82,6 +87,7 @@ class ServiceState with _$ServiceState {
 
   const factory ServiceState.multichecklistChanged({
     @Default('') String value,
+    @Default(false) bool submitTriggered,
   }) = ServiceMultichecklistChangedState;
 
   const factory ServiceState.serviceCreate({

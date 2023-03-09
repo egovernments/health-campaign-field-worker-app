@@ -43,6 +43,8 @@ class AppConfig with _$AppConfig {
         required List<GenderOptions> genderOptions,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
         required List<IdTypeOptions> idTypeOptions,
+    @JsonKey(name: 'CHECKLIST_TYPES')
+        required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
         required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
@@ -137,4 +139,15 @@ class Languages with _$Languages {
 
   factory Languages.fromJson(Map<String, dynamic> json) =>
       _$LanguagesFromJson(json);
+}
+
+@freezed
+class CheckListTypes with _$CheckListTypes {
+  factory CheckListTypes({
+    required String name,
+    required String code,
+  }) = _CheckListTypes;
+
+  factory CheckListTypes.fromJson(Map<String, dynamic> json) =>
+      _$CheckListTypesFromJson(json);
 }

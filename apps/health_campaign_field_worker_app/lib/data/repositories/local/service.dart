@@ -60,9 +60,9 @@ class ServiceLocalRepository
                 isDeleted: e.isDeleted,
                 auditDetails: e.auditDetails,
               )
-            : e.dataType == 'MultiValueList' || e.dataType == 'SingleValueList'
+            : e.dataType == 'MultiValueList'
                 ? ServiceAttributesModel(
-                    value: [e.value],
+                    value: e.value.toString().split('.'),
                     attributeCode: e.attributeCode,
                     tenantId: e.tenantId,
                     clientReferenceId: e.clientReferenceId,
@@ -72,15 +72,27 @@ class ServiceLocalRepository
                     isDeleted: e.isDeleted,
                     auditDetails: e.auditDetails,
                   )
-                : ServiceAttributesModel(
-                    value: e.value,
-                    attributeCode: e.attributeCode,
-                    tenantId: e.tenantId,
-                    clientReferenceId: e.clientReferenceId,
-                    additionalDetails: e.additionalDetails,
-                    isDeleted: e.isDeleted,
-                    auditDetails: e.auditDetails,
-                  );
+                : e.dataType == 'SingleValueList'
+                    ? ServiceAttributesModel(
+                        value: e.value,
+                        attributeCode: e.attributeCode,
+                        tenantId: e.tenantId,
+                        clientReferenceId: e.clientReferenceId,
+                        additionalDetails: e.additionalDetails != null
+                            ? {"value": e.additionalDetails}
+                            : null,
+                        isDeleted: e.isDeleted,
+                        auditDetails: e.auditDetails,
+                      )
+                    : ServiceAttributesModel(
+                        value: e.value,
+                        attributeCode: e.attributeCode,
+                        tenantId: e.tenantId,
+                        clientReferenceId: e.clientReferenceId,
+                        additionalDetails: e.additionalDetails,
+                        isDeleted: e.isDeleted,
+                        auditDetails: e.auditDetails,
+                      );
       }).toList(),
     );
 
@@ -137,6 +149,7 @@ class ServiceLocalRepository
         isActive: data.isActive,
         isDeleted: data.isDeleted,
         serviceDefId: data.serviceDefId,
+        createdAt: data.createdAt,
         attributes: res.whereNotNull().toList(),
       ));
     }

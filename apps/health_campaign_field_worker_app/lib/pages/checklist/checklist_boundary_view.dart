@@ -64,10 +64,11 @@ class _ChecklistBoundaryViewPageState
                   ),
                 ),
                 DigitTextField(
+                  readOnly: true,
                   label: localizations.translate(
                     i18.householdLocation.administrationAreaFormLabel,
                   ),
-                  controller: TextEditingController(text: ''),
+                  controller: TextEditingController(text: 'Solimbo'),
                 ),
               ],
             ),

@@ -10,6 +10,7 @@ class Service extends Table {
   BoolColumn get isActive => boolean().nullable()();
   TextColumn get accountId => text().nullable()();
   TextColumn get additionalDetails => text().nullable()();
+  TextColumn get createdAt => text().nullable()();
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();

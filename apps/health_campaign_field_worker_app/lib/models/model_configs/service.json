@@ -32,6 +32,13 @@
             "name": "additionalDetails",
             "type": "String"
         }
+        ,
+    {
+        "name": "createdAt",
+        "type": "String",
+        "includeForQuery": true
+      }
+
         
     ],
     "customAttributes": [

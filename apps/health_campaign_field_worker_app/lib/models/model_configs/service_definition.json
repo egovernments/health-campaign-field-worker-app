@@ -25,7 +25,6 @@
         "type": "bool",
         "includeForQuery": true      
     }
-  
     ],
 
     "customAttributes": [
