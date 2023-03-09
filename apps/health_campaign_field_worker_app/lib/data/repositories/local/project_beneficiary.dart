@@ -58,6 +58,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           final projectBeneficiary = e.readTable(sql.projectBeneficiary);
 
           return ProjectBeneficiaryModel(
+            createdBy: projectBeneficiary.createdBy,
+            createdAt: projectBeneficiary.createdAt,
             clientReferenceId: projectBeneficiary.clientReferenceId,
             tenantId: projectBeneficiary.tenantId,
             rowVersion: projectBeneficiary.rowVersion,

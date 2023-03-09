@@ -11,10 +11,12 @@ class Boundary extends Table {
   TextColumn get longitude => text().nullable()();
   TextColumn get materializedPath => text().nullable()();
   TextColumn get tenantId => text().nullable()();
+  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => {  };
+  Set<Column> get primaryKey => { createdBy,  };
 }

@@ -35,9 +35,11 @@ class AddressModel extends EntityModel {
   final String? buildingName;
   final String? street;
   final String? tenantId;
+  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final AddressType? type;
+  final DateTime createdAtTime;
   
 
   AddressModel({
@@ -55,11 +57,17 @@ class AddressModel extends EntityModel {
     this.buildingName,
     this.street,
     this.tenantId,
+    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.type,
+    required int createdAt,
     super.auditDetails,
-  }):  super();
+  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
+       super();
+
+  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
+  
 
   AddressCompanion get companion {
     return AddressCompanion(
@@ -77,8 +85,10 @@ class AddressModel extends EntityModel {
       buildingName: Value(buildingName),
       street: Value(street),
       tenantId: Value(tenantId),
+      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      createdAt: Value(createdAt),
       type: Value(type),
       );
   }

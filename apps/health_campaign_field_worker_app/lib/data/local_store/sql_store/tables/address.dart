@@ -19,11 +19,13 @@ class Address extends Table {
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
   TextColumn get tenantId => text().nullable()();
+  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get createdAt => integer()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { relatedClientReferenceId,  };
+  Set<Column> get primaryKey => { relatedClientReferenceId, createdBy,  };
 }

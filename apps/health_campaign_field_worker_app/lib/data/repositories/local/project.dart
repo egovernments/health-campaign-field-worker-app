@@ -47,6 +47,8 @@ class ProjectLocalRepository
 
       return ProjectModel(
         id: data.id,
+        createdBy: data.createdBy,
+        createdAt: data.createdAt,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
         name: data.name,

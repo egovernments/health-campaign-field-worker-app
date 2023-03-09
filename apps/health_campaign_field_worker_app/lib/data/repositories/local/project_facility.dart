@@ -33,6 +33,8 @@ class ProjectFacilityLocalRepository
       final projectFacility = e.readTable(sql.projectFacility);
 
       return ProjectFacilityModel(
+        createdBy: projectFacility.createdBy,
+        createdAt: projectFacility.createdAt,
         facilityId: projectFacility.facilityId,
         projectId: projectFacility.projectId,
         tenantId: projectFacility.tenantId,
