@@ -279,17 +279,16 @@ class _DeliverInterventionPageState
                                 },
                               ),
                               const DigitDivider(),
-                              DigitDropdown<String>(
+                              DigitDropdown<MenuItemModel>(
                                 label: localizations.translate(
                                   i18.deliverIntervention
                                       .resourceDeliveredLabel,
                                 ),
                                 valueMapper: (value) {
-                                  return localizations.translate(value);
+                                  return localizations.translate(value.code);
                                 },
-                                menuItems: tempProductVariants
-                                    .map((e) => e.code)
-                                    .toList(),
+                                initialValue: tempProductVariants.firstOrNull,
+                                menuItems: tempProductVariants,
                                 validationMessages: {
                                   'required': (object) => 'Field is required',
                                 },
