@@ -72,6 +72,9 @@ class _IndividualDetailsPageState
                 child: DigitCard(
                   child: DigitElevatedButton(
                     onPressed: () async {
+                      final userId = context.loggedInUserUuid;
+                      final projectId = context.projectId;
+
                       form.markAllAsTouched();
                       if (!form.valid) return;
 
@@ -89,7 +92,8 @@ class _IndividualDetailsPageState
                           isHeadOfHousehold,
                         ) async {
                           final individual = _getIndividualModel(
-                            form,
+                            context,
+                            form: form,
                             oldIndividual: null,
                           );
 
@@ -129,7 +133,10 @@ class _IndividualDetailsPageState
 
                           if (submit ?? false) {
                             bloc.add(
-                              const BeneficiaryRegistrationCreateEvent(),
+                              BeneficiaryRegistrationCreateEvent(
+                                projectId: projectId,
+                                userUuid: userId,
+                              ),
                             );
                           }
                         },
@@ -139,17 +146,15 @@ class _IndividualDetailsPageState
                           loading,
                         ) {
                           final individual = _getIndividualModel(
-                            form,
+                            context,
+                            form: form,
                             oldIndividual: individualModel,
                           );
 
-                          final rowversion = individualModel.rowVersion;
                           bloc.add(
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                               addressModel: addressModel,
-                              model: individual.copyWith(
-                                rowVersion: rowversion,
-                              ),
+                              model: individual,
                             ),
                           );
                         },
@@ -158,13 +163,17 @@ class _IndividualDetailsPageState
                           householdModel,
                           loading,
                         ) {
-                          final individual = _getIndividualModel(form);
+                          final individual = _getIndividualModel(
+                            context,
+                            form: form,
+                          );
 
                           bloc.add(
                             BeneficiaryRegistrationAddMemberEvent(
                               householdModel: householdModel,
                               individualModel: individual,
                               addressModel: addressModel,
+                              userUuid: userId,
                             ),
                           );
                         },
@@ -333,7 +342,8 @@ class _IndividualDetailsPageState
   }
 
   IndividualModel _getIndividualModel(
-    FormGroup form, {
+    BuildContext context, {
+    required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
     final dob = form.control(_dobKey).value as DateTime?;
@@ -347,6 +357,8 @@ class _IndividualDetailsPageState
       clientReferenceId: IdGen.i.identifier,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
+      createdBy: context.loggedInUserUuid,
+      createdAt: context.millisecondsSinceEpoch(),
     );
 
     var name = individual.name;
@@ -354,6 +366,8 @@ class _IndividualDetailsPageState
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
+      createdBy: context.loggedInUserUuid,
+      createdAt: context.millisecondsSinceEpoch(),
     );
 
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
@@ -364,6 +378,8 @@ class _IndividualDetailsPageState
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
+      createdBy: context.loggedInUserUuid,
+      createdAt: context.millisecondsSinceEpoch(),
     );
 
     individual = individual.copyWith(
