@@ -14,6 +14,7 @@ class Attributes extends Table {
   BoolColumn get required => boolean().nullable()();
   TextColumn get regex => text().nullable()();
   IntColumn get order => integer().nullable()();
+  TextColumn get additionalDetails => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   

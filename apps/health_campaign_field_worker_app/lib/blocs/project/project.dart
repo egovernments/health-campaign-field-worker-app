@@ -3,9 +3,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:path/path.dart';
-
+import 'package:isar/isar.dart';
 import '../../data/data_repository.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
@@ -18,6 +18,7 @@ typedef ProjectEmitter = Emitter<ProjectState>;
 
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
+  final Isar isar;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -60,6 +61,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.facilityLocalRepository,
     required this.serviceDefinitionremoteRepository,
     required this.serviceLocalremoteRepository,
+    required this.isar,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
@@ -140,31 +142,49 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             );
           }
         }
-
+        final configs = await isar.appConfigurations.where().findAll();
+        ;
         List<String> codes = [];
         for (var elements in userObject!.roles) {
           switch (elements.code) {
             case UserRoleCodeEnum.warehouseManager:
-              codes = projects
-                  .map((ele) => '${ele.name}.WAREHOUSE.${'WAREHOUSE_MANAGER'}')
-                  .toList();
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'WAREHOUSE_MANAGER'}');
+                }
+              });
+
               break;
             case UserRoleCodeEnum.registrar:
-              codes = projects
-                  .map((ele) => '${ele.name}.WAREHOUSE.${'REGISTRAR'}')
-                  .toList();
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'REGISTRAR'}');
+                }
+              });
+
               break;
             case UserRoleCodeEnum.systemAdministrator:
-              codes = projects
-                  .map((ele) =>
-                      '${ele.name}.WAREHOUSE.${'SYSTEM_ADMINISTRATOR'}')
-                  .toList();
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'SYSTEM_ADMINISTRATOR'}');
+                }
+              });
+
               break;
             case UserRoleCodeEnum.supervisor:
-              codes = projects
-                  .map((ele) => '${ele.name}.WAREHOUSE.${'SUPERVISOR'}')
-                  .toList();
-
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'SUPERVISOR'}');
+                }
+              });
               break;
           }
         }

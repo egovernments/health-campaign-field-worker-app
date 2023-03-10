@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import '../../utils/utils.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ChecklistViewPage extends LocalizedStatefulWidget {
   const ChecklistViewPage({
@@ -214,57 +217,130 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       ),
                                     ),
                                   ),
-                                  BlocBuilder<ServiceBloc, ServiceState>(
-                                    builder: (context, state) {
-                                      return RadioGroup<String>.builder(
-                                        groupValue:
-                                            controller[index].text.trim(),
-                                        onChanged: (value) {
-                                          context.read<ServiceBloc>().add(
-                                                ServiceChecklistEvent(
-                                                  value: controller[index]
+                                  e.additionalDetails != null
+                                      ? e.additionalDetails!.split(':')[1] ==
+                                              ' STAR'
+                                          ? BlocBuilder<ServiceBloc,
+                                              ServiceState>(
+                                              builder: (context, state) {
+                                                return Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: RatingBar.builder(
+                                                    initialRating: 0,
+                                                    minRating: 1,
+                                                    direction: Axis.horizontal,
+                                                    allowHalfRating: false,
+                                                    itemCount: 5,
+                                                    itemPadding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                      horizontal: 4.0,
+                                                    ),
+                                                    itemBuilder: (context, _) =>
+                                                        Icon(
+                                                      Icons.star,
+                                                      color: theme.colorScheme
+                                                          .secondary,
+                                                    ),
+                                                    onRatingUpdate: (rating) {
+                                                      context
+                                                          .read<ServiceBloc>()
+                                                          .add(
+                                                            ServiceChecklistEvent(
+                                                              value: controller[
+                                                                      index]
+                                                                  .text
+                                                                  .trim(),
+                                                              submitTriggered:
+                                                                  submitTriggered,
+                                                            ),
+                                                          );
+                                                      controller[index].value =
+                                                          TextEditingController
+                                                              .fromValue(
+                                                        TextEditingValue(
+                                                          text:
+                                                              rating.toString(),
+                                                        ),
+                                                      ).value;
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                            )
+                                          : BlocBuilder<ServiceBloc,
+                                              ServiceState>(
+                                              builder: (context, state) {
+                                                return RadioGroup<
+                                                    String>.builder(
+                                                  groupValue: controller[index]
                                                       .text
                                                       .trim(),
-                                                  submitTriggered:
-                                                      submitTriggered,
-                                                ),
-                                              );
-                                          controller[index].value =
-                                              TextEditingController.fromValue(
-                                            TextEditingValue(
-                                              text: value!,
-                                            ),
-                                          ).value;
-                                        },
-                                        items:
-                                            e.values != null ? e.values! : [],
-                                        itemBuilder: (item) =>
-                                            RadioButtonBuilder(
-                                          item.trim(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  BlocBuilder<ServiceBloc, ServiceState>(
-                                    builder: (context, state) {
-                                      return (e.values?.length == 2 &&
-                                              controller[index].text ==
-                                                  e.values?[1].trim())
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: 8,
-                                              ),
-                                              child: DigitTextField(
-                                                controller:
-                                                    additionalController[index],
-                                                label: localizations.translate(
-                                                  '${value.selectedServiceDefinition?.code}.${e.code}.ADDITIONAL_FIELD',
-                                                ),
-                                              ),
+                                                  onChanged: (value) {
+                                                    context
+                                                        .read<ServiceBloc>()
+                                                        .add(
+                                                          ServiceChecklistEvent(
+                                                            value: controller[
+                                                                    index]
+                                                                .text
+                                                                .trim(),
+                                                            submitTriggered:
+                                                                submitTriggered,
+                                                          ),
+                                                        );
+                                                    controller[index].value =
+                                                        TextEditingController
+                                                            .fromValue(
+                                                      TextEditingValue(
+                                                        text: value!,
+                                                      ),
+                                                    ).value;
+                                                  },
+                                                  items: e.values != null
+                                                      ? e.values!
+                                                      : [],
+                                                  itemBuilder: (item) =>
+                                                      RadioButtonBuilder(
+                                                    item.trim(),
+                                                  ),
+                                                );
+                                              },
                                             )
-                                          : const SizedBox();
-                                    },
-                                  ),
+                                      : BlocBuilder<ServiceBloc, ServiceState>(
+                                          builder: (context, state) {
+                                            return RadioGroup<String>.builder(
+                                              groupValue:
+                                                  controller[index].text.trim(),
+                                              onChanged: (value) {
+                                                context.read<ServiceBloc>().add(
+                                                      ServiceChecklistEvent(
+                                                        value: controller[index]
+                                                            .text
+                                                            .trim(),
+                                                        submitTriggered:
+                                                            submitTriggered,
+                                                      ),
+                                                    );
+                                                controller[index].value =
+                                                    TextEditingController
+                                                        .fromValue(
+                                                  TextEditingValue(
+                                                    text: value!,
+                                                  ),
+                                                ).value;
+                                              },
+                                              items: e.values != null
+                                                  ? e.values!
+                                                  : [],
+                                              itemBuilder: (item) =>
+                                                  RadioButtonBuilder(
+                                                item.trim(),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                   BlocBuilder<ServiceBloc, ServiceState>(
                                     builder: (context, state) {
                                       return Offstage(

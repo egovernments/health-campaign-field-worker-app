@@ -59,7 +59,14 @@
             "name": "order",
             "type": "int",
             "includeForQuery": true
+        },
+        {
+
+            "name": "additionalDetails",
+            "type": "String",
+            "includeForQuery": true
         }
+        
 
 
     ],

@@ -108,6 +108,15 @@ class MdmsRepository {
         return genderOption;
       }).toList();
 
+      final List<ChecklistTypes> checklistTypes =
+          element.checklistTypes.map((e) {
+        final checklist = ChecklistTypes()
+          ..name = e.name
+          ..code = e.code;
+
+        return checklist;
+      }).toList();
+
       final List<IdTypeOptions> idTypeOptions =
           element.idTypeOptions.map((element) {
         final idOption = IdTypeOptions()
@@ -142,7 +151,7 @@ class MdmsRepository {
       appConfiguration.genderOptions = genderOptions;
       appConfiguration.idTypeOptions = idTypeOptions;
       appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-
+      appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.backendInterface = backendInterface;
 
       appConfiguration.languages = languageList;

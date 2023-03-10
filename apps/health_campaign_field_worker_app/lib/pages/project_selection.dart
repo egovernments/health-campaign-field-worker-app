@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/project/project.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;

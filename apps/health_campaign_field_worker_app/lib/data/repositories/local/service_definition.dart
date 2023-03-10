@@ -82,6 +82,10 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               : [];
           if (list.isEmpty) list.removeRange(0, list.length);
 
+          final additionalDetails = (resull.additionalDetails
+              ?.replaceFirst('{', '')
+              .replaceFirst('}', ''));
+
           return AttributesModel(
             id: resull.id,
             code: resull.code,
@@ -95,6 +99,9 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
             order: resull.order,
             isDeleted: resull.isDeleted,
             rowVersion: resull.rowVersion,
+            additionalDetails: additionalDetails!.trim().isEmpty
+                ? null
+                : additionalDetails.trim(),
           );
         }
       }).toList();

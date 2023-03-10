@@ -116,6 +116,7 @@ class MainApplication extends StatelessWidget {
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            isar: isar,
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),

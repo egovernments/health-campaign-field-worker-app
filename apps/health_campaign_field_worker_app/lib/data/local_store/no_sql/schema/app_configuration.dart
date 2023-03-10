@@ -30,6 +30,9 @@ class AppConfiguration {
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
 
+  @Name('CHECKLIST_TYPES')
+  late List<ChecklistTypes>? checklistTypes;
+
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
@@ -77,4 +80,10 @@ class Interfaces {
 @embedded
 class Config {
   late int localStoreTTL;
+}
+
+@embedded
+class ChecklistTypes {
+  late String name;
+  late String code;
 }

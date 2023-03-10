@@ -16,8 +16,9 @@ class AttributesSearchModel extends EntitySearchModel {
   final bool? required;
   final String? regex;
   final int? order;
+  final String? additionalDetails;
   final bool? isDeleted;
-  
+
   AttributesSearchModel({
     this.id,
     this.dataType,
@@ -28,9 +29,10 @@ class AttributesSearchModel extends EntitySearchModel {
     this.required,
     this.regex,
     this.order,
+    this.additionalDetails,
     this.isDeleted,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -45,9 +47,9 @@ class AttributesModel extends EntityModel {
   final bool? required;
   final String? regex;
   final int? order;
+  final String? additionalDetails;
   final bool? isDeleted;
   final int? rowVersion;
-  
 
   AttributesModel({
     this.id,
@@ -60,10 +62,11 @@ class AttributesModel extends EntityModel {
     this.required,
     this.regex,
     this.order,
+    this.additionalDetails,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }) : super();
 
   AttributesCompanion get companion {
     return AttributesCompanion(
@@ -77,8 +80,9 @@ class AttributesModel extends EntityModel {
       required: Value(required),
       regex: Value(regex),
       order: Value(order),
+      additionalDetails: Value(additionalDetails),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
