@@ -28,7 +28,6 @@ class ServiceDefinitionBloc
   ) async {
     final results = await serviceDefinitionDataRepository.search(
       ServiceDefinitionSearchModel(
-        // id: "1faa1d3f-c7e4-4334-9ec9-1c5f4259a8c8",
         tenantId: envConfig.variables.tenantId,
       ),
     );
