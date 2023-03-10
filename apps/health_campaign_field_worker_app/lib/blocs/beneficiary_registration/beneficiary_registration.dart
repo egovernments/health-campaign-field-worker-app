@@ -132,6 +132,8 @@ class BeneficiaryRegistrationBloc
           );
         }
 
+        final createdAt = DateTime.now().millisecondsSinceEpoch;
+
         emit(value.copyWith(loading: true));
 
         try {
@@ -158,9 +160,10 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               clientReferenceId: IdGen.i.identifier,
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
-              // TODO(naveen): Please add project ID here
-              projectId: '13',
+              projectId: event.projectId,
               beneficiaryClientReferenceId: household.clientReferenceId,
+              createdAt: createdAt,
+              createdBy: event.userUuid,
             ),
           );
 
@@ -172,6 +175,8 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
+              createdAt: createdAt,
+              createdBy: event.userUuid,
             ),
           );
         } catch (error) {
@@ -277,6 +282,8 @@ class BeneficiaryRegistrationBloc
             ),
           );
 
+          final createdAt = DateTime.now().millisecondsSinceEpoch;
+
           await householdMemberRepository.create(
             HouseholdMemberModel(
               householdClientReferenceId:
@@ -287,6 +294,8 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
+              createdAt: createdAt,
+              createdBy: event.userUuid,
             ),
           );
         } catch (error) {
@@ -320,6 +329,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
+    required String userUuid,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({
@@ -332,8 +342,10 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
-  const factory BeneficiaryRegistrationEvent.create() =
-      BeneficiaryRegistrationCreateEvent;
+  const factory BeneficiaryRegistrationEvent.create({
+    required String userUuid,
+    required String projectId,
+  }) = BeneficiaryRegistrationCreateEvent;
 }
 
 @freezed

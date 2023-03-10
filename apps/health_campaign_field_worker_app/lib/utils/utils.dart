@@ -1,8 +1,14 @@
 library app_utils;
 
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
+
+import '../blocs/auth/auth.dart';
+import '../blocs/project/project.dart';
+import 'app_exception.dart';
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -49,6 +55,56 @@ extension IntIncrementer on int? {
 
   int _incrementBy(int value) {
     return this == null ? value : (this! + value);
+  }
+}
+
+extension ContextUtilityExtensions on BuildContext {
+  int millisecondsSinceEpoch([DateTime? dateTime]) {
+    return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
+  }
+
+  String get loggedInUserUuid {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel) {
+        return userModel;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject.uuid;
+  }
+
+  String get projectId {
+    final projectBloc = _get<ProjectBloc>();
+    final selectedProject = projectBloc.state.whenOrNull(
+      fetched: (projects, selectedProject) {
+        return selectedProject;
+      },
+    );
+
+    if (selectedProject == null) {
+      throw AppException('Project not selected');
+    }
+
+    return selectedProject.id;
+  }
+
+  T _get<T extends BlocBase>() {
+    try {
+      final bloc = read<T>();
+
+      return bloc;
+    } on ProviderNotFoundException catch (_) {
+      throw AppException(
+        '${T.runtimeType} not found in the current context',
+      );
+    } catch (error) {
+      throw AppException('Could not fetch ${T.runtimeType}');
+    }
   }
 }
 

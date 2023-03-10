@@ -95,8 +95,8 @@ class _DeliverInterventionPageState
                                             rowVersion: 1,
                                             projectId: '13',
                                             status: Status.delivered.name,
-                                            createdDate: DateTime.now()
-                                                .millisecondsSinceEpoch,
+                                            createdDate: context
+                                                .millisecondsSinceEpoch(),
                                             resources: [
                                               TaskResourceModel(
                                                 clientReferenceId:
@@ -116,10 +116,17 @@ class _DeliverInterventionPageState
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
+                                                createdAt: context
+                                                    .millisecondsSinceEpoch(),
+                                                createdBy:
+                                                    context.loggedInUserUuid,
                                               ),
                                             ],
                                             address: householdMemberWrapper
                                                 .household.address,
+                                            createdAt: context
+                                                .millisecondsSinceEpoch(),
+                                            createdBy: context.loggedInUserUuid,
                                           ),
                                           state.householdMemberWrapper.task ==
                                                   null

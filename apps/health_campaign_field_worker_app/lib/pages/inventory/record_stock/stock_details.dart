@@ -211,6 +211,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   referenceIdType: 'PROJECT',
                                   quantity: quantity.toString(),
                                   waybillNumber: waybillNumber,
+                                  createdBy: context.loggedInUserUuid,
+                                  createdAt: context.millisecondsSinceEpoch(),
                                 );
 
                                 bloc.add(
