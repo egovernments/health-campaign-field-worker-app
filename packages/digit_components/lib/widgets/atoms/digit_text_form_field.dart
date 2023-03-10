@@ -20,8 +20,7 @@ class DigitTextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
-  final TextCapitalization textCapitalization;
-  final Map<String, String Function(Object object)>? validationMessages;
+  final Map<String, String Function(Object control)>? validationMessages;
 
   const DigitTextFormField({
     super.key,
@@ -36,6 +35,7 @@ class DigitTextFormField extends StatelessWidget {
     this.onTap,
     this.focusNode,
     this.validationMessages,
+    this.suffixIcon,
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.sentences,
     this.obscureText = false,
