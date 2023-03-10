@@ -156,6 +156,10 @@ class _StockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdAt: context
+                                                  .millisecondsSinceEpoch(),
                                             );
 
                                             final submit =
