@@ -4,21 +4,19 @@ import 'package:flutter/material.dart';
 class DigitInfoCard extends StatelessWidget {
   final String title;
   final String description;
-  final Color? backgroundColor;
+  final Color backgroundColor;
   final IconData? icon;
   final Color? iconColor;
   final EdgeInsets? padding;
-  final EdgeInsets? margin;
 
   const DigitInfoCard({
     super.key,
     required this.title,
     required this.description,
-    this.backgroundColor,
+    required this.backgroundColor,
     this.iconColor,
     this.icon,
     this.padding,
-    this.margin,
   });
 
   @override
@@ -26,13 +24,13 @@ class DigitInfoCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: margin ?? DigitTheme.instance.containerMargin,
+      margin: DigitTheme.instance.containerMargin,
       padding: padding ?? const EdgeInsets.all(8),
       decoration: ShapeDecoration(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
-        color: backgroundColor ?? theme.colorScheme.tertiaryContainer,
+        color: backgroundColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,14 +42,12 @@ class DigitInfoCard extends StatelessWidget {
                 padding: padding ?? const EdgeInsets.all(8),
                 child: Icon(
                   icon ?? Icons.info,
-                  color: iconColor ?? theme.colorScheme.surfaceTint,
+                  color: iconColor,
                 ),
               ),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.headlineMedium,
-                ),
+              Text(
+                title,
+                style: theme.textTheme.headlineMedium,
               )
             ],
           ),

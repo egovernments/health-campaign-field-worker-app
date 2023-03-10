@@ -8,6 +8,11 @@
       "includeForQuery": true
     },
     {
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "type",
       "type": "String",
       "includeForQuery": true
@@ -21,6 +26,10 @@
       "name": "manufacturer",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
     }
   ],
   "isEnum": false

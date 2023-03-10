@@ -3,63 +3,53 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitTextFormField extends StatelessWidget {
-  final bool readOnly;
+  final bool? readOnly;
   final String formControlName;
   final String? hint;
   final Widget? suffix;
-  final bool isRequired;
-  final int minLines;
-  final int maxLines;
+  final bool? isRequired;
+  final int? minLines;
   final int? maxLength;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final FocusNode? focusNode;
   final VoidCallback? onTap;
-  final bool obscureText;
+  final bool? obscureText;
   final String label;
-  final int? minLength;
-  final Widget? suffixIcon;
-  final TextCapitalization textCapitalization;
-  final ControlValueAccessor<dynamic, String>? valueAccessor;
-  final Map<String, String Function(Object control)>? validationMessages;
+  final TextCapitalization? textCapitalization;
+  final Map<String, String Function(Object)>? validationMessages;
 
   const DigitTextFormField({
     super.key,
-    required this.label,
+    this.readOnly,
     required this.formControlName,
     this.hint,
     this.suffix,
-    this.minLines = 1,
-    this.maxLines = 1,
-    this.valueAccessor,
+    this.minLines,
     this.maxLength,
     this.onTap,
+    this.isRequired,
+    this.keyboardType,
     this.focusNode,
+    this.textCapitalization,
+    this.obscureText,
     this.validationMessages,
-    this.suffixIcon,
-    this.keyboardType = TextInputType.text,
-    this.textCapitalization = TextCapitalization.sentences,
-    this.obscureText = false,
-    this.isRequired = false,
-    this.readOnly = false,
-    this.minLength,
+    required this.label,
   });
 
   @override
   Widget build(BuildContext context) => LabeledField(
-        label: '$label ${isRequired ? '*' : ''}',
+        label: label,
         child: ReactiveTextField(
-          readOnly: readOnly,
+          readOnly: readOnly ?? false,
           formControlName: formControlName,
           maxLength: maxLength,
           validationMessages: validationMessages,
           autofocus: false,
-          textCapitalization: textCapitalization,
+          textCapitalization: textCapitalization ?? TextCapitalization.none,
           minLines: minLines,
-          maxLines: maxLines,
-          obscureText: obscureText,
+          obscureText: obscureText ?? false,
           focusNode: focusNode,
-          keyboardType: keyboardType,
-          valueAccessor: valueAccessor,
+          keyboardType: keyboardType ?? TextInputType.text,
           decoration: InputDecoration(
             labelText: hint,
             suffixIconConstraints: const BoxConstraints(
