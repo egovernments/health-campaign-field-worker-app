@@ -13,9 +13,6 @@ const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
-const warehouseDetails = WarehouseDetails();
-const stockDetails = StockDetails();
-const stockReconciliationDetails = StockReconciliationDetails();
 
 class Common {
   const Common();
@@ -25,11 +22,8 @@ class Common {
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonGender => 'CORE_COMMON_GENDER';
-
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
-
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
-
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 }
 
@@ -61,10 +55,6 @@ class Home {
   const Home();
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
-
-  String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
-
-  String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
   String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
 
@@ -180,30 +170,22 @@ class HouseholdDetails {
 
 class HouseholdOverView {
   const HouseholdOverView();
-
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
-
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
-
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
-
   String get householdOverViewEditIconText =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
-
   String get householdOverViewActionCardTitle =>
       'HOUSEHOLD_OVER_VIEW_ACTION_CARD_TITLE';
-
   String get householdOverViewPrimaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_PRIMARY_ACTION_LABEL';
 
   String get householdOverViewSecondaryActionLabel =>
       'HOUSEHOLD_OVER_VIEW_SECONDARY_ACTION_LABEL';
-
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
-
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
@@ -221,30 +203,21 @@ class HouseholdOverView {
 
 class MemberCard {
   const MemberCard();
-
   String get assignAsHouseholdhead => 'MEMBER_CARD_ASSIGN_AS_HEAD';
-
   String get editIndividualDetails => 'MEMBER_CARD_EDIT_INDIVIDUAL_DETAILS';
-
   String get deleteIndividualActionText =>
       'MEMBER_CARD_DELETE_INDIVIDUAL_ACTION_TEXT';
-
   String get deliverInterventionSubmitLabel =>
       'MEMBER_CARD_DELIVER_INTERVENTION_SUBMIT_LABEL';
-
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
-
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
-
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
-
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
-
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 
@@ -260,14 +233,12 @@ class DeliverIntervention {
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
   String get idNumberText => 'DELIVER_INTERVENTION_ID_NUMBER_TEXT';
-
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
 
   String get noOfResourcesForDelivery =>
       'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
 
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
-
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 }
 
@@ -287,118 +258,4 @@ class ProjectSelection {
   String get retryButtonText => 'RETRY';
 
   String get dismissButtonText => 'DISMISS';
-}
-
-class WarehouseDetails {
-  const WarehouseDetails();
-
-  String get warehouseDetailsLabel => 'WAREHOUSE_DETAILS_LABEL';
-
-  String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
-
-  String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
-
-  String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
-}
-
-class StockDetails {
-  const StockDetails();
-
-  /// Page Title Keys
-  String get receivedPageTitle => 'RECEIVED_STOCK_DETAILS';
-
-  String get issuedPageTitle => 'ISSUED_STOCK_DETAILS';
-
-  String get returnedPageTitle => 'RETURNED_STOCK_DETAILS';
-
-  String get lostPageTitle => 'LOST_STOCK_DETAILS';
-
-  String get damagedPageTitle => 'DAMAGED_STOCK_DETAILS';
-
-  /// Select Product label
-  String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
-
-  /// Select Transacting party label
-  String get selectTransactingPartyReceived => 'STOCK_DETAILS_RECEIVED_FROM';
-
-  String get selectTransactingPartyIssued => 'STOCK_DETAILS_ISSUED_TO';
-
-  String get selectTransactingPartyReturned => 'STOCK_DETAILS_RETURNED_TO';
-
-  String get selectTransactingPartyReceivedFromDamaged {
-    return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';
-  }
-
-  String get selectTransactingPartyReceivedFromLost {
-    return 'STOCK_DETAILS_RECEIVED_FROM_LOST';
-  }
-
-  /// Quantity sent/received/lost/damaged label
-  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED';
-
-  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT';
-
-  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED';
-
-  String get quantityLostLabel => 'STOCK_DETAILS_QUANTITY_LOST';
-
-  String get quantityDamagedLabel => 'STOCK_DETAILS_QUANTITY_DAMAGED';
-
-  /// Waybill number label
-  String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
-
-  /// Number of product indicated on waybill title
-  String get quantityOfProductIndicatedOnWaybillLabel {
-    return 'STOCK_DETAILS_WAYBILL_QUANTITY';
-  }
-
-  /// Lost/Damaged during label
-  String get transactionReasonLost => 'STOCK_DETAILS_LOST_DURING';
-
-  String get transactionReasonDamaged => 'STOCK_DETAILS_DAMAGED_DURING';
-
-  String get vehicleNumberLabel => 'STOCK_DETAILS_VEHICLE_NUMBER';
-
-  String get commentsLabel => 'STOCK_DETAILS_COMMENTS_LABEL';
-
-  String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
-
-  String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
-}
-
-class StockReconciliationDetails {
-  const StockReconciliationDetails();
-
-  String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
-
-  String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
-
-  String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
-
-  String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
-
-  String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
-
-  String get stockIssued => 'STOCK_RECONCILIATION_STOCK_ISSUED';
-
-  String get stockReturned => 'STOCK_RECONCILIATION_STOCK_RETURNED';
-
-  String get stockLost => 'STOCK_RECONCILIATION_STOCK_LOST';
-
-  String get stockDamaged => 'STOCK_RECONCILIATION_STOCK_DAMAGED';
-
-  String get stockOnHand => 'STOCK_RECONCILIATION_STOCK_ON_HAND';
-
-  String get manualCountLabel =>
-      'STOCK_RECONCILIATION_MANUAL_STOCK_COUNT_LABEL';
-
-  String get commentsLabel => 'STOCK_RECONCILIATION_COMMENTS_LABEL';
-
-  String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
-
-  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT';
-
-  String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
-
-  String get dialogContent => 'STOCK_RECONCILIATION_DIALOG_CONTENT';
 }

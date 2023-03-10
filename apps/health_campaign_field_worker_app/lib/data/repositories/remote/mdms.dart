@@ -35,13 +35,7 @@ class MdmsRepository {
     Isar isar,
   ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
-    final data = result.serviceRegistry?.serviceRegistryList;
-
-    if (data != null && data.isNotEmpty) {
-      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
-    }
-
-    for (final element in data ?? <ServiceRegistryModel>[]) {
+    result.serviceRegistry?.serviceRegistryList.forEach((element) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
       final actions = element.actions.map((item) {
@@ -55,10 +49,11 @@ class MdmsRepository {
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);
-    }
+    });
 
     return await isar.writeTxn(() async {
-      await isar.serviceRegistrys.putAll(newServiceRegistryList);
+      await isar.serviceRegistrys
+          .putAll(newServiceRegistryList); // insert & update
     });
   }
 

@@ -1,0 +1,16 @@
+{
+  "name": "HouseholdAddress",
+  "attributes": [],
+  "customAttributes": [
+    {
+      "name": "household",
+      "type": "household",
+      "createReference": true
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "createReference": true
+    }
+  ]
+}
