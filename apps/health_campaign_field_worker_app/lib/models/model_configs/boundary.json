@@ -24,14 +24,13 @@
     {
       "name": "materializedPath",
       "type": "String"
-    },
+    }
+  ],
+  "customAttributes": [
     {
-      "name": "clientReferenceId",
-      "type": "String",
-      "includeForQuery": false,
-      "nullable": true,
-      "includeForEntity": false,
-      "includeForTable": false
+      "name": "children",
+      "type": "boundary",
+      "createReference": true
     }
   ],
   "isEnum": false

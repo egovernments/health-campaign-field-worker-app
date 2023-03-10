@@ -1,26 +1,13 @@
 {
-  "name": "TaskResource",
+  "name": "task_resource",
   "attributes": [
     {
-      "name": "clientReferenceId",
-      "type": "String",
-      "includeForQuery": false,
-      "nullable": false,
-      "isPk": true,
-      "includeForEntity": true,
-      "includeForTable": true
-    },
-    {
-      "name": "taskId",
-      "type": "String",
-      "nullable": true,
-      "includeForEntity": true,
-      "includeForTable": true
-    },
-    {
       "name": "id",
-      "type": "String",
-      "includeForQuery": true
+      "type": "String"
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
     },
     {
       "name": "productVariantId",

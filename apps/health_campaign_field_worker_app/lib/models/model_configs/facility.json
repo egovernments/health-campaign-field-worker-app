@@ -1,28 +1,16 @@
 {
   "name": "facility",
   "createRepository": true,
-  "ignoreFields": [
-    "clientReferenceId"
-  ],
-  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true,
-      "includeForEntity": false,
-      "includeForTable": false,
-      "isList": true
+      "includeForQuery": true
     },
     {
-      "name": "id",
+      "name": "tenantId",
       "type": "String",
-      "includeForQuery": false,
-      "nullable": false,
-      "isPk": true,
-      "includeForEntity": true,
-      "includeForTable": true,
-      "isList": false
+      "includeForQuery": true
     },
     {
       "name": "isPermanent",
@@ -38,6 +26,10 @@
       "name": "storageCapacity",
       "type": "int",
       "includeForQuery": true
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
     }
   ],
   "customAttributes": [

@@ -8,9 +8,6 @@ class ProjectProductVariant extends Table {
   TextColumn get type => text().nullable()();
   BoolColumn get isBaseUnitVariant => boolean().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer().nullable()();
   
 
   @override

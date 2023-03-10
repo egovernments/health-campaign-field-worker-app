@@ -121,7 +121,7 @@ class AppInitializationState with _$AppInitializationState {
                     DataModelType? type;
 
                     operation = ApiOperation.values.firstWhereOrNull((element) {
-                      return e.action.camelCase == element.name;
+                      return e.action == element.name;
                     });
 
                     type = DataModelType.values.firstWhereOrNull((element) {

@@ -1,0 +1,16 @@
+{
+  "name": "IndividualIdentifier",
+  "attributes": [],
+  "customAttributes": [
+    {
+      "name": "individual",
+      "type": "individual",
+      "createReference": true
+    },
+    {
+      "name": "identifier",
+      "type": "identifier",
+      "createReference": true
+    }
+  ]
+}

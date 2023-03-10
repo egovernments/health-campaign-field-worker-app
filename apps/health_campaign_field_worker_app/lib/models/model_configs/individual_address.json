@@ -1,0 +1,16 @@
+{
+  "name": "IndividualAddress",
+  "attributes": [],
+  "customAttributes": [
+    {
+      "name": "individual",
+      "type": "individual",
+      "createReference": true
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "createReference": true
+    }
+  ]
+}

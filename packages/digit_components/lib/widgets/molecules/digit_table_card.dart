@@ -6,8 +6,6 @@ class DigitTableCard extends StatelessWidget {
   final Border? border;
   final Color? color;
   final EdgeInsetsGeometry? padding;
-  final double gap;
-  final num fraction;
 
   const DigitTableCard({
     super.key,
@@ -15,8 +13,6 @@ class DigitTableCard extends StatelessWidget {
     this.border,
     this.color,
     this.padding,
-    this.gap = 0,
-    this.fraction = 2,
   });
 
   @override
@@ -39,19 +35,17 @@ class DigitTableCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width / fraction,
+                            width: MediaQuery.of(context).size.width / 2,
                             child: Text(
                               e,
                               style: theme.textTheme.headline5,
                               textAlign: TextAlign.start,
                             ),
                           ),
-                          SizedBox(width: gap),
-                          Flexible(
-                              child: Padding(
+                          Padding(
                             padding: const EdgeInsets.only(top: 1.4),
                             child: Text(element[e].toString()),
-                          )),
+                          ),
                         ],
                       ),
                     ))

@@ -49,7 +49,6 @@ class DigitDialog extends StatelessWidget {
 }
 
 class DigitDialogOptions {
-  final Icon? titleIcon;
   final EdgeInsets titlePadding;
   final EdgeInsets contentPadding;
   final String? titleText;
@@ -65,7 +64,6 @@ class DigitDialogOptions {
   const DigitDialogOptions({
     this.titleText,
     this.contentText,
-    this.titleIcon,
     Widget? title,
     Widget? content,
     this.primaryAction,
@@ -81,19 +79,9 @@ class DigitDialogOptions {
   Widget? get title {
     if (_titleWidget != null) return _titleWidget;
     if (titleText != null) {
-      return Row(
-        children: [
-          if (titleIcon != null) ...[
-            titleIcon!,
-            const SizedBox(width: 8),
-          ],
-          Expanded(
-            child: Text(
-              titleText!,
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ],
+      return Text(
+        titleText!,
+        textAlign: TextAlign.left,
       );
     }
     return null;

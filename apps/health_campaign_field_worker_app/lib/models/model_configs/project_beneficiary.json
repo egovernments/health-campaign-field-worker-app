@@ -1,10 +1,14 @@
 {
   "name": "projectBeneficiary",
   "createRepository": true,
-  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "tenantId",
       "type": "String",
       "includeForQuery": true
     },
@@ -19,17 +23,15 @@
       "includeForQuery": true
     },
     {
-      "name": "beneficiaryClientReferenceId",
-      "type": "String",
-      "includeForQuery": true
+      "name": "rowVersion",
+      "type": "int"
     }
   ],
   "dateTimeAttributes": [
     {
       "name": "dateOfRegistration",
       "type": "DateTime",
-      "includeForQuery": true,
-      "nullable": false
+      "includeForQuery": true
     }
   ],
   "isEnum": false

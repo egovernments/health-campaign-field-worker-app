@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class DigitDropdown<T> extends StatelessWidget {
+class DigitDropdown extends StatelessWidget {
   final String label;
-  final T? initialValue;
-  final List<T> menuItems;
+  final String? initialValue;
+  final List<MenuItemModel> menuItems;
+  final ValueChanged<String?> onChanged;
   final String formControlName;
-  final bool isRequired;
-  final ValueChanged<T>? onChanged;
-  final String Function(T value) valueMapper;
-  final Map<String, String Function(Object object)>? validationMessages;
 
   const DigitDropdown({
     super.key,
     required this.label,
     required this.menuItems,
     required this.formControlName,
-    this.isRequired = false,
-    required this.valueMapper,
+    required this.onChanged,
     this.initialValue,
-    this.onChanged,
-    this.validationMessages,
   });
 
   @override
@@ -31,26 +25,18 @@ class DigitDropdown<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '$label${isRequired ? ' *' : ''}',
+            label,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 8),
           ReactiveDropdownField(
-            onChanged: (control) {
-              final value = control.value;
-              if (value == null) return;
-              onChanged?.call(value);
-            },
-            validationMessages: validationMessages,
             formControlName: formControlName,
-            items: menuItems
-                .map(
-                  (e) => DropdownMenuItem<T>(
-                    value: e,
-                    child: Text(valueMapper(e)),
-                  ),
-                )
-                .toList(),
+            items: menuItems.map((e) {
+              return DropdownMenuItem(
+                value: e.code,
+                child: Text(e.name),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -62,8 +48,5 @@ class MenuItemModel {
   final String name;
   final String code;
 
-  const MenuItemModel({
-    required this.name,
-    required this.code,
-  });
+  MenuItemModel(this.name, this.code);
 }

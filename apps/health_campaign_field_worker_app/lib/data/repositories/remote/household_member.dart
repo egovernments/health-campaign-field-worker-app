@@ -8,7 +8,6 @@ class HouseholdMemberRemoteRepository extends RemoteRepository<HouseholdMemberMo
     super.dio, {
     required super.actionMap,
     super.entityName = 'HouseholdMember',
-    super.isSearchResponsePlural = true,
   });
 
   @override

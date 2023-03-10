@@ -11,84 +11,19 @@ void run(HookContext context) {
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
       null) {
-    model = model.copyWith.attributes.addAll(
-      [
-        AttributeModel(
-          name: 'clientReferenceId',
-          type: 'String',
-          isPk: true,
-          isList: true,
-          includeForQuery: true,
-          includeForEntity: false,
-          includeForTable: false,
-          nullable: false,
-        ),
-        AttributeModel(
-          name: 'clientReferenceId',
-          type: 'String',
-          isPk: true,
-          includeForQuery: false,
-          includeForEntity: true,
-          includeForTable: true,
-          nullable: false,
-        ),
-      ],
-    );
-  }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'tenantId') ==
-      null) {
     model = model.copyWith.attributes.add(
       AttributeModel(
-        name: 'tenantId',
+        name: 'clientReferenceId',
         type: 'String',
+        isPk: true,
         includeForQuery: true,
-        nullable: true,
+        nullable: false,
       ),
     );
   }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'isDeleted') ==
-      null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'isDeleted',
-        type: 'bool',
-        includeForQuery: true,
-        includeForEntity: true,
-        nullable: true,
-      ),
-    );
-  }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'rowVersion') ==
-      null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'rowVersion',
-        type: 'int',
-        includeForQuery: false,
-        nullable: true,
-      ),
-    );
-  }
-
-  model = model.copyWith(
-    attributes: model.attributes
-        .where((e) => !model.ignoreFields.contains(e.name))
-        .toList(),
-  );
 
   final sqlAttributes = <AttributeModel>[
-    ...model.attributes.where((element) => element.includeForTable).map((e) {
-      final type = _getSqlType(e.type);
-      final columnType = _getSqlColumnType(e.type);
-      return e.copyWith(type: type, columnType: columnType);
-    }),
-    ...model.dateTimeAttributes.map((e) {
+    ...model.attributes.map((e) {
       final type = _getSqlType(e.type);
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);
@@ -117,9 +52,6 @@ void run(HookContext context) {
 String _getSqlType(String dartType) {
   String type;
   switch (dartType) {
-    case 'DateTime':
-      type = 'Integer';
-      break;
     case 'String':
       type = 'Text';
       break;
@@ -142,9 +74,6 @@ String _getSqlType(String dartType) {
 String _getSqlColumnType(String dartType) {
   String type;
   switch (dartType) {
-    case 'DateTime':
-      type = 'Int';
-      break;
     case 'String':
       type = 'Text';
       break;
