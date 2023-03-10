@@ -1,7 +1,6 @@
 {
   "name": "householdMember",
   "createRepository": true,
-  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
@@ -31,8 +30,16 @@
     {
       "name": "isHeadOfHousehold",
       "type": "bool",
-      "includeForQuery": true,
-      "nullable": false
+      "includeForQuery": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "rowVersion",
+      "type": "int"
     }
   ],
   "isEnum": false

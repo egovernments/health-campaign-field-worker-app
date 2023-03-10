@@ -34,13 +34,12 @@ class ScrollableContent extends StatelessWidget {
           hasScrollBody: false,
           child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: crossAxisAlignment,
               children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: mainAxisAlignment,
-                    children: children,
-                  ),
+                Column(
+                  mainAxisAlignment: mainAxisAlignment,
+                  children: children,
                 ),
                 if (footer != null) ...[
                   const SizedBox(height: 16),

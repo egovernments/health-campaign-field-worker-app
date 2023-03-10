@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 
+import 'boundary.dart';
 
 class Boundary extends Table {
   TextColumn get code => text().nullable()();
@@ -10,11 +11,10 @@ class Boundary extends Table {
   TextColumn get latitude => text().nullable()();
   TextColumn get longitude => text().nullable()();
   TextColumn get materializedPath => text().nullable()();
-  TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable()();
-  IntColumn get rowVersion => integer().nullable()();
+  TextColumn get clientReferenceId => text()();
   
+  TextColumn get children => text().nullable().references(Boundary, #clientReferenceId)();
 
   @override
-  Set<Column> get primaryKey => {  };
+  Set<Column> get primaryKey => { clientReferenceId,  };
 }

@@ -5,7 +5,6 @@ import '../../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 
 class BeneficiaryStatisticsCard extends StatelessWidget {
   final BeneficiaryStatisticsWrapperModel beneficiaryStatistics;
-
   const BeneficiaryStatisticsCard({
     super.key,
     required this.beneficiaryStatistics,

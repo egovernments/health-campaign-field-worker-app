@@ -1,51 +1,30 @@
 {
   "name": "projectFacility",
   "createRepository": true,
-  "ignoreFields": [
-    "clientReferenceId"
-  ],
-  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true,
-      "nullable": false,
-      "isPk": true
+      "includeForQuery": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
     },
     {
       "name": "facilityId",
       "type": "String",
-      "includeForQuery": true,
-      "includeForEntity": false,
-      "includeForTable": false,
-      "isList": true
-    },
-    {
-      "name": "facilityId",
-      "type": "String",
-      "includeForQuery": false,
-      "includeForEntity": true,
-      "includeForTable": true,
-      "nullable": false,
-      "isList": false
+      "includeForQuery": true
     },
     {
       "name": "projectId",
       "type": "String",
-      "includeForQuery": true,
-      "includeForEntity": false,
-      "includeForTable": false,
-      "isList": true
+      "includeForQuery": true
     },
     {
-      "name": "projectId",
-      "type": "String",
-      "includeForQuery": false,
-      "includeForEntity": true,
-      "includeForTable": true,
-      "isList": false,
-      "nullable": false
+      "name": "rowVersion",
+      "type": "String"
     }
   ],
   "isEnum": false

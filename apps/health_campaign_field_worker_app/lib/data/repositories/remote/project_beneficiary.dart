@@ -8,7 +8,6 @@ class ProjectBeneficiaryRemoteRepository extends RemoteRepository<ProjectBenefic
     super.dio, {
     required super.actionMap,
     super.entityName = 'ProjectBeneficiary',
-    super.isSearchResponsePlural = true,
   });
 
   @override

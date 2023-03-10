@@ -6,6 +6,10 @@
       "type": "String"
     },
     {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
       "name": "documentType",
       "type": "String"
     },
