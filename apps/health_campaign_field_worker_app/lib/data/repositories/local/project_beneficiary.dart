@@ -9,13 +9,6 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
   @override
-  Future<List<OpLogEntry<ProjectBeneficiaryModel>>> getItemsToBeSynced() async {
-    final entries = await super.getItemsToBeSynced();
-
-    return entries;
-  }
-
-  @override
   FutureOr<List<ProjectBeneficiaryModel>> search(
     ProjectBeneficiarySearchModel query, [
     String? userId,
