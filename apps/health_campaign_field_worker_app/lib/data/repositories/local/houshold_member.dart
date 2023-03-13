@@ -68,6 +68,7 @@ class HouseholdMemberLocalRepository
   FutureOr<void> create(
     HouseholdMemberModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {

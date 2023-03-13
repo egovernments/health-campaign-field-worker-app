@@ -43,6 +43,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           case DataModelType.projectBeneficiary:
                           case DataModelType.stock:
                           case DataModelType.stockReconciliation:
+                          case DataModelType.service:
                             return true;
                           default:
                             return false;

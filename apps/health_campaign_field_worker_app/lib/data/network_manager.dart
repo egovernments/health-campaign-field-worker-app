@@ -76,6 +76,11 @@ class NetworkManager {
         } else if (operationGroupedEntity.key == DataOperation.delete) {
           await remote.bulkDelete(entities);
         }
+        if (operationGroupedEntity.key == DataOperation.singleCreate) {
+          for (var element in entities) {
+            await remote.singleCreate(element);
+          }
+        }
 
         for (final syncedEntity in operationGroupedEntity.value) {
           local.markSynced(syncedEntity.copyWith(isSynced: true));

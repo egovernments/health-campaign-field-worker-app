@@ -222,7 +222,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       [
         HomeItemCard(
           icon: Icons.menu_book,
-          label: i18.home.viewReportsLabel,
+          label: i18.home.myCheckList,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
         HomeItemCard(
           icon: Icons.announcement,
@@ -289,6 +290,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ProjectBeneficiarySearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
               context.read<LocalRepository<StockModel, StockSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -303,6 +305,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       ProjectBeneficiarySearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
               context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
             ],
           ),
         );
