@@ -1,8 +1,9 @@
-import 'package:digit_components/widgets/labeled_field.dart';
+import 'package:digit_components/digit_components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DigitTextField extends StatelessWidget {
+class DigitTextField extends StatefulWidget {
   final String label;
   final TextEditingController? controller;
   final String prefixText;
@@ -23,6 +24,7 @@ class DigitTextField extends StatelessWidget {
   final bool readOnly;
   final bool? isFilled;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   const DigitTextField(
       {super.key,
@@ -45,34 +47,64 @@ class DigitTextField extends StatelessWidget {
       this.isDisabled = false,
       this.readOnly = false,
       this.isFilled,
-      this.suffixIcon});
+      this.suffixIcon,
+      this.prefixIcon});
 
+  @override
+  State<StatefulWidget> createState() => _DigitTextField();
+}
+
+class _DigitTextField extends State<DigitTextField> {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: label,
+      label: widget.label,
       child: TextFormField(
-        controller: controller,
-        enabled: !isDisabled,
-        maxLength: maxLength,
-        keyboardType: textInputType ?? TextInputType.text,
+        controller: widget.controller,
+        enabled: !widget.isDisabled,
+        maxLength: widget.maxLength,
+        keyboardType: widget.textInputType ?? TextInputType.text,
         autofocus: false,
-        inputFormatters: inputFormatter,
-        textCapitalization: textCapitalization ?? TextCapitalization.none,
-        onChanged: onChange,
-        maxLines: maxLines,
-        focusNode: focusNode,
-        obscureText: obscureText,
-        autovalidateMode: autoValidation,
-        readOnly: readOnly,
+        inputFormatters: widget.inputFormatter,
+        textCapitalization:
+            widget.textCapitalization ?? TextCapitalization.none,
+        onChanged: widget.onChange,
+        maxLines: widget.maxLines,
+        focusNode: widget.focusNode,
+        obscureText: widget.obscureText,
+        autovalidateMode: widget.autoValidation,
+        readOnly: widget.readOnly,
         decoration: InputDecoration(
           suffixIconConstraints: const BoxConstraints(
             maxHeight: 48,
             maxWidth: 48,
           ),
-          suffixIcon: suffixIcon,
+          suffixIcon: widget.suffixIcon,
+          prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: widget.isDisabled
+                  ? DigitColors().cloudGray
+                  : DigitTheme.instance.colorScheme.onBackground),
+          prefixIcon: widget.prefixIcon ??
+              (widget.prefixText == ''
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, left: 10, bottom: 10, right: 0),
+                      child: Text(
+                        widget.prefixText,
+                        style: TextStyle(
+                            fontSize: kIsWeb ? 15 : 16,
+                            fontWeight: FontWeight.w400,
+                            color: widget.isDisabled
+                                ? DigitColors().cloudGray
+                                : DigitTheme.instance.colorScheme.onBackground),
+                      ),
+                    )),
         ),
-        validator: (value) => validator?.call(value),
+        validator: (value) => widget.validator?.call(value),
       ),
     );
   }
