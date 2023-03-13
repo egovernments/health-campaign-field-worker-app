@@ -1,9 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-
+import '../blocs/record_stock/record_stock.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/record_stock/record_stock.dart';
 import '../blocs/search_households/search_households.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
@@ -14,6 +13,11 @@ import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
+import '../pages/checklist/checklist.dart';
+import '../pages/checklist/checklist_view.dart';
+import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/checklist/checklist_boundary_view.dart';
+import '../pages/checklist/checklist_preview.dart';
 import '../pages/home.dart';
 import '../pages/inventory/manage_stocks.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
@@ -81,6 +85,15 @@ part 'app_router.gr.dart';
             ),
           ],
         ),
+        AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
+          AutoRoute(
+            page: ChecklistPage,
+            path: '',
+          ),
+          AutoRoute(page: ChecklistBoundaryViewPage, path: 'view-boundary'),
+          AutoRoute(page: ChecklistViewPage, path: 'view'),
+          AutoRoute(page: ChecklistPreviewPage, path: 'pre-view'),
+        ]),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
 
         /// Inventory Routes

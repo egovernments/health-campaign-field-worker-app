@@ -16,6 +16,7 @@ import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'data/repositories/remote/project.dart';
+import 'data/repositories/remote/service_definition.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -153,6 +154,18 @@ class MainApplication extends StatelessWidget {
                                 ApiOperation.search: '/project/v1/_search',
                               },
                             ),
+
+                            serviceDefinitionremoteRepository:
+                                ServiceDefinitionRemoteRepository(
+                              client,
+                              actionMap: {
+                                ApiOperation.search:
+                                    '/service-request/service/definition/v1/_search',
+                              },
+                            ),
+                            serviceLocalremoteRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
                           ),
                         ),
                       ],

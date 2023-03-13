@@ -144,6 +144,7 @@ class IndividualLocalRepository
   FutureOr<void> create(
     IndividualModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final addresses = entity.address;
     final identifiers = entity.identifiers;

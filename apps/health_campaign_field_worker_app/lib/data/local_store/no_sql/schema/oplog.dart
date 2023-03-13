@@ -11,6 +11,7 @@ class OpLog {
 
   @ignore
   T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();
   }

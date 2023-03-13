@@ -405,7 +405,6 @@ class _HouseholdOverviewPageState
                           i18.memberCard.deliverDetailsUpdateLabel,
                         ),
                         onPressed: () async {
-                          final bloc = ctx.read<DeliverInterventionBloc>();
                           await context.router.push(DeliverInterventionRoute());
                         },
                       )

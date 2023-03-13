@@ -5,7 +5,6 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
 import '../blocs/auth/auth.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
@@ -223,10 +222,16 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.menu_book,
           label: i18.home.viewReportsLabel,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
         HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
+        ),
+        HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () {},
         ),
         HomeItemCard(
           icon: Icons.sync_alt,
@@ -288,6 +293,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   LocalRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               context.read<LocalRepository<StockModel, StockSearchModel>>(),
             ],
             remoteRepositories: [
@@ -302,6 +308,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   RemoteRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context
+                  .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               context.read<RemoteRepository<StockModel, StockSearchModel>>(),
             ],
           ),

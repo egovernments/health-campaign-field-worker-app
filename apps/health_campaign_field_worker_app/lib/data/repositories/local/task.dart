@@ -82,6 +82,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   FutureOr<void> create(
     TaskModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final taskCompanion = entity.companion;
     final addresses = entity.address?.copyWith(

@@ -5,6 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 export 'data_model.mapper.g.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
+export 'entities/attributes.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
 export 'entities/document.dart';
@@ -24,6 +25,9 @@ export 'entities/project_product_variant.dart';
 export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
+export 'entities/service.dart';
+export 'entities/service_attributes.dart';
+export 'entities/service_definition.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
@@ -87,4 +91,8 @@ enum DataModelType {
   stock,
   stockReconciliation,
   task,
+  attributes,
+  serviceDefinition,
+  service,
+  serviceAttributes,
 }

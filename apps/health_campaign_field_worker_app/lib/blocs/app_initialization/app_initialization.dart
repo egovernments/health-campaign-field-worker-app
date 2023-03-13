@@ -55,7 +55,6 @@ class AppInitializationBloc
 
     await mdmsRepository.writeToRegistryDB(result, isar);
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
-
     final configResult = await mdmsRepository.searchAppConfig(
       envConfig.variables.mdmsApiPath,
       {

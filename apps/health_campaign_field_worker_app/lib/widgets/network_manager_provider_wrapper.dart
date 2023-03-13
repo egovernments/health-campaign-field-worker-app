@@ -16,6 +16,8 @@ import '../data/repositories/local/project.dart';
 import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/service.dart';
+import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
@@ -34,6 +36,8 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/service.dart';
+import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
@@ -151,6 +155,28 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
+          sql,
+          ServiceDefinitionOpLogManager(
+            isar,
+          ),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
+          sql,
+          ServiceOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -289,6 +315,23 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.serviceDefinition)
+          RepositoryProvider<
+              RemoteRepository<ServiceDefinitionModel,
+                  ServiceDefinitionSearchModel>>(
+            create: (_) => ServiceDefinitionRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.service)
+          RepositoryProvider<
+              RemoteRepository<ServiceModel, ServiceSearchModel>>(
+            create: (_) => ServiceRemoteRepository(
               dio,
               actionMap: actions,
             ),

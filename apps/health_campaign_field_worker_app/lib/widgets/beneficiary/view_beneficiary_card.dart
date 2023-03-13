@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../blocs/localization/app_localization.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
@@ -47,8 +48,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return DigitCard(
       child: Column(
         children: [
@@ -92,7 +91,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             child: DigitTable(
               headerList: [
                 TableHeader(
-                  'Beneficiary',
+                  AppLocalizations.of(context).translate('Beneficiary'),
                   cellKey: 'beneficiary',
                 ),
                 // TableHeader(
@@ -100,11 +99,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 //   cellKey: 'delivery',
                 // ),
                 TableHeader(
-                  'Age',
+                  AppLocalizations.of(context).translate('CORE_COMMON_AGE'),
                   cellKey: 'age',
                 ),
                 TableHeader(
-                  'Gender',
+                  AppLocalizations.of(context).translate('CORE_COMMON_GENDER'),
                   cellKey: 'gender',
                 ),
               ],

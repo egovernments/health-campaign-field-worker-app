@@ -1,0 +1,27 @@
+{
+    "name": "ServiceAttributes",
+    "entityName": "attributes",
+    "createRepository": true,
+    "attributes": [
+        {
+            "name": "attributeCode",
+            "type": "String"
+        },
+        {
+            "name": "value",
+            "type": "String"
+        },
+        {
+            "name": "dataType",
+            "type": "String"
+        },
+        {
+            "name": "referenceId",
+            "type": "String"
+        },
+        {
+            "name": "additionalDetails",
+            "type": "String"
+        }
+    ]
+}
