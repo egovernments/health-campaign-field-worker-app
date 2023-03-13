@@ -8,11 +8,13 @@ class DigitLanguageCard extends StatelessWidget {
   final ValueChanged<DigitRowCardModel>? onLanguageChange;
   final VoidCallback onLanguageSubmit;
   final String languageSubmitLabel;
+  final Widget? appLogo;
 
   const DigitLanguageCard({
     super.key,
     required this.digitRowCardItems,
     this.onLanguageChange,
+    this.appLogo,
     required this.onLanguageSubmit,
     required this.languageSubmitLabel,
   });
@@ -25,6 +27,7 @@ class DigitLanguageCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          appLogo ?? Container(),
           DigitRowCard(
             onChanged: onLanguageChange,
             rowItems: digitRowCardItems,
