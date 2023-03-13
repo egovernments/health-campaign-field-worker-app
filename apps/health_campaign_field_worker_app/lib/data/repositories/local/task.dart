@@ -21,8 +21,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<List<TaskModel>> search(
-    TaskSearchModel query,
-  ) async {
+    TaskSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.taskResource,
@@ -37,6 +38,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             if (query.clientReferenceId != null)
               sql.task.clientReferenceId.isIn(
                 query.clientReferenceId!,
+              ),
+            if (userId != null)
+              sql.task.auditCreatedBy.equals(
+                userId,
               ),
           ])))
         .get();

@@ -31,7 +31,10 @@ class ProjectLocalRepository
   DataModelType get type => DataModelType.project;
 
   @override
-  FutureOr<List<ProjectModel>> search(ProjectSearchModel query) async {
+  FutureOr<List<ProjectModel>> search(
+    ProjectSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.project).join([]);
     final results = await (selectQuery
           ..where(buildAnd([

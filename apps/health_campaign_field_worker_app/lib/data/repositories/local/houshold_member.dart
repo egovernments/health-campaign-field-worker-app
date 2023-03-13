@@ -10,8 +10,9 @@ class HouseholdMemberLocalRepository
 
   @override
   FutureOr<List<HouseholdMemberModel>> search(
-    HouseholdMemberSearchModel query,
-  ) async {
+    HouseholdMemberSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.householdMember).join([]);
     final results = await (selectQuery
           ..where(
@@ -36,6 +37,10 @@ class HouseholdMemberLocalRepository
                 if (query.isHeadOfHousehold != null)
                   sql.householdMember.isHeadOfHousehold.equals(
                     query.isHeadOfHousehold,
+                  ),
+                if (userId != null)
+                  sql.householdMember.auditCreatedBy.equals(
+                    userId,
                   ),
               ],
             ),
