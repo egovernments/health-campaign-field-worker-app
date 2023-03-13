@@ -80,6 +80,14 @@ class _DigitTextField extends State<DigitTextField> {
             maxWidth: 48,
           ),
           suffixIcon: widget.suffixIcon,
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: DigitColors().lavaRed, width: 1.0),
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: DigitColors().lavaRed, width: 1.0),
+            borderRadius: BorderRadius.circular(4.0),
+          ),
           prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
           prefixStyle: TextStyle(
               fontSize: 16,
