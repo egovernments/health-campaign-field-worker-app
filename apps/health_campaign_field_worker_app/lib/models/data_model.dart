@@ -50,7 +50,9 @@ abstract class EntityModel extends DataModel {
 
 @MappableClass()
 abstract class EntitySearchModel extends DataModel {
-  const EntitySearchModel({super.boundaryCode});
+  final AuditDetails? auditDetails;
+
+  const EntitySearchModel({super.boundaryCode, this.auditDetails});
 }
 
 @MappableClass()
