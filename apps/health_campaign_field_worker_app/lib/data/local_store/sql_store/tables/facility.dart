@@ -8,13 +8,15 @@ class Facility extends Table {
   BoolColumn get isPermanent => boolean().nullable()();
   TextColumn get usage => text().nullable()();
   IntColumn get storageCapacity => integer().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get tenantId => text().nullable()();
-  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => { id, createdBy,  };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }

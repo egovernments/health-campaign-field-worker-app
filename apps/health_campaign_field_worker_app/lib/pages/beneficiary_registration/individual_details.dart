@@ -357,8 +357,10 @@ class _IndividualDetailsPageState
       clientReferenceId: IdGen.i.identifier,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
-      createdBy: context.loggedInUserUuid,
-      createdAt: context.millisecondsSinceEpoch(),
+      auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
     );
 
     var name = individual.name;
@@ -366,8 +368,10 @@ class _IndividualDetailsPageState
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
-      createdBy: context.loggedInUserUuid,
-      createdAt: context.millisecondsSinceEpoch(),
+      auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
     );
 
     var identifier = (individual.identifiers?.isNotEmpty ?? false)
@@ -378,8 +382,10 @@ class _IndividualDetailsPageState
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
-      createdBy: context.loggedInUserUuid,
-      createdAt: context.millisecondsSinceEpoch(),
+      auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
     );
 
     individual = individual.copyWith(

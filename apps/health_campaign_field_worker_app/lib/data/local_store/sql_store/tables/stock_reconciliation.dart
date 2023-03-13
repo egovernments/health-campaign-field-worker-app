@@ -13,14 +13,16 @@ class StockReconciliation extends Table {
   IntColumn get physicalCount => integer().nullable()();
   IntColumn get calculatedCount => integer().nullable()();
   TextColumn get commentsOnReconciliation => text().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfReconciliation => integer()();
-  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId, createdBy,  };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

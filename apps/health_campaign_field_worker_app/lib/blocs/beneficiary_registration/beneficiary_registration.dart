@@ -162,8 +162,10 @@ class BeneficiaryRegistrationBloc
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
               projectId: event.projectId,
               beneficiaryClientReferenceId: household.clientReferenceId,
-              createdAt: createdAt,
-              createdBy: event.userUuid,
+              auditDetails: AuditDetails(
+                createdBy: event.userUuid,
+                createdTime: createdAt,
+              ),
             ),
           );
 
@@ -175,8 +177,10 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
-              createdAt: createdAt,
-              createdBy: event.userUuid,
+              auditDetails: AuditDetails(
+                createdBy: event.userUuid,
+                createdTime: createdAt,
+              ),
             ),
           );
         } catch (error) {
@@ -294,8 +298,10 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
-              createdAt: createdAt,
-              createdBy: event.userUuid,
+              auditDetails: AuditDetails(
+                createdBy: event.userUuid,
+                createdTime: createdAt,
+              ),
             ),
           );
         } catch (error) {

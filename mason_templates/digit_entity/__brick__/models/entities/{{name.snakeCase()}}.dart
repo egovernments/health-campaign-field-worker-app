@@ -47,6 +47,10 @@ class {{name.pascalCase()}}Model extends EntityModel {
 
   {{name.pascalCase()}}Companion get companion {
     return {{name.pascalCase()}}Companion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       {{#sqlAttributes}}{{#includeForEntity}}{{#includeForTable}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
       {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.clientReferenceId),
     {{/references}}{{/referenceAttributes}});

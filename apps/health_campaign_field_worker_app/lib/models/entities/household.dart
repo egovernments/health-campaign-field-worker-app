@@ -29,11 +29,9 @@ class HouseholdModel extends EntityModel {
   final int? memberCount;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  final DateTime createdAtTime;
   
 
   HouseholdModel({
@@ -41,28 +39,24 @@ class HouseholdModel extends EntityModel {
     this.memberCount,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.address,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       memberCount: Value(memberCount),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

@@ -82,7 +82,6 @@ class TaskModel extends EntityModel {
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
-  final DateTime createdAtTime;
   
 
   TaskModel({
@@ -103,7 +102,6 @@ class TaskModel extends EntityModel {
     int? actualStartDate,
     int? actualEndDate,
     int? createdDate,
-    required int createdAt,
     super.auditDetails,
   }): plannedStartDateTime = plannedStartDate == null
           ? null
@@ -120,7 +118,6 @@ class TaskModel extends EntityModel {
       createdDateTime = createdDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
-      createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
        super();
 
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
@@ -138,11 +135,12 @@ class TaskModel extends EntityModel {
   int?  get createdDate => createdDateTime?.millisecondsSinceEpoch;
   
 
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
-
   TaskCompanion get companion {
     return TaskCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
@@ -158,7 +156,6 @@ class TaskModel extends EntityModel {
       actualStartDate: Value(actualStartDate),
       actualEndDate: Value(actualEndDate),
       createdDate: Value(createdDate),
-      createdAt: Value(createdAt),
       );
   }
 }

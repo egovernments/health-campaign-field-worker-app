@@ -10,6 +10,10 @@ class Task extends Table {
   TextColumn get projectBeneficiaryClientReferenceId => text().nullable()();
   TextColumn get createdBy => text().nullable()();
   TextColumn get status => text().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
@@ -19,9 +23,8 @@ class Task extends Table {
   IntColumn get actualStartDate => integer().nullable()();
   IntColumn get actualEndDate => integer().nullable()();
   IntColumn get createdDate => integer().nullable()();
-  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

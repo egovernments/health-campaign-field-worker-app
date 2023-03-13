@@ -47,8 +47,6 @@ class StockReconciliationLocalRepository extends LocalRepository<
 
       return StockReconciliationModel(
         id: data.id,
-        createdBy: data.createdBy,
-        createdAt: data.createdAt,
         tenantId: data.tenantId,
         facilityId: data.facilityId,
         productVariantId: data.productVariantId,

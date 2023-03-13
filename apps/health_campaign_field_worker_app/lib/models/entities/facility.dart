@@ -32,11 +32,9 @@ class FacilityModel extends EntityModel {
   final String? usage;
   final int? storageCapacity;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  final DateTime createdAtTime;
   
 
   FacilityModel({
@@ -45,29 +43,25 @@ class FacilityModel extends EntityModel {
     this.usage,
     this.storageCapacity,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.address,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   FacilityCompanion get companion {
     return FacilityCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

@@ -156,10 +156,12 @@ class _StockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdAt: context
-                                                  .millisecondsSinceEpoch(),
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                             );
 
                                             final submit =

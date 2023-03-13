@@ -27,10 +27,8 @@ class TargetModel extends EntityModel {
   final String? target;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   TargetModel({
@@ -40,29 +38,25 @@ class TargetModel extends EntityModel {
     this.target,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   TargetCompanion get companion {
     return TargetCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

@@ -8,6 +8,44 @@ void run(HookContext context) {
 
   ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
 
+  model = model.copyWith.attributes.addAll(
+    [
+      AttributeModel(
+        name: 'auditCreatedBy',
+        type: 'String',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        isPk: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'auditCreatedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'auditModifiedBy',
+        type: 'String',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'auditModifiedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+    ],
+  );
+
   if (model.attributes
           .firstWhereOrNull((element) => element.name == 'clientReferenceId') ==
       null) {
@@ -45,33 +83,6 @@ void run(HookContext context) {
         type: 'String',
         includeForQuery: true,
         nullable: true,
-      ),
-    );
-  }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'createdBy') ==
-      null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'createdBy',
-        type: 'String',
-        includeForQuery: false,
-        nullable: false,
-        isPk: true,
-      ),
-    );
-  }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'createdAt') ==
-      null) {
-    model = model.copyWith.dateTimeAttributes.add(
-      AttributeModel(
-        name: 'createdAt',
-        type: 'DateTime',
-        includeForQuery: false,
-        nullable: false,
       ),
     );
   }

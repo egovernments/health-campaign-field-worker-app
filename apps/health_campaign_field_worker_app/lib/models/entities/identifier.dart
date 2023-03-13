@@ -30,10 +30,8 @@ class IdentifierModel extends EntityModel {
   final String? identifierType;
   final String? identifierId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   IdentifierModel({
@@ -42,28 +40,24 @@ class IdentifierModel extends EntityModel {
     this.identifierType,
     this.identifierId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }
