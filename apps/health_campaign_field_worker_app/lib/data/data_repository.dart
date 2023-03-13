@@ -336,8 +336,8 @@ abstract class LocalRepository<D extends EntityModel,
     return opLogManager.createEntry(entry, type);
   }
 
-  Future<List<OpLogEntry<D>>> getItemsToBeSynced() async {
-    return opLogManager.getPendingSyncedEntries(type);
+  Future<List<OpLogEntry<D>>> getItemsToBeSynced(String? createdBy) async {
+    return opLogManager.getPendingSyncedEntries(type, createdBy);
   }
 
   FutureOr<void> markSynced(OpLogEntry<EntityModel> entry) async {
