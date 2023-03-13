@@ -8,6 +8,7 @@ class StockReconciliationRemoteRepository extends RemoteRepository<StockReconcil
     super.dio, {
     required super.actionMap,
     super.entityName = 'StockReconciliation',
+    super.isPlural = true,
   });
 
   @override
