@@ -12,8 +12,9 @@ class ProjectFacilityLocalRepository
 
   @override
   FutureOr<List<ProjectFacilityModel>> search(
-    ProjectFacilitySearchModel query,
-  ) async {
+    ProjectFacilitySearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.projectFacility).join([]);
 
     final results = await (selectQuery

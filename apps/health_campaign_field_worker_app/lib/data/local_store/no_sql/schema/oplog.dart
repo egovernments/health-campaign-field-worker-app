@@ -25,5 +25,7 @@ class OpLog {
 
   DateTime? syncedOn;
 
+  String? createdBy;
+
   late bool isSynced;
 }

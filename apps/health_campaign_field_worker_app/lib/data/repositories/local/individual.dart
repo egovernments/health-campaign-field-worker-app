@@ -15,7 +15,10 @@ class IndividualLocalRepository
   DataModelType get type => DataModelType.individual;
 
   @override
-  FutureOr<List<IndividualModel>> search(IndividualSearchModel query) async {
+  FutureOr<List<IndividualModel>> search(
+    IndividualSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.individual).join(
       [
         leftOuterJoin(
@@ -73,6 +76,10 @@ class IndividualLocalRepository
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(
                   query.name!.otherNames,
+                ),
+              if (userId != null)
+                sql.individual.auditCreatedBy.equals(
+                  userId,
                 ),
             ]),
           ))
