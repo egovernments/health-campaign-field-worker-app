@@ -9,15 +9,17 @@ class ProjectStaff extends Table {
   TextColumn get userId => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get channel => text().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get tenantId => text().nullable()();
-  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get startDate => integer().nullable()();
   IntColumn get endDate => integer().nullable()();
-  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => { id, createdBy,  };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }
