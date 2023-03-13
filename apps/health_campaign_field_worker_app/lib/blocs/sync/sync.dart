@@ -70,6 +70,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       await networkManager.syncUp(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
+        userId: event.userId,
       );
       emit(const SyncCompletedState());
     } catch (error) {
@@ -86,6 +87,7 @@ class SyncEvent with _$SyncEvent {
   const factory SyncEvent.refresh([int? count]) = SyncRefreshEvent;
 
   const factory SyncEvent.syncUp({
+    required String userId,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) = SyncSyncUpEvent;

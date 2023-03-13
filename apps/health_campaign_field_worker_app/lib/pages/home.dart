@@ -15,6 +15,7 @@ import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
@@ -277,6 +278,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   void _attemptSyncUp(BuildContext context) {
     context.read<SyncBloc>().add(
           SyncSyncUpEvent(
+            userId: context.loggedInUserUuid,
             localRepositories: [
               context.read<
                   LocalRepository<IndividualModel, IndividualSearchModel>>(),
