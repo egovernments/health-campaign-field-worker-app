@@ -113,8 +113,10 @@ class _HouseholdLocationPageState
                                   form.control(_accuracyKey).value,
                               tenantId: envConfig.variables.tenantId,
                               rowVersion: 1,
-                              createdAt: context.millisecondsSinceEpoch(),
-                              createdBy: context.loggedInUserUuid,
+                              auditDetails: AuditDetails(
+                                createdBy: context.loggedInUserUuid,
+                                createdTime: context.millisecondsSinceEpoch(),
+                              ),
                             );
 
                             bloc.add(

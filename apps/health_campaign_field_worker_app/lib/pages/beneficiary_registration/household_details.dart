@@ -75,8 +75,10 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             tenantId: envConfig.variables.tenantId,
                             clientReferenceId: IdGen.i.identifier,
                             rowVersion: 1,
-                            createdAt: context.millisecondsSinceEpoch(),
-                            createdBy: context.loggedInUserUuid,
+                            auditDetails: AuditDetails(
+                              createdBy: context.loggedInUserUuid,
+                              createdTime: context.millisecondsSinceEpoch(),
+                            ),
                           );
 
                           household = household.copyWith(

@@ -116,17 +116,22 @@ class _DeliverInterventionPageState
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
-                                                createdAt: context
-                                                    .millisecondsSinceEpoch(),
-                                                createdBy:
-                                                    context.loggedInUserUuid,
+                                                auditDetails: AuditDetails(
+                                                  createdBy:
+                                                      context.loggedInUserUuid,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
                                               ),
                                             ],
                                             address: householdMemberWrapper
                                                 .household.address,
-                                            createdAt: context
-                                                .millisecondsSinceEpoch(),
-                                            createdBy: context.loggedInUserUuid,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
                                           ),
                                           state.householdMemberWrapper.task ==
                                                   null

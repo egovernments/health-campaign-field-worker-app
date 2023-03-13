@@ -29,10 +29,8 @@ class TaskResourceModel extends EntityModel {
   final bool? isDelivered;
   final String? deliveryComment;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   TaskResourceModel({
@@ -44,19 +42,17 @@ class TaskResourceModel extends EntityModel {
     this.isDelivered,
     this.deliveryComment,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       clientReferenceId: Value(clientReferenceId),
       taskId: Value(taskId),
       id: Value(id),
@@ -65,10 +61,8 @@ class TaskResourceModel extends EntityModel {
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }
