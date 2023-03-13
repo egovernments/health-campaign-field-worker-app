@@ -49,12 +49,10 @@ class ProjectStaffModel extends EntityModel {
   final String? projectId;
   final String? channel;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-  final DateTime createdAtTime;
   
 
   ProjectStaffModel({
@@ -64,12 +62,10 @@ class ProjectStaffModel extends EntityModel {
     this.projectId,
     this.channel,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     int? startDate,
     int? endDate,
-    required int createdAt,
     super.auditDetails,
   }): startDateTime = startDate == null
           ? null
@@ -77,7 +73,6 @@ class ProjectStaffModel extends EntityModel {
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-      createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
        super();
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
@@ -86,23 +81,22 @@ class ProjectStaffModel extends EntityModel {
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
   
 
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
-
   ProjectStaffCompanion get companion {
     return ProjectStaffCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       staffId: Value(staffId),
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
-      createdAt: Value(createdAt),
       );
   }
 }

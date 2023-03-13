@@ -18,14 +18,16 @@ class Address extends Table {
   TextColumn get pincode => text().nullable()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get tenantId => text().nullable()();
-  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-  IntColumn get createdAt => integer()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { relatedClientReferenceId, createdBy,  };
+  Set<Column> get primaryKey => { relatedClientReferenceId, auditCreatedBy,  };
 }
