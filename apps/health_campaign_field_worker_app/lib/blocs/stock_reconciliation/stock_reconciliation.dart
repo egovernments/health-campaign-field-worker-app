@@ -78,7 +78,12 @@ class StockReconciliationBloc
         rowVersion: 1,
       ),
     );
-    emit(state.copyWith(loading: false));
+    emit(
+      state.copyWith(
+        loading: false,
+        persisted: true,
+      ),
+    );
   }
 }
 
@@ -106,6 +111,7 @@ class StockReconciliationState with _$StockReconciliationState {
 
   factory StockReconciliationState({
     @Default(false) bool loading,
+    @Default(false) bool persisted,
     required String projectId,
     required DateTime dateOfReconciliation,
     FacilityModel? facilityModel,

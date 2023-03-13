@@ -10,6 +10,7 @@ import '../../../blocs/project/project.dart';
 import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
 import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
+import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/facility_wrapper/facility_wrapper.dart';
@@ -93,8 +94,13 @@ class _StockReconciliationPageState
                     dateOfReconciliation: DateTime.now(),
                   ),
                 ),
-                child: BlocBuilder<StockReconciliationBloc,
+                child: BlocConsumer<StockReconciliationBloc,
                     StockReconciliationState>(
+                  listener: (context, stockState) {
+                    if (!stockState.persisted) return;
+
+                    context.router.replace(AcknowledgementRoute());
+                  },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
                       form: _form,
