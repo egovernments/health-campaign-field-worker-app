@@ -63,6 +63,8 @@ class EntityPlurals {
         return 'Projects';
       case 'Stock':
         return 'Stock';
+      case 'StockReconciliation':
+        return 'StockReconciliation';
       default:
         return '${entity}s';
     }
