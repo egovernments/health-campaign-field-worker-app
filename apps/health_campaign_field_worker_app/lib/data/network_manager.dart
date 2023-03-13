@@ -27,6 +27,7 @@ class NetworkManager {
   Future<void> syncUp({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
+    required String userId,
   }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -39,7 +40,7 @@ class NetworkManager {
     );
 
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSynced()),
+      localRepositories.map((e) => e.getItemsToBeSynced(userId)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
