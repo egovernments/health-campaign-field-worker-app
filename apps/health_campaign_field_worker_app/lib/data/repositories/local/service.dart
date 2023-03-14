@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
-
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
@@ -50,30 +49,22 @@ class ServiceLocalRepository
       isDeleted: entity.isDeleted,
       rowVersion: entity.rowVersion,
       attributes: entity.attributes?.map((e) {
-        ServiceAttributesModel serviceAttributesModel = ServiceAttributesModel(
-          attributeCode: e.attributeCode,
-          tenantId: e.tenantId,
-          clientReferenceId: e.clientReferenceId,
-          isDeleted: e.isDeleted,
-          auditDetails: e.auditDetails,
-        );
-
         return e.dataType == 'Number'
-            ? serviceAttributesModel.copyWith(value: int.parse(e.value))
+            ? e.copyWith(value: int.tryParse(e.value))
             : e.dataType == 'MultiValueList'
-                ? serviceAttributesModel.copyWith(
+                ? e.copyWith(
                     value: e.value.toString().split('.'),
                     additionalDetails: e.additionalDetails != null
                         ? {"value": e.additionalDetails}
                         : null,
                   )
                 : e.dataType == 'SingleValueList'
-                    ? serviceAttributesModel.copyWith(
+                    ? e.copyWith(
                         additionalDetails: e.additionalDetails != null
                             ? {"value": e.additionalDetails}
                             : null,
                       )
-                    : serviceAttributesModel;
+                    : e;
       }).toList(),
     );
 
