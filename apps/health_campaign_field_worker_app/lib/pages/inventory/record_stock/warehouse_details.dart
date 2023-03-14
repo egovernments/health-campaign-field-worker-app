@@ -10,6 +10,7 @@ import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 
 class WarehouseDetailsPage extends LocalizedStatefulWidget {
@@ -51,28 +52,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
             return BlocConsumer<FacilityBloc, FacilityState>(
               listener: (context, state) {
                 state.whenOrNull(
-                  empty: () {
-                    DigitDialog.show(
-                      context,
-                      options: DigitDialogOptions(
-                        titleIcon: Icon(
-                          Icons.warning,
-                          color: theme.colorScheme.error,
-                        ),
-                        titleText: 'No facilities assigned',
-                        contentText: 'Please select another boundary or '
-                            'contact the system administrator to assign '
-                            'a facility.',
-                        primaryAction: DigitDialogActions(
-                          label: 'Close',
-                          action: (dialogContext) {
-                            Navigator.of(context, rootNavigator: true).pop();
-                            context.router.pop();
-                          },
-                        ),
-                      ),
-                    );
-                  },
+                  empty: () => NoFacilitiesAssignedDialog.show(context),
                 );
               },
               builder: (ctx, facilityState) {

@@ -38,7 +38,11 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      length ??= (await isar.opLogs.filter().isSyncedEqualTo(false).findAll())
+      length ??= (await isar.opLogs
+              .filter()
+              .createdByEqualTo(event.createdBy)
+              .isSyncedEqualTo(false)
+              .findAll())
           .where((element) {
         switch (element.entityType) {
           case DataModelType.household:
@@ -77,14 +81,15 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       emit(const SyncFailedState());
       rethrow;
     } finally {
-      add(const SyncRefreshEvent());
+      add(SyncRefreshEvent(event.userId));
     }
   }
 }
 
 @freezed
 class SyncEvent with _$SyncEvent {
-  const factory SyncEvent.refresh([int? count]) = SyncRefreshEvent;
+  const factory SyncEvent.refresh(String createdBy, [int? count]) =
+      SyncRefreshEvent;
 
   const factory SyncEvent.syncUp({
     required String userId,
