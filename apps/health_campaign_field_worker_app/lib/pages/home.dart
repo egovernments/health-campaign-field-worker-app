@@ -319,6 +319,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                   LocalRepository<StockReconciliationModel,
                       StockReconciliationSearchModel>>(),
               context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<
+                  LocalRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -340,6 +343,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       StockReconciliationSearchModel>>(),
               context
                   .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+              context.read<
+                  RemoteRepository<StockReconciliationModel,
+                      StockReconciliationSearchModel>>(),
             ],
           ),
         );
