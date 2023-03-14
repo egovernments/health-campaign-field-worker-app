@@ -153,6 +153,18 @@ class MainApplication extends StatelessWidget {
                                 ApiOperation.search: '/project/v1/_search',
                               },
                             ),
+                            productVariantLocalRepository: ctx.read<
+                                LocalRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            productVariantRemoteRepository: ctx.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceLocalRepository: ctx.read<
+                                LocalRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
+                            projectResourceRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],

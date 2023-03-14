@@ -4,13 +4,14 @@
   "ignoreFields": [
     "clientReferenceId"
   ],
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
       "includeForQuery": true,
       "includeForEntity": false,
-      "includeForTable":false,
+      "includeForTable": false,
       "isList": true
     },
     {
@@ -18,7 +19,7 @@
       "type": "String",
       "includeForQuery": false,
       "includeForEntity": true,
-      "includeForTable":true,
+      "includeForTable": true,
       "isList": false,
       "isPk": true
     },
