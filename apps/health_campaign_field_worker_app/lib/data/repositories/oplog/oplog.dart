@@ -82,6 +82,7 @@ abstract class OpLogManager<T extends EntityModel> {
           ..operation = entry.operation
           ..isSynced = entry.isSynced
           ..entityType = entry.type
+          ..createdBy = entry.createdBy
           ..createdOn = entry.dateCreated
           ..syncedOn = entry.syncedOn
           ..entityString = entry.entity.toJson(),
