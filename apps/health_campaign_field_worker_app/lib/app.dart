@@ -139,7 +139,7 @@ class MainApplication extends StatelessWidget {
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            serviceDefinitionremoteRepository:
+                            serviceDefinitionRemoteRepository:
                                 ServiceDefinitionRemoteRepository(
                               client,
                               actionMap: {

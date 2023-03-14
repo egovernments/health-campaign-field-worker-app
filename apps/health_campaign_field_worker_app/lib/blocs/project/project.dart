@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
@@ -45,7 +46,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityLocalRepository;
 
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-      serviceDefinitionremoteRepository;
+      serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionLocalRepository;
 
@@ -59,7 +60,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
-    required this.serviceDefinitionremoteRepository,
+    required this.serviceDefinitionRemoteRepository,
     required this.isar,
     required this.serviceDefinitionLocalRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
@@ -189,7 +190,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           }
         }
 
-        final serviceDefinition = await serviceDefinitionremoteRepository
+        final serviceDefinition = await serviceDefinitionRemoteRepository
             .search(ServiceDefinitionSearchModel(
           tenantId: envConfig.variables.tenantId,
           code: codes,
