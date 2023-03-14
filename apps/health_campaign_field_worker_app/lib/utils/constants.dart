@@ -7,6 +7,13 @@ import '../blocs/app_initialization/app_initialization.dart';
 const List<MenuItemModel> tempProductVariants = [
   MenuItemModel(
     name: "BEDNETS",
+<<<<<<< HEAD
+=======
+    // DEV
+    // code: "PVAR-2023-01-11-000045",
+
+    // QA
+>>>>>>> 1d6d0b8 (Hlm 1939 fix oplog count (#79))
     code: "PVAR-2022-12-21-000001",
   ),
 ];
