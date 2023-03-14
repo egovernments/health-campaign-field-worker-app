@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
 import '../../../blocs/facility/facility.dart';
+import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
@@ -37,7 +37,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   FormGroup _form() {
     return fb.group({
       _productVariantKey: FormControl<MenuItemModel>(
-        value: tempProductVariants.firstOrNull,
         validators: [Validators.required],
       ),
       _transactingPartyKey: FormControl<FacilityModel>(
@@ -282,17 +281,33 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                           localizations.translate(pageTitle),
                           style: theme.textTheme.displayMedium,
                         ),
-                        DigitDropdown<MenuItemModel>(
-                          formControlName: _productVariantKey,
-                          label: localizations.translate(
-                            module.selectProductLabel,
-                          ),
-                          valueMapper: (value) {
-                            return localizations.translate(value.name);
-                          },
-                          menuItems: tempProductVariants,
-                          validationMessages: {
-                            'required': (object) => 'Field is required',
+                        BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              orElse: () => Offstage(),
+                              fetched: (productVariants) {
+                                return DigitDropdown<MenuItemModel>(
+                                  formControlName: _productVariantKey,
+                                  label: localizations.translate(
+                                    module.selectProductLabel,
+                                  ),
+                                  valueMapper: (value) {
+                                    return localizations.translate(value.name);
+                                  },
+                                  menuItems: productVariants
+                                      .map(
+                                        (e) => MenuItemModel(
+                                          name: e.sku ?? '',
+                                          code: e.id,
+                                        ),
+                                      )
+                                      .toList(),
+                                  validationMessages: {
+                                    'required': (object) => 'Field is required',
+                                  },
+                                );
+                              },
+                            );
                           },
                         ),
                         if ([

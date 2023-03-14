@@ -27,7 +27,7 @@ class ProductVariantSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProductVariantModel extends EntityModel {
-  final String? id;
+  final String id;
   final String? productId;
   final String? sku;
   final String? variation;
@@ -37,7 +37,7 @@ class ProductVariantModel extends EntityModel {
   
 
   ProductVariantModel({
-    this.id,
+    required this.id,
     this.productId,
     this.sku,
     this.variation,

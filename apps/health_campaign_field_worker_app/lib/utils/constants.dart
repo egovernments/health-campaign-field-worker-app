@@ -1,19 +1,18 @@
 import 'package:collection/collection.dart';
-import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 
-const List<MenuItemModel> tempProductVariants = [
-  MenuItemModel(
-    name: "BEDNETS",
-    // DEV
-    // code: "PVAR-2023-01-11-000045",
-
-    // QA
-    code: "PVAR-2022-12-21-000001",
-  ),
-];
+// const List<MenuItemModel> tempProductVariants = [
+//   MenuItemModel(
+//     name: "BEDNETS",
+//     // DEV
+//     // code: "PVAR-2023-01-11-000045",
+//
+//     // QA
+//     code: "PVAR-2022-12-21-000001",
+//   ),
+// ];
 
 class Constants {
   static const String localizationApiPath = 'localization/messages/v1/_search';

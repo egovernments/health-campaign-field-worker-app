@@ -19,6 +19,7 @@
       "includeForQuery": false,
       "includeForEntity": true,
       "includeForTable": true,
+      "nullable": false,
       "isPk": true
     },
     {

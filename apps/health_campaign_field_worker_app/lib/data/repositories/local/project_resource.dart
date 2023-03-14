@@ -17,8 +17,10 @@ class ProjectResourceLocalRepository
   ) async {
     final selectQuery = sql.select(sql.projectResource).join([
       leftOuterJoin(
-        sql.productVariant,
-        sql.productVariant.productId.equalsExp(sql.projectResource.resource),
+        sql.projectProductVariant,
+        sql.projectProductVariant.productVariantId.equalsExp(
+          sql.projectResource.resource,
+        ),
       ),
     ]);
 
@@ -60,7 +62,8 @@ class ProjectResourceLocalRepository
     ProjectResourceModel entity, {
     bool createOpLog = false,
   }) async {
-    final projectProductVariantCompanion = entity.resource.companion;
+    final projectProductVariantCompanion =
+        entity.resource.copyWith(auditDetails: entity.auditDetails).companion;
 
     await sql.batch((batch) async {
       batch.insert(
