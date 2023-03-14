@@ -33,8 +33,9 @@ class ProjectStaffLocalRepository
 
   @override
   FutureOr<List<ProjectStaffModel>> search(
-    ProjectStaffSearchModel query,
-  ) async {
+    ProjectStaffSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.projectStaff).join([]);
     final results = await (selectQuery
           ..where(buildAnd([

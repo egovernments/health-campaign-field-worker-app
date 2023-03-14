@@ -11,7 +11,10 @@ class HouseholdLocalRepository
   HouseholdLocalRepository(super.sql, super.opLogManager);
 
   @override
-  FutureOr<List<HouseholdModel>> search(HouseholdSearchModel query) async {
+  FutureOr<List<HouseholdModel>> search(
+    HouseholdSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
@@ -37,6 +40,10 @@ class HouseholdLocalRepository
                 if (query.tenantId != null)
                   sql.household.tenantId.equals(
                     query.tenantId,
+                  ),
+                if (userId != null)
+                  sql.household.auditCreatedBy.equals(
+                    userId,
                   ),
               ],
             ),

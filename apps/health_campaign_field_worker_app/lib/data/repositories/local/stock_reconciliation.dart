@@ -23,8 +23,9 @@ class StockReconciliationLocalRepository extends LocalRepository<
 
   @override
   FutureOr<List<StockReconciliationModel>> search(
-    StockReconciliationSearchModel query,
-  ) async {
+    StockReconciliationSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.stockReconciliation).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
@@ -39,6 +40,10 @@ class StockReconciliationLocalRepository extends LocalRepository<
             if (query.facilityId != null)
               sql.stockReconciliation.facilityId.equals(
                 query.facilityId!,
+              ),
+            if (userId != null)
+              sql.stockReconciliation.auditCreatedBy.equals(
+                userId,
               ),
           ])))
         .get();

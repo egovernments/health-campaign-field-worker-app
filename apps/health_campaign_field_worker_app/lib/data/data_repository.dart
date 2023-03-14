@@ -324,21 +324,16 @@ abstract class LocalRepository<D extends EntityModel,
     return entries;
   }
 
-  FutureOr<void> createOplogEntry(
-    D entity,
-    DataOperation operation,
-  ) {
+  FutureOr<void> createOplogEntry(D entity, DataOperation operation) {
     final entry = OpLogEntry(
       entity,
       operation,
       dateCreated: DateTime.now(),
+      createdBy: entity.auditDetails?.createdBy,
       type: type,
     );
 
-    return opLogManager.createEntry(
-      entry,
-      type,
-    );
+    return opLogManager.createEntry(entry, type);
   }
 
   Future<List<OpLogEntry<D>>> getItemsToBeSynced() async {

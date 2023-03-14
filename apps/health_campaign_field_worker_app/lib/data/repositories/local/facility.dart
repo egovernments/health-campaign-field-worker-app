@@ -11,7 +11,10 @@ class FacilityLocalRepository
   FacilityLocalRepository(super.sql, super.opLogManager);
 
   @override
-  FutureOr<List<FacilityModel>> search(FacilitySearchModel query) async {
+  FutureOr<List<FacilityModel>> search(
+    FacilitySearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.facility).join(
       [
         leftOuterJoin(

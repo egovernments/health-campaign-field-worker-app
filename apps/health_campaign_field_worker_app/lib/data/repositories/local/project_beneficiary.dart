@@ -17,8 +17,9 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
   @override
   FutureOr<List<ProjectBeneficiaryModel>> search(
-    ProjectBeneficiarySearchModel query,
-  ) async {
+    ProjectBeneficiarySearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.projectBeneficiary).join([]);
     final results = await (selectQuery
           ..where(
@@ -47,6 +48,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                 if (query.dateOfRegistrationTime != null)
                   sql.projectBeneficiary.dateOfRegistration.equals(
                     query.dateOfRegistration,
+                  ),
+                if (userId != null)
+                  sql.projectBeneficiary.auditCreatedBy.equals(
+                    userId,
                   ),
               ],
             ),

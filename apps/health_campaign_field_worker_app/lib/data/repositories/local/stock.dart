@@ -22,7 +22,10 @@ class StockLocalRepository
   }
 
   @override
-  FutureOr<List<StockModel>> search(StockSearchModel query) async {
+  FutureOr<List<StockModel>> search(
+    StockSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.stock).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
@@ -33,6 +36,10 @@ class StockLocalRepository
               sql.stock.productVariantId.equals(query.productVariantId),
             if (query.clientReferenceId != null)
               sql.stock.clientReferenceId.isIn(query.clientReferenceId!),
+            if (userId != null)
+              sql.stock.auditCreatedBy.equals(
+                userId,
+              ),
           ])))
         .get();
 
