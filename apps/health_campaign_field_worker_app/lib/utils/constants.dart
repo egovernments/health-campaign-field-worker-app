@@ -7,7 +7,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 const List<MenuItemModel> tempProductVariants = [
   MenuItemModel(
     name: "BEDNETS",
-    code: "PVAR-2023-01-11-000045",
+    code: "PVAR-2022-12-21-000001",
   ),
 ];
 

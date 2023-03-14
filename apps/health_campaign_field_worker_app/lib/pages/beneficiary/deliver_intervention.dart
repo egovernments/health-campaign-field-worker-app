@@ -112,7 +112,7 @@ class _DeliverInterventionPageState
                                                     .value
                                                     .toString(),
                                                 productVariantId:
-                                                    'PVAR-2023-01-11-000045',
+                                                    'PVAR-2022-12-21-000001',
                                                 deliveryComment: form
                                                     .control('deliveryComment')
                                                     .value,
@@ -291,20 +291,21 @@ class _DeliverInterventionPageState
                                 },
                               ),
                               const DigitDivider(),
-                              DigitDropdown<MenuItemModel>(
+                              DigitDropdown<String>(
                                 label: localizations.translate(
                                   i18.deliverIntervention
                                       .resourceDeliveredLabel,
                                 ),
-                                valueMapper: (value) {
-                                  return localizations.translate(value.code);
-                                },
-                                initialValue: tempProductVariants.firstOrNull,
-                                menuItems: tempProductVariants,
+                                valueMapper: (value) => value,
+                                initialValue:
+                                    tempProductVariants.firstOrNull?.code,
+                                menuItems: tempProductVariants.map((e) {
+                                  return localizations.translate(e.code);
+                                }).toList(),
                                 validationMessages: {
                                   'required': (object) => 'Field is required',
                                 },
-                                formControlName: 'resourceDelivered',
+                                formControlName: _resourceDeliveredKey,
                               ),
                               DigitIntegerFormPicker(
                                 form: form,
@@ -339,7 +340,7 @@ class _DeliverInterventionPageState
                                     menuItems: deliveryCommentOptions.map((e) {
                                       return localizations.translate(e.name);
                                     }).toList(),
-                                    formControlName: 'deliveryComment',
+                                    formControlName: _deliveryCommentKey,
                                   );
                                 },
                               ),
@@ -357,6 +358,10 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
+
+    print(state.householdMemberWrapper.task?.resources?.first.productVariantId);
+
+    print('-----');
 
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<String>(

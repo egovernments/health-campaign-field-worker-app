@@ -139,14 +139,9 @@ class MainApplication extends StatelessWidget {
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            serviceDefinitionRemoteRepository:
-                                ServiceDefinitionRemoteRepository(
-                              client,
-                              actionMap: {
-                                ApiOperation.search:
-                                    '/service-request/service/definition/v1/_search',
-                              },
-                            ),
+                            serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
                             isar: isar,
                             serviceDefinitionLocalRepository: ctx.read<
                                 LocalRepository<ServiceDefinitionModel,
