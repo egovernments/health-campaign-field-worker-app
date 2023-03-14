@@ -51,11 +51,9 @@ class ServiceLocalRepository
       rowVersion: entity.rowVersion,
       attributes: entity.attributes?.map((e) {
         ServiceAttributesModel serviceAttributesModel = ServiceAttributesModel(
-          value: e.value,
           attributeCode: e.attributeCode,
           tenantId: e.tenantId,
           clientReferenceId: e.clientReferenceId,
-          additionalDetails: e.additionalDetails,
           isDeleted: e.isDeleted,
           auditDetails: e.auditDetails,
         );
