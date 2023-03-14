@@ -10,14 +10,14 @@ class OpLogEntry<T extends EntityModel> {
   final DataOperation operation;
   final bool isSynced;
   final DateTime dateCreated;
-  final String? createdBy;
+  final String createdBy;
   final DateTime? syncedOn;
 
   const OpLogEntry(
     this.entity,
     this.operation, {
     this.id,
-    this.createdBy,
+    required this.createdBy,
     required this.type,
     this.isSynced = false,
     required this.dateCreated,
