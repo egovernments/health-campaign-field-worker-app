@@ -25,12 +25,13 @@ abstract class OpLogManager<T extends EntityModel> {
           ));
 
   FutureOr<List<OpLogEntry<T>>> getPendingSyncedEntries(
-    DataModelType type, [
-    String? createdBy,
-  ]) async {
+    DataModelType type, {
+    required String createdBy,
+  }) async {
     final entries = await isar.opLogs
         .filter()
         .isSyncedEqualTo(false)
+        .createdByEqualTo(createdBy)
         .entityTypeEqualTo(type)
         .findAll();
 
@@ -40,6 +41,7 @@ abstract class OpLogManager<T extends EntityModel> {
               e.operation,
               dateCreated: e.createdOn,
               id: e.id,
+              createdBy: e.createdBy,
               type: e.entityType,
               isSynced: e.isSynced,
             ))
@@ -62,6 +64,7 @@ abstract class OpLogManager<T extends EntityModel> {
               e.operation,
               dateCreated: e.createdOn,
               id: e.id,
+              createdBy: e.createdBy,
               type: e.entityType,
               isSynced: e.isSynced,
             ))
@@ -79,6 +82,7 @@ abstract class OpLogManager<T extends EntityModel> {
           ..operation = entry.operation
           ..isSynced = entry.isSynced
           ..entityType = entry.type
+          ..createdBy = entry.createdBy
           ..createdOn = entry.dateCreated
           ..syncedOn = entry.syncedOn
           ..entityString = entry.entity.toJson(),

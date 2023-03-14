@@ -9,6 +9,7 @@ import '../blocs/household_details/household_details.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../models/data_model.dart';
+import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -26,15 +27,25 @@ class AuthenticatedPageWrapper extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) {
+              final userId = context.loggedInUserUuid;
+
               final isar = context.read<Isar>();
               final bloc = SyncBloc(
                 isar: isar,
                 networkManager: context.read(),
-              )..add(const SyncRefreshEvent());
+              )..add(SyncRefreshEvent(userId));
 
-              isar.opLogs.filter().isSyncedEqualTo(false).watch().listen(
-                    (event) => bloc.add(
-                      SyncRefreshEvent(event.where((element) {
+              isar.opLogs
+                  .filter()
+                  .createdByEqualTo(userId)
+                  .isSyncedEqualTo(false)
+                  .watch()
+                  .listen(
+                (event) {
+                  bloc.add(
+                    SyncRefreshEvent(
+                      userId,
+                      event.where((element) {
                         switch (element.entityType) {
                           case DataModelType.household:
                           case DataModelType.individual:
@@ -47,9 +58,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           default:
                             return false;
                         }
-                      }).length),
+                      }).length,
                     ),
                   );
+                },
+              );
 
               return bloc;
             },
