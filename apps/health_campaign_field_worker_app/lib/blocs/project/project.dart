@@ -40,6 +40,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
+  /// Project Resource Repositories
+  final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceRemoteRepository;
+  final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceLocalRepository;
+
+  /// Product Variant Repositories
+  final RemoteRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantRemoteRepository;
+  final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantLocalRepository;
+
   ProjectBloc({
     LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
@@ -50,6 +62,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.projectResourceLocalRepository,
+    required this.projectResourceRemoteRepository,
+    required this.productVariantLocalRepository,
+    required this.productVariantRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
