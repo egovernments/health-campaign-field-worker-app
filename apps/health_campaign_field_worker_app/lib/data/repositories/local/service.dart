@@ -50,49 +50,32 @@ class ServiceLocalRepository
       isDeleted: entity.isDeleted,
       rowVersion: entity.rowVersion,
       attributes: entity.attributes?.map((e) {
+        ServiceAttributesModel serviceAttributesModel = ServiceAttributesModel(
+          value: e.value,
+          attributeCode: e.attributeCode,
+          tenantId: e.tenantId,
+          clientReferenceId: e.clientReferenceId,
+          additionalDetails: e.additionalDetails,
+          isDeleted: e.isDeleted,
+          auditDetails: e.auditDetails,
+        );
+
         return e.dataType == 'Number'
-            ? ServiceAttributesModel(
-                value: int.parse(e.value),
-                attributeCode: e.attributeCode,
-                tenantId: e.tenantId,
-                clientReferenceId: e.clientReferenceId,
-                additionalDetails: e.additionalDetails,
-                isDeleted: e.isDeleted,
-                auditDetails: e.auditDetails,
-              )
+            ? serviceAttributesModel.copyWith(value: int.parse(e.value))
             : e.dataType == 'MultiValueList'
-                ? ServiceAttributesModel(
+                ? serviceAttributesModel.copyWith(
                     value: e.value.toString().split('.'),
-                    attributeCode: e.attributeCode,
-                    tenantId: e.tenantId,
-                    clientReferenceId: e.clientReferenceId,
                     additionalDetails: e.additionalDetails != null
                         ? {"value": e.additionalDetails}
                         : null,
-                    isDeleted: e.isDeleted,
-                    auditDetails: e.auditDetails,
                   )
                 : e.dataType == 'SingleValueList'
-                    ? ServiceAttributesModel(
-                        value: e.value,
-                        attributeCode: e.attributeCode,
-                        tenantId: e.tenantId,
-                        clientReferenceId: e.clientReferenceId,
+                    ? serviceAttributesModel.copyWith(
                         additionalDetails: e.additionalDetails != null
                             ? {"value": e.additionalDetails}
                             : null,
-                        isDeleted: e.isDeleted,
-                        auditDetails: e.auditDetails,
                       )
-                    : ServiceAttributesModel(
-                        value: e.value,
-                        attributeCode: e.attributeCode,
-                        tenantId: e.tenantId,
-                        clientReferenceId: e.clientReferenceId,
-                        additionalDetails: e.additionalDetails,
-                        isDeleted: e.isDeleted,
-                        auditDetails: e.auditDetails,
-                      );
+                    : serviceAttributesModel;
       }).toList(),
     );
 

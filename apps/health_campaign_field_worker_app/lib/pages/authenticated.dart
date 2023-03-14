@@ -17,7 +17,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [],
+      ),
       drawer: Container(
         margin: const EdgeInsets.only(top: kToolbarHeight * 1.36),
         child: const Drawer(child: SideBar()),
