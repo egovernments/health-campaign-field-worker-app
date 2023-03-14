@@ -15,7 +15,6 @@ import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
-import 'data/repositories/remote/project.dart';
 import 'data/repositories/remote/service_definition.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
@@ -134,28 +133,12 @@ class MainApplication extends StatelessWidget {
                             projectStaffLocalRepository: ctx.read<
                                 LocalRepository<ProjectStaffModel,
                                     ProjectStaffSearchModel>>(),
-                            // projectRemoteRepository: ctx.read<
-                            //     RemoteRepository<ProjectModel,
-                            //         ProjectSearchModel>>(),
                             projectStaffRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectStaffModel,
                                     ProjectStaffSearchModel>>(),
-                            // projectStaffRemoteRepository:
-                            //     ProjectStaffRemoteRepository(
-                            //   client,
-                            //   actionMap: {
-                            //     ApiOperation.search:
-                            //         '/project/staff/v1/_search',
-                            //   },
-                            // ),
-                            projectRemoteRepository: ProjectRemoteRepository(
-                              client,
-                              actionMap: {
-                                ApiOperation.search:
-                                    Constants.projectSearchApiPath,
-                              },
-                            ),
-
+                            projectRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectModel,
+                                    ProjectSearchModel>>(),
                             serviceDefinitionremoteRepository:
                                 ServiceDefinitionRemoteRepository(
                               client,
