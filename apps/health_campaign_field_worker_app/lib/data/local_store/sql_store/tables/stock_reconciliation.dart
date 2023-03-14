@@ -14,11 +14,13 @@ class StockReconciliation extends Table {
   IntColumn get calculatedCount => integer().nullable()();
   TextColumn get commentsOnReconciliation => text().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfReconciliation => integer()();
+  IntColumn get createdAt => integer()();
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { clientReferenceId, createdBy,  };
 }

@@ -50,6 +50,8 @@ class ProjectStaffLocalRepository
 
       return ProjectStaffModel(
         id: data.id,
+        createdBy: data.createdBy,
+        createdAt: data.createdAt,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
         projectId: data.projectId,

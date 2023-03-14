@@ -45,9 +45,11 @@ class StockReconciliationModel extends EntityModel {
   final int? calculatedCount;
   final String? commentsOnReconciliation;
   final String clientReferenceId;
+  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfReconciliationTime;
+  final DateTime createdAtTime;
   
 
   StockReconciliationModel({
@@ -61,14 +63,20 @@ class StockReconciliationModel extends EntityModel {
     this.calculatedCount,
     this.commentsOnReconciliation,
     required this.clientReferenceId,
+    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     required int dateOfReconciliation,
+    required int createdAt,
     super.auditDetails,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
+      createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
        super();
 
   int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
+  
+
+  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
   
 
   StockReconciliationCompanion get companion {
@@ -83,9 +91,11 @@ class StockReconciliationModel extends EntityModel {
       calculatedCount: Value(calculatedCount),
       commentsOnReconciliation: Value(commentsOnReconciliation),
       clientReferenceId: Value(clientReferenceId),
+      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       dateOfReconciliation: Value(dateOfReconciliation),
+      createdAt: Value(createdAt),
       );
   }
 }
