@@ -324,16 +324,12 @@ abstract class LocalRepository<D extends EntityModel,
     return entries;
   }
 
-  FutureOr<void> createOplogEntry(D entity, DataOperation operation) async {
-    final auditDetails = entity.auditDetails;
-    if (auditDetails == null) {
-      return;
-    }
+  FutureOr<void> createOplogEntry(D entity, DataOperation operation) {
     final entry = OpLogEntry(
       entity,
       operation,
       dateCreated: DateTime.now(),
-      createdBy: auditDetails.createdBy,
+      createdBy: entity.auditDetails?.createdBy,
       type: type,
     );
 
