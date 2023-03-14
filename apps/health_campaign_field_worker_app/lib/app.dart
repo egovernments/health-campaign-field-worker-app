@@ -143,15 +143,8 @@ class MainApplication extends StatelessWidget {
                                 ServiceDefinitionRemoteRepository(
                               client,
                               actionMap: {
-                                ApiOperation.search: appConfigState
-                                    .serviceRegistryList
-                                    .firstWhere((element) =>
-                                        element.service == 'SERVICE')
-                                    .actions
-                                    .firstWhere(
-                                      (element) => element.action == 'search',
-                                    )
-                                    .path,
+                                ApiOperation.search:
+                                    '/service-request/service/definition/v1/_search',
                               },
                             ),
                             isar: isar,
