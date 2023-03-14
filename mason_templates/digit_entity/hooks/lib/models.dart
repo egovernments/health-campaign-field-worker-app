@@ -47,6 +47,7 @@ class AttributeModel {
   final bool includeForEntity;
   final bool includeForTable;
   final bool createReference;
+  final String? referencePkName;
   final List<TableReferenceModel> references;
 
   const AttributeModel({
@@ -61,6 +62,7 @@ class AttributeModel {
     this.includeForQuery = false,
     this.includeForEntity = true,
     this.createReference = false,
+    this.referencePkName,
     this.references = const [],
   });
 }
@@ -69,8 +71,13 @@ class AttributeModel {
 class TableReferenceModel {
   final String table;
   final String column;
+  final String pkName;
 
-  const TableReferenceModel({required this.table, required this.column});
+  const TableReferenceModel({
+    required this.table,
+    required this.column,
+    required this.pkName,
+  });
 }
 
 @MappableClass()

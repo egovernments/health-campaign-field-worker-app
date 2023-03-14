@@ -1,11 +1,26 @@
 {
   "name": "projectResource",
   "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable":false,
+      "isList": true
+    },
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": false,
+      "includeForEntity": true,
+      "includeForTable":true,
+      "isList": false,
+      "isPk": true
     },
     {
       "name": "projectId",
@@ -15,10 +30,11 @@
   ],
   "customAttributes": [
     {
-      "name": "resources",
+      "name": "resource",
       "type": "ProjectProductVariant",
       "nullable": false,
-      "createReference": true
+      "createReference": true,
+      "referencePkName": "productVariantId"
     }
   ],
   "isEnum": false
