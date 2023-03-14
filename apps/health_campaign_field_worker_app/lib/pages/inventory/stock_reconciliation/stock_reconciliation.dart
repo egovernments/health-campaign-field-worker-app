@@ -15,6 +15,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/facility_wrapper/facility_wrapper.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
@@ -246,7 +247,14 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    BlocBuilder<FacilityBloc, FacilityState>(
+                                    BlocConsumer<FacilityBloc, FacilityState>(
+                                      listener: (context, state) =>
+                                          state.whenOrNull(
+                                        empty: () =>
+                                            NoFacilitiesAssignedDialog.show(
+                                          context,
+                                        ),
+                                      ),
                                       builder: (context, state) {
                                         return DigitSearchDropdown<
                                             FacilityModel>(
