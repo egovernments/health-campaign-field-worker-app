@@ -42,7 +42,7 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<MenuItemModel>(
+      _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _manualCountKey: FormControl<String>(
@@ -132,9 +132,9 @@ class _StockReconciliationPageState
                                                   .control(_facilityKey)
                                                   .value as FacilityModel;
 
-                                              final productVariantId = form
+                                              final productVariant = form
                                                   .control(_productVariantKey)
-                                                  .value as MenuItemModel;
+                                                  .value as ProductVariantModel;
 
                                               final calculatedCount = form
                                                   .control(_manualCountKey)
@@ -155,7 +155,7 @@ class _StockReconciliationPageState
                                                     .millisecondsSinceEpoch,
                                                 facilityId: facilityId.id,
                                                 productVariantId:
-                                                    productVariantId.code,
+                                                    productVariant.id,
                                                 calculatedCount: stockState
                                                     .stockInHand
                                                     .toInt(),
@@ -300,7 +300,7 @@ class _StockReconciliationPageState
                                             orElse: () => const Offstage(),
                                             fetched: (productVariants) {
                                               return DigitDropdown<
-                                                  MenuItemModel>(
+                                                  ProductVariantModel>(
                                                 formControlName:
                                                     _productVariantKey,
                                                 label: localizations.translate(
@@ -313,22 +313,17 @@ class _StockReconciliationPageState
                                                           StockReconciliationBloc>()
                                                       .add(
                                                         StockReconciliationSelectProductEvent(
-                                                          value.code,
+                                                          value.id,
                                                         ),
                                                       );
                                                 },
                                                 valueMapper: (value) {
                                                   return localizations
-                                                      .translate(value.name);
+                                                      .translate(
+                                                    value.sku ?? value.id,
+                                                  );
                                                 },
-                                                menuItems: productVariants
-                                                    .map(
-                                                      (e) => MenuItemModel(
-                                                        name: e.sku ?? '',
-                                                        code: e.id,
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                                menuItems: productVariants,
                                                 validationMessages: {
                                                   'required': (object) =>
                                                       'Field is required',

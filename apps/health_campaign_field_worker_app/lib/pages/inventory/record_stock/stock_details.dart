@@ -36,7 +36,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   FormGroup _form() {
     return fb.group({
-      _productVariantKey: FormControl<MenuItemModel>(
+      _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _transactingPartyKey: FormControl<FacilityModel>(
@@ -155,7 +155,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                 final productVariant = form
                                     .control(_productVariantKey)
-                                    .value as MenuItemModel;
+                                    .value as ProductVariantModel;
 
                                 switch (entryType) {
                                   case StockRecordEntryType.receipt:
@@ -201,7 +201,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                 final stockModel = StockModel(
                                   clientReferenceId: IdGen.i.identifier,
-                                  productVariantId: productVariant.code,
+                                  productVariantId: productVariant.id,
                                   transactingPartyId: transactingParty.id,
                                   transactingPartyType: 'WAREHOUSE',
                                   transactionType: transactionType,
@@ -284,24 +284,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         BlocBuilder<ProductVariantBloc, ProductVariantState>(
                           builder: (context, state) {
                             return state.maybeWhen(
-                              orElse: () => Offstage(),
+                              orElse: () => const Offstage(),
                               fetched: (productVariants) {
-                                return DigitDropdown<MenuItemModel>(
+                                return DigitDropdown<ProductVariantModel>(
                                   formControlName: _productVariantKey,
                                   label: localizations.translate(
                                     module.selectProductLabel,
                                   ),
                                   valueMapper: (value) {
-                                    return localizations.translate(value.name);
+                                    return localizations.translate(
+                                      value.sku ?? value.id,
+                                    );
                                   },
-                                  menuItems: productVariants
-                                      .map(
-                                        (e) => MenuItemModel(
-                                          name: e.sku ?? '',
-                                          code: e.id,
-                                        ),
-                                      )
-                                      .toList(),
+                                  menuItems: productVariants,
                                   validationMessages: {
                                     'required': (object) => 'Field is required',
                                   },
