@@ -63,7 +63,8 @@ class MainApplication extends StatelessWidget {
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('en', 'IN');
+                // const defaultLocale = Locale('en', 'IN');
+                const defaultLocale = Locale('pt', 'MZ');
 
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
@@ -161,9 +162,10 @@ class MainApplication extends StatelessWidget {
                             ? languages.map((e) {
                                 final results = e.value.split('_');
 
-                                return results.isNotEmpty
-                                    ? Locale(results.first, results.last)
-                                    : defaultLocale;
+                                return defaultLocale;
+                                // return results.isNotEmpty
+                                //     ? Locale(results.first, results.last)
+                                //     : defaultLocale;
                               })
                             : [defaultLocale],
                         localizationsDelegates: [
