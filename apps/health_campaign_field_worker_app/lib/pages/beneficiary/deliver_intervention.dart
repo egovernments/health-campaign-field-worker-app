@@ -359,10 +359,6 @@ class _DeliverInterventionPageState
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
 
-    print(state.householdMemberWrapper.task?.resources?.first.productVariantId);
-
-    print('-----');
-
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<String>(
         value: state
