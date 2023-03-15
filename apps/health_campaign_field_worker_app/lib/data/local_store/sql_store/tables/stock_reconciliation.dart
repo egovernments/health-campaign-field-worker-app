@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-
 class StockReconciliation extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();
@@ -18,11 +17,15 @@ class StockReconciliation extends Table {
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
+  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfReconciliation => integer()();
-  
+  IntColumn get createdAt => integer()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+        clientReferenceId,
+      };
 }

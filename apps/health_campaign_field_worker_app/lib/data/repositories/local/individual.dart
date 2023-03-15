@@ -94,6 +94,8 @@ class IndividualLocalRepository
 
           return IndividualModel(
             id: individual.id,
+            createdBy: individual.createdBy,
+            createdAt: individual.createdAt,
             tenantId: individual.tenantId,
             clientReferenceId: individual.clientReferenceId,
             dateOfBirth: individual.dateOfBirth,
@@ -103,6 +105,8 @@ class IndividualLocalRepository
             name: name == null
                 ? null
                 : NameModel(
+                    createdBy: name.createdBy,
+                    createdAt: name.createdAt,
                     individualClientReferenceId: individual.clientReferenceId,
                     familyName: name.familyName,
                     givenName: name.givenName,
@@ -115,6 +119,8 @@ class IndividualLocalRepository
               address == null
                   ? null
                   : AddressModel(
+                      createdBy: address.createdBy,
+                      createdAt: address.createdAt,
                       relatedClientReferenceId: individual.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,
@@ -134,6 +140,8 @@ class IndividualLocalRepository
             identifiers: [
               if (identifier != null)
                 IdentifierModel(
+                  createdBy: individual.createdBy,
+                  createdAt: individual.createdAt,
                   individualClientReferenceId: individual.clientReferenceId,
                   identifierType: identifier.identifierType,
                   identifierId: identifier.identifierId,

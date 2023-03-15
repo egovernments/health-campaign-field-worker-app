@@ -21,12 +21,16 @@ class Individual extends Table {
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
+  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get createdAt => integer()();
   IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
   IntColumn get gender => intEnum<Gender>().nullable()();
-  
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+        clientReferenceId,
+      };
 }

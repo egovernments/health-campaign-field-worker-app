@@ -23,6 +23,7 @@ class Task extends Table {
   IntColumn get actualStartDate => integer().nullable()();
   IntColumn get actualEndDate => integer().nullable()();
   IntColumn get createdDate => integer().nullable()();
+  IntColumn get createdAt => integer()();
   
 
   @override

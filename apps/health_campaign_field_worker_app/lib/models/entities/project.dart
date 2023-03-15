@@ -63,6 +63,7 @@ class ProjectModel extends EntityModel {
   final String? referenceId;
   final String? projectHierarchy;
   final String? tenantId;
+  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
@@ -70,6 +71,7 @@ class ProjectModel extends EntityModel {
   final List<DocumentModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
+  final DateTime createdAtTime;
   
 
   ProjectModel({
@@ -85,6 +87,7 @@ class ProjectModel extends EntityModel {
     this.referenceId,
     this.projectHierarchy,
     this.tenantId,
+    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.address,
@@ -92,6 +95,7 @@ class ProjectModel extends EntityModel {
     this.documents,
     int? startDate,
     int? endDate,
+    required int createdAt,
     super.auditDetails,
   }): startDateTime = startDate == null
           ? null
@@ -99,12 +103,16 @@ class ProjectModel extends EntityModel {
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
+      createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
        super();
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
   int?  get endDate => endDateTime?.millisecondsSinceEpoch;
+  
+
+  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
   
 
   ProjectCompanion get companion {
@@ -125,10 +133,12 @@ class ProjectModel extends EntityModel {
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
       tenantId: Value(tenantId),
+      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
+      createdAt: Value(createdAt),
       );
   }
 }

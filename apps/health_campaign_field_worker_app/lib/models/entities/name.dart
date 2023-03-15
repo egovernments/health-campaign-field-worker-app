@@ -33,8 +33,10 @@ class NameModel extends EntityModel {
   final String? familyName;
   final String? otherNames;
   final String? tenantId;
+  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
+  final DateTime createdAtTime;
   
 
   NameModel({
@@ -44,10 +46,16 @@ class NameModel extends EntityModel {
     this.familyName,
     this.otherNames,
     this.tenantId,
+    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
+    required int createdAt,
     super.auditDetails,
-  }):  super();
+  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
+       super();
+
+  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
+  
 
   NameCompanion get companion {
     return NameCompanion(
@@ -61,8 +69,10 @@ class NameModel extends EntityModel {
       familyName: Value(familyName),
       otherNames: Value(otherNames),
       tenantId: Value(tenantId),
+      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      createdAt: Value(createdAt),
       );
   }
 }
