@@ -42,7 +42,7 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<ProductVariantModel>(
+      _productVariantKey: FormControl<String>(
         validators: [Validators.required],
       ),
       _manualCountKey: FormControl<String>(
@@ -134,7 +134,7 @@ class _StockReconciliationPageState
 
                                               final productVariant = form
                                                   .control(_productVariantKey)
-                                                  .value as ProductVariantModel;
+                                                  .value as String;
 
                                               final calculatedCount = form
                                                   .control(_manualCountKey)
@@ -155,7 +155,7 @@ class _StockReconciliationPageState
                                                     .millisecondsSinceEpoch,
                                                 facilityId: facilityId.id,
                                                 productVariantId:
-                                                    productVariant.id,
+                                                    productVariant,
                                                 calculatedCount: stockState
                                                     .stockInHand
                                                     .toInt(),
@@ -299,8 +299,7 @@ class _StockReconciliationPageState
                                           return state.maybeWhen(
                                             orElse: () => const Offstage(),
                                             fetched: (productVariants) {
-                                              return DigitDropdown<
-                                                  ProductVariantModel>(
+                                              return DigitDropdown<String>(
                                                 formControlName:
                                                     _productVariantKey,
                                                 label: localizations.translate(
@@ -313,17 +312,19 @@ class _StockReconciliationPageState
                                                           StockReconciliationBloc>()
                                                       .add(
                                                         StockReconciliationSelectProductEvent(
-                                                          value.id,
+                                                          value,
                                                         ),
                                                       );
                                                 },
                                                 valueMapper: (value) {
                                                   return localizations
                                                       .translate(
-                                                    value.sku ?? value.id,
+                                                    value,
                                                   );
                                                 },
-                                                menuItems: productVariants,
+                                                menuItems: productVariants
+                                                    .map((e) => e.sku ?? e.id)
+                                                    .toList(),
                                                 validationMessages: {
                                                   'required': (object) =>
                                                       'Field is required',
