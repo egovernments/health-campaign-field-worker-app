@@ -51,6 +51,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
       boundaryRemoteRepository;
+
   /// Project Resource Repositories
   final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
       projectResourceRemoteRepository;
@@ -197,7 +198,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
         }
         final configs = await isar.appConfigurations.where().findAll();
-        ;
+        final userObject = await localSecureStore.userRequestModel;
         List<String> codes = [];
         for (var elements in userObject!.roles) {
           switch (elements.code) {
@@ -237,6 +238,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   .forEach((element) {
                 for (var ele in projects) {
                   codes.add('${ele.name}.$element.${'SUPERVISOR'}');
+                }
+              });
+              break;
+            case UserRoleCodeEnum.distributor:
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'DISTRIBUTOR'}');
                 }
               });
               break;

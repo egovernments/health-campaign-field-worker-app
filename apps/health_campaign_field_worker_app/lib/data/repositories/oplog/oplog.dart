@@ -144,6 +144,7 @@ class ServiceDefinitionOpLogManager
 
 class ServiceOpLogManager extends OpLogManager<ServiceModel> {
   ServiceOpLogManager(super.isar);
+}
 
 class ProjectResourceOpLogManager extends OpLogManager<ProjectResourceModel> {
   ProjectResourceOpLogManager(super.isar);
