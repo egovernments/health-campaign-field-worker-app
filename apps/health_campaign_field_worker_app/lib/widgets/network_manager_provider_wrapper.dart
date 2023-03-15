@@ -21,8 +21,11 @@ import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
+import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/service.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
+import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -36,9 +39,12 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/service.dart';
+import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+
 import '../models/data_model.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -164,7 +170,21 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>(
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
+          sql,
+          ServiceDefinitionOpLogManager(
+            isar,
+          ),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
+          sql,
+          ServiceOpLogManager(isar),
+          ),),),
+           RepositoryProvider<LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>(
         create: (_) => ProjectResourceLocalRepository(
           sql,
           ProjectResourceOpLogManager(isar),
@@ -318,6 +338,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.service)
+          RepositoryProvider<
+              RemoteRepository<ServiceModel, ServiceSearchModel>>(
+            create: (_) => ServiceRemoteRepository( 
+               dio,
+              actionMap: actions,
+            ),
+          ),
+
         if (value == DataModelType.projectResource)
           RepositoryProvider<
               RemoteRepository<ProjectResourceModel,
@@ -327,6 +356,25 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.serviceDefinition)
+          RepositoryProvider<
+              RemoteRepository<ServiceDefinitionModel,
+                  ServiceDefinitionSearchModel>>(
+            create: (_) => ServiceDefinitionRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.boundary)
+          RepositoryProvider<
+              RemoteRepository<BoundaryModel, BoundarySearchModel>>(
+            create: (_) => BoundaryRemoteRepository(
+                 dio,
+              actionMap: actions,
+            ),
+          ),
+
+
         if (value == DataModelType.productVariant)
           RepositoryProvider<
               RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(

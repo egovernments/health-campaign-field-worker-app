@@ -5,6 +5,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 
 class Constants {
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const String projectSearchApiPath = '/project/v1/_search';
 
   static String getEndPoint({
     required AppInitialized state,

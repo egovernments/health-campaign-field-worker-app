@@ -65,6 +65,7 @@ class DigitMobileTypography extends DigitTypography {
       displayMedium: _big.copyWith(
         fontSize: 32,
         fontWeight: FontWeight.w700,
+        fontFamily: 'RobotoCondensed',
       ),
       headlineLarge: _normal.copyWith(
         fontSize: 24,

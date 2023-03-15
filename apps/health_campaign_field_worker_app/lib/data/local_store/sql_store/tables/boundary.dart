@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-
 class Boundary extends Table {
   TextColumn get code => text().nullable()();
   TextColumn get name => text().nullable()();
@@ -17,8 +16,9 @@ class Boundary extends Table {
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-  
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+      };
 }

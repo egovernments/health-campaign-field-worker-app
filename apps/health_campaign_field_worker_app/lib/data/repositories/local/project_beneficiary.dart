@@ -76,6 +76,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   FutureOr<void> create(
     ProjectBeneficiaryModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {

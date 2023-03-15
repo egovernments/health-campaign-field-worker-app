@@ -39,6 +39,7 @@ class ApiInterceptors extends Interceptor {
         ).toJson(),
       };
     }
+    print(options.queryParameters);
     super.onRequest(options, handler);
   }
 }

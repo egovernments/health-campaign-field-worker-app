@@ -409,7 +409,7 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-
+    
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],

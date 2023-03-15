@@ -64,9 +64,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             },
             builder: (context, state) {
               return state.maybeMap(
-                orElse: () => const Expanded(
-                  child: Center(child: Text('No Projects Assigned')),
-                ),
+                orElse: () => const Center(child: Text('No Projects Assigned')),
                 loading: (value) => const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
@@ -84,76 +82,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       )
                       .toList(),
                 ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
-    return Scaffold(
-      body: ScrollableContent(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        header: Column(children: [
-          const BackNavigationHelpHeaderWidget(),
-          Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: Text(
-              localizations.translate(
-                i18.projectSelection.projectDetailsLabelText,
-              ),
-              style: theme.textTheme.displayMedium,
-            ),
-          ),
-        ]),
-        children: [
-          const Center(
-            child: Text('Project list not fetched'),
-          ),
-          BlocConsumer<ProjectBloc, ProjectState>(
-            listener: (context, state) {
-              state.maybeWhen(
-                orElse: () {
-                  return;
-                },
-                fetched: (projects, selectedProject) {
-                  if (selectedProject != null) {
-                    context.router.replace(HomeRoute());
-                  }
-                },
-              );
-            },
-            builder: (context, state) {
-              return const Center(
-                child: Text('Project list not fetched'),
-              );
-
-              return state.map(
-                uninitialized: (value) => const Center(
-                  child: Text('Project list not fetched'),
-                ),
-                loading: (value) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                empty: (value) => const Offstage(),
-                fetched: (ProjectSelectionFetchedState value) {
-                  return Column(
-                    children: value.projects
-                        .map(
-                          (element) => DigitProjectCell(
-                            projectText: element.name,
-                            onTap: () {
-                              context.read<ProjectBloc>().add(
-                                    ProjectSelectProjectEvent(element),
-                                  );
-
-                              context.router.push(HomeRoute());
-                            },
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
               );
             },
           ),

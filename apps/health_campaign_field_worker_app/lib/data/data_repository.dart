@@ -17,7 +17,9 @@ abstract class DataRepository<D extends EntityModel,
 
   DataModelType get type;
 
-  FutureOr<List<D>> search(R query);
+  FutureOr<List<D>> search(
+    R query,
+  );
 
   FutureOr<dynamic> create(D entity);
 
@@ -61,7 +63,9 @@ abstract class RemoteRepository<D extends EntityModel,
   });
 
   @override
-  FutureOr<List<D>> search(R query) async {
+  FutureOr<List<D>> search(
+    R query,
+  ) async {
     Response response;
 
     try {
@@ -75,8 +79,11 @@ abstract class RemoteRepository<D extends EntityModel,
               'tenantId': envConfig.variables.tenantId,
             },
             data: {
-              isPlural ? entityNamePlural : entityName:
-                  isPlural ? [query.toMap()] : query.toMap(),
+              isPlural
+                  ? entityNamePlural
+                  : entityName == 'ServiceDefinition'
+                      ? 'ServiceDefinitionCriteria'
+                      : entityName: isPlural ? [query.toMap()] : query.toMap(),
             },
           );
         },
@@ -95,8 +102,11 @@ abstract class RemoteRepository<D extends EntityModel,
       );
     }
 
-    if (!responseMap
-        .containsKey(isSearchResponsePlural ? entityNamePlural : entityName)) {
+    if (!responseMap.containsKey(
+      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+          ? entityNamePlural
+          : entityName,
+    )) {
       throw InvalidApiResponseException(
         data: query.toMap(),
         path: searchPath,
@@ -105,7 +115,9 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityResponse = await responseMap[
-        isSearchResponsePlural ? entityNamePlural : entityName];
+        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+            ? entityNamePlural
+            : entityName];
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -117,6 +129,16 @@ abstract class RemoteRepository<D extends EntityModel,
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
     return entityList.map((e) => Mapper.fromMap<D>(e)).toList();
+  }
+
+  FutureOr<Response> singleCreate(D entity) async {
+    return await dio.post(
+      createPath,
+      data: {
+        'Service': entity.toMap(),
+        "apiOperation": "CREATE",
+      },
+    );
   }
 
   @override
@@ -280,8 +302,12 @@ abstract class LocalRepository<D extends EntityModel,
 
   @override
   @mustCallSuper
-  FutureOr<void> create(D entity, {bool createOpLog = true}) async {
-    if (createOpLog) await createOplogEntry(entity, DataOperation.create);
+  FutureOr<void> create(
+    D entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
   @override

@@ -32,6 +32,10 @@ export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
+export 'entities/service.dart';
+export 'entities/service_definition.dart';
+export 'entities/service_attributes.dart';
+export 'entities/attributes.dart';
 export 'oplog/oplog_entry.dart';
 
 @MappableClass()
@@ -89,4 +93,9 @@ enum DataModelType {
   stock,
   stockReconciliation,
   task,
+  serviceDefinition,
+  service,
+  attributes,
+  boundary,
+  serviceAttributes,
 }

@@ -27,6 +27,9 @@ class AppConfiguration {
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
+  @Name('CHECKLIST_TYPES')
+  late List<ChecklistTypes>? checklistTypes;
+
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
 
@@ -77,4 +80,10 @@ class Interfaces {
 @embedded
 class Config {
   late int localStoreTTL;
+}
+
+@embedded
+class ChecklistTypes {
+  late String name;
+  late String code;
 }

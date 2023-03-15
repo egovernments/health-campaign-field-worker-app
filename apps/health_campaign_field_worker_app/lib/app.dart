@@ -15,7 +15,6 @@ import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
-import 'data/repositories/remote/project.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
@@ -133,38 +132,34 @@ class MainApplication extends StatelessWidget {
                             projectStaffLocalRepository: ctx.read<
                                 LocalRepository<ProjectStaffModel,
                                     ProjectStaffSearchModel>>(),
-                            // projectRemoteRepository: ctx.read<
-                            //     RemoteRepository<ProjectModel,
-                            //         ProjectSearchModel>>(),
                             projectStaffRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectStaffModel,
                                     ProjectStaffSearchModel>>(),
-                            // projectStaffRemoteRepository:
-                            //     ProjectStaffRemoteRepository(
-                            //   client,
-                            //   actionMap: {
-                            //     ApiOperation.search:
-                            //         '/project/staff/v1/_search',
-                            //   },
-                            // ),
-                            projectRemoteRepository: ProjectRemoteRepository(
-                              client,
-                              actionMap: {
-                                ApiOperation.search: '/project/v1/_search',
-                              },
-                            ),
-                            productVariantLocalRepository: ctx.read<
-                                LocalRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            productVariantRemoteRepository: ctx.read<
-                                RemoteRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            projectResourceLocalRepository: ctx.read<
-                                LocalRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
-                            projectResourceRemoteRepository: ctx.read<
-                                RemoteRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
+                            projectRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectModel,
+                                    ProjectSearchModel>>(),
+                            serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            isar: isar,
+                            serviceDefinitionLocalRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            boundaryRemoteRepository: ctx.read<
+                                RemoteRepository<BoundaryModel,
+                                    BoundarySearchModel>>(),
+                                    productVariantLocalRepository: ctx.read<
+                                    LocalRepository<ProductVariantModel,
+                                        ProductVariantSearchModel>>(),
+                                productVariantRemoteRepository: ctx.read<
+                                    RemoteRepository<ProductVariantModel,
+                                        ProductVariantSearchModel>>(),
+                                projectResourceLocalRepository: ctx.read<
+                                    LocalRepository<ProjectResourceModel,
+                                        ProjectResourceSearchModel>>(),
+                                projectResourceRemoteRepository: ctx.read<
+                                    RemoteRepository<ProjectResourceModel,
+                                        ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],

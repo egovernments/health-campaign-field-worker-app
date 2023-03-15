@@ -137,6 +137,14 @@ class StockReconciliationOpLogManager
   StockReconciliationOpLogManager(super.isar);
 }
 
+class ServiceDefinitionOpLogManager
+    extends OpLogManager<ServiceDefinitionModel> {
+  ServiceDefinitionOpLogManager(super.isar);
+}
+
+class ServiceOpLogManager extends OpLogManager<ServiceModel> {
+  ServiceOpLogManager(super.isar);
+
 class ProjectResourceOpLogManager extends OpLogManager<ProjectResourceModel> {
   ProjectResourceOpLogManager(super.isar);
 }

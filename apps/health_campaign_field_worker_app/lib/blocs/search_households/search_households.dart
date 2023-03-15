@@ -57,6 +57,8 @@ class SearchHouseholdsBloc
         name: NameSearchModel(givenName: event.searchText.trim()),
       ),
     );
+    print("--------");
+    print(results);
 
     final householdMembers = <HouseholdMemberModel>[];
     for (final element in results) {

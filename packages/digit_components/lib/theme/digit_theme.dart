@@ -130,7 +130,7 @@ class DigitTheme {
             ),
           ),
           borderSide: BorderSide(
-            color: colors.davyGray,
+            color: colors.burningOrange,
             width: 2,
           ),
         ),
@@ -173,7 +173,16 @@ class DigitTheme {
 
   OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: colorScheme.secondary),
+          side: BorderSide(
+            color: colorScheme.secondary,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                0,
+              ),
+            ),
+          ),
           padding: buttonPadding,
         ),
       );

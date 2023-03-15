@@ -18,7 +18,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [],
+      ),
       drawer: Container(
         margin: const EdgeInsets.only(top: kToolbarHeight * 1.36),
         child: const Drawer(child: SideBar()),
@@ -54,6 +56,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           case DataModelType.projectBeneficiary:
                           case DataModelType.stock:
                           case DataModelType.stockReconciliation:
+                          case DataModelType.service:
                             return true;
                           default:
                             return false;

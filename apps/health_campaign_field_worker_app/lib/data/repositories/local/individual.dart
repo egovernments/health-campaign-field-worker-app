@@ -85,6 +85,8 @@ class IndividualLocalRepository
           ))
         .get();
 
+    print(results.length);
+
     return results
         .map((e) {
           final individual = e.readTable(sql.individual);
@@ -151,6 +153,7 @@ class IndividualLocalRepository
   FutureOr<void> create(
     IndividualModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final addresses = entity.address;
     final identifiers = entity.identifiers;
