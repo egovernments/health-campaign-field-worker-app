@@ -15,6 +15,7 @@ const deliverIntervention = DeliverIntervention();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
+const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
 
 class Common {
@@ -31,6 +32,10 @@ class Common {
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
 
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
+
+  String get corecommonRequired => 'CORE_COMMON_REQUIRED';
+
+  String get corecommonclose => 'CORE_COMMON_CLOSE';
 }
 
 class Login {
@@ -43,6 +48,30 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+}
+
+class Checklist {
+  const Checklist();
+
+  String get checklist => 'CHECKLIST';
+  String get checklistlabel => 'CHECKLIST_LABEL';
+
+  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
+
+  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
+
+  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+
+  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
+
+  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
+
+  String get checklistDialogSecondaryAction =>
+      'CHECKLIST_DIALOG_SECONDARY_ACTION';
+
+  String get checklistdate => 'CHECKLIST_DATE';
 }
 
 class ForgotPassword {
@@ -81,6 +110,8 @@ class Home {
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
+
+  String get myCheckList => 'MY_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {

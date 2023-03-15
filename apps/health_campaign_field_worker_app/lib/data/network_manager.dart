@@ -35,8 +35,8 @@ class NetworkManager {
     }
 
     await getServerGeneratedIds(
-      localRepositories: localRepositories,
-      remoteRepositories: remoteRepositories,
+      localRepositories: localRepositories.toSet().toList(),
+      remoteRepositories: remoteRepositories.toSet().toList(),
     );
 
     final futures = await Future.wait(
@@ -76,6 +76,11 @@ class NetworkManager {
           await remote.bulkUpdate(entities);
         } else if (operationGroupedEntity.key == DataOperation.delete) {
           await remote.bulkDelete(entities);
+        }
+        if (operationGroupedEntity.key == DataOperation.singleCreate) {
+          for (var element in entities) {
+            await remote.singleCreate(element);
+          }
         }
 
         for (final syncedEntity in operationGroupedEntity.value) {
@@ -230,13 +235,15 @@ class NetworkManager {
             break;
 
           case DataModelType.stock:
-            responseEntities = await remote.search(StockSearchModel(
-              clientReferenceId: entities
-                  .whereType<StockModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
 
             for (var element in typeGroupedEntity.value) {
               if (element.id == null) return;

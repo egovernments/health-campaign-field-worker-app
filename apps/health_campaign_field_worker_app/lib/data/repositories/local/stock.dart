@@ -12,6 +12,7 @@ class StockLocalRepository
   FutureOr<void> create(
     StockModel entity, {
     bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final stockCompanion = entity.companion;
     await sql.batch((batch) {

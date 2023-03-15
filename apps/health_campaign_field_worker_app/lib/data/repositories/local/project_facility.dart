@@ -48,6 +48,7 @@ class ProjectFacilityLocalRepository
   FutureOr<void> create(
     ProjectFacilityModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     await sql.batch((batch) async {
       batch.insert(

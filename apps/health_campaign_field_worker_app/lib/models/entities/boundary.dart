@@ -7,10 +7,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
+  final String? boundaryType;
   final String? tenantId;
   final bool? isDeleted;
   
   BoundarySearchModel({
+    this.boundaryType,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,

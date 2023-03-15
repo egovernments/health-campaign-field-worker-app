@@ -3,10 +3,13 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:isar/isar.dart';
 import '../../data/data_repository.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
 part 'project.freezed.dart';
@@ -15,6 +18,7 @@ typedef ProjectEmitter = Emitter<ProjectState>;
 
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
+  final Isar isar;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -40,6 +44,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionRemoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionLocalRepository;
+
+  final RemoteRepository<BoundaryModel, BoundarySearchModel>
+      boundaryRemoteRepository;
   /// Project Resource Repositories
   final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
       projectResourceRemoteRepository;
@@ -62,6 +73,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.serviceDefinitionRemoteRepository,
+    required this.boundaryRemoteRepository,
+    required this.isar,
+    required this.serviceDefinitionLocalRepository,
     required this.projectResourceLocalRepository,
     required this.projectResourceRemoteRepository,
     required this.productVariantLocalRepository,
@@ -181,6 +196,65 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             createOpLog: false,
           );
         }
+        final configs = await isar.appConfigurations.where().findAll();
+        ;
+        List<String> codes = [];
+        for (var elements in userObject!.roles) {
+          switch (elements.code) {
+            case UserRoleCodeEnum.warehouseManager:
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'WAREHOUSE_MANAGER'}');
+                }
+              });
+
+              break;
+            case UserRoleCodeEnum.registrar:
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'REGISTRAR'}');
+                }
+              });
+
+              break;
+            case UserRoleCodeEnum.systemAdministrator:
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'SYSTEM_ADMINISTRATOR'}');
+                }
+              });
+
+              break;
+            case UserRoleCodeEnum.supervisor:
+              configs.first.checklistTypes
+                  ?.map((e) => e.code)
+                  .forEach((element) {
+                for (var ele in projects) {
+                  codes.add('${ele.name}.$element.${'SUPERVISOR'}');
+                }
+              });
+              break;
+          }
+        }
+
+        final serviceDefinition = await serviceDefinitionRemoteRepository
+            .search(ServiceDefinitionSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          code: codes,
+        ));
+
+        for (var element in serviceDefinition) {
+          await serviceDefinitionLocalRepository.create(
+            element,
+            createOpLog: false,
+          );
+        }
       }
     }
   }
@@ -189,6 +263,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
+    final List<BoundaryModel> boundaries = (await boundaryRemoteRepository
+        .search(BoundarySearchModel(boundaryType: '')));
+    print(boundaries.first.name);
+
     state.maybeMap(
       orElse: () {
         return;
