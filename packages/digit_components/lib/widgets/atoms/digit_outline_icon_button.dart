@@ -1,9 +1,10 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class DigitOutlineIconButton extends StatelessWidget {
   final String label;
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? iconColor;
 
   const DigitOutlineIconButton({
@@ -17,24 +18,16 @@ class DigitOutlineIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: OutlinedButton(
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(icon, color: iconColor ?? theme.colorScheme.secondary),
-            const SizedBox(
-              width: 4,
-            ),
-            Flexible(
-                child: Text(label,
-                    style: TextStyle(
-                        color: iconColor ?? theme.colorScheme.secondary))),
-          ],
-        ),
+
+    return OutlinedButton(
+      onPressed: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(child: Icon(icon)),
+          SizedBox(width: kPadding),
+          Text(label),
+        ],
       ),
     );
   }

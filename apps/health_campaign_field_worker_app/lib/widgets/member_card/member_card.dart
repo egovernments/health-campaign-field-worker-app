@@ -96,7 +96,7 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.assignAsHouseholdhead,
                           ),
-                          action: setAsHeadAction,
+                          action: isHead ? null : setAsHeadAction,
                         ),
                         ActionCardModel(
                           icon: Icons.edit,
@@ -110,7 +110,7 @@ class MemberCard extends StatelessWidget {
                           label: localizations.translate(
                             i18.memberCard.deleteIndividualActionText,
                           ),
-                          action: deleteMemberAction,
+                          action: isHead ? null : deleteMemberAction,
                         ),
                       ],
                     ),
