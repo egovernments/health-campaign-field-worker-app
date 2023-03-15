@@ -6,7 +6,7 @@ import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
-import '../../../widgets/facility_wrapper/facility_wrapper.dart';
+import '../../../widgets/project_component_wrapper/project_component_wrapper.dart';
 
 class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
@@ -46,15 +46,17 @@ class RecordStockWrapperPage extends StatelessWidget {
             }
 
             return FacilityBlocWrapper(
-              child: BlocProvider(
-                create: (_) => RecordStockBloc(
-                  RecordStockCreateState(
-                    entryType: type,
-                    projectId: projectId,
+              child: ProductVariantBlocWrapper(
+                child: BlocProvider(
+                  create: (_) => RecordStockBloc(
+                    RecordStockCreateState(
+                      entryType: type,
+                      projectId: projectId,
+                    ),
+                    stockRepository: stockRepository,
                   ),
-                  stockRepository: stockRepository,
+                  child: const AutoRouter(),
                 ),
-                child: const AutoRouter(),
               ),
             );
           },

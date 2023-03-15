@@ -1,11 +1,26 @@
 {
   "name": "productVariant",
   "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "nullable": false,
+      "isPk": true
     },
     {
       "name": "productId",
