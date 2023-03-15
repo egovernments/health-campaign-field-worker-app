@@ -307,10 +307,32 @@ class _DeliverInterventionPageState
                                 const DigitDivider(),
                                 BlocBuilder<ProductVariantBloc,
                                     ProductVariantState>(
-                                  builder: (context, state) {
-                                    return state.maybeWhen(
+                                  builder: (context, productState) {
+                                    return productState.maybeWhen(
                                       orElse: () => const Offstage(),
                                       fetched: (productVariants) {
+                                        final productVariantId = state
+                                            .householdMemberWrapper
+                                            .task
+                                            ?.resources
+                                            ?.firstOrNull
+                                            ?.productVariantId;
+
+                                        final variant = productState.whenOrNull(
+                                          fetched: (productVariants) {
+                                            return productVariants
+                                                .firstWhereOrNull(
+                                              (element) =>
+                                                  element.id ==
+                                                  productVariantId,
+                                            );
+                                          },
+                                        );
+
+                                        form
+                                            .control(_resourceDeliveredKey)
+                                            .value = variant;
+
                                         return DigitDropdown<
                                             ProductVariantModel>(
                                           label: localizations.translate(
@@ -327,7 +349,8 @@ class _DeliverInterventionPageState
                                             'required': (object) =>
                                                 'Field is required',
                                           },
-                                          formControlName: 'resourceDelivered',
+                                          formControlName:
+                                              _resourceDeliveredKey,
                                         );
                                       },
                                     );
@@ -336,7 +359,7 @@ class _DeliverInterventionPageState
                                 DigitIntegerFormPicker(
                                   form: form,
                                   minimum: 0,
-                                  formControlName: 'quantityDistributed',
+                                  formControlName: _quantityDistributedKey,
                                   label: localizations.translate(
                                     i18.deliverIntervention
                                         .quantityDistributedLabel,
@@ -367,7 +390,7 @@ class _DeliverInterventionPageState
                                           deliveryCommentOptions.map((e) {
                                         return localizations.translate(e.name);
                                       }).toList(),
-                                      formControlName: 'deliveryComment',
+                                      formControlName: _deliveryCommentKey,
                                     );
                                   },
                                 ),
@@ -388,9 +411,7 @@ class _DeliverInterventionPageState
     final state = context.read<HouseholdOverviewBloc>().state;
 
     return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<String>(
-        value: state
-            .householdMemberWrapper.task?.resources?.first.productVariantId,
+      _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(
