@@ -1,10 +1,16 @@
 {
   "name": "projectProductVariant",
   "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "productVariantId",
-      "type": "String"
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": false,
+      "isPk": true
     },
     {
       "name": "type",

@@ -7,16 +7,14 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class ProjectResourceSearchModel extends EntitySearchModel {
-  final String? id;
+  final List<String>? id;
   final String? projectId;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
   ProjectResourceSearchModel({
     this.id,
     this.projectId,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -27,21 +25,19 @@ class ProjectResourceSearchModel extends EntitySearchModel {
 class ProjectResourceModel extends EntityModel {
   final String? id;
   final String? projectId;
-  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final ProjectProductVariantModel resources;
+  final ProjectProductVariantModel resource;
   
 
   ProjectResourceModel({
     this.id,
     this.projectId,
-    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
-    required this.resources,
+    required this.resource,
     super.auditDetails,
   }):  super();
 
@@ -53,11 +49,10 @@ class ProjectResourceModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       projectId: Value(projectId),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      resources: Value(resources.clientReferenceId),
+      resource: Value(resource.productVariantId),
     );
   }
 }

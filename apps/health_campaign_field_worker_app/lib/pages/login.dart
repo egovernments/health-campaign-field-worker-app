@@ -184,14 +184,14 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           // value: 'registrar',
           // value: 'sysadmin9012',
-          // value: 'warehouse9012',
+          value: 'warehouse9012',
           // value: 'sysadmin9012',
-          value: 'warehousemgr',
+          // value: 'warehousemgr',
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          // value: 'eGov@4321',
-          value: 'eGov@1234',
+          value: 'eGov@4321',
+          // value: 'eGov@1234',
         ),
       });
 }

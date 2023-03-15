@@ -40,6 +40,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
+  /// Project Resource Repositories
+  final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceRemoteRepository;
+  final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceLocalRepository;
+
+  /// Product Variant Repositories
+  final RemoteRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantRemoteRepository;
+  final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantLocalRepository;
+
   ProjectBloc({
     LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
@@ -50,6 +62,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.projectResourceLocalRepository,
+    required this.projectResourceRemoteRepository,
+    required this.productVariantLocalRepository,
+    required this.productVariantRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectsEmptyState()) {
     on(_handleProjectInit);
@@ -105,34 +121,67 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       }
 
       if (projects.isNotEmpty) {
-        final projectFacilities = await projectFacilityRemoteRepository.search(
-          ProjectFacilitySearchModel(
-            projectId: projects.map((e) => e.id).toList(),
-          ),
-        );
-
-        for (final projectFacility in projectFacilities) {
-          await projectFacilityLocalRepository.create(
-            projectFacility,
-            createOpLog: false,
-          );
-
-          final facilities = await facilityRemoteRepository.search(
-            FacilitySearchModel(
-              id: [projectFacility.facilityId],
-            ),
-          );
-
-          for (final facility in facilities) {
-            await facilityLocalRepository.create(
-              facility,
-              createOpLog: false,
-            );
-          }
-        }
+        await _loadProjectFacilities(projects);
+        await _loadProductVariants(projects);
       }
 
       emit(ProjectSelectionFetchedState(projects: projects));
+    }
+  }
+
+  FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
+    final projectFacilities = await projectFacilityRemoteRepository.search(
+      ProjectFacilitySearchModel(
+        projectId: projects.map((e) => e.id).toList(),
+      ),
+    );
+
+    for (final projectFacility in projectFacilities) {
+      await projectFacilityLocalRepository.create(
+        projectFacility,
+        createOpLog: false,
+      );
+
+      final facilities = await facilityRemoteRepository.search(
+        FacilitySearchModel(
+          id: [projectFacility.facilityId],
+        ),
+      );
+
+      for (final facility in facilities) {
+        await facilityLocalRepository.create(
+          facility,
+          createOpLog: false,
+        );
+      }
+    }
+  }
+
+  FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
+    for (final project in projects) {
+      final projectResources = await projectResourceRemoteRepository.search(
+        ProjectResourceSearchModel(projectId: project.id),
+      );
+
+      for (final projectResource in projectResources) {
+        await projectResourceLocalRepository.create(
+          projectResource,
+          createOpLog: false,
+        );
+
+        final productVariants = await productVariantRemoteRepository.search(
+          ProductVariantSearchModel(
+            id: [projectResource.resource.productVariantId],
+          ),
+        );
+
+        for (final productVariant in productVariants) {
+          await productVariantLocalRepository.create(
+            productVariant,
+            createOpLog: false,
+          );
+        }
+      }
     }
   }
 

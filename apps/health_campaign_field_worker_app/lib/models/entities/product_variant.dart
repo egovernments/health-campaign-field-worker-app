@@ -7,11 +7,10 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class ProductVariantSearchModel extends EntitySearchModel {
-  final String? id;
+  final List<String>? id;
   final String? productId;
   final String? sku;
   final String? variation;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
@@ -20,7 +19,6 @@ class ProductVariantSearchModel extends EntitySearchModel {
     this.productId,
     this.sku,
     this.variation,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -29,22 +27,20 @@ class ProductVariantSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProductVariantModel extends EntityModel {
-  final String? id;
+  final String id;
   final String? productId;
   final String? sku;
   final String? variation;
-  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
   
 
   ProductVariantModel({
-    this.id,
+    required this.id,
     this.productId,
     this.sku,
     this.variation,
-    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -61,7 +57,6 @@ class ProductVariantModel extends EntityModel {
       productId: Value(productId),
       sku: Value(sku),
       variation: Value(variation),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
