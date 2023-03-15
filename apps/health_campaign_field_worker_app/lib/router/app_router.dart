@@ -93,11 +93,7 @@ part 'app_router.gr.dart';
           ),
           AutoRoute(page: ChecklistBoundaryViewPage, path: 'view-boundary'),
           AutoRoute(page: ChecklistViewPage, path: 'view'),
-<<<<<<< HEAD
           AutoRoute(page: ChecklistPreviewPage, path: 'preview'),
-=======
-          AutoRoute(page: ChecklistPreviewPage, path: 'pre-view'),
->>>>>>> 9d28901 (resolved conflicts)
         ]),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
 
