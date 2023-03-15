@@ -116,12 +116,10 @@ class _DeliverInterventionPageState
                                                       .value
                                                       .toString(),
                                                   productVariantId: (form
-                                                              .control(
-                                                                'resourceDelivered',
-                                                              )
-                                                              .value
-                                                          as ProductVariantModel)
-                                                      .id,
+                                                      .control(
+                                                        'resourceDelivered',
+                                                      )
+                                                      .value as String),
                                                   deliveryComment: form
                                                       .control(
                                                         'deliveryComment',
@@ -311,23 +309,25 @@ class _DeliverInterventionPageState
                                     return state.maybeWhen(
                                       orElse: () => const Offstage(),
                                       fetched: (productVariants) {
-                                        return DigitDropdown<
-                                            ProductVariantModel>(
+                                        return DigitDropdown<String>(
                                           label: localizations.translate(
                                             i18.deliverIntervention
                                                 .resourceDeliveredLabel,
                                           ),
                                           valueMapper: (value) {
                                             return localizations.translate(
-                                              value.sku ?? value.id,
+                                              value,
                                             );
                                           },
-                                          menuItems: productVariants,
+                                          menuItems: productVariants
+                                              .map((e) => e.sku ?? e.id)
+                                              .toList(),
                                           validationMessages: {
                                             'required': (object) =>
                                                 'Field is required',
                                           },
-                                          formControlName: 'resourceDelivered',
+                                          formControlName:
+                                              _resourceDeliveredKey,
                                         );
                                       },
                                     );
@@ -336,7 +336,7 @@ class _DeliverInterventionPageState
                                 DigitIntegerFormPicker(
                                   form: form,
                                   minimum: 0,
-                                  formControlName: 'quantityDistributed',
+                                  formControlName: _quantityDistributedKey,
                                   label: localizations.translate(
                                     i18.deliverIntervention
                                         .quantityDistributedLabel,
@@ -367,7 +367,7 @@ class _DeliverInterventionPageState
                                           deliveryCommentOptions.map((e) {
                                         return localizations.translate(e.name);
                                       }).toList(),
-                                      formControlName: 'deliveryComment',
+                                      formControlName: _deliveryCommentKey,
                                     );
                                   },
                                 ),
