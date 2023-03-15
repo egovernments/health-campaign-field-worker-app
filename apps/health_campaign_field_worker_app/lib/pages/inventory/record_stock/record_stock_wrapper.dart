@@ -6,7 +6,8 @@ import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
-import '../../../widgets/project_component_wrapper/project_component_wrapper.dart';
+import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
+import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
