@@ -3,12 +3,13 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class StockReconciliationRemoteRepository extends RemoteRepository<StockReconciliationModel, StockReconciliationSearchModel> {
+class StockReconciliationRemoteRepository extends RemoteRepository<
+    StockReconciliationModel, StockReconciliationSearchModel> {
   StockReconciliationRemoteRepository(
     super.dio, {
     required super.actionMap,
     super.entityName = 'StockReconciliation',
-    super.isPlural = true,
+    super.isPlural = false,
   });
 
   @override

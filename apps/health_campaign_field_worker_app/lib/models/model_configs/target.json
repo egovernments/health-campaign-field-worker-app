@@ -1,9 +1,14 @@
 {
   "name": "target",
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
   "attributes": [
     {
       "name": "id",
-      "type": "String"
+      "type": "String",
+      "nullable": false,
+      "isPk": true
     },
     {
       "name": "beneficiaryType",

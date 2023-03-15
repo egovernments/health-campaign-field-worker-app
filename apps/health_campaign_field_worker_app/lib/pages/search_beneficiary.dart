@@ -150,6 +150,7 @@ class _SearchBeneficiaryPageState
                   bloc.add(
                     SearchHouseholdsSearchByHouseholdHeadEvent(
                       searchText: value.trim(),
+                      projectId: '13',
                     ),
                   );
                 },
@@ -187,6 +188,7 @@ class _SearchBeneficiaryPageState
                               bloc.add(
                                 SearchHouseholdsSearchByHouseholdHeadEvent(
                                   searchText: searchController.text,
+                                  projectId: '13',
                                 ),
                               );
                             },
