@@ -150,13 +150,11 @@ class _SearchBeneficiaryPageState
                         return;
                       }
 
-                      bloc.add(
-                        SearchHouseholdsSearchByHouseholdHeadEvent(
-                          searchText: value.trim(),
-                          projectId: '13',
-                        ),
-                      );
-                    },
+                  bloc.add(
+                    SearchHouseholdsSearchByHouseholdHeadEvent(
+                      searchText: value.trim(),
+                      projectId: '13',
+                    ),
                   );
                 },
               ),
@@ -192,8 +190,9 @@ class _SearchBeneficiaryPageState
 
                               bloc.add(
                                 SearchHouseholdsSearchByHouseholdHeadEvent(
-                                    searchText: searchController.text,
-                                    projectId: ''),
+                                  searchText: searchController.text,
+                                  projectId: '13',
+                                ),
                               );
                             },
                           ),

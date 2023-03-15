@@ -139,10 +139,13 @@ void run(HookContext context) {
         .where((element) => element.createReference)
         .where((element) => !element.isEnum)
         .map((e) {
+      final pkName = e.referencePkName ?? 'clientReferenceId';
+
       return e.copyWith(references: [
         TableReferenceModel(
           table: e.type,
           column: e.name,
+          pkName: pkName,
         ),
       ]);
     }),

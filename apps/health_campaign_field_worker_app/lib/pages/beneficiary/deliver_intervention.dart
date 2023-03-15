@@ -12,6 +12,7 @@ import 'package:recase/recase.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/product_variant/product_variant.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -20,6 +21,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/project_component_wrapper/project_component_wrapper.dart';
 
 class DeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
@@ -45,328 +47,371 @@ class _DeliverInterventionPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-      builder: (context, state) {
-        final householdMemberWrapper = state.householdMemberWrapper;
+    return ProductVariantBlocWrapper(
+      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+        builder: (context, state) {
+          final householdMemberWrapper = state.householdMemberWrapper;
 
-        return Scaffold(
-          body: state.loading
-              ? const Center(child: CircularProgressIndicator())
-              : ReactiveFormBuilder(
-                  form: () => buildForm(context),
-                  builder: (context, form, child) {
-                    return ScrollableContent(
-                      header: Column(children: const [
-                        BackNavigationHelpHeaderWidget(),
-                      ]),
-                      footer: DigitElevatedButton(
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (!form.valid) return;
-                          DigitDialog.show(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(
-                                i18.deliverIntervention.dialogTitle,
-                              ),
-                              contentText: localizations.translate(
-                                i18.deliverIntervention.dialogContent,
-                              ),
-                              primaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonSubmit),
-                                action: (ctx) {
-                                  final clientReferenceId =
-                                      state.householdMemberWrapper.task == null
-                                          ? IdGen.i.identifier
-                                          : state.householdMemberWrapper.task!
-                                              .clientReferenceId;
-                                  context.read<DeliverInterventionBloc>().add(
-                                        DeliverInterventionSubmitEvent(
-                                          TaskModel(
-                                            clientReferenceId:
-                                                clientReferenceId,
-                                            projectBeneficiaryClientReferenceId:
-                                                householdMemberWrapper
-                                                    .projectBeneficiary
-                                                    .clientReferenceId,
-                                            tenantId:
-                                                envConfig.variables.tenantId,
-                                            rowVersion: 1,
-                                            projectId: '13',
-                                            status: Status.delivered.name,
-                                            createdDate: context
-                                                .millisecondsSinceEpoch(),
-                                            resources: [
-                                              TaskResourceModel(
-                                                clientReferenceId:
-                                                    clientReferenceId,
-                                                rowVersion: 1,
-                                                isDelivered: true,
-                                                tenantId: envConfig
-                                                    .variables.tenantId,
-                                                quantity: form
-                                                    .control(
-                                                      'quantityDistributed',
-                                                    )
-                                                    .value
-                                                    .toString(),
-                                                productVariantId:
-                                                    'PVAR-2022-12-21-000001',
-                                                deliveryComment: form
-                                                    .control('deliveryComment')
-                                                    .value,
-                                                auditDetails: AuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
-                                              ),
-                                            ],
-                                            address: householdMemberWrapper
-                                                .household.address,
-                                            auditDetails: AuditDetails(
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdTime: context
+          return Scaffold(
+            body: state.loading
+                ? const Center(child: CircularProgressIndicator())
+                : ReactiveFormBuilder(
+                    form: () => buildForm(context),
+                    builder: (context, form, child) {
+                      return ScrollableContent(
+                        header: Column(children: const [
+                          BackNavigationHelpHeaderWidget(),
+                        ]),
+                        footer: DigitElevatedButton(
+                          onPressed: () {
+                            form.markAllAsTouched();
+                            if (!form.valid) return;
+                            DigitDialog.show(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18.deliverIntervention.dialogTitle,
+                                ),
+                                contentText: localizations.translate(
+                                  i18.deliverIntervention.dialogContent,
+                                ),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations
+                                      .translate(i18.common.coreCommonSubmit),
+                                  action: (ctx) {
+                                    final clientReferenceId =
+                                        state.householdMemberWrapper.task ==
+                                                null
+                                            ? IdGen.i.identifier
+                                            : state.householdMemberWrapper.task!
+                                                .clientReferenceId;
+                                    context.read<DeliverInterventionBloc>().add(
+                                          DeliverInterventionSubmitEvent(
+                                            TaskModel(
+                                              clientReferenceId:
+                                                  clientReferenceId,
+                                              projectBeneficiaryClientReferenceId:
+                                                  householdMemberWrapper
+                                                      .projectBeneficiary
+                                                      .clientReferenceId,
+                                              tenantId:
+                                                  envConfig.variables.tenantId,
+                                              rowVersion: 1,
+                                              projectId: '13',
+                                              status: Status.delivered.name,
+                                              createdDate: context
                                                   .millisecondsSinceEpoch(),
+                                              resources: [
+                                                TaskResourceModel(
+                                                  clientReferenceId:
+                                                      clientReferenceId,
+                                                  rowVersion: 1,
+                                                  isDelivered: true,
+                                                  tenantId: envConfig
+                                                      .variables.tenantId,
+                                                  quantity: form
+                                                      .control(
+                                                        'quantityDistributed',
+                                                      )
+                                                      .value
+                                                      .toString(),
+                                                  productVariantId: (form
+                                                              .control(
+                                                                'resourceDelivered',
+                                                              )
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .id,
+                                                  deliveryComment: form
+                                                      .control(
+                                                        'deliveryComment',
+                                                      )
+                                                      .value,
+                                                  auditDetails: AuditDetails(
+                                                    createdBy: context
+                                                        .loggedInUserUuid,
+                                                    createdTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                  ),
+                                                ),
+                                              ],
+                                              address: householdMemberWrapper
+                                                  .household.address,
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                             ),
+                                            state.householdMemberWrapper.task ==
+                                                    null
+                                                ? false
+                                                : true,
                                           ),
-                                          state.householdMemberWrapper.task ==
-                                                  null
-                                              ? false
-                                              : true,
+                                        );
+
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                    context.router.push(AcknowledgementRoute());
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations
+                                      .translate(i18.common.coreCommonCancel),
+                                  action: (context) =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                            ),
+                          ),
+                        ),
+                        children: [
+                          DigitCard(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .deliverInterventionLabel,
                                         ),
+                                        style: theme.textTheme.displayMedium,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                DigitTableCard(
+                                  element: {
+                                    localizations.translate(i18
+                                        .deliverIntervention
+                                        .dateOfRegistrationLabel): () {
+                                      final date = householdMemberWrapper
+                                          .projectBeneficiary
+                                          .dateOfRegistration;
+
+                                      final registrationDate =
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                        date,
                                       );
 
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                  context.router.push(AcknowledgementRoute());
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations
-                                    .translate(i18.common.coreCommonCancel),
-                                action: (context) =>
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations
-                                .translate(i18.common.coreCommonSubmit),
-                          ),
-                        ),
-                      ),
-                      children: [
-                        DigitCard(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.deliverIntervention
-                                            .deliverInterventionLabel,
-                                      ),
-                                      style: theme.textTheme.displayMedium,
-                                    ),
+                                      return DateFormat('dd MMMM yyyy')
+                                          .format(registrationDate);
+                                    }(),
+                                  },
+                                ),
+                                DigitTableCard(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    style: BorderStyle.solid,
+                                    width: 1.0,
                                   ),
-                                ],
-                              ),
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(i18
-                                      .deliverIntervention
-                                      .dateOfRegistrationLabel): () {
-                                    final date = householdMemberWrapper
-                                        .projectBeneficiary.dateOfRegistration;
+                                  padding: const EdgeInsets.only(
+                                    left: 8,
+                                    right: 8,
+                                    bottom: 16,
+                                  ),
+                                  element: {
+                                    localizations.translate(i18
+                                            .householdOverView
+                                            .householdOverViewHouseholdHeadLabel):
+                                        householdMemberWrapper.headOfHousehold
+                                                .name?.givenName ??
+                                            '',
+                                    localizations.translate(
+                                      i18.deliverIntervention.idTypeText,
+                                    ): () {
+                                      final identifiers = householdMemberWrapper
+                                          .headOfHousehold.identifiers;
+                                      if (identifiers == null ||
+                                          identifiers.isEmpty) {
+                                        return '';
+                                      }
 
-                                    final registrationDate =
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                      date,
-                                    );
+                                      return identifiers.first.identifierType ??
+                                          '';
+                                    }(),
+                                    localizations.translate(
+                                      i18.deliverIntervention.idNumberText,
+                                    ): () {
+                                      final identifiers = householdMemberWrapper
+                                          .headOfHousehold.identifiers;
+                                      if (identifiers == null ||
+                                          identifiers.isEmpty) {
+                                        return '';
+                                      }
 
-                                    return DateFormat('dd MMMM yyyy')
-                                        .format(registrationDate);
-                                  }(),
-                                },
-                              ),
-                              DigitTableCard(
-                                color: Theme.of(context).colorScheme.surface,
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  style: BorderStyle.solid,
-                                  width: 1.0,
+                                      return identifiers.first.identifierId ??
+                                          '';
+                                    }(),
+                                    localizations.translate(
+                                      i18.common.coreCommonAge,
+                                    ): () {
+                                      final dob = householdMemberWrapper
+                                          .headOfHousehold.dateOfBirth;
+                                      if (dob == null || dob.isEmpty) {
+                                        return '';
+                                      }
+
+                                      final date =
+                                          DateFormat('dd/MM/yyyy').parse(dob);
+
+                                      return date.age.toString();
+                                    }(),
+                                    localizations.translate(
+                                      i18.common.coreCommonGender,
+                                    ): householdMemberWrapper.headOfHousehold
+                                            .gender?.name.sentenceCase ??
+                                        '',
+                                    localizations.translate(
+                                      i18.common.coreCommonMobileNumber,
+                                    ): householdMemberWrapper
+                                        .headOfHousehold.mobileNumber,
+                                  },
                                 ),
-                                padding: const EdgeInsets.only(
-                                  left: 8,
-                                  right: 8,
-                                  bottom: 16,
-                                ),
-                                element: {
-                                  localizations.translate(i18.householdOverView
-                                          .householdOverViewHouseholdHeadLabel):
-                                      householdMemberWrapper.headOfHousehold
-                                              .name?.givenName ??
-                                          '',
-                                  localizations.translate(
-                                    i18.deliverIntervention.idTypeText,
-                                  ): () {
-                                    final identifiers = householdMemberWrapper
-                                        .headOfHousehold.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '';
-                                    }
-
-                                    return identifiers.first.identifierType ??
-                                        '';
-                                  }(),
-                                  localizations.translate(
-                                    i18.deliverIntervention.idNumberText,
-                                  ): () {
-                                    final identifiers = householdMemberWrapper
-                                        .headOfHousehold.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '';
-                                    }
-
-                                    return identifiers.first.identifierId ?? '';
-                                  }(),
-                                  localizations.translate(
-                                    i18.common.coreCommonAge,
-                                  ): () {
-                                    final dob = householdMemberWrapper
-                                        .headOfHousehold.dateOfBirth;
-                                    if (dob == null || dob.isEmpty) {
-                                      return '';
-                                    }
-
-                                    final date =
-                                        DateFormat('dd/MM/yyyy').parse(dob);
-
-                                    return date.age.toString();
-                                  }(),
-                                  localizations.translate(
-                                    i18.common.coreCommonGender,
-                                  ): householdMemberWrapper.headOfHousehold
-                                          .gender?.name.sentenceCase ??
-                                      '',
-                                  localizations.translate(
-                                    i18.common.coreCommonMobileNumber,
-                                  ): householdMemberWrapper
-                                      .headOfHousehold.mobileNumber,
-                                },
-                              ),
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(
-                                    i18.deliverIntervention.memberCountText,
-                                  ): householdMemberWrapper
-                                          .household.memberCount ??
-                                      householdMemberWrapper.members.length,
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(i18
-                                      .deliverIntervention
-                                      .noOfResourcesForDelivery): () {
-                                    final count = householdMemberWrapper
+                                DigitTableCard(
+                                  element: {
+                                    localizations.translate(
+                                      i18.deliverIntervention.memberCountText,
+                                    ): householdMemberWrapper
                                             .household.memberCount ??
-                                        householdMemberWrapper.members.length;
-
-                                    return min(count * 1.8, 3).round();
-                                  }(),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitDropdown<String>(
-                                label: localizations.translate(
-                                  i18.deliverIntervention
-                                      .resourceDeliveredLabel,
+                                        householdMemberWrapper.members.length,
+                                  },
                                 ),
-                                valueMapper: (value) => value,
-                                initialValue:
-                                    tempProductVariants.firstOrNull?.code,
-                                menuItems: tempProductVariants.map((e) {
-                                  return localizations.translate(e.code);
-                                }).toList(),
-                                validationMessages: {
-                                  'required': (object) => 'Field is required',
-                                },
-                                formControlName: _resourceDeliveredKey,
-                              ),
-                              DigitIntegerFormPicker(
-                                form: form,
-                                minimum: 0,
-                                formControlName: 'quantityDistributed',
-                                label: localizations.translate(
-                                  i18.deliverIntervention
-                                      .quantityDistributedLabel,
+                                const DigitDivider(),
+                                DigitTableCard(
+                                  element: {
+                                    localizations.translate(i18
+                                        .deliverIntervention
+                                        .noOfResourcesForDelivery): () {
+                                      final count = householdMemberWrapper
+                                              .household.memberCount ??
+                                          householdMemberWrapper.members.length;
+
+                                      return min(count * 1.8, 3).round();
+                                    }(),
+                                  },
                                 ),
-                                incrementer: true,
-                              ),
-                              BlocBuilder<AppInitializationBloc,
-                                  AppInitializationState>(
-                                builder: (context, state) {
-                                  if (state is! AppInitialized) {
-                                    return const Offstage();
-                                  }
+                                const DigitDivider(),
+                                BlocBuilder<ProductVariantBloc,
+                                    ProductVariantState>(
+                                  builder: (context, productState) {
+                                    return productState.maybeWhen(
+                                      orElse: () => const Offstage(),
+                                      fetched: (productVariants) {
+                                        final productVariantId = state
+                                            .householdMemberWrapper
+                                            .task
+                                            ?.resources
+                                            ?.firstOrNull
+                                            ?.productVariantId;
 
-                                  final deliveryCommentOptions = state
-                                          .appConfiguration
-                                          .deliveryCommentOptions ??
-                                      <DeliveryCommentOptions>[];
+                                        final variant = productState.whenOrNull(
+                                          fetched: (productVariants) {
+                                            return productVariants
+                                                .firstWhereOrNull(
+                                              (element) =>
+                                                  element.id ==
+                                                  productVariantId,
+                                            );
+                                          },
+                                        );
 
-                                  return DigitDropdown<String>(
-                                    label: localizations.translate(
-                                      i18.deliverIntervention
-                                          .deliveryCommentLabel,
-                                    ),
-                                    valueMapper: (value) => value,
-                                    initialValue: deliveryCommentOptions
-                                        .firstOrNull?.name,
-                                    menuItems: deliveryCommentOptions.map((e) {
-                                      return localizations.translate(e.name);
-                                    }).toList(),
-                                    formControlName: _deliveryCommentKey,
-                                  );
-                                },
-                              ),
-                            ],
+                                        form
+                                            .control(_resourceDeliveredKey)
+                                            .value = variant;
+
+                                        return DigitDropdown<
+                                            ProductVariantModel>(
+                                          label: localizations.translate(
+                                            i18.deliverIntervention
+                                                .resourceDeliveredLabel,
+                                          ),
+                                          valueMapper: (value) {
+                                            return localizations.translate(
+                                              value.sku ?? value.id,
+                                            );
+                                          },
+                                          menuItems: productVariants,
+                                          validationMessages: {
+                                            'required': (object) =>
+                                                'Field is required',
+                                          },
+                                          formControlName:
+                                              _resourceDeliveredKey,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                DigitIntegerFormPicker(
+                                  form: form,
+                                  minimum: 0,
+                                  formControlName: _quantityDistributedKey,
+                                  label: localizations.translate(
+                                    i18.deliverIntervention
+                                        .quantityDistributedLabel,
+                                  ),
+                                  incrementer: true,
+                                ),
+                                BlocBuilder<AppInitializationBloc,
+                                    AppInitializationState>(
+                                  builder: (context, state) {
+                                    if (state is! AppInitialized) {
+                                      return const Offstage();
+                                    }
+
+                                    final deliveryCommentOptions = state
+                                            .appConfiguration
+                                            .deliveryCommentOptions ??
+                                        <DeliveryCommentOptions>[];
+
+                                    return DigitDropdown<String>(
+                                      label: localizations.translate(
+                                        i18.deliverIntervention
+                                            .deliveryCommentLabel,
+                                      ),
+                                      valueMapper: (value) => value,
+                                      initialValue: deliveryCommentOptions
+                                          .firstOrNull?.name,
+                                      menuItems:
+                                          deliveryCommentOptions.map((e) {
+                                        return localizations.translate(e.name);
+                                      }).toList(),
+                                      formControlName: _deliveryCommentKey,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-        );
-      },
+                        ],
+                      );
+                    },
+                  ),
+          );
+        },
+      ),
     );
   }
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-
-    print(state.householdMemberWrapper.task?.resources?.first.productVariantId);
-
-    print('-----');
-
+    
     return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<String>(
-        value: state
-            .householdMemberWrapper.task?.resources?.first.productVariantId,
+      _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(

@@ -12,9 +12,11 @@ import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/product_variant.dart';
 import '../data/repositories/local/project.dart';
 import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
+import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
@@ -181,6 +183,18 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => ServiceLocalRepository(
           sql,
           ServiceOpLogManager(isar),
+          ),),),
+           RepositoryProvider<LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>(
+        create: (_) => ProjectResourceLocalRepository(
+          sql,
+          ProjectResourceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProductVariantModel, ProductVariantSearchModel>>(
+        create: (_) => ProductVariantLocalRepository(
+          sql,
+          ProductVariantOpLogManager(isar),
         ),
       ),
     ];
@@ -327,7 +341,17 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.service)
           RepositoryProvider<
               RemoteRepository<ServiceModel, ServiceSearchModel>>(
-            create: (_) => ServiceRemoteRepository(
+            create: (_) => ServiceRemoteRepository( 
+               dio,
+              actionMap: actions,
+            ),
+          ),
+
+        if (value == DataModelType.projectResource)
+          RepositoryProvider<
+              RemoteRepository<ProjectResourceModel,
+                  ProjectResourceSearchModel>>(
+            create: (_) => ProjectResourceRemoteRepository(
               dio,
               actionMap: actions,
             ),
@@ -345,6 +369,16 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<BoundaryModel, BoundarySearchModel>>(
             create: (_) => BoundaryRemoteRepository(
+                 dio,
+              actionMap: actions,
+            ),
+          ),
+
+
+        if (value == DataModelType.productVariant)
+          RepositoryProvider<
+              RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(
+            create: (_) => ProductVariantRemoteRepository(
               dio,
               actionMap: actions,
             ),
