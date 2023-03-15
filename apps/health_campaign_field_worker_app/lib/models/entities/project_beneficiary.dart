@@ -43,11 +43,9 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? beneficiaryClientReferenceId;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfRegistrationTime;
-  final DateTime createdAtTime;
   
 
   ProjectBeneficiaryModel({
@@ -57,20 +55,14 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.beneficiaryClientReferenceId,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     required int dateOfRegistration,
-    required int createdAt,
     super.auditDetails,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-      createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
        super();
 
   int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
-  
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
   
 
   ProjectBeneficiaryCompanion get companion {
@@ -85,11 +77,9 @@ class ProjectBeneficiaryModel extends EntityModel {
       beneficiaryClientReferenceId: Value(beneficiaryClientReferenceId),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       dateOfRegistration: Value(dateOfRegistration),
-      createdAt: Value(createdAt),
       );
   }
 }

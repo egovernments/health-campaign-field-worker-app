@@ -44,8 +44,6 @@ class FacilityLocalRepository
 
       return FacilityModel(
         id: facility.id,
-        createdAt: facility.createdAt,
-        createdBy: facility.createdBy,
         rowVersion: facility.rowVersion,
         tenantId: facility.tenantId,
         isDeleted: facility.isDeleted,
@@ -56,8 +54,6 @@ class FacilityLocalRepository
             ? null
             : AddressModel(
                 id: address.id,
-                createdBy: address.createdBy,
-                createdAt: address.createdAt,
                 relatedClientReferenceId: facility.id,
                 tenantId: address.tenantId,
                 doorNo: address.doorNo,

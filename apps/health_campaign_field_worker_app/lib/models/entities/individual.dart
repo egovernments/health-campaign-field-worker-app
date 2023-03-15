@@ -42,7 +42,6 @@ class IndividualModel extends EntityModel {
   final String? photo;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final NameModel? name;
@@ -50,7 +49,6 @@ class IndividualModel extends EntityModel {
   final List<AddressModel>? address;
   final Gender? gender;
   final List<IdentifierModel>? identifiers;
-  final DateTime createdAtTime;
   
 
   IndividualModel({
@@ -65,7 +63,6 @@ class IndividualModel extends EntityModel {
     this.photo,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.name,
@@ -73,13 +70,8 @@ class IndividualModel extends EntityModel {
     this.address,
     this.gender,
     this.identifiers,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   IndividualCompanion get companion {
     return IndividualCompanion(
@@ -98,10 +90,8 @@ class IndividualModel extends EntityModel {
       photo: Value(photo),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),
       );

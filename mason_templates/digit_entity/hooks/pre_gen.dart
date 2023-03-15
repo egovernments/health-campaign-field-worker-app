@@ -88,33 +88,6 @@ void run(HookContext context) {
   }
 
   if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'createdBy') ==
-      null) {
-    model = model.copyWith.attributes.add(
-      AttributeModel(
-        name: 'createdBy',
-        type: 'String',
-        includeForQuery: false,
-        nullable: false,
-        isPk: true,
-      ),
-    );
-  }
-
-  if (model.attributes
-          .firstWhereOrNull((element) => element.name == 'createdAt') ==
-      null) {
-    model = model.copyWith.dateTimeAttributes.add(
-      AttributeModel(
-        name: 'createdAt',
-        type: 'DateTime',
-        includeForQuery: false,
-        nullable: false,
-      ),
-    );
-  }
-
-  if (model.attributes
           .firstWhereOrNull((element) => element.name == 'isDeleted') ==
       null) {
     model = model.copyWith.attributes.add(
@@ -167,7 +140,10 @@ void run(HookContext context) {
         .where((element) => !element.isEnum)
         .map((e) {
       return e.copyWith(references: [
-        TableReferenceModel(table: e.type, column: e.name),
+        TableReferenceModel(
+          table: e.type,
+          column: e.name,
+        ),
       ]);
     }),
   ];

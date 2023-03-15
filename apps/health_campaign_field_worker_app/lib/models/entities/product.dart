@@ -35,10 +35,8 @@ class ProductModel extends EntityModel {
   final String? manufacturer;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   ProductModel({
@@ -48,16 +46,10 @@ class ProductModel extends EntityModel {
     this.manufacturer,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   ProductCompanion get companion {
     return ProductCompanion(
@@ -71,10 +63,8 @@ class ProductModel extends EntityModel {
       manufacturer: Value(manufacturer),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

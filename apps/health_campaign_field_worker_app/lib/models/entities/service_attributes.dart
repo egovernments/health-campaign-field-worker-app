@@ -10,26 +10,27 @@ class ServiceAttributesSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
-
+  
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
 class ServiceAttributesModel extends EntityModel {
   final String? attributeCode;
-  final dynamic value;
+  final dynamic? value;
   final String? dataType;
   final String? referenceId;
-  final dynamic additionalDetails;
+  final dynamic? additionalDetails;
   final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  
 
   ServiceAttributesModel({
     this.attributeCode,
@@ -42,10 +43,14 @@ class ServiceAttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }) : super();
+  }):  super();
 
   ServiceAttributesCompanion get companion {
     return ServiceAttributesCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
@@ -55,6 +60,6 @@ class ServiceAttributesModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }

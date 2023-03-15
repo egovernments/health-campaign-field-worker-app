@@ -26,10 +26,8 @@ class ProjectProductVariantModel extends EntityModel {
   final bool? isBaseUnitVariant;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   ProjectProductVariantModel({
@@ -38,16 +36,10 @@ class ProjectProductVariantModel extends EntityModel {
     this.isBaseUnitVariant,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(
@@ -60,10 +52,8 @@ class ProjectProductVariantModel extends EntityModel {
       isBaseUnitVariant: Value(isBaseUnitVariant),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

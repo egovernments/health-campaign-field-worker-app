@@ -10,13 +10,13 @@ class DocumentSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
-  
+
   DocumentSearchModel({
     this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -27,11 +27,8 @@ class DocumentModel extends EntityModel {
   final String? documentUid;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
-  
 
   DocumentModel({
     this.id,
@@ -40,16 +37,10 @@ class DocumentModel extends EntityModel {
     this.documentUid,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }) : super();
 
   DocumentCompanion get companion {
     return DocumentCompanion(
@@ -63,10 +54,8 @@ class DocumentModel extends EntityModel {
       documentUid: Value(documentUid),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
-      );
+    );
   }
 }

@@ -14,10 +14,14 @@ class Attributes extends Table {
   BoolColumn get required => boolean().nullable()();
   TextColumn get regex => text().nullable()();
   IntColumn get order => integer().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { id,  };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }

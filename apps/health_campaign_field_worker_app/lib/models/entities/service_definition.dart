@@ -4,7 +4,6 @@ import 'package:drift/drift.dart';
 
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
-import 'attributes.dart';
 
 @MappableClass(ignoreNull: true)
 class ServiceDefinitionSearchModel extends EntitySearchModel {
@@ -47,6 +46,10 @@ class ServiceDefinitionModel extends EntityModel {
 
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       tenantId: Value(tenantId),
       code: Value(code),

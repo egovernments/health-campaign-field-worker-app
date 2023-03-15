@@ -96,5 +96,6 @@ enum DataModelType {
   serviceDefinition,
   service,
   attributes,
+  boundary,
   serviceAttributes,
 }

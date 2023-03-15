@@ -30,11 +30,9 @@ class ProjectTypeModel extends EntityModel {
   final List<String>? taskProcedure;
   final String clientReferenceId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final List<ProjectProductVariantModel>? resources;
-  final DateTime createdAtTime;
   
 
   ProjectTypeModel({
@@ -47,17 +45,11 @@ class ProjectTypeModel extends EntityModel {
     this.taskProcedure,
     required this.clientReferenceId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.resources,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   ProjectTypeCompanion get companion {
     return ProjectTypeCompanion(
@@ -74,10 +66,8 @@ class ProjectTypeModel extends EntityModel {
       taskProcedure: Value(taskProcedure?.toString()),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

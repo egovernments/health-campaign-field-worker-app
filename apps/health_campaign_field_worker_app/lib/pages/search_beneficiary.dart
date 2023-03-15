@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../blocs/project/project.dart';
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
@@ -133,24 +134,29 @@ class _SearchBeneficiaryPageState
                   );
                 },
               ),
-              DigitSearchBar(
-                controller: searchController,
-                hintText: localizations.translate(
-                  i18.searchBeneficiary.beneficiarySearchHintText,
-                ),
-                textCapitalization: TextCapitalization.words,
-                onChanged: (value) {
-                  final bloc = context.read<SearchHouseholdsBloc>();
-                  if (value.trim().length < 2) {
-                    bloc.add(const SearchHouseholdsClearEvent());
-
-                    return;
-                  }
-
-                  bloc.add(
-                    SearchHouseholdsSearchByHouseholdHeadEvent(
-                      searchText: value.trim(),
+              BlocBuilder<ProjectBloc, ProjectState>(
+                builder: (context, state) {
+                  return DigitSearchBar(
+                    controller: searchController,
+                    hintText: localizations.translate(
+                      i18.searchBeneficiary.beneficiarySearchHintText,
                     ),
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (value) {
+                      final bloc = context.read<SearchHouseholdsBloc>();
+                      if (value.trim().length < 2) {
+                        bloc.add(const SearchHouseholdsClearEvent());
+
+                        return;
+                      }
+
+                      bloc.add(
+                        SearchHouseholdsSearchByHouseholdHeadEvent(
+                          searchText: value.trim(),
+                          projectId: '13',
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -186,8 +192,8 @@ class _SearchBeneficiaryPageState
 
                               bloc.add(
                                 SearchHouseholdsSearchByHouseholdHeadEvent(
-                                  searchText: searchController.text,
-                                ),
+                                    searchText: searchController.text,
+                                    projectId: ''),
                               );
                             },
                           ),

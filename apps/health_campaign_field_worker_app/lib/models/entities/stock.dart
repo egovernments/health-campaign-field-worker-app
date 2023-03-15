@@ -50,12 +50,10 @@ class StockModel extends EntityModel {
   final String? quantity;
   final String? waybillNumber;
   final String clientReferenceId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
-  final DateTime createdAtTime;
   
 
   StockModel({
@@ -70,18 +68,12 @@ class StockModel extends EntityModel {
     this.quantity,
     this.waybillNumber,
     required this.clientReferenceId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   StockCompanion get companion {
     return StockCompanion(
@@ -100,10 +92,8 @@ class StockModel extends EntityModel {
       quantity: Value(quantity),
       waybillNumber: Value(waybillNumber),
       clientReferenceId: Value(clientReferenceId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
       );

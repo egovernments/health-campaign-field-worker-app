@@ -22,8 +22,8 @@ import '../data/repositories/local/task.dart';
 import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/oplog/oplog.dart';
-
 import '../data/repositories/remote/auth.dart';
+import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -337,6 +337,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<ServiceDefinitionModel,
                   ServiceDefinitionSearchModel>>(
             create: (_) => ServiceDefinitionRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.boundary)
+          RepositoryProvider<
+              RemoteRepository<BoundaryModel, BoundarySearchModel>>(
+            create: (_) => BoundaryRemoteRepository(
               dio,
               actionMap: actions,
             ),

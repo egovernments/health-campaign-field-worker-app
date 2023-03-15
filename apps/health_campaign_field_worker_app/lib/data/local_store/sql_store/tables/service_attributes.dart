@@ -9,6 +9,10 @@ class ServiceAttributes extends Table {
   TextColumn get dataType => text().nullable()();
   TextColumn get referenceId => text().nullable()();
   TextColumn get additionalDetails => text().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
@@ -16,5 +20,5 @@ class ServiceAttributes extends Table {
   
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

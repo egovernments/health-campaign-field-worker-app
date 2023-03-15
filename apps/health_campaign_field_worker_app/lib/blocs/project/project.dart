@@ -49,6 +49,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionLocalRepository;
 
+  final RemoteRepository<BoundaryModel, BoundarySearchModel>
+      boundaryRemoteRepository;
+
   ProjectBloc({
     LocalSecureStore? localSecureStore,
     required this.projectStaffRemoteRepository,
@@ -60,6 +63,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
     required this.serviceDefinitionRemoteRepository,
+    required this.boundaryRemoteRepository,
     required this.isar,
     required this.serviceDefinitionLocalRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
@@ -211,6 +215,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
+    final List<BoundaryModel> boundaries = (await boundaryRemoteRepository
+        .search(BoundarySearchModel(boundaryType: '')));
+    print(boundaries.first.name);
+
     state.maybeMap(
       orElse: () {
         return;

@@ -17,7 +17,9 @@ abstract class DataRepository<D extends EntityModel,
 
   DataModelType get type;
 
-  FutureOr<List<D>> search(R query);
+  FutureOr<List<D>> search(
+    R query,
+  );
 
   FutureOr<dynamic> create(D entity);
 
@@ -61,7 +63,9 @@ abstract class RemoteRepository<D extends EntityModel,
   });
 
   @override
-  FutureOr<List<D>> search(R query) async {
+  FutureOr<List<D>> search(
+    R query,
+  ) async {
     Response response;
 
     try {

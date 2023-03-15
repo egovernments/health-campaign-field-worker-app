@@ -235,13 +235,15 @@ class NetworkManager {
             break;
 
           case DataModelType.stock:
-            responseEntities = await remote.search(StockSearchModel(
-              clientReferenceId: entities
-                  .whereType<StockModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
 
             for (var element in typeGroupedEntity.value) {
               if (element.id == null) return;

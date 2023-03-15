@@ -29,10 +29,8 @@ class ProjectFacilityModel extends EntityModel {
   final String facilityId;
   final String projectId;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   ProjectFacilityModel({
@@ -40,16 +38,10 @@ class ProjectFacilityModel extends EntityModel {
     required this.facilityId,
     required this.projectId,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(
@@ -61,10 +53,8 @@ class ProjectFacilityModel extends EntityModel {
       facilityId: Value(facilityId),
       projectId: Value(projectId),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

@@ -59,6 +59,10 @@ class ServiceModel extends EntityModel {
 
   ServiceCompanion get companion {
     return ServiceCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       id: Value(id),
       clientId: Value(clientId),
       serviceDefId: Value(serviceDefId),

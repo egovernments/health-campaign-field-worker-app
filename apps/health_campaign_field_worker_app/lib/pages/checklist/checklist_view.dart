@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import 'package:intl/intl.dart';
 import '../../blocs/service/service.dart';
@@ -341,6 +342,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                           .selectedServiceDefinition!
                                           .attributes!;
                                       attributes.add(ServiceAttributesModel(
+                                        auditDetails: AuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime: DateTime.now()
+                                              .millisecondsSinceEpoch,
+                                        ),
                                         attributeCode: '${attribute[i].code}',
                                         dataType: attribute[i].dataType,
                                         clientReferenceId: IdGen.i.identifier,
@@ -371,6 +377,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               attributes: attributes,
                                               rowVersion: 1,
                                               accountId: IdGen.i.identifier,
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: DateTime.now()
+                                                    .millisecondsSinceEpoch,
+                                              ),
                                             ),
                                           ),
                                         );

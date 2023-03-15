@@ -145,6 +145,9 @@ class MainApplication extends StatelessWidget {
                             serviceDefinitionLocalRepository: ctx.read<
                                 LocalRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
+                            boundaryRemoteRepository: ctx.read<
+                                RemoteRepository<BoundaryModel,
+                                    BoundarySearchModel>>(),
                           ),
                         ),
                       ],

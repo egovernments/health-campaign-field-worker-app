@@ -7,10 +7,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
+  final String? boundaryType;
   final String? tenantId;
   final bool? isDeleted;
   
   BoundarySearchModel({
+    this.boundaryType,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -26,10 +28,8 @@ class BoundaryModel extends EntityModel {
   final String? longitude;
   final String? materializedPath;
   final String? tenantId;
-  final String createdBy;
   final bool? isDeleted;
   final int? rowVersion;
-  final DateTime createdAtTime;
   
 
   BoundaryModel({
@@ -40,16 +40,10 @@ class BoundaryModel extends EntityModel {
     this.longitude,
     this.materializedPath,
     this.tenantId,
-    required this.createdBy,
     this.isDeleted,
     this.rowVersion,
-    required int createdAt,
     super.auditDetails,
-  }): createdAtTime = DateTime.fromMillisecondsSinceEpoch(createdAt),
-       super();
-
-  int  get createdAt => createdAtTime.millisecondsSinceEpoch;
-  
+  }):  super();
 
   BoundaryCompanion get companion {
     return BoundaryCompanion(
@@ -64,10 +58,8 @@ class BoundaryModel extends EntityModel {
       longitude: Value(longitude),
       materializedPath: Value(materializedPath),
       tenantId: Value(tenantId),
-      createdBy: Value(createdBy),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      createdAt: Value(createdAt),
       );
   }
 }

@@ -21,10 +21,8 @@ class Stock extends Table {
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
-  TextColumn get createdBy => text()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-  IntColumn get createdAt => integer()();
   IntColumn get transactionType => intEnum<TransactionType>().nullable()();
   IntColumn get transactionReason => intEnum<TransactionReason>().nullable()();
 
