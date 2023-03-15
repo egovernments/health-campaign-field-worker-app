@@ -35,8 +35,8 @@ class NetworkManager {
     }
 
     await getServerGeneratedIds(
-      localRepositories: localRepositories,
-      remoteRepositories: remoteRepositories,
+      localRepositories: localRepositories.toSet().toList(),
+      remoteRepositories: remoteRepositories.toSet().toList(),
     );
 
     final futures = await Future.wait(
