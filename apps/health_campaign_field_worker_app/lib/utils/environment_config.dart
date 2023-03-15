@@ -48,7 +48,7 @@ class Variables {
 
   static const _baseUrl = EnvEntry(
     'BASE_URL',
-    'https://health-dev.digit.org/',
+    'https://health-qa.digit.org/',
   );
 
   static const _mdmsApi = EnvEntry(

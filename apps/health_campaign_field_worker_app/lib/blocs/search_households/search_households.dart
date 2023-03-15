@@ -118,7 +118,7 @@ class SearchHouseholdsBloc
       final projectBeneficiaries = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
           beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
-          projectId: '13',
+          projectId: event.projectId,
         ),
       );
 
@@ -158,6 +158,7 @@ class SearchHouseholdsBloc
 class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
+    required String projectId,
   }) = SearchHouseholdsSearchByHouseholdHeadEvent;
 
   const factory SearchHouseholdsEvent.clear() = SearchHouseholdsClearEvent;

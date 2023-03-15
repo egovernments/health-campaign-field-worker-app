@@ -7,12 +7,10 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class TargetSearchModel extends EntitySearchModel {
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
   TargetSearchModel({
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -21,22 +19,20 @@ class TargetSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TargetModel extends EntityModel {
-  final String? id;
+  final String id;
   final String? beneficiaryType;
   final String? baseline;
   final String? target;
-  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
   
 
   TargetModel({
-    this.id,
+    required this.id,
     this.beneficiaryType,
     this.baseline,
     this.target,
-    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -53,7 +49,6 @@ class TargetModel extends EntityModel {
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

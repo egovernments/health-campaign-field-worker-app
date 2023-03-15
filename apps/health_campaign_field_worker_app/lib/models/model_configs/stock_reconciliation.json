@@ -1,7 +1,7 @@
 {
   "name": "stockReconciliation",
   "createRepository": true,
-  "isPlural": true,
+  "isPlural": false,
   "attributes": [
     {
       "name": "id",
