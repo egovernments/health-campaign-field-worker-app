@@ -185,12 +185,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           value: 'registrar1',
           // value: 'sysadmin9012',
           // value: 'warehouse9012',
-          // value: 'sysadmin9012',
           // value: 'warehousemgr',
+          // value: 'registrar',
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          // value: 'eGov@4321',
           value: 'eGov@1234',
         ),
       });

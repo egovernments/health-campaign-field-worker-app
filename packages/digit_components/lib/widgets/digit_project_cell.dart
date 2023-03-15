@@ -17,7 +17,8 @@ class DigitProjectCell extends StatelessWidget {
       onTap: onTap,
       child: DigitCard(
         child: Padding(
-          padding: const EdgeInsets.only(left:8, right:8, top: 10, bottom: 10),
+          padding:
+              const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -32,9 +33,18 @@ class DigitProjectCell extends StatelessWidget {
                   const SizedBox(
                     width: 14,
                   ),
-                  Text(
-                    projectText,
-                    style: Theme.of(context).textTheme.headlineLarge,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            projectText,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

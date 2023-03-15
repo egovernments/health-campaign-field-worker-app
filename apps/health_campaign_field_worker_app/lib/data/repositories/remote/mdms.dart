@@ -52,6 +52,10 @@ class MdmsRepository {
 
         return newServiceRegistryAction;
       }).toList();
+      actions.add(Actions()
+        ..entityName = 'Boundary'
+        ..action = 'search'
+        ..path = '/egov-location/location/v11/boundarys/_search');
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);
@@ -117,6 +121,15 @@ class MdmsRepository {
         return idOption;
       }).toList();
 
+      final List<ChecklistTypes> checklistTypes =
+          element.checklistTypes.map((e) {
+        final checklist = ChecklistTypes()
+          ..name = e.name
+          ..code = e.code;
+
+        return checklist;
+      }).toList();
+
       final List<DeliveryCommentOptions> deliveryCommentOptions =
           element.deliveryCommentOptions.map((element) {
         final deliveryCommentOption = DeliveryCommentOptions()
@@ -142,7 +155,7 @@ class MdmsRepository {
       appConfiguration.genderOptions = genderOptions;
       appConfiguration.idTypeOptions = idTypeOptions;
       appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-
+      appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.backendInterface = backendInterface;
 
       appConfiguration.languages = languageList;

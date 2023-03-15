@@ -32,6 +32,10 @@ import 'tables/stock.dart';
 import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
+import 'tables/service.dart';
+import 'tables/attributes.dart';
+import 'tables/service_attributes.dart';
+import 'tables/service_definition.dart';
 import 'tables/task_resource.dart';
 
 part 'sql_store.g.dart';
@@ -60,6 +64,10 @@ part 'sql_store.g.dart';
   Target,
   Task,
   TaskResource,
+  Service,
+  ServiceAttributes,
+  ServiceDefinition,
+  Attributes,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

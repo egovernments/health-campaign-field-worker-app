@@ -138,7 +138,7 @@ class DigitTheme {
             ),
           ),
           borderSide: BorderSide(
-            color: colors.davyGray,
+            color: colors.burningOrange,
             width: 2,
           ),
         ),
@@ -178,7 +178,7 @@ class DigitTheme {
         ),
         actionsPadding: const EdgeInsets.all(kPadding),
       );
-
+      
   BorderSide get tableCellBorder => BorderSide(
         color: colorScheme.background,
         width: 0.5,

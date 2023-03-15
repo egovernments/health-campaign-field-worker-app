@@ -76,6 +76,7 @@ class FacilityLocalRepository
   FutureOr<void> create(
     FacilityModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final facilityCompanion = entity.companion;
     final addressCompanion = entity.address?.companion;

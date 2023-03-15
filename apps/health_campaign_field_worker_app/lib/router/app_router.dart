@@ -25,6 +25,11 @@ import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/checklist/checklist.dart';
+import '../pages/checklist/checklist_view.dart';
+import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/checklist/checklist_boundary_view.dart';
+import '../pages/checklist/checklist_preview.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -81,6 +86,15 @@ part 'app_router.gr.dart';
             ),
           ],
         ),
+        AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
+          AutoRoute(
+            page: ChecklistPage,
+            path: '',
+          ),
+          AutoRoute(page: ChecklistBoundaryViewPage, path: 'view-boundary'),
+          AutoRoute(page: ChecklistViewPage, path: 'view'),
+          AutoRoute(page: ChecklistPreviewPage, path: 'preview'),
+        ]),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
 
         /// Inventory Routes
