@@ -187,7 +187,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
+<<<<<<< HEAD
           value: 'eGov@1234',
+=======
+          value: 'eGov@4321',
+>>>>>>> 9d28901 (resolved conflicts)
         ),
       });
 }
