@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 
+
 class ProjectProductVariant extends Table {
   TextColumn get productVariantId => text().nullable()();
   TextColumn get type => text().nullable()();
@@ -14,10 +15,8 @@ class ProjectProductVariant extends Table {
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  
 
   @override
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-        clientReferenceId,
-      };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

@@ -15,13 +15,9 @@ class ProjectResource extends Table {
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
-
-  TextColumn get resources =>
-      text().references(ProjectProductVariant, #clientReferenceId)();
+  
+  TextColumn get resources => text().references(ProjectProductVariant, #clientReferenceId)();
 
   @override
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-        clientReferenceId,
-      };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

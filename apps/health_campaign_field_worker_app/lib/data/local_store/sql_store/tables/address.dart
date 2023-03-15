@@ -26,10 +26,8 @@ class Address extends Table {
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get type => intEnum<AddressType>().nullable()();
+  
 
   @override
-  Set<Column> get primaryKey => {
-        relatedClientReferenceId,
-        auditCreatedBy,
-      };
+  Set<Column> get primaryKey => { relatedClientReferenceId, auditCreatedBy,  };
 }

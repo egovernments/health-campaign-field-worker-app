@@ -45,16 +45,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
           return TaskModel(
             id: task.id,
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
             createdBy: task.createdBy,
-            createdAt: task.createdAt,
->>>>>>> f960d2d (resolved conflicts)
-=======
-
->>>>>>> a593e0e (added boundary)
             clientReferenceId: task.clientReferenceId,
             rowVersion: task.rowVersion,
             tenantId: task.tenantId,

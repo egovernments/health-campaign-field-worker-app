@@ -19,13 +19,5 @@ class Document extends Table {
   
 
   @override
-<<<<<<< HEAD
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-        clientReferenceId,
-      };
-}
-=======
   Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }
->>>>>>> a593e0e (added boundary)

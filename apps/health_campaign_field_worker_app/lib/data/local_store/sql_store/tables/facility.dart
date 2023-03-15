@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 
+
 class Facility extends Table {
   TextColumn get id => text()();
   BoolColumn get isPermanent => boolean().nullable()();
@@ -14,10 +15,8 @@ class Facility extends Table {
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
+  
 
   @override
-  Set<Column> get primaryKey => {
-        id,
-        auditCreatedBy,
-      };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }

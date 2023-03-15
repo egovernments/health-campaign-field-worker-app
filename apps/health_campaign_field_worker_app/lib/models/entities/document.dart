@@ -10,13 +10,13 @@ class DocumentSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
-
+  
   DocumentSearchModel({
     this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -29,6 +29,7 @@ class DocumentModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  
 
   DocumentModel({
     this.id,
@@ -40,7 +41,7 @@ class DocumentModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }) : super();
+  }):  super();
 
   DocumentCompanion get companion {
     return DocumentCompanion(
@@ -56,6 +57,6 @@ class DocumentModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }

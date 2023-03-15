@@ -25,10 +25,8 @@ class Stock extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get transactionType => intEnum<TransactionType>().nullable()();
   IntColumn get transactionReason => intEnum<TransactionReason>().nullable()();
+  
 
   @override
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-        clientReferenceId,
-      };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

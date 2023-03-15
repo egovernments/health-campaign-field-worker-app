@@ -2,6 +2,7 @@
 
 import 'package:drift/drift.dart';
 
+
 class Project extends Table {
   TextColumn get id => text()();
   TextColumn get projectTypeId => text().nullable()();
@@ -23,10 +24,8 @@ class Project extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get startDate => integer().nullable()();
   IntColumn get endDate => integer().nullable()();
+  
 
   @override
-  Set<Column> get primaryKey => {
-        id,
-        auditCreatedBy,
-      };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }

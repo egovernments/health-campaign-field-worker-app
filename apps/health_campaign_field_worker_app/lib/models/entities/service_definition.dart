@@ -9,10 +9,10 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ServiceDefinitionSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final List<String>? code;
+  final String? code;
   final bool? isActive;
   final bool? isDeleted;
-
+  
   ServiceDefinitionSearchModel({
     this.id,
     this.tenantId,
@@ -20,7 +20,7 @@ class ServiceDefinitionSearchModel extends EntitySearchModel {
     this.isActive,
     this.isDeleted,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -32,6 +32,7 @@ class ServiceDefinitionModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final List<AttributesModel>? attributes;
+  
 
   ServiceDefinitionModel({
     this.id,
@@ -42,7 +43,7 @@ class ServiceDefinitionModel extends EntityModel {
     this.rowVersion,
     this.attributes,
     super.auditDetails,
-  }) : super();
+  }):  super();
 
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
@@ -56,6 +57,6 @@ class ServiceDefinitionModel extends EntityModel {
       isActive: Value(isActive),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }
