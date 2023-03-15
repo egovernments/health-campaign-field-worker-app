@@ -115,11 +115,17 @@ class _DeliverInterventionPageState
                                                       )
                                                       .value
                                                       .toString(),
-                                                  productVariantId:
-                                                      'PVAR-2023-01-11-000045',
+                                                  productVariantId: (form
+                                                              .control(
+                                                                'resourceDelivered',
+                                                              )
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .id,
                                                   deliveryComment: form
                                                       .control(
-                                                          'deliveryComment')
+                                                        'deliveryComment',
+                                                      )
                                                       .value,
                                                   auditDetails: AuditDetails(
                                                     createdBy: context
@@ -305,23 +311,18 @@ class _DeliverInterventionPageState
                                     return state.maybeWhen(
                                       orElse: () => const Offstage(),
                                       fetched: (productVariants) {
-                                        return DigitDropdown<MenuItemModel>(
+                                        return DigitDropdown<
+                                            ProductVariantModel>(
                                           label: localizations.translate(
                                             i18.deliverIntervention
                                                 .resourceDeliveredLabel,
                                           ),
                                           valueMapper: (value) {
-                                            return localizations
-                                                .translate(value.code);
+                                            return localizations.translate(
+                                              value.sku ?? value.id,
+                                            );
                                           },
-                                          menuItems: productVariants
-                                              .map(
-                                                (e) => MenuItemModel(
-                                                  name: e.sku ?? '',
-                                                  code: e.id,
-                                                ),
-                                              )
-                                              .toList(),
+                                          menuItems: productVariants,
                                           validationMessages: {
                                             'required': (object) =>
                                                 'Field is required',
