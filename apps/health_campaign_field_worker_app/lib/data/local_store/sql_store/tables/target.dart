@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 
 
 class Target extends Table {
-  TextColumn get id => text().nullable()();
+  TextColumn get id => text()();
   TextColumn get beneficiaryType => text().nullable()();
   TextColumn get baseline => text().nullable()();
   TextColumn get target => text().nullable()();
@@ -12,12 +12,11 @@ class Target extends Table {
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }
