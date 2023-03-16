@@ -26,7 +26,7 @@ class ActionCard extends StatelessWidget {
 class ActionCardModel {
   final IconData icon;
   final String label;
-  final VoidCallback action;
+  final VoidCallback? action;
 
   const ActionCardModel({
     required this.icon,
