@@ -148,18 +148,21 @@ class MainApplication extends StatelessWidget {
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
-                                    productVariantLocalRepository: ctx.read<
-                                    LocalRepository<ProductVariantModel,
-                                        ProductVariantSearchModel>>(),
-                                productVariantRemoteRepository: ctx.read<
-                                    RemoteRepository<ProductVariantModel,
-                                        ProductVariantSearchModel>>(),
-                                projectResourceLocalRepository: ctx.read<
-                                    LocalRepository<ProjectResourceModel,
-                                        ProjectResourceSearchModel>>(),
-                                projectResourceRemoteRepository: ctx.read<
-                                    RemoteRepository<ProjectResourceModel,
-                                        ProjectResourceSearchModel>>(),
+                            boundaryLocalRepository: ctx.read<
+                                LocalRepository<BoundaryModel,
+                                    BoundarySearchModel>>(),
+                            productVariantLocalRepository: ctx.read<
+                                LocalRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            productVariantRemoteRepository: ctx.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceLocalRepository: ctx.read<
+                                LocalRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
+                            projectResourceRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],

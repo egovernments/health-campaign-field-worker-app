@@ -49,8 +49,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionLocalRepository;
 
+  ///Boundary Resource Repositories
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
       boundaryRemoteRepository;
+  final LocalRepository<BoundaryModel, BoundarySearchModel>
+      boundaryLocalRepository;
 
   /// Project Resource Repositories
   final RemoteRepository<ProjectResourceModel, ProjectResourceSearchModel>
@@ -76,6 +79,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.facilityLocalRepository,
     required this.serviceDefinitionRemoteRepository,
     required this.boundaryRemoteRepository,
+    required this.boundaryLocalRepository,
     required this.isar,
     required this.serviceDefinitionLocalRepository,
     required this.projectResourceLocalRepository,
@@ -275,7 +279,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   ) async {
     final List<BoundaryModel> boundaries = (await boundaryRemoteRepository
         .search(BoundarySearchModel(boundaryType: '')));
-    print(boundaries.first.name);
+    print(boundaries.length);
+
+    boundaryLocalRepository.create(
+      boundaries.first,
+      createOpLog: false,
+      dataOperation: DataOperation.create,
+    );
 
     state.maybeMap(
       orElse: () {

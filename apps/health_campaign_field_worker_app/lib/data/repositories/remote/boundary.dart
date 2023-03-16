@@ -125,12 +125,29 @@ class BoundaryRemoteRepository
         );
       }
 
+      List<BoundaryModel> blist = [];
+      Fib(List n) {
+        if (n.isEmpty) {
+          return blist;
+        }
+
+        blist.addAll(n.map((e) {
+          return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
+        }).toList());
+
+        print(Mapper.fromMap<BoundaryModel>(Map.castFrom(n.first)).name);
+
+        return Fib(List.castFrom(n.first['children']));
+      }
+
       final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
       List<BoundaryModel> boundaryList =
-          List.castFrom(entityList.first['boundary'])
-              .map((e) => Mapper.fromMap<BoundaryModel>(Map.castFrom(e)))
-              .toList();
+          List.castFrom(entityList.first['boundary']).map((e) {
+        print(Fib(List.castFrom(e['children'])));
+
+        return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
+      }).toList();
 
       return boundaryList;
     } on DioError catch (e) {
