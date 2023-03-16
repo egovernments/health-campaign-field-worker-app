@@ -30,6 +30,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               sql.task.clientReferenceId.isIn(
                 query.clientReferenceId!,
               ),
+            if (query.projectBeneficiaryClientReferenceId != null)
+              sql.task.projectBeneficiaryClientReferenceId.equals(
+                query.projectBeneficiaryClientReferenceId!,
+              ),
             if (userId != null)
               sql.task.auditCreatedBy.equals(
                 userId,
