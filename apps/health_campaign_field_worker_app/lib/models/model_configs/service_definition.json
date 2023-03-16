@@ -1,38 +1,46 @@
 {
-    "name": "ServiceDefinition",
-    "createRepository": true,
-    "ignoreFields": ["clientReferenceId"],
-    "attributes": [{
-        "name": "id",
-        "type": "String",
-        "isPk": true,
-        "includeForQuery": true
+  "name": "ServiceDefinition",
+  "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "isPk": true,
+      "includeForQuery": true
     },
     {
-        "name": "tenantId",
-        "type": "String",
-        "includeForQuery": true
-        
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
     },
     {
-        "name": "code",
-        "type": "String",
-        "includeForQuery": true     
+      "name": "code",
+      "type": "String",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
     },
-
     {
-        "name": "isActive",
-        "type": "bool",
-        "includeForQuery": true      
+      "name": "code",
+      "type": "String",
+      "includeForQuery": false
+    },
+    {
+      "name": "isActive",
+      "type": "bool",
+      "includeForQuery": true
     }
-    ],
-
-    "customAttributes": [
-        {
-          "name": "attributes",
-          "type": "attributes",
-          "isList": true
-        }
-      ],
-      "isEnum": false
+  ],
+  "customAttributes": [
+    {
+      "name": "attributes",
+      "type": "attributes",
+      "isList": true
+    }
+  ],
+  "isEnum": false
 }
