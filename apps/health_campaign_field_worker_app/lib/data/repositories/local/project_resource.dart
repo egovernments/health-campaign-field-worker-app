@@ -61,6 +61,7 @@ class ProjectResourceLocalRepository
   FutureOr<void> create(
     ProjectResourceModel entity, {
     bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectProductVariantCompanion =
         entity.resource.copyWith(auditDetails: entity.auditDetails).companion;
