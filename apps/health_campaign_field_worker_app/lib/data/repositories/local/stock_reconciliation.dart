@@ -70,5 +70,25 @@ class StockReconciliationLocalRepository extends LocalRepository<
   }
 
   @override
+  FutureOr<void> update(
+    StockReconciliationModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final stockReconciliationCompanion = entity.companion;
+
+    await sql.batch((batch) {
+      batch.update(
+        sql.stockReconciliation,
+        stockReconciliationCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
   DataModelType get type => DataModelType.stockReconciliation;
 }
