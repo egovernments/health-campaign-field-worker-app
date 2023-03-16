@@ -67,5 +67,25 @@ class StockLocalRepository
   }
 
   @override
+  FutureOr<void> update(
+    StockModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final stockCompanion = entity.companion;
+
+    await sql.batch((batch) {
+      batch.update(
+        sql.stock,
+        stockCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
   DataModelType get type => DataModelType.stock;
 }
