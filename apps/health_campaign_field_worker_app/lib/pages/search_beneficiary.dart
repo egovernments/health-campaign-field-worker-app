@@ -8,7 +8,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/network_manager.dart';
 import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
@@ -40,25 +39,15 @@ class _SearchBeneficiaryPageState
 
     return BlocProvider(
       create: (context) {
-        final networkManager = context.read<NetworkManager>();
-
         return SearchHouseholdsBloc(
-          projectBeneficiary: networkManager.repository<ProjectBeneficiaryModel,
-              ProjectBeneficiarySearchModel>(
-            context,
-          ),
-          householdMember: networkManager
-              .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(
-            context,
-          ),
-          household:
-              networkManager.repository<HouseholdModel, HouseholdSearchModel>(
-            context,
-          ),
-          individual: networkManager
-              .repository<IndividualModel, IndividualSearchModel>(context),
-          taskDataRepository:
-              networkManager.repository<TaskModel, TaskSearchModel>(context),
+          projectBeneficiary: context.repository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>(),
+          householdMember: context
+              .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(),
+          household: context.repository<HouseholdModel, HouseholdSearchModel>(),
+          individual:
+              context.repository<IndividualModel, IndividualSearchModel>(),
+          taskDataRepository: context.repository<TaskModel, TaskSearchModel>(),
         );
       },
       child: KeyboardVisibilityBuilder(

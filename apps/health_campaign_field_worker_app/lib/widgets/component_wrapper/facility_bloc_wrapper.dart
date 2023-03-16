@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/facility/facility.dart';
-import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
+import '../../utils/extensions/extensions.dart';
 import 'selected_project_builder.dart';
 
 class FacilityBlocWrapper extends StatelessWidget {
@@ -18,15 +18,11 @@ class FacilityBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SelectedProjectBuilder(
       projectBuilder: (context, selectedProject) {
-        final networkManager = context.read<NetworkManager>();
+        final facilityRepository =
+            context.repository<FacilityModel, FacilitySearchModel>();
 
-        final facilityRepository = networkManager
-            .repository<FacilityModel, FacilitySearchModel>(context);
-
-        final projectFacilityRepository = networkManager
-            .repository<ProjectFacilityModel, ProjectFacilitySearchModel>(
-          context,
-        );
+        final projectFacilityRepository = context
+            .repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
 
         return BlocProvider(
           create: (_) => FacilityBloc(
