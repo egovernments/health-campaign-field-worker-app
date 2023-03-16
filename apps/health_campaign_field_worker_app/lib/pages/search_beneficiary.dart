@@ -139,7 +139,7 @@ class _SearchBeneficiaryPageState
                   bloc.add(
                     SearchHouseholdsSearchByHouseholdHeadEvent(
                       searchText: value.trim(),
-                      projectId: '13',
+                      projectId: context.projectId,
                     ),
                   );
                 },
@@ -168,6 +168,8 @@ class _SearchBeneficiaryPageState
                             householdMember: i,
                             onOpenPressed: () async {
                               final bloc = context.read<SearchHouseholdsBloc>();
+                              final projectId = context.projectId;
+
                               await context.router.push(
                                 BeneficiaryWrapperRoute(
                                   wrapper: i,
@@ -177,7 +179,7 @@ class _SearchBeneficiaryPageState
                               bloc.add(
                                 SearchHouseholdsSearchByHouseholdHeadEvent(
                                   searchText: searchController.text,
-                                  projectId: '13',
+                                  projectId: projectId,
                                 ),
                               );
                             },

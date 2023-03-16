@@ -97,7 +97,7 @@ class _DeliverInterventionPageState
                                               tenantId:
                                                   envConfig.variables.tenantId,
                                               rowVersion: 1,
-                                              projectId: '13',
+                                              projectId: context.projectId,
                                               status: Status.delivered.name,
                                               createdDate: context
                                                   .millisecondsSinceEpoch(),
@@ -409,7 +409,7 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-    
+
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],

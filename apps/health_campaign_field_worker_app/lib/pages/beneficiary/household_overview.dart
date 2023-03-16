@@ -76,6 +76,9 @@ class _HouseholdOverviewPageState
                                                   .householdOverViewEditLabel,
                                             ),
                                             action: () async {
+                                              final projectId =
+                                                  context.projectId;
+
                                               final bloc = context.read<
                                                   HouseholdOverviewBloc>();
                                               Navigator.of(
@@ -117,7 +120,9 @@ class _HouseholdOverviewPageState
                                               );
 
                                               bloc.add(
-                                                const HouseholdOverviewReloadEvent(),
+                                                HouseholdOverviewReloadEvent(
+                                                  projectId: projectId,
+                                                ),
                                               );
                                             },
                                           ),
@@ -150,6 +155,8 @@ class _HouseholdOverviewPageState
                                                             HouseholdOverviewBloc>()
                                                         .add(
                                                           HouseholdOverviewDeleteHouseholdEvent(
+                                                            projectId: context
+                                                                .projectId,
                                                             householdModel: state
                                                                 .householdMemberWrapper
                                                                 .household,
@@ -257,13 +264,14 @@ class _HouseholdOverviewPageState
                                           rootNavigator: true,
                                         ).pop();
 
-                                        final wrapper =
-                                            state.householdMemberWrapper;
                                         final address = e.address;
                                         if (address == null ||
                                             address.isEmpty) {
                                           return;
                                         }
+
+                                        final projectId = context.projectId;
+
                                         await context.router.root.push(
                                           BeneficiaryRegistrationWrapperRoute(
                                             initialState:
@@ -280,13 +288,16 @@ class _HouseholdOverviewPageState
                                         );
 
                                         bloc.add(
-                                          const HouseholdOverviewReloadEvent(),
+                                          HouseholdOverviewReloadEvent(
+                                            projectId: projectId,
+                                          ),
                                         );
                                       },
                                       setAsHeadAction: () {
                                         ctx.read<HouseholdOverviewBloc>().add(
                                               HouseholdOverviewSetAsHeadEvent(
                                                 individualModel: e,
+                                                projectId: ctx.projectId,
                                                 householdModel: state
                                                     .householdMemberWrapper
                                                     .household,
@@ -322,6 +333,8 @@ class _HouseholdOverviewPageState
                                                         HouseholdOverviewBloc>()
                                                     .add(
                                                       HouseholdOverviewDeleteIndividualEvent(
+                                                        projectId:
+                                                            ctx.projectId,
                                                         householdModel: state
                                                             .householdMemberWrapper
                                                             .household,
@@ -370,6 +383,8 @@ class _HouseholdOverviewPageState
 
                                     if (address == null) return;
 
+                                    final projectId = context.projectId;
+
                                     await context.router.push(
                                       BeneficiaryRegistrationWrapperRoute(
                                         initialState:
@@ -384,7 +399,9 @@ class _HouseholdOverviewPageState
                                     );
 
                                     bloc.add(
-                                      const HouseholdOverviewReloadEvent(),
+                                      HouseholdOverviewReloadEvent(
+                                        projectId: projectId,
+                                      ),
                                     );
                                   },
                                   iconText: localizations.translate(
@@ -412,16 +429,22 @@ class _HouseholdOverviewPageState
                           i18.memberCard.deliverDetailsUpdateLabel,
                         ),
                         onPressed: () async {
-                          final bloc = ctx.read<DeliverInterventionBloc>();
                           await context.router.push(DeliverInterventionRoute());
                         },
                       )
                     : DigitElevatedButton(
                         onPressed: () async {
                           final bloc = ctx.read<HouseholdOverviewBloc>();
+
+                          final projectId = context.projectId;
+
                           await context.router.push(DeliverInterventionRoute());
 
-                          bloc.add(const HouseholdOverviewReloadEvent());
+                          bloc.add(
+                            HouseholdOverviewReloadEvent(
+                              projectId: projectId,
+                            ),
+                          );
                         },
                         child: Center(
                           child: Text(
