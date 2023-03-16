@@ -5,6 +5,24 @@ extension ContextUtilityExtensions on BuildContext {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
   }
 
+  String get projectId {
+    final projectBloc = _get<ProjectBloc>();
+    final projectState = projectBloc.state;
+
+    return projectState.maybeWhen(
+      orElse: () {
+        throw AppException('Invalid project state');
+      },
+      fetched: (projects, selectedProject) {
+        if (selectedProject == null) {
+          throw AppException('No project is selected');
+        }
+
+        return selectedProject.id;
+      },
+    );
+  }
+
   String get loggedInUserUuid {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
@@ -18,21 +36,6 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return userRequestObject.uuid;
-  }
-
-  String get projectId {
-    final projectBloc = _get<ProjectBloc>();
-    final selectedProject = projectBloc.state.whenOrNull(
-      fetched: (projects, selectedProject) {
-        return selectedProject;
-      },
-    );
-
-    if (selectedProject == null) {
-      throw AppException('Project not selected');
-    }
-
-    return selectedProject.id;
   }
 
   NetworkManager get networkManager => read<NetworkManager>();
