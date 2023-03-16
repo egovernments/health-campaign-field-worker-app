@@ -9,7 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ServiceDefinitionSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final String? code;
+  final List<String>? code;
   final bool? isActive;
   final bool? isDeleted;
   
