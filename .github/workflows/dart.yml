@@ -22,11 +22,11 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
 
-      - name: Install melos
-        run: dart pub global activate melos 2.9.0
-
       - name: Generate models
         run: ./tools/install_bricks.sh
+
+      - name: Analyze code
+        run: melos run analyze
 
 
 

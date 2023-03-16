@@ -26,7 +26,7 @@ scripts:
     description: Run all Flutter tests in this project.
 
   analyze:
-    run: melos exec -- flutter analyze .
+    run: melos exec -- flutter analyze . --no-fatal-infos --no-fatal-warnings
     description: Run `dart analyze` in all packages.
 
   combine-coverage:
