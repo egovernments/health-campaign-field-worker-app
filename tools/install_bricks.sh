@@ -20,3 +20,4 @@ cd "$home" || exit
 echo "$PWD"
 
 melos bootstrap
+melos analyze
