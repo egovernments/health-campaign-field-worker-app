@@ -26,6 +26,7 @@ class ProjectResourceModel extends EntityModel {
 
   static const schemaName = 'ProjectResource';
 
+  final ProjectResourceAdditionalFields? additionalFields;
   final String? id;
   final String? projectId;
   final String? tenantId;
@@ -35,6 +36,7 @@ class ProjectResourceModel extends EntityModel {
   
 
   ProjectResourceModel({
+    this.additionalFields,
     this.id,
     this.projectId,
     this.tenantId,
@@ -42,12 +44,7 @@ class ProjectResourceModel extends EntityModel {
     this.rowVersion,
     required this.resource,
     super.auditDetails,
-    ProjectResourceAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProjectResourceCompanion get companion {
     return ProjectResourceCompanion(

@@ -38,6 +38,7 @@ class StockReconciliationModel extends EntityModel {
 
   static const schemaName = 'StockReconciliation';
 
+  final StockReconciliationAdditionalFields? additionalFields;
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -54,6 +55,7 @@ class StockReconciliationModel extends EntityModel {
   
 
   StockReconciliationModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -68,13 +70,8 @@ class StockReconciliationModel extends EntityModel {
     this.rowVersion,
     required int dateOfReconciliation,
     super.auditDetails,
-    StockReconciliationAdditionalFields? additionalFields,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
-      super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+      super();
 
   int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
   

@@ -24,6 +24,7 @@ class ServiceAttributesModel extends EntityModel {
 
   static const schemaName = 'ServiceAttributes';
 
+  final ServiceAttributesAdditionalFields? additionalFields;
   final String? attributeCode;
   final dynamic? value;
   final String? dataType;
@@ -36,6 +37,7 @@ class ServiceAttributesModel extends EntityModel {
   
 
   ServiceAttributesModel({
+    this.additionalFields,
     this.attributeCode,
     this.value,
     this.dataType,
@@ -46,12 +48,7 @@ class ServiceAttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    ServiceAttributesAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ServiceAttributesCompanion get companion {
     return ServiceAttributesCompanion(

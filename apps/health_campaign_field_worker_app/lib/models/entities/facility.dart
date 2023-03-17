@@ -30,6 +30,7 @@ class FacilityModel extends EntityModel {
 
   static const schemaName = 'Facility';
 
+  final FacilityAdditionalFields? additionalFields;
   final String id;
   final bool? isPermanent;
   final String? usage;
@@ -41,6 +42,7 @@ class FacilityModel extends EntityModel {
   
 
   FacilityModel({
+    this.additionalFields,
     required this.id,
     this.isPermanent,
     this.usage,
@@ -50,12 +52,7 @@ class FacilityModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
-    FacilityAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   FacilityCompanion get companion {
     return FacilityCompanion(

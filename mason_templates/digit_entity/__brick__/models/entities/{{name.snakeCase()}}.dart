@@ -30,25 +30,22 @@ class {{name.pascalCase()}}Model extends EntityModel {
 
   static const schemaName = '{{name.pascalCase()}}';
 
+  final {{name.pascalCase()}}AdditionalFields? additionalFields;
   {{#attributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/includeForEntity}}{{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Model({
+    this.additionalFields,
     {{#attributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
-    {{name.pascalCase()}}AdditionalFields? additionalFields,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-      {{/dateTimeAttributes}}super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));{{#dateTimeAttributes}}
+      {{/dateTimeAttributes}}super();{{#dateTimeAttributes}}
 
   int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}}.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}

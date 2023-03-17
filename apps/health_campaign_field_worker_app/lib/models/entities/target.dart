@@ -22,6 +22,7 @@ class TargetModel extends EntityModel {
 
   static const schemaName = 'Target';
 
+  final TargetAdditionalFields? additionalFields;
   final String id;
   final String? beneficiaryType;
   final String? baseline;
@@ -32,6 +33,7 @@ class TargetModel extends EntityModel {
   
 
   TargetModel({
+    this.additionalFields,
     required this.id,
     this.beneficiaryType,
     this.baseline,
@@ -40,12 +42,7 @@ class TargetModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    TargetAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   TargetCompanion get companion {
     return TargetCompanion(

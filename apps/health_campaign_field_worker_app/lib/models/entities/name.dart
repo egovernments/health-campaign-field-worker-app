@@ -30,6 +30,7 @@ class NameModel extends EntityModel {
 
   static const schemaName = 'Name';
 
+  final NameAdditionalFields? additionalFields;
   final String? id;
   final String? individualClientReferenceId;
   final String? givenName;
@@ -41,6 +42,7 @@ class NameModel extends EntityModel {
   
 
   NameModel({
+    this.additionalFields,
     this.id,
     this.individualClientReferenceId,
     this.givenName,
@@ -50,12 +52,7 @@ class NameModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    NameAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   NameCompanion get companion {
     return NameCompanion(

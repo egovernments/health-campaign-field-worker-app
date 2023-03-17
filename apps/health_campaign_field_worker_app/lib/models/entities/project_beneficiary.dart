@@ -40,6 +40,7 @@ class ProjectBeneficiaryModel extends EntityModel {
 
   static const schemaName = 'ProjectBeneficiary';
 
+  final ProjectBeneficiaryAdditionalFields? additionalFields;
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
@@ -52,6 +53,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   
 
   ProjectBeneficiaryModel({
+    this.additionalFields,
     this.id,
     this.projectId,
     this.beneficiaryId,
@@ -62,13 +64,8 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.rowVersion,
     required int dateOfRegistration,
     super.auditDetails,
-    ProjectBeneficiaryAdditionalFields? additionalFields,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-      super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+      super();
 
   int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
   

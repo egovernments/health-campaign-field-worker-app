@@ -24,6 +24,7 @@ class TaskResourceModel extends EntityModel {
 
   static const schemaName = 'TaskResource';
 
+  final TaskResourceAdditionalFields? additionalFields;
   final String clientReferenceId;
   final String? taskId;
   final String? id;
@@ -37,6 +38,7 @@ class TaskResourceModel extends EntityModel {
   
 
   TaskResourceModel({
+    this.additionalFields,
     required this.clientReferenceId,
     this.taskId,
     this.id,
@@ -48,12 +50,7 @@ class TaskResourceModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    TaskResourceAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(

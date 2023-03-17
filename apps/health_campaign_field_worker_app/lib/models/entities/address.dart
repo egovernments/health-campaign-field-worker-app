@@ -24,6 +24,7 @@ class AddressModel extends EntityModel {
 
   static const schemaName = 'Address';
 
+  final AddressAdditionalFields? additionalFields;
   final String? id;
   final String? relatedClientReferenceId;
   final String? doorNo;
@@ -44,6 +45,7 @@ class AddressModel extends EntityModel {
   
 
   AddressModel({
+    this.additionalFields,
     this.id,
     this.relatedClientReferenceId,
     this.doorNo,
@@ -62,12 +64,7 @@ class AddressModel extends EntityModel {
     this.rowVersion,
     this.type,
     super.auditDetails,
-    AddressAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   AddressCompanion get companion {
     return AddressCompanion(

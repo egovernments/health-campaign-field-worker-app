@@ -30,6 +30,7 @@ class ProductVariantModel extends EntityModel {
 
   static const schemaName = 'ProductVariant';
 
+  final ProductVariantAdditionalFields? additionalFields;
   final String id;
   final String? productId;
   final String? sku;
@@ -40,6 +41,7 @@ class ProductVariantModel extends EntityModel {
   
 
   ProductVariantModel({
+    this.additionalFields,
     required this.id,
     this.productId,
     this.sku,
@@ -48,12 +50,7 @@ class ProductVariantModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    ProductVariantAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProductVariantCompanion get companion {
     return ProductVariantCompanion(

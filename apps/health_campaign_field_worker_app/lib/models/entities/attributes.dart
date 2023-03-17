@@ -38,6 +38,7 @@ class AttributesModel extends EntityModel {
 
   static const schemaName = 'Attributes';
 
+  final AttributesAdditionalFields? additionalFields;
   final String? id;
   final String? dataType;
   final String? referenceId;
@@ -53,6 +54,7 @@ class AttributesModel extends EntityModel {
   
 
   AttributesModel({
+    this.additionalFields,
     this.id,
     this.dataType,
     this.referenceId,
@@ -66,12 +68,7 @@ class AttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    AttributesAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   AttributesCompanion get companion {
     return AttributesCompanion(

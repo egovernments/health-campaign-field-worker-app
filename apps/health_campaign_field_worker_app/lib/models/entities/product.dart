@@ -32,6 +32,7 @@ class ProductModel extends EntityModel {
 
   static const schemaName = 'Product';
 
+  final ProductAdditionalFields? additionalFields;
   final String? id;
   final String? type;
   final String? name;
@@ -43,6 +44,7 @@ class ProductModel extends EntityModel {
   
 
   ProductModel({
+    this.additionalFields,
     this.id,
     this.type,
     this.name,
@@ -52,12 +54,7 @@ class ProductModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    ProductAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProductCompanion get companion {
     return ProductCompanion(

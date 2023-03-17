@@ -42,6 +42,7 @@ class StockModel extends EntityModel {
 
   static const schemaName = 'Stock';
 
+  final StockAdditionalFields? additionalFields;
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -60,6 +61,7 @@ class StockModel extends EntityModel {
   
 
   StockModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -76,12 +78,7 @@ class StockModel extends EntityModel {
     this.transactionType,
     this.transactionReason,
     super.auditDetails,
-    StockAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   StockCompanion get companion {
     return StockCompanion(

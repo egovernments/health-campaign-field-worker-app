@@ -36,6 +36,7 @@ class HouseholdMemberModel extends EntityModel {
 
   static const schemaName = 'HouseholdMember';
 
+  final HouseholdMemberAdditionalFields? additionalFields;
   final String? id;
   final String? householdId;
   final String? householdClientReferenceId;
@@ -49,6 +50,7 @@ class HouseholdMemberModel extends EntityModel {
   
 
   HouseholdMemberModel({
+    this.additionalFields,
     this.id,
     this.householdId,
     this.householdClientReferenceId,
@@ -60,12 +62,7 @@ class HouseholdMemberModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    HouseholdMemberAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   HouseholdMemberCompanion get companion {
     return HouseholdMemberCompanion(

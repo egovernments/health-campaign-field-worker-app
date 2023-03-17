@@ -24,6 +24,7 @@ class ProjectProductVariantModel extends EntityModel {
 
   static const schemaName = 'ProjectProductVariant';
 
+  final ProjectProductVariantAdditionalFields? additionalFields;
   final String productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
@@ -33,6 +34,7 @@ class ProjectProductVariantModel extends EntityModel {
   
 
   ProjectProductVariantModel({
+    this.additionalFields,
     required this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
@@ -40,12 +42,7 @@ class ProjectProductVariantModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    ProjectProductVariantAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(

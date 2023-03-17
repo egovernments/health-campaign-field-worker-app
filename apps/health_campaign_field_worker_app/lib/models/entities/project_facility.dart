@@ -28,6 +28,7 @@ class ProjectFacilityModel extends EntityModel {
 
   static const schemaName = 'ProjectFacility';
 
+  final ProjectFacilityAdditionalFields? additionalFields;
   final String id;
   final String facilityId;
   final String projectId;
@@ -37,6 +38,7 @@ class ProjectFacilityModel extends EntityModel {
   
 
   ProjectFacilityModel({
+    this.additionalFields,
     required this.id,
     required this.facilityId,
     required this.projectId,
@@ -44,12 +46,7 @@ class ProjectFacilityModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    ProjectFacilityAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(

@@ -24,6 +24,7 @@ class DocumentModel extends EntityModel {
 
   static const schemaName = 'Document';
 
+  final DocumentAdditionalFields? additionalFields;
   final String? id;
   final String? documentType;
   final String? fileStoreId;
@@ -35,6 +36,7 @@ class DocumentModel extends EntityModel {
   
 
   DocumentModel({
+    this.additionalFields,
     this.id,
     this.documentType,
     this.fileStoreId,
@@ -44,12 +46,7 @@ class DocumentModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    DocumentAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   DocumentCompanion get companion {
     return DocumentCompanion(

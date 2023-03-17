@@ -34,6 +34,7 @@ class IndividualModel extends EntityModel {
 
   static const schemaName = 'Individual';
 
+  final IndividualAdditionalFields? additionalFields;
   final String? id;
   final String? userId;
   final String? dateOfBirth;
@@ -55,6 +56,7 @@ class IndividualModel extends EntityModel {
   
 
   IndividualModel({
+    this.additionalFields,
     this.id,
     this.userId,
     this.dateOfBirth,
@@ -74,12 +76,7 @@ class IndividualModel extends EntityModel {
     this.gender,
     this.identifiers,
     super.auditDetails,
-    IndividualAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   IndividualCompanion get companion {
     return IndividualCompanion(

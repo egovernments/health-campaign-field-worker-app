@@ -24,6 +24,7 @@ class ProjectTypeModel extends EntityModel {
 
   static const schemaName = 'ProjectType';
 
+  final ProjectTypeAdditionalFields? additionalFields;
   final String? id;
   final String? name;
   final String? code;
@@ -39,6 +40,7 @@ class ProjectTypeModel extends EntityModel {
   
 
   ProjectTypeModel({
+    this.additionalFields,
     this.id,
     this.name,
     this.code,
@@ -52,12 +54,7 @@ class ProjectTypeModel extends EntityModel {
     this.rowVersion,
     this.resources,
     super.auditDetails,
-    ProjectTypeAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ProjectTypeCompanion get companion {
     return ProjectTypeCompanion(

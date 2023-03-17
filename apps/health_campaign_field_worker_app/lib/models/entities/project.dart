@@ -54,6 +54,7 @@ class ProjectModel extends EntityModel {
 
   static const schemaName = 'Project';
 
+  final ProjectAdditionalFields? additionalFields;
   final String id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -76,6 +77,7 @@ class ProjectModel extends EntityModel {
   
 
   ProjectModel({
+    this.additionalFields,
     required this.id,
     this.projectTypeId,
     this.projectNumber,
@@ -96,18 +98,13 @@ class ProjectModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
-    ProjectAdditionalFields? additionalFields,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-      super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+      super();
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   

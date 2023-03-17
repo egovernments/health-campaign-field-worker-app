@@ -28,6 +28,7 @@ class IdentifierModel extends EntityModel {
 
   static const schemaName = 'Identifier';
 
+  final IdentifierAdditionalFields? additionalFields;
   final String? id;
   final String? individualClientReferenceId;
   final String? identifierType;
@@ -38,6 +39,7 @@ class IdentifierModel extends EntityModel {
   
 
   IdentifierModel({
+    this.additionalFields,
     this.id,
     this.individualClientReferenceId,
     this.identifierType,
@@ -46,12 +48,7 @@ class IdentifierModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    IdentifierAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(

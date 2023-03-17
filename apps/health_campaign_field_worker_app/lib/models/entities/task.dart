@@ -68,6 +68,7 @@ class TaskModel extends EntityModel {
 
   static const schemaName = 'Task';
 
+  final TaskAdditionalFields? additionalFields;
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
@@ -88,6 +89,7 @@ class TaskModel extends EntityModel {
   
 
   TaskModel({
+    this.additionalFields,
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
@@ -106,7 +108,6 @@ class TaskModel extends EntityModel {
     int? actualEndDate,
     int? createdDate,
     super.auditDetails,
-    TaskAdditionalFields? additionalFields,
   }): plannedStartDateTime = plannedStartDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
@@ -122,11 +123,7 @@ class TaskModel extends EntityModel {
       createdDateTime = createdDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
-      super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+      super();
 
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   

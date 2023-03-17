@@ -48,12 +48,8 @@ abstract class DataModel {
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
-  final AdditionalFields? additionalFields;
 
-  const EntityModel({
-    this.auditDetails,
-    this.additionalFields,
-  });
+  const EntityModel({this.auditDetails});
 }
 
 @MappableClass(ignoreNull: true)

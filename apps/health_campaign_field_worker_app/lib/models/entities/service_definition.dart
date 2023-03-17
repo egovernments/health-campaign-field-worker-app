@@ -28,6 +28,7 @@ class ServiceDefinitionModel extends EntityModel {
 
   static const schemaName = 'ServiceDefinition';
 
+  final ServiceDefinitionAdditionalFields? additionalFields;
   final String? id;
   final String? tenantId;
   final String? code;
@@ -38,6 +39,7 @@ class ServiceDefinitionModel extends EntityModel {
   
 
   ServiceDefinitionModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.code,
@@ -46,12 +48,7 @@ class ServiceDefinitionModel extends EntityModel {
     this.rowVersion,
     this.attributes,
     super.auditDetails,
-    ServiceDefinitionAdditionalFields? additionalFields,
-  }): super(additionalFields: additionalFields == null
-          ? null
-          : Mapper.fromMap<AdditionalFields>(
-            additionalFields.toMap(),
-          ));
+  }): super();
 
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
