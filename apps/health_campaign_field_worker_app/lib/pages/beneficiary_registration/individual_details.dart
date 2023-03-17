@@ -326,6 +326,9 @@ class _IndividualDetailsPageState
                               i18.individualDetails.mobileNumberLabelText,
                             ),
                             maxLength: 10,
+                            validationMessages: {
+                              'number': (object) => 'Mobile number is invalid',
+                            },
                           ),
                         ],
                       ),
@@ -458,6 +461,9 @@ class _IndividualDetailsPageState
       ),
       _mobileNumberKey: FormControl<String>(
         value: individual?.mobileNumber,
+        validators: [
+          CustomValidator.validMobileNumber,
+        ],
       ),
     });
   }

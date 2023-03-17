@@ -123,4 +123,16 @@ class CustomValidator {
         ? null
         : {'Min 2 characters Required': true};
   }
+
+  static Map<String, dynamic>? validMobileNumber(AbstractControl<dynamic> control) {
+    if(control.value == null || control.value.toString().isEmpty){
+      return null;
+    }
+
+    var parsed = double.tryParse(control.value.toString());
+
+    return parsed != null
+        ? null
+        : {'Mobile number should be numeric': true};
+  }
 }
