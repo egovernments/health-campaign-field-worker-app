@@ -31,12 +31,12 @@ class DigitTheme {
       scaffoldBackgroundColor: colorScheme.background,
       textTheme: mobileTypography.textTheme,
       appBarTheme: const AppBarTheme(elevation: 0),
-      textButtonTheme: textButtonTheme,
       elevatedButtonTheme: elevatedButtonTheme,
+      outlinedButtonTheme: outlinedButtonTheme,
+      textButtonTheme: textButtonTheme,
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
       dialogTheme: dialogTheme,
-      outlinedButtonTheme: outlinedButtonTheme,
     );
   }
 
@@ -90,6 +90,14 @@ class DigitTheme {
           ),
           disabledForegroundColor: colorScheme.onSecondary,
           elevation: 0,
+        ),
+      );
+
+  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: colorScheme.secondary,
+          // side: BorderSide(color: colorScheme.secondary),
+          padding: buttonPadding,
         ),
       );
 
@@ -170,23 +178,7 @@ class DigitTheme {
         ),
         actionsPadding: const EdgeInsets.all(kPadding),
       );
-
-  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(
-            color: colorScheme.secondary,
-          ),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(
-                0,
-              ),
-            ),
-          ),
-          padding: buttonPadding,
-        ),
-      );
-
+      
   BorderSide get tableCellBorder => BorderSide(
         color: colorScheme.background,
         width: 0.5,

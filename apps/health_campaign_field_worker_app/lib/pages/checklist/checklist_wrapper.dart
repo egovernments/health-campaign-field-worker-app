@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
-import '../../data/network_manager.dart';
-
 import '../../models/entities/service.dart';
 import '../../models/entities/service_definition.dart';
+import '../../utils/extensions/extensions.dart';
 
 class ChecklistWrapperPage extends StatelessWidget {
   final bool isEditing;
@@ -18,15 +18,10 @@ class ChecklistWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final networkManager = context.read<NetworkManager>();
+    final serviceDefinition = context
+        .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
 
-    final serviceDefinition = networkManager
-        .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(
-      context,
-    );
-
-    final service =
-        networkManager.repository<ServiceModel, ServiceSearchModel>(context);
+    final service = context.repository<ServiceModel, ServiceSearchModel>();
 
     return MultiBlocProvider(
       providers: [

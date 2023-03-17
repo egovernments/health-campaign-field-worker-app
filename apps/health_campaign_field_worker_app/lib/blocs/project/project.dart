@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
@@ -143,6 +144,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (projects.isNotEmpty) {
         await _loadProjectFacilities(projects);
         await _loadProductVariants(projects);
+        await _loadServiceDefinition(projects);
       }
 
       emit(ProjectSelectionFetchedState(projects: projects));
@@ -177,6 +179,67 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
   }
 
+  FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+    final configs = await isar.appConfigurations.where().findAll();
+    final userObject = await localSecureStore.userRequestModel;
+    List<String> codes = [];
+    for (var elements in userObject!.roles) {
+      switch (elements.code) {
+        case UserRoleCodeEnum.warehouseManager:
+          configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+            for (var ele in projects) {
+              codes.add('${ele.name}.$element.${'WAREHOUSE_MANAGER'}');
+            }
+          });
+
+          break;
+        case UserRoleCodeEnum.registrar:
+          configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+            for (var ele in projects) {
+              codes.add('${ele.name}.$element.${'REGISTRAR'}');
+            }
+          });
+
+          break;
+        case UserRoleCodeEnum.systemAdministrator:
+          configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+            for (var ele in projects) {
+              codes.add('${ele.name}.$element.${'SYSTEM_ADMINISTRATOR'}');
+            }
+          });
+
+          break;
+        case UserRoleCodeEnum.supervisor:
+          configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+            for (var ele in projects) {
+              codes.add('${ele.name}.$element.${'SUPERVISOR'}');
+            }
+          });
+          break;
+        case UserRoleCodeEnum.distributor:
+          configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+            for (var ele in projects) {
+              codes.add('${ele.name}.$element.${'DISTRIBUTOR'}');
+            }
+          });
+          break;
+      }
+    }
+
+    final serviceDefinition = await serviceDefinitionRemoteRepository
+        .search(ServiceDefinitionSearchModel(
+      tenantId: envConfig.variables.tenantId,
+      code: codes,
+    ));
+
+    for (var element in serviceDefinition) {
+      await serviceDefinitionLocalRepository.create(
+        element,
+        createOpLog: false,
+      );
+    }
+  }
+
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
@@ -201,74 +264,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             createOpLog: false,
           );
         }
-        final configs = await isar.appConfigurations.where().findAll();
-        final userObject = await localSecureStore.userRequestModel;
-        List<String> codes = [];
-        for (var elements in userObject!.roles) {
-          switch (elements.code) {
-            case UserRoleCodeEnum.warehouseManager:
-              configs.first.checklistTypes
-                  ?.map((e) => e.code)
-                  .forEach((element) {
-                for (var ele in projects) {
-                  codes.add('${ele.name}.$element.${'WAREHOUSE_MANAGER'}');
-                }
-              });
-
-              break;
-            case UserRoleCodeEnum.registrar:
-              configs.first.checklistTypes
-                  ?.map((e) => e.code)
-                  .forEach((element) {
-                for (var ele in projects) {
-                  codes.add('${ele.name}.$element.${'REGISTRAR'}');
-                }
-              });
-
-              break;
-            case UserRoleCodeEnum.systemAdministrator:
-              configs.first.checklistTypes
-                  ?.map((e) => e.code)
-                  .forEach((element) {
-                for (var ele in projects) {
-                  codes.add('${ele.name}.$element.${'SYSTEM_ADMINISTRATOR'}');
-                }
-              });
-
-              break;
-            case UserRoleCodeEnum.supervisor:
-              configs.first.checklistTypes
-                  ?.map((e) => e.code)
-                  .forEach((element) {
-                for (var ele in projects) {
-                  codes.add('${ele.name}.$element.${'SUPERVISOR'}');
-                }
-              });
-              break;
-            case UserRoleCodeEnum.distributor:
-              configs.first.checklistTypes
-                  ?.map((e) => e.code)
-                  .forEach((element) {
-                for (var ele in projects) {
-                  codes.add('${ele.name}.$element.${'DISTRIBUTOR'}');
-                }
-              });
-              break;
-          }
-        }
-
-        final serviceDefinition = await serviceDefinitionRemoteRepository
-            .search(ServiceDefinitionSearchModel(
-          tenantId: envConfig.variables.tenantId,
-          code: codes,
-        ));
-
-        for (var element in serviceDefinition) {
-          await serviceDefinitionLocalRepository.create(
-            element,
-            createOpLog: false,
-          );
-        }
       }
     }
   }
@@ -278,23 +273,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectEmitter emit,
   ) async {
     final List<BoundaryModel> boundaries =
-        (await boundaryRemoteRepository.search(BoundarySearchModel(
-      boundaryType: event.model.address!.boundaryType,
-      code: event.model.address!.boundaryCode.toString(),
-    )));
+        await boundaryRemoteRepository.search(
+      BoundarySearchModel(
+        boundaryType: event.model.address?.boundaryType,
+        code: event.model.address?.boundaryCode.toString(),
+      ),
+    );
 
     state.maybeMap(
       orElse: () {
         return;
       },
-      fetched: (value) {
-        boundaries.forEach((element) {
-          boundaryLocalRepository.create(
+      fetched: (value) async {
+        for (var element in boundaries) {
+          await boundaryLocalRepository.create(
             element,
             createOpLog: false,
             dataOperation: DataOperation.create,
           );
-        });
+        }
         emit(value.copyWith(selectedProject: event.model));
       },
     );

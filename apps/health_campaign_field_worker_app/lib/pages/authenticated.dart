@@ -264,6 +264,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           BlocProvider(
             create: (_) => LocationBloc(location: Location())
               ..add(const LoadLocationEvent()),
+            lazy: false,
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
