@@ -124,15 +124,17 @@ class CustomValidator {
         : {'Min 2 characters Required': true};
   }
 
-  static Map<String, dynamic>? validMobileNumber(AbstractControl<dynamic> control) {
-    if(control.value == null || control.value.toString().isEmpty){
+  static Map<String, dynamic>? validMobileNumber(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value == null || control.value.toString().isEmpty) {
       return null;
     }
 
-    var parsed = double.tryParse(control.value.toString());
+    String pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
 
-    return parsed != null
-        ? null
-        : {'Mobile number should be numeric': true};
+    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
+
+    return {'mobileNumber': true};
   }
 }

@@ -327,7 +327,9 @@ class _IndividualDetailsPageState
                             ),
                             maxLength: 10,
                             validationMessages: {
-                              'number': (object) => 'Mobile number is invalid',
+                              'mobileNumber': (object) =>
+                                  localizations.translate(i18.individualDetails
+                                      .mobileNumberInvalidFormatValidationMessage),
                             },
                           ),
                         ],
