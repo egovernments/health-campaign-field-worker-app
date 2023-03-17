@@ -1,12 +1,15 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
+import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
+import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -32,6 +35,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _waybillNumberKey = 'waybillNumber';
   static const _waybillQuantityKey = 'waybillQuantity';
   static const _vehicleNumberKey = 'vehicleNumber';
+  static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
 
   FormGroup _form() {
@@ -53,6 +57,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         value: '0',
       ),
       _vehicleNumberKey: FormControl<String>(),
+      _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
     });
   }
@@ -358,6 +363,49 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 .quantityOfProductIndicatedOnWaybillLabel,
                           ),
                           formControlName: _waybillQuantityKey,
+                        ),
+                        BlocBuilder<AppInitializationBloc,
+                            AppInitializationState>(
+                          builder: (context, state) => state.maybeWhen(
+                            orElse: () => const Offstage(),
+                            initialized: (appConfiguration, _) {
+                              final transportTypeOptions =
+                                  appConfiguration.transportTypes ??
+                                      <TransportTypes>[];
+
+                              return DigitDropdown<String>(
+                                isRequired: true,
+                                label: localizations.translate(
+                                  i18.stockDetails.transportTypeLabel,
+                                ),
+                                valueMapper: (e) => e,
+                                onChanged: (value) {
+                                  setState(() {
+                                    form
+                                        .control(_typeOfTransportKey)
+                                        .setValidators(
+                                      [
+                                        if (value == 'DEFAULT')
+                                          Validators.required,
+                                      ],
+                                    );
+                                  });
+                                },
+                                initialValue:
+                                    transportTypeOptions.firstOrNull?.name,
+                                menuItems: transportTypeOptions.map(
+                                  (e) {
+                                    return localizations.translate(e.name);
+                                  },
+                                ).toList(),
+                                formControlName: _typeOfTransportKey,
+                                validationMessages: {
+                                  'required': (object) =>
+                                      'Transport type is required',
+                                },
+                              );
+                            },
+                          ),
                         ),
                         DigitTextFormField(
                           label: localizations.translate(
