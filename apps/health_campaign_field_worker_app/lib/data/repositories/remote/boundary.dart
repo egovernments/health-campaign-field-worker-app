@@ -21,59 +21,6 @@ class BoundaryRemoteRepository
 
   @override
   FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
-    FutureOr<T> executeFuture<T>({
-      required Future<T> Function() future,
-    }) async {
-      try {
-        return await future();
-      } on DioError catch (error) {
-        const encoder = JsonEncoder.withIndent('  ');
-
-        String? errorResponse;
-        String? requestBody;
-
-        debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
-
-        try {
-          errorResponse = encoder.convert(
-            error.response?.data,
-          );
-        } catch (_) {
-          errorResponse = 'Could not parse error';
-        }
-
-        try {
-          requestBody =
-              encoder.convert(error.requestOptions.data['TenantBoundary'][0]);
-        } catch (_) {
-          requestBody = 'Could not parse request body';
-        }
-
-        AppLogger.instance.debug(
-          requestBody,
-          title: runtimeType.toString(),
-        );
-
-        AppLogger.instance.error(
-          message: '${error.error}\n$errorResponse',
-          title: '${runtimeType.toString()} | DIO_ERROR',
-        );
-
-        debugPrint(
-          '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
-        );
-
-        rethrow;
-      } catch (error) {
-        AppLogger.instance.error(
-          message: error.toString(),
-          title: runtimeType.toString(),
-        );
-
-        rethrow;
-      }
-    }
-
     Response response;
     try {
       response = await executeFuture(
@@ -125,39 +72,46 @@ class BoundaryRemoteRepository
         );
       }
 
-      List<BoundaryModel> blist = [];
+      List<BoundaryModel> boundaryModelList = [];
 
       processJsonArray(
-        List jsonArray,
+        List<Map<String, dynamic>> jsonArray,
         int level,
-        String inp,
+        String code,
         String unchanged,
       ) {
-        for (var i = 0; i < jsonArray.length; i++) {
-          final element = jsonArray[i];
+        for (final element in jsonArray) {
           final r = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
 
-          inp = '$inp.${r.code}';
+          code = '$code.${r.code}';
 
           if (List.castFrom(element['children']).isNotEmpty) {
-            element['materializedPath'] = inp;
+            element['materializedPath'] = code;
 
-            blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(element)));
+            boundaryModelList.add(
+              Mapper.fromMap<BoundaryModel>(
+                Map.castFrom(element),
+              ),
+            );
 
-            final r = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
+            final childR = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
 
-            inp = unchanged;
+            code = unchanged;
 
             processJsonArray(
               List.castFrom(element['children']),
               level + 1,
-              '$inp.${r.code}',
+              '$code.${childR.code}',
               unchanged,
             );
           } else if (List.castFrom(element['children']).isEmpty) {
-            element['materializedPath'] = inp;
+            element['materializedPath'] = code;
 
-            blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(element)));
+            boundaryModelList.add(
+              Mapper.fromMap<BoundaryModel>(
+                Map.castFrom(element),
+              ),
+            );
           }
         }
       }
@@ -176,15 +130,68 @@ class BoundaryRemoteRepository
 
         e['materializedPath'] =
             Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString();
-        blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(e)));
+        boundaryModelList.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(e)));
 
         return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
       }).toList();
 
-      print(blist);
+      print(boundaryModelList);
 
-      return blist;
+      return boundaryModelList;
     } on DioError catch (e) {
+      rethrow;
+    }
+  }
+
+  FutureOr<T> executeFuture<T>({
+    required Future<T> Function() future,
+  }) async {
+    try {
+      return await future();
+    } on DioError catch (error) {
+      const encoder = JsonEncoder.withIndent('  ');
+
+      String? errorResponse;
+      String? requestBody;
+
+      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
+
+      try {
+        errorResponse = encoder.convert(
+          error.response?.data,
+        );
+      } catch (_) {
+        errorResponse = 'Could not parse error';
+      }
+
+      try {
+        requestBody =
+            encoder.convert(error.requestOptions.data['TenantBoundary'][0]);
+      } catch (_) {
+        requestBody = 'Could not parse request body';
+      }
+
+      AppLogger.instance.debug(
+        requestBody,
+        title: runtimeType.toString(),
+      );
+
+      AppLogger.instance.error(
+        message: '${error.error}\n$errorResponse',
+        title: '${runtimeType.toString()} | DIO_ERROR',
+      );
+
+      debugPrint(
+        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
+      );
+
+      rethrow;
+    } catch (error) {
+      AppLogger.instance.error(
+        message: error.toString(),
+        title: runtimeType.toString(),
+      );
+
       rethrow;
     }
   }

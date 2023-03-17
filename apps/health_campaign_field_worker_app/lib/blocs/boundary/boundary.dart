@@ -13,6 +13,7 @@ typedef BoundaryEmitter = Emitter<BoundaryState>;
 
 class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   final DataRepository<BoundaryModel, BoundarySearchModel> boundaryRepository;
+
   BoundaryBloc(
     super.initialState, {
     required this.boundaryRepository,
@@ -25,17 +26,17 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
-    print("Event Triggered");
-    List<BoundaryModel> boundaryList =
-        await boundaryRepository.search(BoundarySearchModel(code: 'LC00004'));
-    final codesList = boundaryList
-        .reduce((a, b) =>
-            a.materializedPath!.length > b.materializedPath!.length ? a : b)
-        .materializedPath;
-    print(codesList);
+    List<BoundaryModel> boundaryList = await boundaryRepository.search(
+      BoundarySearchModel(code: 'LC00004'),
+    );
 
-    // boundaryList.forEach((element) {});
-    // final List boundaryMapperList = [];
+    final codesList =
+        boundaryList.where((e) => e.materializedPath != null).reduce(
+      (a, b) {
+        return a.materializedPath!.length > b.materializedPath!.length ? a : b;
+      },
+    ).materializedPath;
+
     final List<String> mapperArray = [];
 
     codesList?.split('.').forEach((e) {
@@ -50,8 +51,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       }
     });
 
-    // print(boundaryMapperList);
-    print(mapperArray.toSet().toList());
     emit(BoundaryFetchedState(
       boundaryList: boundaryList,
       boundaryMapperList: mapperArray.toSet().toList(),
@@ -72,6 +71,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
 @freezed
 class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.search() = BoundarySearchEvent;
+
   const factory BoundaryEvent.select({
     required String selectedBoundary,
   }) = BoundarySelectEvent;
@@ -80,10 +80,12 @@ class BoundaryEvent with _$BoundaryEvent {
 @freezed
 class BoundaryState with _$BoundaryState {
   const factory BoundaryState.loading() = BoundaryLoadingState;
+
   const factory BoundaryState.fetched({
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
     String? selectedBoundary,
   }) = BoundaryFetchedState;
+
   const factory BoundaryState.empty() = BoundaryEmptyState;
 }

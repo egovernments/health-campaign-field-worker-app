@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter_portal/flutter_portal.dart';
+
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/sync/sync.dart';
@@ -16,6 +16,7 @@ import '../widgets/sidebar/side_bar.dart';
 
 class AuthenticatedPageWrapper extends StatefulWidget {
   const AuthenticatedPageWrapper({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return AuthenticatedPageWrapperState();
@@ -55,17 +56,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           return ReactiveFormBuilder(
             form: buildForm,
             builder: (context, form, child) {
-              form.addAll(
-                Map.fromEntries(
-                  boundaryMapperList.map(
-                    (e) => MapEntry(
-                      e,
-                      FormControl<String>(),
-                    ),
-                  ),
-                ),
-              );
-
               return Positioned(
                 top: 100.0,
                 left: 100.0,
@@ -184,26 +174,16 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 onPressed: () {
                   // removeHighlightOverlay();
 
-                  boundaryState.maybeWhen(
+                  boundaryState.whenOrNull(
                     fetched:
                         (value, boundaryMapperList, selectedBoundary) async {
-                      print(selectedBoundary);
-                      await Future.delayed(const Duration(seconds: 3));
                       createHighlightOverlay(
                         alignment: AlignmentDirectional.topCenter,
                         borderColor: Colors.red,
                         boundaryList: value,
                         boundaryMapperList: boundaryMapperList,
                       );
-                      if (selectedBoundary != null) {
-                        // NavigatorState navigator =
-                        //     Navigator.of(context, rootNavigator: true);
-                        // // Add the OverlayEntry to the Overlay.
-                        // navigator.overlay != null;
-                        // removeHighlightOverlay();
-                      }
                     },
-                    orElse: () {},
                   );
                 },
                 child: const Text('Selected Amistrative Area'),

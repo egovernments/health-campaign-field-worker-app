@@ -247,7 +247,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         return;
       },
