@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -26,6 +27,7 @@ class AuthenticatedPageWrapper extends StatefulWidget {
 class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   bool visiable = false;
   String selectedBoundaryValue = '';
+  int random = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,12 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   fetched:
                       (boundaryList, boundaryMapperList, selectedBoundary) {
                     if (boundaryList.isEmpty) return;
+
+                    if (selectedBoundary == null) {
+                      setState(() {
+                        visiable = true;
+                      });
+                    }
                   },
                 );
               },
@@ -56,14 +64,13 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     },
                     fetched:
                         (boundaryList, boundaryMapperList, selectedBoundary) {
-                      return Container(
+                      return DigitCard(
                         margin: EdgeInsets.only(
                           top: kToolbarHeight * 2,
                           left: 8,
                           right: 8,
                           bottom: MediaQuery.of(context).size.height / 2,
                         ),
-                        width: MediaQuery.of(context).size.width,
                         child: ReactiveFormBuilder(
                           form: buildForm,
                           builder: (context, form, child) {
@@ -87,43 +94,59 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                   child: Column(
                                     children: [
                                       ...boundaryMapperList
-                                          .map((e) => DigitDropdown<String>(
-                                                label: e,
-                                                menuItems: boundaryList
-                                                    .where((ele) => form
-                                                                .control(e)
-                                                                .value !=
-                                                            null
-                                                        ? ele.label == e &&
-                                                            ele.name
-                                                                .toString()
-                                                                .contains(form
+                                          .map((e) => StatefulBuilder(
+                                                builder:
+                                                    (contex, setBuiderState) {
+                                                  return DigitDropdown<String>(
+                                                    label: e,
+                                                    menuItems: boundaryList
+                                                        .where((ele) => form
                                                                     .control(e)
-                                                                    .value
-                                                                    .toString())
-                                                        : ele.label == e)
-                                                    .toList()
-                                                    .map((ele) =>
-                                                        ele.name.toString())
-                                                    .toList()
-                                                    .toSet()
-                                                    .toList(),
-                                                formControlName: e,
-                                                valueMapper: (value) => value,
-                                                onChanged: (value) {
-                                                  (boundaryMapperList
-                                                      .forEach((item) {
-                                                    if (e == item) {
-                                                      (form
-                                                          .control(item)
-                                                          .value = value);
-                                                    }
-                                                  }));
+                                                                    .value !=
+                                                                null
+                                                            ? ele.label == e &&
+                                                                ele.name
+                                                                    .toString()
+                                                                    .contains(
+                                                                      form
+                                                                          .control(
+                                                                            e,
+                                                                          )
+                                                                          .value
+                                                                          .toString(),
+                                                                    )
+                                                            : ele.label == e)
+                                                        .toList()
+                                                        .map((ele) =>
+                                                            ele.name.toString())
+                                                        .toList()
+                                                        .toSet()
+                                                        .toList(),
+                                                    formControlName: e,
+                                                    valueMapper: (value) =>
+                                                        value,
+                                                    onChanged: (value) {
+                                                      (boundaryMapperList
+                                                          .forEach((item) {
+                                                        if (e == item) {
+                                                          (form
+                                                              .control(item)
+                                                              .value = value);
+                                                          setBuiderState(() {
+                                                            random = random + 1;
+                                                          });
+                                                        }
+                                                      }));
+                                                    },
+                                                  );
                                                 },
                                               ))
                                           .toList(),
                                       Container(
-                                        margin: const EdgeInsets.all(8),
+                                        margin: const EdgeInsets.only(
+                                          top: 16,
+                                          bottom: 16,
+                                        ),
                                         child: ReactiveFormConsumer(
                                           builder: (context, form, child) =>
                                               DigitElevatedButton(

@@ -27,7 +27,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundaryEmitter emit,
   ) async {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
-      BoundarySearchModel(code: 'LC00004'),
+      BoundarySearchModel(code: event.code),
     );
 
     final codesList =
@@ -41,8 +41,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
 
     codesList?.split('.').forEach((e) {
       if (e.isNotEmpty) {
-        // boundaryMapperList
-        //     .add();
         boundaryList.forEach((element) {
           if (element.code == e) {
             mapperArray.add(element.label.toString());
@@ -62,15 +60,24 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    print(event.selectedBoundary);
-    emit(BoundaryFetchedState(selectedBoundary: event.selectedBoundary));
+    state.maybeMap(
+      orElse: () {},
+      fetched: (value) {
+        emit(value.copyWith(
+          selectedBoundary: event.selectedBoundary,
+        ));
+      },
+      empty: (value) {},
+    );
+
     // handle logic for select here
   }
 }
 
 @freezed
 class BoundaryEvent with _$BoundaryEvent {
-  const factory BoundaryEvent.search() = BoundarySearchEvent;
+  const factory BoundaryEvent.search({required String code}) =
+      BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
     required String selectedBoundary,

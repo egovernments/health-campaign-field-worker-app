@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/boundary/boundary.dart';
+import '../blocs/project/project.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -36,8 +37,6 @@ class _HomePageState extends LocalizedState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    context.read<BoundaryBloc>().add(const BoundarySearchEvent());
 
     return Scaffold(
       body: ScrollableContent(

@@ -87,6 +87,8 @@ class ProjectLocalRepository
                 city: address.city,
                 pincode: address.pincode,
                 type: address.type,
+                boundary: address.boundary,
+                boundaryType: address.boundary,
                 rowVersion: address.rowVersion,
               ),
       );
