@@ -44,4 +44,18 @@ class CustomValidator {
         ? null
         : {'Min 2 characters Required': true};
   }
+
+  static Map<String, dynamic>? validMobileNumber(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value == null || control.value.toString().isEmpty) {
+      return null;
+    }
+
+    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+
+    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
+
+    return {'mobileNumber': true};
+  }
 }
