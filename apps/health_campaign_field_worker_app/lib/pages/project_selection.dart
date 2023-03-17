@@ -64,7 +64,12 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             },
             builder: (context, state) {
               return state.maybeMap(
-                orElse: () => const Center(child: Text('No Projects Assigned')),
+                orElse: () => const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                empty: (_) => const Center(child: Text('No Projects Assigned')),
                 loading: (value) => const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),

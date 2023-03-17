@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recase/recase.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -39,6 +40,8 @@ class _IndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  bool idNumberVisibility = true;
+  List<ValidatorFunction> idNumberValidators = [];
 
   @override
   Widget build(BuildContext context) {
@@ -238,6 +241,8 @@ class _IndividualDetailsPageState
                                   valueMapper: (e) => e,
                                   onChanged: (value) {
                                     setState(() {
+                                      idNumberVisibility = value != 'DEFAULT';
+                                      idNumberValidators = value == 'DEFAULT' ? [Validators.required] : [];
                                       form.control(_idNumberKey).setValidators(
                                         [
                                           if (value == 'DEFAULT')
@@ -261,26 +266,30 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ReactiveFormConsumer(
-                                builder: (context, formGroup, child) {
-                                  return DigitTextFormField(
-                                    isRequired: true,
-                                    formControlName: _idNumberKey,
-                                    label: localizations.translate(
-                                      i18.individualDetails.idNumberLabelText,
-                                    ),
-                                    validationMessages: {
-                                      'required': (object) =>
-                                          'ID Number is required',
-                                    },
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 4),
-                            ],
+                          Visibility(
+                            visible: idNumberVisibility,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ReactiveFormConsumer(
+                                  builder: (context, formGroup, child) {
+                                    formGroup.control(_idNumberKey).setValidators([Validators.required]);
+                                    return DigitTextFormField(
+                                      isRequired: true,
+                                      formControlName: _idNumberKey,
+                                      label: localizations.translate(
+                                        i18.individualDetails.idNumberLabelText,
+                                      ),
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            'ID Number is required',
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            ),
                           ),
                           DigitDobPicker(
                             datePickerFormControl: _dobKey,
