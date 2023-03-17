@@ -160,6 +160,9 @@ class IndividualDetails {
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
+
+  String get mobileNumberInvalidFormatValidationMessage =>
+      'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
 }
 
 class HouseholdLocation {
