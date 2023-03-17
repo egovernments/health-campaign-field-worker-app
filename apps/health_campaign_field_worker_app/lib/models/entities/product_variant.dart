@@ -30,7 +30,6 @@ class ProductVariantModel extends EntityModel {
 
   static const schemaName = 'ProductVariant';
 
-  final ProductVariantAdditionalFields? additionalFields;
   final String id;
   final String? productId;
   final String? sku;
@@ -38,7 +37,7 @@ class ProductVariantModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProductVariantAdditionalFields? additionalFields;
 
   ProductVariantModel({
     this.additionalFields,
@@ -58,7 +57,7 @@ class ProductVariantModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       productId: Value(productId),
       sku: Value(sku),

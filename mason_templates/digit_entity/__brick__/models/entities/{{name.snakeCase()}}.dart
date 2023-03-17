@@ -30,11 +30,10 @@ class {{name.pascalCase()}}Model extends EntityModel {
 
   static const schemaName = '{{name.pascalCase()}}';
 
-  final {{name.pascalCase()}}AdditionalFields? additionalFields;
   {{#attributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/includeForEntity}}{{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
-  {{/dateTimeAttributes}}
+  {{/dateTimeAttributes}}final {{name.pascalCase()}}AdditionalFields? additionalFields;
 
   {{name.pascalCase()}}Model({
     this.additionalFields,
@@ -56,7 +55,7 @@ class {{name.pascalCase()}}Model extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       {{#sqlAttributes}}{{#includeForEntity}}{{#includeForTable}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
       {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.{{pkName}}),
     {{/references}}{{/referenceAttributes}});

@@ -22,7 +22,6 @@ class TargetModel extends EntityModel {
 
   static const schemaName = 'Target';
 
-  final TargetAdditionalFields? additionalFields;
   final String id;
   final String? beneficiaryType;
   final String? baseline;
@@ -30,7 +29,7 @@ class TargetModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final TargetAdditionalFields? additionalFields;
 
   TargetModel({
     this.additionalFields,
@@ -50,7 +49,7 @@ class TargetModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),

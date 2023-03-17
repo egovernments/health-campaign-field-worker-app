@@ -24,7 +24,6 @@ class TaskResourceModel extends EntityModel {
 
   static const schemaName = 'TaskResource';
 
-  final TaskResourceAdditionalFields? additionalFields;
   final String clientReferenceId;
   final String? taskId;
   final String? id;
@@ -35,7 +34,7 @@ class TaskResourceModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final TaskResourceAdditionalFields? additionalFields;
 
   TaskResourceModel({
     this.additionalFields,
@@ -58,7 +57,7 @@ class TaskResourceModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       clientReferenceId: Value(clientReferenceId),
       taskId: Value(taskId),
       id: Value(id),

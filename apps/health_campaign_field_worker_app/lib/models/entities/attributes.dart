@@ -38,7 +38,6 @@ class AttributesModel extends EntityModel {
 
   static const schemaName = 'Attributes';
 
-  final AttributesAdditionalFields? additionalFields;
   final String? id;
   final String? dataType;
   final String? referenceId;
@@ -51,7 +50,7 @@ class AttributesModel extends EntityModel {
   final int? order;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final AttributesAdditionalFields? additionalFields;
 
   AttributesModel({
     this.additionalFields,
@@ -76,7 +75,7 @@ class AttributesModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),

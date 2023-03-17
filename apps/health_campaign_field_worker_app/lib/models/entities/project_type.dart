@@ -24,7 +24,6 @@ class ProjectTypeModel extends EntityModel {
 
   static const schemaName = 'ProjectType';
 
-  final ProjectTypeAdditionalFields? additionalFields;
   final String? id;
   final String? name;
   final String? code;
@@ -37,7 +36,7 @@ class ProjectTypeModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final List<ProjectProductVariantModel>? resources;
-  
+  final ProjectTypeAdditionalFields? additionalFields;
 
   ProjectTypeModel({
     this.additionalFields,
@@ -62,7 +61,7 @@ class ProjectTypeModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       name: Value(name),
       code: Value(code),

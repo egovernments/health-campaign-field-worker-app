@@ -38,7 +38,6 @@ class StockReconciliationModel extends EntityModel {
 
   static const schemaName = 'StockReconciliation';
 
-  final StockReconciliationAdditionalFields? additionalFields;
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -52,7 +51,7 @@ class StockReconciliationModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfReconciliationTime;
-  
+  final StockReconciliationAdditionalFields? additionalFields;
 
   StockReconciliationModel({
     this.additionalFields,
@@ -82,7 +81,7 @@ class StockReconciliationModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),

@@ -68,7 +68,6 @@ class TaskModel extends EntityModel {
 
   static const schemaName = 'Task';
 
-  final TaskAdditionalFields? additionalFields;
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
@@ -86,7 +85,7 @@ class TaskModel extends EntityModel {
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
-  
+  final TaskAdditionalFields? additionalFields;
 
   TaskModel({
     this.additionalFields,
@@ -146,7 +145,7 @@ class TaskModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),

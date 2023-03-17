@@ -42,7 +42,6 @@ class StockModel extends EntityModel {
 
   static const schemaName = 'Stock';
 
-  final StockAdditionalFields? additionalFields;
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -58,7 +57,7 @@ class StockModel extends EntityModel {
   final int? rowVersion;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
-  
+  final StockAdditionalFields? additionalFields;
 
   StockModel({
     this.additionalFields,
@@ -86,7 +85,7 @@ class StockModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),

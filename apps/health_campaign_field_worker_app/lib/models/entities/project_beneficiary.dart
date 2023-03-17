@@ -40,7 +40,6 @@ class ProjectBeneficiaryModel extends EntityModel {
 
   static const schemaName = 'ProjectBeneficiary';
 
-  final ProjectBeneficiaryAdditionalFields? additionalFields;
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
@@ -50,7 +49,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfRegistrationTime;
-  
+  final ProjectBeneficiaryAdditionalFields? additionalFields;
 
   ProjectBeneficiaryModel({
     this.additionalFields,
@@ -76,7 +75,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),

@@ -30,7 +30,6 @@ class FacilityModel extends EntityModel {
 
   static const schemaName = 'Facility';
 
-  final FacilityAdditionalFields? additionalFields;
   final String id;
   final bool? isPermanent;
   final String? usage;
@@ -39,7 +38,7 @@ class FacilityModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  
+  final FacilityAdditionalFields? additionalFields;
 
   FacilityModel({
     this.additionalFields,
@@ -60,7 +59,7 @@ class FacilityModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       isPermanent: Value(isPermanent),
       usage: Value(usage),

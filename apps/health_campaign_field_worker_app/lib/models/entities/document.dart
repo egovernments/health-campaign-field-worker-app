@@ -24,7 +24,6 @@ class DocumentModel extends EntityModel {
 
   static const schemaName = 'Document';
 
-  final DocumentAdditionalFields? additionalFields;
   final String? id;
   final String? documentType;
   final String? fileStoreId;
@@ -33,7 +32,7 @@ class DocumentModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final DocumentAdditionalFields? additionalFields;
 
   DocumentModel({
     this.additionalFields,
@@ -54,7 +53,7 @@ class DocumentModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),

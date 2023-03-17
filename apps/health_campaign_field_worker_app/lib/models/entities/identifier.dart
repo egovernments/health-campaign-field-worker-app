@@ -28,7 +28,6 @@ class IdentifierModel extends EntityModel {
 
   static const schemaName = 'Identifier';
 
-  final IdentifierAdditionalFields? additionalFields;
   final String? id;
   final String? individualClientReferenceId;
   final String? identifierType;
@@ -36,7 +35,7 @@ class IdentifierModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final IdentifierAdditionalFields? additionalFields;
 
   IdentifierModel({
     this.additionalFields,
@@ -56,7 +55,7 @@ class IdentifierModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),

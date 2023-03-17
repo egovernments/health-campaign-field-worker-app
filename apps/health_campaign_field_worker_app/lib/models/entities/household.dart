@@ -28,7 +28,6 @@ class HouseholdModel extends EntityModel {
 
   static const schemaName = 'Household';
 
-  final HouseholdAdditionalFields? additionalFields;
   final String? id;
   final int? memberCount;
   final String clientReferenceId;
@@ -36,7 +35,7 @@ class HouseholdModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  
+  final HouseholdAdditionalFields? additionalFields;
 
   HouseholdModel({
     this.additionalFields,
@@ -56,7 +55,7 @@ class HouseholdModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       memberCount: Value(memberCount),
       clientReferenceId: Value(clientReferenceId),

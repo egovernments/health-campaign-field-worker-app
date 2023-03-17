@@ -24,7 +24,6 @@ class ServiceAttributesModel extends EntityModel {
 
   static const schemaName = 'ServiceAttributes';
 
-  final ServiceAttributesAdditionalFields? additionalFields;
   final String? attributeCode;
   final dynamic? value;
   final String? dataType;
@@ -34,7 +33,7 @@ class ServiceAttributesModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ServiceAttributesAdditionalFields? additionalFields;
 
   ServiceAttributesModel({
     this.additionalFields,
@@ -56,7 +55,7 @@ class ServiceAttributesModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),

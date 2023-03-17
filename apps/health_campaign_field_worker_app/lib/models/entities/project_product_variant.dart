@@ -24,14 +24,13 @@ class ProjectProductVariantModel extends EntityModel {
 
   static const schemaName = 'ProjectProductVariant';
 
-  final ProjectProductVariantAdditionalFields? additionalFields;
   final String productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProjectProductVariantAdditionalFields? additionalFields;
 
   ProjectProductVariantModel({
     this.additionalFields,
@@ -50,7 +49,7 @@ class ProjectProductVariantModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       productVariantId: Value(productVariantId),
       type: Value(type),
       isBaseUnitVariant: Value(isBaseUnitVariant),

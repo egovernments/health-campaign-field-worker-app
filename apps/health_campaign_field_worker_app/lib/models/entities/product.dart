@@ -32,7 +32,6 @@ class ProductModel extends EntityModel {
 
   static const schemaName = 'Product';
 
-  final ProductAdditionalFields? additionalFields;
   final String? id;
   final String? type;
   final String? name;
@@ -41,7 +40,7 @@ class ProductModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProductAdditionalFields? additionalFields;
 
   ProductModel({
     this.additionalFields,
@@ -62,7 +61,7 @@ class ProductModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       type: Value(type),
       name: Value(name),

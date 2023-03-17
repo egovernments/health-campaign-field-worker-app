@@ -24,7 +24,6 @@ class AddressModel extends EntityModel {
 
   static const schemaName = 'Address';
 
-  final AddressAdditionalFields? additionalFields;
   final String? id;
   final String? relatedClientReferenceId;
   final String? doorNo;
@@ -42,7 +41,7 @@ class AddressModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final AddressType? type;
-  
+  final AddressAdditionalFields? additionalFields;
 
   AddressModel({
     this.additionalFields,
@@ -72,7 +71,7 @@ class AddressModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),

@@ -34,7 +34,6 @@ class IndividualModel extends EntityModel {
 
   static const schemaName = 'Individual';
 
-  final IndividualAdditionalFields? additionalFields;
   final String? id;
   final String? userId;
   final String? dateOfBirth;
@@ -53,7 +52,7 @@ class IndividualModel extends EntityModel {
   final List<AddressModel>? address;
   final Gender? gender;
   final List<IdentifierModel>? identifiers;
-  
+  final IndividualAdditionalFields? additionalFields;
 
   IndividualModel({
     this.additionalFields,
@@ -84,7 +83,7 @@ class IndividualModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),

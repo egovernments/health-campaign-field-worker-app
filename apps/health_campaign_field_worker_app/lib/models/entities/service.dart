@@ -32,7 +32,6 @@ class ServiceModel extends EntityModel {
 
   static const schemaName = 'Service';
 
-  final ServiceAdditionalFields? additionalFields;
   final String? id;
   final String? clientId;
   final String? serviceDefId;
@@ -44,7 +43,7 @@ class ServiceModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final List<ServiceAttributesModel>? attributes;
-  
+  final ServiceAdditionalFields? additionalFields;
 
   ServiceModel({
     this.additionalFields,
@@ -68,7 +67,7 @@ class ServiceModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toString()),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       clientId: Value(clientId),
       serviceDefId: Value(serviceDefId),

@@ -5,7 +5,8 @@ analyzer:
     - records
   exclude:
     - build/**
-    - "**/*.g.dart"
+    - "**/*.gr.dart"
+    - "**/*.freezed.dart"
   errors:
     invalid_annotation_target: ignore
   plugins:
