@@ -374,21 +374,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       <TransportTypes>[];
 
                               return DigitDropdown<String>(
-                                isRequired: true,
+                                isRequired: false,
                                 label: localizations.translate(
                                   i18.stockDetails.transportTypeLabel,
                                 ),
                                 valueMapper: (e) => e,
                                 onChanged: (value) {
                                   setState(() {
-                                    form
-                                        .control(_typeOfTransportKey)
-                                        .setValidators(
-                                      [
-                                        if (value == 'DEFAULT')
-                                          Validators.required,
-                                      ],
-                                    );
+                                    form.control(_typeOfTransportKey);
                                   });
                                 },
                                 initialValue:
@@ -399,10 +392,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   },
                                 ).toList(),
                                 formControlName: _typeOfTransportKey,
-                                validationMessages: {
-                                  'required': (object) =>
-                                      'Transport type is required',
-                                },
                               );
                             },
                           ),
