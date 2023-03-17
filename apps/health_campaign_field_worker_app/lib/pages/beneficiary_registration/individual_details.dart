@@ -326,6 +326,11 @@ class _IndividualDetailsPageState
                               i18.individualDetails.mobileNumberLabelText,
                             ),
                             maxLength: 10,
+                            validationMessages: {
+                              'mobileNumber': (object) =>
+                                  localizations.translate(i18.individualDetails
+                                      .mobileNumberInvalidFormatValidationMessage),
+                            },
                           ),
                         ],
                       ),
@@ -458,6 +463,9 @@ class _IndividualDetailsPageState
       ),
       _mobileNumberKey: FormControl<String>(
         value: individual?.mobileNumber,
+        validators: [
+          CustomValidator.validMobileNumber,
+        ],
       ),
     });
   }
