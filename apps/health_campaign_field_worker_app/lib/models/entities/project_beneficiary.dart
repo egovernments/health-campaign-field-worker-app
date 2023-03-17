@@ -37,6 +37,9 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectBeneficiaryModel extends EntityModel {
+
+  static const schemaName = 'ProjectBeneficiary';
+
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
@@ -59,6 +62,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.rowVersion,
     required int dateOfRegistration,
     super.auditDetails,
+    super.additionalFields,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
        super();
 
@@ -71,6 +75,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),

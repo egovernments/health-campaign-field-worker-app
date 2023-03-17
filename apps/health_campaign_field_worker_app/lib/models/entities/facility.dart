@@ -27,6 +27,9 @@ class FacilitySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class FacilityModel extends EntityModel {
+
+  static const schemaName = 'Facility';
+
   final String id;
   final bool? isPermanent;
   final String? usage;
@@ -47,6 +50,7 @@ class FacilityModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   FacilityCompanion get companion {
@@ -55,6 +59,7 @@ class FacilityModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       isPermanent: Value(isPermanent),
       usage: Value(usage),

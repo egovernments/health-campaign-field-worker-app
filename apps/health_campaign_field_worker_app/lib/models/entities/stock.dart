@@ -39,6 +39,9 @@ class StockSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class StockModel extends EntityModel {
+
+  static const schemaName = 'Stock';
+
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -73,6 +76,7 @@ class StockModel extends EntityModel {
     this.transactionType,
     this.transactionReason,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   StockCompanion get companion {
@@ -81,6 +85,7 @@ class StockModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),

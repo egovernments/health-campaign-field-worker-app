@@ -31,6 +31,9 @@ class IndividualSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class IndividualModel extends EntityModel {
+
+  static const schemaName = 'Individual';
+
   final String? id;
   final String? userId;
   final String? dateOfBirth;
@@ -71,6 +74,7 @@ class IndividualModel extends EntityModel {
     this.gender,
     this.identifiers,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   IndividualCompanion get companion {
@@ -79,6 +83,7 @@ class IndividualModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),

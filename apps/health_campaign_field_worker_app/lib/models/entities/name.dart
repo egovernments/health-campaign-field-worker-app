@@ -27,6 +27,9 @@ class NameSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class NameModel extends EntityModel {
+
+  static const schemaName = 'Name';
+
   final String? id;
   final String? individualClientReferenceId;
   final String? givenName;
@@ -47,6 +50,7 @@ class NameModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   NameCompanion get companion {
@@ -55,6 +59,7 @@ class NameModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       givenName: Value(givenName),

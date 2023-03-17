@@ -21,6 +21,9 @@ class AddressSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class AddressModel extends EntityModel {
+
+  static const schemaName = 'Address';
+
   final String? id;
   final String? relatedClientReferenceId;
   final String? doorNo;
@@ -59,6 +62,7 @@ class AddressModel extends EntityModel {
     this.rowVersion,
     this.type,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   AddressCompanion get companion {
@@ -67,6 +71,7 @@ class AddressModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),

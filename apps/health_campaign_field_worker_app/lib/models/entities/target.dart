@@ -19,6 +19,9 @@ class TargetSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TargetModel extends EntityModel {
+
+  static const schemaName = 'Target';
+
   final String id;
   final String? beneficiaryType;
   final String? baseline;
@@ -37,6 +40,7 @@ class TargetModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   TargetCompanion get companion {
@@ -45,6 +49,7 @@ class TargetModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),

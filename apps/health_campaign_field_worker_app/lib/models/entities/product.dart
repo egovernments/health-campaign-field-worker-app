@@ -29,6 +29,9 @@ class ProductSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProductModel extends EntityModel {
+
+  static const schemaName = 'Product';
+
   final String? id;
   final String? type;
   final String? name;
@@ -49,6 +52,7 @@ class ProductModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   ProductCompanion get companion {
@@ -57,6 +61,7 @@ class ProductModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       type: Value(type),
       name: Value(name),

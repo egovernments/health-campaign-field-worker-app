@@ -27,6 +27,9 @@ class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class {{name.pascalCase()}}Model extends EntityModel {
+
+  static const schemaName = '{{name.pascalCase()}}';
+
   {{#attributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/includeForEntity}}{{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
   {{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
@@ -37,6 +40,7 @@ class {{name.pascalCase()}}Model extends EntityModel {
     {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
+    super.additionalFields,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
@@ -51,6 +55,7 @@ class {{name.pascalCase()}}Model extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       {{#sqlAttributes}}{{#includeForEntity}}{{#includeForTable}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
       {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.{{pkName}}),
     {{/references}}{{/referenceAttributes}});

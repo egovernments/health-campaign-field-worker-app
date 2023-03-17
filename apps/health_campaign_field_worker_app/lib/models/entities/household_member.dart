@@ -33,6 +33,9 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class HouseholdMemberModel extends EntityModel {
+
+  static const schemaName = 'HouseholdMember';
+
   final String? id;
   final String? householdId;
   final String? householdClientReferenceId;
@@ -57,6 +60,7 @@ class HouseholdMemberModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   HouseholdMemberCompanion get companion {
@@ -65,6 +69,7 @@ class HouseholdMemberModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       householdId: Value(householdId),
       householdClientReferenceId: Value(householdClientReferenceId),

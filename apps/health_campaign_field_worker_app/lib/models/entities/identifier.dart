@@ -25,6 +25,9 @@ class IdentifierSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class IdentifierModel extends EntityModel {
+
+  static const schemaName = 'Identifier';
+
   final String? id;
   final String? individualClientReferenceId;
   final String? identifierType;
@@ -43,6 +46,7 @@ class IdentifierModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   IdentifierCompanion get companion {
@@ -51,6 +55,7 @@ class IdentifierModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),

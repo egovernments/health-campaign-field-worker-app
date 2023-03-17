@@ -21,6 +21,9 @@ class ProjectProductVariantSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectProductVariantModel extends EntityModel {
+
+  static const schemaName = 'ProjectProductVariant';
+
   final String productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
@@ -37,6 +40,7 @@ class ProjectProductVariantModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   ProjectProductVariantCompanion get companion {
@@ -45,6 +49,7 @@ class ProjectProductVariantModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       productVariantId: Value(productVariantId),
       type: Value(type),
       isBaseUnitVariant: Value(isBaseUnitVariant),

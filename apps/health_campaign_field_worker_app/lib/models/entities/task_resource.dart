@@ -21,6 +21,9 @@ class TaskResourceSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel {
+
+  static const schemaName = 'TaskResource';
+
   final String clientReferenceId;
   final String? taskId;
   final String? id;
@@ -45,6 +48,7 @@ class TaskResourceModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   TaskResourceCompanion get companion {
@@ -53,6 +57,7 @@ class TaskResourceModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       clientReferenceId: Value(clientReferenceId),
       taskId: Value(taskId),
       id: Value(id),

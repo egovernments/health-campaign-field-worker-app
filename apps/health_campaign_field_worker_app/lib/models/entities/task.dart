@@ -65,6 +65,9 @@ class TaskSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TaskModel extends EntityModel {
+
+  static const schemaName = 'Task';
+
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
@@ -103,6 +106,7 @@ class TaskModel extends EntityModel {
     int? actualEndDate,
     int? createdDate,
     super.auditDetails,
+    super.additionalFields,
   }): plannedStartDateTime = plannedStartDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
@@ -141,6 +145,7 @@ class TaskModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),

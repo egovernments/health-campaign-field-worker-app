@@ -21,6 +21,9 @@ class ProjectTypeSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectTypeModel extends EntityModel {
+
+  static const schemaName = 'ProjectType';
+
   final String? id;
   final String? name;
   final String? code;
@@ -49,6 +52,7 @@ class ProjectTypeModel extends EntityModel {
     this.rowVersion,
     this.resources,
     super.auditDetails,
+    super.additionalFields,
   }):  super();
 
   ProjectTypeCompanion get companion {
@@ -57,6 +61,7 @@ class ProjectTypeModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toString()),
       id: Value(id),
       name: Value(name),
       code: Value(code),
