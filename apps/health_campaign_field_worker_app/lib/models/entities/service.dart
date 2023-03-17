@@ -59,7 +59,11 @@ class ServiceModel extends EntityModel {
     this.attributes,
     super.auditDetails,
     ServiceAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   ServiceCompanion get companion {
     return ServiceCompanion(
@@ -82,6 +86,7 @@ class ServiceModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ServiceAdditionalFields extends AdditionalFields {
   ServiceAdditionalFields({
     super.schema = 'Service',

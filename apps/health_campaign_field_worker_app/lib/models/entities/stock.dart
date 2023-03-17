@@ -77,7 +77,11 @@ class StockModel extends EntityModel {
     this.transactionReason,
     super.auditDetails,
     StockAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   StockCompanion get companion {
     return StockCompanion(
@@ -105,6 +109,7 @@ class StockModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class StockAdditionalFields extends AdditionalFields {
   StockAdditionalFields({
     super.schema = 'Stock',

@@ -103,7 +103,11 @@ class ProjectModel extends EntityModel {
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-       super(additionalFields: additionalFields);
+      super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -138,6 +142,7 @@ class ProjectModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ProjectAdditionalFields extends AdditionalFields {
   ProjectAdditionalFields({
     super.schema = 'Project',

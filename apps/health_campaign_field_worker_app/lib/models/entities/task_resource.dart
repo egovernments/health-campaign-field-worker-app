@@ -49,7 +49,11 @@ class TaskResourceModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     TaskResourceAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -72,6 +76,7 @@ class TaskResourceModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class TaskResourceAdditionalFields extends AdditionalFields {
   TaskResourceAdditionalFields({
     super.schema = 'TaskResource',

@@ -43,7 +43,11 @@ class ProjectResourceModel extends EntityModel {
     required this.resource,
     super.auditDetails,
     ProjectResourceAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   ProjectResourceCompanion get companion {
     return ProjectResourceCompanion(
@@ -62,6 +66,7 @@ class ProjectResourceModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ProjectResourceAdditionalFields extends AdditionalFields {
   ProjectResourceAdditionalFields({
     super.schema = 'ProjectResource',

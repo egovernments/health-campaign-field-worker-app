@@ -47,7 +47,11 @@ class HouseholdModel extends EntityModel {
     this.address,
     super.auditDetails,
     HouseholdAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
@@ -66,6 +70,7 @@ class HouseholdModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class HouseholdAdditionalFields extends AdditionalFields {
   HouseholdAdditionalFields({
     super.schema = 'Household',

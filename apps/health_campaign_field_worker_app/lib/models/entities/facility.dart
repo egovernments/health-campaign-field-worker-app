@@ -51,7 +51,11 @@ class FacilityModel extends EntityModel {
     this.address,
     super.auditDetails,
     FacilityAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   FacilityCompanion get companion {
     return FacilityCompanion(
@@ -71,6 +75,7 @@ class FacilityModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class FacilityAdditionalFields extends AdditionalFields {
   FacilityAdditionalFields({
     super.schema = 'Facility',

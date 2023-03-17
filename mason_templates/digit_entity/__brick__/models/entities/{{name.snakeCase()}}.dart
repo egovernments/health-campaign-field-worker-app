@@ -44,7 +44,11 @@ class {{name.pascalCase()}}Model extends EntityModel {
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-      {{/dateTimeAttributes}} super(additionalFields: additionalFields);{{#dateTimeAttributes}}
+      {{/dateTimeAttributes}}super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));{{#dateTimeAttributes}}
 
   int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}}.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
@@ -62,6 +66,7 @@ class {{name.pascalCase()}}Model extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class {{name.pascalCase()}}AdditionalFields extends AdditionalFields {
   {{name.pascalCase()}}AdditionalFields({
     super.schema = '{{name.pascalCase()}}',

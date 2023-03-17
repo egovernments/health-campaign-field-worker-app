@@ -67,7 +67,11 @@ class AttributesModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     AttributesAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   AttributesCompanion get companion {
     return AttributesCompanion(
@@ -92,6 +96,7 @@ class AttributesModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class AttributesAdditionalFields extends AdditionalFields {
   AttributesAdditionalFields({
     super.schema = 'Attributes',

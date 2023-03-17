@@ -215,6 +215,32 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     createdTime:
                                         context.millisecondsSinceEpoch(),
                                   ),
+                                  additionalFields: [
+                                    waybillQuantity,
+                                    vehicleNumber,
+                                    comments,
+                                  ].any((element) => element != null)
+                                      ? StockAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            if (waybillQuantity != null)
+                                              AdditionalField(
+                                                'waybill_quantity',
+                                                waybillQuantity,
+                                              ),
+                                            if (vehicleNumber != null)
+                                              AdditionalField(
+                                                'vehicle_number',
+                                                vehicleNumber,
+                                              ),
+                                            if (comments != null)
+                                              AdditionalField(
+                                                'comments',
+                                                comments,
+                                              ),
+                                          ],
+                                        )
+                                      : null,
                                 );
 
                                 bloc.add(

@@ -122,7 +122,11 @@ class TaskModel extends EntityModel {
       createdDateTime = createdDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
-       super(additionalFields: additionalFields);
+      super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   
@@ -165,6 +169,7 @@ class TaskModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class TaskAdditionalFields extends AdditionalFields {
   TaskAdditionalFields({
     super.schema = 'Task',

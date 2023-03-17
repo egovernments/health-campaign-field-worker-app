@@ -64,7 +64,11 @@ class ProjectBeneficiaryModel extends EntityModel {
     super.auditDetails,
     ProjectBeneficiaryAdditionalFields? additionalFields,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-       super(additionalFields: additionalFields);
+      super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
   
@@ -89,6 +93,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ProjectBeneficiaryAdditionalFields extends AdditionalFields {
   ProjectBeneficiaryAdditionalFields({
     super.schema = 'ProjectBeneficiary',

@@ -70,7 +70,11 @@ class StockReconciliationModel extends EntityModel {
     super.auditDetails,
     StockReconciliationAdditionalFields? additionalFields,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
-       super(additionalFields: additionalFields);
+      super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
   
@@ -99,6 +103,7 @@ class StockReconciliationModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class StockReconciliationAdditionalFields extends AdditionalFields {
   StockReconciliationAdditionalFields({
     super.schema = 'StockReconciliation',

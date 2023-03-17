@@ -75,7 +75,11 @@ class IndividualModel extends EntityModel {
     this.identifiers,
     super.auditDetails,
     IndividualAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   IndividualCompanion get companion {
     return IndividualCompanion(
@@ -103,6 +107,7 @@ class IndividualModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class IndividualAdditionalFields extends AdditionalFields {
   IndividualAdditionalFields({
     super.schema = 'Individual',

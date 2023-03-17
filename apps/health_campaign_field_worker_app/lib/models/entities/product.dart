@@ -53,7 +53,11 @@ class ProductModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     ProductAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   ProductCompanion get companion {
     return ProductCompanion(
@@ -74,6 +78,7 @@ class ProductModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ProductAdditionalFields extends AdditionalFields {
   ProductAdditionalFields({
     super.schema = 'Product',

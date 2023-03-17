@@ -47,7 +47,11 @@ class IdentifierModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     IdentifierAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
@@ -67,6 +71,7 @@ class IdentifierModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class IdentifierAdditionalFields extends AdditionalFields {
   IdentifierAdditionalFields({
     super.schema = 'Identifier',

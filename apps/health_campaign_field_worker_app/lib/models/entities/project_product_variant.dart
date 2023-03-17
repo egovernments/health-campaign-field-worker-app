@@ -41,7 +41,11 @@ class ProjectProductVariantModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     ProjectProductVariantAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(
@@ -60,6 +64,7 @@ class ProjectProductVariantModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class ProjectProductVariantAdditionalFields extends AdditionalFields {
   ProjectProductVariantAdditionalFields({
     super.schema = 'ProjectProductVariant',

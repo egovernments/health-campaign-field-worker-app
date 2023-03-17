@@ -45,7 +45,11 @@ class DocumentModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     DocumentAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   DocumentCompanion get companion {
     return DocumentCompanion(
@@ -66,6 +70,7 @@ class DocumentModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class DocumentAdditionalFields extends AdditionalFields {
   DocumentAdditionalFields({
     super.schema = 'Document',

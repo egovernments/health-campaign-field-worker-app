@@ -61,7 +61,11 @@ class HouseholdMemberModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     HouseholdMemberAdditionalFields? additionalFields,
-  }):  super(additionalFields: additionalFields);
+  }): super(additionalFields: additionalFields == null
+          ? null
+          : Mapper.fromMap<AdditionalFields>(
+            additionalFields.toMap(),
+          ));
 
   HouseholdMemberCompanion get companion {
     return HouseholdMemberCompanion(
@@ -84,6 +88,7 @@ class HouseholdMemberModel extends EntityModel {
   }
 }
 
+@MappableClass(ignoreNull: true)
 class HouseholdMemberAdditionalFields extends AdditionalFields {
   HouseholdMemberAdditionalFields({
     super.schema = 'HouseholdMember',
