@@ -56,11 +56,16 @@ abstract class EntityModel extends DataModel {
   });
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 abstract class EntitySearchModel extends DataModel {
   final AuditDetails? auditDetails;
+  final AdditionalFields? additionalFields;
 
-  const EntitySearchModel({super.boundaryCode, this.auditDetails});
+  const EntitySearchModel({
+    super.boundaryCode,
+    this.auditDetails,
+    this.additionalFields,
+  });
 }
 
 @MappableClass()
