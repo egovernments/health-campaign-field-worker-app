@@ -9,15 +9,15 @@ import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
-import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
+import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
+import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../../../widgets/project_component_wrapper/project_component_wrapper.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
   const StockReconciliationPage({
@@ -59,7 +59,6 @@ class _StockReconciliationPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final networkManager = context.read<NetworkManager>();
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
@@ -87,11 +86,11 @@ class _StockReconciliationPageState
               child: ProductVariantBlocWrapper(
                 child: BlocProvider(
                   create: (context) => StockReconciliationBloc(
-                    stockRepository: networkManager
-                        .repository<StockModel, StockSearchModel>(context),
-                    stockReconciliationRepository: networkManager.repository<
+                    stockRepository:
+                        context.repository<StockModel, StockSearchModel>(),
+                    stockReconciliationRepository: context.repository<
                         StockReconciliationModel,
-                        StockReconciliationSearchModel>(context),
+                        StockReconciliationSearchModel>(),
                     StockReconciliationState(
                       projectId: projectId,
                       dateOfReconciliation: DateTime.now(),
