@@ -17,8 +17,6 @@ class ServiceLocalRepository
     bool createOpLog = true,
     DataOperation dataOperation = DataOperation.singleCreate,
   }) async {
-    print(entity);
-    print("----");
     final serviceCompanion = entity.companion;
     final attributes = entity.attributes;
     await sql.batch((batch) {

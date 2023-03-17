@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
+import '../../utils/extensions/extensions.dart';
 
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
   final BeneficiaryRegistrationState initialState;
@@ -16,18 +16,17 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final networkManager = context.read<NetworkManager>();
-    final individual = networkManager
-        .repository<IndividualModel, IndividualSearchModel>(context);
+    final individual =
+        context.repository<IndividualModel, IndividualSearchModel>();
 
-    final household = networkManager
-        .repository<HouseholdModel, HouseholdSearchModel>(context);
+    final household =
+        context.repository<HouseholdModel, HouseholdSearchModel>();
 
-    final householdMember = networkManager
-        .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context);
+    final householdMember =
+        context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>();
 
-    final projectBeneficiary = networkManager.repository<
-        ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context);
+    final projectBeneficiary = context
+        .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>();
 
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(

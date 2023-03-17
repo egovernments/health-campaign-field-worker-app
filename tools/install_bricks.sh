@@ -23,3 +23,4 @@ echo "$PWD"
 
 melos clean
 melos bootstrap
+melos analyze

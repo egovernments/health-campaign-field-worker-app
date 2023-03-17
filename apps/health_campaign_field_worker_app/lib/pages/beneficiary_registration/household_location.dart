@@ -61,7 +61,6 @@ class _HouseholdLocationPageState
                 ? false
                 : true;
           },
-          bloc: context.read<LocationBloc>()..add(const LoadLocationEvent()),
           child: BlocBuilder<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
             builder: (context, registrationState) {

@@ -85,8 +85,6 @@ class IndividualLocalRepository
           ))
         .get();
 
-    print(results.length);
-
     return results
         .map((e) {
           final individual = e.readTable(sql.individual);
