@@ -16,10 +16,12 @@ typedef LocationStateEmitter = Emitter<LocationState>;
 /// macOS - <https://docs.page/Lyokone/flutterlocation/installation/macos>
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final Location location;
+
   LocationBloc({required this.location}) : super(const LocationState()) {
     on<LoadLocationEvent>(_handleLoadLocation);
     on<RequestLocationPermissionEvent>(_handleRequestPermission);
     on<RequestLocationServiceEvent>(_handleRequestService);
+    on<LocationSetLatLngEvent>(_handleSetLatLng);
   }
 
   FutureOr<void> _handleRequestPermission(
@@ -99,25 +101,38 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         throw Exception('Location services are not enabled');
       }
 
-      final locationData = await location.getLocation();
-      if ([
-        locationData.latitude,
-        locationData.longitude,
-      ].any((element) => element == null)) {
-        throw Exception('Could not fetch location data');
-      }
+      location.onLocationChanged.listen((locationData) {
+        add(LocationSetLatLngEvent(locationData: locationData));
+      });
 
-      emit(state.copyWith(
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-        accuracy: locationData.accuracy,
-      ));
+      final locationData = await location.getLocation();
+      add(LocationSetLatLngEvent(locationData: locationData));
     } catch (error) {
       emit(state.copyWith(latitude: null, longitude: null, accuracy: null));
       rethrow;
     } finally {
       emit(state.copyWith(loading: false));
     }
+  }
+
+  void _handleSetLatLng(
+    LocationSetLatLngEvent event,
+    LocationStateEmitter emit,
+  ) {
+    final locationData = event.locationData;
+
+    if ([
+      locationData.latitude,
+      locationData.longitude,
+    ].any((element) => element == null)) {
+      throw Exception('Could not fetch location data');
+    }
+
+    emit(state.copyWith(
+      latitude: locationData.latitude,
+      longitude: locationData.longitude,
+      accuracy: locationData.accuracy,
+    ));
   }
 }
 
@@ -132,6 +147,10 @@ class LocationEvent with _$LocationEvent {
   const factory LocationEvent.requestPermission({
     @Default(1) int retry,
   }) = RequestLocationPermissionEvent;
+
+  const factory LocationEvent.setLatLng({
+    required LocationData locationData,
+  }) = LocationSetLatLngEvent;
 }
 
 @freezed
