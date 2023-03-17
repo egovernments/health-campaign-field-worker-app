@@ -184,7 +184,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           // value: 'registrar',
 
-          value: 'warehousemgr',
+          value: 'wmgrUlongue',
 
           // value: 'sysadmin9012',
           // value: 'warehouse9012',

@@ -277,21 +277,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
-    final List<BoundaryModel> boundaries = (await boundaryRemoteRepository
-        .search(BoundarySearchModel(boundaryType: '')));
-    print(boundaries.length);
-
-    boundaryLocalRepository.create(
-      boundaries.first,
-      createOpLog: false,
-      dataOperation: DataOperation.create,
-    );
+    final List<BoundaryModel> boundaries =
+        (await boundaryRemoteRepository.search(BoundarySearchModel(
+      boundaryType: event.model.address!.boundaryType,
+      code: event.model.address!.boundaryCode.toString(),
+    )));
 
     state.maybeMap(
       orElse: () {
         return;
       },
       fetched: (value) {
+        boundaries.forEach((element) {
+          boundaryLocalRepository.create(
+            element,
+            createOpLog: false,
+            dataOperation: DataOperation.create,
+          );
+        });
         emit(value.copyWith(selectedProject: event.model));
       },
     );

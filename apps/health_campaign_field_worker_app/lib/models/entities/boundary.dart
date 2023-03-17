@@ -10,13 +10,15 @@ class BoundarySearchModel extends EntitySearchModel {
   final String? boundaryType;
   final String? tenantId;
   final bool? isDeleted;
-  
+  final String? code;
+
   BoundarySearchModel({
     this.boundaryType,
     this.tenantId,
     this.isDeleted,
+    this.code,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
@@ -30,7 +32,6 @@ class BoundaryModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
 
   BoundaryModel({
     this.code,
@@ -43,7 +44,7 @@ class BoundaryModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }) : super();
 
   BoundaryCompanion get companion {
     return BoundaryCompanion(
@@ -60,6 +61,6 @@ class BoundaryModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }

@@ -85,6 +85,7 @@ class BoundaryRemoteRepository
               'offset': 0,
               'limit': 100,
               'tenantId': envConfig.variables.tenantId,
+              ...query.toMap(),
             },
             data: {},
           );
@@ -126,30 +127,64 @@ class BoundaryRemoteRepository
       }
 
       List<BoundaryModel> blist = [];
-      Fib(List n) {
-        if (n.isEmpty) {
-          return blist;
+
+      processJsonArray(
+        List jsonArray,
+        int level,
+        String inp,
+        String unchanged,
+      ) {
+        for (var i = 0; i < jsonArray.length; i++) {
+          final element = jsonArray[i];
+          final r = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
+
+          inp = '$inp.${r.code}';
+
+          if (List.castFrom(element['children']).isNotEmpty) {
+            element['materializedPath'] = inp;
+
+            blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(element)));
+
+            final r = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
+
+            inp = unchanged;
+
+            processJsonArray(
+              List.castFrom(element['children']),
+              level + 1,
+              '$inp.${r.code}',
+              unchanged,
+            );
+          } else if (List.castFrom(element['children']).isEmpty) {
+            element['materializedPath'] = inp;
+
+            blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(element)));
+          }
         }
-
-        blist.addAll(n.map((e) {
-          return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
-        }).toList());
-
-        print(Mapper.fromMap<BoundaryModel>(Map.castFrom(n.first)).name);
-
-        return Fib(List.castFrom(n.first['children']));
       }
 
       final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
       List<BoundaryModel> boundaryList =
           List.castFrom(entityList.first['boundary']).map((e) {
-        print(Fib(List.castFrom(e['children'])));
+        int level = 0;
+        processJsonArray(
+          List.castFrom(e['children']),
+          level,
+          Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString(),
+          Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString(),
+        );
+
+        e['materializedPath'] =
+            Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString();
+        blist.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(e)));
 
         return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
       }).toList();
 
-      return boundaryList;
+      print(blist);
+
+      return blist;
     } on DioError catch (e) {
       rethrow;
     }
