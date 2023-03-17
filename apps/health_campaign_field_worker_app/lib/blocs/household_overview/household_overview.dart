@@ -99,7 +99,7 @@ class HouseholdOverviewBloc
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
         beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
-        projectId: '13',
+        projectId: event.projectId,
       ),
     );
 
@@ -181,7 +181,7 @@ class HouseholdOverviewBloc
       );
     }
 
-    add(const HouseholdOverviewReloadEvent());
+    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
   }
 
   FutureOr<void> _handleSetAsHead(
@@ -225,29 +225,34 @@ class HouseholdOverviewBloc
       );
     }
 
-    add(const HouseholdOverviewReloadEvent());
+    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
   }
 }
 
 @freezed
 class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
   const factory HouseholdOverviewEvent.deleteHousehold({
+    required String projectId,
     required HouseholdModel householdModel,
     required List<IndividualModel> members,
     required ProjectBeneficiaryModel projectBeneficiaryModel,
   }) = HouseholdOverviewDeleteHouseholdEvent;
 
   const factory HouseholdOverviewEvent.deleteIndividual({
+    required String projectId,
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
   }) = HouseholdOverviewDeleteIndividualEvent;
 
   const factory HouseholdOverviewEvent.setAsHead({
+    required String projectId,
     required IndividualModel individualModel,
     required HouseholdModel householdModel,
   }) = HouseholdOverviewSetAsHeadEvent;
 
-  const factory HouseholdOverviewEvent.reload() = HouseholdOverviewReloadEvent;
+  const factory HouseholdOverviewEvent.reload({
+    required String projectId,
+  }) = HouseholdOverviewReloadEvent;
 }
 
 @freezed

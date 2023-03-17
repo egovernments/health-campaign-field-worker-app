@@ -19,9 +19,9 @@ import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/project_component_wrapper/project_component_wrapper.dart';
 
 class DeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
@@ -97,7 +97,7 @@ class _DeliverInterventionPageState
                                               tenantId:
                                                   envConfig.variables.tenantId,
                                               rowVersion: 1,
-                                              projectId: '13',
+                                              projectId: context.projectId,
                                               status: Status.delivered.name,
                                               createdDate: context
                                                   .millisecondsSinceEpoch(),
@@ -409,7 +409,7 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
-    
+
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],

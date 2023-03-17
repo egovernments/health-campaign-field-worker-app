@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../data/network_manager.dart';
 import '../../../models/data_model.dart';
-import '../../../widgets/project_component_wrapper/project_component_wrapper.dart';
+import '../../../utils/extensions/extensions.dart';
+import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
+import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
@@ -18,10 +19,7 @@ class RecordStockWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final manager = context.read<NetworkManager>();
-    final stockRepository = manager.repository<StockModel, StockSearchModel>(
-      context,
-    );
+    final stockRepository = context.repository<StockModel, StockSearchModel>();
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {

@@ -46,6 +46,8 @@ class Variables {
   final DotEnv _dotEnv;
   final bool useFallbackValues;
 
+  static const _connectTimeout = EnvEntry('CONNECT_TIMEOUT', '120000');
+
   static const _baseUrl = EnvEntry(
     'BASE_URL',
     'https://health-qa.digit.org/',

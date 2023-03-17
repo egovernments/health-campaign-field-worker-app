@@ -1,12 +1,13 @@
 // Generated using mason. Do not modify by hand
 
-import '../../../models/data_model.dart';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
+import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 
@@ -72,8 +73,6 @@ class BoundaryRemoteRepository
         rethrow;
       }
     }
-
-    print("data can bee over written");
 
     Response response;
     try {

@@ -23,6 +23,8 @@ class OpLog {
 
   late DateTime createdOn;
 
+  String? serverGeneratedId;
+
   DateTime? syncedOn;
 
   late String createdBy;

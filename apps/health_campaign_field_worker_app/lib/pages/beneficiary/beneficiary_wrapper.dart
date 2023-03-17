@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
-import '../../data/network_manager.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/task.dart';
+import '../../utils/extensions/extensions.dart';
 
 class BeneficiaryWrapperPage extends StatelessWidget {
   final HouseholdMemberWrapper wrapper;
@@ -24,19 +24,18 @@ class BeneficiaryWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final networkManager = context.read<NetworkManager>();
-    final task = networkManager.repository<TaskModel, TaskSearchModel>(context);
-    final individual = networkManager
-        .repository<IndividualModel, IndividualSearchModel>(context);
+    final task = context.repository<TaskModel, TaskSearchModel>();
+    final individual =
+        context.repository<IndividualModel, IndividualSearchModel>();
 
-    final household = networkManager
-        .repository<HouseholdModel, HouseholdSearchModel>(context);
+    final household =
+        context.repository<HouseholdModel, HouseholdSearchModel>();
 
-    final householdMember = networkManager
-        .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context);
+    final householdMember =
+        context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>();
 
-    final projectBeneficiary = networkManager.repository<
-        ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(context);
+    final projectBeneficiary = context
+        .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>();
 
     return MultiBlocProvider(
       providers: [
