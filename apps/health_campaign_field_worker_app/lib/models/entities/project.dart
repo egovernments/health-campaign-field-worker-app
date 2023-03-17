@@ -96,14 +96,14 @@ class ProjectModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
-    super.additionalFields,
+    ProjectAdditionalFields? additionalFields,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-       super();
+       super(additionalFields: additionalFields);
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -136,4 +136,12 @@ class ProjectModel extends EntityModel {
       endDate: Value(endDate),
       );
   }
+}
+
+class ProjectAdditionalFields extends AdditionalFields {
+  ProjectAdditionalFields({
+    super.schema = 'Project',
+    required super.version,
+    super.fields,
+  });
 }

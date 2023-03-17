@@ -46,8 +46,8 @@ class HouseholdModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    HouseholdAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
@@ -64,4 +64,12 @@ class HouseholdModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class HouseholdAdditionalFields extends AdditionalFields {
+  HouseholdAdditionalFields({
+    super.schema = 'Household',
+    required super.version,
+    super.fields,
+  });
 }

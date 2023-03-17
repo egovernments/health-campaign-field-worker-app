@@ -40,8 +40,8 @@ class TargetModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    TargetAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   TargetCompanion get companion {
     return TargetCompanion(
@@ -59,4 +59,12 @@ class TargetModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class TargetAdditionalFields extends AdditionalFields {
+  TargetAdditionalFields({
+    super.schema = 'Target',
+    required super.version,
+    super.fields,
+  });
 }

@@ -106,7 +106,7 @@ class TaskModel extends EntityModel {
     int? actualEndDate,
     int? createdDate,
     super.auditDetails,
-    super.additionalFields,
+    TaskAdditionalFields? additionalFields,
   }): plannedStartDateTime = plannedStartDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
@@ -122,7 +122,7 @@ class TaskModel extends EntityModel {
       createdDateTime = createdDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
-       super();
+       super(additionalFields: additionalFields);
 
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   
@@ -163,4 +163,12 @@ class TaskModel extends EntityModel {
       createdDate: Value(createdDate),
       );
   }
+}
+
+class TaskAdditionalFields extends AdditionalFields {
+  TaskAdditionalFields({
+    super.schema = 'Task',
+    required super.version,
+    super.fields,
+  });
 }

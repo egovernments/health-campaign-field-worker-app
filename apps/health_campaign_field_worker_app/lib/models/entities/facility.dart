@@ -50,8 +50,8 @@ class FacilityModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    FacilityAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   FacilityCompanion get companion {
     return FacilityCompanion(
@@ -69,4 +69,12 @@ class FacilityModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class FacilityAdditionalFields extends AdditionalFields {
+  FacilityAdditionalFields({
+    super.schema = 'Facility',
+    required super.version,
+    super.fields,
+  });
 }

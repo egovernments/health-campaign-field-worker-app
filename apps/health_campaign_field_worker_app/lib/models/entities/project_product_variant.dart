@@ -40,8 +40,8 @@ class ProjectProductVariantModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ProjectProductVariantAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(
@@ -58,4 +58,12 @@ class ProjectProductVariantModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ProjectProductVariantAdditionalFields extends AdditionalFields {
+  ProjectProductVariantAdditionalFields({
+    super.schema = 'ProjectProductVariant',
+    required super.version,
+    super.fields,
+  });
 }

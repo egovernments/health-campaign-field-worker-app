@@ -46,8 +46,8 @@ class ServiceAttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ServiceAttributesAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ServiceAttributesCompanion get companion {
     return ServiceAttributesCompanion(
@@ -67,4 +67,12 @@ class ServiceAttributesModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ServiceAttributesAdditionalFields extends AdditionalFields {
+  ServiceAttributesAdditionalFields({
+    super.schema = 'ServiceAttributes',
+    required super.version,
+    super.fields,
+  });
 }

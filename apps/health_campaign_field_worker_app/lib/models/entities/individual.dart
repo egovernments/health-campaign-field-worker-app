@@ -74,8 +74,8 @@ class IndividualModel extends EntityModel {
     this.gender,
     this.identifiers,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    IndividualAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   IndividualCompanion get companion {
     return IndividualCompanion(
@@ -101,4 +101,12 @@ class IndividualModel extends EntityModel {
       gender: Value(gender),
       );
   }
+}
+
+class IndividualAdditionalFields extends AdditionalFields {
+  IndividualAdditionalFields({
+    super.schema = 'Individual',
+    required super.version,
+    super.fields,
+  });
 }

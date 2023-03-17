@@ -58,8 +58,8 @@ class ServiceModel extends EntityModel {
     this.rowVersion,
     this.attributes,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ServiceAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ServiceCompanion get companion {
     return ServiceCompanion(
@@ -80,4 +80,12 @@ class ServiceModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ServiceAdditionalFields extends AdditionalFields {
+  ServiceAdditionalFields({
+    super.schema = 'Service',
+    required super.version,
+    super.fields,
+  });
 }

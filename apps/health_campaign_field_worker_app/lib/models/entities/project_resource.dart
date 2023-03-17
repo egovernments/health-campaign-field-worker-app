@@ -42,8 +42,8 @@ class ProjectResourceModel extends EntityModel {
     this.rowVersion,
     required this.resource,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ProjectResourceAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ProjectResourceCompanion get companion {
     return ProjectResourceCompanion(
@@ -60,4 +60,12 @@ class ProjectResourceModel extends EntityModel {
       resource: Value(resource.productVariantId),
     );
   }
+}
+
+class ProjectResourceAdditionalFields extends AdditionalFields {
+  ProjectResourceAdditionalFields({
+    super.schema = 'ProjectResource',
+    required super.version,
+    super.fields,
+  });
 }

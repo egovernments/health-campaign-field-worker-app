@@ -62,9 +62,9 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.rowVersion,
     required int dateOfRegistration,
     super.auditDetails,
-    super.additionalFields,
+    ProjectBeneficiaryAdditionalFields? additionalFields,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-       super();
+       super(additionalFields: additionalFields);
 
   int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
   
@@ -87,4 +87,12 @@ class ProjectBeneficiaryModel extends EntityModel {
       dateOfRegistration: Value(dateOfRegistration),
       );
   }
+}
+
+class ProjectBeneficiaryAdditionalFields extends AdditionalFields {
+  ProjectBeneficiaryAdditionalFields({
+    super.schema = 'ProjectBeneficiary',
+    required super.version,
+    super.fields,
+  });
 }

@@ -69,7 +69,7 @@ abstract class EntitySearchModel extends DataModel {
 }
 
 @MappableClass()
-class AdditionalFields {
+abstract class AdditionalFields {
   final String schema;
   final int version;
   final List<AdditionalField> fields;

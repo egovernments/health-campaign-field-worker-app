@@ -46,8 +46,8 @@ class ServiceDefinitionModel extends EntityModel {
     this.rowVersion,
     this.attributes,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ServiceDefinitionAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
@@ -64,4 +64,12 @@ class ServiceDefinitionModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ServiceDefinitionAdditionalFields extends AdditionalFields {
+  ServiceDefinitionAdditionalFields({
+    super.schema = 'ServiceDefinition',
+    required super.version,
+    super.fields,
+  });
 }

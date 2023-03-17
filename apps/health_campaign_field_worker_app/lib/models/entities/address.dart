@@ -62,8 +62,8 @@ class AddressModel extends EntityModel {
     this.rowVersion,
     this.type,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    AddressAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   AddressCompanion get companion {
     return AddressCompanion(
@@ -91,4 +91,12 @@ class AddressModel extends EntityModel {
       type: Value(type),
       );
   }
+}
+
+class AddressAdditionalFields extends AdditionalFields {
+  AddressAdditionalFields({
+    super.schema = 'Address',
+    required super.version,
+    super.fields,
+  });
 }

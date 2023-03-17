@@ -44,8 +44,8 @@ class ProjectFacilityModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ProjectFacilityAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(
@@ -62,4 +62,12 @@ class ProjectFacilityModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ProjectFacilityAdditionalFields extends AdditionalFields {
+  ProjectFacilityAdditionalFields({
+    super.schema = 'ProjectFacility',
+    required super.version,
+    super.fields,
+  });
 }

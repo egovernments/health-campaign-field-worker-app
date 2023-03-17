@@ -60,8 +60,8 @@ class HouseholdMemberModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    HouseholdMemberAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   HouseholdMemberCompanion get companion {
     return HouseholdMemberCompanion(
@@ -82,4 +82,12 @@ class HouseholdMemberModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class HouseholdMemberAdditionalFields extends AdditionalFields {
+  HouseholdMemberAdditionalFields({
+    super.schema = 'HouseholdMember',
+    required super.version,
+    super.fields,
+  });
 }

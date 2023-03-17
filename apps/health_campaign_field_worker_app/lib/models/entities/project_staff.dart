@@ -70,14 +70,14 @@ class ProjectStaffModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
-    super.additionalFields,
+    ProjectStaffAdditionalFields? additionalFields,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-       super();
+       super(additionalFields: additionalFields);
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -104,4 +104,12 @@ class ProjectStaffModel extends EntityModel {
       endDate: Value(endDate),
       );
   }
+}
+
+class ProjectStaffAdditionalFields extends AdditionalFields {
+  ProjectStaffAdditionalFields({
+    super.schema = 'ProjectStaff',
+    required super.version,
+    super.fields,
+  });
 }

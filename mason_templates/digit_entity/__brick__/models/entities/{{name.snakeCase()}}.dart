@@ -40,11 +40,11 @@ class {{name.pascalCase()}}Model extends EntityModel {
     {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
     {{/dateTimeAttributes}}super.auditDetails,
-    super.additionalFields,
+    {{name.pascalCase()}}AdditionalFields? additionalFields,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-      {{/dateTimeAttributes}} super();{{#dateTimeAttributes}}
+      {{/dateTimeAttributes}} super(additionalFields: additionalFields);{{#dateTimeAttributes}}
 
   int{{#nullable}}?{{/nullable}}  get {{name}} => {{name}}Time{{#nullable}}?{{/nullable}}.millisecondsSinceEpoch;
   {{/dateTimeAttributes}}
@@ -60,6 +60,14 @@ class {{name.pascalCase()}}Model extends EntityModel {
       {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.{{pkName}}),
     {{/references}}{{/referenceAttributes}});
   }
+}
+
+class {{name.pascalCase()}}AdditionalFields extends AdditionalFields {
+  {{name.pascalCase()}}AdditionalFields({
+    super.schema = '{{name.pascalCase()}}',
+    required super.version,
+    super.fields,
+  });
 }
 {{/isEnum}}{{#isEnum}}
 @MappableEnum(caseStyle: CaseStyle.upperCase)

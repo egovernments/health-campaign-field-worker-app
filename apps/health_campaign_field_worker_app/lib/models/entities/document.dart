@@ -44,8 +44,8 @@ class DocumentModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    DocumentAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   DocumentCompanion get companion {
     return DocumentCompanion(
@@ -64,4 +64,12 @@ class DocumentModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class DocumentAdditionalFields extends AdditionalFields {
+  DocumentAdditionalFields({
+    super.schema = 'Document',
+    required super.version,
+    super.fields,
+  });
 }

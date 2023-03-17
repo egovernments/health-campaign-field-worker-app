@@ -76,8 +76,8 @@ class StockModel extends EntityModel {
     this.transactionType,
     this.transactionReason,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    StockAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   StockCompanion get companion {
     return StockCompanion(
@@ -103,4 +103,12 @@ class StockModel extends EntityModel {
       transactionReason: Value(transactionReason),
       );
   }
+}
+
+class StockAdditionalFields extends AdditionalFields {
+  StockAdditionalFields({
+    super.schema = 'Stock',
+    required super.version,
+    super.fields,
+  });
 }

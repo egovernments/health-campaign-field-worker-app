@@ -50,8 +50,8 @@ class NameModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    NameAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   NameCompanion get companion {
     return NameCompanion(
@@ -70,4 +70,12 @@ class NameModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class NameAdditionalFields extends AdditionalFields {
+  NameAdditionalFields({
+    super.schema = 'Name',
+    required super.version,
+    super.fields,
+  });
 }

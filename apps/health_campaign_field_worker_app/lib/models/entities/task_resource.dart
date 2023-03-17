@@ -48,8 +48,8 @@ class TaskResourceModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    TaskResourceAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -70,4 +70,12 @@ class TaskResourceModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class TaskResourceAdditionalFields extends AdditionalFields {
+  TaskResourceAdditionalFields({
+    super.schema = 'TaskResource',
+    required super.version,
+    super.fields,
+  });
 }

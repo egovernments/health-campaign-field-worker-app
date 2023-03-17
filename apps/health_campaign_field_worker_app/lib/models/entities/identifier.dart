@@ -46,8 +46,8 @@ class IdentifierModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    IdentifierAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
@@ -65,4 +65,12 @@ class IdentifierModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class IdentifierAdditionalFields extends AdditionalFields {
+  IdentifierAdditionalFields({
+    super.schema = 'Identifier',
+    required super.version,
+    super.fields,
+  });
 }

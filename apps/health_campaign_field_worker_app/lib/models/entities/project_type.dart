@@ -52,8 +52,8 @@ class ProjectTypeModel extends EntityModel {
     this.rowVersion,
     this.resources,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ProjectTypeAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ProjectTypeCompanion get companion {
     return ProjectTypeCompanion(
@@ -75,4 +75,12 @@ class ProjectTypeModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ProjectTypeAdditionalFields extends AdditionalFields {
+  ProjectTypeAdditionalFields({
+    super.schema = 'ProjectType',
+    required super.version,
+    super.fields,
+  });
 }

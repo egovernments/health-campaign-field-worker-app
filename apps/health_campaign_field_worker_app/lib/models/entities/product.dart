@@ -52,8 +52,8 @@ class ProductModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    ProductAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   ProductCompanion get companion {
     return ProductCompanion(
@@ -72,4 +72,12 @@ class ProductModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class ProductAdditionalFields extends AdditionalFields {
+  ProductAdditionalFields({
+    super.schema = 'Product',
+    required super.version,
+    super.fields,
+  });
 }

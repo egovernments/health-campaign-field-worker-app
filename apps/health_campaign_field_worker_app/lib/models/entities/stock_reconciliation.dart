@@ -68,9 +68,9 @@ class StockReconciliationModel extends EntityModel {
     this.rowVersion,
     required int dateOfReconciliation,
     super.auditDetails,
-    super.additionalFields,
+    StockReconciliationAdditionalFields? additionalFields,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
-       super();
+       super(additionalFields: additionalFields);
 
   int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
   
@@ -97,4 +97,12 @@ class StockReconciliationModel extends EntityModel {
       dateOfReconciliation: Value(dateOfReconciliation),
       );
   }
+}
+
+class StockReconciliationAdditionalFields extends AdditionalFields {
+  StockReconciliationAdditionalFields({
+    super.schema = 'StockReconciliation',
+    required super.version,
+    super.fields,
+  });
 }

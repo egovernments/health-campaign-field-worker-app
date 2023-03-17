@@ -66,8 +66,8 @@ class AttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.additionalFields,
-  }):  super();
+    AttributesAdditionalFields? additionalFields,
+  }):  super(additionalFields: additionalFields);
 
   AttributesCompanion get companion {
     return AttributesCompanion(
@@ -90,4 +90,12 @@ class AttributesModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+class AttributesAdditionalFields extends AdditionalFields {
+  AttributesAdditionalFields({
+    super.schema = 'Attributes',
+    required super.version,
+    super.fields,
+  });
 }
