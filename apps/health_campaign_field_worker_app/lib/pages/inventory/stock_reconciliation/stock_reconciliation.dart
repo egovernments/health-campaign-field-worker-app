@@ -289,8 +289,14 @@ class _StockReconciliationPageState
                                             ),
                                             formControlName: _facilityKey,
                                             valueMapper: (value) => value.id,
-                                            initialValueText: state.maybeWhen(
-                                              orElse: () => null,
+                                            initialValue: state.whenOrNull(
+                                              fetched: (facilities) {
+                                                return facilities.length == 1
+                                                    ? facilities.elementAt(0)
+                                                    : null;
+                                              },
+                                            ),
+                                            initialValueText: state.whenOrNull(
                                               fetched: (facilities) {
                                                 return facilities.length == 1
                                                     ? facilities

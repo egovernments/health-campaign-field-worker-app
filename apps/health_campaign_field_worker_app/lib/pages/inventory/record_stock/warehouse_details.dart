@@ -151,8 +151,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     label: localizations.translate(
                                       i18.warehouseDetails.warehouseNameId,
                                     ),
-                                    initialValueText: facilityState.maybeWhen(
-                                      orElse: () => null,
+                                    initialValue: facilityState.whenOrNull(
+                                      fetched: (facilities) {
+                                        return facilities.length == 1
+                                            ? facilities.elementAt(0)
+                                            : null;
+                                      },
+                                    ),
+                                    initialValueText: facilityState.whenOrNull(
                                       fetched: (facilities) {
                                         return facilities.length == 1
                                             ? facilities
