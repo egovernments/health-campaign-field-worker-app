@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
@@ -139,7 +140,7 @@ class SideBar extends StatelessWidget {
           title: 'Logout',
           icon: Icons.logout,
           onPressed: () {
-            // TODO: Complete implementation
+            context.read<AuthBloc>().add(AuthLogoutEvent());
           },
         ),
         const PoweredByDigit(),

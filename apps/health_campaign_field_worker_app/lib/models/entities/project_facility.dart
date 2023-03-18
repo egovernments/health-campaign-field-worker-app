@@ -25,15 +25,19 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectFacilityModel extends EntityModel {
+
+  static const schemaName = 'ProjectFacility';
+
   final String id;
   final String facilityId;
   final String projectId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProjectFacilityAdditionalFields? additionalFields;
 
   ProjectFacilityModel({
+    this.additionalFields,
     required this.id,
     required this.facilityId,
     required this.projectId,
@@ -41,7 +45,7 @@ class ProjectFacilityModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(
@@ -49,6 +53,7 @@ class ProjectFacilityModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
@@ -57,4 +62,13 @@ class ProjectFacilityModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProjectFacilityAdditionalFields extends AdditionalFields {
+  ProjectFacilityAdditionalFields({
+    super.schema = 'ProjectFacility',
+    required super.version,
+    super.fields,
+  });
 }

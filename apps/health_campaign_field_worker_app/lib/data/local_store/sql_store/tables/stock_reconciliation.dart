@@ -22,6 +22,7 @@ class StockReconciliation extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfReconciliation => integer()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };

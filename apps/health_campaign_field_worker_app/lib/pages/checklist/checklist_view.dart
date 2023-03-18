@@ -5,16 +5,15 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/data_model.dart';
-import '../../router/app_router.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:intl/intl.dart';
+
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
-import '../../models/entities/service.dart';
-import '../../models/entities/service_attributes.dart';
+import '../../models/data_model.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -344,8 +343,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       attributes.add(ServiceAttributesModel(
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
-                                          createdTime: DateTime.now()
-                                              .millisecondsSinceEpoch,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
                                         ),
                                         attributeCode: '${attribute[i].code}',
                                         dataType: attribute[i].dataType,

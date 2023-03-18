@@ -25,6 +25,9 @@ class IdentifierSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class IdentifierModel extends EntityModel {
+
+  static const schemaName = 'Identifier';
+
   final String? id;
   final String? individualClientReferenceId;
   final String? identifierType;
@@ -32,9 +35,10 @@ class IdentifierModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final IdentifierAdditionalFields? additionalFields;
 
   IdentifierModel({
+    this.additionalFields,
     this.id,
     this.individualClientReferenceId,
     this.identifierType,
@@ -43,7 +47,7 @@ class IdentifierModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   IdentifierCompanion get companion {
     return IdentifierCompanion(
@@ -51,6 +55,7 @@ class IdentifierModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
@@ -60,4 +65,13 @@ class IdentifierModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class IdentifierAdditionalFields extends AdditionalFields {
+  IdentifierAdditionalFields({
+    super.schema = 'Identifier',
+    required super.version,
+    super.fields,
+  });
 }

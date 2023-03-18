@@ -19,6 +19,9 @@ class TargetSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TargetModel extends EntityModel {
+
+  static const schemaName = 'Target';
+
   final String id;
   final String? beneficiaryType;
   final String? baseline;
@@ -26,9 +29,10 @@ class TargetModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final TargetAdditionalFields? additionalFields;
 
   TargetModel({
+    this.additionalFields,
     required this.id,
     this.beneficiaryType,
     this.baseline,
@@ -37,7 +41,7 @@ class TargetModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   TargetCompanion get companion {
     return TargetCompanion(
@@ -45,6 +49,7 @@ class TargetModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
@@ -54,4 +59,13 @@ class TargetModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class TargetAdditionalFields extends AdditionalFields {
+  TargetAdditionalFields({
+    super.schema = 'Target',
+    required super.version,
+    super.fields,
+  });
 }

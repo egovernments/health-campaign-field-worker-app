@@ -21,6 +21,7 @@ class Attributes extends Table {
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { id, auditCreatedBy,  };

@@ -24,6 +24,7 @@ class Task extends Table {
   IntColumn get actualEndDate => integer().nullable()();
   IntColumn get createdDate => integer().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };

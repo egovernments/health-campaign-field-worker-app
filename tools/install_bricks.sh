@@ -21,5 +21,6 @@ done
 cd "$home" || exit
 echo "$PWD"
 
+melos clean
 melos bootstrap
 melos analyze

@@ -37,6 +37,9 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectBeneficiaryModel extends EntityModel {
+
+  static const schemaName = 'ProjectBeneficiary';
+
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
@@ -46,9 +49,10 @@ class ProjectBeneficiaryModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfRegistrationTime;
-  
+  final ProjectBeneficiaryAdditionalFields? additionalFields;
 
   ProjectBeneficiaryModel({
+    this.additionalFields,
     this.id,
     this.projectId,
     this.beneficiaryId,
@@ -60,7 +64,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     required int dateOfRegistration,
     super.auditDetails,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-       super();
+      super();
 
   int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
   
@@ -71,6 +75,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),
@@ -82,4 +87,13 @@ class ProjectBeneficiaryModel extends EntityModel {
       dateOfRegistration: Value(dateOfRegistration),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProjectBeneficiaryAdditionalFields extends AdditionalFields {
+  ProjectBeneficiaryAdditionalFields({
+    super.schema = 'ProjectBeneficiary',
+    required super.version,
+    super.fields,
+  });
 }

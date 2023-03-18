@@ -51,6 +51,9 @@ class ProjectSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectModel extends EntityModel {
+
+  static const schemaName = 'Project';
+
   final String id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -70,9 +73,10 @@ class ProjectModel extends EntityModel {
   final List<DocumentModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-  
+  final ProjectAdditionalFields? additionalFields;
 
   ProjectModel({
+    this.additionalFields,
     required this.id,
     this.projectTypeId,
     this.projectNumber,
@@ -99,7 +103,7 @@ class ProjectModel extends EntityModel {
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-       super();
+      super();
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -113,6 +117,7 @@ class ProjectModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       projectTypeId: Value(projectTypeId),
       projectNumber: Value(projectNumber),
@@ -131,4 +136,13 @@ class ProjectModel extends EntityModel {
       endDate: Value(endDate),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProjectAdditionalFields extends AdditionalFields {
+  ProjectAdditionalFields({
+    super.schema = 'Project',
+    required super.version,
+    super.fields,
+  });
 }

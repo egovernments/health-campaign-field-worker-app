@@ -21,15 +21,19 @@ class ProjectProductVariantSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectProductVariantModel extends EntityModel {
+
+  static const schemaName = 'ProjectProductVariant';
+
   final String productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProjectProductVariantAdditionalFields? additionalFields;
 
   ProjectProductVariantModel({
+    this.additionalFields,
     required this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
@@ -37,7 +41,7 @@ class ProjectProductVariantModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   ProjectProductVariantCompanion get companion {
     return ProjectProductVariantCompanion(
@@ -45,6 +49,7 @@ class ProjectProductVariantModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       productVariantId: Value(productVariantId),
       type: Value(type),
       isBaseUnitVariant: Value(isBaseUnitVariant),
@@ -53,4 +58,13 @@ class ProjectProductVariantModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProjectProductVariantAdditionalFields extends AdditionalFields {
+  ProjectProductVariantAdditionalFields({
+    super.schema = 'ProjectProductVariant',
+    required super.version,
+    super.fields,
+  });
 }
