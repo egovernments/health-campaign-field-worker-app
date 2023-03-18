@@ -399,6 +399,8 @@ class StockDetails {
   String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
+
+  String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
 }
 
 class StockReconciliationDetails {

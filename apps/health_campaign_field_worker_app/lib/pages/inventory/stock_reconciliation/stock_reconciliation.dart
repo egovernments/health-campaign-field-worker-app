@@ -353,7 +353,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReceived,
-                                          ): stockState.stockReceived,
+                                          ): stockState.stockReceived.toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -364,7 +364,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockIssued,
-                                          ): stockState.stockIssued,
+                                          ): stockState.stockIssued.toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -375,7 +375,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReturned,
-                                          ): stockState.stockReturned,
+                                          ): stockState.stockReturned.toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -386,7 +386,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockLost,
-                                          ): stockState.stockLost,
+                                          ): stockState.stockLost.toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -397,7 +397,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockDamaged,
-                                          ): stockState.stockDamaged,
+                                          ): stockState.stockDamaged.toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -408,7 +408,7 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockOnHand,
-                                          ): stockState.stockInHand,
+                                          ): stockState.stockInHand.toStringAsFixed(0),
                                         },
                                       ),
                                       DigitInfoCard(
