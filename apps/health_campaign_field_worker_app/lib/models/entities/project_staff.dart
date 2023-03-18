@@ -43,6 +43,9 @@ class ProjectStaffSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProjectStaffModel extends EntityModel {
+
+  static const schemaName = 'ProjectStaff';
+
   final String id;
   final String? staffId;
   final String? userId;
@@ -53,9 +56,10 @@ class ProjectStaffModel extends EntityModel {
   final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-  
+  final ProjectStaffAdditionalFields? additionalFields;
 
   ProjectStaffModel({
+    this.additionalFields,
     required this.id,
     this.staffId,
     this.userId,
@@ -73,7 +77,7 @@ class ProjectStaffModel extends EntityModel {
       endDateTime = endDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(endDate),
-       super();
+      super();
 
   int?  get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -87,6 +91,7 @@ class ProjectStaffModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       staffId: Value(staffId),
       userId: Value(userId),
@@ -99,4 +104,13 @@ class ProjectStaffModel extends EntityModel {
       endDate: Value(endDate),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProjectStaffAdditionalFields extends AdditionalFields {
+  ProjectStaffAdditionalFields({
+    super.schema = 'ProjectStaff',
+    required super.version,
+    super.fields,
+  });
 }

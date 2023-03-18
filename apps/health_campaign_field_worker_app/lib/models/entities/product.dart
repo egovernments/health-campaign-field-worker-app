@@ -29,6 +29,9 @@ class ProductSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ProductModel extends EntityModel {
+
+  static const schemaName = 'Product';
+
   final String? id;
   final String? type;
   final String? name;
@@ -37,9 +40,10 @@ class ProductModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ProductAdditionalFields? additionalFields;
 
   ProductModel({
+    this.additionalFields,
     this.id,
     this.type,
     this.name,
@@ -49,7 +53,7 @@ class ProductModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   ProductCompanion get companion {
     return ProductCompanion(
@@ -57,6 +61,7 @@ class ProductModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       type: Value(type),
       name: Value(name),
@@ -67,4 +72,13 @@ class ProductModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ProductAdditionalFields extends AdditionalFields {
+  ProductAdditionalFields({
+    super.schema = 'Product',
+    required super.version,
+    super.fields,
+  });
 }

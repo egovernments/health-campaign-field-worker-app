@@ -27,6 +27,9 @@ class FacilitySearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class FacilityModel extends EntityModel {
+
+  static const schemaName = 'Facility';
+
   final String id;
   final bool? isPermanent;
   final String? usage;
@@ -35,9 +38,10 @@ class FacilityModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  
+  final FacilityAdditionalFields? additionalFields;
 
   FacilityModel({
+    this.additionalFields,
     required this.id,
     this.isPermanent,
     this.usage,
@@ -47,7 +51,7 @@ class FacilityModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   FacilityCompanion get companion {
     return FacilityCompanion(
@@ -55,6 +59,7 @@ class FacilityModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       isPermanent: Value(isPermanent),
       usage: Value(usage),
@@ -64,4 +69,13 @@ class FacilityModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class FacilityAdditionalFields extends AdditionalFields {
+  FacilityAdditionalFields({
+    super.schema = 'Facility',
+    required super.version,
+    super.fields,
+  });
 }

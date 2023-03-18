@@ -35,6 +35,9 @@ class AttributesSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class AttributesModel extends EntityModel {
+
+  static const schemaName = 'Attributes';
+
   final String? id;
   final String? dataType;
   final String? referenceId;
@@ -47,9 +50,10 @@ class AttributesModel extends EntityModel {
   final int? order;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final AttributesAdditionalFields? additionalFields;
 
   AttributesModel({
+    this.additionalFields,
     this.id,
     this.dataType,
     this.referenceId,
@@ -63,7 +67,7 @@ class AttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   AttributesCompanion get companion {
     return AttributesCompanion(
@@ -71,6 +75,7 @@ class AttributesModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
@@ -85,4 +90,13 @@ class AttributesModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class AttributesAdditionalFields extends AdditionalFields {
+  AttributesAdditionalFields({
+    super.schema = 'Attributes',
+    required super.version,
+    super.fields,
+  });
 }

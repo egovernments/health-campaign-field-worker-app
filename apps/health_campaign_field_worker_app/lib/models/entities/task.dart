@@ -65,6 +65,9 @@ class TaskSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class TaskModel extends EntityModel {
+
+  static const schemaName = 'Task';
+
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
@@ -82,9 +85,10 @@ class TaskModel extends EntityModel {
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
   final DateTime? createdDateTime;
-  
+  final TaskAdditionalFields? additionalFields;
 
   TaskModel({
+    this.additionalFields,
     this.id,
     this.projectId,
     this.projectBeneficiaryId,
@@ -118,7 +122,7 @@ class TaskModel extends EntityModel {
       createdDateTime = createdDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(createdDate),
-       super();
+      super();
 
   int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
   
@@ -141,6 +145,7 @@ class TaskModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
@@ -158,4 +163,13 @@ class TaskModel extends EntityModel {
       createdDate: Value(createdDate),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class TaskAdditionalFields extends AdditionalFields {
+  TaskAdditionalFields({
+    super.schema = 'Task',
+    required super.version,
+    super.fields,
+  });
 }

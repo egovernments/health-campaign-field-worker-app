@@ -19,6 +19,7 @@ class ProjectStaff extends Table {
   IntColumn get startDate => integer().nullable()();
   IntColumn get endDate => integer().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { id, auditCreatedBy,  };

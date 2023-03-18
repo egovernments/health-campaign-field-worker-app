@@ -18,6 +18,7 @@ class ProjectBeneficiary extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get dateOfRegistration => integer()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
