@@ -26,6 +26,7 @@ class Individual extends Table {
   IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
   IntColumn get gender => intEnum<Gender>().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };

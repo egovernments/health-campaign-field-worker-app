@@ -21,6 +21,9 @@ class DocumentSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class DocumentModel extends EntityModel {
+
+  static const schemaName = 'Document';
+
   final String? id;
   final String? documentType;
   final String? fileStoreId;
@@ -29,9 +32,10 @@ class DocumentModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final DocumentAdditionalFields? additionalFields;
 
   DocumentModel({
+    this.additionalFields,
     this.id,
     this.documentType,
     this.fileStoreId,
@@ -41,7 +45,7 @@ class DocumentModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   DocumentCompanion get companion {
     return DocumentCompanion(
@@ -49,6 +53,7 @@ class DocumentModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),
@@ -59,4 +64,13 @@ class DocumentModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class DocumentAdditionalFields extends AdditionalFields {
+  DocumentAdditionalFields({
+    super.schema = 'Document',
+    required super.version,
+    super.fields,
+  });
 }

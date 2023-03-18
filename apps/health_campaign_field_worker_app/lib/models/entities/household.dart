@@ -25,6 +25,9 @@ class HouseholdSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class HouseholdModel extends EntityModel {
+
+  static const schemaName = 'Household';
+
   final String? id;
   final int? memberCount;
   final String clientReferenceId;
@@ -32,9 +35,10 @@ class HouseholdModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
-  
+  final HouseholdAdditionalFields? additionalFields;
 
   HouseholdModel({
+    this.additionalFields,
     this.id,
     this.memberCount,
     required this.clientReferenceId,
@@ -43,7 +47,7 @@ class HouseholdModel extends EntityModel {
     this.rowVersion,
     this.address,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
@@ -51,6 +55,7 @@ class HouseholdModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       memberCount: Value(memberCount),
       clientReferenceId: Value(clientReferenceId),
@@ -59,4 +64,13 @@ class HouseholdModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class HouseholdAdditionalFields extends AdditionalFields {
+  HouseholdAdditionalFields({
+    super.schema = 'Household',
+    required super.version,
+    super.fields,
+  });
 }

@@ -75,6 +75,7 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
             return TypeAheadField<V>(
               suggestionsCallback: suggestionsCallback,
               itemBuilder: itemBuilder,
+              autoFlipListDirection: true,
               onSuggestionSelected: (value) {
                 controller.text = stringify(value);
                 field.didChange(value);
