@@ -71,8 +71,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
             },
           ),
           BlocProvider(
-            create: (_) => LocationBloc(location: Location())
-              ..add(const LoadLocationEvent()),
+            create: (_) {
+              return LocationBloc(location: Location())
+                ..add(const LoadLocationEvent());
+            },
             lazy: false,
           ),
           BlocProvider(
