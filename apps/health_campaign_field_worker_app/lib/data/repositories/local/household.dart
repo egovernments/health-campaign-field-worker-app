@@ -62,6 +62,12 @@ class HouseholdLocalRepository
             memberCount: household.memberCount,
             rowVersion: household.rowVersion,
             isDeleted: household.isDeleted,
+            auditDetails: AuditDetails(
+              createdBy: household.auditCreatedBy!,
+              createdTime: household.auditCreatedTime!,
+              lastModifiedBy: household.auditModifiedBy,
+              lastModifiedTime: household.auditModifiedTime,
+            ),
             address: address == null
                 ? null
                 : AddressModel(
@@ -79,6 +85,12 @@ class HouseholdLocalRepository
                     pincode: address.pincode,
                     type: address.type,
                     rowVersion: address.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: household.auditCreatedBy!,
+                      createdTime: household.auditCreatedTime!,
+                      lastModifiedBy: household.auditModifiedBy,
+                      lastModifiedTime: household.auditModifiedTime,
+                    ),
                   ),
           );
         })

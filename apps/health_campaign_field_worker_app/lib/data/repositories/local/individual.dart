@@ -128,6 +128,12 @@ class IndividualLocalRepository
                       pincode: address.pincode,
                       type: address.type,
                       rowVersion: address.rowVersion,
+                      auditDetails: AuditDetails(
+                        createdBy: individual.auditCreatedBy!,
+                        createdTime: individual.auditCreatedTime!,
+                        lastModifiedBy: individual.auditModifiedBy,
+                        lastModifiedTime: individual.auditModifiedTime,
+                      ),
                     ),
             ].whereNotNull().toList(),
             gender: individual.gender,
@@ -139,6 +145,12 @@ class IndividualLocalRepository
                   identifierId: identifier.identifierId,
                   rowVersion: identifier.rowVersion,
                   tenantId: identifier.tenantId,
+                  auditDetails: AuditDetails(
+                    createdBy: identifier.auditCreatedBy!,
+                    createdTime: identifier.auditCreatedTime!,
+                    lastModifiedBy: identifier.auditModifiedBy,
+                    lastModifiedTime: identifier.auditModifiedTime,
+                  ),
                 ),
             ],
           );

@@ -135,8 +135,6 @@ class BoundaryRemoteRepository
         return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
       }).toList();
 
-      print(boundaryModelList);
-
       return boundaryModelList;
     } on DioError catch (e) {
       rethrow;

@@ -184,10 +184,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
     for (var elements in userObject!.roles) {
-      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((item) {
         for (final project in projects) {
           codes.add(
-            '${project.name}.$element.${elements.code.name.snakeCase.toUpperCase()}',
+            '${project.name}.$item.${elements.code.name.snakeCase.toUpperCase()}',
           );
         }
       });

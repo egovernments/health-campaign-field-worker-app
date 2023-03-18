@@ -88,6 +88,8 @@ class _DeliverInterventionPageState
                                     context.read<DeliverInterventionBloc>().add(
                                           DeliverInterventionSubmitEvent(
                                             TaskModel(
+                                              id: householdMemberWrapper
+                                                  .task?.id,
                                               clientReferenceId:
                                                   clientReferenceId,
                                               projectBeneficiaryClientReferenceId:
@@ -103,6 +105,11 @@ class _DeliverInterventionPageState
                                                   .millisecondsSinceEpoch(),
                                               resources: [
                                                 TaskResourceModel(
+                                                  id: householdMemberWrapper
+                                                      .task
+                                                      ?.resources
+                                                      ?.first
+                                                      .id,
                                                   clientReferenceId:
                                                       clientReferenceId,
                                                   rowVersion: 1,
@@ -132,6 +139,10 @@ class _DeliverInterventionPageState
                                                         .loggedInUserUuid,
                                                     createdTime: context
                                                         .millisecondsSinceEpoch(),
+                                                    lastModifiedBy: context
+                                                        .loggedInUserUuid,
+                                                    lastModifiedTime: context
+                                                        .millisecondsSinceEpoch(),
                                                   ),
                                                 ),
                                               ],
@@ -141,6 +152,10 @@ class _DeliverInterventionPageState
                                                 createdBy:
                                                     context.loggedInUserUuid,
                                                 createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
                                                     .millisecondsSinceEpoch(),
                                               ),
                                             ),

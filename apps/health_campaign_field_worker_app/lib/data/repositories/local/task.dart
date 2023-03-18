@@ -17,6 +17,12 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   ]) async {
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
+        sql.address,
+        sql.address.relatedClientReferenceId.equalsExp(
+          sql.task.clientReferenceId,
+        ),
+      ),
+      leftOuterJoin(
         sql.taskResource,
         sql.taskResource.clientReferenceId.equalsExp(
           sql.task.clientReferenceId,
@@ -45,6 +51,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         .map((e) {
           final task = e.readTableOrNull(sql.task);
           final resources = e.readTableOrNull(sql.taskResource);
+          final address = e.readTableOrNull(sql.address);
           if (task == null) return null;
 
           return TaskModel(
@@ -57,7 +64,37 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
             createdDate: task.createdDate,
+            address: address == null
+                ? null
+                : AddressModel(
+                    id: address.id,
+                    relatedClientReferenceId: task.clientReferenceId,
+                    tenantId: address.tenantId,
+                    doorNo: address.doorNo,
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    landmark: address.landmark,
+                    locationAccuracy: address.locationAccuracy,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2,
+                    city: address.city,
+                    pincode: address.pincode,
+                    type: address.type,
+                    rowVersion: address.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: task.auditCreatedBy!,
+                      createdTime: task.auditCreatedTime!,
+                      lastModifiedBy: task.auditModifiedBy,
+                      lastModifiedTime: task.auditModifiedTime,
+                    ),
+                  ),
             status: task.status,
+            auditDetails: AuditDetails(
+              createdBy: task.auditCreatedBy!,
+              createdTime: task.auditCreatedTime!,
+              lastModifiedBy: task.auditModifiedBy,
+              lastModifiedTime: task.auditModifiedTime,
+            ),
             resources: resources == null
                 ? null
                 : [
@@ -69,6 +106,12 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       deliveryComment: resources.deliveryComment,
                       quantity: resources.quantity,
                       rowVersion: resources.rowVersion,
+                      auditDetails: AuditDetails(
+                        createdBy: resources.auditCreatedBy!,
+                        createdTime: resources.auditCreatedTime!,
+                        lastModifiedBy: resources.auditModifiedBy,
+                        lastModifiedTime: resources.auditModifiedTime,
+                      ),
                     ),
                   ],
           );
