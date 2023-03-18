@@ -54,6 +54,7 @@ class Checklist {
   const Checklist();
 
   String get checklist => 'CHECKLIST';
+
   String get checklistlabel => 'CHECKLIST_LABEL';
 
   String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
@@ -160,6 +161,9 @@ class IndividualDetails {
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
+
+  String get mobileNumberInvalidFormatValidationMessage =>
+      'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
 }
 
 class HouseholdLocation {
@@ -434,4 +438,14 @@ class StockReconciliationDetails {
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_RECONCILIATION_DIALOG_CONTENT';
+
+  String get manualCountRequiredError =>
+      'STOCK_RECONCILIATION_COUNT_IS_REQUIRED';
+
+  String get manualCountInvalidType =>
+      'STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER';
+
+  String get manualCountMinError => 'STOCK_RECONCILIATION_COUNT_BELOW_MIN';
+
+  String get manualCountMaxError => 'STOCK_RECONCILIATION_COUNT_EXCEEDED_MAX';
 }

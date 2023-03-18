@@ -39,6 +39,9 @@ class StockSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class StockModel extends EntityModel {
+
+  static const schemaName = 'Stock';
+
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -54,9 +57,10 @@ class StockModel extends EntityModel {
   final int? rowVersion;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
-  
+  final StockAdditionalFields? additionalFields;
 
   StockModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -73,7 +77,7 @@ class StockModel extends EntityModel {
     this.transactionType,
     this.transactionReason,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   StockCompanion get companion {
     return StockCompanion(
@@ -81,6 +85,7 @@ class StockModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),
@@ -98,4 +103,13 @@ class StockModel extends EntityModel {
       transactionReason: Value(transactionReason),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class StockAdditionalFields extends AdditionalFields {
+  StockAdditionalFields({
+    super.schema = 'Stock',
+    required super.version,
+    super.fields,
+  });
 }

@@ -16,6 +16,7 @@ class ProjectResource extends Table {
   IntColumn get rowVersion => integer().nullable()();
   
   TextColumn get resource => text().references(ProjectProductVariant, #productVariantId)();
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { id, auditCreatedBy,  };

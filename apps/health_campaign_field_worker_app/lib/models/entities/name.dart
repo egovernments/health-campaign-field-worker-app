@@ -27,6 +27,9 @@ class NameSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class NameModel extends EntityModel {
+
+  static const schemaName = 'Name';
+
   final String? id;
   final String? individualClientReferenceId;
   final String? givenName;
@@ -35,9 +38,10 @@ class NameModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final NameAdditionalFields? additionalFields;
 
   NameModel({
+    this.additionalFields,
     this.id,
     this.individualClientReferenceId,
     this.givenName,
@@ -47,7 +51,7 @@ class NameModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   NameCompanion get companion {
     return NameCompanion(
@@ -55,6 +59,7 @@ class NameModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       givenName: Value(givenName),
@@ -65,4 +70,13 @@ class NameModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class NameAdditionalFields extends AdditionalFields {
+  NameAdditionalFields({
+    super.schema = 'Name',
+    required super.version,
+    super.fields,
+  });
 }

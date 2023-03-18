@@ -5,6 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 export 'data_model.mapper.g.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
+export 'entities/attributes.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
 export 'entities/document.dart';
@@ -24,6 +25,9 @@ export 'entities/project_product_variant.dart';
 export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
+export 'entities/service.dart';
+export 'entities/service_attributes.dart';
+export 'entities/service_definition.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
@@ -32,10 +36,6 @@ export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
-export 'entities/service.dart';
-export 'entities/service_definition.dart';
-export 'entities/service_attributes.dart';
-export 'entities/attributes.dart';
 export 'oplog/oplog_entry.dart';
 
 @MappableClass()
@@ -52,11 +52,37 @@ abstract class EntityModel extends DataModel {
   const EntityModel({this.auditDetails});
 }
 
-@MappableClass()
+@MappableClass(ignoreNull: true)
 abstract class EntitySearchModel extends DataModel {
   final AuditDetails? auditDetails;
+  final AdditionalFields? additionalFields;
 
-  const EntitySearchModel({super.boundaryCode, this.auditDetails});
+  const EntitySearchModel({
+    super.boundaryCode,
+    this.auditDetails,
+    this.additionalFields,
+  });
+}
+
+@MappableClass()
+abstract class AdditionalFields {
+  final String schema;
+  final int version;
+  final List<AdditionalField> fields;
+
+  const AdditionalFields({
+    required this.schema,
+    required this.version,
+    this.fields = const [],
+  });
+}
+
+@MappableClass()
+class AdditionalField {
+  final String key;
+  final dynamic value;
+
+  const AdditionalField(this.key, this.value);
 }
 
 @MappableClass()

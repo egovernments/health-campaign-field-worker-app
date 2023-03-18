@@ -35,6 +35,9 @@ class StockReconciliationSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class StockReconciliationModel extends EntityModel {
+
+  static const schemaName = 'StockReconciliation';
+
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -48,9 +51,10 @@ class StockReconciliationModel extends EntityModel {
   final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfReconciliationTime;
-  
+  final StockReconciliationAdditionalFields? additionalFields;
 
   StockReconciliationModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -66,7 +70,7 @@ class StockReconciliationModel extends EntityModel {
     required int dateOfReconciliation,
     super.auditDetails,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
-       super();
+      super();
 
   int  get dateOfReconciliation => dateOfReconciliationTime.millisecondsSinceEpoch;
   
@@ -77,6 +81,7 @@ class StockReconciliationModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),
@@ -92,4 +97,13 @@ class StockReconciliationModel extends EntityModel {
       dateOfReconciliation: Value(dateOfReconciliation),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class StockReconciliationAdditionalFields extends AdditionalFields {
+  StockReconciliationAdditionalFields({
+    super.schema = 'StockReconciliation',
+    required super.version,
+    super.fields,
+  });
 }

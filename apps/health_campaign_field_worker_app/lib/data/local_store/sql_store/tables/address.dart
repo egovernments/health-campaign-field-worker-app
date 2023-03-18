@@ -27,6 +27,7 @@ class Address extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
   Set<Column> get primaryKey => { relatedClientReferenceId, auditCreatedBy,  };
