@@ -63,7 +63,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
     return Scaffold(
       body: BlocBuilder<LocationBloc, LocationState>(
-        bloc: context.read<LocationBloc>()..add(const LoadLocationEvent()),
         builder: (context, locationState) {
           return BlocConsumer<RecordStockBloc, RecordStockState>(
             listener: (context, stockState) {
