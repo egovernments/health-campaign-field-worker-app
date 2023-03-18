@@ -36,6 +36,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
+  @Name('TRANSPORT_TYPES')
+  late List<TransportTypes>? transportTypes;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -84,6 +87,12 @@ class Config {
 
 @embedded
 class ChecklistTypes {
+  late String name;
+  late String code;
+}
+
+@embedded
+class TransportTypes {
   late String name;
   late String code;
 }

@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_config_model.freezed.dart';
+
 part 'app_config_model.g.dart';
 
 @freezed
@@ -49,6 +50,8 @@ class AppConfig with _$AppConfig {
         required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
+    @JsonKey(name: 'TRANSPORT_TYPES')
+        required List<TransportTypes> transportTypes,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -150,4 +153,15 @@ class CheckListTypes with _$CheckListTypes {
 
   factory CheckListTypes.fromJson(Map<String, dynamic> json) =>
       _$CheckListTypesFromJson(json);
+}
+
+@freezed
+class TransportTypes with _$TransportTypes {
+  factory TransportTypes({
+    required String name,
+    required String code,
+  }) = _TransportTypes;
+
+  factory TransportTypes.fromJson(Map<String, dynamic> json) =>
+      _$TransportTypesFromJson(json);
 }
