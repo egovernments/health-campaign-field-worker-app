@@ -10,6 +10,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
   final SuggestionSelectionCallback<T>? onSuggestionSelected;
   final String label;
   final T? initialValue;
+  final String? initialValueText;
   final Iterable<T> menuItems;
   final String formControlName;
   final bool isRequired;
@@ -29,6 +30,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     this.validationMessages,
+    this.initialValueText,
   }) : super(key: key);
 
   @override
@@ -46,6 +48,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
           DigitReactiveTypeAhead<T, T>(
             formControlName: formControlName,
             stringify: valueMapper,
+            initialValue: initialValueText,
             onSuggestionSelected: onSuggestionSelected,
             debounceDuration: const Duration(milliseconds: 100),
             suggestionsCallback: (pattern) => suggestionsCallback(
