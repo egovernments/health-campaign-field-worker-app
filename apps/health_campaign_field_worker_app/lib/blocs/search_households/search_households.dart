@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/project_beneficiary.dart';
+import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
@@ -33,7 +35,7 @@ class SearchHouseholdsBloc
     required this.household,
     required this.projectBeneficiary,
     required this.taskDataRepository,
-  }) : super(const SearchHouseholdsEmptyState()) {
+  }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
       transformer: debounce<SearchHouseholdsSearchByHouseholdHeadEvent>(
@@ -43,7 +45,27 @@ class SearchHouseholdsBloc
     on(_handleClear);
     on(_handleInitialize);
 
-    add(const SearchHouseholdsInitializedEvent());
+    if (projectBeneficiary is ProjectBeneficiaryLocalRepository) {
+      (projectBeneficiary as ProjectBeneficiaryLocalRepository).listenToChanges(
+        query: ProjectBeneficiarySearchModel(
+          projectId: projectId,
+        ),
+        listener: (data) {
+          add(const SearchHouseholdsInitializedEvent());
+        },
+      );
+    }
+
+    if (taskDataRepository is TaskLocalRepository) {
+      (taskDataRepository as TaskLocalRepository).listenToChanges(
+        query: TaskSearchModel(
+          projectId: projectId,
+        ),
+        listener: (data) {
+          add(const SearchHouseholdsInitializedEvent());
+        },
+      );
+    }
   }
 
   void _handleInitialize(
@@ -87,11 +109,18 @@ class SearchHouseholdsBloc
     SearchHouseholdsEmitter emit,
   ) async {
     if (event.searchText.trim().isEmpty) {
-      emit(const SearchHouseholdsEmptyState());
+      emit(state.copyWith(
+        householdMembers: [],
+        searchQuery: null,
+        loading: false,
+      ));
 
       return;
     }
-    emit(const SearchHouseholdsLoadingState());
+    emit(state.copyWith(
+      loading: true,
+      searchQuery: event.searchText,
+    ));
 
     final results = await individual.search(
       IndividualSearchModel(
@@ -180,18 +209,20 @@ class SearchHouseholdsBloc
       );
     }
 
-    if (containers.isEmpty) {
-      emit(SearchHouseholdsNotFoundState(searchQuery: event.searchText));
-    } else {
-      emit(SearchHouseholdsResultsState(householdMembers: containers));
-    }
+    emit(state.copyWith(
+      householdMembers: containers,
+      loading: false,
+    ));
   }
 
   FutureOr<void> _handleClear(
     SearchHouseholdsClearEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
-    emit(const SearchHouseholdsEmptyState());
+    emit(const SearchHouseholdsState(
+      searchQuery: null,
+      householdMembers: [],
+    ));
   }
 }
 
@@ -210,28 +241,22 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 
 @freezed
 class SearchHouseholdsState with _$SearchHouseholdsState {
-  const factory SearchHouseholdsState.loading({
-    @Default(0) int registeredHouseholds,
-    @Default(0) int deliveredInterventions,
-  }) = SearchHouseholdsLoadingState;
+  const SearchHouseholdsState._();
 
-  const factory SearchHouseholdsState.notFound({
-    String? searchQuery,
-    @Default(0) int registeredHouseholds,
-    @Default(0) int deliveredInterventions,
-  }) = SearchHouseholdsNotFoundState;
-
-  const factory SearchHouseholdsState.empty({
-    @Default(0) int registeredHouseholds,
-    @Default(0) int deliveredInterventions,
-  }) = SearchHouseholdsEmptyState;
-
-  const factory SearchHouseholdsState.results({
+  const factory SearchHouseholdsState({
+    @Default(false) bool loading,
     String? searchQuery,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
     @Default(0) int registeredHouseholds,
     @Default(0) int deliveredInterventions,
-  }) = SearchHouseholdsResultsState;
+  }) = _SearchHouseholdsState;
+
+  bool get resultsNotFound {
+    if (loading) return false;
+    if (searchQuery?.isEmpty ?? true) return false;
+
+    return householdMembers.isEmpty;
+  }
 }
 
 @freezed
