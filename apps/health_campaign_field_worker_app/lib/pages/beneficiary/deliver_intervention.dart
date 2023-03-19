@@ -147,7 +147,11 @@ class _DeliverInterventionPageState
                                                 ),
                                               ],
                                               address: householdMemberWrapper
-                                                  .household.address,
+                                                  .household.address
+                                                  ?.copyWith(
+                                                id: state.householdMemberWrapper
+                                                    .task?.address?.id,
+                                              ),
                                               auditDetails: AuditDetails(
                                                 createdBy:
                                                     context.loggedInUserUuid,
