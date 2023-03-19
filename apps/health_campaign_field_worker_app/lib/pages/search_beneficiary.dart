@@ -40,6 +40,7 @@ class _SearchBeneficiaryPageState
     return BlocProvider(
       create: (context) {
         return SearchHouseholdsBloc(
+          projectId: context.projectId,
           projectBeneficiary: context.repository<ProjectBeneficiaryModel,
               ProjectBeneficiarySearchModel>(),
           householdMember: context

@@ -19,6 +19,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
+  final String projectId;
   final IndividualDataRepository individual;
   final HouseholdDataRepository household;
   final HouseholdMemberDataRepository householdMember;
@@ -26,6 +27,7 @@ class SearchHouseholdsBloc
   final TaskDataRepository taskDataRepository;
 
   SearchHouseholdsBloc({
+    required this.projectId,
     required this.individual,
     required this.householdMember,
     required this.household,
@@ -39,6 +41,45 @@ class SearchHouseholdsBloc
       ),
     );
     on(_handleClear);
+    on(_handleInitialize);
+
+    add(const SearchHouseholdsInitializedEvent());
+  }
+
+  void _handleInitialize(
+    SearchHouseholdsInitializedEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    final beneficiaries = await projectBeneficiary.search(
+      ProjectBeneficiarySearchModel(
+        projectId: projectId,
+      ),
+    );
+
+    final tasks = await taskDataRepository.search(
+      TaskSearchModel(
+        projectId: projectId,
+      ),
+    );
+
+    final interventionDelivered = tasks
+        .map(
+          (task) {
+            return task.resources?.map(
+              (taskResource) {
+                return int.tryParse(taskResource.quantity ?? '0');
+              },
+            ).whereNotNull();
+          },
+        )
+        .whereNotNull()
+        .expand((element) => [...element])
+        .fold(0, (previousValue, element) => previousValue + element);
+
+    emit(state.copyWith(
+      registeredHouseholds: beneficiaries.length,
+      deliveredInterventions: interventionDelivered,
+    ));
   }
 
   FutureOr<void> _handleSearchByHouseholdHead(
@@ -156,6 +197,9 @@ class SearchHouseholdsBloc
 
 @freezed
 class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
+  const factory SearchHouseholdsEvent.initialize() =
+      SearchHouseholdsInitializedEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
@@ -166,17 +210,27 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 
 @freezed
 class SearchHouseholdsState with _$SearchHouseholdsState {
-  const factory SearchHouseholdsState.loading() = SearchHouseholdsLoadingState;
+  const factory SearchHouseholdsState.loading({
+    @Default(0) int registeredHouseholds,
+    @Default(0) int deliveredInterventions,
+  }) = SearchHouseholdsLoadingState;
 
   const factory SearchHouseholdsState.notFound({
     String? searchQuery,
+    @Default(0) int registeredHouseholds,
+    @Default(0) int deliveredInterventions,
   }) = SearchHouseholdsNotFoundState;
 
-  const factory SearchHouseholdsState.empty() = SearchHouseholdsEmptyState;
+  const factory SearchHouseholdsState.empty({
+    @Default(0) int registeredHouseholds,
+    @Default(0) int deliveredInterventions,
+  }) = SearchHouseholdsEmptyState;
 
   const factory SearchHouseholdsState.results({
     String? searchQuery,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
+    @Default(0) int registeredHouseholds,
+    @Default(0) int deliveredInterventions,
   }) = SearchHouseholdsResultsState;
 }
 
