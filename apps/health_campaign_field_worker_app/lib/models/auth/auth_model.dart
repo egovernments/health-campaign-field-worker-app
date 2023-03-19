@@ -74,4 +74,12 @@ enum UserRoleCodeEnum {
   supervisor,
   @JsonValue('DISTRIBUTOR')
   distributor,
+  @JsonValue('NATIONAL_SUPERVISOR')
+  nationalSupervisor,
+  @JsonValue('PROVINCIAL_SUPERVISOR')
+  provincialSupervisor,
+  @JsonValue('DISTRICT_SUPERVISOR')
+  districSupervisor,
+  @JsonValue('FIELD_SUPERVISOR')
+  fieldSupervisor,
 }

@@ -137,6 +137,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       isRequired: false,
                                     ),
                                     DigitTextFormField(
+                                      readOnly: true,
                                       formControlName: _administrativeUnitKey,
                                       label: localizations.translate(
                                         i18.warehouseDetails.administrativeUnit,
