@@ -60,14 +60,12 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    state.maybeMap(
-      orElse: () {},
+    state.mapOrNull(
       fetched: (value) {
         emit(value.copyWith(
           selectedBoundary: event.selectedBoundary,
         ));
       },
-      empty: (value) {},
     );
 
     // handle logic for select here
