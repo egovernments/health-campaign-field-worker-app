@@ -21,10 +21,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          final parent = context.router.parent();
-          if (parent is StackRouter) {
-            parent.navigate(HomeRoute());
-          }
+          context.router.pop();
         },
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
