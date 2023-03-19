@@ -189,9 +189,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       );
                     },
                   ),
-
-                  // 3. Align the "follower" relative to the "child" anywhere you like
-
                   child: TextButton(
                     onPressed: () {
                       boundaryState.maybeWhen(
