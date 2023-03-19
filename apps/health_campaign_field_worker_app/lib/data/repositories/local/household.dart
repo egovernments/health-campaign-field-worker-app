@@ -133,7 +133,10 @@ class HouseholdLocalRepository
   }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address
-        ?.copyWith(relatedClientReferenceId: entity.clientReferenceId)
+        ?.copyWith(
+          relatedClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+        )
         .companion;
 
     await sql.batch((batch) async {

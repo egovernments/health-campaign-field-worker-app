@@ -385,7 +385,7 @@ class _IndividualDetailsPageState
         : null;
 
     identifier ??= IdentifierModel(
-      individualClientReferenceId: individual.clientReferenceId,
+      clientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(

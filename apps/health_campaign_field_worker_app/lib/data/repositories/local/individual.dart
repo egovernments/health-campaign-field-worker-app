@@ -35,7 +35,7 @@ class IndividualLocalRepository
         ),
         leftOuterJoin(
           sql.identifier,
-          sql.identifier.individualClientReferenceId.equalsExp(
+          sql.identifier.clientReferenceId.equalsExp(
             sql.individual.clientReferenceId,
           ),
         ),
@@ -100,6 +100,12 @@ class IndividualLocalRepository
             mobileNumber: individual.mobileNumber,
             isDeleted: individual.isDeleted,
             rowVersion: individual.rowVersion,
+            auditDetails: AuditDetails(
+              createdBy: individual.auditCreatedBy!,
+              createdTime: individual.auditCreatedTime!,
+              lastModifiedBy: individual.auditModifiedBy,
+              lastModifiedTime: individual.auditModifiedTime,
+            ),
             name: name == null
                 ? null
                 : NameModel(
@@ -129,10 +135,10 @@ class IndividualLocalRepository
                       type: address.type,
                       rowVersion: address.rowVersion,
                       auditDetails: AuditDetails(
-                        createdBy: individual.auditCreatedBy!,
-                        createdTime: individual.auditCreatedTime!,
-                        lastModifiedBy: individual.auditModifiedBy,
-                        lastModifiedTime: individual.auditModifiedTime,
+                        createdBy: address.auditCreatedBy!,
+                        createdTime: address.auditCreatedTime!,
+                        lastModifiedBy: address.auditModifiedBy,
+                        lastModifiedTime: address.auditModifiedTime,
                       ),
                     ),
             ].whereNotNull().toList(),
@@ -140,7 +146,8 @@ class IndividualLocalRepository
             identifiers: [
               if (identifier != null)
                 IdentifierModel(
-                  individualClientReferenceId: individual.clientReferenceId,
+                  id: identifier.id,
+                  clientReferenceId: individual.clientReferenceId,
                   identifierType: identifier.identifierType,
                   identifierId: identifier.identifierId,
                   rowVersion: identifier.rowVersion,
@@ -219,7 +226,9 @@ class IndividualLocalRepository
     final nameCompanion = entity.name?.companion;
     final addressCompanions = entity.address?.map((e) {
           return e
-              .copyWith(relatedClientReferenceId: entity.clientReferenceId)
+              .copyWith(
+                relatedClientReferenceId: entity.clientReferenceId,
+              )
               .companion;
         }).toList() ??
         [];

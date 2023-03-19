@@ -8,19 +8,6 @@
       "nullable": true
     },
     {
-      "name": "individualClientReferenceId",
-      "type": "String",
-      "isPk": true
-    },
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "includeForQuery": false,
-      "nullable": true,
-      "includeForEntity": false,
-      "includeForTable": false
-    },
-    {
       "name": "identifierType",
       "type": "String",
       "includeForQuery": true

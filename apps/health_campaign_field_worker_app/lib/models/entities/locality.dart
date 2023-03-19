@@ -6,19 +6,15 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class IdentifierSearchModel extends EntitySearchModel {
-  final String? id;
-  final String? identifierType;
-  final String? identifierId;
-  final List<String>? clientReferenceId;
+class LocalitySearchModel extends EntitySearchModel {
+  final String? code;
+  final String? name;
   final String? tenantId;
   final bool? isDeleted;
   
-  IdentifierSearchModel({
-    this.id,
-    this.identifierType,
-    this.identifierId,
-    this.clientReferenceId,
+  LocalitySearchModel({
+    this.code,
+    this.name,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -26,42 +22,36 @@ class IdentifierSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class IdentifierModel extends EntityModel {
+class LocalityModel extends EntityModel {
 
-  static const schemaName = 'Identifier';
+  static const schemaName = 'Locality';
 
-  final String? id;
-  final String? identifierType;
-  final String? identifierId;
-  final String clientReferenceId;
+  final String code;
+  final String name;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final IdentifierAdditionalFields? additionalFields;
+  final LocalityAdditionalFields? additionalFields;
 
-  IdentifierModel({
+  LocalityModel({
     this.additionalFields,
-    this.id,
-    this.identifierType,
-    this.identifierId,
-    required this.clientReferenceId,
+    required this.code,
+    required this.name,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
   }): super();
 
-  IdentifierCompanion get companion {
-    return IdentifierCompanion(
+  LocalityCompanion get companion {
+    return LocalityCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      id: Value(id),
-      identifierType: Value(identifierType),
-      identifierId: Value(identifierId),
-      clientReferenceId: Value(clientReferenceId),
+      code: Value(code),
+      name: Value(name),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
@@ -70,9 +60,9 @@ class IdentifierModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class IdentifierAdditionalFields extends AdditionalFields {
-  IdentifierAdditionalFields({
-    super.schema = 'Identifier',
+class LocalityAdditionalFields extends AdditionalFields {
+  LocalityAdditionalFields({
+    super.schema = 'Locality',
     required super.version,
     super.fields,
   });

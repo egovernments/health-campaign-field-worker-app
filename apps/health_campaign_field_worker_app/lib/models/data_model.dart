@@ -36,6 +36,7 @@ export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
+export 'entities/locality.dart';
 export 'oplog/oplog_entry.dart';
 
 @MappableClass()
@@ -124,4 +125,5 @@ enum DataModelType {
   attributes,
   boundary,
   serviceAttributes,
+  locality
 }
