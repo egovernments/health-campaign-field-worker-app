@@ -19,6 +19,7 @@ import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
+import 'utils/environment_config.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
@@ -57,7 +58,12 @@ class MainApplication extends StatelessWidget {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read()),
+                create: (ctx) => AuthBloc(authRepository: ctx.read())
+                  ..add(
+                    AuthAutoLoginEvent(
+                      tenantId: envConfig.variables.tenantId,
+                    ),
+                  ),
               ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -148,18 +154,18 @@ class MainApplication extends StatelessWidget {
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
-                                    productVariantLocalRepository: ctx.read<
-                                    LocalRepository<ProductVariantModel,
-                                        ProductVariantSearchModel>>(),
-                                productVariantRemoteRepository: ctx.read<
-                                    RemoteRepository<ProductVariantModel,
-                                        ProductVariantSearchModel>>(),
-                                projectResourceLocalRepository: ctx.read<
-                                    LocalRepository<ProjectResourceModel,
-                                        ProjectResourceSearchModel>>(),
-                                projectResourceRemoteRepository: ctx.read<
-                                    RemoteRepository<ProjectResourceModel,
-                                        ProjectResourceSearchModel>>(),
+                            productVariantLocalRepository: ctx.read<
+                                LocalRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            productVariantRemoteRepository: ctx.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceLocalRepository: ctx.read<
+                                LocalRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
+                            projectResourceRemoteRepository: ctx.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],
