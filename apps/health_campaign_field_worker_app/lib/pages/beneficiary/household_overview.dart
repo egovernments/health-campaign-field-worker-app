@@ -277,6 +277,9 @@ class _HouseholdOverviewPageState
                                             initialState:
                                                 BeneficiaryRegistrationEditIndividualState(
                                               individualModel: e,
+                                              householdModel: state
+                                                  .householdMemberWrapper
+                                                  .household,
                                               addressModel: address.first,
                                             ),
                                             children: [
