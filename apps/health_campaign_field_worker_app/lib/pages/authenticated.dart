@@ -1,60 +1,18 @@
-import 'package:auto_route/auto_route.dart';
-
-<<<<
-<<
-<
-HEAD====
-==
-=
 import 'package:digit_components/digit_components.dart';
-
->>
->
->
->
->
->
-origin/
-
-develop
-import
-'
-package:flutter/material.dart
-';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
-
-<<<<
-<<
-<
-HEAD====
-==
-=
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
->>
->
->
->
->
->
-origin/
-
-develop
-
-import
-'
-../blocs/boundary/boundary.dart
-';
+import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
-import '../utils/i18_key_constants.dart';
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
 
@@ -117,93 +75,84 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                             form.addAll(
                               Map.fromEntries(
                                 boundaryMapperList.map(
-                                      (e) =>
-                                      MapEntry(
-                                        e,
-                                        FormControl<String>(),
-                                      ),
+                                  (e) => MapEntry(
+                                    e,
+                                    FormControl<String>(),
+                                  ),
                                 ),
                               ),
                             );
 
                             return SizedBox(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width,
+                              width: MediaQuery.of(context).size.width,
                               child: Container(
                                 color: Colors.white,
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height / 4,
+                                height: MediaQuery.of(context).size.height / 4,
                                 child: SingleChildScrollView(
                                   child: Column(
                                     children: [
                                       ...boundaryMapperList
-                                          .map((e) =>
-                                          StatefulBuilder(
-                                            builder:
-                                                (contex, setBuiderState) {
-                                              return DigitDropdown<String>(
-                                                label: e,
-                                                menuItems: boundaryList
-                                                    .where((ele) =>
-                                                form
-                                                    .control(e)
-                                                    .value !=
-                                                    null
-                                                    ? ele.label == e &&
-                                                    ele.name
-                                                        .toString()
-                                                        .contains(
-                                                      form
-                                                          .control(
-                                                        e,
-                                                      )
-                                                          .value
-                                                          .toString(),
-                                                    )
-                                                    : ele.label == e)
-                                                    .toList()
-                                                    .map((ele) =>
-                                                    ele.name.toString())
-                                                    .toList()
-                                                    .toSet()
-                                                    .toList(),
-                                                formControlName: e,
-                                                valueMapper: (value) =>
-                                                value,
-                                                onChanged: (value) {
-                                                  (boundaryMapperList
-                                                      .forEach((item) {
-                                                    if (e == item) {
-                                                      (form
-                                                          .control(item)
-                                                          .value = value);
-                                                      setBuiderState(() {
-                                                        random = random + 1;
-                                                      });
-                                                    }
+                                          .map((e) => StatefulBuilder(
+                                                builder:
+                                                    (contex, setBuiderState) {
+                                                  return DigitDropdown<String>(
+                                                    label: e,
+                                                    menuItems: boundaryList
+                                                        .where((ele) => form
+                                                                    .control(e)
+                                                                    .value !=
+                                                                null
+                                                            ? ele.label == e &&
+                                                                ele.name
+                                                                    .toString()
+                                                                    .contains(
+                                                                      form
+                                                                          .control(
+                                                                            e,
+                                                                          )
+                                                                          .value
+                                                                          .toString(),
+                                                                    )
+                                                            : ele.label == e)
+                                                        .toList()
+                                                        .map((ele) =>
+                                                            ele.name.toString())
+                                                        .toList()
+                                                        .toSet()
+                                                        .toList(),
+                                                    formControlName: e,
+                                                    valueMapper: (value) =>
+                                                        value,
+                                                    onChanged: (value) {
+                                                      (boundaryMapperList
+                                                          .forEach((item) {
+                                                        if (e == item) {
+                                                          (form
+                                                              .control(item)
+                                                              .value = value);
+                                                          setBuiderState(() {
+                                                            random = random + 1;
+                                                          });
+                                                        }
 
-                                                    if (form
-                                                        .control(item)
-                                                        .value !=
-                                                        null) {
-                                                      setState(() {
-                                                        selectedBoundaryValue =
-                                                            form
-                                                                .control(
-                                                              item,
-                                                            )
-                                                                .value;
-                                                      });
-                                                    }
-                                                  }));
+                                                        if (form
+                                                                .control(item)
+                                                                .value !=
+                                                            null) {
+                                                          setState(() {
+                                                            selectedBoundaryValue =
+                                                                form
+                                                                    .control(
+                                                                      item,
+                                                                    )
+                                                                    .value;
+                                                          });
+                                                        }
+                                                      }));
+                                                    },
+                                                  );
                                                 },
-                                              );
-                                            },
-                                          ))
+                                              ))
                                           .toList(),
                                       Container(
                                         margin: const EdgeInsets.only(
@@ -213,26 +162,26 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         child: ReactiveFormConsumer(
                                           builder: (context, form, child) =>
                                               DigitElevatedButton(
-                                                onPressed: selectedBoundaryValue
+                                            onPressed: selectedBoundaryValue
                                                     .trim()
                                                     .isEmpty
-                                                    ? null
-                                                    : () {
-                                                  context
-                                                      .read<BoundaryBloc>()
-                                                      .add(BoundaryEvent
-                                                      .select(
-                                                    selectedBoundary:
-                                                    selectedBoundaryValue,
-                                                  ));
-                                                  setState(() {
-                                                    visiable = false;
-                                                  });
-                                                  context.router
-                                                      .replace(HomeRoute());
-                                                },
-                                                child: const Text('Submit'),
-                                              ),
+                                                ? null
+                                                : () {
+                                                    context
+                                                        .read<BoundaryBloc>()
+                                                        .add(BoundaryEvent
+                                                            .select(
+                                                          selectedBoundary:
+                                                              selectedBoundaryValue,
+                                                        ));
+                                                    setState(() {
+                                                      visiable = false;
+                                                    });
+                                                    context.router
+                                                        .replace(HomeRoute());
+                                                  },
+                                            child: const Text('Submit'),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -248,9 +197,11 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   child: TextButton(
                     onPressed: () {
                       boundaryState.maybeWhen(
-                        fetched: (value,
-                            boundaryMapperList,
-                            selectedBoundary,) async {
+                        fetched: (
+                          value,
+                          boundaryMapperList,
+                          selectedBoundary,
+                        ) async {
                           setState(() {
                             visiable = true;
                           });
@@ -266,18 +217,17 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           ],
         ),
         drawer:
-        (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
-            visiable == false)
-            ? const Drawer(child: SideBar())
-            : null,
+            (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
+                    visiable == false)
+                ? const Drawer(child: SideBar())
+                : null,
         body: MultiBlocProvider(
           providers: [
             BlocProvider(
               create: (context) {
                 return SearchHouseholdsBloc(
                   projectBeneficiary: context.repository<
-                      ProjectBeneficiaryModel,
-                      ProjectBeneficiarySearchModel>(),
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
                   householdMember: context.repository<HouseholdMemberModel,
                       HouseholdMemberSearchModel>(),
                   household: context
@@ -285,10 +235,9 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   individual: context
                       .repository<IndividualModel, IndividualSearchModel>(),
                   taskDataRepository:
-                  context.repository<TaskModel, TaskSearchModel>(),
+                      context.repository<TaskModel, TaskSearchModel>(),
                   projectId: context.projectId,
-                )
-                  ..add(const SearchHouseholdsClearEvent());
+                )..add(const SearchHouseholdsClearEvent());
               },
             ),
             BlocProvider(
@@ -299,8 +248,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                 final bloc = SyncBloc(
                   isar: isar,
                   networkManager: context.read(),
-                )
-                  ..add(SyncRefreshEvent(userId));
+                )..add(SyncRefreshEvent(userId));
 
                 isar.opLogs
                     .filter()
@@ -308,7 +256,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     .isSyncedEqualTo(false)
                     .watch()
                     .listen(
-                      (event) {
+                  (event) {
                     bloc.add(
                       SyncRefreshEvent(
                         userId,
@@ -336,8 +284,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
               },
             ),
             BlocProvider(
-              create: (_) =>
-              LocationBloc(location: Location())
+              create: (_) => LocationBloc(location: Location())
                 ..add(const LoadLocationEvent()),
               lazy: false,
             ),
