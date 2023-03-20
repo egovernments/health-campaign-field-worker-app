@@ -190,7 +190,12 @@ class _IndividualDetailsPageState
                     },
                     child: Center(
                       child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
+                        state.mapOrNull(
+                              editIndividual: (value) => localizations
+                                  .translate(i18.common.coreCommonSave),
+                            ) ??
+                            localizations
+                                .translate(i18.common.coreCommonSubmit),
                       ),
                     ),
                   ),
