@@ -43,6 +43,7 @@ class SearchHouseholdsBloc
       ),
     );
     on(_handleClear);
+    on(_handleSearchByHousehold);
     on(_handleInitialize);
 
     if (projectBeneficiary is ProjectBeneficiaryLocalRepository) {
@@ -102,6 +103,80 @@ class SearchHouseholdsBloc
       registeredHouseholds: beneficiaries.length,
       deliveredInterventions: interventionDelivered,
     ));
+  }
+
+  Future<void> _handleSearchByHousehold(
+    SearchHouseholdsByHouseholdsEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+
+    try {
+      final householdMembers = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final individuals = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ),
+      );
+
+      final projectBeneficiaries = await projectBeneficiary.search(
+        ProjectBeneficiarySearchModel(
+          projectId: event.projectId,
+          beneficiaryClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final projectBeneficiaryModel = projectBeneficiaries.firstOrNull;
+      final headOfHousehold = individuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            householdMembers.firstWhereOrNull(
+              (element) {
+                return element.isHeadOfHousehold;
+              },
+            )?.individualClientReferenceId,
+      );
+
+      if (projectBeneficiaryModel == null || headOfHousehold == null) {
+        emit(state.copyWith(
+          loading: false,
+          householdMembers: [],
+        ));
+      } else {
+        final householdMemberWrapper = HouseholdMemberWrapper(
+          household: event.householdModel,
+          headOfHousehold: headOfHousehold,
+          members: individuals,
+          projectBeneficiary: projectBeneficiaryModel,
+        );
+
+        emit(
+          state.copyWith(
+            loading: false,
+            householdMembers: [
+              householdMemberWrapper,
+            ],
+            searchQuery: [
+              headOfHousehold.name?.givenName,
+              headOfHousehold.name?.familyName,
+            ].whereNotNull().join(' '),
+          ),
+        );
+      }
+    } catch (error) {
+      emit(state.copyWith(
+        loading: false,
+        householdMembers: [],
+      ));
+    }
   }
 
   FutureOr<void> _handleSearchByHouseholdHead(
