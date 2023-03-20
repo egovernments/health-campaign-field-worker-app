@@ -146,20 +146,20 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     formControlName: _warehouseKey,
                                     menuItems: facilityState.maybeWhen(
                                       orElse: () => [],
-                                      fetched: (facilities) => facilities,
+                                      fetched: (facilities, _) => facilities,
                                     ),
                                     label: localizations.translate(
                                       i18.warehouseDetails.warehouseNameId,
                                     ),
                                     initialValue: facilityState.whenOrNull(
-                                      fetched: (facilities) {
+                                      fetched: (facilities, _) {
                                         return facilities.length == 1
                                             ? facilities.elementAt(0)
                                             : null;
                                       },
                                     ),
                                     initialValueText: facilityState.whenOrNull(
-                                      fetched: (facilities) {
+                                      fetched: (facilities, _) {
                                         return facilities.length == 1
                                             ? facilities
                                                 .elementAt(0)

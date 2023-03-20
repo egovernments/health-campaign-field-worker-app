@@ -183,10 +183,10 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         _userId: FormControl<String>(
           validators: [Validators.required],
           // value: 'registrar1',
-          value: 'distributor4',
+          // value: 'distributor4',
           // value: 'sysadmin9012',
           // value: 'warehouse9012',
-          // value: 'warehousemgr',
+          value: 'warehousemgr',
           // value: 'registrar',
         ),
         _password: FormControl<String>(

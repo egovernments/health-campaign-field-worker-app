@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/blocs/location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import 'package:location/location.dart';
 
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_households.dart';
@@ -87,13 +85,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return bloc;
             },
-          ),
-          BlocProvider(
-            create: (_) {
-              return LocationBloc(location: Location())
-                ..add(const LoadLocationEvent());
-            },
-            lazy: false,
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),

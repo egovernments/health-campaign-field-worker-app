@@ -379,7 +379,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   },
                                   menuItems: state.maybeWhen(
                                     orElse: () => [],
-                                    fetched: (facilities) => facilities,
+                                    fetched: (_, facilities) => facilities,
                                   ),
                                   formControlName: _transactingPartyKey,
                                   valueMapper: (value) => value.id,
