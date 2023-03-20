@@ -31,6 +31,8 @@ class Common {
 
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
 
+  String get coreCommonSave => 'CORE_COMMON_SAVE';
+
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
