@@ -9,9 +9,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
+import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../models/data_model.dart';
+import '../router/app_router.dart';
+import '../utils/i18_key_constants.dart';
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
 
@@ -166,9 +169,18 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                     .isEmpty
                                                 ? null
                                                 : () {
+                                                    context
+                                                        .read<BoundaryBloc>()
+                                                        .add(BoundaryEvent
+                                                            .select(
+                                                          selectedBoundary:
+                                                              selectedBoundaryValue,
+                                                        ));
                                                     setState(() {
                                                       visiable = false;
                                                     });
+                                                    context.router
+                                                        .replace(HomeRoute());
                                                   },
                                             child: const Text('Submit'),
                                           ),
@@ -206,12 +218,30 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             ),
           ],
         ),
-        drawer: Container(
-          margin: const EdgeInsets.only(top: kToolbarHeight * 1.36),
-          child: const Drawer(child: SideBar()),
-        ),
+        drawer:
+            (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
+                    visiable == false)
+                ? const Drawer(child: SideBar())
+                : null,
         body: MultiBlocProvider(
           providers: [
+            BlocProvider(
+              create: (context) {
+                return SearchHouseholdsBloc(
+                  projectBeneficiary: context.repository<
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
+                  householdMember: context.repository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>(),
+                  household: context
+                      .repository<HouseholdModel, HouseholdSearchModel>(),
+                  individual: context
+                      .repository<IndividualModel, IndividualSearchModel>(),
+                  taskDataRepository:
+                      context.repository<TaskModel, TaskSearchModel>(),
+                  projectId: context.projectId,
+                )..add(const SearchHouseholdsClearEvent());
+              },
+            ),
             BlocProvider(
               create: (context) {
                 final userId = context.loggedInUserUuid;
@@ -258,6 +288,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             BlocProvider(
               create: (_) => LocationBloc(location: Location())
                 ..add(const LoadLocationEvent()),
+              lazy: false,
             ),
             BlocProvider(
               create: (_) =>

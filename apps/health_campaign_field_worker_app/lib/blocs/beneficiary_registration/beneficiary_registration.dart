@@ -193,7 +193,10 @@ class BeneficiaryRegistrationBloc
         } finally {
           emit(value.copyWith(loading: false));
           emit(
-            const BeneficiaryRegistrationPersistedState(navigateToRoot: false),
+            BeneficiaryRegistrationPersistedState(
+              navigateToRoot: false,
+              householdModel: household,
+            ),
           );
         }
       },
@@ -236,7 +239,11 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(
+            BeneficiaryRegistrationPersistedState(
+              householdModel: value.householdModel,
+            ),
+          );
         }
       },
     );
@@ -265,7 +272,9 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(BeneficiaryRegistrationPersistedState(
+            householdModel: value.householdModel,
+          ));
         }
       },
     );
@@ -315,7 +324,9 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(BeneficiaryRegistrationPersistedState(
+            householdModel: value.householdModel,
+          ));
         }
       },
     );
@@ -382,6 +393,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   }) = BeneficiaryRegistrationEditHouseholdState;
 
   const factory BeneficiaryRegistrationState.editIndividual({
+    required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
     @Default(false) bool loading,
@@ -395,6 +407,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
 
   const factory BeneficiaryRegistrationState.persisted({
     @Default(true) bool navigateToRoot,
+    required HouseholdModel householdModel,
   }) = BeneficiaryRegistrationPersistedState;
 }
 

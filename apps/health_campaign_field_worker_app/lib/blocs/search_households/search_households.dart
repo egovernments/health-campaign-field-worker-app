@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/project_beneficiary.dart';
+import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
@@ -19,6 +21,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
+  final String projectId;
   final IndividualDataRepository individual;
   final HouseholdDataRepository household;
   final HouseholdMemberDataRepository householdMember;
@@ -26,12 +29,13 @@ class SearchHouseholdsBloc
   final TaskDataRepository taskDataRepository;
 
   SearchHouseholdsBloc({
+    required this.projectId,
     required this.individual,
     required this.householdMember,
     required this.household,
     required this.projectBeneficiary,
     required this.taskDataRepository,
-  }) : super(const SearchHouseholdsEmptyState()) {
+  }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
       transformer: debounce<SearchHouseholdsSearchByHouseholdHeadEvent>(
@@ -39,6 +43,140 @@ class SearchHouseholdsBloc
       ),
     );
     on(_handleClear);
+    on(_handleSearchByHousehold);
+    on(_handleInitialize);
+
+    if (projectBeneficiary is ProjectBeneficiaryLocalRepository) {
+      (projectBeneficiary as ProjectBeneficiaryLocalRepository).listenToChanges(
+        query: ProjectBeneficiarySearchModel(
+          projectId: projectId,
+        ),
+        listener: (data) {
+          add(const SearchHouseholdsInitializedEvent());
+        },
+      );
+    }
+
+    if (taskDataRepository is TaskLocalRepository) {
+      (taskDataRepository as TaskLocalRepository).listenToChanges(
+        query: TaskSearchModel(
+          projectId: projectId,
+        ),
+        listener: (data) {
+          add(const SearchHouseholdsInitializedEvent());
+        },
+      );
+    }
+  }
+
+  void _handleInitialize(
+    SearchHouseholdsInitializedEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    final beneficiaries = await projectBeneficiary.search(
+      ProjectBeneficiarySearchModel(
+        projectId: projectId,
+      ),
+    );
+
+    final tasks = await taskDataRepository.search(
+      TaskSearchModel(
+        projectId: projectId,
+      ),
+    );
+
+    final interventionDelivered = tasks
+        .map(
+          (task) {
+            return task.resources?.map(
+              (taskResource) {
+                return int.tryParse(taskResource.quantity ?? '0');
+              },
+            ).whereNotNull();
+          },
+        )
+        .whereNotNull()
+        .expand((element) => [...element])
+        .fold(0, (previousValue, element) => previousValue + element);
+
+    emit(state.copyWith(
+      registeredHouseholds: beneficiaries.length,
+      deliveredInterventions: interventionDelivered,
+    ));
+  }
+
+  Future<void> _handleSearchByHousehold(
+    SearchHouseholdsByHouseholdsEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+
+    try {
+      final householdMembers = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final individuals = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ),
+      );
+
+      final projectBeneficiaries = await projectBeneficiary.search(
+        ProjectBeneficiarySearchModel(
+          projectId: event.projectId,
+          beneficiaryClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final projectBeneficiaryModel = projectBeneficiaries.firstOrNull;
+      final headOfHousehold = individuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            householdMembers.firstWhereOrNull(
+              (element) {
+                return element.isHeadOfHousehold;
+              },
+            )?.individualClientReferenceId,
+      );
+
+      if (projectBeneficiaryModel == null || headOfHousehold == null) {
+        emit(state.copyWith(
+          loading: false,
+          householdMembers: [],
+        ));
+      } else {
+        final householdMemberWrapper = HouseholdMemberWrapper(
+          household: event.householdModel,
+          headOfHousehold: headOfHousehold,
+          members: individuals,
+          projectBeneficiary: projectBeneficiaryModel,
+        );
+
+        emit(
+          state.copyWith(
+            loading: false,
+            householdMembers: [
+              householdMemberWrapper,
+            ],
+            searchQuery: [
+              headOfHousehold.name?.givenName,
+              headOfHousehold.name?.familyName,
+            ].whereNotNull().join(' '),
+          ),
+        );
+      }
+    } catch (error) {
+      emit(state.copyWith(
+        loading: false,
+        householdMembers: [],
+      ));
+    }
   }
 
   FutureOr<void> _handleSearchByHouseholdHead(
@@ -46,11 +184,18 @@ class SearchHouseholdsBloc
     SearchHouseholdsEmitter emit,
   ) async {
     if (event.searchText.trim().isEmpty) {
-      emit(const SearchHouseholdsEmptyState());
+      emit(state.copyWith(
+        householdMembers: [],
+        searchQuery: null,
+        loading: false,
+      ));
 
       return;
     }
-    emit(const SearchHouseholdsLoadingState());
+    emit(state.copyWith(
+      loading: true,
+      searchQuery: event.searchText,
+    ));
 
     final results = await individual.search(
       IndividualSearchModel(
@@ -139,23 +284,33 @@ class SearchHouseholdsBloc
       );
     }
 
-    if (containers.isEmpty) {
-      emit(SearchHouseholdsNotFoundState(searchQuery: event.searchText));
-    } else {
-      emit(SearchHouseholdsResultsState(householdMembers: containers));
-    }
+    emit(state.copyWith(
+      householdMembers: containers,
+      loading: false,
+    ));
   }
 
   FutureOr<void> _handleClear(
     SearchHouseholdsClearEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
-    emit(const SearchHouseholdsEmptyState());
+    emit(const SearchHouseholdsState(
+      searchQuery: null,
+      householdMembers: [],
+    ));
   }
 }
 
 @freezed
 class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
+  const factory SearchHouseholdsEvent.initialize() =
+      SearchHouseholdsInitializedEvent;
+
+  const factory SearchHouseholdsEvent.searchByHousehold({
+    required String projectId,
+    required HouseholdModel householdModel,
+  }) = SearchHouseholdsByHouseholdsEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
@@ -166,18 +321,22 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 
 @freezed
 class SearchHouseholdsState with _$SearchHouseholdsState {
-  const factory SearchHouseholdsState.loading() = SearchHouseholdsLoadingState;
+  const SearchHouseholdsState._();
 
-  const factory SearchHouseholdsState.notFound({
-    String? searchQuery,
-  }) = SearchHouseholdsNotFoundState;
-
-  const factory SearchHouseholdsState.empty() = SearchHouseholdsEmptyState;
-
-  const factory SearchHouseholdsState.results({
+  const factory SearchHouseholdsState({
+    @Default(false) bool loading,
     String? searchQuery,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
-  }) = SearchHouseholdsResultsState;
+    @Default(0) int registeredHouseholds,
+    @Default(0) int deliveredInterventions,
+  }) = _SearchHouseholdsState;
+
+  bool get resultsNotFound {
+    if (loading) return false;
+    if (searchQuery?.isEmpty ?? true) return false;
+
+    return householdMembers.isEmpty;
+  }
 }
 
 @freezed

@@ -63,10 +63,12 @@ class _DeliverInterventionPageState
                           BackNavigationHelpHeaderWidget(),
                         ]),
                         footer: DigitElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             form.markAllAsTouched();
                             if (!form.valid) return;
-                            DigitDialog.show(
+                            final router = context.router;
+
+                            final shouldSubmit = await DigitDialog.show<bool>(
                               context,
                               options: DigitDialogOptions(
                                 titleText: localizations.translate(
@@ -195,8 +197,7 @@ class _DeliverInterventionPageState
                                         );
 
                                     Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                    context.router.push(AcknowledgementRoute());
+                                        .pop(true);
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(
@@ -204,10 +205,18 @@ class _DeliverInterventionPageState
                                       .translate(i18.common.coreCommonCancel),
                                   action: (context) =>
                                       Navigator.of(context, rootNavigator: true)
-                                          .pop(),
+                                          .pop(false),
                                 ),
                               ),
                             );
+
+                            if (shouldSubmit ?? false) {
+                              final parent = router.parent() as StackRouter;
+                              parent
+                                ..pop()
+                                ..pop();
+                              router.push(AcknowledgementRoute());
+                            }
                           },
                           child: Center(
                             child: Text(
