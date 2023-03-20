@@ -7,6 +7,7 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId {
     final projectBloc = _get<ProjectBloc>();
+
     final projectState = projectBloc.state;
 
     return projectState.maybeWhen(
@@ -19,6 +20,24 @@ extension ContextUtilityExtensions on BuildContext {
         }
 
         return selectedProject.id;
+      },
+    );
+  }
+
+  String get boundaryCode {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+
+    return boundaryState.maybeWhen(
+      orElse: () {
+        throw AppException('Invalid project state');
+      },
+      fetched: (bondaries, boundaryMapper, selectedBoundary) {
+        if (selectedBoundary == null) {
+          throw AppException('No project is selected');
+        }
+
+        return selectedBoundary;
       },
     );
   }

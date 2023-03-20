@@ -37,6 +37,8 @@ class AddressModel extends EntityModel {
   final String? pincode;
   final String? buildingName;
   final String? street;
+  final String? boundaryType;
+  final String? boundary;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -58,6 +60,8 @@ class AddressModel extends EntityModel {
     this.pincode,
     this.buildingName,
     this.street,
+    this.boundaryType,
+    this.boundary,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -85,6 +89,8 @@ class AddressModel extends EntityModel {
       pincode: Value(pincode),
       buildingName: Value(buildingName),
       street: Value(street),
+      boundaryType: Value(boundaryType),
+      boundary: Value(boundary),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

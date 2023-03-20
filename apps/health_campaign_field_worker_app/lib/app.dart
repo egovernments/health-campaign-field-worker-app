@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
@@ -73,6 +74,14 @@ class MainApplication extends StatelessWidget {
                     ),
                   ),
               ),
+              BlocProvider(
+                create: (ctx) => BoundaryBloc(
+                  const BoundaryState.empty(),
+                  boundaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<BoundaryModel, BoundarySearchModel>(ctx),
+                ),
+              ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
@@ -81,7 +90,7 @@ class MainApplication extends StatelessWidget {
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
-                      return const MaterialApp(
+                      return MaterialApp(
                         home: Scaffold(
                           body: Center(
                             child: Text('Loading'),
@@ -162,6 +171,9 @@ class MainApplication extends StatelessWidget {
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
+                            boundaryLocalRepository: ctx.read<
+                                LocalRepository<BoundaryModel,
+                                    BoundarySearchModel>>(),
                             productVariantLocalRepository: ctx.read<
                                 LocalRepository<ProductVariantModel,
                                     ProductVariantSearchModel>>(),
@@ -177,37 +189,54 @@ class MainApplication extends StatelessWidget {
                           ),
                         ),
                       ],
-                      child: MaterialApp.router(
-                        supportedLocales: languages != null
-                            ? languages.map((e) {
-                                final results = e.value.split('_');
+                      child: BlocBuilder<LocalizationBloc, LocalizationState>(
+                        builder: (context, langState) {
+                          return MaterialApp.router(
+                            supportedLocales: languages != null
+                                ? languages.map((e) {
+                                    final results = e.value.split('_');
 
-                                return results.isNotEmpty
-                                    ? Locale(results.first, results.last)
-                                    : defaultLocale;
-                              })
-                            : [defaultLocale],
-                        localizationsDelegates: [
-                          AppLocalizations.getDelegate(appConfig, isar),
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          GlobalMaterialLocalizations.delegate,
-                        ],
-                        theme: DigitTheme.instance.mobileTheme,
-                        routeInformationParser: appRouter.defaultRouteParser(),
-                        scaffoldMessengerKey: scaffoldMessengerKey,
-                        routerDelegate: AutoRouterDelegate.declarative(
-                          appRouter,
-                          navigatorObservers: () => [AppRouterObserver()],
-                          routes: (handler) => authState.maybeWhen(
-                            orElse: () => [
-                              const UnauthenticatedRouteWrapper(),
+                                    return results.isNotEmpty
+                                        ? Locale(results.first, results.last)
+                                        : defaultLocale;
+                                  })
+                                : [defaultLocale],
+                            localizationsDelegates: [
+                              AppLocalizations.getDelegate(appConfig, isar),
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                              GlobalMaterialLocalizations.delegate,
                             ],
-                            authenticated: (_, __, ___) => [
-                              const AuthenticatedRouteWrapper(),
-                            ],
-                          ),
-                        ),
+                            locale: languages != null
+                                ? Locale(
+                                    languages[langState.index]
+                                        .value
+                                        .split('_')
+                                        .first,
+                                    languages[langState.index]
+                                        .value
+                                        .split('_')
+                                        .last,
+                                  )
+                                : defaultLocale,
+                            theme: DigitTheme.instance.mobileTheme,
+                            routeInformationParser:
+                                appRouter.defaultRouteParser(),
+                            scaffoldMessengerKey: scaffoldMessengerKey,
+                            routerDelegate: AutoRouterDelegate.declarative(
+                              appRouter,
+                              navigatorObservers: () => [AppRouterObserver()],
+                              routes: (handler) => authState.maybeWhen(
+                                orElse: () => [
+                                  const UnauthenticatedRouteWrapper(),
+                                ],
+                                authenticated: (_, __, ___) => [
+                                  const AuthenticatedRouteWrapper(),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
                   },

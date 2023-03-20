@@ -23,12 +23,15 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
+  // final TaskDataRepository taskDataRepository;
+
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    // required this.taskDataRepository,
   }) {
     on(_handleSaveAddress);
     on(_handleSaveHouseholdDetails);
@@ -142,6 +145,7 @@ class BeneficiaryRegistrationBloc
               address: [
                 address.copyWith(
                   relatedClientReferenceId: individual.clientReferenceId,
+                  auditDetails: individual.auditDetails,
                 ),
               ],
             ),
@@ -150,6 +154,7 @@ class BeneficiaryRegistrationBloc
             household.copyWith(
               address: address.copyWith(
                 relatedClientReferenceId: household.clientReferenceId,
+                auditDetails: individual.auditDetails,
               ),
             ),
           );
@@ -228,6 +233,8 @@ class BeneficiaryRegistrationBloc
               ),
             );
           }
+
+          // await taskDataRepository.update(elment.)
         } catch (error) {
           rethrow;
         } finally {

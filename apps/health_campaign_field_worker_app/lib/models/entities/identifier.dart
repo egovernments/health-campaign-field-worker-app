@@ -10,6 +10,7 @@ class IdentifierSearchModel extends EntitySearchModel {
   final String? id;
   final String? identifierType;
   final String? identifierId;
+  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
@@ -17,6 +18,7 @@ class IdentifierSearchModel extends EntitySearchModel {
     this.id,
     this.identifierType,
     this.identifierId,
+    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -29,9 +31,9 @@ class IdentifierModel extends EntityModel {
   static const schemaName = 'Identifier';
 
   final String? id;
-  final String? individualClientReferenceId;
   final String? identifierType;
   final String? identifierId;
+  final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -40,9 +42,9 @@ class IdentifierModel extends EntityModel {
   IdentifierModel({
     this.additionalFields,
     this.id,
-    this.individualClientReferenceId,
     this.identifierType,
     this.identifierId,
+    required this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -57,9 +59,9 @@ class IdentifierModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
-      individualClientReferenceId: Value(individualClientReferenceId),
       identifierType: Value(identifierType),
       identifierId: Value(identifierId),
+      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),

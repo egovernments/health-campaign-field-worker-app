@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -283,10 +284,6 @@ class _IndividualDetailsPageState
                                     },
                                   ).toList(),
                                   formControlName: _idTypeKey,
-                                  validationMessages: {
-                                    'required': (object) =>
-                                        'ID Type is required',
-                                  },
                                 );
                               },
                             ),
@@ -297,6 +294,8 @@ class _IndividualDetailsPageState
                               ReactiveFormConsumer(
                                 builder: (context, formGroup, child) {
                                   return DigitTextFormField(
+                                    readOnly: form.control(_idTypeKey).value ==
+                                        'DEFAULT',
                                     isRequired: form
                                         .control(_idNumberKey)
                                         .validators
@@ -417,7 +416,7 @@ class _IndividualDetailsPageState
         : null;
 
     identifier ??= IdentifierModel(
-      individualClientReferenceId: individual.clientReferenceId,
+      clientReferenceId: individual.clientReferenceId,
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(

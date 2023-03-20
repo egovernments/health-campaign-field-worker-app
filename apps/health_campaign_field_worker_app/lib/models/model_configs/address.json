@@ -63,6 +63,14 @@
     {
       "name": "street",
       "type": "String"
+    },
+    {
+      "name": "boundaryType",
+      "type": "String"
+    },
+    {
+      "name": "boundary",
+      "type": "String"
     }
   ],
   "customAttributes": [
@@ -71,6 +79,7 @@
       "type": "AddressType",
       "isEnum": true
     }
+
   ],
   "isEnum": false
 }

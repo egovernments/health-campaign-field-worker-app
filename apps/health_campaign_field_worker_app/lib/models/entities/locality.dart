@@ -6,61 +6,64 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class BoundarySearchModel extends EntitySearchModel {
-  final String? boundaryType;
+class LocalitySearchModel extends EntitySearchModel {
+  final String? code;
+  final String? name;
   final String? tenantId;
   final bool? isDeleted;
-  final String? code;
-
-  BoundarySearchModel({
-    this.boundaryType,
+  
+  LocalitySearchModel({
+    this.code,
+    this.name,
     this.tenantId,
     this.isDeleted,
-    this.code,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
-class BoundaryModel extends EntityModel {
-  final String? code;
-  final String? name;
-  final String? label;
-  final String? latitude;
-  final String? longitude;
-  final String? materializedPath;
+class LocalityModel extends EntityModel {
+
+  static const schemaName = 'Locality';
+
+  final String code;
+  final String name;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final LocalityAdditionalFields? additionalFields;
 
-  BoundaryModel({
-    this.code,
-    this.name,
-    this.label,
-    this.latitude,
-    this.longitude,
-    this.materializedPath,
+  LocalityModel({
+    this.additionalFields,
+    required this.code,
+    required this.name,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }) : super();
+  }): super();
 
-  BoundaryCompanion get companion {
-    return BoundaryCompanion(
+  LocalityCompanion get companion {
+    return LocalityCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       code: Value(code),
       name: Value(name),
-      label: Value(label),
-      latitude: Value(latitude),
-      longitude: Value(longitude),
-      materializedPath: Value(materializedPath),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class LocalityAdditionalFields extends AdditionalFields {
+  LocalityAdditionalFields({
+    super.schema = 'Locality',
+    required super.version,
+    super.fields,
+  });
 }
