@@ -46,7 +46,7 @@ class _StockReconciliationPageState
         validators: [Validators.required],
       ),
       _manualCountKey: FormControl<String>(
-        value: '1',
+        value: '0',
         validators: [
           Validators.number,
           Validators.required,
@@ -370,7 +370,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReceived,
-                                          ): stockState.stockReceived.toStringAsFixed(0),
+                                          ): stockState.stockReceived
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -381,7 +382,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockIssued,
-                                          ): stockState.stockIssued.toStringAsFixed(0),
+                                          ): stockState.stockIssued
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -392,7 +394,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReturned,
-                                          ): stockState.stockReturned.toStringAsFixed(0),
+                                          ): stockState.stockReturned
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -403,7 +406,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockLost,
-                                          ): stockState.stockLost.toStringAsFixed(0),
+                                          ): stockState.stockLost
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -414,7 +418,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockDamaged,
-                                          ): stockState.stockDamaged.toStringAsFixed(0),
+                                          ): stockState.stockDamaged
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -425,7 +430,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockOnHand,
-                                          ): stockState.stockInHand.toStringAsFixed(0),
+                                          ): stockState.stockInHand
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       DigitInfoCard(

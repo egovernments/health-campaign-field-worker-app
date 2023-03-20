@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
+import '../../../models/data_model.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';
   static const refreshTokenKey = 'refreshTokenKey';
   static const userObjectKey = 'userObject';
+  static const selectedProjectKey = 'selectedProject';
 
   final storage = const FlutterSecureStorage();
 
@@ -35,6 +37,26 @@ class LocalSecureStore {
     } catch (_) {
       return null;
     }
+  }
+
+  Future<ProjectModel?> get selectedProject async {
+    final projectString = await storage.read(key: selectedProjectKey);
+    if (projectString == null) return null;
+
+    try {
+      final project = Mapper.fromMap<ProjectModel>(json.decode(projectString));
+
+      return project;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setSelectedProject(ProjectModel projectModel) async {
+    await storage.write(
+      key: selectedProjectKey,
+      value: projectModel.toJson(),
+    );
   }
 
   Future<void> setAuthCredentials(AuthModel model) async {

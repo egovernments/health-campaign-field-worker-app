@@ -131,7 +131,7 @@ class MdmsRepository {
       }).toList();
 
       final List<TransportTypes> transportTypes =
-      element.transportTypes.map((e) {
+          element.transportTypes.map((e) {
         final transportTypes = TransportTypes()
           ..name = e.name
           ..code = e.code;

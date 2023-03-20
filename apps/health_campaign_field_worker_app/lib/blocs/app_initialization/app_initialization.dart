@@ -9,6 +9,7 @@ import 'package:recase/recase.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
+import '../../models/app_config/app_config_model.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
@@ -34,67 +35,89 @@ class AppInitializationBloc
     AppInitializationEmitter emit,
   ) async {
     emit(const AppInitializing());
-    final result = await mdmsRepository.searchServiceRegistry(
-      envConfig.variables.mdmsApiPath,
-      {
-        "MdmsCriteria": {
-          "tenantId": "default",
-          "moduleDetails": [
-            {
-              "moduleName": "HCM-SERVICE-REGISTRY",
-              "masterDetails": [
-                {
-                  "name": "serviceRegistry",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    );
 
-    await mdmsRepository.writeToRegistryDB(result, isar);
+    try {
+      if (event.retriesLeft == 0) {
+        throw const AppInitializationException('Unable to fetch MDMS Config');
+      }
+      final config = await _loadOfflineData();
+      emit(AppInitialized(
+        appConfiguration: config.appConfigs.first,
+        serviceRegistryList: config.serviceRegistryList,
+      ));
+    } on AppInitializationException catch (_) {
+      emit(const AppUninitialized());
+      rethrow;
+    } catch (error) {
+      final result = await mdmsRepository.searchServiceRegistry(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-SERVICE-REGISTRY',
+                masterDetails: [
+                  MdmsMasterDetailModel('serviceRegistry'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+      await mdmsRepository.writeToRegistryDB(result, isar);
+
+      final configResult = await mdmsRepository.searchAppConfig(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-FIELD-APP-CONFIG',
+                masterDetails: [
+                  MdmsMasterDetailModel('appConfig'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+
+      await mdmsRepository.writeToAppConfigDB(configResult, isar);
+
+      add(
+        AppInitializationSetupEvent(
+          retriesLeft: event.retriesLeft - 1,
+        ),
+      );
+      emit(const AppUninitialized());
+    }
+  }
+
+  Future<MdmsConfig> _loadOfflineData() async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
-
-    final configResult = await mdmsRepository.searchAppConfig(
-      envConfig.variables.mdmsApiPath,
-      {
-        "MdmsCriteria": {
-          "tenantId": "default",
-          "moduleDetails": [
-            {
-              "moduleName": "HCM-FIELD-APP-CONFIG",
-              "masterDetails": [
-                {
-                  "name": "appConfig",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    );
-
-    await mdmsRepository.writeToAppConfigDB(configResult, isar);
     final configs = await isar.appConfigurations.where().findAll();
 
-    if (configs.isEmpty) throw Exception('`configs` cannot be empty');
+    if (serviceRegistryList.isEmpty) {
+      throw Exception('`serviceRegistryList` cannot be empty');
+    }
+    if (configs.isEmpty) {
+      throw Exception('`configs` cannot be empty');
+    }
 
-    emit(AppInitialized(
-      appConfiguration: configs.first,
+    return MdmsConfig(
+      appConfigs: configs,
       serviceRegistryList: serviceRegistryList,
-    ));
+    );
   }
 }
 
 @freezed
 class AppInitializationEvent with _$AppInitializationEvent {
-  const factory AppInitializationEvent.onSetup() = AppInitializationSetupEvent;
-
-  const factory AppInitializationEvent.onApplicationConfigurationSetup({
-    String? service,
-    required String actionType,
-  }) = FindAppConfigurationEvent;
+  const factory AppInitializationEvent.onSetup({
+    @Default(3) int retriesLeft,
+  }) = AppInitializationSetupEvent;
 }
 
 @freezed
@@ -164,4 +187,20 @@ class AppInitializationState with _$AppInitializationState {
           'serviceCount: ${serviceRegistryList.length}',
     );
   }
+}
+
+class MdmsConfig {
+  final List<AppConfiguration> appConfigs;
+  final List<ServiceRegistry> serviceRegistryList;
+
+  const MdmsConfig({
+    required this.appConfigs,
+    required this.serviceRegistryList,
+  });
+}
+
+class AppInitializationException implements Exception {
+  final String? message;
+
+  const AppInitializationException([this.message]);
 }
