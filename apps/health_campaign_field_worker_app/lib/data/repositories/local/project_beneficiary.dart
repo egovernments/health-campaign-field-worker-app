@@ -8,36 +8,6 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
-  void listenToChanges({
-    required ProjectBeneficiarySearchModel query,
-    required void Function(List<ProjectBeneficiaryModel> data) listener,
-  }) {
-    final select = sql.select(sql.projectBeneficiary)
-      ..where(
-        (tbl) => buildOr([
-          if (query.projectId != null) tbl.projectId.equals(query.projectId),
-        ]),
-      );
-
-    select.watch().listen((event) {
-      final data = event.map((e) {
-        return ProjectBeneficiaryModel(
-          clientReferenceId: e.clientReferenceId,
-          dateOfRegistration: e.dateOfRegistration,
-          projectId: e.projectId,
-          tenantId: e.tenantId,
-          beneficiaryClientReferenceId: e.beneficiaryClientReferenceId,
-          id: e.id,
-          rowVersion: e.rowVersion,
-          isDeleted: e.isDeleted,
-          beneficiaryId: e.beneficiaryId,
-        );
-      }).toList();
-
-      listener(data);
-    });
-  }
-
   @override
   FutureOr<List<ProjectBeneficiaryModel>> search(
     ProjectBeneficiarySearchModel query, [
