@@ -65,11 +65,8 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     fetched:
                         (boundaryList, boundaryMapperList, selectedBoundary) {
                       return DigitCard(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           top: kToolbarHeight * 2,
-                          left: 8,
-                          right: 8,
-                          bottom: MediaQuery.of(context).size.height / 2,
                         ),
                         child: ReactiveFormBuilder(
                           form: buildForm,
@@ -136,6 +133,20 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                             random = random + 1;
                                                           });
                                                         }
+
+                                                        if (form
+                                                                .control(item)
+                                                                .value !=
+                                                            null) {
+                                                          setState(() {
+                                                            selectedBoundaryValue =
+                                                                form
+                                                                    .control(
+                                                                      item,
+                                                                    )
+                                                                    .value;
+                                                          });
+                                                        }
                                                       }));
                                                     },
                                                   );
@@ -150,31 +161,15 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         child: ReactiveFormConsumer(
                                           builder: (context, form, child) =>
                                               DigitElevatedButton(
-                                            onPressed: () {
-                                              String selectedBoundary = '';
-                                              (boundaryMapperList
-                                                  .forEach((item) {
-                                                if (form.control(item).value !=
-                                                    null) {
-                                                  selectedBoundary =
-                                                      form.control(item).value;
-                                                }
-                                              }));
-
-                                              if (selectedBoundary != '') {
-                                                context
-                                                    .read<BoundaryBloc>()
-                                                    .add(BoundaryEvent.select(
-                                                      selectedBoundary:
-                                                          selectedBoundary,
-                                                    ));
-                                              }
-                                              setState(() {
-                                                visiable = false;
-                                                selectedBoundaryValue =
-                                                    selectedBoundary;
-                                              });
-                                            },
+                                            onPressed: selectedBoundaryValue
+                                                    .trim()
+                                                    .isEmpty
+                                                ? null
+                                                : () {
+                                                    setState(() {
+                                                      visiable = false;
+                                                    });
+                                                  },
                                             child: const Text('Submit'),
                                           ),
                                         ),

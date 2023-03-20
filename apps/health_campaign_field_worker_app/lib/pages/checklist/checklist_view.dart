@@ -260,6 +260,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 bottom: 8,
                                               ),
                                               child: DigitTextField(
+                                                maxLength: 1000,
                                                 controller:
                                                     additionalController[index],
                                                 label: localizations.translate(

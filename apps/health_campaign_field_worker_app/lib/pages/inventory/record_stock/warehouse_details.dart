@@ -145,6 +145,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     ),
                                   ]),
                                   DigitSearchDropdown<FacilityModel>(
+                                    isRequired: true,
                                     valueMapper: (value) => value.id,
                                     formControlName: _warehouseKey,
                                     menuItems: facilityState.maybeWhen(

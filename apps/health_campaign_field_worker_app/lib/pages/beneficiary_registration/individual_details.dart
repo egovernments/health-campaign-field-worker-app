@@ -238,14 +238,21 @@ class _IndividualDetailsPageState
                                   ),
                                   valueMapper: (e) => e,
                                   onChanged: (value) {
-                                    setState(() {
-                                      form.control(_idNumberKey).setValidators(
-                                        [
-                                          if (value == 'DEFAULT')
-                                            Validators.required,
-                                        ],
-                                      );
-                                    });
+                                    Map<String, dynamic>? requiredTrue(
+                                      AbstractControl<dynamic> control,
+                                    ) {
+                                      print(control.value);
+
+                                      return value == 'DEFAULT'
+                                          ? null
+                                          : {
+                                              'Age Shoud be less than 150': true
+                                            };
+                                    }
+
+                                    form
+                                        .control(_idNumberKey)
+                                        .setValidators([requiredTrue]);
                                   },
                                   initialValue: idTypeOptions.firstOrNull?.name,
                                   menuItems: idTypeOptions.map(
@@ -254,10 +261,6 @@ class _IndividualDetailsPageState
                                     },
                                   ).toList(),
                                   formControlName: _idTypeKey,
-                                  validationMessages: {
-                                    'required': (object) =>
-                                        'ID Type is required',
-                                  },
                                 );
                               },
                             ),
