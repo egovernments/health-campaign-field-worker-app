@@ -31,6 +31,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
           BlocProvider(
             create: (context) {
               return SearchHouseholdsBloc(
+                projectId: context.projectId,
                 projectBeneficiary: context.repository<ProjectBeneficiaryModel,
                     ProjectBeneficiarySearchModel>(),
                 householdMember: context.repository<HouseholdMemberModel,
