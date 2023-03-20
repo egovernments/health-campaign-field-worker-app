@@ -39,6 +39,72 @@ class SearchHouseholdsBloc
       ),
     );
     on(_handleClear);
+    on(_handleSearchByHousehold);
+  }
+
+  FutureOr<void> _handleSearchByHousehold(
+    SearchHouseholdsByHouseholdsEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    emit(const SearchHouseholdsLoadingState());
+
+    try {
+      final householdMembers = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final individuals = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ),
+      );
+
+      final projectBeneficiaries = await projectBeneficiary.search(
+        ProjectBeneficiarySearchModel(
+          projectId: event.projectId,
+          beneficiaryClientReferenceId: event.householdModel.clientReferenceId,
+        ),
+      );
+
+      final projectBeneficiaryModel = projectBeneficiaries.firstOrNull;
+      final headOfHousehold = individuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            householdMembers.firstWhereOrNull(
+              (element) {
+                return element.isHeadOfHousehold;
+              },
+            )?.individualClientReferenceId,
+      );
+
+      if (projectBeneficiaryModel == null || headOfHousehold == null) {
+        emit(const SearchHouseholdsEmptyState());
+      } else {
+        final householdMemberWrapper = HouseholdMemberWrapper(
+          household: event.householdModel,
+          headOfHousehold: headOfHousehold,
+          members: individuals,
+          projectBeneficiary: projectBeneficiaryModel,
+        );
+
+        emit(
+          SearchHouseholdsResultsState(
+            searchQuery: [
+              headOfHousehold.name?.givenName,
+              headOfHousehold.name?.familyName,
+            ].whereNotNull().join(' '),
+            householdMembers: [householdMemberWrapper],
+          ),
+        );
+      }
+    } catch (error) {
+      emit(const SearchHouseholdsEmptyState());
+    }
   }
 
   FutureOr<void> _handleSearchByHouseholdHead(
@@ -156,6 +222,11 @@ class SearchHouseholdsBloc
 
 @freezed
 class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
+  const factory SearchHouseholdsEvent.searchByHousehold({
+    required String projectId,
+    required HouseholdModel householdModel,
+  }) = SearchHouseholdsByHouseholdsEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
