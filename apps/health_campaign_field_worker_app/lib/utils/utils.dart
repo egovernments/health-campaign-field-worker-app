@@ -67,7 +67,7 @@ class CustomValidator {
     }
 
     var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 1) {
+    if (parsed < 0) {
       return {'min': true};
     } else if (parsed > 100000) {
       return {'max': true};
