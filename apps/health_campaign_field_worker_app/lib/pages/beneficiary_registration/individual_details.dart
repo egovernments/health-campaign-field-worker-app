@@ -297,6 +297,8 @@ class _IndividualDetailsPageState
                               ReactiveFormConsumer(
                                 builder: (context, formGroup, child) {
                                   return DigitTextFormField(
+                                    readOnly: form.control(_idTypeKey).value ==
+                                        'DEFAULT',
                                     isRequired: form
                                         .control(_idNumberKey)
                                         .validators
