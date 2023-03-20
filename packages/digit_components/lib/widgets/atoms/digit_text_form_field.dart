@@ -21,6 +21,7 @@ class DigitTextFormField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
   final Map<String, String Function(Object control)>? validationMessages;
+  final ValueChanged<String>? onChanged;
 
   const DigitTextFormField({
     super.key,
@@ -42,6 +43,7 @@ class DigitTextFormField extends StatelessWidget {
     this.isRequired = false,
     this.readOnly = false,
     this.minLength,
+    this.onChanged,
   });
 
   @override
@@ -73,6 +75,11 @@ class DigitTextFormField extends StatelessWidget {
                     child: suffix,
                   ),
           ),
+          onChanged: (control) {
+            final value = control.value;
+            if (value == null) return;
+            onChanged?.call(value);
+          }
         ),
       );
 }

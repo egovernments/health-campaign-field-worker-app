@@ -39,9 +39,9 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<MenuItemModel>(
-        validators: [Validators.required],
-      ),
+      // _productVariantKey: FormControl<MenuItemModel>(
+      //   validators: [Validators.required],
+      // ),
       _manualCountKey: FormControl<String>(
         value: '0',
         validators: [
@@ -123,9 +123,9 @@ class _StockReconciliationPageState
                                                 .control(_facilityKey)
                                                 .value as FacilityModel;
 
-                                            final productVariantId = form
-                                                .control(_productVariantKey)
-                                                .value as MenuItemModel;
+                                            // final productVariantId = form
+                                            //     .control(_productVariantKey)
+                                            //     .value as MenuItemModel;
 
                                             final calculatedCount = form
                                                 .control(_manualCountKey)
@@ -146,7 +146,7 @@ class _StockReconciliationPageState
                                                   .millisecondsSinceEpoch,
                                               facilityId: facilityId.id,
                                               productVariantId:
-                                                  productVariantId.code,
+                                              tempProductVariants[0].code,
                                               calculatedCount: stockState
                                                   .stockInHand
                                                   .toInt(),
@@ -266,29 +266,29 @@ class _StockReconciliationPageState
                                         );
                                       },
                                     ),
-                                    DigitDropdown<MenuItemModel>(
-                                      formControlName: _productVariantKey,
-                                      label: localizations.translate(
-                                        i18.stockReconciliationDetails
-                                            .productLabel,
-                                      ),
-                                      onChanged: (value) {
-                                        ctx.read<StockReconciliationBloc>().add(
-                                              StockReconciliationSelectProductEvent(
-                                                value.code,
-                                              ),
-                                            );
-                                      },
-                                      valueMapper: (value) {
-                                        return localizations
-                                            .translate(value.name);
-                                      },
-                                      menuItems: tempProductVariants,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            'Field is required',
-                                      },
-                                    ),
+                                    // DigitDropdown<MenuItemModel>(
+                                    //   formControlName: _productVariantKey,
+                                    //   label: localizations.translate(
+                                    //     i18.stockReconciliationDetails
+                                    //         .productLabel,
+                                    //   ),
+                                    //   onChanged: (value) {
+                                    //     ctx.read<StockReconciliationBloc>().add(
+                                    //           StockReconciliationSelectProductEvent(
+                                    //             value.code,
+                                    //           ),
+                                    //         );
+                                    //   },
+                                    //   valueMapper: (value) {
+                                    //     return localizations
+                                    //         .translate(value.name);
+                                    //   },
+                                    //   menuItems: tempProductVariants,
+                                    //   validationMessages: {
+                                    //     'required': (object) =>
+                                    //         'Field is required',
+                                    //   },
+                                    // ),
                                     DigitTableCard(
                                       fraction: 2.5,
                                       gap: kPadding,
@@ -394,6 +394,20 @@ class _StockReconciliationPageState
                                           const TextInputType.numberWithOptions(
                                         decimal: true,
                                       ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          form.control(_reconciliationCommentsKey).setValidators(
+                                            [
+                                              if ((int
+                                                  .tryParse(value,)
+                                                  ?? 0) == stockState
+                                                  .stockInHand
+                                                  .toInt())
+                                                Validators.required,
+                                            ],
+                                          );
+                                        });
+                                      },
                                     ),
                                     DigitTextFormField(
                                       label: localizations.translate(
@@ -402,6 +416,13 @@ class _StockReconciliationPageState
                                       ),
                                       formControlName:
                                           _reconciliationCommentsKey,
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              i18.stockReconciliationDetails
+                                                  .commentsErrorMessage,
+                                        ),
+                                      },
                                     ),
                                   ],
                                 ),

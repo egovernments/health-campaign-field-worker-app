@@ -36,24 +36,29 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   FormGroup _form() {
     return fb.group({
-      _productVariantKey: FormControl<MenuItemModel>(
-        value: tempProductVariants.firstOrNull,
-        validators: [Validators.required],
-      ),
+      // _productVariantKey: FormControl<MenuItemModel>(
+      //   value: tempProductVariants.firstOrNull,
+      //   validators: [Validators.required],
+      // ),
       _transactingPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<String>(validators: [
         Validators.number,
         Validators.required,
+        CustomValidator.minValueOne
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
-      _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(
-        validators: [Validators.number],
-        value: '0',
+      _waybillNumberKey: FormControl<String>(
+          validators: [Validators.required]
       ),
-      _vehicleNumberKey: FormControl<String>(),
+      _waybillQuantityKey: FormControl<String>(
+        validators: [Validators.number, Validators.required,
+          CustomValidator.minValueOne]
+      ),
+      _vehicleNumberKey: FormControl<String>(
+          validators: [Validators.required]
+      ),
       _commentsKey: FormControl<String>(),
     });
   }
@@ -82,6 +87,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           String? transactionReasonLabel;
           TransactionType transactionType;
           TransactionReason? transactionReason;
+          String quantityErrorMessage = i18.common.coreCommonRequired;
 
           List<TransactionReason>? reasons;
 
@@ -91,18 +97,21 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               transactionPartyLabel = module.selectTransactingPartyReceived;
               quantityCountLabel = module.quantityReceivedLabel;
               transactionType = TransactionType.received;
+              quantityErrorMessage = module.quantityReceivedErrorMessage;
               break;
             case StockRecordEntryType.dispatch:
               pageTitle = module.issuedPageTitle;
               transactionPartyLabel = module.selectTransactingPartyIssued;
               quantityCountLabel = module.quantitySentLabel;
               transactionType = TransactionType.dispatched;
+              quantityErrorMessage = module.quantitySentLabelErrorMessage;
               break;
             case StockRecordEntryType.returned:
               pageTitle = module.returnedPageTitle;
               transactionPartyLabel = module.selectTransactingPartyReturned;
               quantityCountLabel = module.quantityReturnedLabel;
               transactionType = TransactionType.received;
+              quantityErrorMessage = module.quantityReturnedLabelErrorMessage;
               break;
             case StockRecordEntryType.loss:
               pageTitle = module.lostPageTitle;
@@ -154,9 +163,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                 final bloc = context.read<RecordStockBloc>();
 
-                                final productVariant = form
-                                    .control(_productVariantKey)
-                                    .value as MenuItemModel;
+                                // final productVariant = form
+                                //     .control(_productVariantKey)
+                                //     .value as MenuItemModel;
 
                                 switch (entryType) {
                                   case StockRecordEntryType.receipt:
@@ -202,7 +211,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                 final stockModel = StockModel(
                                   clientReferenceId: IdGen.i.identifier,
-                                  productVariantId: productVariant.code,
+                                  productVariantId: tempProductVariants[0].code,
                                   transactingPartyId: transactingParty.id,
                                   transactingPartyType: 'WAREHOUSE',
                                   transactionType: transactionType,
@@ -277,19 +286,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                           localizations.translate(pageTitle),
                           style: theme.textTheme.displayMedium,
                         ),
-                        DigitDropdown<MenuItemModel>(
-                          formControlName: _productVariantKey,
-                          label: localizations.translate(
-                            module.selectProductLabel,
-                          ),
-                          valueMapper: (value) {
-                            return localizations.translate(value.name);
-                          },
-                          menuItems: tempProductVariants,
-                          validationMessages: {
-                            'required': (object) => 'Field is required',
-                          },
-                        ),
+                        // DigitDropdown<MenuItemModel>(
+                        //   formControlName: _productVariantKey,
+                        //   label: localizations.translate(
+                        //     module.selectProductLabel,
+                        //   ),
+                        //   valueMapper: (value) {
+                        //     return localizations.translate(value.name);
+                        //   },
+                        //   menuItems: tempProductVariants,
+                        //   validationMessages: {
+                        //     'required': (object) => 'Field is required',
+                        //   },
+                        // ),
                         if ([
                           StockRecordEntryType.loss,
                           StockRecordEntryType.damaged,
@@ -330,12 +339,22 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                           label: localizations.translate(
                             quantityCountLabel,
                           ),
+                          validationMessages: {
+                            'required': (object) => localizations.translate(
+                              quantityErrorMessage,
+                            ),
+                          },
                         ),
                         DigitTextFormField(
                           label: localizations.translate(
                             i18.stockDetails.waybillNumberLabel,
                           ),
                           formControlName: _waybillNumberKey,
+                          validationMessages: {
+                            'required': (object) => localizations.translate(
+                              i18.stockDetails.waybillNumberErrorMessage,
+                            ),
+                          },
                         ),
                         DigitTextFormField(
                           label: localizations.translate(
@@ -343,12 +362,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 .quantityOfProductIndicatedOnWaybillLabel,
                           ),
                           formControlName: _waybillQuantityKey,
+                          validationMessages: {
+                            'required': (object) =>
+                                localizations.translate(i18.stockDetails
+                                  .quantityOfProductIndicatedOnWaybillErrorMessage,
+                            ),
+                          },
                         ),
                         DigitTextFormField(
                           label: localizations.translate(
                             i18.stockDetails.vehicleNumberLabel,
                           ),
                           formControlName: _vehicleNumberKey,
+                          validationMessages: {
+                            'required': (object) => localizations.translate(
+                              i18.stockDetails.vehicleNumberErrorMessage,
+                            ),
+                          },
                         ),
                         DigitTextFormField(
                           label: localizations.translate(

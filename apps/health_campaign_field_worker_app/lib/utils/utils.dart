@@ -67,4 +67,10 @@ class CustomValidator {
         ? null
         : {'Min 2 characters Required': true};
   }
+
+  static Map<String, dynamic>? minValueOne(AbstractControl<dynamic> control) {
+    return control.value == null || control.value >= 1
+        ? null
+        : {'Min Value should be 1': true};
+  }
 }

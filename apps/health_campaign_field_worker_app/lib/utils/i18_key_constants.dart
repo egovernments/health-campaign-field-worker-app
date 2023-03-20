@@ -31,6 +31,8 @@ class Common {
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
 
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
+
+  String get coreCommonRequired => 'CORE_COMMON_REQUIRED';
 }
 
 class Login {
@@ -364,6 +366,28 @@ class StockDetails {
   String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
+
+/// Error messages for impl
+  String get quantityReceivedErrorMessage =>
+      'STOCK_DETAILS_QUANTITY_RECEIVED_ERROR_MESSAGE';
+
+  String get quantitySentLabelErrorMessage =>
+      'STOCK_DETAILS_QUANTITY_SENT_ERROR_MESSAGE';
+
+  String get quantityReturnedLabelErrorMessage =>
+      'STOCK_DETAILS_QUANTITY_RETURNED_ERROR_MESSAGE';
+
+  String get vehicleNumberErrorMessage =>
+      'STOCK_DETAILS_VEHICLE_NUMBER_ERROR_MESSAGE';
+
+  String get waybillNumberErrorMessage =>
+      'STOCK_DETAILS_WAYBILL_NUMBER_ERROR_MESSAGE';
+
+  /// Number of product indicated on waybill title
+  String get quantityOfProductIndicatedOnWaybillErrorMessage {
+    return 'STOCK_DETAILS_WAYBILL_QUANTITY_ERROR_MESSAGE';
+  }
+
 }
 
 class StockReconciliationDetails {
@@ -401,4 +425,7 @@ class StockReconciliationDetails {
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_RECONCILIATION_DIALOG_CONTENT';
+
+  String get commentsErrorMessage =>
+      'STOCK_RECONCILIATION_COMMENTS_ERROR_MESSAGE';
 }
