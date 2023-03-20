@@ -47,11 +47,14 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 8),
-                      child: Text(
-                        localizations.translate(
-                          i18.checklist.checklistlabel,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          localizations.translate(
+                            i18.checklist.checklistlabel,
+                          ),
+                          style: theme.textTheme.displayMedium,
                         ),
-                        style: theme.textTheme.displayMedium,
                       ),
                     ),
                     Column(

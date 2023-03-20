@@ -7,6 +7,7 @@ import 'package:isar/isar.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
@@ -65,6 +66,14 @@ class MainApplication extends StatelessWidget {
                     ),
                   ),
               ),
+              BlocProvider(
+                create: (ctx) => BoundaryBloc(
+                  const BoundaryState.empty(),
+                  boundaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<BoundaryModel, BoundarySearchModel>(ctx),
+                ),
+              ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
@@ -73,7 +82,7 @@ class MainApplication extends StatelessWidget {
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
-                      return const MaterialApp(
+                      return MaterialApp(
                         home: Scaffold(
                           body: Center(
                             child: Text('Loading'),
@@ -153,6 +162,9 @@ class MainApplication extends StatelessWidget {
                                     ServiceDefinitionSearchModel>>(),
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
+                                    BoundarySearchModel>>(),
+                            boundaryLocalRepository: ctx.read<
+                                LocalRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
                             productVariantLocalRepository: ctx.read<
                                 LocalRepository<ProductVariantModel,

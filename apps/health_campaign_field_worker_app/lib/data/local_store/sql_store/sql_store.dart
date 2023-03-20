@@ -37,6 +37,7 @@ import 'tables/attributes.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/task_resource.dart';
+import 'tables/locality.dart';
 
 part 'sql_store.g.dart';
 
@@ -68,6 +69,7 @@ part 'sql_store.g.dart';
   ServiceAttributes,
   ServiceDefinition,
   Attributes,
+  Locality,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

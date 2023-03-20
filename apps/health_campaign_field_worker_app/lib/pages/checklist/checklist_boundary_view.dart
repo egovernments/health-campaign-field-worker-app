@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../../router/app_router.dart';
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -68,7 +69,7 @@ class _ChecklistBoundaryViewPageState
                   label: localizations.translate(
                     i18.householdLocation.administrationAreaFormLabel,
                   ),
-                  controller: TextEditingController(text: 'Solimbo'),
+                  controller: TextEditingController(text: context.boundaryCode),
                 ),
               ],
             ),
