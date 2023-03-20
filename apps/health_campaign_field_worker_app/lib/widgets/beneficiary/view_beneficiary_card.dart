@@ -147,8 +147,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     ),
                   )
                   .toList(),
-              leftColumnWidth: 110,
-              rightColumnWidth: 45 * 8,
+              leftColumnWidth: 130,
+              rightColumnWidth: 45 * 6,
               height: 170,
             ),
           ),
