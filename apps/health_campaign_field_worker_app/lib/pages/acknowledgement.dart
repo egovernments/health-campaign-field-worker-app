@@ -23,6 +23,20 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         action: () {
           final parent = context.router.parent();
           if (parent is StackRouter) {
+            var routeCollection = context.router.stack;
+            bool isBeneficiaryPage = false;
+            for (var element in routeCollection) {
+              if (element.routeData.path == "beneficiary-registration") {
+                isBeneficiaryPage = true;
+              }
+            }
+
+            if (isBeneficiaryPage) {
+              parent.navigate(SearchBeneficiaryRoute());
+
+              return;
+            }
+
             parent.navigate(HomeRoute());
           }
         },
