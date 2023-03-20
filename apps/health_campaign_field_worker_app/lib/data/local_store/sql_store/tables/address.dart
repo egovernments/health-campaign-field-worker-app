@@ -18,6 +18,8 @@ class Address extends Table {
   TextColumn get pincode => text().nullable()();
   TextColumn get buildingName => text().nullable()();
   TextColumn get street => text().nullable()();
+  TextColumn get boundaryType => text().nullable()();
+  TextColumn get boundary => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();

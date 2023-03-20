@@ -49,11 +49,28 @@ class DigitDobPicker extends StatelessWidget {
               style: theme.textTheme.bodyLarge,
             ),
             DigitTextFormField(
+              maxLength: 3,
               valueAccessor: DobValueAccessor(),
               formControlName: datePickerFormControl,
               label: ageFieldLabel,
               keyboardType: TextInputType.number,
               readOnly: isVerified,
+              onChanged: (formControl) {
+                /// Validates that control's value must be `true`
+                Map<String, dynamic>? requiredTrue(
+                    AbstractControl<dynamic> control) {
+                  String value =
+                      (DateTime.now().difference(formControl.value).inDays /
+                              365)
+                          .round()
+                          .toStringAsFixed(0);
+                  return int.parse(value) <= 150
+                      ? null
+                      : {'Age Shoud be less than 150': true};
+                }
+
+                formControl.setValidators([requiredTrue]);
+              },
             )
           ],
         ),

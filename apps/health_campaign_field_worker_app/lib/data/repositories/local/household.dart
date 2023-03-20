@@ -62,6 +62,12 @@ class HouseholdLocalRepository
             memberCount: household.memberCount,
             rowVersion: household.rowVersion,
             isDeleted: household.isDeleted,
+            auditDetails: AuditDetails(
+              createdBy: household.auditCreatedBy!,
+              createdTime: household.auditCreatedTime!,
+              lastModifiedBy: household.auditModifiedBy,
+              lastModifiedTime: household.auditModifiedTime,
+            ),
             address: address == null
                 ? null
                 : AddressModel(
@@ -79,6 +85,12 @@ class HouseholdLocalRepository
                     pincode: address.pincode,
                     type: address.type,
                     rowVersion: address.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: household.auditCreatedBy!,
+                      createdTime: household.auditCreatedTime!,
+                      lastModifiedBy: household.auditModifiedBy,
+                      lastModifiedTime: household.auditModifiedTime,
+                    ),
                   ),
           );
         })
@@ -121,7 +133,10 @@ class HouseholdLocalRepository
   }) async {
     final householdCompanion = entity.companion;
     final addressCompanion = entity.address
-        ?.copyWith(relatedClientReferenceId: entity.clientReferenceId)
+        ?.copyWith(
+          relatedClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+        )
         .companion;
 
     await sql.batch((batch) async {

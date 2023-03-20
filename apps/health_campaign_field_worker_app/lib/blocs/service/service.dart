@@ -20,6 +20,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on(_handleCreate);
     on(_multichecklistChanged);
     on(_handleSearch);
+    on(_handlereset);
     on(_handleSelect);
   }
 
@@ -38,6 +39,16 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ServiceEmitter emit,
   ) async {
     await serviceDataRepository.create(event.serviceModel);
+  }
+
+  FutureOr<void> _handlereset(
+    ServiceResetEvent event,
+    ServiceEmitter emit,
+  ) async {
+    emit(ServiceSearchState(
+      selectedService: null,
+      serviceList: event.serviceList,
+    ));
   }
 
   FutureOr<void> _handleSearch(
@@ -77,6 +88,10 @@ class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.selectService({
     required ServiceModel service,
   }) = ServiceSelectionEvent;
+
+  const factory ServiceEvent.resetSelected({
+    required List<ServiceModel> serviceList,
+  }) = ServiceResetEvent;
 }
 
 @freezed

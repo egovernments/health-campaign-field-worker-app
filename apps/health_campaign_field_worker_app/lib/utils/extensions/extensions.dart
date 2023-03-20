@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/auth/auth.dart';
+import '../../blocs/boundary/boundary.dart';
 import '../../blocs/project/project.dart';
 import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';

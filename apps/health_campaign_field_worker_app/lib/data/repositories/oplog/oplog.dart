@@ -153,3 +153,7 @@ class ProjectResourceOpLogManager extends OpLogManager<ProjectResourceModel> {
 class ProductVariantOpLogManager extends OpLogManager<ProductVariantModel> {
   ProductVariantOpLogManager(super.isar);
 }
+
+class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
+  BoundaryOpLogManager(super.isar);
+}

@@ -18,7 +18,5 @@ class Boundary extends Table {
   IntColumn get rowVersion => integer().nullable()();
 
   @override
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-      };
+  Set<Column> get primaryKey => {code};
 }

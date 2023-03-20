@@ -64,6 +64,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                     key: abcKey, //assigning key to form
                     child: DigitCard(
                       child: Column(children: [
+                        Text(localizations.translate(
+                          value.selectedServiceDefinition!.code.toString(),
+                        )),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -257,6 +260,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 bottom: 8,
                                               ),
                                               child: DigitTextField(
+                                                maxLength: 1000,
                                                 controller:
                                                     additionalController[index],
                                                 label: localizations.translate(

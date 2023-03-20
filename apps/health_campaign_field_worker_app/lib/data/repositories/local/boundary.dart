@@ -17,11 +17,14 @@ class BoundaryLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final boundaryCompanion = entity.companion;
+
     await sql.batch((batch) async {
+      // batch.deleteWhere(sql.boundary, (tbl) => const Constant(true));
+
       batch.insert(
         sql.boundary,
         boundaryCompanion,
-        mode: InsertMode.insertOrReplace,
+        mode: InsertMode.replace,
       );
     });
 
@@ -33,20 +36,21 @@ class BoundaryLocalRepository
     final selectQuery = sql.select(sql.boundary).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
-            if (query.boundaryCode != null)
-              sql.boundary.code.equals(
-                query.boundaryCode,
-              ),
+            if (query.code != null)
+              sql.boundary.materializedPath.like('%${query.code}%'),
           ])))
         .get();
 
     return results.map((e) {
-      final data = e.readTable(sql.project);
+      final data = e.readTable(sql.boundary);
 
       return BoundaryModel(
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,
         name: data.name,
+        code: data.code,
+        label: data.label,
+        materializedPath: data.materializedPath,
       );
     }).toList();
   }

@@ -18,6 +18,7 @@ class DigitTextFormField extends StatelessWidget {
   final String label;
   final int? minLength;
   final Widget? suffixIcon;
+  final void Function(FormControl<dynamic>)? onChanged;
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
   final Map<String, String Function(Object control)>? validationMessages;
@@ -41,6 +42,7 @@ class DigitTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.isRequired = false,
     this.readOnly = false,
+    this.onChanged,
     this.minLength,
   });
 
@@ -48,6 +50,7 @@ class DigitTextFormField extends StatelessWidget {
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
         child: ReactiveTextField(
+          onChanged: onChanged,
           readOnly: readOnly,
           formControlName: formControlName,
           maxLength: maxLength,

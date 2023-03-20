@@ -8,6 +8,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
@@ -197,6 +198,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => ProductVariantLocalRepository(
           sql,
           ProductVariantOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<BoundaryModel, BoundarySearchModel>>(
+        create: (_) => BoundaryLocalRepository(
+          sql,
+          BoundaryOpLogManager(isar),
         ),
       ),
     ];
