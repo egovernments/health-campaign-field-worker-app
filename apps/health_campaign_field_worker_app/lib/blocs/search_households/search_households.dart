@@ -231,6 +231,11 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
   const factory SearchHouseholdsEvent.initialize() =
       SearchHouseholdsInitializedEvent;
 
+  const factory SearchHouseholdsEvent.searchByHousehold({
+    required String projectId,
+    required HouseholdModel householdModel,
+  }) = SearchHouseholdsByHouseholdsEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
