@@ -572,6 +572,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  overlay_builder:
+    dependency: transitive
+    description:
+      name: overlay_builder
+      sha256: "58b97bc5f67a2e2bb7006dd88e697ac757dfffc9dbd1e7dfc1917fb510a4b5c8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   package_config:
     dependency: transitive
     description:
