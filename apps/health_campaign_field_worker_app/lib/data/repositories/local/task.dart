@@ -10,6 +10,68 @@ import '../../data_repository.dart';
 class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   TaskLocalRepository(super.sql, super.opLogManager);
 
+  void listenToChanges({
+    required TaskSearchModel query,
+    required void Function(List<TaskModel> data) listener,
+  }) {
+    final select = sql.select(sql.task).join([
+      leftOuterJoin(
+        sql.taskResource,
+        sql.taskResource.clientReferenceId.equalsExp(
+          sql.task.clientReferenceId,
+        ),
+      ),
+    ])
+      ..where(
+        buildOr([
+          if (query.projectId != null)
+            sql.task.projectId.equals(
+              query.projectId,
+            ),
+        ]),
+      );
+
+    select.watch().listen((results) {
+      final data = results
+          .map((e) {
+            final task = e.readTableOrNull(sql.task);
+            final resources = e.readTableOrNull(sql.taskResource);
+            if (task == null) return null;
+
+            return TaskModel(
+              id: task.id,
+              createdBy: task.createdBy,
+              clientReferenceId: task.clientReferenceId,
+              rowVersion: task.rowVersion,
+              tenantId: task.tenantId,
+              isDeleted: task.isDeleted,
+              projectId: task.projectId,
+              projectBeneficiaryId: task.projectBeneficiaryId,
+              createdDate: task.createdDate,
+              status: task.status,
+              resources: resources == null
+                  ? null
+                  : [
+                      TaskResourceModel(
+                        clientReferenceId: resources.clientReferenceId,
+                        id: resources.id,
+                        productVariantId: resources.productVariantId,
+                        taskId: resources.taskId,
+                        deliveryComment: resources.deliveryComment,
+                        quantity: resources.quantity,
+                        rowVersion: resources.rowVersion,
+                      ),
+                    ],
+            );
+          })
+          .whereNotNull()
+          .where((element) => element.isDeleted != true)
+          .toList();
+
+      listener(data);
+    });
+  }
+
   @override
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query, [
