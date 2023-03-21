@@ -16,6 +16,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../facility_selection.dart';
 
 class StockDetailsPage extends LocalizedStatefulWidget {
   const StockDetailsPage({
@@ -369,20 +370,39 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
-                                return DigitSearchDropdown<FacilityModel>(
-                                  label: localizations.translate(
-                                    transactionPartyLabel,
+                                final facilities = state.whenOrNull(
+                                      fetched: (_, facilities) => facilities,
+                                    ) ??
+                                    [];
+
+                                return DigitTextFormField(
+                                  valueAccessor: FacilityValueAccessor(
+                                    facilities,
                                   ),
-                                  suggestionsCallback: (items, pattern) {
-                                    return items
-                                        .where((e) => e.id.contains(pattern));
-                                  },
-                                  menuItems: state.maybeWhen(
-                                    orElse: () => [],
-                                    fetched: (_, facilities) => facilities,
+                                  label: localizations.translate(
+                                    i18.stockReconciliationDetails
+                                        .facilityLabel,
+                                  ),
+                                  suffix: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.search),
                                   ),
                                   formControlName: _transactingPartyKey,
-                                  valueMapper: (value) => value.id,
+                                  readOnly: true,
+                                  onTap: () async {
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    final facility =
+                                        await parent.push<FacilityModel>(
+                                      FacilitySelectionRoute(
+                                        facilities: facilities,
+                                      ),
+                                    );
+
+                                    if (facility == null) return;
+                                    form.control(_transactingPartyKey).value =
+                                        facility;
+                                  },
                                 );
                               },
                             ),

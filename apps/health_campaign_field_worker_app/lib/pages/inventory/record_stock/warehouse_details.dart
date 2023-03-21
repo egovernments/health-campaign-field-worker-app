@@ -13,6 +13,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
+import '../facility_selection.dart';
 
 class WarehouseDetailsPage extends LocalizedStatefulWidget {
   const WarehouseDetailsPage({
@@ -58,6 +59,11 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                 );
               },
               builder: (ctx, facilityState) {
+                final facilities = facilityState.whenOrNull(
+                      fetched: (facilities, _) => facilities,
+                    ) ??
+                    [];
+
                 return Scaffold(
                   body: GestureDetector(
                     onTap: () {
@@ -144,40 +150,34 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       ),
                                     ),
                                   ]),
-                                  DigitSearchDropdown<FacilityModel>(
-                                    isRequired: true,
-                                    valueMapper: (value) => value.id,
-                                    formControlName: _warehouseKey,
-                                    menuItems: facilityState.maybeWhen(
-                                      orElse: () => [],
-                                      fetched: (facilities, _) => facilities,
+                                  DigitTextFormField(
+                                    valueAccessor: FacilityValueAccessor(
+                                      facilities,
                                     ),
                                     label: localizations.translate(
-                                      i18.warehouseDetails.warehouseNameId,
+                                      i18.stockReconciliationDetails
+                                          .facilityLabel,
                                     ),
-                                    initialValue: facilityState.whenOrNull(
-                                      fetched: (facilities, _) {
-                                        return facilities.length == 1
-                                            ? facilities.elementAt(0)
-                                            : null;
-                                      },
+                                    suffix: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search),
                                     ),
-                                    initialValueText: facilityState.whenOrNull(
-                                      fetched: (facilities, _) {
-                                        return facilities.length == 1
-                                            ? facilities
-                                                .elementAt(0)
-                                                .id
-                                                .toString()
-                                            : null;
-                                      },
-                                    ),
-                                    suggestionsCallback: (items, pattern) =>
-                                        items
-                                            .where(
-                                              (e) => e.id.contains(pattern),
-                                            )
-                                            .toList(),
+                                    formControlName: _warehouseKey,
+                                    readOnly: true,
+                                    onTap: () async {
+                                      final parent = context.router.parent()
+                                          as StackRouter;
+                                      final facility =
+                                          await parent.push<FacilityModel>(
+                                        FacilitySelectionRoute(
+                                          facilities: facilities,
+                                        ),
+                                      );
+
+                                      if (facility == null) return;
+                                      form.control(_warehouseKey).value =
+                                          facility;
+                                    },
                                   ),
                                 ],
                               ),
