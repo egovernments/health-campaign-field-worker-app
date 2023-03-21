@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/auth/auth.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/project/project.dart';
 import '../router/app_router.dart';
@@ -83,7 +84,41 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             },
             builder: (context, state) {
               return state.maybeMap(
-                orElse: () => const Center(child: Text('No Projects Assigned')),
+                orElse: () => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: Column(
+                      children: [
+                        Text(localizations.translate(
+                          i18.projectSelection.noProjectsAssigned,
+                        )),
+                        Text(localizations.translate(
+                          i18.projectSelection.contactSysAdmin,
+                        )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 30),
+                          child: SizedBox(
+                            width: 300,
+                            child: DigitElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<AuthBloc>()
+                                    .add(const AuthLogoutEvent());
+                              },
+                              child: Center(
+                                child: Text(
+                                  localizations.translate(
+                                    i18.common.coreCommonOk,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 loading: (value) => const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
