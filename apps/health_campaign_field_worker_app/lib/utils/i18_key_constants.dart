@@ -43,6 +43,14 @@ class Common {
   String get coreCommonOk => 'CORE_COMMON_OK';
 
   String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
+
+  String get coreCommonBack => 'CORE_COMMON_BACK';
+
+  String get coreCommonHelp => 'CORE_COMMON_HELP';
+
+  String get coreCommonHome => 'CORE_COMMON_HOME';
+
+  String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 }
 
 class Login {
