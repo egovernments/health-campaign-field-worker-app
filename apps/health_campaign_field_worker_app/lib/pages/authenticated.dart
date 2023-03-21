@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
-import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
@@ -282,11 +281,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
                 return bloc;
               },
-            ),
-            BlocProvider(
-              create: (_) => LocationBloc(location: Location())
-                ..add(const LoadLocationEvent()),
-              lazy: false,
             ),
             BlocProvider(
               create: (_) =>
