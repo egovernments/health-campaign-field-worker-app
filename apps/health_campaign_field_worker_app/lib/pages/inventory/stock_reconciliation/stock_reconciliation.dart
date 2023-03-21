@@ -106,6 +106,8 @@ class _StockReconciliationPageState
                       context.router.replace(AcknowledgementRoute());
                     },
                     builder: (context, stockState) {
+                      print(stockState.stockReceived);
+
                       return ReactiveFormBuilder(
                         form: _form,
                         builder: (ctx, form, child) {
@@ -295,6 +297,14 @@ class _StockReconciliationPageState
                                               if (facility == null) return;
                                               form.control(_facilityKey).value =
                                                   facility;
+                                              context
+                                                  .read<
+                                                      StockReconciliationBloc>()
+                                                  .add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                      facility,
+                                                    ),
+                                                  );
                                             },
                                           );
                                         },
