@@ -16,9 +16,13 @@ class DigitProjectCell extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: DigitCard(
+        margin: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+        ),
         child: Padding(
           padding:
-              const EdgeInsets.only(left: 8, right: 8, top: 10, bottom: 10),
+              const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -34,7 +38,7 @@ class DigitProjectCell extends StatelessWidget {
                     width: 14,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.5,
+                    width: MediaQuery.of(context).size.width / 1.8,
                     child: Row(
                       children: [
                         Flexible(
