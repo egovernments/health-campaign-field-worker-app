@@ -65,6 +65,7 @@ class DigitTextFormField extends StatelessWidget {
           valueAccessor: valueAccessor,
           decoration: InputDecoration(
             labelText: hint,
+            contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
             suffixIconConstraints: const BoxConstraints(
               maxHeight: 40,
               maxWidth: 40,
