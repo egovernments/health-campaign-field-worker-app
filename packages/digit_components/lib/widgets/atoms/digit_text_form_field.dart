@@ -50,33 +50,40 @@ class DigitTextFormField extends StatelessWidget {
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
         child: ReactiveTextField(
-          onChanged: onChanged,
-          readOnly: readOnly,
-          formControlName: formControlName,
-          maxLength: maxLength,
-          validationMessages: validationMessages,
-          autofocus: false,
-          textCapitalization: textCapitalization,
-          minLines: minLines,
-          maxLines: maxLines,
-          obscureText: obscureText,
-          focusNode: focusNode,
-          keyboardType: keyboardType,
-          valueAccessor: valueAccessor,
-          decoration: InputDecoration(
-            labelText: hint,
-            contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-            suffixIconConstraints: const BoxConstraints(
-              maxHeight: 40,
-              maxWidth: 40,
-            ),
-            suffixIcon: suffix == null
-                ? null
-                : InkWell(
-                    onTap: onTap,
-                    child: suffix,
-                  ),
-          ),
-        ),
+            onChanged: onChanged,
+            readOnly: readOnly,
+            formControlName: formControlName,
+            maxLength: maxLength,
+            validationMessages: validationMessages,
+            autofocus: false,
+            textCapitalization: textCapitalization,
+            minLines: minLines,
+            maxLines: maxLines,
+            obscureText: obscureText,
+            focusNode: focusNode,
+            keyboardType: keyboardType,
+            valueAccessor: valueAccessor,
+            decoration: readOnly == true
+                ? InputDecoration(
+                    enabledBorder:
+                        DigitTheme.instance.inputDecorationTheme.disabledBorder,
+                    fillColor: DigitTheme.instance.colors.cloudGray,
+                    focusedBorder:
+                        DigitTheme.instance.inputDecorationTheme.disabledBorder,
+                    focusColor: DigitTheme.instance.colors.cloudGray)
+                : InputDecoration(
+                    labelText: hint,
+                    contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
+                    suffixIconConstraints: const BoxConstraints(
+                      maxHeight: 40,
+                      maxWidth: 40,
+                    ),
+                    suffixIcon: suffix == null
+                        ? null
+                        : InkWell(
+                            onTap: onTap,
+                            child: suffix,
+                          ),
+                  )),
       );
 }
