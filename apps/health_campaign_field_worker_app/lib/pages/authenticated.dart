@@ -135,6 +135,20 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                             random = random + 1;
                                                           });
                                                         }
+
+                                                        if (form
+                                                                .control(item)
+                                                                .value !=
+                                                            null) {
+                                                          setState(() {
+                                                            selectedBoundaryValue =
+                                                                form
+                                                                    .control(
+                                                                      item,
+                                                                    )
+                                                                    .value;
+                                                          });
+                                                        }
                                                       }));
                                                     },
                                                   );
@@ -149,31 +163,24 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         child: ReactiveFormConsumer(
                                           builder: (context, form, child) =>
                                               DigitElevatedButton(
-                                            onPressed: () {
-                                              String selectedBoundary = '';
-                                              (boundaryMapperList
-                                                  .forEach((item) {
-                                                if (form.control(item).value !=
-                                                    null) {
-                                                  selectedBoundary =
-                                                      form.control(item).value;
-                                                }
-                                              }));
-
-                                              if (selectedBoundary != '') {
-                                                context
-                                                    .read<BoundaryBloc>()
-                                                    .add(BoundaryEvent.select(
-                                                      selectedBoundary:
-                                                          selectedBoundary,
-                                                    ));
-                                              }
-                                              setState(() {
-                                                visiable = false;
-                                                selectedBoundaryValue =
-                                                    selectedBoundary;
-                                              });
-                                            },
+                                            onPressed: selectedBoundaryValue
+                                                    .trim()
+                                                    .isEmpty
+                                                ? null
+                                                : () {
+                                                    context
+                                                        .read<BoundaryBloc>()
+                                                        .add(BoundaryEvent
+                                                            .select(
+                                                          selectedBoundary:
+                                                              selectedBoundaryValue,
+                                                        ));
+                                                    setState(() {
+                                                      visiable = false;
+                                                    });
+                                                    context.router
+                                                        .replace(HomeRoute());
+                                                  },
                                             child: const Text('Submit'),
                                           ),
                                         ),
