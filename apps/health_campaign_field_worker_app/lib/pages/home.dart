@@ -7,8 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
 import '../blocs/auth/auth.dart';
-import '../blocs/boundary/boundary.dart';
-import '../blocs/project/project.dart';
+import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -167,10 +166,12 @@ class _HomePageState extends LocalizedState<HomePage> {
             HomeItemCard(
               icon: Icons.all_inbox,
               label: i18.home.beneficiaryLabel,
-              onPressed: () {
-                context.router.push(
+              onPressed: () async {
+                final searchBloc = context.read<SearchHouseholdsBloc>();
+                await context.router.push(
                   SearchBeneficiaryRoute(),
                 );
+                searchBloc.add(const SearchHouseholdsClearEvent());
               },
             ),
           );
@@ -240,10 +241,12 @@ class _HomePageState extends LocalizedState<HomePage> {
             HomeItemCard(
               icon: Icons.all_inbox,
               label: i18.home.beneficiaryLabel,
-              onPressed: () {
-                context.router.push(
+              onPressed: () async {
+                final searchBloc = context.read<SearchHouseholdsBloc>();
+                await context.router.push(
                   SearchBeneficiaryRoute(),
                 );
+                searchBloc.add(const SearchHouseholdsClearEvent());
               },
             ),
           ]);
@@ -262,10 +265,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.all_inbox,
                 label: i18.home.beneficiaryLabel,
-                onPressed: () {
-                  context.router.push(
+                onPressed: () async {
+                  final searchBloc = context.read<SearchHouseholdsBloc>();
+                  await context.router.push(
                     SearchBeneficiaryRoute(),
                   );
+                  searchBloc.add(const SearchHouseholdsClearEvent());
                 },
               ),
             ],
