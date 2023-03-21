@@ -29,7 +29,18 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       ProjectFacilitySearchModel(projectId: [event.projectId]),
     );
 
+    List<FacilityModel> allFacilities = [
+      FacilityModel(id: 'NA'),
+      FacilityModel(id: 'DeliveryTeam'),
+    ];
+
     List<FacilityModel> facilities = [];
+
+    if (event.loadAllProjects) {
+      allFacilities.addAll(await facilityDataRepository.search(
+        FacilitySearchModel(id: null),
+      ));
+    }
 
     for (final projectFacility in projectFacilities) {
       final results = await facilityDataRepository.search(
@@ -42,7 +53,10 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     if (facilities.isEmpty) {
       emit(const FacilityEmptyState());
     } else {
-      emit(FacilityFetchedState(facilities: facilities));
+      emit(FacilityFetchedState(
+        facilities: facilities,
+        allFacilities: allFacilities,
+      ));
     }
   }
 }
@@ -51,6 +65,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
 class FacilityEvent with _$FacilityEvent {
   const factory FacilityEvent.loadForProjectId({
     required String projectId,
+    @Default(true) bool loadAllProjects,
   }) = FacilityLoadForProjectEvent;
 }
 
@@ -62,5 +77,6 @@ class FacilityState with _$FacilityState {
 
   const factory FacilityState.fetched({
     required List<FacilityModel> facilities,
+    @Default([]) List<FacilityModel> allFacilities,
   }) = FacilityFetchedState;
 }

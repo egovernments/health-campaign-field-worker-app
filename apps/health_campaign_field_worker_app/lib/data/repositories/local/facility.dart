@@ -28,7 +28,10 @@ class FacilityLocalRepository
           ..where(
             buildAnd(
               [
-                if (query.id != null) sql.facility.id.isIn(query.id!),
+                if (query.id != null)
+                  sql.facility.id.isIn(query.id!)
+                else
+                  const Constant(true),
                 if (query.isPermanent != null)
                   sql.facility.isPermanent.equals(
                     query.isPermanent!,

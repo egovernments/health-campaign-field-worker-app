@@ -184,10 +184,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           // value: 'fieldSupervisor1',
           // value: 'registrar1',
-          value: 'distributorUlongue',
+          // value: 'distributor4',
+          // value: 'distributorUlongue',
           // value: 'sysadmin9012',
           // value: 'warehouse9012',
-          // value: 'warehousemgr',
+          value: 'warehousemgr',
           // value: 'registrar',
         ),
         _password: FormControl<String>(

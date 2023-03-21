@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
+import 'package:location/location.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -58,6 +59,13 @@ class MainApplication extends StatelessWidget {
           sql: sql,
           child: MultiBlocProvider(
             providers: [
+              BlocProvider(
+                create: (_) {
+                  return LocationBloc(location: Location())
+                    ..add(const LoadLocationEvent());
+                },
+                lazy: false,
+              ),
               BlocProvider(
                 create: (ctx) => AuthBloc(authRepository: ctx.read())
                   ..add(
@@ -223,7 +231,7 @@ class MainApplication extends StatelessWidget {
                                   const UnauthenticatedRouteWrapper(),
                                 ],
                                 authenticated: (_, __, ___) => [
-                                  const AuthenticatedRouteWrapper(),
+                                  AuthenticatedRouteWrapper(),
                                 ],
                               ),
                             ),

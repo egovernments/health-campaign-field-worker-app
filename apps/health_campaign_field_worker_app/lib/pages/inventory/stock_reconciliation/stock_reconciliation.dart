@@ -285,20 +285,20 @@ class _StockReconciliationPageState
                                             },
                                             menuItems: state.maybeWhen(
                                               orElse: () => [],
-                                              fetched: (facilities) =>
+                                              fetched: (facilities, _) =>
                                                   facilities,
                                             ),
                                             formControlName: _facilityKey,
                                             valueMapper: (value) => value.id,
                                             initialValue: state.whenOrNull(
-                                              fetched: (facilities) {
+                                              fetched: (facilities, _) {
                                                 return facilities.length == 1
                                                     ? facilities.elementAt(0)
                                                     : null;
                                               },
                                             ),
                                             initialValueText: state.whenOrNull(
-                                              fetched: (facilities) {
+                                              fetched: (facilities, _) {
                                                 return facilities.length == 1
                                                     ? facilities
                                                         .elementAt(0)
