@@ -188,7 +188,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           // value: 'distributorUlongue',
           // value: 'sysadmin9012',
           // value: 'warehouse9012',
-          value: 'warehousemgr',
+          value: 'wmgrUlongue',
           // value: 'registrar',
         ),
         _password: FormControl<String>(

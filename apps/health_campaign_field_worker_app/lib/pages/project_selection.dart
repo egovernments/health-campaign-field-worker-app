@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,24 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 },
                 fetched: (projects, selectedProject) {
                   if (selectedProject != null) {
-                    context.read<BoundaryBloc>().add(BoundarySearchEvent(
-                          code: selectedProject.address!.boundary!,
-                        ));
-                    context.router.replace(HomeRoute());
+                    final boundary = selectedProject.address?.boundary;
+                    if (boundary != null) {
+                      context.read<BoundaryBloc>().add(
+                            BoundarySearchEvent(
+                              code: boundary,
+                            ),
+                          );
+                      context.router.replace(HomeRoute());
+                    } else {
+                      DigitToast.show(
+                        context,
+                        options: DigitToastOptions(
+                          'No boundary data associated with this project.',
+                          true,
+                          theme,
+                        ),
+                      );
+                    }
                   }
                 },
               );
