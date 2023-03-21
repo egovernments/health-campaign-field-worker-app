@@ -460,6 +460,7 @@ class _IndividualDetailsPageState
         value: individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
+        validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(
