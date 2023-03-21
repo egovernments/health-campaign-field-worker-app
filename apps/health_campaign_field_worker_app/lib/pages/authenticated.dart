@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
+import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
@@ -65,8 +67,11 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     fetched:
                         (boundaryList, boundaryMapperList, selectedBoundary) {
                       return DigitCard(
-                        margin: const EdgeInsets.only(
+                        margin: EdgeInsets.only(
                           top: kToolbarHeight * 2,
+                          left: 8,
+                          right: 8,
+                          bottom: MediaQuery.of(context).size.height / 2,
                         ),
                         child: ReactiveFormBuilder(
                           form: buildForm,
@@ -133,20 +138,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                             random = random + 1;
                                                           });
                                                         }
-
-                                                        if (form
-                                                                .control(item)
-                                                                .value !=
-                                                            null) {
-                                                          setState(() {
-                                                            selectedBoundaryValue =
-                                                                form
-                                                                    .control(
-                                                                      item,
-                                                                    )
-                                                                    .value;
-                                                          });
-                                                        }
                                                       }));
                                                     },
                                                   );
@@ -161,24 +152,31 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                         child: ReactiveFormConsumer(
                                           builder: (context, form, child) =>
                                               DigitElevatedButton(
-                                            onPressed: selectedBoundaryValue
-                                                    .trim()
-                                                    .isEmpty
-                                                ? null
-                                                : () {
-                                                    context
-                                                        .read<BoundaryBloc>()
-                                                        .add(BoundaryEvent
-                                                            .select(
-                                                          selectedBoundary:
-                                                              selectedBoundaryValue,
-                                                        ));
-                                                    setState(() {
-                                                      visiable = false;
-                                                    });
-                                                    context.router
-                                                        .replace(HomeRoute());
-                                                  },
+                                            onPressed: () {
+                                              String selectedBoundary = '';
+                                              (boundaryMapperList
+                                                  .forEach((item) {
+                                                if (form.control(item).value !=
+                                                    null) {
+                                                  selectedBoundary =
+                                                      form.control(item).value;
+                                                }
+                                              }));
+
+                                              if (selectedBoundary != '') {
+                                                context
+                                                    .read<BoundaryBloc>()
+                                                    .add(BoundaryEvent.select(
+                                                      selectedBoundary:
+                                                          selectedBoundary,
+                                                    ));
+                                              }
+                                              setState(() {
+                                                visiable = false;
+                                                selectedBoundaryValue =
+                                                    selectedBoundary;
+                                              });
+                                            },
                                             child: const Text('Submit'),
                                           ),
                                         ),
@@ -193,6 +191,9 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       );
                     },
                   ),
+
+                  // 3. Align the "follower" relative to the "child" anywhere you like
+
                   child: TextButton(
                     onPressed: () {
                       boundaryState.maybeWhen(
@@ -281,6 +282,10 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
                 return bloc;
               },
+            ),
+            BlocProvider(
+              create: (_) => LocationBloc(location: Location())
+                ..add(const LoadLocationEvent()),
             ),
             BlocProvider(
               create: (_) =>
