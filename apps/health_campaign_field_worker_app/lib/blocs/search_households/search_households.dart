@@ -91,7 +91,7 @@ class SearchHouseholdsBloc
         .map(
           (task) {
             return task.resources?.where((element) {
-              return true;
+              return element.auditDetails?.createdBy == userUid;
             }).map(
               (taskResource) {
                 return int.tryParse(taskResource.quantity ?? '0');
@@ -105,7 +105,7 @@ class SearchHouseholdsBloc
 
     emit(state.copyWith(
       registeredHouseholds: beneficiaries.where((element) {
-        return true;
+        return element.auditDetails?.createdBy == userUid;
       }).length,
       deliveredInterventions: interventionDelivered,
     ));
