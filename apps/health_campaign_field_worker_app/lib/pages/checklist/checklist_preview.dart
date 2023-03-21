@@ -119,7 +119,10 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                     : BlocBuilder<ServiceDefinitionBloc,
                         ServiceDefinitionState>(builder: (context, state) {
                         return state.maybeWhen(
-                          serviceDefinitionFetch: (item1, item2) {
+                          serviceDefinitionFetch: (
+                            item1,
+                            item2,
+                          ) {
                             return DigitCard(
                               child: Column(
                                 children: [
