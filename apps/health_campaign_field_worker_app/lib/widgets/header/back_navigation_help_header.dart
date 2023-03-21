@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
   final bool showBackNavigation;
+  final bool showLogoutCTA;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
     this.showHelp = true,
     this.showBackNavigation = true,
+    this.showLogoutCTA = false,
   });
 
   @override
@@ -29,6 +33,21 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               children: const [
                 Icon(Icons.arrow_left_sharp),
                 Text('Back'),
+              ],
+            ),
+          ),
+        ],
+        if (showLogoutCTA) ...[
+          const SizedBox(width: 8),
+          TextButton(
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            onPressed: () {
+              context.read<AuthBloc>().add(const AuthLogoutEvent());
+            },
+            child: Row(
+              children: const [
+                Text('Logout'),
+                Icon(Icons.logout_outlined),
               ],
             ),
           ),

@@ -39,7 +39,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         header: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BackNavigationHelpHeaderWidget(),
+            const BackNavigationHelpHeaderWidget(
+              showLogoutCTA: true,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
