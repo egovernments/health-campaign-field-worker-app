@@ -54,8 +54,6 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               sql.serviceDefinition.id.equals(
                 query.id,
               ),
-            if (query.code != null)
-              sql.serviceDefinition.code.like('%${query.code}%'),
           ])))
         .get();
 
