@@ -17,6 +17,7 @@ const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
 const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
+const manageStock = ManageStock();
 
 class Common {
   const Common();
@@ -458,4 +459,38 @@ class StockReconciliationDetails {
   String get manualCountMinError => 'STOCK_RECONCILIATION_COUNT_BELOW_MIN';
 
   String get manualCountMaxError => 'STOCK_RECONCILIATION_COUNT_EXCEEDED_MAX';
+
+  String get noProjectSelected => 'NO_PROJECT_SELECTED';
+
+  String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
+}
+
+class ManageStock {
+  const ManageStock();
+
+  String get label => 'MANAGE_STOCK_LABEL';
+
+  String get recordstockReceiptLabel =>
+      'MANAGE_STOCK_RECORDSTOCK_RECEIPT_LABEL';
+
+  String get recordstockReceiptDescription =>
+      'MANAGE_STOCK_RECEIPT_DESCRIPTION';
+  String get recordstockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
+
+  String get recordstockIssuedtDescription =>
+      'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
+  String get recordstockReturnedLabel =>
+      'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
+
+  String get recordstockReturnedtDescription =>
+      'MANAGE_STOCK_RECORDSTOCK_RETURNED_DESCRIPTION';
+  String get recordstockDamagedLabel =>
+      'MANAGE_STOCK_RECORDSTOCK_DAMAGED_LABEL';
+
+  String get recordstockDamagedDescription =>
+      'MANAGE_STOCK_RECORDSTOCK_DAMAGED_DESCRIPTION';
+  String get recordstockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
+
+  String get recordstockLossDescription =>
+      'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
 }
