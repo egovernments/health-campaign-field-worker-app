@@ -122,8 +122,12 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     },
                     child: Center(
                       child: Text(
-                        localizations
-                            .translate(i18.householdDetails.actionLabel),
+                        registrationState.mapOrNull(
+                              editHousehold: (value) => localizations
+                                  .translate(i18.common.coreCommonSave),
+                            ) ??
+                            localizations
+                                .translate(i18.householdDetails.actionLabel),
                       ),
                     ),
                   ),
