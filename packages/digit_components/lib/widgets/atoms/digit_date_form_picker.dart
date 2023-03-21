@@ -56,6 +56,7 @@ class DigitDateFormPicker extends StatelessWidget {
               dateTimeFormat: DateFormat('dd MMM yyyy'),
             ),
             decoration: InputDecoration(
+              contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
               suffixIcon: const Icon(Icons.date_range),
               label: hint == null ? null : Text(hint!),
             ),

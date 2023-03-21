@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,8 @@ class DigitTable extends StatelessWidget {
                 isAscending: e.isAscendingOrder,
                 isBorderRequired: (index - 1) == 0));
       } else {
-        return _getTitleItemWidget(e.label, theme);
+        return _getTitleItemWidget(e.label, theme,
+            isBorderRequired: (index - 1) == 0);
       }
     }).toList();
   }
@@ -44,6 +46,8 @@ class DigitTable extends StatelessWidget {
       {bool? isAscending, bool isBorderRequired = false}) {
     var textWidget = Text((label), style: theme.textTheme.headlineSmall);
     final tableCellBorder = DigitTheme.instance.tableCellBorder;
+    final tableCellStrongBorder = DigitTheme.instance.tableCellStrongBorder;
+    final surfaceColor = DigitTheme.instance.colorScheme.surface;
 
     return Container(
       decoration: isBorderRequired
@@ -51,12 +55,13 @@ class DigitTable extends StatelessWidget {
               border: Border(
                 left: tableCellBorder,
                 bottom: tableCellBorder,
-                right: tableCellBorder,
+                right: tableCellStrongBorder,
               ),
-            )
+              color: surfaceColor)
           : null,
       width: leftColumnWidth,
       height: 56,
+      color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
       alignment: Alignment.centerLeft,
       child: isAscending != null
@@ -89,6 +94,9 @@ class DigitTable extends StatelessWidget {
           : columnRowFixedHeight,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
       alignment: Alignment.centerLeft,
+      color: index % 2 == 0
+          ? DigitTheme.instance.colorScheme.background
+          : DigitTheme.instance.colorScheme.surface,
       child: Row(
         children: <Widget>[
           Expanded(
@@ -121,6 +129,7 @@ class DigitTable extends StatelessWidget {
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     var data = tableData[index].tableRow.first;
     final tableCellBorder = DigitTheme.instance.tableCellBorder;
+    final tableCellStrongBorder = DigitTheme.instance.tableCellStrongBorder;
     return InkWell(
       onTap: () {
         if (data.callBack != null) {
@@ -129,11 +138,11 @@ class DigitTable extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
+            color: DigitTheme.instance.colorScheme.surface,
             border: Border(
-          left: tableCellBorder,
-          bottom: tableCellBorder,
-          right: tableCellBorder,
-        )),
+              left: tableCellBorder,
+              right: tableCellStrongBorder,
+            )),
         width: leftColumnWidth,
         height: tableData[index].tableRow.first.label.length > 28
             ? columnRowIncreasedHeight(index)
@@ -152,8 +161,11 @@ class DigitTable extends StatelessWidget {
     return SizedBox(
       height: height,
       child: Container(
+        margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
         decoration: BoxDecoration(
-            border: Border.all(color: theme.scaffoldBackgroundColor)),
+          border: Border.all(color: DigitTheme.instance.colorScheme.outline),
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+        ),
         padding: const EdgeInsets.all(2),
         child: HorizontalDataTable(
           leftHandSideColumnWidth: leftColumnWidth,
@@ -174,5 +186,4 @@ class DigitTable extends StatelessWidget {
   }
 
 //Need to move this to theme
-
 }

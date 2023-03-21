@@ -178,9 +178,14 @@ class DigitTheme {
         ),
         actionsPadding: const EdgeInsets.all(kPadding),
       );
-      
+
   BorderSide get tableCellBorder => BorderSide(
-        color: colorScheme.background,
+        color: colorScheme.outline,
         width: 0.5,
+      );
+
+  BorderSide get tableCellStrongBorder => BorderSide(
+        color: colorScheme.outline,
+        width: 2,
       );
 }

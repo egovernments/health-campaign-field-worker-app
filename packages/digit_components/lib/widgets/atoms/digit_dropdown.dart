@@ -43,6 +43,9 @@ class DigitDropdown<T> extends StatelessWidget {
             },
             validationMessages: validationMessages,
             formControlName: formControlName,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(16, 12, 0, 12),
+            ),
             items: menuItems
                 .map(
                   (e) => DropdownMenuItem<T>(
