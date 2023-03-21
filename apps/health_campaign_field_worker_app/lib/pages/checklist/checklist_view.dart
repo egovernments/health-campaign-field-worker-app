@@ -302,7 +302,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ]);
                         }).toList(),
                         DigitElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final router = context.router;
                             submitTriggered = true;
 
                             context.read<ServiceBloc>().add(
@@ -324,7 +325,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                               }
                             }
 
-                            DigitDialog.show(
+                            final shouldSubmit = await DigitDialog.show(
                               context,
                               options: DigitDialogOptions(
                                 titleText: localizations.translate(
@@ -393,9 +394,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     Navigator.of(
                                       context,
                                       rootNavigator: true,
-                                    ).pop();
-
-                                    context.router.push(AcknowledgementRoute());
+                                    ).pop(true);
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(
@@ -405,11 +404,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                     Navigator.of(
                                       context,
                                       rootNavigator: true,
-                                    ).pop();
+                                    ).pop(false);
                                   },
                                 ),
                               ),
                             );
+                            if (shouldSubmit ?? false) {
+                              router.navigate(ChecklistRoute());
+                              router.push(AcknowledgementRoute());
+                            }
                           },
                           child: Text(
                             localizations
