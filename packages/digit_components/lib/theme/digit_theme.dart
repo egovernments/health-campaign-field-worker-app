@@ -3,7 +3,6 @@ library digit_theme;
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/typography.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const kPadding = 8.0;
 
@@ -15,8 +14,12 @@ class DigitTheme {
   DigitColors get colors => const DigitColors();
 
   DigitMobileTypography get mobileTypography => DigitMobileTypography(
-        normalBase: GoogleFonts.roboto(),
-        displayBase: GoogleFonts.robotoCondensed(),
+        normalBase: const TextStyle(
+          fontFamily: 'Roboto',
+        ),
+        displayBase: const TextStyle(
+          fontFamily: 'Roboto',
+        ),
         light: colors.davyGray,
         normal: colors.woodsmokeBlack,
       );
@@ -141,6 +144,14 @@ class DigitTheme {
             color: colors.burningOrange,
             width: 2,
           ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(color: colors.cloudGray, width: 2),
         ),
         contentPadding: const EdgeInsets.all(12),
         isDense: true,
