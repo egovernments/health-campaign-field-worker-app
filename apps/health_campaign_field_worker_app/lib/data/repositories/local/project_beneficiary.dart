@@ -96,6 +96,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             beneficiaryId: projectBeneficiary.beneficiaryId,
             dateOfRegistration: projectBeneficiary.dateOfRegistration,
             projectId: projectBeneficiary.projectId,
+            auditDetails: AuditDetails(
+              createdTime: projectBeneficiary.auditCreatedTime!,
+              createdBy: projectBeneficiary.auditCreatedBy!,
+            ),
           );
         })
         .where((element) => element.isDeleted != true)
