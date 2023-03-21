@@ -137,9 +137,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           }
 
           projects.removeDuplicates((e) => e.id);
-          projects.removeDuplicates(
-            (element) => element.id,
-          );
 
           for (final project in projects) {
             await projectLocalRepository.create(
@@ -187,9 +184,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         createOpLog: false,
       );
 
+      /// Passing [id] as [null] is required to load all facilities associated
+      /// with the tenant
       final facilities = await facilityRemoteRepository.search(
         FacilitySearchModel(
-          id: [projectFacility.facilityId],
+          id: null,
         ),
       );
 
