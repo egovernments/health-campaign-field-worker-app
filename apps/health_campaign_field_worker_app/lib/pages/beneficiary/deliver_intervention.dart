@@ -353,7 +353,7 @@ class _DeliverInterventionPageState
                                               .household.memberCount ??
                                           householdMemberWrapper.members.length;
 
-                                      return min(count * 1.8, 3).round();
+                                         return min(count / 1.8, 3).round();
                                     }(),
                                   },
                                 ),
