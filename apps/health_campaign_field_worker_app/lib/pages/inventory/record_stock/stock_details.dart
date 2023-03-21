@@ -216,11 +216,30 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         .control(_commentsKey)
                                         .value as String?;
 
+                                    String? transactingPartyType;
+
+                                    final fields = transactingParty
+                                        .additionalFields?.fields;
+
+                                    if (fields != null && fields.isNotEmpty) {
+                                      final type = fields.firstWhereOrNull(
+                                          (element) => element.key == 'type');
+                                      final value = type?.value;
+                                      if (value != null &&
+                                          value is String &&
+                                          value.isNotEmpty) {
+                                        transactingPartyType = value;
+                                      }
+                                    }
+
+                                    transactingPartyType ??= 'WAREHOUSE';
+
                                     final stockModel = StockModel(
                                       clientReferenceId: IdGen.i.identifier,
                                       productVariantId: productVariant.id,
                                       transactingPartyId: transactingParty.id,
-                                      transactingPartyType: 'WAREHOUSE',
+                                      transactingPartyType:
+                                          transactingPartyType,
                                       transactionType: transactionType,
                                       transactionReason: transactionReason,
                                       referenceId: stockState.projectId,
