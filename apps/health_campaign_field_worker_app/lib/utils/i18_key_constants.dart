@@ -40,6 +40,8 @@ class Common {
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
+
+  String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
 }
 
 class Login {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/auth/auth.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
@@ -45,9 +47,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
             child: Row(
-              children: const [
-                Text('Logout'),
-                Icon(Icons.logout_outlined),
+              children: [
+                Text(AppLocalizations.of(context)
+                    .translate(i18.common.coreCommonLogout)),
+                const Icon(Icons.logout_outlined),
               ],
             ),
           ),
