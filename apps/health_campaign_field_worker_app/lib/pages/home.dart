@@ -197,7 +197,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
           break;
 
-        case UserRoleCodeEnum.districSupervisor:
+        case UserRoleCodeEnum.districtSupervisor:
           homeItems.addAll([
             HomeItemCard(
               icon: Icons.menu_book,

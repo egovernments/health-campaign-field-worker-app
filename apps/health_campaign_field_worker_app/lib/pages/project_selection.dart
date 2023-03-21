@@ -41,7 +41,10 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           children: [
             const BackNavigationHelpHeaderWidget(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
               child: Text(
                 localizations.translate(
                   i18.projectSelection.projectDetailsLabelText,
