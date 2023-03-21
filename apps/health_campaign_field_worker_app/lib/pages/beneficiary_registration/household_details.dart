@@ -43,8 +43,9 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
-                height: 90,
+                height: 85,
                 child: DigitCard(
+                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
                     onPressed: () {
                       form.markAllAsTouched();
