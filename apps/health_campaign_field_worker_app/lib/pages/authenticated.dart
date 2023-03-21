@@ -225,6 +225,8 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             BlocProvider(
               create: (context) {
                 return SearchHouseholdsBloc(
+                  userUid: context.loggedInUserUuid,
+                  projectId: context.projectId,
                   projectBeneficiary: context.repository<
                       ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
                   householdMember: context.repository<HouseholdMemberModel,
@@ -235,7 +237,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                       .repository<IndividualModel, IndividualSearchModel>(),
                   taskDataRepository:
                       context.repository<TaskModel, TaskSearchModel>(),
-                  projectId: context.projectId,
                 )..add(const SearchHouseholdsClearEvent());
               },
             ),
