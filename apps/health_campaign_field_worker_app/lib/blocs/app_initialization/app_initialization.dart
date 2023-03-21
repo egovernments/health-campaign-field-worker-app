@@ -38,7 +38,7 @@ class AppInitializationBloc
       envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
-          "tenantId": "mz",
+          "tenantId": "default",
           "moduleDetails": [
             {
               "moduleName": "HCM-SERVICE-REGISTRY",
@@ -60,7 +60,7 @@ class AppInitializationBloc
       envConfig.variables.mdmsApiPath,
       {
         "MdmsCriteria": {
-          "tenantId": "mz",
+          "tenantId": "default",
           "moduleDetails": [
             {
               "moduleName": "HCM-FIELD-APP-CONFIG",

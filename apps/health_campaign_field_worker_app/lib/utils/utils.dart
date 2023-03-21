@@ -69,8 +69,9 @@ class CustomValidator {
   }
 
   static Map<String, dynamic>? minValueOne(AbstractControl<dynamic> control) {
-    return control.value == null || control.value >= 1
+    return control.value == null
+        || (int.tryParse(control.value,) ?? 0) >= 1
         ? null
-        : {'Min Value should be 1': true};
+        : {'minValueOne': true};
   }
 }

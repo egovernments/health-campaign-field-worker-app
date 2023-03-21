@@ -398,11 +398,9 @@ class _StockReconciliationPageState
                                         setState(() {
                                           form.control(_reconciliationCommentsKey).setValidators(
                                             [
-                                              if ((int
-                                                  .tryParse(value,)
-                                                  ?? 0) == stockState
-                                                  .stockInHand
-                                                  .toInt())
+                                              if ((int.tryParse(value,) ?? 0)
+                                                  != stockState
+                                                      .stockInHand.toInt())
                                                 Validators.required,
                                             ],
                                           );

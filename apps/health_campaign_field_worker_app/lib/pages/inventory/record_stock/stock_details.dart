@@ -44,8 +44,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<String>(validators: [
-        Validators.number,
         Validators.required,
+        Validators.number,
         CustomValidator.minValueOne
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
@@ -54,7 +54,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       ),
       _waybillQuantityKey: FormControl<String>(
         validators: [Validators.number, Validators.required,
-          CustomValidator.minValueOne]
+          CustomValidator.minValueOne],
+        value: '1',
       ),
       _vehicleNumberKey: FormControl<String>(
           validators: [Validators.required]
@@ -343,9 +344,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             'required': (object) => localizations.translate(
                               quantityErrorMessage,
                             ),
+                            'number': (object) => localizations.translate(
+                              quantityErrorMessage,
+                            ),
+                            'minValueOne': (object) => localizations.translate(
+                              quantityErrorMessage,
+                            ),
                           },
                         ),
                         DigitTextFormField(
+                          isRequired: true,
                           label: localizations.translate(
                             i18.stockDetails.waybillNumberLabel,
                           ),
@@ -357,6 +365,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                           },
                         ),
                         DigitTextFormField(
+                          isRequired: true,
                           label: localizations.translate(
                             i18.stockDetails
                                 .quantityOfProductIndicatedOnWaybillLabel,
@@ -367,9 +376,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 localizations.translate(i18.stockDetails
                                   .quantityOfProductIndicatedOnWaybillErrorMessage,
                             ),
+                            'number': (object) =>
+                                localizations.translate(i18.stockDetails
+                                  .quantityOfProductIndicatedOnWaybillErrorMessage,
+                            ),
+                            'minValueOne': (object) =>
+                                localizations.translate(i18.stockDetails
+                                  .quantityOfProductIndicatedOnWaybillErrorMessage,
+                            ),
                           },
                         ),
                         DigitTextFormField(
+                          isRequired: true,
                           label: localizations.translate(
                             i18.stockDetails.vehicleNumberLabel,
                           ),

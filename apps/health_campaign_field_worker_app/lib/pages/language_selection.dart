@@ -60,7 +60,7 @@ class LanguageSelectionPage extends StatelessWidget {
                                           .map((e) => e.name.toString())
                                           .join(',')
                                           .toString(),
-                                      tenantId: appConfig.tenantId ?? "mz",
+                                      tenantId: appConfig.tenantId ?? "default",
                                       locale: value.value.toString(),
                                       path: Constants.localizationApiPath,
                                     ),
