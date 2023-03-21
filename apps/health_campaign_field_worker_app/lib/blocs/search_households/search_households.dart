@@ -22,6 +22,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
   final String projectId;
+  final String userUid;
   final IndividualDataRepository individual;
   final HouseholdDataRepository household;
   final HouseholdMemberDataRepository householdMember;
@@ -29,6 +30,7 @@ class SearchHouseholdsBloc
   final TaskDataRepository taskDataRepository;
 
   SearchHouseholdsBloc({
+    required this.userUid,
     required this.projectId,
     required this.individual,
     required this.householdMember,
@@ -88,7 +90,9 @@ class SearchHouseholdsBloc
     final interventionDelivered = tasks
         .map(
           (task) {
-            return task.resources?.map(
+            return task.resources?.where((element) {
+              return element.auditDetails?.createdBy == userUid;
+            }).map(
               (taskResource) {
                 return int.tryParse(taskResource.quantity ?? '0');
               },
@@ -100,7 +104,9 @@ class SearchHouseholdsBloc
         .fold(0, (previousValue, element) => previousValue + element);
 
     emit(state.copyWith(
-      registeredHouseholds: beneficiaries.length,
+      registeredHouseholds: beneficiaries
+          .where((element) => element.auditDetails?.createdBy == userUid)
+          .length,
       deliveredInterventions: interventionDelivered,
     ));
   }
