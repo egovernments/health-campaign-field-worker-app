@@ -67,11 +67,8 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                     fetched:
                         (boundaryList, boundaryMapperList, selectedBoundary) {
                       return DigitCard(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           top: kToolbarHeight * 2,
-                          left: 8,
-                          right: 8,
-                          bottom: MediaQuery.of(context).size.height / 2,
                         ),
                         child: ReactiveFormBuilder(
                           form: buildForm,
