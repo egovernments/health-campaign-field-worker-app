@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
+import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/project/project.dart';
@@ -64,8 +64,9 @@ class _StockReconciliationPageState
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
-        const noProjectSelected = Center(
-          child: Text('No project selected'),
+        var noProjectSelected = Center(
+          child: Text(AppLocalizations.of(context)
+              .translate(i18.stockReconciliationDetails.noProjectSelected)),
         );
 
         return projectState.maybeWhen(
@@ -79,8 +80,10 @@ class _StockReconciliationPageState
             }
 
             if (selectedProject == null) {
-              return const Center(
-                child: Text('Project not selected'),
+              return Center(
+                child: Text(AppLocalizations.of(context).translate(
+                  i18.stockReconciliationDetails.noProjectSelected,
+                )),
               );
             }
 
@@ -106,8 +109,6 @@ class _StockReconciliationPageState
                       context.router.replace(AcknowledgementRoute());
                     },
                     builder: (context, stockState) {
-                      print(stockState.stockReceived);
-
                       return ReactiveFormBuilder(
                         form: _form,
                         builder: (ctx, form, child) {
@@ -119,7 +120,11 @@ class _StockReconciliationPageState
                               footer: SizedBox(
                                 height: 85,
                                 child: DigitCard(
-                                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                                  margin: const EdgeInsets.only(
+                                    left: 0,
+                                    right: 0,
+                                    top: 10,
+                                  ),
                                   child: ReactiveFormConsumer(
                                     builder: (ctx, form, child) =>
                                         DigitElevatedButton(
@@ -343,7 +348,11 @@ class _StockReconciliationPageState
                                                 menuItems: productVariants,
                                                 validationMessages: {
                                                   'required': (object) =>
-                                                      'Field is required',
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      ).translate(i18
+                                                          .stockReconciliationDetails
+                                                          .fieldRequired),
                                                 },
                                               );
                                             },

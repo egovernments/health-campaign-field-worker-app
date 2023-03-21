@@ -1,6 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/record_stock/record_stock.dart';
 import '../../router/app_router.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -36,7 +36,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    localizations.translate('Manage Stocks'),
+                    localizations.translate(i18.manageStock.label),
                     style: theme.textTheme.displayMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -44,9 +44,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               ),
               Column(children: [
                 DigitListView(
-                  title: 'Record Stock Receipt',
-                  description:
-                      'Create records for stock received at the warehouse',
+                  title: localizations
+                      .translate(i18.manageStock.recordstockReceiptLabel),
+                  description: localizations
+                      .translate(i18.manageStock.recordstockReceiptDescription),
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -56,9 +57,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: 'Record Stock Issued',
-                  description:
-                      'Create records for stock sent out from the warehouse',
+                  title: localizations
+                      .translate(i18.manageStock.recordstockIssuedLabel),
+                  description: localizations
+                      .translate(i18.manageStock.recordstockIssuedtDescription),
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -68,9 +70,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: 'Stock Returned',
-                  description:
-                      'Create records for the stock returned to the warehouse',
+                  title: localizations
+                      .translate(i18.manageStock.recordstockReturnedLabel),
+                  description: localizations.translate(
+                    i18.manageStock.recordstockReturnedtDescription,
+                  ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -80,9 +84,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: 'Stock Damaged',
-                  description:
-                      'Record the list of resources damaged during campaign operations',
+                  title: localizations
+                      .translate(i18.manageStock.recordstockDamagedLabel),
+                  description: localizations.translate(
+                    i18.manageStock.recordstockDamagedDescription,
+                  ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -92,9 +98,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: 'Stock Loss',
-                  description:
-                      'Record the list of resources lost during campaign operations',
+                  title: localizations
+                      .translate(i18.manageStock.recordstockLossLabel),
+                  description: localizations.translate(
+                    i18.manageStock.recordstockDamagedDescription,
+                  ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
