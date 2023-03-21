@@ -422,10 +422,11 @@ class _HouseholdOverviewPageState
                   },
                 ),
           bottomNavigationBar: SizedBox(
-            height: 90,
+            height: 85,
             child:
                 BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
               builder: (ctx, state) => DigitCard(
+                margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                 child: state.task?.status == 'delivered'
                     ? DigitOutLineButton(
                         label: localizations.translate(
