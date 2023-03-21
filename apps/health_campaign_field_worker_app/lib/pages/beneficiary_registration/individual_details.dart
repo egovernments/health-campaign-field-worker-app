@@ -261,19 +261,10 @@ class _IndividualDetailsPageState
                                   onChanged: (value) {
                                     setState(() {
                                       if (value == 'DEFAULT') {
-                                        form
-                                            .control(_idNumberKey)
-                                            .setValidators(
-                                          [Validators.required],
-                                        );
+                                        form.control(_idNumberKey).value =
+                                            IdGen.i.identifier.toString();
                                       } else {
-                                        form
-                                            .control(_idNumberKey)
-                                            .setValidators(
-                                          [],
-                                          updateParent: true,
-                                          autoValidate: true,
-                                        );
+                                        form.control(_idNumberKey).value = null;
                                       }
                                     });
                                   },
@@ -469,6 +460,7 @@ class _IndividualDetailsPageState
         value: individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(
+        validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierId,
       ),
       _dobKey: FormControl<DateTime>(

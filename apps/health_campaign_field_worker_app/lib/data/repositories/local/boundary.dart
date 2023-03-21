@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:async';
-
 import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -19,12 +17,10 @@ class BoundaryLocalRepository
     final boundaryCompanion = entity.companion;
 
     await sql.batch((batch) async {
-      // batch.deleteWhere(sql.boundary, (tbl) => const Constant(true));
-
       batch.insert(
         sql.boundary,
         boundaryCompanion,
-        mode: InsertMode.replace,
+        mode: InsertMode.insertOrReplace,
       );
     });
 

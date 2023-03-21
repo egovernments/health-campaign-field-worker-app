@@ -82,6 +82,14 @@ class MainApplication extends StatelessWidget {
                       .repository<BoundaryModel, BoundarySearchModel>(ctx),
                 ),
               ),
+              BlocProvider(
+                create: (ctx) => BoundaryBloc(
+                  const BoundaryState.empty(),
+                  boundaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<BoundaryModel, BoundarySearchModel>(ctx),
+                ),
+              ),
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {

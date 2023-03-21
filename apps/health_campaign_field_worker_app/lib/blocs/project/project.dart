@@ -206,10 +206,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
     for (var elements in userObject!.roles) {
-      configs.first.checklistTypes?.map((e) => e.code).forEach((item) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
         for (final project in projects) {
           codes.add(
-            '${project.name}.$item.${elements.code.name.snakeCase.toUpperCase()}',
+            '${project.name}.$element.${elements.code.name.snakeCase.toUpperCase()}',
           );
         }
       });
@@ -268,6 +268,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         code: event.model.address?.boundaryCode.toString(),
       ),
     );
+
     await localSecureStore.setSelectedProject(event.model);
 
     await state.maybeMap(
