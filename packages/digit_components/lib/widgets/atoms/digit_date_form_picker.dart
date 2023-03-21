@@ -50,6 +50,11 @@ class DigitDateFormPicker extends StatelessWidget {
         lastDate: end ?? DateTime.now(),
         builder: (context, picker, child) {
           return ReactiveTextField(
+            style: TextStyle(
+              color: isEnabled == true
+                  ? DigitTheme.instance.colorScheme.onBackground
+                  : DigitTheme.instance.colorScheme.shadow,
+            ),
             formControlName: formControlName,
             readOnly: true,
             valueAccessor: DateTimeValueAccessor(
