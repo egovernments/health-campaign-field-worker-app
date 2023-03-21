@@ -10,6 +10,7 @@ echo "--------------------"
 cp -fr .env-qa .env
 echo
 
+rm -rf release-apk
 mkdir release-apk
 
 echo "Generating QA APK"
