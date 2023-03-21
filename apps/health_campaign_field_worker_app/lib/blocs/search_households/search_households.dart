@@ -294,7 +294,7 @@ class SearchHouseholdsBloc
     SearchHouseholdsClearEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
-    emit(const SearchHouseholdsState(
+    emit(state.copyWith(
       searchQuery: null,
       householdMembers: [],
     ));

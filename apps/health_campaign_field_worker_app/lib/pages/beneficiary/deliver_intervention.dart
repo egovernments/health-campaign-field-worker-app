@@ -330,7 +330,8 @@ class _DeliverInterventionPageState
                                     localizations.translate(
                                       i18.common.coreCommonMobileNumber,
                                     ): householdMemberWrapper
-                                        .headOfHousehold.mobileNumber,
+                                            .headOfHousehold.mobileNumber ??
+                                        '',
                                   },
                                 ),
                                 DigitTableCard(
