@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../../blocs/localization/app_localization.dart';
+
 class BeneficiaryCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -37,13 +39,15 @@ class BeneficiaryCard extends StatelessWidget {
           child: status == 'delivered'
               ? DigitIconButton(
                   icon: Icons.check_circle,
-                  iconText: status,
+                  iconText:
+                      AppLocalizations.of(context).translate(status.toString()),
                   iconTextColor: theme.colorScheme.onSurfaceVariant,
                   iconColor: theme.colorScheme.onSurfaceVariant,
                 )
               : DigitIconButton(
                   icon: Icons.info_rounded,
-                  iconText: status,
+                  iconText:
+                      AppLocalizations.of(context).translate(status.toString()),
                   iconTextColor: theme.colorScheme.error,
                   iconColor: theme.colorScheme.error,
                 ),

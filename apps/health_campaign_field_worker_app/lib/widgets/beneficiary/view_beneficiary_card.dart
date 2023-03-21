@@ -68,7 +68,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
-                      '${householdMember.household.memberCount ?? 1} Members',
+                      '${householdMember.household.memberCount ?? 1} ${'Members'}',
                   status: householdMember.task?.status != null
                       ? 'delivered'
                       : 'Not Delivered',
