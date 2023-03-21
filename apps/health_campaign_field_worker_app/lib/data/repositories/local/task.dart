@@ -10,12 +10,80 @@ import '../../data_repository.dart';
 class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   TaskLocalRepository(super.sql, super.opLogManager);
 
+  void listenToChanges({
+    required TaskSearchModel query,
+    required void Function(List<TaskModel> data) listener,
+  }) {
+    final select = sql.select(sql.task).join([
+      leftOuterJoin(
+        sql.taskResource,
+        sql.taskResource.clientReferenceId.equalsExp(
+          sql.task.clientReferenceId,
+        ),
+      ),
+    ])
+      ..where(
+        buildOr([
+          if (query.projectId != null)
+            sql.task.projectId.equals(
+              query.projectId,
+            ),
+        ]),
+      );
+
+    select.watch().listen((results) {
+      final data = results
+          .map((e) {
+            final task = e.readTableOrNull(sql.task);
+            final resources = e.readTableOrNull(sql.taskResource);
+            if (task == null) return null;
+
+            return TaskModel(
+              id: task.id,
+              createdBy: task.createdBy,
+              clientReferenceId: task.clientReferenceId,
+              rowVersion: task.rowVersion,
+              tenantId: task.tenantId,
+              isDeleted: task.isDeleted,
+              projectId: task.projectId,
+              projectBeneficiaryId: task.projectBeneficiaryId,
+              createdDate: task.createdDate,
+              status: task.status,
+              resources: resources == null
+                  ? null
+                  : [
+                      TaskResourceModel(
+                        clientReferenceId: resources.clientReferenceId,
+                        id: resources.id,
+                        productVariantId: resources.productVariantId,
+                        taskId: resources.taskId,
+                        deliveryComment: resources.deliveryComment,
+                        quantity: resources.quantity,
+                        rowVersion: resources.rowVersion,
+                      ),
+                    ],
+            );
+          })
+          .whereNotNull()
+          .where((element) => element.isDeleted != true)
+          .toList();
+
+      listener(data);
+    });
+  }
+
   @override
   FutureOr<List<TaskModel>> search(
     TaskSearchModel query, [
     String? userId,
   ]) async {
     final selectQuery = sql.select(sql.task).join([
+      leftOuterJoin(
+        sql.address,
+        sql.address.relatedClientReferenceId.equalsExp(
+          sql.task.clientReferenceId,
+        ),
+      ),
       leftOuterJoin(
         sql.taskResource,
         sql.taskResource.clientReferenceId.equalsExp(
@@ -45,6 +113,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         .map((e) {
           final task = e.readTableOrNull(sql.task);
           final resources = e.readTableOrNull(sql.taskResource);
+          final address = e.readTableOrNull(sql.address);
           if (task == null) return null;
 
           return TaskModel(
@@ -57,7 +126,37 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
             createdDate: task.createdDate,
+            address: address == null
+                ? null
+                : AddressModel(
+                    id: address.id,
+                    relatedClientReferenceId: task.clientReferenceId,
+                    tenantId: address.tenantId,
+                    doorNo: address.doorNo,
+                    latitude: address.latitude,
+                    longitude: address.longitude,
+                    landmark: address.landmark,
+                    locationAccuracy: address.locationAccuracy,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2,
+                    city: address.city,
+                    pincode: address.pincode,
+                    type: address.type,
+                    rowVersion: address.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: task.auditCreatedBy!,
+                      createdTime: task.auditCreatedTime!,
+                      lastModifiedBy: task.auditModifiedBy,
+                      lastModifiedTime: task.auditModifiedTime,
+                    ),
+                  ),
             status: task.status,
+            auditDetails: AuditDetails(
+              createdBy: task.auditCreatedBy!,
+              createdTime: task.auditCreatedTime!,
+              lastModifiedBy: task.auditModifiedBy,
+              lastModifiedTime: task.auditModifiedTime,
+            ),
             resources: resources == null
                 ? null
                 : [
@@ -69,6 +168,12 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       deliveryComment: resources.deliveryComment,
                       quantity: resources.quantity,
                       rowVersion: resources.rowVersion,
+                      auditDetails: AuditDetails(
+                        createdBy: resources.auditCreatedBy!,
+                        createdTime: resources.auditCreatedTime!,
+                        lastModifiedBy: resources.auditModifiedBy,
+                        lastModifiedTime: resources.auditModifiedTime,
+                      ),
                     ),
                   ],
           );
@@ -125,6 +230,13 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }) async {
     final taskCompanion = entity.companion;
 
+    final addressCompanion = entity.address
+        ?.copyWith(
+          relatedClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+        )
+        .companion;
+
     final resourcesCompanions = entity.resources?.map((e) {
           return e
               .copyWith(clientReferenceId: entity.clientReferenceId)
@@ -140,6 +252,17 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           entity.clientReferenceId,
         ),
       );
+
+      if (addressCompanion != null) {
+        batch.update(
+          sql.address,
+          addressCompanion,
+          where: (table) => table.relatedClientReferenceId.equals(
+            addressCompanion.relatedClientReferenceId.value,
+          ),
+        );
+      }
+
       batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
     });
 

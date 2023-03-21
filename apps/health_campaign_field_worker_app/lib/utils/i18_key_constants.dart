@@ -31,6 +31,8 @@ class Common {
 
   String get coreCommonSubmit => 'CORE_COMMON_SUBMIT';
 
+  String get coreCommonSave => 'CORE_COMMON_SAVE';
+
   String get coreCommonCancel => 'CORE_COMMON_CANCEL';
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
@@ -54,6 +56,7 @@ class Checklist {
   const Checklist();
 
   String get checklist => 'CHECKLIST';
+
   String get checklistlabel => 'CHECKLIST_LABEL';
 
   String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
@@ -160,6 +163,9 @@ class IndividualDetails {
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
+
+  String get mobileNumberInvalidFormatValidationMessage =>
+      'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
 }
 
 class HouseholdLocation {
@@ -395,6 +401,8 @@ class StockDetails {
   String get dialogTitle => 'STOCK_DETAILS_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
+
+  String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
 }
 
 class StockReconciliationDetails {
@@ -432,4 +440,14 @@ class StockReconciliationDetails {
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
   String get dialogContent => 'STOCK_RECONCILIATION_DIALOG_CONTENT';
+
+  String get manualCountRequiredError =>
+      'STOCK_RECONCILIATION_COUNT_IS_REQUIRED';
+
+  String get manualCountInvalidType =>
+      'STOCK_RECONCILIATION_COUNT_EXPECTS_NUMBER';
+
+  String get manualCountMinError => 'STOCK_RECONCILIATION_COUNT_BELOW_MIN';
+
+  String get manualCountMaxError => 'STOCK_RECONCILIATION_COUNT_EXCEEDED_MAX';
 }

@@ -241,7 +241,7 @@ class _HouseholdLocationPageState
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: 'Solimbo',
+        value: context.boundaryCode,
         validators: [Validators.required],
       ),
       _addressLine1Key:

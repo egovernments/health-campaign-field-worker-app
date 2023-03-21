@@ -23,12 +23,15 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
+  // final TaskDataRepository taskDataRepository;
+
   BeneficiaryRegistrationBloc(
     super.initialState, {
     required this.individualRepository,
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    // required this.taskDataRepository,
   }) {
     on(_handleSaveAddress);
     on(_handleSaveHouseholdDetails);
@@ -142,6 +145,7 @@ class BeneficiaryRegistrationBloc
               address: [
                 address.copyWith(
                   relatedClientReferenceId: individual.clientReferenceId,
+                  auditDetails: individual.auditDetails,
                 ),
               ],
             ),
@@ -150,6 +154,7 @@ class BeneficiaryRegistrationBloc
             household.copyWith(
               address: address.copyWith(
                 relatedClientReferenceId: household.clientReferenceId,
+                auditDetails: individual.auditDetails,
               ),
             ),
           );
@@ -188,7 +193,10 @@ class BeneficiaryRegistrationBloc
         } finally {
           emit(value.copyWith(loading: false));
           emit(
-            const BeneficiaryRegistrationPersistedState(navigateToRoot: false),
+            BeneficiaryRegistrationPersistedState(
+              navigateToRoot: false,
+              householdModel: household,
+            ),
           );
         }
       },
@@ -225,11 +233,17 @@ class BeneficiaryRegistrationBloc
               ),
             );
           }
+
+          // await taskDataRepository.update(elment.)
         } catch (error) {
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(
+            BeneficiaryRegistrationPersistedState(
+              householdModel: value.householdModel,
+            ),
+          );
         }
       },
     );
@@ -258,7 +272,9 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(BeneficiaryRegistrationPersistedState(
+            householdModel: value.householdModel,
+          ));
         }
       },
     );
@@ -308,7 +324,9 @@ class BeneficiaryRegistrationBloc
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));
-          emit(const BeneficiaryRegistrationPersistedState());
+          emit(BeneficiaryRegistrationPersistedState(
+            householdModel: value.householdModel,
+          ));
         }
       },
     );
@@ -375,6 +393,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   }) = BeneficiaryRegistrationEditHouseholdState;
 
   const factory BeneficiaryRegistrationState.editIndividual({
+    required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
     @Default(false) bool loading,
@@ -388,6 +407,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
 
   const factory BeneficiaryRegistrationState.persisted({
     @Default(true) bool navigateToRoot,
+    required HouseholdModel householdModel,
   }) = BeneficiaryRegistrationPersistedState;
 }
 

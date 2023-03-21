@@ -50,6 +50,7 @@ class _StockReconciliationPageState
         validators: [
           Validators.number,
           Validators.required,
+          CustomValidator.validStockCount,
         ],
       ),
       _reconciliationCommentsKey: FormControl<String>(),
@@ -284,11 +285,28 @@ class _StockReconciliationPageState
                                             },
                                             menuItems: state.maybeWhen(
                                               orElse: () => [],
-                                              fetched: (facilities) =>
+                                              fetched: (facilities, _) =>
                                                   facilities,
                                             ),
                                             formControlName: _facilityKey,
                                             valueMapper: (value) => value.id,
+                                            initialValue: state.whenOrNull(
+                                              fetched: (facilities, _) {
+                                                return facilities.length == 1
+                                                    ? facilities.elementAt(0)
+                                                    : null;
+                                              },
+                                            ),
+                                            initialValueText: state.whenOrNull(
+                                              fetched: (facilities, _) {
+                                                return facilities.length == 1
+                                                    ? facilities
+                                                        .elementAt(0)
+                                                        .id
+                                                        .toString()
+                                                    : null;
+                                              },
+                                            ),
                                           );
                                         },
                                       ),
@@ -352,7 +370,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReceived,
-                                          ): stockState.stockReceived,
+                                          ): stockState.stockReceived
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -363,7 +382,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockIssued,
-                                          ): stockState.stockIssued,
+                                          ): stockState.stockIssued
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -374,7 +394,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockReturned,
-                                          ): stockState.stockReturned,
+                                          ): stockState.stockReturned
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -385,7 +406,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockLost,
-                                          ): stockState.stockLost,
+                                          ): stockState.stockLost
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -396,7 +418,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockDamaged,
-                                          ): stockState.stockDamaged,
+                                          ): stockState.stockDamaged
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       const DigitDivider(),
@@ -407,7 +430,8 @@ class _StockReconciliationPageState
                                           localizations.translate(
                                             i18.stockReconciliationDetails
                                                 .stockOnHand,
-                                          ): stockState.stockInHand,
+                                          ): stockState.stockInHand
+                                              .toStringAsFixed(0),
                                         },
                                       ),
                                       DigitInfoCard(
@@ -436,8 +460,22 @@ class _StockReconciliationPageState
                                         formControlName: _manualCountKey,
                                         keyboardType: const TextInputType
                                             .numberWithOptions(
-                                          decimal: true,
+                                          decimal: false,
                                         ),
+                                        validationMessages: {
+                                          "required": (object) => i18
+                                              .stockReconciliationDetails
+                                              .manualCountRequiredError,
+                                          "number": (object) => i18
+                                              .stockReconciliationDetails
+                                              .manualCountInvalidType,
+                                          "min": (object) => i18
+                                              .stockReconciliationDetails
+                                              .manualCountMinError,
+                                          "max": (object) => i18
+                                              .stockReconciliationDetails
+                                              .manualCountMaxError,
+                                        },
                                       ),
                                       DigitTextFormField(
                                         label: localizations.translate(

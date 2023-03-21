@@ -179,11 +179,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeItems.addAll(
             [
               HomeItemCard(
-                icon: Icons.menu_book,
-                label: i18.home.myCheckList,
-                onPressed: () => context.router.push(ChecklistWrapperRoute()),
-              ),
-              HomeItemCard(
                 icon: Icons.store_mall_directory,
                 label: i18.home.manageStockLabel,
                 onPressed: () {
@@ -199,6 +194,45 @@ class _HomePageState extends LocalizedState<HomePage> {
               ),
             ],
           );
+          break;
+
+        case UserRoleCodeEnum.districSupervisor:
+          homeItems.addAll([
+            HomeItemCard(
+              icon: Icons.menu_book,
+              label: i18.home.myCheckList,
+              onPressed: () => context.router.push(ChecklistWrapperRoute()),
+            ),
+          ]);
+          break;
+
+        case UserRoleCodeEnum.nationalSupervisor:
+          homeItems.addAll([
+            HomeItemCard(
+              icon: Icons.menu_book,
+              label: i18.home.myCheckList,
+              onPressed: () => context.router.push(ChecklistWrapperRoute()),
+            ),
+          ]);
+          break;
+
+        case UserRoleCodeEnum.fieldSupervisor:
+          homeItems.addAll([
+            HomeItemCard(
+              icon: Icons.menu_book,
+              label: i18.home.myCheckList,
+              onPressed: () => context.router.push(ChecklistWrapperRoute()),
+            ),
+          ]);
+          break;
+        case UserRoleCodeEnum.provincialSupervisor:
+          homeItems.addAll([
+            HomeItemCard(
+              icon: Icons.menu_book,
+              label: i18.home.myCheckList,
+              onPressed: () => context.router.push(ChecklistWrapperRoute()),
+            ),
+          ]);
           break;
 
         case UserRoleCodeEnum.distributor:

@@ -9,6 +9,7 @@ import '../../../blocs/record_stock/record_stock.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
@@ -30,7 +31,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
-        _administrativeUnitKey: FormControl<String>(value: 'Solimbo'),
+        _administrativeUnitKey:
+            FormControl<String>(value: context.boundaryCode),
         _warehouseKey: FormControl<FacilityModel>(
           validators: [Validators.required],
         ),
@@ -135,6 +137,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       isRequired: false,
                                     ),
                                     DigitTextFormField(
+                                      readOnly: true,
                                       formControlName: _administrativeUnitKey,
                                       label: localizations.translate(
                                         i18.warehouseDetails.administrativeUnit,
@@ -142,14 +145,32 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     ),
                                   ]),
                                   DigitSearchDropdown<FacilityModel>(
+                                    isRequired: true,
                                     valueMapper: (value) => value.id,
                                     formControlName: _warehouseKey,
                                     menuItems: facilityState.maybeWhen(
                                       orElse: () => [],
-                                      fetched: (facilities) => facilities,
+                                      fetched: (facilities, _) => facilities,
                                     ),
                                     label: localizations.translate(
                                       i18.warehouseDetails.warehouseNameId,
+                                    ),
+                                    initialValue: facilityState.whenOrNull(
+                                      fetched: (facilities, _) {
+                                        return facilities.length == 1
+                                            ? facilities.elementAt(0)
+                                            : null;
+                                      },
+                                    ),
+                                    initialValueText: facilityState.whenOrNull(
+                                      fetched: (facilities, _) {
+                                        return facilities.length == 1
+                                            ? facilities
+                                                .elementAt(0)
+                                                .id
+                                                .toString()
+                                            : null;
+                                      },
                                     ),
                                     suggestionsCallback: (items, pattern) =>
                                         items

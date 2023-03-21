@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
+import 'package:location/location.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -20,6 +21,7 @@ import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/constants.dart';
+import 'utils/environment_config.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
@@ -58,7 +60,27 @@ class MainApplication extends StatelessWidget {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read()),
+                create: (_) {
+                  return LocationBloc(location: Location())
+                    ..add(const LoadLocationEvent());
+                },
+                lazy: false,
+              ),
+              BlocProvider(
+                create: (ctx) => AuthBloc(authRepository: ctx.read())
+                  ..add(
+                    AuthAutoLoginEvent(
+                      tenantId: envConfig.variables.tenantId,
+                    ),
+                  ),
+              ),
+              BlocProvider(
+                create: (ctx) => BoundaryBloc(
+                  const BoundaryState.empty(),
+                  boundaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<BoundaryModel, BoundarySearchModel>(ctx),
+                ),
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
@@ -175,37 +197,54 @@ class MainApplication extends StatelessWidget {
                           ),
                         ),
                       ],
-                      child: MaterialApp.router(
-                        supportedLocales: languages != null
-                            ? languages.map((e) {
-                                final results = e.value.split('_');
+                      child: BlocBuilder<LocalizationBloc, LocalizationState>(
+                        builder: (context, langState) {
+                          return MaterialApp.router(
+                            supportedLocales: languages != null
+                                ? languages.map((e) {
+                                    final results = e.value.split('_');
 
-                                return results.isNotEmpty
-                                    ? Locale(results.first, results.last)
-                                    : defaultLocale;
-                              })
-                            : [defaultLocale],
-                        localizationsDelegates: [
-                          AppLocalizations.getDelegate(appConfig, isar),
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          GlobalMaterialLocalizations.delegate,
-                        ],
-                        theme: DigitTheme.instance.mobileTheme,
-                        routeInformationParser: appRouter.defaultRouteParser(),
-                        scaffoldMessengerKey: scaffoldMessengerKey,
-                        routerDelegate: AutoRouterDelegate.declarative(
-                          appRouter,
-                          navigatorObservers: () => [AppRouterObserver()],
-                          routes: (handler) => authState.maybeWhen(
-                            orElse: () => [
-                              const UnauthenticatedRouteWrapper(),
+                                    return results.isNotEmpty
+                                        ? Locale(results.first, results.last)
+                                        : defaultLocale;
+                                  })
+                                : [defaultLocale],
+                            localizationsDelegates: [
+                              AppLocalizations.getDelegate(appConfig, isar),
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                              GlobalMaterialLocalizations.delegate,
                             ],
-                            authenticated: (_, __, ___) => [
-                              const AuthenticatedRouteWrapper(),
-                            ],
-                          ),
-                        ),
+                            locale: languages != null
+                                ? Locale(
+                                    languages[langState.index]
+                                        .value
+                                        .split('_')
+                                        .first,
+                                    languages[langState.index]
+                                        .value
+                                        .split('_')
+                                        .last,
+                                  )
+                                : defaultLocale,
+                            theme: DigitTheme.instance.mobileTheme,
+                            routeInformationParser:
+                                appRouter.defaultRouteParser(),
+                            scaffoldMessengerKey: scaffoldMessengerKey,
+                            routerDelegate: AutoRouterDelegate.declarative(
+                              appRouter,
+                              navigatorObservers: () => [AppRouterObserver()],
+                              routes: (handler) => authState.maybeWhen(
+                                orElse: () => [
+                                  const UnauthenticatedRouteWrapper(),
+                                ],
+                                authenticated: (_, __, ___) => [
+                                  AuthenticatedRouteWrapper(),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
                   },

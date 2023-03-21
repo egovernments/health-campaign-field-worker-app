@@ -56,6 +56,8 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
     bool obscureText = false,
     String obscuringCharacter = '•',
     bool autocorrect = true,
+    V? initialValue,
+    String? initialValueText,
   }) : super(
           key: key,
           formControl: formControl,
@@ -71,10 +73,16 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
             state._setFocusNode(textFieldConfiguration.focusNode);
             final controller =
                 textFieldConfiguration.controller ?? state._textController;
+            if (initialValue != null && initialValueText != null) {
+              controller.text = initialValueText;
+              field.didChange(initialValue);
+              onSuggestionSelected?.call(initialValue);
+            }
 
             return TypeAheadField<V>(
               suggestionsCallback: suggestionsCallback,
               itemBuilder: itemBuilder,
+              autoFlipListDirection: true,
               onSuggestionSelected: (value) {
                 controller.text = stringify(value);
                 field.didChange(value);

@@ -6,21 +6,15 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class ProductSearchModel extends EntitySearchModel {
-  final String? id;
-  final String? type;
+class LocalitySearchModel extends EntitySearchModel {
+  final String? code;
   final String? name;
-  final String? manufacturer;
-  final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   
-  ProductSearchModel({
-    this.id,
-    this.type,
+  LocalitySearchModel({
+    this.code,
     this.name,
-    this.manufacturer,
-    this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
@@ -28,45 +22,36 @@ class ProductSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProductModel extends EntityModel {
+class LocalityModel extends EntityModel {
 
-  static const schemaName = 'Product';
+  static const schemaName = 'Locality';
 
-  final String? id;
-  final String? type;
-  final String? name;
-  final String? manufacturer;
-  final String clientReferenceId;
+  final String code;
+  final String name;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final ProductAdditionalFields? additionalFields;
+  final LocalityAdditionalFields? additionalFields;
 
-  ProductModel({
+  LocalityModel({
     this.additionalFields,
-    this.id,
-    this.type,
-    this.name,
-    this.manufacturer,
-    required this.clientReferenceId,
+    required this.code,
+    required this.name,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
   }): super();
 
-  ProductCompanion get companion {
-    return ProductCompanion(
+  LocalityCompanion get companion {
+    return LocalityCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      id: Value(id),
-      type: Value(type),
+      code: Value(code),
       name: Value(name),
-      manufacturer: Value(manufacturer),
-      clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
@@ -75,9 +60,9 @@ class ProductModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class ProductAdditionalFields extends AdditionalFields {
-  ProductAdditionalFields({
-    super.schema = 'Product',
+class LocalityAdditionalFields extends AdditionalFields {
+  LocalityAdditionalFields({
+    super.schema = 'Locality',
     required super.version,
     super.fields,
   });

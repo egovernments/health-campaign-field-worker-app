@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -98,56 +99,75 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectEmitter emit,
   ) async {
     emit(const ProjectLoadingState());
-    final userObject = await localSecureStore.userRequestModel;
-    final uuid = userObject?.uuid;
 
-    List<ProjectStaffModel> projectStaffList =
-        await projectStaffRemoteRepository.search(
-      ProjectStaffSearchModel(staffId: uuid),
-    );
+    final connectivityResult = await (Connectivity().checkConnectivity());
 
-    projectStaffList.removeDuplicates((e) => e.id);
+    switch (connectivityResult) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        final userObject = await localSecureStore.userRequestModel;
+        final uuid = userObject?.uuid;
 
-    if (projectStaffList.isEmpty) {
-      emit(const ProjectsEmptyState());
-    } else {
-      List<ProjectModel> projects = [];
-
-      for (final projectStaff in projectStaffList) {
-        await projectStaffLocalRepository.create(
-          projectStaff,
-          createOpLog: false,
+        List<ProjectStaffModel> projectStaffList =
+            await projectStaffRemoteRepository.search(
+          ProjectStaffSearchModel(staffId: uuid),
         );
 
-        final staffProjects = await projectRemoteRepository.search(
+        projectStaffList.removeDuplicates((e) => e.id);
+
+        if (projectStaffList.isEmpty) {
+          emit(const ProjectsEmptyState());
+        } else {
+          List<ProjectModel> projects = [];
+
+          for (final projectStaff in projectStaffList) {
+            await projectStaffLocalRepository.create(
+              projectStaff,
+              createOpLog: false,
+            );
+
+            final staffProjects = await projectRemoteRepository.search(
+              ProjectSearchModel(
+                id: projectStaff.projectId,
+                tenantId: projectStaff.tenantId,
+              ),
+            );
+
+            projects.addAll(staffProjects);
+          }
+
+          projects.removeDuplicates((e) => e.id);
+
+          for (final project in projects) {
+            await projectLocalRepository.create(
+              project,
+              createOpLog: false,
+            );
+          }
+
+          if (projects.isNotEmpty) {
+            await _loadProjectFacilities(projects);
+            await _loadProductVariants(projects);
+            await _loadServiceDefinition(projects);
+          }
+
+          emit(ProjectSelectionFetchedState(projects: projects));
+        }
+        break;
+      default:
+        final projects = await projectLocalRepository.search(
           ProjectSearchModel(
-            id: projectStaff.projectId,
-            tenantId: projectStaff.tenantId,
+            tenantId: envConfig.variables.tenantId,
           ),
         );
 
-        projects.addAll(staffProjects);
-      }
-
-      projects.removeDuplicates((e) => e.id);
-      projects.removeDuplicates(
-        (element) => element.id,
-      );
-
-      for (final project in projects) {
-        await projectLocalRepository.create(
-          project,
-          createOpLog: false,
+        final selectedProject = await localSecureStore.selectedProject;
+        emit(
+          ProjectSelectionFetchedState(
+            projects: projects,
+            selectedProject: selectedProject,
+          ),
         );
-      }
-
-      if (projects.isNotEmpty) {
-        await _loadProjectFacilities(projects);
-        await _loadProductVariants(projects);
-        await _loadServiceDefinition(projects);
-      }
-
-      emit(ProjectSelectionFetchedState(projects: projects));
     }
   }
 
@@ -164,9 +184,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         createOpLog: false,
       );
 
+      /// Passing [id] as [null] is required to load all facilities associated
+      /// with the tenant
       final facilities = await facilityRemoteRepository.search(
         FacilitySearchModel(
-          id: [projectFacility.facilityId],
+          id: null,
         ),
       );
 
@@ -246,6 +268,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         code: event.model.address?.boundaryCode.toString(),
       ),
     );
+
+    await localSecureStore.setSelectedProject(event.model);
 
     await state.maybeMap(
       orElse: () {

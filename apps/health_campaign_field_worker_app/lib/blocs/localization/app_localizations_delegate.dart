@@ -35,6 +35,6 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) {
-    return false;
+    return true;
   }
 }

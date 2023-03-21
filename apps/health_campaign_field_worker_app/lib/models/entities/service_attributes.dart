@@ -21,6 +21,9 @@ class ServiceAttributesSearchModel extends EntitySearchModel {
 
 @MappableClass(ignoreNull: true)
 class ServiceAttributesModel extends EntityModel {
+
+  static const schemaName = 'ServiceAttributes';
+
   final String? attributeCode;
   final dynamic? value;
   final String? dataType;
@@ -30,9 +33,10 @@ class ServiceAttributesModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  
+  final ServiceAttributesAdditionalFields? additionalFields;
 
   ServiceAttributesModel({
+    this.additionalFields,
     this.attributeCode,
     this.value,
     this.dataType,
@@ -43,7 +47,7 @@ class ServiceAttributesModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }):  super();
+  }): super();
 
   ServiceAttributesCompanion get companion {
     return ServiceAttributesCompanion(
@@ -51,6 +55,7 @@ class ServiceAttributesModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
@@ -62,4 +67,13 @@ class ServiceAttributesModel extends EntityModel {
       rowVersion: Value(rowVersion),
       );
   }
+}
+
+@MappableClass(ignoreNull: true)
+class ServiceAttributesAdditionalFields extends AdditionalFields {
+  ServiceAttributesAdditionalFields({
+    super.schema = 'ServiceAttributes',
+    required super.version,
+    super.fields,
+  });
 }
