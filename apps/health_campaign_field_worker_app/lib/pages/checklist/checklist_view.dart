@@ -64,9 +64,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                     key: abcKey, //assigning key to form
                     child: DigitCard(
                       child: Column(children: [
-                        Text(localizations.translate(
-                          value.selectedServiceDefinition!.code.toString(),
-                        )),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            localizations.translate(
+                              value.selectedServiceDefinition!.code.toString(),
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
