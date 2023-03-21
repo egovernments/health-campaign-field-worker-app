@@ -79,7 +79,7 @@ enum UserRoleCodeEnum {
   @JsonValue('PROVINCIAL_SUPERVISOR')
   provincialSupervisor,
   @JsonValue('DISTRICT_SUPERVISOR')
-  districSupervisor,
+  districtSupervisor,
   @JsonValue('FIELD_SUPERVISOR')
   fieldSupervisor,
 }
