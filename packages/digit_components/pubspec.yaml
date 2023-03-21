@@ -41,5 +41,9 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
-    - fonts/Roboto/
-    - fonts/Roboto_Condensed/
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+

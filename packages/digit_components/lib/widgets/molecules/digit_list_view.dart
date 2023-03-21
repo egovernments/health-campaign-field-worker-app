@@ -31,13 +31,10 @@ class DigitListView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Icon(
-                            prefixIcon,
-                            color: theme.colorScheme.secondary,
-                            size: 24,
-                          ),
+                        Icon(
+                          prefixIcon,
+                          color: theme.colorScheme.secondary,
+                          size: 24,
                         ),
                         const SizedBox(
                           width: 14,
