@@ -18,6 +18,7 @@ import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
+import '../facility_selection.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
   const StockReconciliationPage({
@@ -261,52 +262,40 @@ class _StockReconciliationPageState
                                           ),
                                         ),
                                         builder: (context, state) {
-                                          return DigitSearchDropdown<
-                                              FacilityModel>(
+                                          final facilities = state.whenOrNull(
+                                                fetched: (facilities, _) =>
+                                                    facilities,
+                                              ) ??
+                                              [];
+
+                                          return DigitTextFormField(
+                                            valueAccessor:
+                                                FacilityValueAccessor(
+                                              facilities,
+                                            ),
                                             label: localizations.translate(
                                               i18.stockReconciliationDetails
                                                   .facilityLabel,
                                             ),
-                                            onSuggestionSelected: (suggestion) {
-                                              ctx
-                                                  .read<
-                                                      StockReconciliationBloc>()
-                                                  .add(
-                                                    StockReconciliationSelectFacilityEvent(
-                                                      suggestion,
-                                                    ),
-                                                  );
-                                            },
-                                            suggestionsCallback:
-                                                (items, pattern) {
-                                              return items.where(
-                                                (e) => e.id.contains(pattern),
-                                              );
-                                            },
-                                            menuItems: state.maybeWhen(
-                                              orElse: () => [],
-                                              fetched: (facilities, _) =>
-                                                  facilities,
+                                            suffix: const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Icon(Icons.search),
                                             ),
                                             formControlName: _facilityKey,
-                                            valueMapper: (value) => value.id,
-                                            initialValue: state.whenOrNull(
-                                              fetched: (facilities, _) {
-                                                return facilities.length == 1
-                                                    ? facilities.elementAt(0)
-                                                    : null;
-                                              },
-                                            ),
-                                            initialValueText: state.whenOrNull(
-                                              fetched: (facilities, _) {
-                                                return facilities.length == 1
-                                                    ? facilities
-                                                        .elementAt(0)
-                                                        .id
-                                                        .toString()
-                                                    : null;
-                                              },
-                                            ),
+                                            readOnly: true,
+                                            onTap: () async {
+                                              final facility = await context
+                                                  .router
+                                                  .push<FacilityModel>(
+                                                FacilitySelectionRoute(
+                                                  facilities: facilities,
+                                                ),
+                                              );
+
+                                              if (facility == null) return;
+                                              form.control(_facilityKey).value =
+                                                  facility;
+                                            },
                                           );
                                         },
                                       ),
