@@ -38,6 +38,8 @@ class Common {
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
+
+  String get coreCommonOk => 'CORE_COMMON_OK';
 }
 
 class Login {
@@ -324,6 +326,10 @@ class ProjectSelection {
   String get retryButtonText => 'RETRY';
 
   String get dismissButtonText => 'DISMISS';
+
+  String get noProjectsAssigned => 'NO_PROJECTS_ASSIGNED';
+
+  String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
 }
 
 class WarehouseDetails {
