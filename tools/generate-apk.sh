@@ -28,3 +28,5 @@ echo "------------------"
 flutter build apk
 cp -fr build/app/outputs/flutter-apk/app-release.apk release-apk/apk-uat.apk
 echo
+
+open release-apk
