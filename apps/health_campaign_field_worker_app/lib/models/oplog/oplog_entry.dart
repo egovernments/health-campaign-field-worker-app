@@ -17,6 +17,7 @@ class OpLogEntry<T extends EntityModel> {
   final DateTime? syncedDownOn;
   final String? serverGeneratedId;
   final String? clientReferenceId;
+  final List<String>? additionalIds;
 
   const OpLogEntry(
     this.entity,
@@ -31,6 +32,7 @@ class OpLogEntry<T extends EntityModel> {
     this.syncedDownOn,
     this.serverGeneratedId,
     this.clientReferenceId,
+    this.additionalIds,
   });
 
   static OpLogEntry<T> fromOpLog<T extends EntityModel>(OpLog e) {
@@ -47,6 +49,7 @@ class OpLogEntry<T extends EntityModel> {
       syncedDownOn: e.syncedDownOn,
       syncedUp: e.syncedUp,
       syncedUpOn: e.syncedUpOn,
+      additionalIds: e.additionalIds,
     );
   }
 
@@ -62,6 +65,7 @@ class OpLogEntry<T extends EntityModel> {
       ..createdBy = createdBy
       ..createdAt = createdAt
       ..syncedUp = syncedUp
+      ..additionalIds = additionalIds
       ..syncedDown = syncedDown;
 
     if (id != null) {

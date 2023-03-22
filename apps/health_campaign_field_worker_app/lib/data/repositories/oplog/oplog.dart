@@ -106,6 +106,7 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<void> updateServerGeneratedIds({
     required String clientReferenceId,
     required String serverGeneratedId,
+    List<String>? additionalIds,
     OpLogEntry<T>? entry,
   }) async {
     final opLogs = await isar.opLogs
@@ -116,14 +117,9 @@ abstract class OpLogManager<T extends EntityModel> {
     for (final e in opLogs) {
       final entry = OpLogEntry.fromOpLog<T>(e);
 
-      final updatedEntity = applyServerGeneratedIdToEntity(
-        entry.entity,
-        serverGeneratedId,
-      );
-
       final updatedEntry = entry.copyWith(
-        entity: updatedEntity,
         serverGeneratedId: serverGeneratedId,
+        additionalIds: additionalIds,
       );
 
       await isar.writeTxn(() async {
