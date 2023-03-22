@@ -25,6 +25,15 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedDownEqualTo(false)
         .findAll();
 
+    final singleCreateOpLogs = await isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.singleCreate)
+        .serverGeneratedIdIsNull()
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .findAll();
+
     final updateOpLogs = await isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -47,6 +56,7 @@ abstract class OpLogManager<T extends EntityModel> {
       createOpLogs,
       updateOpLogs,
       deleteOpLogs,
+      singleCreateOpLogs,
     ].expand((element) => element);
 
     entries = entries.sortedBy((element) => element.createdAt);
@@ -151,10 +161,10 @@ abstract class OpLogManager<T extends EntityModel> {
 
       final updatedEntity = entry.entity.copyWith(
         id: model.id!,
-        resources: entry.entity.resources?.map((e) {
-          return e.copyWith(
+        resources: entry.entity.resources?.map((element) {
+          return element.copyWith(
             taskId: model.id,
-            id: e.id,
+            id: model.resources?.first.id,
           );
         }).toList(),
       );
@@ -424,8 +434,7 @@ class ServiceOpLogManager extends OpLogManager<ServiceModel> {
       entity.copyWith(id: serverGeneratedId);
 
   @override
-  String getClientReferenceId(ServiceModel entity) =>
-      throw UnimplementedError();
+  String getClientReferenceId(ServiceModel entity) => entity.clientId;
 
   @override
   String? getServerGeneratedId(ServiceModel entity) => entity.id;
