@@ -392,6 +392,7 @@ class _DeliverInterventionPageState
                                             i18.deliverIntervention
                                                 .resourceDeliveredLabel,
                                           ),
+                                          isRequired: true,
                                           valueMapper: (value) {
                                             return localizations.translate(
                                               value.sku ?? value.id,

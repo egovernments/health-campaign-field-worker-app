@@ -149,7 +149,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   .toList(),
               leftColumnWidth: 130,
               rightColumnWidth: 45 * 6,
-              height: (householdMember.members.length + 1) * 60,
+              height: householdMember.members.length <= 5
+                  ? (householdMember.members.length + 1) * 57
+                  : 6 * 57,
             ),
           ),
           Container(
