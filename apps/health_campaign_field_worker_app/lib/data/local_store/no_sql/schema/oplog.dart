@@ -11,6 +11,7 @@ class OpLog {
 
   @ignore
   T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();
   }
@@ -21,13 +22,19 @@ class OpLog {
   @Enumerated(EnumType.name)
   late DataOperation operation;
 
-  late DateTime createdOn;
-
   String? serverGeneratedId;
 
-  DateTime? syncedOn;
+  String? clientReferenceId;
+
+  DateTime? syncedUpOn;
+
+  DateTime? syncedDownOn;
 
   late String createdBy;
 
-  late bool isSynced;
+  late DateTime createdAt;
+
+  late bool syncedUp;
+
+  late bool syncedDown;
 }
