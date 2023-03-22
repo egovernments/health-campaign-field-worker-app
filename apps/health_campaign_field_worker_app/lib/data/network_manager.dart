@@ -232,19 +232,55 @@ class NetworkManager {
 
             for (var element in typeGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as TaskModel;
-              final responseEntity =
+              final taskModel = element.entity as TaskModel;
+              var responseEntity =
                   responseEntities.whereType<TaskModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                        (e) =>
+                            e.clientReferenceId == taskModel.clientReferenceId,
                       );
 
               final serverGeneratedId = responseEntity?.id;
 
+              final updatedResources = <TaskResourceModel>[];
+
+              taskModel.resources?.forEach((resource) {
+                final responseResource =
+                    responseEntity?.resources?.firstWhereOrNull(
+                  (e) => e.clientReferenceId == resource.clientReferenceId,
+                );
+
+                final updatedResource = resource.copyWith(
+                  id: responseResource?.id,
+                  taskId: serverGeneratedId,
+                );
+
+                updatedResources.add(updatedResource);
+              });
+
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
+                await local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: taskModel.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
                 );
+              }
+
+              final clientReferenceId = element.clientReferenceId;
+              if (clientReferenceId != null) {
+                final entries = (await local.opLogManager.getEntries(
+                  clientReferenceId,
+                  element.operation,
+                ))
+                    .whereType<OpLogEntry<TaskModel>>();
+
+                for (final entry in entries) {
+                  final updatedEntry = entry.copyWith(
+                    entity: entry.entity.copyWith(
+                      resources: updatedResources,
+                    ),
+                  );
+
+                  await local.opLogManager.put(updatedEntry);
+                }
               }
             }
 
