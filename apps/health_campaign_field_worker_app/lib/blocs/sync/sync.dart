@@ -41,7 +41,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       length ??= (await isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
-              .isSyncedEqualTo(false)
+              .syncedUpEqualTo(false)
               .findAll())
           .where((element) {
         switch (element.entityType) {

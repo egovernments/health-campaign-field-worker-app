@@ -35,16 +35,16 @@ class NetworkManager {
     }
 
     await getServerGeneratedIds(
+      createdBy: userId,
       localRepositories: localRepositories.toSet().toList(),
       remoteRepositories: remoteRepositories.toSet().toList(),
     );
 
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSynced(userId)),
+      localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
-    pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
@@ -84,13 +84,14 @@ class NetworkManager {
         }
 
         for (final syncedEntity in operationGroupedEntity.value) {
-          local.markSynced(syncedEntity.copyWith(isSynced: true));
+          local.markSyncedUp(syncedEntity);
         }
       }
     }
   }
 
   FutureOr<void> getServerGeneratedIds({
+    required String createdBy,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
@@ -100,11 +101,10 @@ class NetworkManager {
     }
 
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getSyncedCreateEntities()),
+      localRepositories.map((e) => e.getItemsToBeSyncedDown(createdBy)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
-    pendingSyncEntries.sort((a, b) => a.dateCreated.compareTo(b.dateCreated));
 
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
@@ -149,11 +149,15 @@ class NetworkManager {
                   responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
                         (e) => e.clientReferenceId == entity.clientReferenceId,
                       );
-              final updatedEntity = entity.copyWith(id: responseEntity?.id);
 
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -175,10 +179,15 @@ class NetworkManager {
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
-              final updatedEntity = entity.copyWith(id: responseEntity?.id);
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -200,10 +209,14 @@ class NetworkManager {
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
-              final updatedEntity = entity.copyWith(id: responseEntity?.id);
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -223,13 +236,15 @@ class NetworkManager {
                   responseEntities.whereType<TaskModel>().firstWhereOrNull(
                         (e) => e.clientReferenceId == entity.clientReferenceId,
                       );
-              final updatedEntity = entity.copyWith(
-                id: responseEntity?.id,
-              );
 
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -252,13 +267,15 @@ class NetworkManager {
                   responseEntities.whereType<StockModel>().firstWhereOrNull(
                         (e) => e.clientReferenceId == entity.clientReferenceId,
                       );
-              final updatedEntity = entity.copyWith(
-                id: responseEntity?.id,
-              );
 
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -281,13 +298,15 @@ class NetworkManager {
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
-              final updatedEntity = entity.copyWith(
-                id: responseEntity?.id,
-              );
 
-              await local.opLogManager.update(
-                element.copyWith(entity: updatedEntity),
-              );
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  clientReferenceId: entity.clientReferenceId,
+                  serverGeneratedId: serverGeneratedId,
+                );
+              }
             }
 
             break;
@@ -308,7 +327,7 @@ class NetworkManager {
     String userId,
   ) async =>
       (await Future.wait(localRepositories.map((e) {
-        return e.getItemsToBeSynced(userId);
+        return e.getItemsToBeSyncedUp(userId);
       })))
           .expand((element) => element)
           .length;
