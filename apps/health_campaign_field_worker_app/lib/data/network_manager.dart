@@ -66,9 +66,39 @@ class NetworkManager {
       );
 
       for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value.map((e) {
-          return e.entity;
-        }).toList();
+        final entities = operationGroupedEntity.value
+            .map((e) {
+              final oplogEntryEntity = e.entity;
+
+              final serverGeneratedId = e.serverGeneratedId;
+              if (serverGeneratedId != null) {
+                var updatedEntity =
+                    local.opLogManager.applyServerGeneratedIdToEntity(
+                  oplogEntryEntity,
+                  serverGeneratedId,
+                );
+
+                if (updatedEntity is TaskModel) {
+                  final additionalIds = e.additionalIds ?? [];
+                  final resourceId =
+                      additionalIds.isNotEmpty ? additionalIds.first : null;
+                  updatedEntity = updatedEntity.copyWith(
+                    resources: updatedEntity.resources?.map((e) {
+                      return e.copyWith(
+                        taskId: serverGeneratedId,
+                        id: resourceId,
+                      );
+                    }).toList(),
+                  );
+                }
+
+                return updatedEntity;
+              }
+
+              return oplogEntryEntity;
+            })
+            .whereNotNull()
+            .toList();
 
         if (operationGroupedEntity.key == DataOperation.create) {
           await Future.delayed(const Duration(seconds: 1));
@@ -241,46 +271,15 @@ class NetworkManager {
 
               final serverGeneratedId = responseEntity?.id;
 
-              final updatedResources = <TaskResourceModel>[];
-
-              taskModel.resources?.forEach((resource) {
-                final responseResource =
-                    responseEntity?.resources?.firstWhereOrNull(
-                  (e) => e.clientReferenceId == resource.clientReferenceId,
-                );
-
-                final updatedResource = resource.copyWith(
-                  id: responseResource?.id,
-                  taskId: serverGeneratedId,
-                );
-
-                updatedResources.add(updatedResource);
-              });
-
               if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
+                local.opLogManager.updateServerGeneratedIds(
                   clientReferenceId: taskModel.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
+                  additionalIds: responseEntity?.resources
+                      ?.map((e) => e.id)
+                      .whereNotNull()
+                      .toList(),
                 );
-              }
-
-              final clientReferenceId = element.clientReferenceId;
-              if (clientReferenceId != null) {
-                final entries = (await local.opLogManager.getEntries(
-                  clientReferenceId,
-                  element.operation,
-                ))
-                    .whereType<OpLogEntry<TaskModel>>();
-
-                for (final entry in entries) {
-                  final updatedEntry = entry.copyWith(
-                    entity: entry.entity.copyWith(
-                      resources: updatedResources,
-                    ),
-                  );
-
-                  await local.opLogManager.put(updatedEntry);
-                }
               }
             }
 

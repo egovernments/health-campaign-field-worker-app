@@ -37,4 +37,6 @@ class OpLog {
   late bool syncedUp;
 
   late bool syncedDown;
+
+  List<String>? additionalIds;
 }
