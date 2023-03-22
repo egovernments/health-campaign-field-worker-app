@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
+import '../../../utils/app_exception.dart';
 import '../../local_store/no_sql/schema/oplog.dart';
 
 abstract class OpLogManager<T extends EntityModel> {
@@ -95,16 +96,17 @@ abstract class OpLogManager<T extends EntityModel> {
   }
 
   Future<void> markSyncUp(OpLogEntry<T> entry) async {
-    put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+    await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
   }
 
   Future<void> markSyncDown(OpLogEntry<T> entry) async {
-    put(entry.copyWith(syncedDown: true, syncedDownOn: DateTime.now()));
+    await put(entry.copyWith(syncedDown: true, syncedDownOn: DateTime.now()));
   }
 
   Future<void> updateServerGeneratedIds({
     required String clientReferenceId,
     required String serverGeneratedId,
+    OpLogEntry<T>? entry,
   }) async {
     final opLogs = await isar.opLogs
         .filter()
@@ -130,6 +132,23 @@ abstract class OpLogManager<T extends EntityModel> {
 
       if (entry.syncedUp) await markSyncDown(updatedEntry);
     }
+  }
+
+  Future<List<OpLogEntry<T>>> getEntries(
+    String clientReferenceId,
+    DataOperation operation,
+  ) async {
+    final oplog = await isar.opLogs
+        .filter()
+        .operationEqualTo(operation)
+        .clientReferenceIdEqualTo(clientReferenceId)
+        .findAll();
+
+    if (oplog.isEmpty) {
+      throw AppException('OpLog not found for id: $clientReferenceId');
+    }
+
+    return oplog.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
 
   String? getServerGeneratedId(T entity);

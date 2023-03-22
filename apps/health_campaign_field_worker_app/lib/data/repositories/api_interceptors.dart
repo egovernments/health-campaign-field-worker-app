@@ -41,4 +41,20 @@ class ApiInterceptors extends Interceptor {
     }
     super.onRequest(options, handler);
   }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    try {
+      AppLogger.instance.info(
+        response.data.toString(),
+        title: 'onResponse: ${response.requestOptions.path}',
+      );
+    } catch (error) {
+      AppLogger.instance.info(
+        response.statusCode.toString(),
+        title: 'onResponse: ${response.requestOptions.path}',
+      );
+    }
+    super.onResponse(response, handler);
+  }
 }
