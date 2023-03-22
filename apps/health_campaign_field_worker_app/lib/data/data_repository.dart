@@ -322,12 +322,6 @@ abstract class LocalRepository<D extends EntityModel,
     if (createOpLog) await createOplogEntry(entity, DataOperation.delete);
   }
 
-  Future<List<OpLogEntry<D>>> getSyncedCreateEntities() async {
-    final entries = await opLogManager.getSyncedCreateEntries(type);
-
-    return entries;
-  }
-
   FutureOr<void> createOplogEntry(D entity, DataOperation operation) async {
     final auditDetails = entity.auditDetails;
     if (auditDetails == null) {
@@ -336,22 +330,28 @@ abstract class LocalRepository<D extends EntityModel,
     final entry = OpLogEntry(
       entity,
       operation,
-      dateCreated: DateTime.now(),
+      createdAt: DateTime.now(),
       createdBy: auditDetails.createdBy,
       type: type,
     );
 
-    return opLogManager.createEntry(entry, type);
+    return opLogManager.put(entry);
   }
 
-  Future<List<OpLogEntry<D>>> getItemsToBeSynced(String createdBy) async {
-    return opLogManager.getPendingSyncedEntries(type, createdBy: createdBy);
+  Future<List<OpLogEntry<D>>> getItemsToBeSyncedUp(String createdBy) async {
+    return opLogManager.getPendingUpSync(type, createdBy: createdBy);
   }
 
-  FutureOr<void> markSynced(OpLogEntry<EntityModel> entry) async {
-    return opLogManager.update(
-      entry.copyWith(isSynced: true, syncedOn: DateTime.now()),
-    );
+  Future<List<OpLogEntry<D>>> getItemsToBeSyncedDown(String createdBy) async {
+    return opLogManager.getPendingDownSync(type, createdBy: createdBy);
+  }
+
+  FutureOr<void> markSyncedUp(OpLogEntry<D> entry) async {
+    return opLogManager.markSyncUp(entry);
+  }
+
+  FutureOr<void> markSyncedDown(OpLogEntry<D> entry) async {
+    return opLogManager.markSyncDown(entry);
   }
 }
 

@@ -149,7 +149,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     footer: SizedBox(
                       height: 85,
                       child: DigitCard(
-                        margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        margin:
+                            const EdgeInsets.only(left: 0, right: 0, top: 10),
                         child: ReactiveFormConsumer(
                           builder: (context, form, child) =>
                               DigitElevatedButton(
@@ -224,7 +225,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     if (fields != null && fields.isNotEmpty) {
                                       final type = fields.firstWhereOrNull(
-                                          (element) => element.key == 'type');
+                                        (element) => element.key == 'type',
+                                      );
                                       final value = type?.value;
                                       if (value != null &&
                                           value is String &&
