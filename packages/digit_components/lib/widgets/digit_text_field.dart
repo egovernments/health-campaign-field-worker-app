@@ -57,7 +57,7 @@ class DigitTextField extends StatelessWidget {
         style: TextStyle(
             color: readOnly == true
                 ? DigitTheme.instance.colorScheme.shadow
-                : DigitTheme.instance.colorScheme.background),
+                : DigitTheme.instance.colorScheme.onSurface),
         controller: controller,
         enabled: !isDisabled,
         maxLength: maxLength,
