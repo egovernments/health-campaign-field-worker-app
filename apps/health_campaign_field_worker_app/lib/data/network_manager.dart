@@ -71,6 +71,7 @@ class NetworkManager {
         }).toList();
 
         if (operationGroupedEntity.key == DataOperation.create) {
+          await Future.delayed(const Duration(seconds: 1));
           await remote.bulkCreate(entities);
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);

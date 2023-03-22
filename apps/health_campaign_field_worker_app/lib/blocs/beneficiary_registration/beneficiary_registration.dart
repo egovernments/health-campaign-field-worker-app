@@ -140,6 +140,15 @@ class BeneficiaryRegistrationBloc
         emit(value.copyWith(loading: true));
 
         try {
+          await householdRepository.create(
+            household.copyWith(
+              address: address.copyWith(
+                relatedClientReferenceId: household.clientReferenceId,
+                auditDetails: individual.auditDetails,
+              ),
+            ),
+          );
+
           await individualRepository.create(
             individual.copyWith(
               address: [
@@ -148,14 +157,6 @@ class BeneficiaryRegistrationBloc
                   auditDetails: individual.auditDetails,
                 ),
               ],
-            ),
-          );
-          await householdRepository.create(
-            household.copyWith(
-              address: address.copyWith(
-                relatedClientReferenceId: household.clientReferenceId,
-                auditDetails: individual.auditDetails,
-              ),
             ),
           );
 

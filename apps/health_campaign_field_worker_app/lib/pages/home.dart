@@ -344,15 +344,15 @@ class _HomePageState extends LocalizedState<HomePage> {
             userId: context.loggedInUserUuid,
             localRepositories: [
               context.read<
-                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
-              context.read<
                   LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
               context.read<
-                  LocalRepository<HouseholdMemberModel,
-                      HouseholdMemberSearchModel>>(),
+                  LocalRepository<IndividualModel, IndividualSearchModel>>(),
               context.read<
                   LocalRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  LocalRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
               context.read<LocalRepository<StockModel, StockSearchModel>>(),
               context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
@@ -362,15 +362,15 @@ class _HomePageState extends LocalizedState<HomePage> {
             ],
             remoteRepositories: [
               context.read<
-                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-              context.read<
                   RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
               context.read<
-                  RemoteRepository<HouseholdMemberModel,
-                      HouseholdMemberSearchModel>>(),
+                  RemoteRepository<IndividualModel, IndividualSearchModel>>(),
               context.read<
                   RemoteRepository<ProjectBeneficiaryModel,
                       ProjectBeneficiarySearchModel>>(),
+              context.read<
+                  RemoteRepository<HouseholdMemberModel,
+                      HouseholdMemberSearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
               context.read<RemoteRepository<StockModel, StockSearchModel>>(),
               context
