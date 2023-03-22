@@ -484,12 +484,10 @@ class _IndividualDetailsPageState
               },
             ),
       ),
-      _mobileNumberKey: FormControl<String>(
-        value: individual?.mobileNumber,
-        validators: [
-          CustomValidator.validMobileNumber,
-        ],
-      ),
+      _mobileNumberKey:
+          FormControl<String>(value: individual?.mobileNumber, validators: [
+        CustomValidator.validMobileNumber,
+      ]),
     });
   }
 }

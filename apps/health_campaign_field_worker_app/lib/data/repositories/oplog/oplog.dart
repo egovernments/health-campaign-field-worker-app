@@ -106,10 +106,12 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<void> updateServerGeneratedIds({
     required String clientReferenceId,
     required String serverGeneratedId,
+    required DataOperation dataOperation,
     OpLogEntry<T>? entry,
   }) async {
     final opLogs = await isar.opLogs
         .filter()
+        .operationEqualTo(dataOperation)
         .clientReferenceIdEqualTo(clientReferenceId)
         .findAll();
 
@@ -131,6 +133,42 @@ abstract class OpLogManager<T extends EntityModel> {
       });
 
       if (entry.syncedUp) await markSyncDown(updatedEntry);
+    }
+  }
+
+  Future<void> updateServerGeneratedData({
+    required TaskModel model,
+    required String clientReferenceId,
+  }) async {
+    final opLogs = await isar.opLogs
+        .filter()
+        .clientReferenceIdEqualTo(clientReferenceId)
+        .findAll();
+    model;
+
+    for (final e in opLogs) {
+      final entry = OpLogEntry.fromOpLog<TaskModel>(e);
+
+      final updatedEntity = entry.entity.copyWith(
+        id: model.id!,
+        resources: entry.entity.resources?.map((e) {
+          return e.copyWith(
+            taskId: model.id,
+            id: e.id,
+          );
+        }).toList(),
+      );
+
+      final updatedEntry = entry.copyWith(
+        entity: updatedEntity,
+        serverGeneratedId: model.id!,
+      );
+
+      await isar.writeTxn(() async {
+        await isar.opLogs.put(updatedEntry.oplog);
+      });
+
+      if (entry.syncedUp) await markSyncDown(updatedEntry as OpLogEntry<T>);
     }
   }
 
