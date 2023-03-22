@@ -166,7 +166,6 @@ class DigitTable extends StatelessWidget {
           border: Border.all(color: DigitTheme.instance.colorScheme.outline),
           borderRadius: const BorderRadius.all(Radius.circular(4.0)),
         ),
-        padding: const EdgeInsets.all(2),
         child: HorizontalDataTable(
           leftHandSideColumnWidth: leftColumnWidth,
           rightHandSideColumnWidth: rightColumnWidth,
