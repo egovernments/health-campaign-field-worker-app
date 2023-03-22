@@ -12,6 +12,7 @@
             "name": "clientId",
             "type": "String",
             "isPk": true,
+            "nullable": false,
             "includeForQuery": true
         },
         {
