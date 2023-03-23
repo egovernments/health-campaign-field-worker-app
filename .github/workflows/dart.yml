@@ -7,9 +7,9 @@ name: Run analysis and tests
 
 on:
   push:
-    branches: [ "develop", "master" ]
+    branches: [ "develop", "master", "qa", "demo", "uat" ]
   pull_request:
-    branches: [ "develop", "master" ]
+    branches: [ "develop", "master", "qa", "demo", "uat" ]
 
 jobs:
   build:
