@@ -7,6 +7,7 @@ class AppBlocObserver extends BlocObserver {
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
     if (!kDebugMode) return;
+    if (bloc is LocationBloc) return;
 
     AppLogger.instance.info(
       transition.nextState,

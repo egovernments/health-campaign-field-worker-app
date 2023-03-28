@@ -3,13 +3,13 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Run analysis and tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop", "master", "qa", "demo", "uat" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop", "master", "qa", "demo", "uat" ]
 
 jobs:
   build:
@@ -18,25 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
-      
+
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
-        
-      - name: Install melos
-        run: dart pub global activate melos
 
-      - name: Install dependencies
-        run: melos bs
+      - name: Generate models
+        run: ./tools/install_bricks.sh
 
-      # - name: Verify formatting
-      #  run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze code
+        run: melos run analyze
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      # - name: Analyze project source
-      #   run: dart analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
-      - name: Run tests
-        run: melos run all-test
+

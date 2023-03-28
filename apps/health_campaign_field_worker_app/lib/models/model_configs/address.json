@@ -4,16 +4,21 @@
     {
       "name": "id",
       "type": "String",
+      "includeForQuery": true,
       "nullable": true
     },
     {
-      "name": "tenantId",
-      "type": "String"
+      "name": "relatedClientReferenceId",
+      "type": "String",
+      "isPk": true
     },
     {
       "name": "clientReferenceId",
       "type": "String",
-      "isPk": true
+      "includeForQuery": false,
+      "nullable": true,
+      "includeForEntity": false,
+      "includeForTable": false
     },
     {
       "name": "doorNo",
@@ -41,8 +46,7 @@
     },
     {
       "name": "landmark",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "city",
@@ -54,26 +58,28 @@
     },
     {
       "name": "buildingName",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "street",
-      "type": "String",
-      "nullable": true
+      "type": "String"
+    },
+    {
+      "name": "boundaryType",
+      "type": "String"
+    },
+    {
+      "name": "boundary",
+      "type": "String"
     }
   ],
   "customAttributes": [
-    {
-      "name": "locality",
-      "type": "boundary",
-      "createReference": true
-    },
     {
       "name": "type",
       "type": "AddressType",
       "isEnum": true
     }
+
   ],
   "isEnum": false
 }

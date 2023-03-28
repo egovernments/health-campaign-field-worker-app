@@ -1,58 +1,42 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
-class IndividualRepository
+class IndividualLocalRepository
     extends LocalRepository<IndividualModel, IndividualSearchModel> {
-  const IndividualRepository(super.sql, super.opLogManager);
+  const IndividualLocalRepository(super.sql, super.opLogManager);
 
   @override
   DataModelType get type => DataModelType.individual;
 
   @override
-  FutureOr<List<IndividualModel>> search(IndividualSearchModel query) async {
+  FutureOr<List<IndividualModel>> search(
+    IndividualSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.individual).join(
       [
         leftOuterJoin(
-          sql.individualName,
-          sql.individualName.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualAddress,
-          sql.individualAddress.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
-          sql.individualIdentifier,
-          sql.individualIdentifier.individual.equalsExp(
-            sql.individual.clientReferenceId,
-          ),
-        ),
-        leftOuterJoin(
           sql.address,
-          sql.address.clientReferenceId.equalsExp(
-            sql.individualAddress.address,
+          sql.address.relatedClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.name,
-          sql.name.clientReferenceId.equalsExp(
-            sql.individualName.name,
+          sql.name.individualClientReferenceId.equalsExp(
+            sql.individual.clientReferenceId,
           ),
         ),
         leftOuterJoin(
           sql.identifier,
           sql.identifier.clientReferenceId.equalsExp(
-            sql.individualIdentifier.identifier,
+            sql.individual.clientReferenceId,
           ),
         ),
       ],
@@ -62,8 +46,8 @@ class IndividualRepository
           ..where(
             buildAnd([
               if (query.clientReferenceId != null)
-                sql.individual.clientReferenceId.equals(
-                  query.clientReferenceId,
+                sql.individual.clientReferenceId.isIn(
+                  query.clientReferenceId!,
                 ),
               if (query.id != null)
                 sql.individual.id.equals(
@@ -82,8 +66,8 @@ class IndividualRepository
                   query.gender?.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.equals(
-                  query.name!.givenName,
+                sql.name.givenName.contains(
+                  query.name!.givenName!,
                 ),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
@@ -93,145 +77,177 @@ class IndividualRepository
                 sql.name.otherNames.equals(
                   query.name!.otherNames,
                 ),
+              if (userId != null)
+                sql.individual.auditCreatedBy.equals(
+                  userId,
+                ),
             ]),
           ))
         .get();
 
-    return results.map((e) {
-      final individual = e.readTable(sql.individual);
-      final name = e.readTable(sql.name);
-      final address = e.readTable(sql.address);
-      final identifier = e.readTableOrNull(sql.identifier);
+    return results
+        .map((e) {
+          final individual = e.readTable(sql.individual);
+          final name = e.readTableOrNull(sql.name);
+          final address = e.readTableOrNull(sql.address);
+          final identifier = e.readTableOrNull(sql.identifier);
 
-      return IndividualModel(
-        tenantId: individual.tenantId,
-        clientReferenceId: individual.clientReferenceId,
-        dateOfBirth: individual.dateOfBirth,
-        mobileNumber: individual.mobileNumber,
-        rowVersion: individual.rowVersion,
-        name: NameModel(
-          clientReferenceId: name.clientReferenceId,
-          familyName: name.familyName,
-          givenName: name.givenName,
-          otherNames: name.otherNames,
-        ),
-        bloodGroup: individual.bloodGroup,
-        address: [
-          AddressModel(
-            tenantId: address.tenantId,
-            clientReferenceId: address.clientReferenceId,
-            doorNo: address.doorNo,
-            latitude: address.latitude,
-            longitude: address.longitude,
-            locationAccuracy: address.locationAccuracy,
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            pincode: address.pincode,
-            locality: BoundaryModel(
-              clientReferenceId: '',
-              code: '',
-              name: '',
+          return IndividualModel(
+            id: individual.id,
+            tenantId: individual.tenantId,
+            clientReferenceId: individual.clientReferenceId,
+            dateOfBirth: individual.dateOfBirth,
+            mobileNumber: individual.mobileNumber,
+            isDeleted: individual.isDeleted,
+            rowVersion: individual.rowVersion,
+            auditDetails: AuditDetails(
+              createdBy: individual.auditCreatedBy!,
+              createdTime: individual.auditCreatedTime!,
+              lastModifiedBy: individual.auditModifiedBy,
+              lastModifiedTime: individual.auditModifiedTime,
             ),
-            type: address.type,
-          ),
-        ],
-        gender: individual.gender,
-        identifiers: [
-          if (identifier != null)
-            IdentifierModel(
-              type: identifier.type,
-              clientReferenceId: identifier.clientReferenceId,
-              id: identifier.id,
-            ),
-        ],
-      );
-    }).toList();
+            name: name == null
+                ? null
+                : NameModel(
+                    individualClientReferenceId: individual.clientReferenceId,
+                    familyName: name.familyName,
+                    givenName: name.givenName,
+                    otherNames: name.otherNames,
+                    rowVersion: name.rowVersion,
+                    tenantId: name.tenantId,
+                  ),
+            bloodGroup: individual.bloodGroup,
+            address: [
+              address == null
+                  ? null
+                  : AddressModel(
+                      relatedClientReferenceId: individual.clientReferenceId,
+                      tenantId: address.tenantId,
+                      doorNo: address.doorNo,
+                      latitude: address.latitude,
+                      longitude: address.longitude,
+                      landmark: address.landmark,
+                      locationAccuracy: address.locationAccuracy,
+                      addressLine1: address.addressLine1,
+                      addressLine2: address.addressLine2,
+                      city: address.city,
+                      pincode: address.pincode,
+                      type: address.type,
+                      rowVersion: address.rowVersion,
+                      auditDetails: AuditDetails(
+                        createdBy: address.auditCreatedBy!,
+                        createdTime: address.auditCreatedTime!,
+                        lastModifiedBy: address.auditModifiedBy,
+                        lastModifiedTime: address.auditModifiedTime,
+                      ),
+                    ),
+            ].whereNotNull().toList(),
+            gender: individual.gender,
+            identifiers: [
+              if (identifier != null)
+                IdentifierModel(
+                  id: identifier.id,
+                  clientReferenceId: individual.clientReferenceId,
+                  identifierType: identifier.identifierType,
+                  identifierId: identifier.identifierId,
+                  rowVersion: identifier.rowVersion,
+                  tenantId: identifier.tenantId,
+                  auditDetails: AuditDetails(
+                    createdBy: identifier.auditCreatedBy!,
+                    createdTime: identifier.auditCreatedTime!,
+                    lastModifiedBy: identifier.auditModifiedBy,
+                    lastModifiedTime: identifier.auditModifiedTime,
+                  ),
+                ),
+            ],
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(IndividualModel entity) async {
-    final nameValue = entity.name;
-    final addressValue = entity.address;
+  FutureOr<void> create(
+    IndividualModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    final addresses = entity.address;
     final identifiers = entity.identifiers;
 
-    final nameCompanion = _getNameCompanion(nameValue);
-    final addressCompanions = addressValue.map((e) {
-      return _getAddressCompanion(e);
-    }).toList();
-
-    final identifierCompanions = identifiers.map((e) {
-      return _getIdentifierCompanion(e);
-    }).toList();
-
-    final individualCompanion = _getIndividualCompanion(entity);
+    final individualCompanion = entity.companion;
+    final nameCompanion = entity.name?.companion;
 
     await sql.batch((batch) async {
-      batch.insert(sql.name, nameCompanion);
-      batch.insert(sql.individual, individualCompanion);
-      batch.insertAll(sql.address, addressCompanions);
-      batch.insertAll(sql.identifier, identifierCompanions);
-
       batch.insert(
-        sql.individualName,
-        IndividualNameCompanion.insert(
-          clientReferenceId: const Uuid().v1(),
-          individual: individualCompanion.clientReferenceId.value,
-          name: nameCompanion.clientReferenceId.value,
-        ),
+        sql.individual,
+        individualCompanion,
+        mode: InsertMode.insertOrReplace,
       );
+      if (nameCompanion != null) {
+        batch.insert(
+          sql.name,
+          nameCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
 
-      batch.insertAll(
-        sql.individualAddress,
-        addressCompanions.map(
-          (e) => IndividualAddressCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            address: e.clientReferenceId.value,
-          ),
-        ),
-      );
+      if (addresses != null) {
+        final addressCompanions = addresses.map((e) {
+          return e.companion;
+        }).toList();
 
-      batch.insertAll(
-        sql.individualIdentifier,
-        identifierCompanions.map(
-          (e) => IndividualIdentifierCompanion.insert(
-            clientReferenceId: const Uuid().v1(),
-            individual: individualCompanion.clientReferenceId.value,
-            identifier: e.clientReferenceId.value,
-          ),
-        ),
-      );
+        batch.insertAll(
+          sql.address,
+          addressCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      if (identifiers != null) {
+        final identifierCompanions = identifiers.map((e) {
+          return e.companion;
+        }).toList();
+
+        batch.insertAll(sql.identifier, identifierCompanions);
+      }
     });
 
     await super.create(entity);
   }
 
   @override
-  FutureOr<void> update(IndividualModel entity) async {
-    final nameValue = entity.name;
-    final addressValue = entity.address;
-    final identifiers = entity.identifiers;
+  FutureOr<void> update(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final individualCompanion = entity.companion;
 
-    final nameCompanion = _getNameCompanion(nameValue);
-    final addressCompanions = addressValue.map((e) {
-      return _getAddressCompanion(e);
-    }).toList();
+    final nameCompanion = entity.name?.companion;
+    final addressCompanions = entity.address?.map((e) {
+          return e
+              .copyWith(
+                relatedClientReferenceId: entity.clientReferenceId,
+              )
+              .companion;
+        }).toList() ??
+        [];
 
-    final identifierCompanions = identifiers.map((e) {
-      return _getIdentifierCompanion(e);
-    }).toList();
-
-    final individualCompanion = _getIndividualCompanion(entity);
+    final identifierCompanions = entity.identifiers?.map((e) {
+          return e.companion;
+        }).toList() ??
+        [];
 
     await sql.batch((batch) async {
-      batch.update(
-        sql.name,
-        nameCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          nameValue.clientReferenceId,
-        ),
-      );
+      if (nameCompanion != null) {
+        batch.update(
+          sql.name,
+          nameCompanion,
+          where: (table) => table.individualClientReferenceId.equals(
+            nameCompanion.individualClientReferenceId.value,
+          ),
+        );
+      }
 
       batch.update(
         sql.individual,
@@ -245,63 +261,28 @@ class IndividualRepository
       batch.insertAllOnConflictUpdate(sql.identifier, identifierCompanions);
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
   }
 
-  NameCompanion _getNameCompanion(NameModel nameValue) {
-    return NameCompanion.insert(
-      givenName: nameValue.givenName,
-      familyName: nameValue.familyName,
-      otherNames: Value(nameValue.otherNames),
-      clientReferenceId: nameValue.clientReferenceId,
-    );
-  }
-
-  AddressCompanion _getAddressCompanion(AddressModel e) {
-    return AddressCompanion.insert(
-      tenantId: e.tenantId,
-      clientReferenceId: e.clientReferenceId,
-      doorNo: e.doorNo,
-      latitude: e.latitude,
-      longitude: e.longitude,
-      locationAccuracy: e.locationAccuracy,
-      addressLine1: e.addressLine1,
-      addressLine2: e.addressLine2,
-      city: e.city,
-      pincode: e.pincode,
-      type: e.type,
-      locality: e.locality.clientReferenceId,
-      id: Value(e.id),
-      buildingName: Value(e.buildingName),
-      landmark: Value(e.landmark),
-      street: Value(e.street),
-    );
-  }
-
-  IdentifierCompanion _getIdentifierCompanion(IdentifierModel e) {
-    return IdentifierCompanion.insert(
-      type: e.type,
-      clientReferenceId: e.clientReferenceId,
-      id: e.id,
-    );
-  }
-
-  IndividualCompanion _getIndividualCompanion(IndividualModel entity) {
-    return IndividualCompanion.insert(
-      tenantId: entity.tenantId,
-      clientReferenceId: entity.clientReferenceId,
-      dateOfBirth: entity.dateOfBirth,
-      mobileNumber: entity.mobileNumber,
+  @override
+  FutureOr<void> delete(
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
       rowVersion: entity.rowVersion,
-      bloodGroup: entity.bloodGroup,
-      gender: entity.gender,
-      altContactNumber: Value(entity.altContactNumber),
-      email: Value(entity.email),
-      fatherName: Value(entity.fatherName),
-      husbandName: Value(entity.husbandName),
-      photo: Value(entity.photo),
-      id: Value(entity.id),
-      userId: Value(entity.userId),
     );
+    await sql.batch((batch) {
+      batch.update(
+        sql.individual,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 }

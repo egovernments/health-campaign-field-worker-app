@@ -4,28 +4,38 @@ import 'package:flutter/material.dart';
 class DigitInfoCard extends StatelessWidget {
   final String title;
   final String description;
-  final Color backgroundcolor;
+  final Color? backgroundColor;
   final IconData? icon;
-  final Color? iconcolor;
+  final Color? iconColor;
   final EdgeInsets? padding;
+  final EdgeInsets? margin;
 
   const DigitInfoCard({
     super.key,
     required this.title,
     required this.description,
-    required this.backgroundcolor,
-    this.iconcolor,
+    this.backgroundColor,
+    this.iconColor,
     this.icon,
     this.padding,
+    this.margin,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      margin: DigitTheme.instance.containerMargin,
+      margin: margin ?? DigitTheme.instance.containerMargin,
       padding: padding ?? const EdgeInsets.all(8),
-      color: backgroundcolor,
+      decoration: ShapeDecoration(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        color: backgroundColor ?? theme.colorScheme.tertiaryContainer,
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -33,19 +43,25 @@ class DigitInfoCard extends StatelessWidget {
               Padding(
                 padding: padding ?? const EdgeInsets.all(8),
                 child: Icon(
-                  icon,
-                  color: iconcolor,
+                  icon ?? Icons.info,
+                  color: iconColor ?? theme.colorScheme.surfaceTint,
                 ),
               ),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium,
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.headlineMedium,
+                ),
               )
             ],
           ),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyLarge,
+          Padding(
+            padding: const EdgeInsets.all(kPadding),
+            child: Text(
+              description,
+              style: theme.textTheme.bodyLarge,
+              textAlign: TextAlign.start,
+            ),
           )
         ],
       ),

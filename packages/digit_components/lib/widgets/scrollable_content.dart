@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ScrollableContent extends StatelessWidget {
   final Widget? header;
   final Widget? footer;
+  final List<Widget> slivers;
   final bool? primary;
   final ScrollController? controller;
   final MainAxisAlignment mainAxisAlignment;
@@ -18,6 +19,7 @@ class ScrollableContent extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.children = const <Widget>[],
+    this.slivers = const [],
   });
 
   @override
@@ -27,16 +29,18 @@ class ScrollableContent extends StatelessWidget {
       primary: primary,
       slivers: [
         if (header != null) SliverToBoxAdapter(child: header),
+        ...slivers,
         SliverFillRemaining(
           hasScrollBody: false,
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: crossAxisAlignment,
               children: [
-                Column(
-                  mainAxisAlignment: mainAxisAlignment,
-                  children: children,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: mainAxisAlignment,
+                    children: children,
+                  ),
                 ),
                 if (footer != null) ...[
                   const SizedBox(height: 16),

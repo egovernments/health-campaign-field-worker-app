@@ -3,10 +3,14 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ProjectBeneficiaryRepository extends RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
-  ProjectBeneficiaryRepository(
+class ProjectBeneficiaryRemoteRepository extends RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
+  ProjectBeneficiaryRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.actionMap,
     super.entityName = 'ProjectBeneficiary',
+    super.isSearchResponsePlural = true,
   });
+
+  @override
+  DataModelType get type => DataModelType.projectBeneficiary;
 }

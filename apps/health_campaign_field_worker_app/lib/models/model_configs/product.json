@@ -5,12 +5,6 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
-    },
-    {
-      "name": "tenantId",
-      "type": "String",
       "includeForQuery": true
     },
     {
@@ -26,12 +20,7 @@
     {
       "name": "manufacturer",
       "type": "String",
-      "nullable": true,
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "isEnum": false

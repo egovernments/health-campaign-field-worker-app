@@ -3,10 +3,13 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class ProjectStaffRepository extends RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel> {
-  ProjectStaffRepository(
+class ProjectStaffRemoteRepository extends RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel> {
+  ProjectStaffRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.actionMap,
     super.entityName = 'ProjectStaff',
   });
+
+  @override
+  DataModelType get type => DataModelType.projectStaff;
 }

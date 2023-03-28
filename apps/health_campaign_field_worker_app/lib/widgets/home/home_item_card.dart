@@ -11,7 +11,7 @@ class HomeItemCard extends StatelessWidget {
   const HomeItemCard({
     required this.icon,
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     super.key,
   });
 
@@ -21,7 +21,7 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
+      padding: const EdgeInsets.all(kPadding).copyWith(top: kPadding * 5),
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(

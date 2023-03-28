@@ -3,11 +3,10 @@ library digit_theme;
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/typography.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+const kPadding = 8.0;
 
 class DigitTheme {
-  static const kPadding = 8.0;
-
   static const DigitTheme _instance = DigitTheme._internal();
 
   static DigitTheme get instance => _instance;
@@ -15,8 +14,12 @@ class DigitTheme {
   DigitColors get colors => const DigitColors();
 
   DigitMobileTypography get mobileTypography => DigitMobileTypography(
-        normalBase: GoogleFonts.roboto(),
-        displayBase: GoogleFonts.robotoCondensed(),
+        normalBase: const TextStyle(
+          fontFamily: 'Roboto',
+        ),
+        displayBase: const TextStyle(
+          fontFamily: 'Roboto',
+        ),
         light: colors.davyGray,
         normal: colors.woodsmokeBlack,
       );
@@ -34,10 +37,10 @@ class DigitTheme {
           AppBarTheme(elevation: 0, color: colorScheme.secondaryContainer),
       textButtonTheme: textButtonTheme,
       elevatedButtonTheme: elevatedButtonTheme,
+      outlinedButtonTheme: outlinedButtonTheme,
       cardTheme: cardTheme,
       inputDecorationTheme: inputDecorationTheme,
       dialogTheme: dialogTheme,
-      outlinedButtonTheme: outlinedButtonTheme,
     );
   }
 
@@ -58,6 +61,10 @@ class DigitTheme {
         tertiaryContainer: colors.tropicalBlue,
         inversePrimary: colors.paleLeafGreen,
         surfaceTint: colors.waterBlue,
+        outline: colors.quillGray,
+        shadow: colors.davyGray,
+        tertiary: colors.paleRose,
+        onTertiaryContainer: colors.curiousBlue,
       );
 
   EdgeInsets get buttonPadding => const EdgeInsets.symmetric(
@@ -66,6 +73,12 @@ class DigitTheme {
       );
 
   EdgeInsets get containerMargin => const EdgeInsets.all(kPadding);
+
+  EdgeInsets get verticalMargin => const EdgeInsets.symmetric(
+        vertical: kPadding,
+      );
+
+  Duration get toastDuration => const Duration(seconds: 2);
 
   OutlinedBorder get buttonBorder => const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.zero),
@@ -82,6 +95,14 @@ class DigitTheme {
           ),
           disabledForegroundColor: colorScheme.onSecondary,
           elevation: 0,
+        ),
+      );
+
+  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: colorScheme.secondary,
+          // side: BorderSide(color: colorScheme.secondary),
+          padding: buttonPadding,
         ),
       );
 
@@ -122,14 +143,40 @@ class DigitTheme {
             ),
           ),
           borderSide: BorderSide(
-            color: colors.davyGray,
+            color: colors.burningOrange,
             width: 2,
           ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(color: colors.cloudGray, width: 2),
         ),
         contentPadding: const EdgeInsets.all(12),
         isDense: true,
         isCollapsed: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
+        errorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: colors.lavaRed,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(
+              0,
+            ),
+          ),
+          borderSide: BorderSide(color: colors.lavaRed, width: 2),
+        ),
       );
 
   DialogTheme get dialogTheme => DialogTheme(
@@ -145,15 +192,13 @@ class DigitTheme {
         actionsPadding: const EdgeInsets.all(kPadding),
       );
 
-  OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: colorScheme.secondary),
-          padding: buttonPadding,
-        ),
+  BorderSide get tableCellBorder => BorderSide(
+        color: colorScheme.outline,
+        width: 0.5,
       );
 
-  BorderSide get tableCellBorder => BorderSide(
-        color: colorScheme.background,
-        width: 0.5,
+  BorderSide get tableCellStrongBorder => BorderSide(
+        color: colorScheme.outline,
+        width: 2,
       );
 }

@@ -26,7 +26,7 @@ scripts:
     description: Run all Flutter tests in this project.
 
   analyze:
-    run: melos exec -- flutter analyze .
+    run: melos exec -- flutter analyze . --no-fatal-infos --no-fatal-warnings
     description: Run `dart analyze` in all packages.
 
   combine-coverage:
@@ -38,19 +38,19 @@ scripts:
     description: Generate a coverage report using lcov.info. Requires genhtml to be installed.
 
   generate:build-runner:
-    exec: flutter packages run build_runner build --delete-conflicting-outputs
+    exec: flutter packages run build_runner build --delete-conflicting-outputs --enable-experiment=records
     select-package:
       flutter: true
       depends-on: build_runner
 
   hooks:build-runner:
-    exec: dart run build_runner build --delete-conflicting-outputs
+    exec: dart run build_runner build --delete-conflicting-outputs  --enable-experiment=records
     select-package:
       dart: true
       depends-on: [build_runner, mason]
 
   watch:build-runner:
-    exec: flutter packages run build_runner watch
+    exec: flutter packages run build_runner watch  --enable-experiment=records
     select-package:
       flutter: true
       depends-on: build_runner

@@ -16,6 +16,7 @@ class RequestInfoMapperModel with _$RequestInfoMapperModel {
 
 @freezed
 class RequestInfoModel with _$RequestInfoModel {
+  @JsonSerializable(includeIfNull: false)
   const factory RequestInfoModel({
     final String? apiId,
     final String? ver,

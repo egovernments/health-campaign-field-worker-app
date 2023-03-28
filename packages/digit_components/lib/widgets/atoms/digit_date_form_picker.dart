@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitDateFormPicker extends StatelessWidget {
@@ -23,15 +24,14 @@ class DigitDateFormPicker extends StatelessWidget {
   const DigitDateFormPicker({
     super.key,
     required this.label,
-    required this.isRequired,
+    this.isRequired = false,
     this.firstDate,
     this.lastDate,
     this.initialDate,
     this.onChangeOfDate,
     required this.formControlName,
-    this.isEnabled,
+    this.isEnabled = true,
     this.requiredMessage,
-
     this.validator,
     this.autoValidation,
     this.margin,
@@ -49,16 +49,27 @@ class DigitDateFormPicker extends StatelessWidget {
         firstDate: start ?? DateTime(1900),
         lastDate: end ?? DateTime.now(),
         builder: (context, picker, child) {
-          return ReactiveTextField<String>(
+          return ReactiveTextField(
+            style: TextStyle(
+              color: isEnabled == true
+                  ? DigitTheme.instance.colorScheme.onBackground
+                  : DigitTheme.instance.colorScheme.shadow,
+            ),
             formControlName: formControlName,
             readOnly: true,
+            valueAccessor: DateTimeValueAccessor(
+              dateTimeFormat: DateFormat('dd MMM yyyy'),
+            ),
             decoration: InputDecoration(
+              contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
               suffixIcon: const Icon(Icons.date_range),
               label: hint == null ? null : Text(hint!),
             ),
-            onTap: (control) {
-              picker.showPicker();
-            },
+            onTap: isEnabled == true
+                ? (control) {
+                    picker.showPicker();
+                  }
+                : null,
           );
         },
       ),

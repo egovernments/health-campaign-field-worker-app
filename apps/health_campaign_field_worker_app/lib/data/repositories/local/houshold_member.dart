@@ -3,7 +3,6 @@ import 'dart:async';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
@@ -11,8 +10,9 @@ class HouseholdMemberLocalRepository
 
   @override
   FutureOr<List<HouseholdMemberModel>> search(
-    HouseholdMemberSearchModel query,
-  ) async {
+    HouseholdMemberSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.householdMember).join([]);
     final results = await (selectQuery
           ..where(
@@ -34,32 +34,48 @@ class HouseholdMemberLocalRepository
                   sql.householdMember.individualId.equals(
                     query.individualId,
                   ),
+                if (query.isHeadOfHousehold != null)
+                  sql.householdMember.isHeadOfHousehold.equals(
+                    query.isHeadOfHousehold,
+                  ),
+                if (userId != null)
+                  sql.householdMember.auditCreatedBy.equals(
+                    userId,
+                  ),
               ],
             ),
           ))
         .get();
 
-    return results.map((e) {
-      final householdMember = e.readTable(sql.householdMember);
+    return results
+        .map((e) {
+          final householdMember = e.readTable(sql.householdMember);
 
-      return HouseholdMemberModel(
-        householdId: householdMember.householdId,
-        householdClientReferenceId: householdMember.householdClientReferenceId,
-        individualId: householdMember.individualId,
-        individualClientReferenceId:
-            householdMember.individualClientReferenceId,
-        isHeadOfHousehold: householdMember.isHeadOfHousehold,
-        tenantId: householdMember.tenantId,
-        rowVersion: householdMember.rowVersion,
-        clientReferenceId: householdMember.clientReferenceId,
-      );
-    }).toList();
+          return HouseholdMemberModel(
+            householdId: householdMember.householdId,
+            householdClientReferenceId:
+                householdMember.householdClientReferenceId,
+            individualId: householdMember.individualId,
+            individualClientReferenceId:
+                householdMember.individualClientReferenceId,
+            isHeadOfHousehold: householdMember.isHeadOfHousehold,
+            isDeleted: householdMember.isDeleted,
+            tenantId: householdMember.tenantId,
+            rowVersion: householdMember.rowVersion,
+            clientReferenceId: householdMember.clientReferenceId,
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   @override
-  FutureOr<void> create(HouseholdMemberModel entity) async {
-    final householdMemberCompanion = _getHouseholdMemberCompanion(entity);
-
+  FutureOr<void> create(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {
       batch.insert(sql.householdMember, householdMemberCompanion);
     });
@@ -68,8 +84,11 @@ class HouseholdMemberLocalRepository
   }
 
   @override
-  FutureOr<void> update(HouseholdMemberModel entity) async {
-    final householdMemberCompanion = _getHouseholdMemberCompanion(entity);
+  FutureOr<void> update(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final householdMemberCompanion = entity.companion;
 
     await sql.batch((batch) {
       batch.update(
@@ -81,24 +100,31 @@ class HouseholdMemberLocalRepository
       );
     });
 
-    await super.update(entity);
+    await super.update(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> delete(
+    HouseholdMemberModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final updated = entity.copyWith(
+      isDeleted: true,
+      rowVersion: entity.rowVersion.increment,
+    );
+    await sql.batch((batch) {
+      batch.update(
+        sql.householdMember,
+        updated.companion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    return super.delete(updated);
   }
 
   @override
   DataModelType get type => DataModelType.householdMember;
-
-  HouseholdMemberCompanion _getHouseholdMemberCompanion(
-    HouseholdMemberModel e,
-  ) {
-    return HouseholdMemberCompanion.insert(
-      householdId: e.householdId,
-      householdClientReferenceId: e.householdClientReferenceId,
-      individualId: e.individualId,
-      individualClientReferenceId: e.individualClientReferenceId,
-      isHeadOfHousehold: e.isHeadOfHousehold,
-      tenantId: e.tenantId,
-      rowVersion: e.rowVersion,
-      clientReferenceId: e.clientReferenceId,
-    );
-  }
 }

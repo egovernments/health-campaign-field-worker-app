@@ -16,9 +16,12 @@ abstract class DigitTypography {
         _textColorLight = light,
         _textColorNormal = normal;
 
-  TextStyle get _normal => _normalBase.copyWith(color: _textColorNormal);
-  TextStyle get _light => _normalBase.copyWith(color: _textColorLight);
-  TextStyle get _big => _displayBase.copyWith(color: _textColorNormal);
+  TextStyle get _normal =>
+      _normalBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
+  TextStyle get _light =>
+      _normalBase.copyWith(color: _textColorLight, fontFamily: 'Roboto');
+  TextStyle get _big =>
+      _displayBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
 
   /// Follows Digit Typography standards
   ///
@@ -65,6 +68,7 @@ class DigitMobileTypography extends DigitTypography {
       displayMedium: _big.copyWith(
         fontSize: 32,
         fontWeight: FontWeight.w700,
+        fontFamily: 'Roboto Condensed',
       ),
       headlineLarge: _normal.copyWith(
         fontSize: 24,
@@ -77,18 +81,22 @@ class DigitMobileTypography extends DigitTypography {
       headlineSmall: _normal.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w700,
+        fontFamily: 'Roboto',
       ),
       bodyLarge: _normal.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
       ),
       bodyMedium: _normal.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
       ),
       bodySmall: _normal.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
       ),
       labelLarge: _normal.copyWith(
         fontSize: 19,
@@ -97,10 +105,12 @@ class DigitMobileTypography extends DigitTypography {
       labelMedium: _light.copyWith(
         fontSize: 18,
         fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
       ),
-      labelSmall: _light.copyWith(
+      labelSmall: _normal.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
       ),
     );
   }

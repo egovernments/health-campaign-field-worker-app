@@ -1,0 +1,52 @@
+{
+    "name": "Service",
+    "createRepository": true,
+    "ignoreFields": ["clientReferenceId"],
+    "attributes": [
+        {
+            "name": "id",
+            "type": "String",
+            "includeForQuery": true
+        },
+        {
+            "name": "clientId",
+            "type": "String",
+            "isPk": true,
+            "nullable": false,
+            "includeForQuery": true
+        },
+        {
+            "name": "serviceDefId",
+            "type": "String",
+            "includeForQuery": true
+        },
+        {
+            "name": "isActive",
+            "type": "bool"
+        },
+        {
+            "name": "accountId",
+            "type": "String",
+            "includeForQuery": true
+        },
+        {
+            "name": "additionalDetails",
+            "type": "String"
+        }
+        ,
+    {
+        "name": "createdAt",
+        "type": "String",
+        "includeForQuery": true
+      }
+
+        
+    ],
+    "customAttributes": [
+        {
+          "name": "attributes",
+          "type": "ServiceAttributes",
+          "isList": true
+        }
+      ]
+}

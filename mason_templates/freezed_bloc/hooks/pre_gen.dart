@@ -1,5 +1,4 @@
 import 'package:mason/mason.dart';
-import 'package:recase/recase.dart';
 
 void run(HookContext context) {
   final logger = context.logger;
@@ -21,8 +20,7 @@ void run(HookContext context) {
   final events = <String>[];
   final states = <String>[];
 
-  logger.info(lightYellow
-      .wrap('Provide names of triggered events. Leave empty to exit'));
+  logger.info(lightYellow.wrap('Provide names of triggered events. Leave empty to exit'));
   while (true) {
     final property = logger.prompt(':').replaceAll(RegExp('\\s+'), ' ').trim();
     if (property.trim().isEmpty) {
@@ -32,8 +30,7 @@ void run(HookContext context) {
     events.add(property);
   }
 
-  logger.info(
-      lightYellow.wrap('Provide names of emitted states. Leave empty to exit'));
+  logger.info(lightYellow.wrap('Provide names of emitted states. Leave empty to exit'));
   while (true) {
     final property = logger.prompt(':').replaceAll(RegExp('\\s+'), ' ').trim();
     if (property.trim().isEmpty) {

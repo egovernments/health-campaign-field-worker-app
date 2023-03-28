@@ -60,6 +60,10 @@ class _DigitTextField extends State<DigitTextField> {
     return LabeledField(
       label: widget.label,
       child: TextFormField(
+        style: TextStyle(
+            color: widget.readOnly == true
+                ? DigitTheme.instance.colorScheme.shadow
+                : DigitTheme.instance.colorScheme.onSurface),
         controller: widget.controller,
         enabled: !widget.isDisabled,
         maxLength: widget.maxLength,
@@ -74,6 +78,7 @@ class _DigitTextField extends State<DigitTextField> {
         obscureText: widget.obscureText,
         autovalidateMode: widget.autoValidation,
         readOnly: widget.readOnly,
+        validator: (value) => widget.validator?.call(value),
         decoration: InputDecoration(
           suffixIconConstraints: const BoxConstraints(
             maxHeight: 48,
@@ -112,7 +117,6 @@ class _DigitTextField extends State<DigitTextField> {
                       ),
                     )),
         ),
-        validator: (value) => widget.validator?.call(value),
       ),
     );
   }

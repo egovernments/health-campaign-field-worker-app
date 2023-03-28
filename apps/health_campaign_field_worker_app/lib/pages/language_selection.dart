@@ -1,7 +1,8 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
@@ -24,10 +25,11 @@ class LanguageSelectionPage extends StatelessWidget {
           children: [
             BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, state) {
+                if (state is! AppInitialized) return const Offstage();
                 final appConfig = state.appConfiguration;
-                final languages = state.appConfiguration?.languages;
+                final languages = state.appConfiguration.languages;
                 final localizationModulesList =
-                    state.appConfiguration?.backendInterface?.interfaces;
+                    state.appConfiguration.backendInterface?.interfaces;
                 if (languages == null) {
                   return const Offstage();
                 }
@@ -52,17 +54,17 @@ class LanguageSelectionPage extends StatelessWidget {
                                     value.value.toString(),
                               );
 
-                              context
-                                  .read<LocalizationBloc>()
-                                  .add(LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
-                                    tenantId: appConfig?.tenantId ?? "default",
-                                    locale: value.value.toString(),
-                                    path: Constants.localizationApiPath,
-                                  ));
+                              context.read<LocalizationBloc>().add(
+                                    LocalizationEvent.onLoadLocalization(
+                                      module: localizationModulesList
+                                          .map((e) => e.name.toString())
+                                          .join(',')
+                                          .toString(),
+                                      tenantId: appConfig.tenantId ?? "default",
+                                      locale: value.value.toString(),
+                                      path: Constants.localizationApiPath,
+                                    ),
+                                  );
 
                               context.read<LocalizationBloc>().add(
                                     OnUpdateLocalizationIndexEvent(
@@ -82,7 +84,7 @@ class LanguageSelectionPage extends StatelessWidget {
                 );
               },
             ),
-            const PoweredByDigit(),
+            const PoweredByDigit(isWhiteLogo: true),
           ],
         ),
       ),

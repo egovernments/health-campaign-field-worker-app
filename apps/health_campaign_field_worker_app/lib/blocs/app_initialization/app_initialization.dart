@@ -1,13 +1,18 @@
 import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+import 'package:recase/recase.dart';
+
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
-import '../../models/app_config/app_config_model.dart' as app_configuration;
-import '../../models/mdms/service_registry/service_registry_model.dart';
+import '../../models/app_config/app_config_model.dart';
+import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
+import '../../widgets/network_manager_provider_wrapper.dart';
 
 part 'app_initialization.freezed.dart';
 
@@ -18,94 +23,184 @@ class AppInitializationBloc
   final MdmsRepository mdmsRepository;
   final Isar isar;
 
-  AppInitializationBloc(
-    AppInitializationState appInitializationState, {
+  AppInitializationBloc({
     required this.mdmsRepository,
     required this.isar,
-  }) : super(const AppInitializationState()) {
-    on<AppInitializationSetupEvent>(_onAppInitilizeSetup);
-    on<FindAppConfigurationEvent>(_onAppConfigurationSetup);
+  }) : super(const AppUninitialized()) {
+    on(_onAppInitializeSetup);
   }
 
-  FutureOr<void> _onAppInitilizeSetup(
+  FutureOr<void> _onAppInitializeSetup(
     AppInitializationSetupEvent event,
     AppInitializationEmitter emit,
   ) async {
-    ServiceRegistryPrimaryWrapperModel result =
-        await mdmsRepository.searchServiceRegistry(
-      envConfig.variables.mdmsApiPath,
-      {
-        "MdmsCriteria": {
-          "tenantId": "default",
-          "moduleDetails": [
-            {
-              "moduleName": "HCM-SERVICE-REGISTRY",
-              "masterDetails": [
-                {
-                  "name": "serviceRegistry",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    );
+    emit(const AppInitializing());
 
-    await mdmsRepository.writeToRegistryDB(result, isar);
-    List<ServiceRegistry> serviceRegistryList =
-        await isar.serviceRegistrys.where().findAll();
-    emit(state.copyWith(serviceRegistryList: serviceRegistryList));
+    try {
+      if (event.retriesLeft == 0) {
+        throw const AppInitializationException('Unable to fetch MDMS Config');
+      }
+      final config = await _loadOfflineData();
+      emit(AppInitialized(
+        appConfiguration: config.appConfigs.first,
+        serviceRegistryList: config.serviceRegistryList,
+      ));
+    } on AppInitializationException catch (_) {
+      emit(const AppUninitialized());
+      rethrow;
+    } catch (error) {
+      final result = await mdmsRepository.searchServiceRegistry(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-SERVICE-REGISTRY',
+                masterDetails: [
+                  MdmsMasterDetailModel('serviceRegistry'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+      await mdmsRepository.writeToRegistryDB(result, isar);
+
+      final configResult = await mdmsRepository.searchAppConfig(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-FIELD-APP-CONFIG',
+                masterDetails: [
+                  MdmsMasterDetailModel('appConfig'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+
+      await mdmsRepository.writeToAppConfigDB(configResult, isar);
+
+      add(
+        AppInitializationSetupEvent(
+          retriesLeft: event.retriesLeft - 1,
+        ),
+      );
+      emit(const AppUninitialized());
+    }
   }
 
-  FutureOr<void> _onAppConfigurationSetup(
-    FindAppConfigurationEvent event,
-    AppInitializationEmitter emit,
-  ) async {
-    app_configuration.AppConfigPrimaryWrapperModel result =
-        await mdmsRepository.searchAppConfig(
-      envConfig.variables.mdmsApiPath,
-      {
-        "MdmsCriteria": {
-          "tenantId": "default",
-          "moduleDetails": [
-            {
-              "moduleName": "HCM-FIELD-APP-CONFIG",
-              "masterDetails": [
-                {
-                  "name": "appConfig",
-                },
-              ],
-            },
-          ],
-        },
-      },
+  Future<MdmsConfig> _loadOfflineData() async {
+    final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
+    final configs = await isar.appConfigurations.where().findAll();
+
+    if (serviceRegistryList.isEmpty) {
+      throw Exception('`serviceRegistryList` cannot be empty');
+    }
+    if (configs.isEmpty) {
+      throw Exception('`configs` cannot be empty');
+    }
+
+    return MdmsConfig(
+      appConfigs: configs,
+      serviceRegistryList: serviceRegistryList,
     );
-
-    mdmsRepository.writeToAppConfigDB(result, isar);
-    List<AppConfiguration> appConfiguration =
-        await isar.appConfigurations.where().findAll();
-
-    emit(state.copyWith(appConfiguration: appConfiguration.first));
   }
 }
 
 @freezed
 class AppInitializationEvent with _$AppInitializationEvent {
-  const factory AppInitializationEvent.onSetup() = AppInitializationSetupEvent;
-
-  const factory AppInitializationEvent.onApplicationConfigurationSetup({
-    String? service,
-    required String actionType,
-  }) = FindAppConfigurationEvent;
+  const factory AppInitializationEvent.onSetup({
+    @Default(3) int retriesLeft,
+  }) = AppInitializationSetupEvent;
 }
 
 @freezed
 class AppInitializationState with _$AppInitializationState {
   const AppInitializationState._();
 
-  const factory AppInitializationState({
-    @Default(false) bool isInitializationCompleted,
-    AppConfiguration? appConfiguration,
+  const factory AppInitializationState.uninitialized() = AppUninitialized;
+
+  const factory AppInitializationState.loading() = AppInitializing;
+
+  const factory AppInitializationState.initialized({
+    required AppConfiguration appConfiguration,
     @Default([]) List<ServiceRegistry> serviceRegistryList,
-  }) = _AppInitializationState;
+  }) = AppInitialized;
+
+  Map<DataModelType, Map<ApiOperation, String>> get entityActionMapping {
+    return when(
+      uninitialized: () => {},
+      loading: () => {},
+      initialized: (appConfiguration, serviceRegistryList) =>
+          serviceRegistryList
+              .map((e) => e.actions.map((e) {
+                    ApiOperation? operation;
+                    DataModelType? type;
+
+                    operation = ApiOperation.values.firstWhereOrNull((element) {
+                      return e.action.camelCase == element.name;
+                    });
+
+                    type = DataModelType.values.firstWhereOrNull((element) {
+                      return e.entityName.camelCase == element.name;
+                    });
+
+                    if (operation == null || type == null) return null;
+
+                    return ActionPathModel(
+                      operation: operation,
+                      type: type,
+                      path: e.path,
+                    );
+                  }))
+              .expand((element) => element)
+              .whereNotNull()
+              .fold(<DataModelType, Map<ApiOperation, String>>{}, (o, element) {
+        if (o.containsKey(element.type)) {
+          o[element.type]?.addEntries(
+            [MapEntry(element.operation, element.path)],
+          );
+        } else {
+          o[element.type] = Map.fromEntries([
+            MapEntry(element.operation, element.path),
+          ]);
+        }
+
+        return o;
+      }),
+    );
+  }
+
+  @override
+  String toString() {
+    return when<String>(
+      uninitialized: () => 'Uninitialized',
+      loading: () => 'Loading',
+      initialized: (appConfiguration, serviceRegistryList) =>
+          'tenantId: ${appConfiguration.tenantId}\n'
+          'serviceCount: ${serviceRegistryList.length}',
+    );
+  }
+}
+
+class MdmsConfig {
+  final List<AppConfiguration> appConfigs;
+  final List<ServiceRegistry> serviceRegistryList;
+
+  const MdmsConfig({
+    required this.appConfigs,
+    required this.serviceRegistryList,
+  });
+}
+
+class AppInitializationException implements Exception {
+  final String? message;
+
+  const AppInitializationException([this.message]);
 }

@@ -1,30 +1,36 @@
 {
   "name": "projectStaff",
   "createRepository": true,
+  "ignoreFields": ["clientReferenceId"],
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
-    },{
-      "name": "tenantId",
+      "includeForQuery": true,
+      "isPk": true,
+      "includeForEntity": true,
+      "nullable": false
+    },
+    
+    {
+      "name": "staffId",
       "type": "String",
-      "includeForQuery": true
-    },{
+      "includeForQuery": true,
+      "nullable": true
+    },
+    {
       "name": "userId",
       "type": "String",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "projectId",
       "type": "String",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "channel",
       "type": "String"
-    },{
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "dateTimeAttributes": [
@@ -32,7 +38,8 @@
       "name": "startDate",
       "type": "DateTime",
       "includeForQuery": true
-    },{
+    },
+    {
       "name": "endDate",
       "type": "DateTime",
       "includeForQuery": true

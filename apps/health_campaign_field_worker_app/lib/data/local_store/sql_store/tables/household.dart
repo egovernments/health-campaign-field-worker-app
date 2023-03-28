@@ -5,12 +5,18 @@ import 'package:drift/drift.dart';
 
 class Household extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get tenantId => text()();
+  IntColumn get memberCount => integer().nullable()();
+  TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get auditCreatedTime => integer().nullable()();
+  TextColumn get auditModifiedBy => text().nullable()();
+  IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
-  IntColumn get memberCount => integer()();
-  IntColumn get rowVersion => integer()();
+  TextColumn get tenantId => text().nullable()();
+  BoolColumn get isDeleted => boolean().nullable()();
+  IntColumn get rowVersion => integer().nullable()();
   
+  TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId,  };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

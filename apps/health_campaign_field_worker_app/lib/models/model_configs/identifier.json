@@ -2,17 +2,18 @@
   "name": "identifier",
   "attributes": [
     {
-      "name": "type",
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    },
+    {
+      "name": "identifierType",
       "type": "String",
       "includeForQuery": true
     },
     {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true
-    },
-    {
-      "name": "id",
+      "name": "identifierId",
       "type": "String",
       "includeForQuery": true
     }

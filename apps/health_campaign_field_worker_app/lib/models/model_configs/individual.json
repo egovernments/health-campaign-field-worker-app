@@ -5,24 +5,11 @@
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
-    },
-    {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true,
       "includeForQuery": true
     },
     {
       "name": "userId",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "dateOfBirth",
@@ -35,32 +22,23 @@
     },
     {
       "name": "altContactNumber",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "email",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "fatherName",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "husbandName",
-      "type": "String",
-      "nullable": true
+      "type": "String"
     },
     {
       "name": "photo",
-      "type": "String",
-      "nullable": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
+      "type": "String"
     }
   ],
   "customAttributes": [

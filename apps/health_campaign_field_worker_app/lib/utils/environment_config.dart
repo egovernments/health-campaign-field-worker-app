@@ -46,14 +46,21 @@ class Variables {
   final DotEnv _dotEnv;
   final bool useFallbackValues;
 
+  static const _connectTimeout = EnvEntry('CONNECT_TIMEOUT', '120000');
+
   static const _baseUrl = EnvEntry(
     'BASE_URL',
-    'https://health-dev.digit.org/',
+    'https://health-qa.digit.org/',
   );
 
   static const _mdmsApi = EnvEntry(
     'MDMS_API_PATH',
     'egov-mdms-service/v1/_search',
+  );
+
+  static const _tenantId = EnvEntry(
+    'TENANT_ID',
+    'default',
   );
 
   const Variables({
@@ -68,6 +75,10 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+  String get tenantId => useFallbackValues
+      ? _tenantId.value
+      : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
 }
 
 class EnvEntry {

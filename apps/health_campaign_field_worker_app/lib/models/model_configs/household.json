@@ -1,32 +1,17 @@
 {
   "name": "household",
   "createRepository": true,
+  "isSearchResponsePlural": true,
   "attributes": [
     {
       "name": "id",
       "type": "String",
-      "nullable": true,
-      "includeForQuery": true
-    },
-    {
-      "name": "tenantId",
-      "type": "String",
-      "includeForQuery": true
-    },
-    {
-      "name": "clientReferenceId",
-      "type": "String",
-      "isPk": true,
       "includeForQuery": true
     },
     {
       "name": "memberCount",
       "type": "int",
       "includeForQuery": true
-    },
-    {
-      "name": "rowVersion",
-      "type": "int"
     }
   ],
   "customAttributes": [

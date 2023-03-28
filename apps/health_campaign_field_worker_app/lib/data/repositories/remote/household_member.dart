@@ -3,10 +3,14 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class HouseholdMemberRepository extends RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
-  HouseholdMemberRepository(
+class HouseholdMemberRemoteRepository extends RemoteRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
+  HouseholdMemberRemoteRepository(
     super.dio, {
-    required super.path,
+    required super.actionMap,
     super.entityName = 'HouseholdMember',
+    super.isSearchResponsePlural = true,
   });
+
+  @override
+  DataModelType get type => DataModelType.householdMember;
 }

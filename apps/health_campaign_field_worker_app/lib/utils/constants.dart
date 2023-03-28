@@ -1,26 +1,23 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 
 class Constants {
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const String projectSearchApiPath = '/project/v1/_search';
 
-  static String getEndPoint(
-    BuildContext context,
-    service,
-    String action,
-    String entityName,
-  ) {
-    final actionResult = context
-        .read<AppInitializationBloc>()
-        .state
-        .serviceRegistryList
+  static String getEndPoint({
+    required AppInitialized state,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = state.serviceRegistryList
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
-        .firstWhere((element) => element.entityName == entityName)
-        .path;
+        .firstWhereOrNull((element) => element.entityName == entityName)
+        ?.path;
 
     return actionResult ?? '';
   }
@@ -40,4 +37,29 @@ class RequestInfoData {
 
 class Modules {
   static const String localizationModule = "LOCALIZATION_MODULE";
+}
+
+class EntityPlurals {
+  static String getPluralForEntityName(String entity) {
+    switch (entity) {
+      case 'Beneficiary':
+        return 'Beneficiaries';
+      case 'ProjectBeneficiary':
+        return 'ProjectBeneficiaries';
+      case 'Address':
+        return 'Addresses';
+      case 'Facility':
+        return 'Facilities';
+      case 'ProjectFacility':
+        return 'ProjectFacilities';
+      case 'Project':
+        return 'Projects';
+      case 'Stock':
+        return 'Stock';
+      case 'StockReconciliation':
+        return 'StockReconciliation';
+      default:
+        return '${entity}s';
+    }
+  }
 }

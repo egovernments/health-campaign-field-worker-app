@@ -27,6 +27,18 @@ class AppConfiguration {
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
+  @Name('CHECKLIST_TYPES')
+  late List<ChecklistTypes>? checklistTypes;
+
+  @Name('ID_TYPE_OPTIONS_POPULATOR')
+  late List<IdTypeOptions>? idTypeOptions;
+
+  @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptions;
+
+  @Name('TRANSPORT_TYPES')
+  late List<TransportTypes>? transportTypes;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -50,6 +62,18 @@ class GenderOptions {
 }
 
 @embedded
+class IdTypeOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class DeliveryCommentOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
 class Interfaces {
   late String type;
   late String name;
@@ -59,4 +83,16 @@ class Interfaces {
 @embedded
 class Config {
   late int localStoreTTL;
+}
+
+@embedded
+class ChecklistTypes {
+  late String name;
+  late String code;
+}
+
+@embedded
+class TransportTypes {
+  late String name;
+  late String code;
 }

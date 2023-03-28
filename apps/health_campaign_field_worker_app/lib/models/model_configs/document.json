@@ -3,11 +3,6 @@
   "attributes": [
     {
       "name": "id",
-      "type": "String",
-      "nullable": true
-    },
-    {
-      "name": "tenantId",
       "type": "String"
     },
     {
