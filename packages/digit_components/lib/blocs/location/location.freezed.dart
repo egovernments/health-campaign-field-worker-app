@@ -18,46 +18,58 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$LocationEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
     required TResult Function(int retry) requestService,
     required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
     TResult? Function(int retry)? requestService,
     TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
     TResult Function(int retry)? requestService,
     TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
     required TResult Function(RequestLocationServiceEvent value) requestService,
     required TResult Function(RequestLocationPermissionEvent value)
         requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
     TResult? Function(RequestLocationServiceEvent value)? requestService,
     TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
     TResult Function(RequestLocationServiceEvent value)? requestService,
     TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -86,6 +98,8 @@ abstract class _$$LoadLocationEventCopyWith<$Res> {
   factory _$$LoadLocationEventCopyWith(
           _$LoadLocationEvent value, $Res Function(_$LoadLocationEvent) then) =
       __$$LoadLocationEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int retry});
 }
 
 /// @nodoc
@@ -95,57 +109,88 @@ class __$$LoadLocationEventCopyWithImpl<$Res>
   __$$LoadLocationEventCopyWithImpl(
       _$LoadLocationEvent _value, $Res Function(_$LoadLocationEvent) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? retry = null,
+  }) {
+    return _then(_$LoadLocationEvent(
+      retry: null == retry
+          ? _value.retry
+          : retry // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$LoadLocationEvent implements LoadLocationEvent {
-  const _$LoadLocationEvent();
+  const _$LoadLocationEvent({this.retry = 5});
+
+  @override
+  @JsonKey()
+  final int retry;
 
   @override
   String toString() {
-    return 'LocationEvent.load()';
+    return 'LocationEvent.load(retry: $retry)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadLocationEvent);
+        (other.runtimeType == runtimeType &&
+            other is _$LoadLocationEvent &&
+            (identical(other.retry, retry) || other.retry == retry));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, retry);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadLocationEventCopyWith<_$LoadLocationEvent> get copyWith =>
+      __$$LoadLocationEventCopyWithImpl<_$LoadLocationEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
     required TResult Function(int retry) requestService,
     required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
   }) {
-    return load();
+    return load(retry);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
     TResult? Function(int retry)? requestService,
     TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
   }) {
-    return load?.call();
+    return load?.call(retry);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
     TResult Function(int retry)? requestService,
     TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
     required TResult orElse(),
   }) {
     if (load != null) {
-      return load();
+      return load(retry);
     }
     return orElse();
   }
@@ -154,9 +199,11 @@ class _$LoadLocationEvent implements LoadLocationEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
     required TResult Function(RequestLocationServiceEvent value) requestService,
     required TResult Function(RequestLocationPermissionEvent value)
         requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
   }) {
     return load(this);
   }
@@ -165,8 +212,10 @@ class _$LoadLocationEvent implements LoadLocationEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
     TResult? Function(RequestLocationServiceEvent value)? requestService,
     TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
   }) {
     return load?.call(this);
   }
@@ -175,8 +224,10 @@ class _$LoadLocationEvent implements LoadLocationEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
     TResult Function(RequestLocationServiceEvent value)? requestService,
     TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -187,7 +238,166 @@ class _$LoadLocationEvent implements LoadLocationEvent {
 }
 
 abstract class LoadLocationEvent implements LocationEvent {
-  const factory LoadLocationEvent() = _$LoadLocationEvent;
+  const factory LoadLocationEvent({final int retry}) = _$LoadLocationEvent;
+
+  int get retry;
+  @JsonKey(ignore: true)
+  _$$LoadLocationEventCopyWith<_$LoadLocationEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ListenLocationEventCopyWith<$Res> {
+  factory _$$ListenLocationEventCopyWith(_$ListenLocationEvent value,
+          $Res Function(_$ListenLocationEvent) then) =
+      __$$ListenLocationEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int retry});
+}
+
+/// @nodoc
+class __$$ListenLocationEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$ListenLocationEvent>
+    implements _$$ListenLocationEventCopyWith<$Res> {
+  __$$ListenLocationEventCopyWithImpl(
+      _$ListenLocationEvent _value, $Res Function(_$ListenLocationEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? retry = null,
+  }) {
+    return _then(_$ListenLocationEvent(
+      retry: null == retry
+          ? _value.retry
+          : retry // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ListenLocationEvent implements ListenLocationEvent {
+  const _$ListenLocationEvent({this.retry = 5});
+
+  @override
+  @JsonKey()
+  final int retry;
+
+  @override
+  String toString() {
+    return 'LocationEvent.listen(retry: $retry)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ListenLocationEvent &&
+            (identical(other.retry, retry) || other.retry == retry));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, retry);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ListenLocationEventCopyWith<_$ListenLocationEvent> get copyWith =>
+      __$$ListenLocationEventCopyWithImpl<_$ListenLocationEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
+    required TResult Function(int retry) requestService,
+    required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
+  }) {
+    return listen(retry);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
+    TResult? Function(int retry)? requestService,
+    TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
+  }) {
+    return listen?.call(retry);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
+    TResult Function(int retry)? requestService,
+    TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
+    required TResult orElse(),
+  }) {
+    if (listen != null) {
+      return listen(retry);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
+    required TResult Function(RequestLocationServiceEvent value) requestService,
+    required TResult Function(RequestLocationPermissionEvent value)
+        requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
+  }) {
+    return listen(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
+    TResult? Function(RequestLocationServiceEvent value)? requestService,
+    TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
+  }) {
+    return listen?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
+    TResult Function(RequestLocationServiceEvent value)? requestService,
+    TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
+    required TResult orElse(),
+  }) {
+    if (listen != null) {
+      return listen(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ListenLocationEvent implements LocationEvent {
+  const factory ListenLocationEvent({final int retry}) = _$ListenLocationEvent;
+
+  int get retry;
+  @JsonKey(ignore: true)
+  _$$ListenLocationEventCopyWith<_$ListenLocationEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -226,7 +436,7 @@ class __$$RequestLocationServiceEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
-  const _$RequestLocationServiceEvent({this.retry = 1});
+  const _$RequestLocationServiceEvent({this.retry = 5});
 
   @override
   @JsonKey()
@@ -258,9 +468,11 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
     required TResult Function(int retry) requestService,
     required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
   }) {
     return requestService(retry);
   }
@@ -268,9 +480,11 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
     TResult? Function(int retry)? requestService,
     TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
   }) {
     return requestService?.call(retry);
   }
@@ -278,9 +492,11 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
     TResult Function(int retry)? requestService,
     TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
     required TResult orElse(),
   }) {
     if (requestService != null) {
@@ -293,9 +509,11 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
     required TResult Function(RequestLocationServiceEvent value) requestService,
     required TResult Function(RequestLocationPermissionEvent value)
         requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
   }) {
     return requestService(this);
   }
@@ -304,8 +522,10 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
     TResult? Function(RequestLocationServiceEvent value)? requestService,
     TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
   }) {
     return requestService?.call(this);
   }
@@ -314,8 +534,10 @@ class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
     TResult Function(RequestLocationServiceEvent value)? requestService,
     TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
     required TResult orElse(),
   }) {
     if (requestService != null) {
@@ -404,9 +626,11 @@ class _$RequestLocationPermissionEvent
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() load,
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
     required TResult Function(int retry) requestService,
     required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
   }) {
     return requestPermission(retry);
   }
@@ -414,9 +638,11 @@ class _$RequestLocationPermissionEvent
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? load,
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
     TResult? Function(int retry)? requestService,
     TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
   }) {
     return requestPermission?.call(retry);
   }
@@ -424,9 +650,11 @@ class _$RequestLocationPermissionEvent
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? load,
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
     TResult Function(int retry)? requestService,
     TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
     required TResult orElse(),
   }) {
     if (requestPermission != null) {
@@ -439,9 +667,11 @@ class _$RequestLocationPermissionEvent
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
     required TResult Function(RequestLocationServiceEvent value) requestService,
     required TResult Function(RequestLocationPermissionEvent value)
         requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
   }) {
     return requestPermission(this);
   }
@@ -450,8 +680,10 @@ class _$RequestLocationPermissionEvent
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
     TResult? Function(RequestLocationServiceEvent value)? requestService,
     TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
   }) {
     return requestPermission?.call(this);
   }
@@ -460,8 +692,10 @@ class _$RequestLocationPermissionEvent
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
     TResult Function(RequestLocationServiceEvent value)? requestService,
     TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
     required TResult orElse(),
   }) {
     if (requestPermission != null) {
@@ -479,6 +713,161 @@ abstract class RequestLocationPermissionEvent implements LocationEvent {
   @JsonKey(ignore: true)
   _$$RequestLocationPermissionEventCopyWith<_$RequestLocationPermissionEvent>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LocationSetLatLngEventCopyWith<$Res> {
+  factory _$$LocationSetLatLngEventCopyWith(_$LocationSetLatLngEvent value,
+          $Res Function(_$LocationSetLatLngEvent) then) =
+      __$$LocationSetLatLngEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({LocationData locationData});
+}
+
+/// @nodoc
+class __$$LocationSetLatLngEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$LocationSetLatLngEvent>
+    implements _$$LocationSetLatLngEventCopyWith<$Res> {
+  __$$LocationSetLatLngEventCopyWithImpl(_$LocationSetLatLngEvent _value,
+      $Res Function(_$LocationSetLatLngEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? locationData = null,
+  }) {
+    return _then(_$LocationSetLatLngEvent(
+      locationData: null == locationData
+          ? _value.locationData
+          : locationData // ignore: cast_nullable_to_non_nullable
+              as LocationData,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LocationSetLatLngEvent implements LocationSetLatLngEvent {
+  const _$LocationSetLatLngEvent({required this.locationData});
+
+  @override
+  final LocationData locationData;
+
+  @override
+  String toString() {
+    return 'LocationEvent.setLatLng(locationData: $locationData)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LocationSetLatLngEvent &&
+            (identical(other.locationData, locationData) ||
+                other.locationData == locationData));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, locationData);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LocationSetLatLngEventCopyWith<_$LocationSetLatLngEvent> get copyWith =>
+      __$$LocationSetLatLngEventCopyWithImpl<_$LocationSetLatLngEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int retry) load,
+    required TResult Function(int retry) listen,
+    required TResult Function(int retry) requestService,
+    required TResult Function(int retry) requestPermission,
+    required TResult Function(LocationData locationData) setLatLng,
+  }) {
+    return setLatLng(locationData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int retry)? load,
+    TResult? Function(int retry)? listen,
+    TResult? Function(int retry)? requestService,
+    TResult? Function(int retry)? requestPermission,
+    TResult? Function(LocationData locationData)? setLatLng,
+  }) {
+    return setLatLng?.call(locationData);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int retry)? load,
+    TResult Function(int retry)? listen,
+    TResult Function(int retry)? requestService,
+    TResult Function(int retry)? requestPermission,
+    TResult Function(LocationData locationData)? setLatLng,
+    required TResult orElse(),
+  }) {
+    if (setLatLng != null) {
+      return setLatLng(locationData);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadLocationEvent value) load,
+    required TResult Function(ListenLocationEvent value) listen,
+    required TResult Function(RequestLocationServiceEvent value) requestService,
+    required TResult Function(RequestLocationPermissionEvent value)
+        requestPermission,
+    required TResult Function(LocationSetLatLngEvent value) setLatLng,
+  }) {
+    return setLatLng(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadLocationEvent value)? load,
+    TResult? Function(ListenLocationEvent value)? listen,
+    TResult? Function(RequestLocationServiceEvent value)? requestService,
+    TResult? Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult? Function(LocationSetLatLngEvent value)? setLatLng,
+  }) {
+    return setLatLng?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadLocationEvent value)? load,
+    TResult Function(ListenLocationEvent value)? listen,
+    TResult Function(RequestLocationServiceEvent value)? requestService,
+    TResult Function(RequestLocationPermissionEvent value)? requestPermission,
+    TResult Function(LocationSetLatLngEvent value)? setLatLng,
+    required TResult orElse(),
+  }) {
+    if (setLatLng != null) {
+      return setLatLng(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LocationSetLatLngEvent implements LocationEvent {
+  const factory LocationSetLatLngEvent(
+      {required final LocationData locationData}) = _$LocationSetLatLngEvent;
+
+  LocationData get locationData;
+  @JsonKey(ignore: true)
+  _$$LocationSetLatLngEventCopyWith<_$LocationSetLatLngEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

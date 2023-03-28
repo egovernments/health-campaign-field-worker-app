@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'schema_object.dart';
 
@@ -158,6 +158,7 @@ class _$_SchemaObject implements _SchemaObject {
   @override
   @JsonKey()
   Map<String, PropertySchema> get pages {
+    if (_pages is EqualUnmodifiableMapView) return _pages;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_pages);
   }
@@ -167,6 +168,7 @@ class _$_SchemaObject implements _SchemaObject {
   List<ActionSchema>? get actionSchema {
     final value = _actionSchema;
     if (value == null) return null;
+    if (_actionSchema is EqualUnmodifiableListView) return _actionSchema;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -380,6 +382,7 @@ class _$_ActionSchema implements _ActionSchema {
   final List<ActionItemSchema> _actionItems;
   @override
   List<ActionItemSchema> get actionItems {
+    if (_actionItems is EqualUnmodifiableListView) return _actionItems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_actionItems);
   }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'property_schema.dart';
 
@@ -104,7 +104,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
     Object? minimum = freezed,
     Object? hint = freezed,
     Object? label = freezed,
-    Object? value = null,
+    Object? value = freezed,
     Object? displayBehavior = freezed,
   }) {
     return _then(_value.copyWith(
@@ -168,7 +168,7 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
-      value: null == value
+      value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as dynamic,
@@ -277,7 +277,7 @@ class __$$_PropertySchemaCopyWithImpl<$Res>
     Object? minimum = freezed,
     Object? hint = freezed,
     Object? label = freezed,
-    Object? value = null,
+    Object? value = freezed,
     Object? displayBehavior = freezed,
   }) {
     return _then(_$_PropertySchema(
@@ -341,7 +341,7 @@ class __$$_PropertySchemaCopyWithImpl<$Res>
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
               as String?,
-      value: null == value
+      value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
               as dynamic,
@@ -394,6 +394,7 @@ class _$_PropertySchema implements _PropertySchema {
   Map<String, PropertySchema>? get properties {
     final value = _properties;
     if (value == null) return null;
+    if (_properties is EqualUnmodifiableMapView) return _properties;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(value);
   }
@@ -403,6 +404,7 @@ class _$_PropertySchema implements _PropertySchema {
   List<String>? get required {
     final value = _required;
     if (value == null) return null;
+    if (_required is EqualUnmodifiableListView) return _required;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -412,6 +414,7 @@ class _$_PropertySchema implements _PropertySchema {
   List<String>? get enums {
     final value = _enums;
     if (value == null) return null;
+    if (_enums is EqualUnmodifiableListView) return _enums;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -856,6 +859,7 @@ class _$_DisplayBehavior implements _DisplayBehavior {
   List<String>? get oneOf {
     final value = _oneOf;
     if (value == null) return null;
+    if (_oneOf is EqualUnmodifiableListView) return _oneOf;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -865,6 +869,7 @@ class _$_DisplayBehavior implements _DisplayBehavior {
   List<String>? get allOf {
     final value = _allOf;
     if (value == null) return null;
+    if (_allOf is EqualUnmodifiableListView) return _allOf;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
