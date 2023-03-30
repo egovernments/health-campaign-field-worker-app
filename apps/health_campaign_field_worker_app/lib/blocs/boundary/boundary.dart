@@ -29,25 +29,22 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
+    boundaryList.forEach((ele) => print(ele.code));
 
-    final codesList =
-        boundaryList.where((e) => e.materializedPath != null).reduce(
-      (a, b) {
-        return a.materializedPath!.length > b.materializedPath!.length ? a : b;
-      },
-    ).materializedPath;
+    boundaryList.sort((a, b) {
+      // Extract the numeric part of each string using a regular expression
+      RegExp regex = RegExp(r'\d+');
+      int aNum = int.tryParse(regex.stringMatch(a.code!.toString())!) ?? 0;
+      int bNum = int.tryParse(regex.stringMatch(b.code!.toString())!) ?? 0;
+
+      // Compare the numeric parts
+      return aNum.compareTo(bNum);
+    });
 
     final List<String> mapperArray = [];
-
-    codesList?.split('.').forEach((e) {
-      if (e.isNotEmpty) {
-        boundaryList.forEach((element) {
-          if (element.code == e) {
-            mapperArray.add(element.label.toString());
-          }
-        });
-      }
-    });
+    for (var element in boundaryList) {
+      mapperArray.add(element.label.toString());
+    }
 
     emit(BoundaryFetchedState(
       boundaryList: boundaryList,
@@ -80,7 +77,7 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required String selectedBoundary,
+    required List<String> selectedBoundary,
   }) = BoundarySelectEvent;
 }
 
@@ -91,7 +88,7 @@ class BoundaryState with _$BoundaryState {
   const factory BoundaryState.fetched({
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
-    String? selectedBoundary,
+    @Default([]) List<String> selectedBoundary,
   }) = BoundaryFetchedState;
 
   const factory BoundaryState.empty() = BoundaryEmptyState;
