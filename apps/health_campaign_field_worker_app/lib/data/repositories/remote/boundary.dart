@@ -96,7 +96,10 @@ class BoundaryRemoteRepository
 
             final childR = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
 
-            code = unchanged;
+            final List codeList = code.split('.');
+            codeList.removeLast();
+
+            code = codeList.join('.');
 
             processJsonArray(
               List.castFrom(element['children']),

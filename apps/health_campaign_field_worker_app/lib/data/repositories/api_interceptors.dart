@@ -22,7 +22,6 @@ class ApiInterceptors extends Interceptor {
   ) async {
     AppLogger.instance.info(options.path, title: 'onRequest');
     final authToken = await localSecureStore.accessToken;
-
     if (options.data is Map) {
       AppLogger.instance.info(json.encode(options.data), title: options.path);
 

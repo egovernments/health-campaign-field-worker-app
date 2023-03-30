@@ -37,7 +37,7 @@ extension ContextUtilityExtensions on BuildContext {
           throw AppException('No project is selected');
         }
 
-        return selectedBoundary;
+        return selectedBoundary.where((e) => e != '').toList().last;
       },
     );
   }

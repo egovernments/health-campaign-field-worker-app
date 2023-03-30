@@ -26,8 +26,6 @@ class StockReconciliationLocalRepository extends LocalRepository<
     StockReconciliationSearchModel query, [
     String? userId,
   ]) async {
-    print("search event not triggered");
-
     final selectQuery = sql.select(sql.stockReconciliation).join([]);
     final results = await (selectQuery
           ..where(buildAnd([
