@@ -86,19 +86,22 @@ class _DigitTextField extends State<DigitTextField> {
           ),
           suffixIcon: widget.suffixIcon,
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: DigitColors().lavaRed, width: 1.0),
+            borderSide:
+                BorderSide(color: const DigitColors().lavaRed, width: 1.0),
             borderRadius: BorderRadius.circular(4.0),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: DigitColors().lavaRed, width: 1.0),
+            borderSide:
+                BorderSide(color: const DigitColors().lavaRed, width: 1.0),
             borderRadius: BorderRadius.circular(4.0),
           ),
-          prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 0, minHeight: 0),
           prefixStyle: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: widget.isDisabled
-                  ? DigitColors().cloudGray
+                  ? const DigitColors().cloudGray
                   : DigitTheme.instance.colorScheme.onBackground),
           prefixIcon: widget.prefixIcon ??
               (widget.prefixText == ''
@@ -112,7 +115,7 @@ class _DigitTextField extends State<DigitTextField> {
                             fontSize: kIsWeb ? 15 : 16,
                             fontWeight: FontWeight.w400,
                             color: widget.isDisabled
-                                ? DigitColors().cloudGray
+                                ? const DigitColors().cloudGray
                                 : DigitTheme.instance.colorScheme.onBackground),
                       ),
                     )),
