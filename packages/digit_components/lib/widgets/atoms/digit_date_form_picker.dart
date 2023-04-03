@@ -16,6 +16,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final String? requiredMessage;
   final String? Function(DateTime?)? validator;
   final AutovalidateMode? autoValidation;
+  final Map<String, String Function(Object control)>? validationMessages;
   final EdgeInsets? margin;
   final DateTime? start;
   final DateTime? end;
@@ -33,6 +34,7 @@ class DigitDateFormPicker extends StatelessWidget {
     this.isEnabled = true,
     this.requiredMessage,
     this.validator,
+    this.validationMessages,
     this.autoValidation,
     this.margin,
     this.end,
@@ -56,6 +58,7 @@ class DigitDateFormPicker extends StatelessWidget {
                   : DigitTheme.instance.colorScheme.shadow,
             ),
             formControlName: formControlName,
+            validationMessages: validationMessages,
             readOnly: true,
             valueAccessor: DateTimeValueAccessor(
               dateTimeFormat: DateFormat('dd MMM yyyy'),
