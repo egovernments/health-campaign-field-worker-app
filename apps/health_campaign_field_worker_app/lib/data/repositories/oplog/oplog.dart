@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/app_exception.dart';
-import '../../local_store/no_sql/schema/oplog.dart';
+import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 
 abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;
@@ -106,7 +106,7 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<void> updateServerGeneratedIds({
     required String clientReferenceId,
     required String serverGeneratedId,
-    List<String>? additionalIds,
+    List<AdditionalId>? additionalIds,
     OpLogEntry<T>? entry,
   }) async {
     final opLogs = await isar.opLogs
