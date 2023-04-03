@@ -27,6 +27,18 @@ void main() async {
     OpLogSchema,
   ]);
 
+  isar.opLogs.where().watch().listen((event) {
+    for (final entry in event) {
+      AppLogger.instance.info(
+        [
+          'serverGeneratedId: ${entry.serverGeneratedId}',
+          'clientReferenceId: ${entry.clientReferenceId}',
+        ].join('\n'),
+        title: 'Isar Update - ${entry.entityType.name}',
+      );
+    }
+  });
+
   final sql = LocalSqlDataStore();
   Dio client = Client().init();
 

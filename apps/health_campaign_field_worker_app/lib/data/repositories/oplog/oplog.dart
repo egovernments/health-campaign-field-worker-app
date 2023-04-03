@@ -99,10 +99,6 @@ abstract class OpLogManager<T extends EntityModel> {
     await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
   }
 
-  Future<void> markSyncDown(OpLogEntry<T> entry) async {
-    await put(entry.copyWith(syncedDown: true, syncedDownOn: DateTime.now()));
-  }
-
   Future<void> updateServerGeneratedIds({
     required String clientReferenceId,
     required String serverGeneratedId,
@@ -114,19 +110,26 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(clientReferenceId)
         .findAll();
 
-    for (final e in opLogs) {
-      final entry = OpLogEntry.fromOpLog<T>(e);
+    for (final oplog in opLogs) {
+      final entry = OpLogEntry.fromOpLog<T>(oplog);
 
-      final updatedEntry = entry.copyWith(
+      OpLogEntry updatedEntry = entry.copyWith(
         serverGeneratedId: serverGeneratedId,
         additionalIds: additionalIds,
       );
 
-      await isar.writeTxn(() async {
-        await isar.opLogs.put(updatedEntry.oplog);
-      });
+      if (entry.syncedUp) {
+        updatedEntry = updatedEntry.copyWith(
+          syncedDown: true,
+          syncedDownOn: DateTime.now(),
+        );
+      }
 
-      if (entry.syncedUp) await markSyncDown(updatedEntry);
+      final updatedOplog = updatedEntry.oplog;
+
+      await isar.writeTxn(() async {
+        await isar.opLogs.put(updatedOplog);
+      });
     }
   }
 
