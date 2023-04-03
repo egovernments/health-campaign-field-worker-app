@@ -61,7 +61,7 @@ class OpLogEntry<T extends EntityModel> {
       ..entityString = entity.toJson()
       ..entityType = type
       ..operation = operation
-      ..primaryId = serverGeneratedId == null ? '' : serverGeneratedId!
+      ..serverGeneratedId = serverGeneratedId
       ..clientReferenceId = clientReferenceId
       ..syncedUpOn = syncedUpOn
       ..syncedDownOn = syncedDownOn
