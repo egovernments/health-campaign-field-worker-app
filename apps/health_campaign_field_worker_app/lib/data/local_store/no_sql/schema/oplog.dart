@@ -22,13 +22,7 @@ class OpLog {
   @Enumerated(EnumType.name)
   late DataOperation operation;
 
-  String primaryId = '';
-
-  String? get serverGeneratedId {
-    if (primaryId.isEmpty) return null;
-
-    return primaryId;
-  }
+  String? serverGeneratedId;
 
   String? clientReferenceId;
 
