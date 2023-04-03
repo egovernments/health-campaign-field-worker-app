@@ -79,16 +79,19 @@ class NetworkManager {
                 );
 
                 if (updatedEntity is TaskModel) {
-                  final additionalIds = e.additionalIds ?? [];
-                  final resourceId =
-                      additionalIds.isNotEmpty ? additionalIds.first : null;
+                  final resourceId = e.additionalIds
+                      .firstWhereOrNull(
+                        (element) => element.idType == 'resourceId',
+                      )
+                      ?.id;
+
                   updatedEntity = updatedEntity.copyWith(
-                    resources: updatedEntity.resources?.map((e) {
-                      return e.copyWith(
-                        taskId: serverGeneratedId,
-                        id: resourceId,
-                      );
-                    }).toList(),
+                    resources: updatedEntity.resources
+                        ?.map((e) => e.copyWith(
+                              taskId: serverGeneratedId,
+                              id: resourceId,
+                            ))
+                        .toList(),
                   );
                 }
 
@@ -276,7 +279,12 @@ class NetworkManager {
                   clientReferenceId: taskModel.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
                   additionalIds: responseEntity?.resources
-                      ?.map((e) => e.id)
+                      ?.map((e) {
+                        final id = e.id;
+                        if (id == null) return null;
+
+                        return AdditionalId(idType: 'resourceId', id: id);
+                      })
                       .whereNotNull()
                       .toList(),
                 );
