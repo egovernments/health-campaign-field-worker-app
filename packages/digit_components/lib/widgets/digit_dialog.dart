@@ -30,6 +30,7 @@ class DigitDialog extends StatelessWidget {
   Widget build(BuildContext context) => AlertDialog(
         title: options.title,
         content: options.content,
+        scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
           if (options.primaryAction != null)
@@ -60,6 +61,7 @@ class DigitDialogOptions {
   final DigitDialogActions? secondaryAction;
   final bool barrierDismissible;
   final Color? barrierColor;
+  final bool isScrollable;
   final Key? key;
 
   const DigitDialogOptions({
@@ -71,6 +73,7 @@ class DigitDialogOptions {
     this.primaryAction,
     this.secondaryAction,
     this.barrierDismissible = false,
+    this.isScrollable = false,
     this.titlePadding = const EdgeInsets.all(kPadding),
     this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
