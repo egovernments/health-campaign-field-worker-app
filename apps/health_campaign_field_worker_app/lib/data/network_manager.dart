@@ -10,6 +10,8 @@ import 'data_repository.dart';
 class NetworkManager {
   static const _taskResourceIdKey = 'taskResourceId';
   static const _individualIdentifierIdKey = 'individualIdentifierId';
+  static const _householdAddressIdKey = 'householdAddressId';
+  static const _individualAddressIdKey = 'individualAddressId';
 
   final NetworkManagerConfiguration configuration;
 
@@ -81,6 +83,20 @@ class NetworkManager {
                   serverGeneratedId,
                 );
 
+                if (updatedEntity is HouseholdModel) {
+                  final addressId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _householdAddressIdKey;
+                    },
+                  )?.id;
+
+                  updatedEntity = updatedEntity.copyWith(
+                    address: updatedEntity.address?.copyWith(
+                      id: addressId,
+                    ),
+                  );
+                }
+
                 if (updatedEntity is IndividualModel) {
                   final identifierId = e.additionalIds.firstWhereOrNull(
                     (element) {
@@ -88,10 +104,24 @@ class NetworkManager {
                     },
                   )?.id;
 
+                  final addressId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _individualAddressIdKey;
+                    },
+                  )?.id;
+
                   updatedEntity = updatedEntity.copyWith(
+                    // TODO: Modify this to work with multiple identifiers
                     identifiers: updatedEntity.identifiers?.map((e) {
                       return e.copyWith(
                         id: identifierId,
+                      );
+                    }).toList(),
+
+                    // TODO: Modify this to work with multiple addresses
+                    address: updatedEntity.address?.map((e) {
+                      return e.copyWith(
+                        id: addressId,
                       );
                     }).toList(),
                   );
@@ -206,9 +236,19 @@ class NetworkManager {
               final serverGeneratedId = responseEntity?.id;
 
               if (serverGeneratedId != null) {
+                final addressAdditionalId = responseEntity?.address?.id == null
+                    ? null
+                    : AdditionalId(
+                        idType: _householdAddressIdKey,
+                        id: responseEntity!.address!.id!,
+                      );
+
                 local.opLogManager.updateServerGeneratedIds(
                   clientReferenceId: entity.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
+                  additionalIds: [
+                    if (addressAdditionalId != null) addressAdditionalId,
+                  ],
                 );
               }
             }
@@ -236,22 +276,42 @@ class NetworkManager {
               final serverGeneratedId = responseEntity?.id;
 
               if (serverGeneratedId != null) {
+                final identifierAdditionalIds = responseEntity?.identifiers
+                    ?.map((e) {
+                      final id = e.id;
+
+                      if (id == null) return null;
+
+                      return AdditionalId(
+                        idType: _individualIdentifierIdKey,
+                        id: id,
+                      );
+                    })
+                    .whereNotNull()
+                    .toList();
+
+                final addressAdditionalIds = responseEntity?.address
+                    ?.map((e) {
+                      final id = e.id;
+
+                      if (id == null) return null;
+
+                      return AdditionalId(
+                        idType: _individualAddressIdKey,
+                        id: id,
+                      );
+                    })
+                    .whereNotNull()
+                    .toList();
+
                 local.opLogManager.updateServerGeneratedIds(
                   clientReferenceId: entity.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
-                  additionalIds: responseEntity?.identifiers
-                      ?.map((e) {
-                        final id = e.id;
-
-                        if (id == null) return null;
-
-                        return AdditionalId(
-                          idType: _individualIdentifierIdKey,
-                          id: id,
-                        );
-                      })
-                      .whereNotNull()
-                      .toList(),
+                  additionalIds: [
+                    if (identifierAdditionalIds != null)
+                      ...identifierAdditionalIds,
+                    if (addressAdditionalIds != null) ...addressAdditionalIds,
+                  ],
                 );
               }
             }
