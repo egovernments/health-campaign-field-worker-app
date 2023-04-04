@@ -8,6 +8,9 @@ import '../models/data_model.dart';
 import 'data_repository.dart';
 
 class NetworkManager {
+  static const _taskResourceIdKey = 'taskResourceId';
+  static const _individualIdentifierIdKey = 'individualIdentifierId';
+
   final NetworkManagerConfiguration configuration;
 
   const NetworkManager({required this.configuration});
@@ -78,10 +81,26 @@ class NetworkManager {
                   serverGeneratedId,
                 );
 
+                if (updatedEntity is IndividualModel) {
+                  final identifierId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _individualIdentifierIdKey;
+                    },
+                  )?.id;
+
+                  updatedEntity = updatedEntity.copyWith(
+                    identifiers: updatedEntity.identifiers?.map((e) {
+                      return e.copyWith(
+                        id: identifierId,
+                      );
+                    }).toList(),
+                  );
+                }
+
                 if (updatedEntity is TaskModel) {
                   final resourceId = e.additionalIds
                       .firstWhereOrNull(
-                        (element) => element.idType == 'resourceId',
+                        (element) => element.idType == _taskResourceIdKey,
                       )
                       ?.id;
 
@@ -220,6 +239,19 @@ class NetworkManager {
                 local.opLogManager.updateServerGeneratedIds(
                   clientReferenceId: entity.clientReferenceId,
                   serverGeneratedId: serverGeneratedId,
+                  additionalIds: responseEntity?.identifiers
+                      ?.map((e) {
+                        final id = e.id;
+
+                        if (id == null) return null;
+
+                        return AdditionalId(
+                          idType: _individualIdentifierIdKey,
+                          id: id,
+                        );
+                      })
+                      .whereNotNull()
+                      .toList(),
                 );
               }
             }
@@ -283,7 +315,10 @@ class NetworkManager {
                         final id = e.id;
                         if (id == null) return null;
 
-                        return AdditionalId(idType: 'resourceId', id: id);
+                        return AdditionalId(
+                          idType: _taskResourceIdKey,
+                          id: id,
+                        );
                       })
                       .whereNotNull()
                       .toList(),
