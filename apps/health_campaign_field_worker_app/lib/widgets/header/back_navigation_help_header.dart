@@ -32,9 +32,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             ),
             onPressed: () => context.router.pop(),
             child: Row(
-              children: const [
-                Icon(Icons.arrow_left_sharp),
-                Text('Back'),
+              children: [
+                const Icon(Icons.arrow_left_sharp),
+                Text(AppLocalizations.of(context)
+                    .translate(i18.common.coreCommonBack)),
               ],
             ),
           ),
@@ -61,9 +62,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             onPressed: null,
             child: Row(
-              children: const [
-                Text('Help'),
-                Icon(Icons.help_outline_outlined),
+              children: [
+                Text(AppLocalizations.of(context)
+                    .translate(i18.common.coreCommonHelp)),
+                const Icon(Icons.help_outline_outlined),
               ],
             ),
           ),

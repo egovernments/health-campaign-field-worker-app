@@ -70,7 +70,14 @@ class DigitTextFormField extends StatelessWidget {
                     fillColor: DigitTheme.instance.colors.cloudGray,
                     focusedBorder:
                         DigitTheme.instance.inputDecorationTheme.disabledBorder,
-                    focusColor: DigitTheme.instance.colors.cloudGray)
+                    focusColor: DigitTheme.instance.colors.cloudGray,
+                    suffixIcon: suffix == null
+                        ? null
+                        : InkWell(
+                            onTap: onTap,
+                            child: suffix,
+                          ),
+                  )
                 : InputDecoration(
                     labelText: hint,
                     contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),

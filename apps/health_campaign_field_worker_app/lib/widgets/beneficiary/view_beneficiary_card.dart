@@ -68,7 +68,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
-                      '${householdMember.household.memberCount ?? 1} Members',
+                      '${householdMember.household.memberCount ?? 1} ${'Members'}',
                   status: householdMember.task?.status != null
                       ? 'delivered'
                       : 'Not Delivered',
@@ -149,7 +149,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   .toList(),
               leftColumnWidth: 130,
               rightColumnWidth: 45 * 6,
-              height: (householdMember.members.length + 1) * 60,
+              height: householdMember.members.length <= 5
+                  ? (householdMember.members.length + 1) * 57
+                  : 6 * 57,
             ),
           ),
           Container(

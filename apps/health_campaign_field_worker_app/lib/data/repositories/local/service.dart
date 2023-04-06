@@ -119,6 +119,7 @@ class ServiceLocalRepository
       }).toList();
 
       serviceList.add(ServiceModel(
+        clientId: data.clientId,
         id: data.id,
         tenantId: data.tenantId,
         rowVersion: data.rowVersion,

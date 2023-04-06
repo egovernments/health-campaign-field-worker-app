@@ -155,6 +155,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     valueAccessor: FacilityValueAccessor(
                                       facilities,
                                     ),
+                                    isRequired: true,
                                     label: localizations.translate(
                                       i18.stockReconciliationDetails
                                           .facilityLabel,

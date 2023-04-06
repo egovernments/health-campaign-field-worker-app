@@ -291,6 +291,7 @@ class _StockReconciliationPageState
                                             ),
                                             formControlName: _facilityKey,
                                             readOnly: true,
+                                            isRequired: true,
                                             onTap: () async {
                                               final facility = await context
                                                   .router
@@ -329,6 +330,7 @@ class _StockReconciliationPageState
                                                   i18.stockReconciliationDetails
                                                       .productLabel,
                                                 ),
+                                                isRequired: true,
                                                 onChanged: (value) {
                                                   ctx
                                                       .read<
