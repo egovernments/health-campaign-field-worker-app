@@ -110,22 +110,19 @@ abstract class OpLogManager<T extends EntityModel> {
   }
 
   Future<void> updateServerGeneratedIds({
-    required String clientReferenceId,
-    required String serverGeneratedId,
-    List<AdditionalId>? additionalIds,
-    OpLogEntry<T>? entry,
+    required UpdateServerGeneratedIdModel<T> model,
   }) async {
     final opLogs = await isar.opLogs
         .filter()
-        .clientReferenceIdEqualTo(clientReferenceId)
+        .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAll();
 
     for (final oplog in opLogs) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
       OpLogEntry updatedEntry = entry.copyWith(
-        serverGeneratedId: serverGeneratedId,
-        additionalIds: additionalIds,
+        serverGeneratedId: model.serverGeneratedId,
+        additionalIds: model.additionalIds,
       );
 
       if (entry.syncedUp) {
@@ -453,4 +450,20 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
   @override
   String? getServerGeneratedId(BoundaryModel entity) =>
       throw UnimplementedError();
+}
+
+class UpdateServerGeneratedIdModel<T extends EntityModel> {
+  final String clientReferenceId;
+  final String serverGeneratedId;
+  final DataOperation dataOperation;
+  final List<AdditionalId>? additionalIds;
+  final OpLogEntry<T>? entry;
+
+  const UpdateServerGeneratedIdModel({
+    required this.clientReferenceId,
+    required this.serverGeneratedId,
+    required this.dataOperation,
+    this.additionalIds,
+    this.entry,
+  });
 }

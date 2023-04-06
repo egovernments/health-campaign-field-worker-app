@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
+import 'repositories/oplog/oplog.dart';
 
 class NetworkManager {
   static const _taskResourceIdKey = 'taskResourceId';
@@ -248,11 +249,14 @@ class NetworkManager {
                       );
 
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  additionalIds: [
-                    if (addressAdditionalId != null) addressAdditionalId,
-                  ],
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: [
+                      if (addressAdditionalId != null) addressAdditionalId,
+                    ],
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -309,13 +313,16 @@ class NetworkManager {
                     .toList();
 
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  additionalIds: [
-                    if (identifierAdditionalIds != null)
-                      ...identifierAdditionalIds,
-                    if (addressAdditionalIds != null) ...addressAdditionalIds,
-                  ],
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: [
+                      if (identifierAdditionalIds != null)
+                        ...identifierAdditionalIds,
+                      if (addressAdditionalIds != null) ...addressAdditionalIds,
+                    ],
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -343,8 +350,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -372,20 +382,23 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: taskModel.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  additionalIds: responseEntity?.resources
-                      ?.map((e) {
-                        final id = e.id;
-                        if (id == null) return null;
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: taskModel.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: responseEntity?.resources
+                        ?.map((e) {
+                          final id = e.id;
+                          if (id == null) return null;
 
-                        return AdditionalId(
-                          idType: _taskResourceIdKey,
-                          id: id,
-                        );
-                      })
-                      .whereNotNull()
-                      .toList(),
+                          return AdditionalId(
+                            idType: _taskResourceIdKey,
+                            id: id,
+                          );
+                        })
+                        .whereNotNull()
+                        .toList(),
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -415,8 +428,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -446,8 +462,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
