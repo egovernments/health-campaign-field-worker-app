@@ -6,8 +6,14 @@ import 'package:provider/provider.dart';
 
 import '../models/data_model.dart';
 import 'data_repository.dart';
+import 'repositories/oplog/oplog.dart';
 
 class NetworkManager {
+  static const _taskResourceIdKey = 'taskResourceId';
+  static const _individualIdentifierIdKey = 'individualIdentifierId';
+  static const _householdAddressIdKey = 'householdAddressId';
+  static const _individualAddressIdKey = 'individualAddressId';
+
   final NetworkManagerConfiguration configuration;
 
   const NetworkManager({required this.configuration});
@@ -66,9 +72,90 @@ class NetworkManager {
       );
 
       for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value.map((e) {
-          return e.entity;
-        }).toList();
+        final entities = operationGroupedEntity.value
+            .map((e) {
+              final oplogEntryEntity = e.entity;
+
+              final serverGeneratedId = e.serverGeneratedId;
+              if (serverGeneratedId != null) {
+                var updatedEntity =
+                    local.opLogManager.applyServerGeneratedIdToEntity(
+                  oplogEntryEntity,
+                  serverGeneratedId,
+                );
+
+                if (updatedEntity is HouseholdModel) {
+                  final addressId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _householdAddressIdKey;
+                    },
+                  )?.id;
+
+                  updatedEntity = updatedEntity.copyWith(
+                    address: updatedEntity.address?.copyWith(
+                      id: addressId,
+                    ),
+                  );
+                }
+
+                if (updatedEntity is IndividualModel) {
+                  final identifierId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _individualIdentifierIdKey;
+                    },
+                  )?.id;
+
+                  final addressId = e.additionalIds.firstWhereOrNull(
+                    (element) {
+                      return element.idType == _individualAddressIdKey;
+                    },
+                  )?.id;
+
+                  updatedEntity = updatedEntity.copyWith(
+                    // TODO: Modify this to work with multiple identifiers
+                    identifiers: updatedEntity.identifiers?.map((e) {
+                      return e.copyWith(
+                        id: identifierId,
+                      );
+                    }).toList(),
+
+                    // TODO: Modify this to work with multiple addresses
+                    address: updatedEntity.address?.map((e) {
+                      return e.copyWith(
+                        id: addressId,
+                      );
+                    }).toList(),
+                  );
+                }
+
+                if (updatedEntity is TaskModel) {
+                  final resourceId = e.additionalIds
+                      .firstWhereOrNull(
+                        (element) => element.idType == _taskResourceIdKey,
+                      )
+                      ?.id;
+
+                  updatedEntity = updatedEntity.copyWith(
+                    resources: updatedEntity.resources?.map((e) {
+                      if (resourceId != null) {
+                        return e.copyWith(
+                          taskId: serverGeneratedId,
+                          id: resourceId,
+                        );
+                      }
+
+                      return e.copyWith(taskId: serverGeneratedId);
+                    }).toList(),
+                  );
+                }
+
+                return updatedEntity;
+              }
+
+              return oplogEntryEntity;
+            })
+            .whereNotNull()
+            .toList();
 
         if (operationGroupedEntity.key == DataOperation.create) {
           await Future.delayed(const Duration(seconds: 1));
@@ -154,10 +241,22 @@ class NetworkManager {
               final serverGeneratedId = responseEntity?.id;
 
               if (serverGeneratedId != null) {
+                final addressAdditionalId = responseEntity?.address?.id == null
+                    ? null
+                    : AdditionalId(
+                        idType: _householdAddressIdKey,
+                        id: responseEntity!.address!.id!,
+                      );
+
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  dataOperation: element.operation,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: [
+                      if (addressAdditionalId != null) addressAdditionalId,
+                    ],
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -185,10 +284,45 @@ class NetworkManager {
               final serverGeneratedId = responseEntity?.id;
 
               if (serverGeneratedId != null) {
+                final identifierAdditionalIds = responseEntity?.identifiers
+                    ?.map((e) {
+                      final id = e.id;
+
+                      if (id == null) return null;
+
+                      return AdditionalId(
+                        idType: _individualIdentifierIdKey,
+                        id: id,
+                      );
+                    })
+                    .whereNotNull()
+                    .toList();
+
+                final addressAdditionalIds = responseEntity?.address
+                    ?.map((e) {
+                      final id = e.id;
+
+                      if (id == null) return null;
+
+                      return AdditionalId(
+                        idType: _individualAddressIdKey,
+                        id: id,
+                      );
+                    })
+                    .whereNotNull()
+                    .toList();
+
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  dataOperation: element.operation,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: [
+                      if (identifierAdditionalIds != null)
+                        ...identifierAdditionalIds,
+                      if (addressAdditionalIds != null) ...addressAdditionalIds,
+                    ],
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -216,9 +350,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  dataOperation: element.operation,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -237,14 +373,32 @@ class NetworkManager {
               if (element.id == null) return;
               final taskModel = element.entity as TaskModel;
               var responseEntity =
-                  responseEntities.whereType<TaskModel>().where(
+                  responseEntities.whereType<TaskModel>().firstWhereOrNull(
                         (e) =>
                             e.clientReferenceId == taskModel.clientReferenceId,
                       );
-              for (var r in responseEntity) {
-                await local.opLogManager.updateServerGeneratedData(
-                  model: r,
-                  clientReferenceId: r.clientReferenceId,
+
+              final serverGeneratedId = responseEntity?.id;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: taskModel.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    additionalIds: responseEntity?.resources
+                        ?.map((e) {
+                          final id = e.id;
+                          if (id == null) return null;
+
+                          return AdditionalId(
+                            idType: _taskResourceIdKey,
+                            id: id,
+                          );
+                        })
+                        .whereNotNull()
+                        .toList(),
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -274,9 +428,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  dataOperation: element.operation,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }
@@ -306,9 +462,11 @@ class NetworkManager {
 
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
-                  clientReferenceId: entity.clientReferenceId,
-                  serverGeneratedId: serverGeneratedId,
-                  dataOperation: element.operation,
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
                 );
               }
             }

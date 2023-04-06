@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/app_exception.dart';
-import '../../local_store/no_sql/schema/oplog.dart';
+import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 
 abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;
@@ -109,76 +109,34 @@ abstract class OpLogManager<T extends EntityModel> {
     await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
   }
 
-  Future<void> markSyncDown(OpLogEntry<T> entry) async {
-    await put(entry.copyWith(syncedDown: true, syncedDownOn: DateTime.now()));
-  }
-
   Future<void> updateServerGeneratedIds({
-    required String clientReferenceId,
-    required String serverGeneratedId,
-    required DataOperation dataOperation,
-    OpLogEntry<T>? entry,
+    required UpdateServerGeneratedIdModel model,
   }) async {
     final opLogs = await isar.opLogs
         .filter()
-        .operationEqualTo(dataOperation)
-        .clientReferenceIdEqualTo(clientReferenceId)
+        .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAll();
 
-    for (final e in opLogs) {
-      final entry = OpLogEntry.fromOpLog<T>(e);
+    for (final oplog in opLogs) {
+      final entry = OpLogEntry.fromOpLog<T>(oplog);
 
-      final updatedEntity = applyServerGeneratedIdToEntity(
-        entry.entity,
-        serverGeneratedId,
+      OpLogEntry updatedEntry = entry.copyWith(
+        serverGeneratedId: model.serverGeneratedId,
+        additionalIds: model.additionalIds,
       );
 
-      final updatedEntry = entry.copyWith(
-        entity: updatedEntity,
-        serverGeneratedId: serverGeneratedId,
-      );
+      if (entry.syncedUp) {
+        updatedEntry = updatedEntry.copyWith(
+          syncedDown: true,
+          syncedDownOn: DateTime.now(),
+        );
+      }
+
+      final updatedOplog = updatedEntry.oplog;
 
       await isar.writeTxn(() async {
-        await isar.opLogs.put(updatedEntry.oplog);
+        await isar.opLogs.put(updatedOplog);
       });
-
-      if (entry.syncedUp) await markSyncDown(updatedEntry);
-    }
-  }
-
-  Future<void> updateServerGeneratedData({
-    required TaskModel model,
-    required String clientReferenceId,
-  }) async {
-    final opLogs = await isar.opLogs
-        .filter()
-        .clientReferenceIdEqualTo(clientReferenceId)
-        .findAll();
-    model;
-
-    for (final e in opLogs) {
-      final entry = OpLogEntry.fromOpLog<TaskModel>(e);
-
-      final updatedEntity = entry.entity.copyWith(
-        id: model.id!,
-        resources: entry.entity.resources?.map((element) {
-          return element.copyWith(
-            taskId: model.id,
-            id: model.resources?.first.id,
-          );
-        }).toList(),
-      );
-
-      final updatedEntry = entry.copyWith(
-        entity: updatedEntity,
-        serverGeneratedId: model.id!,
-      );
-
-      await isar.writeTxn(() async {
-        await isar.opLogs.put(updatedEntry.oplog);
-      });
-
-      if (entry.syncedUp) await markSyncDown(updatedEntry as OpLogEntry<T>);
     }
   }
 
@@ -492,4 +450,20 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
   @override
   String? getServerGeneratedId(BoundaryModel entity) =>
       throw UnimplementedError();
+}
+
+class UpdateServerGeneratedIdModel {
+  final String clientReferenceId;
+  final String serverGeneratedId;
+  final DataOperation dataOperation;
+  final List<AdditionalId>? additionalIds;
+  final OpLogEntry? entry;
+
+  const UpdateServerGeneratedIdModel({
+    required this.clientReferenceId,
+    required this.serverGeneratedId,
+    required this.dataOperation,
+    this.additionalIds,
+    this.entry,
+  });
 }
