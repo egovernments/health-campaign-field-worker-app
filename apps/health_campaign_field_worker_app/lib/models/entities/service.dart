@@ -33,7 +33,7 @@ class ServiceModel extends EntityModel {
   static const schemaName = 'Service';
 
   final String? id;
-  final String? clientId;
+  final String clientId;
   final String? serviceDefId;
   final bool? isActive;
   final String? accountId;
@@ -48,7 +48,7 @@ class ServiceModel extends EntityModel {
   ServiceModel({
     this.additionalFields,
     this.id,
-    this.clientId,
+    required this.clientId,
     this.serviceDefId,
     this.isActive,
     this.accountId,

@@ -363,6 +363,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       label: localizations.translate(
                                         module.selectProductLabel,
                                       ),
+                                      isRequired: true,
                                       valueMapper: (value) {
                                         return localizations.translate(
                                           value.sku ?? value.id,
@@ -389,6 +390,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 menuItems: reasons ?? [],
                                 formControlName: _transactionReasonKey,
                                 valueMapper: (value) => value.name.titleCase,
+                                isRequired: true,
                               ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
@@ -405,6 +407,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     i18.stockReconciliationDetails
                                         .facilityLabel,
                                   ),
+                                  isRequired: true,
                                   suffix: const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Icon(Icons.search),

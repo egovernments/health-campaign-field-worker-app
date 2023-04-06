@@ -92,6 +92,44 @@ class AdditionalId {
     required this.idType,
     required this.id,
   });
+
+  static OpLogEntry<T> fromOpLog<T extends EntityModel>(OpLog e) {
+    return OpLogEntry<T>(
+      e.getEntity<T>(),
+      e.operation,
+      createdBy: e.createdBy,
+      createdAt: e.createdAt,
+      type: e.entityType,
+      serverGeneratedId: e.serverGeneratedId,
+      id: e.id,
+      clientReferenceId: e.clientReferenceId,
+      syncedDown: e.syncedDown,
+      syncedDownOn: e.syncedDownOn,
+      syncedUp: e.syncedUp,
+      syncedUpOn: e.syncedUpOn,
+    );
+  }
+
+  OpLog get oplog {
+    OpLog oplog = OpLog()
+      ..entityString = entity.toJson()
+      ..entityType = type
+      ..operation = operation
+      ..serverGeneratedId = serverGeneratedId
+      ..clientReferenceId = clientReferenceId
+      ..syncedUpOn = syncedUpOn
+      ..syncedDownOn = syncedDownOn
+      ..createdBy = createdBy
+      ..createdAt = createdAt
+      ..syncedUp = syncedUp
+      ..syncedDown = syncedDown;
+
+    if (id != null) {
+      oplog.id = id!;
+    }
+
+    return oplog;
+  }
 }
 
 @MappableEnum()

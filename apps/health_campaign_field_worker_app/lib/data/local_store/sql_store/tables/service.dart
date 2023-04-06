@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 
 class Service extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get clientId => text().nullable()();
+  TextColumn get clientId => text()();
   TextColumn get serviceDefId => text().nullable()();
   BoolColumn get isActive => boolean().nullable()();
   TextColumn get accountId => text().nullable()();
