@@ -37,4 +37,12 @@ class OpLog {
   late bool syncedUp;
 
   late bool syncedDown;
+
+  late List<AdditionalId> additionalIds;
+}
+
+@embedded
+class AdditionalId {
+  late String idType;
+  late String id;
 }
