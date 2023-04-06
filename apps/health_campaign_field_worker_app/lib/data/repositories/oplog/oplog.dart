@@ -110,7 +110,7 @@ abstract class OpLogManager<T extends EntityModel> {
   }
 
   Future<void> updateServerGeneratedIds({
-    required UpdateServerGeneratedIdModel<T> model,
+    required UpdateServerGeneratedIdModel model,
   }) async {
     final opLogs = await isar.opLogs
         .filter()
@@ -452,12 +452,12 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
       throw UnimplementedError();
 }
 
-class UpdateServerGeneratedIdModel<T extends EntityModel> {
+class UpdateServerGeneratedIdModel {
   final String clientReferenceId;
   final String serverGeneratedId;
   final DataOperation dataOperation;
   final List<AdditionalId>? additionalIds;
-  final OpLogEntry<T>? entry;
+  final OpLogEntry? entry;
 
   const UpdateServerGeneratedIdModel({
     required this.clientReferenceId,
