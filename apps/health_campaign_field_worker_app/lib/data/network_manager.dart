@@ -135,12 +135,16 @@ class NetworkManager {
                       ?.id;
 
                   updatedEntity = updatedEntity.copyWith(
-                    resources: updatedEntity.resources
-                        ?.map((e) => e.copyWith(
-                              taskId: serverGeneratedId,
-                              id: resourceId,
-                            ))
-                        .toList(),
+                    resources: updatedEntity.resources?.map((e) {
+                      if (resourceId != null) {
+                        return e.copyWith(
+                          taskId: serverGeneratedId,
+                          id: resourceId,
+                        );
+                      }
+
+                      return e.copyWith(taskId: serverGeneratedId);
+                    }).toList(),
                   );
                 }
 
