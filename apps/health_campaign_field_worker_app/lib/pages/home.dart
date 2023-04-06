@@ -261,6 +261,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.menu_book,
                 label: i18.home.stockReconciliationLabel,
+                onPressed: () => context.router.push(ReasonForDeletionRoute()),
               ),
               HomeItemCard(
                 icon: Icons.all_inbox,
@@ -292,6 +293,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
+          onPressed: () => context.router.push(ReasonForDeletionRoute()),
         ),
         HomeItemCard(
           icon: Icons.sync_alt,

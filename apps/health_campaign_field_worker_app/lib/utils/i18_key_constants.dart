@@ -18,6 +18,7 @@ const stockDetails = StockDetails();
 const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
+const reasonForDeletion = ReasonForDeletion();
 
 class Common {
   const Common();
@@ -501,4 +502,10 @@ class ManageStock {
 
   String get recordstockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+}
+
+class ReasonForDeletion {
+  const ReasonForDeletion();
+
+  String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
 }

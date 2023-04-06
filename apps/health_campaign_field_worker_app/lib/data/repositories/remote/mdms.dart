@@ -103,6 +103,26 @@ class MdmsRepository {
         return languages;
       }).toList();
 
+      final List<HouseholdDeletionReasonOptions>
+          householdDeletionReasonOptions =
+          element.householdDeletionReasonOptions.map((element) {
+        final deletionReasonOption = HouseholdDeletionReasonOptions()
+          ..name = element.value
+          ..code = element.code;
+
+        return deletionReasonOption;
+      }).toList();
+
+      final List<HouseholdMemberDeletionReasonOptions>
+          householdMemberDeletionReasonOptions =
+          element.householdMemberDeletionReasonOptions.map((element) {
+        final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
+          ..name = element.value
+          ..code = element.code;
+
+        return deletionReasonOption;
+      }).toList();
+
       final List<GenderOptions> genderOptions =
           element.genderOptions.map((element) {
         final genderOption = GenderOptions()
@@ -164,6 +184,10 @@ class MdmsRepository {
       appConfiguration.genderOptions = genderOptions;
       appConfiguration.idTypeOptions = idTypeOptions;
       appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+      appConfiguration.householdDeletionReasonOptions =
+          householdDeletionReasonOptions;
+      appConfiguration.householdMemberDeletionReasonOptions =
+          householdMemberDeletionReasonOptions;
       appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.transportTypes = transportTypes;
       appConfiguration.backendInterface = backendInterface;

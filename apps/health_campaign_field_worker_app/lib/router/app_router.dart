@@ -30,6 +30,7 @@ import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/project_selection.dart';
+import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
@@ -86,6 +87,10 @@ part 'app_router.gr.dart';
               page: DeliverInterventionPage,
               path: 'deliver-intervention',
             ),
+            AutoRoute(
+              page: ReasonForDeletionPage,
+              path: 'reason-for-deletion',
+            ),
           ],
         ),
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
@@ -97,6 +102,7 @@ part 'app_router.gr.dart';
           AutoRoute(page: ChecklistViewPage, path: 'view'),
           AutoRoute(page: ChecklistPreviewPage, path: 'preview'),
         ]),
+
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
 
         /// Inventory Routes
