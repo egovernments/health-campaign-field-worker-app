@@ -349,10 +349,6 @@ abstract class LocalRepository<D extends EntityModel,
   FutureOr<void> markSyncedUp(OpLogEntry<D> entry) async {
     return opLogManager.markSyncUp(entry);
   }
-
-  FutureOr<void> markSyncedDown(OpLogEntry<D> entry) async {
-    return opLogManager.markSyncDown(entry);
-  }
 }
 
 class InvalidApiResponseException implements Exception {
