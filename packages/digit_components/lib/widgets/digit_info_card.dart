@@ -6,6 +6,7 @@ class DigitInfoCard extends StatelessWidget {
   final String description;
   final Color? backgroundColor;
   final IconData? icon;
+  final TextStyle? titleStyle;
   final Color? iconColor;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
@@ -14,6 +15,7 @@ class DigitInfoCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
+    this.titleStyle,
     this.backgroundColor,
     this.iconColor,
     this.icon,
@@ -50,7 +52,7 @@ class DigitInfoCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.headlineMedium,
+                  style: titleStyle ?? theme.textTheme.headlineMedium,
                 ),
               )
             ],
