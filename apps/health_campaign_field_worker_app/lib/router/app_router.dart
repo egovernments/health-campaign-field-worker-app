@@ -20,6 +20,15 @@ import '../pages/checklist/checklist_boundary_view.dart';
 import '../pages/checklist/checklist_preview.dart';
 import '../pages/checklist/checklist_view.dart';
 import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/complaints/complaint_type.dart';
+import '../pages/complaints/complaints_details.dart';
+import '../pages/complaints/complaints_inbox.dart';
+import '../pages/complaints/complaints_inbox_filter.dart';
+import '../pages/complaints/complaints_inbox_search.dart';
+import '../pages/complaints/complaints_inbox_sort.dart';
+import '../pages/complaints/complaints_inbox_wrapper.dart';
+import '../pages/complaints/complaints_location.dart';
+import '../pages/complaints/complaints_registration_wrapper.dart';
 import '../pages/home.dart';
 import '../pages/inventory/facility_selection.dart';
 import '../pages/inventory/manage_stocks.dart';
@@ -124,6 +133,52 @@ part 'app_router.gr.dart';
           page: ProjectSelectionPage,
           path: 'select-project',
           initial: true,
+        ),
+
+        /// Complaints Inbox
+        AutoRoute(
+          page: ComplaintsInboxWrapperPage,
+          path: 'complaints-inbox',
+          children: [
+            AutoRoute(
+              page: ComplaintsInboxPage,
+              path: 'complaints-inbox-items',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsInboxFilterPage,
+              path: 'complaints-inbox-filter',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSearchPage,
+              path: 'complaints-inbox-search',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSortPage,
+              path: 'complaints-inbox-sort',
+            ),
+          ],
+        ),
+
+        /// Complaints registration
+        AutoRoute(
+          page: ComplaintsRegistrationWrapperPage,
+          path: 'complaints-registration',
+          children: [
+            AutoRoute(
+              page: ComplaintTypePage,
+              path: 'complaints-type',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsLocationPage,
+              path: 'complaints-location',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsPage,
+              path: 'complaints-details',
+            ),
+          ],
         ),
       ],
     ),
