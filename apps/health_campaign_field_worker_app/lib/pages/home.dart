@@ -1,11 +1,12 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-
+import 'package:overlay_builder/overlay_builder.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
@@ -37,112 +38,164 @@ class _HomePageState extends LocalizedState<HomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    List<GlobalKey<OverlayWidgetState>> overlayWidgetStateList = [];
+    List<GlobalKey<DigitWalkthroughState>> walkthroughWidgetStateList = [];
+    for (var i = 0; i < _getItems(context).length + 1; i++) {
+      overlayWidgetStateList
+          .add(GlobalKey<OverlayWidgetState>(debugLabel: 'home_Overlay_$i'));
+      walkthroughWidgetStateList.add(GlobalKey<DigitWalkthroughState>(
+        debugLabel: 'home_$i',
+      ));
+    }
+
+    GlobalKey<OverlayWidgetState> overlaykey = GlobalKey(debugLabel: 'new');
+
+    GlobalKey<DigitWalkthroughWrapperState> overlayWrapperkey =
+        GlobalKey(debugLabel: 'newwrapper');
+
     return Scaffold(
-      body: ScrollableContent(
-        slivers: [
-          SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _getItems(context).elementAt(index),
-              childCount: _getItems(context).length,
-            ),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 145,
-              childAspectRatio: 104 / 128,
-            ),
-          ),
-        ],
-        header: Column(
-          children: [
-            const BackNavigationHelpHeaderWidget(
-              showBackNavigation: false,
-            ),
-            ProgressIndicatorContainer(
-              label: localizations.translate(
-                i18.home.progressIndicatorTitle,
-              ),
-              prefixLabel: localizations.translate(
-                i18.home.progressIndicatorPrefixLabel,
-              ),
-              suffixLabel: '200',
-              value: .08,
-            ),
-          ],
-        ),
-        footer: const PoweredByDigit(),
-        children: [
-          const SizedBox(height: kPadding * 2),
-          BlocConsumer<SyncBloc, SyncState>(
-            listener: (context, state) {
-              state.maybeWhen(
-                orElse: () => null,
-                syncInProgress: () => DigitSyncDialogContent.show(
-                  context,
-                  type: DigitSyncDialogType.inProgress,
-                  // TODO: Localization pending
-                  label: 'Sync in Progress', barrierDismissible: false,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: DigitWalkthroughWrapper(
+          key: overlayWrapperkey,
+          overlayWidget: overlaykey,
+          keysArray: overlayWidgetStateList,
+          widgetKey: walkthroughWidgetStateList,
+          child: ScrollableContent(
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return DigitWalkthrough(
+                      onSkip: () =>
+                          {overlayWrapperkey.currentState?.onSelectedSkip()},
+                      widgetHeight: 130,
+                      onTap: () =>
+                          {overlayWrapperkey.currentState?.onSelectedTap()},
+                      key: walkthroughWidgetStateList[index + 1],
+                      description:
+                          '${_getItems(context).elementAt(index).label}_HELP',
+                      overlayWidget: overlayWidgetStateList[index + 1],
+                      titleAlignment: TextAlign.center,
+                      child: _getItems(context).elementAt(index),
+                    );
+                  },
+                  childCount: _getItems(context).length,
                 ),
-                completedSync: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-
-                  DigitSyncDialogContent.show(
-                    context,
-                    type: DigitSyncDialogType.complete,
-                    // TODO: Localization Pending
-                    label: 'Data Synced',
-                    primaryAction: DigitDialogActions(
-                      // TODO: Localization Pending
-                      label: 'Close',
-                      action: (ctx) {
-                        Navigator.pop(ctx);
-                      },
-                    ),
-                  );
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 145,
+                  childAspectRatio: 104 / 128,
+                ),
+              ),
+            ],
+            header: Column(children: [
+              BackNavigationHelpHeaderWidget(
+                showBackNavigation: false,
+                helpClicked: () {
+                  overlayWrapperkey.currentState?.onSelectedTap();
                 },
-                failedSync: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-
-                  DigitSyncDialogContent.show(
-                    context,
-                    type: DigitSyncDialogType.failed,
-                    // TODO: Localization Pending
-                    label: 'Sync Failed !',
-                    primaryAction: DigitDialogActions(
-                      // TODO: Localization Pending
-                      label: 'Retry',
-                      action: (ctx) {
-                        Navigator.pop(ctx);
-                        _attemptSyncUp(context);
-                      },
-                    ),
-                    secondaryAction: DigitDialogActions(
-                      // TODO: Localization Pending
-                      label: 'Close',
-                      action: (ctx) => Navigator.pop(ctx),
-                    ),
-                  );
+              ),
+              DigitWalkthrough(
+                onSkip: () =>
+                    {overlayWrapperkey.currentState?.onSelectedSkip()},
+                widgetHeight: 150,
+                onTap: () => {
+                  overlayWrapperkey.currentState?.onSelectedTap(),
                 },
-              );
-            },
-            builder: (context, state) {
-              return state.maybeWhen(
-                orElse: () => const Offstage(),
-                pendingSync: (count) => count == 0
-                    ? const Offstage()
-                    : DigitInfoCard(
-                        icon: Icons.info,
-                        backgroundColor: theme.colorScheme.tertiaryContainer,
-                        iconColor: theme.colorScheme.surfaceTint,
-                        description: localizations
-                            .translate(i18.home.dataSyncInfoContent)
-                            .replaceAll('{}', count.toString()),
-                        title: localizations.translate(
-                          i18.home.dataSyncInfoLabel,
+                key: walkthroughWidgetStateList[0],
+                description: i18.home.progressIndicatorHelp,
+                overlayWidget: overlayWidgetStateList[0],
+                titleAlignment: TextAlign.center,
+                child: ProgressIndicatorContainer(
+                  label: localizations.translate(
+                    i18.home.progressIndicatorTitle,
+                  ),
+                  prefixLabel: localizations.translate(
+                    i18.home.progressIndicatorPrefixLabel,
+                  ),
+                  suffixLabel: '200',
+                  value: .08,
+                ),
+              ),
+            ]),
+            footer: const PoweredByDigit(),
+            children: [
+              const SizedBox(height: kPadding * 2),
+              BlocConsumer<SyncBloc, SyncState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () => null,
+                    syncInProgress: () => DigitSyncDialogContent.show(
+                      context,
+                      type: DigitSyncDialogType.inProgress,
+                      // TODO: Localization pending
+                      label: 'Sync in Progress', barrierDismissible: false,
+                    ),
+                    completedSync: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+
+                      DigitSyncDialogContent.show(
+                        context,
+                        type: DigitSyncDialogType.complete,
+                        // TODO: Localization Pending
+                        label: 'Data Synced',
+                        primaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Close',
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                          },
                         ),
-                      ),
-              );
-            },
+                      );
+                    },
+                    failedSync: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+
+                      DigitSyncDialogContent.show(
+                        context,
+                        type: DigitSyncDialogType.failed,
+                        // TODO: Localization Pending
+                        label: 'Sync Failed !',
+                        primaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Retry',
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                            _attemptSyncUp(context);
+                          },
+                        ),
+                        secondaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Close',
+                          action: (ctx) => Navigator.pop(ctx),
+                        ),
+                      );
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    orElse: () => const Offstage(),
+                    pendingSync: (count) => count == 0
+                        ? const Offstage()
+                        : DigitInfoCard(
+                            icon: Icons.info,
+                            backgroundColor:
+                                theme.colorScheme.tertiaryContainer,
+                            iconColor: theme.colorScheme.surfaceTint,
+                            description: localizations
+                                .translate(i18.home.dataSyncInfoContent)
+                                .replaceAll('{}', count.toString()),
+                            title: localizations.translate(
+                              i18.home.dataSyncInfoLabel,
+                            ),
+                          ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

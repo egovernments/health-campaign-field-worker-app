@@ -29,3 +29,5 @@ export './scrollable_content.dart';
 export 'atoms/digit_toast_helper.dart';
 export 'digit_row_card/digit_row_card.dart';
 export 'digit_search_dropdown.dart';
+export './molecules/digit_walkthrough_wrapper.dart';
+export './molecules/digit_walkthrough.dart';
