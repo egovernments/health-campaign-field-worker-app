@@ -18,6 +18,7 @@ const stockDetails = StockDetails();
 const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
+const complaints = Complaints();
 
 class Common {
   const Common();
@@ -501,4 +502,58 @@ class ManageStock {
 
   String get recordstockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+}
+
+class Complaints {
+  const Complaints();
+
+  String get complaintsTypeHeading => 'COMPLAINTS_TYPE_HEADING';
+
+  String get complaintsTypeLabel => 'COMPLAINTS_TYPE_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+
+  String get complaintsLocationLabel => 'COMPLAINTS_LOCATION_LABEL';
+
+  String get complaintsDetailsLabel => 'COMPLAINTS_DETAILS_LABEL';
+
+  String get dateOfComplaint => 'COMPLAINTS_DATE';
+
+  String get complainantTypeQuestion => 'COMPLAINTS_COMPLAINANT_TYPE_QUESTION';
+
+  String get complainantName => 'COMPLAINTS_COMPLAINANT_NAME';
+
+  String get complainantContactNumber => 'COMPLAINTS_COMPLAINANT_CONTACT_NUMBER';
+
+  String get supervisorName => 'COMPLAINTS_SUPERVISOR_NAME';
+
+  String get supervisorContactNumber => 'COMPLAINTS_SUPERVISOR_CONTACT_NUMBER';
+
+  String get complaintDescription => 'COMPLAINTS_DESCRIPTION';
+
+  String get dialogTitle => 'COMPLAINTS_DIALOG_TITLE';
+
+  String get dialogContent => 'COMPLAINTS_DIALOG_MESSAGE';
+
+  String get fileComplaintAction => 'COMPLAINTS_FILE_COMPLAINT_ACTION';
+
+  String get inboxHeading => 'COMPLAINTS_INBOX_HEADING';
+
+  String get searchCTA => 'COMPLAINTS_INBOX_SEARCH_CTA';
+
+  String get filterCTA => 'COMPLAINTS_INBOX_FILTER_CTA';
+
+  String get sortCTA => 'COMPLAINTS_INBOX_SORT_CTA';
+
+  String get complaintInboxFilterHeading => 'COMPLAINTS_INBOX_FILTER_HEADING';
+
+  String get complaintsFilterClearAll => 'COMPLAINTS_FILTER_CLEAR_ALL';
+
+  String get complaintInboxSearchHeading => 'COMPLAINTS_INBOX_SEARCH_HEADING';
+
+  String get complaintInboxSortHeading => 'COMPLAINTS_INBOX_SORT_HEADING';
+
+  String get complaintsSortDateAsc => 'COMPLAINT_SORT_DATE_ASC';
+
+  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';
 }
