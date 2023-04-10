@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/complaints_registration/complaints_registration.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -28,9 +29,6 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
     final theme = Theme.of(context);
-
-    final complaintTypes = ["Sync Not Working", "Not Enough Stock"];
-    complaintTypes.add("Other");
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -96,22 +94,34 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         label: localizations.translate(
                           i18.complaints.complaintsTypeHeading,
                         ),
-                        child: BlocBuilder<ComplaintsRegistrationBloc,
-                            ComplaintsRegistrationState>(
+                        child: BlocBuilder<AppInitializationBloc,
+                            AppInitializationState>(
                           builder: (context, state) {
-                            return RadioGroup<String>.builder(
-                              groupValue:
-                                  form.control(_complaintType).value ?? "",
-                              onChanged: (changedValue) {
-                                setState(() {
-                                  form.control(_complaintType).value =
-                                      changedValue;
-                                });
+                            return state.maybeWhen(
+                              orElse: () => const Offstage(),
+                              initialized:
+                                  (appConfiguration, serviceRegistryList) {
+                                var complaintTypes = appConfiguration
+                                    .complaintTypes
+                                    ?.map((e) => e.name)
+                                    .toList();
+                                complaintTypes?.add("Other");
+
+                                return RadioGroup<String>.builder(
+                                  groupValue:
+                                      form.control(_complaintType).value ?? "",
+                                  onChanged: (changedValue) {
+                                    setState(() {
+                                      form.control(_complaintType).value =
+                                          changedValue;
+                                    });
+                                  },
+                                  items: complaintTypes ?? [],
+                                  itemBuilder: (item) => RadioButtonBuilder(
+                                    item.trim(),
+                                  ),
+                                );
                               },
-                              items: complaintTypes,
-                              itemBuilder: (item) => RadioButtonBuilder(
-                                item.trim(),
-                              ),
                             );
                           },
                         ),
