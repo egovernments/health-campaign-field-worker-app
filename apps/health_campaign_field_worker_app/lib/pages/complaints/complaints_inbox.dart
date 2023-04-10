@@ -26,29 +26,6 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     final bloc = context.read<ComplaintsInboxBloc>();
     final router = context.router;
 
-    //TODO: test data block. REMOVE
-    List<ComplaintsInboxItem> list = List.empty(growable: true);
-    list.add(const ComplaintsInboxItem(
-      status: "Created",
-      area: "Solimbo",
-      complaintType: "Attendance",
-      dateOfComplaint: "22/05/2023",
-    ));
-    list.add(const ComplaintsInboxItem(
-      status: "Pending",
-      area: "Angonia",
-      complaintType: "Network",
-      complaintNumber: "HCM-19090",
-      dateOfComplaint: "22/06/2023",
-    ));
-
-    bloc.add(
-      ComplaintInboxEvent.saveComplaints(
-        complaintInboxItems: list,
-      ),
-    );
-    //TODO: End of test data block. REMOVE
-
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
