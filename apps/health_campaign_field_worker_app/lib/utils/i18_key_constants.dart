@@ -19,6 +19,7 @@ const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
 const complaints = Complaints();
+const reasonForDeletion = ReasonForDeletion();
 
 class Common {
   const Common();
@@ -555,5 +556,11 @@ class Complaints {
 
   String get complaintsSortDateAsc => 'COMPLAINT_SORT_DATE_ASC';
 
-  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';
+  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';  
+}
+
+class ReasonForDeletion {
+  const ReasonForDeletion();
+
+  String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
 }

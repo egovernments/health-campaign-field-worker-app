@@ -79,6 +79,11 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+        required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+        required List<DeletionReasonOptions>
+            householdMemberDeletionReasonOptions,
     @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
         required List<GenderOptions> genderOptions,
     @JsonKey(name: 'CHECKLIST_TYPES')
@@ -117,6 +122,17 @@ class DeliveryCommentOptions with _$DeliveryCommentOptions {
 
   factory DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
       _$DeliveryCommentOptionsFromJson(json);
+}
+
+@freezed
+class DeletionReasonOptions with _$DeletionReasonOptions {
+  factory DeletionReasonOptions({
+    required String value,
+    required String code,
+  }) = _DeletionReasonOptions;
+
+  factory DeletionReasonOptions.fromJson(Map<String, dynamic> json) =>
+      _$DeletionReasonOptionsFromJson(json);
 }
 
 @freezed

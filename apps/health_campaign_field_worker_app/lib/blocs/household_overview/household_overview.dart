@@ -33,6 +33,14 @@ class HouseholdOverviewBloc
     on(_handleDeleteIndividual);
     on(_handleSetAsHead);
     on(_handleReloadMember);
+    on(_selectedIndividual);
+  }
+
+  FutureOr<void> _selectedIndividual(
+    HouseholdOverviewSelectIndividualEvent event,
+    Emitter<HouseholdOverviewState> emit,
+  ) async {
+    emit(state.copyWith(selectedIndividual: event.individualModel));
   }
 
   FutureOr<void> _handleReloadMember(
@@ -250,6 +258,10 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required HouseholdModel householdModel,
   }) = HouseholdOverviewSetAsHeadEvent;
 
+  const factory HouseholdOverviewEvent.selectedIndividual({
+    required IndividualModel individualModel,
+  }) = HouseholdOverviewSelectIndividualEvent;
+
   const factory HouseholdOverviewEvent.reload({
     required String projectId,
   }) = HouseholdOverviewReloadEvent;
@@ -260,5 +272,6 @@ class HouseholdOverviewState with _$HouseholdOverviewState {
   const factory HouseholdOverviewState({
     @Default(false) bool loading,
     required HouseholdMemberWrapper householdMemberWrapper,
+    IndividualModel? selectedIndividual,
   }) = _HouseholdOverviewState;
 }
