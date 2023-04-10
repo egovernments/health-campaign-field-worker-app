@@ -150,28 +150,11 @@ class _HouseholdOverviewPageState
                                                     )
                                                       ..pop()
                                                       ..pop();
-                                                    context
-                                                        .read<
-                                                            HouseholdOverviewBloc>()
-                                                        .add(
-                                                          HouseholdOverviewDeleteHouseholdEvent(
-                                                            projectId: context
-                                                                .projectId,
-                                                            householdModel: state
-                                                                .householdMemberWrapper
-                                                                .household,
-                                                            members: state
-                                                                .householdMemberWrapper
-                                                                .members,
-                                                            projectBeneficiaryModel: state
-                                                                .householdMemberWrapper
-                                                                .projectBeneficiary,
-                                                          ),
-                                                        );
-
-                                                    (context.router.parent()
-                                                            as StackRouter)
-                                                        .pop();
+                                                    context.router.push(
+                                                      ReasonForDeletionRoute(
+                                                        isHousholdDelete: false,
+                                                      ),
+                                                    );
                                                   },
                                                 ),
                                                 secondaryAction:
@@ -330,20 +313,20 @@ class _HouseholdOverviewPageState
                                                 )
                                                   ..pop()
                                                   ..pop();
-
                                                 context
                                                     .read<
                                                         HouseholdOverviewBloc>()
                                                     .add(
-                                                      HouseholdOverviewDeleteIndividualEvent(
-                                                        projectId:
-                                                            ctx.projectId,
-                                                        householdModel: state
-                                                            .householdMemberWrapper
-                                                            .household,
+                                                      HouseholdOverviewEvent
+                                                          .selectedIndividual(
                                                         individualModel: e,
                                                       ),
                                                     );
+                                                context.router.push(
+                                                  ReasonForDeletionRoute(
+                                                    isHousholdDelete: true,
+                                                  ),
+                                                );
                                               },
                                             ),
                                             secondaryAction: DigitDialogActions(
