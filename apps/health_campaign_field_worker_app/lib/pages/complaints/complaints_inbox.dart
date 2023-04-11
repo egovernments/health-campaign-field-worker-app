@@ -29,6 +29,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
+          var inboxItems = state.complaintInboxItems;
+
           return ScrollableContent(
             header: Column(
               children: const [
@@ -53,63 +55,84 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
               ),
             ),
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: theme.colorScheme.secondary,
-                      padding: EdgeInsets.zero,
+              Padding(
+                padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    localizations.translate(
+                      i18.complaints.inboxHeading,
                     ),
-                    onPressed: () {
-                      router.push(ComplaintsInboxSearchRoute());
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.search),
-                        Text(localizations.translate(
-                          i18.complaints.searchCTA,
-                        )),
-                      ],
-                    ),
+                    style: theme.textTheme.displayMedium,
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: theme.colorScheme.secondary,
-                      padding: EdgeInsets.zero,
-                    ),
-                    onPressed: () {
-                      router.push(ComplaintsInboxFilterRoute());
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.filter_list_alt),
-                        Text(localizations.translate(
-                          i18.complaints.filterCTA,
-                        )),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: theme.colorScheme.secondary,
-                      padding: EdgeInsets.zero,
-                    ),
-                    onPressed: () {
-                      router.push(ComplaintsInboxSortRoute());
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.segment),
-                        Text(localizations.translate(
-                          i18.complaints.sortCTA,
-                        )),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-              getInboxCards(state, theme),
+              if (inboxItems == null) ...[
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "No complaints exist",
+                  ),
+                ),
+              ] else ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.secondary,
+                        padding: EdgeInsets.zero,
+                      ),
+                      onPressed: () {
+                        router.push(ComplaintsInboxSearchRoute());
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.search),
+                          Text(localizations.translate(
+                            i18.complaints.searchCTA,
+                          )),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.secondary,
+                        padding: EdgeInsets.zero,
+                      ),
+                      onPressed: () {
+                        router.push(ComplaintsInboxFilterRoute());
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.filter_list_alt),
+                          Text(localizations.translate(
+                            i18.complaints.filterCTA,
+                          )),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.secondary,
+                        padding: EdgeInsets.zero,
+                      ),
+                      onPressed: () {
+                        router.push(ComplaintsInboxSortRoute());
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.segment),
+                          Text(localizations.translate(
+                            i18.complaints.sortCTA,
+                          )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                getInboxCards(inboxItems, theme),
+              ],
             ],
           );
         },
@@ -117,18 +140,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     );
   }
 
-  Widget getInboxCards(ComplaintInboxState state, ThemeData theme) {
-    var inboxItems = state.complaintInboxItems;
-
-    if (inboxItems == null) {
-      return const Padding(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          "No complaints exist",
-        ),
-      );
-    }
-
+  Widget getInboxCards(List<ComplaintsInboxItem> inboxItems, ThemeData theme) {
     var cards = inboxItems.map((e) {
       return DigitCard(
         child: Column(
@@ -290,9 +302,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     });
 
     return Column(
-      children: [
-        ...cards,
-      ],
+      children: cards.toList(),
     );
   }
 }
