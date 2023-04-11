@@ -69,7 +69,7 @@ abstract class RemoteRepository<D extends EntityModel,
     Response response;
 
     try {
-      response = await _executeFuture(
+      response = await executeFuture(
         future: () async {
           return await dio.post(
             searchPath,
@@ -143,7 +143,7 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<Response> create(D entity) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           createPath,
@@ -158,7 +158,7 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<Response> delete(D entity) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           createPath,
@@ -172,7 +172,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           bulkCreatePath,
@@ -188,7 +188,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> bulkUpdate(List<EntityModel> entities) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           bulkUpdatePath,
@@ -205,7 +205,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> bulkDelete(List<EntityModel> entities) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           bulkDeletePath,
@@ -223,7 +223,7 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<Response> update(EntityModel entity) async {
-    return _executeFuture(
+    return executeFuture(
       future: () async {
         return await dio.post(
           updatePath,
@@ -240,7 +240,7 @@ abstract class RemoteRepository<D extends EntityModel,
     return entities.map((e) => Mapper.toMap(e)).toList();
   }
 
-  FutureOr<T> _executeFuture<T>({
+  FutureOr<T> executeFuture<T>({
     required Future<T> Function() future,
   }) async {
     try {
