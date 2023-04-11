@@ -119,17 +119,17 @@ class _ComplaintsInboxSortPageState
                                           "COMPLAINT_SORT_DATE_ASC") {
                                         listToSort.sort(
                                           (a, b) {
-                                            return a
+                                            return b
                                                 .toString()
-                                                .compareTo(b.toString());
+                                                .compareTo(a.toString());
                                           },
                                         );
                                       } else {
                                         listToSort.sort(
                                           (a, b) {
-                                            return b
+                                            return a
                                                 .toString()
-                                                .compareTo(a.toString());
+                                                .compareTo(b.toString());
                                           },
                                         );
                                       }

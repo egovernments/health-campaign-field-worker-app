@@ -23,6 +23,7 @@ class ComplaintTypePage extends LocalizedStatefulWidget {
 
 class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
   static const _complaintType = 'complaintType';
+  static const _otherComplaintType = 'otherComplaintType';
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,18 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                     onPressed: () async {
                       form.markAllAsTouched();
 
+                      var complaintType = form.control(_complaintType).value;
+                      var otherComplaintTypeValue =
+                          form.control(_otherComplaintType).value;
+
                       if (!form.valid) return;
+
+                      if (complaintType == "Other") {
+                        if (otherComplaintTypeValue == null) return;
+
+                        form.control(_complaintType).value =
+                            otherComplaintTypeValue;
+                      }
 
                       state.maybeWhen(
                         orElse: () {
@@ -92,7 +104,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                       ),
                       LabeledField(
                         label: localizations.translate(
-                          i18.complaints.complaintsTypeHeading,
+                          i18.complaints.complaintsTypeLabel,
                         ),
                         child: BlocBuilder<AppInitializationBloc,
                             AppInitializationState>(
@@ -128,9 +140,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                       ),
                       if (form.control(_complaintType).value == "Other") ...[
                         const DigitTextFormField(
-                          formControlName: _complaintType,
+                          formControlName: _otherComplaintType,
                           label: "",
-                          maxLength: 64,
+                          maxLength: 100,
                         ),
                       ],
                       const SizedBox(height: 16),
@@ -149,6 +161,10 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     return fb.group(<String, Object>{
       _complaintType: FormControl<String>(
         validators: [Validators.required],
+        value: state.complaintType,
+      ),
+      _otherComplaintType: FormControl<String>(
+        validators: [],
         value: state.complaintType,
       ),
     });

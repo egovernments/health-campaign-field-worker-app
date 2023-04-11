@@ -1,5 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -8,9 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/complaints_registration/complaints_registration.dart';
 import '../../models/complaints/complaints.dart';
-import '../../models/data_model.dart';
 import '../../router/app_router.dart';
-import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -53,7 +50,6 @@ class _ComplaintsDetailsPageState
           listener: (context, complaintState) {
             complaintState.mapOrNull(
               saveComplaint: (value) {
-
                 //TODO: Add listener for complaint registration
                 router.push(AcknowledgementRoute());
               },
@@ -105,36 +101,8 @@ class _ComplaintsDetailsPageState
                             .control(_complaintDescription)
                             .value as String?;
 
-                        state.maybeWhen(
-                          orElse: () {
-                            return;
-                          },
-                          saveComplaint: (
-                            complaintType,
-                            addressModel,
-                            complaintsDetailsModel,
-                          ) {
-                            bloc.add(
-                              ComplaintsRegistrationEvent.saveComplaintDetails(
-                                complaintsDetailsModel: ComplaintsDetailsModel(
-                                  administrativeArea: administrativeArea,
-                                  dateOfComplaint: dateOfComplaint,
-                                  complaintRaisedFor: complaintRaisedFor,
-                                  complainantName: complainantName,
-                                  complainantContactNumber:
-                                      complainantContactNumber,
-                                  supervisorName: supervisorName,
-                                  supervisorContactNumber:
-                                      supervisorContactNumber,
-                                  complaintDescription: complaintDescription,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-
                         //TODO: Add complaints submit logic here
-                        await DigitDialog.show<bool>(
+                        final submit = await DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
                             titleText: localizations.translate(
@@ -165,6 +133,38 @@ class _ComplaintsDetailsPageState
                             ),
                           ),
                         );
+
+                        if (submit ?? false) {
+                          state.maybeWhen(
+                            orElse: () {
+                              return;
+                            },
+                            saveComplaint: (
+                              complaintType,
+                              addressModel,
+                              complaintsDetailsModel,
+                            ) {
+                              bloc.add(
+                                ComplaintsRegistrationEvent
+                                    .saveComplaintDetails(
+                                  complaintsDetailsModel:
+                                      ComplaintsDetailsModel(
+                                    administrativeArea: administrativeArea,
+                                    dateOfComplaint: dateOfComplaint,
+                                    complaintRaisedFor: complaintRaisedFor,
+                                    complainantName: complainantName,
+                                    complainantContactNumber:
+                                        complainantContactNumber,
+                                    supervisorName: supervisorName,
+                                    supervisorContactNumber:
+                                        supervisorContactNumber,
+                                    complaintDescription: complaintDescription,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
                       },
                       child: Center(
                         child: Text(
@@ -267,6 +267,13 @@ class _ComplaintsDetailsPageState
                                     ),
                                     maxLength: 10,
                                     isRequired: true,
+                                    keyboardType: TextInputType.number,
+                                    validationMessages: {
+                                      'mobileNumber': (object) =>
+                                          localizations.translate(i18
+                                              .individualDetails
+                                              .mobileNumberInvalidFormatValidationMessage),
+                                    },
                                   ),
                                 ],
                               );
@@ -284,14 +291,20 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.complaints.supervisorContactNumber,
                             ),
-                            maxLength: 64,
+                            maxLength: 10,
+                            keyboardType: TextInputType.number,
+                            validationMessages: {
+                              'mobileNumber': (object) =>
+                                  localizations.translate(i18.individualDetails
+                                      .mobileNumberInvalidFormatValidationMessage),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _complaintDescription,
                             label: localizations.translate(
                               i18.complaints.complaintDescription,
                             ),
-                            maxLength: 64,
+                            maxLength: 1000,
                             isRequired: true,
                           ),
                         ]),
@@ -322,7 +335,7 @@ class _ComplaintsDetailsPageState
       ),
       _complaintRaisedFor: FormControl<String>(
         value: complaintDetails?.complaintRaisedFor,
-        validators: [],
+        validators: [Validators.required],
       ),
       _complainantName: FormControl<String>(
         value: complaintDetails?.complainantName,
@@ -337,6 +350,7 @@ class _ComplaintsDetailsPageState
       ),
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
+        validators: [CustomValidator.validMobileNumber],
       ),
       _complaintDescription: FormControl<String>(
         value: complaintDetails?.complaintDescription,

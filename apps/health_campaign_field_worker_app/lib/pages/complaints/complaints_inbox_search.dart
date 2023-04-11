@@ -38,113 +38,112 @@ class _ComplaintsInboxSearchPageState
       backgroundColor: theme.colorScheme.onPrimary,
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
-          return ScrollableContent(
-            header: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+          return ReactiveFormBuilder(
+            form: () => buildForm(state),
+            builder: (context, formGroup, child) {
+              return ScrollableContent(
+                header: Column(
                   children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onBackground,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () => context.router.pop(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: theme.colorScheme.onBackground,
+                            padding: EdgeInsets.zero,
+                          ),
+                          onPressed: () => context.router.pop(),
+                          child: Row(
+                            children: const [
+                              Icon(Icons.close),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
                       child: Row(
-                        children: const [
-                          Icon(Icons.close),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            localizations.translate(
+                              i18.complaints.complaintInboxSearchHeading,
+                            ),
+                            style: theme.textTheme.displayMedium,
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        localizations.translate(
-                          i18.complaints.complaintInboxSearchHeading,
-                        ),
-                        style: theme.textTheme.displayMedium,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            footer: SizedBox(
-              height: 85,
-              child: DigitCard(
-                margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: DigitElevatedButton(
-                        onPressed: () {
-                          context.router.pop();
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(i18.complaints.searchCTA),
+                footer: SizedBox(
+                  height: 85,
+                  child: DigitCard(
+                    margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: DigitElevatedButton(
+                            onPressed: () {
+                              if (!formGroup.valid) return;
+
+                              //TODO: Implement search logic
+                              context.router.pop();
+                            },
+                            child: Center(
+                              child: Text(
+                                localizations
+                                    .translate(i18.complaints.searchCTA),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            children: [
-              Column(
                 children: [
-                  ReactiveFormBuilder(
-                    form: () => buildForm(state),
-                    builder: (context, formGroup, child) {
-                      return BlocConsumer<ComplaintsInboxBloc,
-                          ComplaintInboxState>(
+                  Column(
+                    children: [
+                      BlocConsumer<ComplaintsInboxBloc, ComplaintInboxState>(
                         listener: (context, state) {},
                         builder: (context, state) {
                           return Padding(
                             padding: const EdgeInsets.all(22),
                             child: Column(
                               children: [
-                                DigitTextField(
+                                const DigitTextFormField(
+                                  formControlName: _complaintNumber,
                                   label: "Complaint Number",
                                   maxLength: 65,
-                                  onChange: (value) {
-                                    setState(() {
-                                      formGroup
-                                          .control(_complaintNumber)
-                                          .value = value;
-                                    });
-                                  },
                                 ),
-                                DigitTextField(
+                                DigitTextFormField(
+                                  formControlName: _mobileNumber,
                                   label: "Mobile Number",
                                   maxLength: 10,
-                                  onChange: (value) {
-                                    setState(() {
-                                      formGroup.control(_mobileNumber).value =
-                                          value;
-                                    });
+                                  keyboardType: TextInputType.number,
+                                  validationMessages: {
+                                    'mobileNumber': (object) =>
+                                        localizations.translate(i18
+                                            .individualDetails
+                                            .mobileNumberInvalidFormatValidationMessage),
                                   },
                                 ),
                               ],
                             ),
                           );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
+              );
+            },
           );
         },
       ),
