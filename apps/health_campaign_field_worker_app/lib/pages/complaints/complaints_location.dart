@@ -28,6 +28,9 @@ class _ComplaintsLocationPageState
   static const _addressLine2Key = 'addressLine2';
   static const _landmarkKey = 'landmark';
   static const _postalCodeKey = 'postalCode';
+  static const _latKey = 'latKey';
+  static const _lngKey = 'lngKey';
+  static const _accuracyKey = 'accuracyKey';
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,24 @@ class _ComplaintsLocationPageState
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
         builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
-          listener: (context, locationState) {},
+          listener: (context, locationState) {
+            final lat = locationState.latitude;
+            final lng = locationState.longitude;
+            final accuracy = locationState.accuracy;
+
+            form.control(_latKey).value ??= lat;
+            form.control(_lngKey).value ??= lng;
+            form.control(_accuracyKey).value ??= accuracy;
+          },
+          listenWhen: (previous, current) {
+            final lat = form.control(_latKey).value;
+            final lng = form.control(_lngKey).value;
+            final accuracy = form.control(_accuracyKey).value;
+
+            return lat != null || lng != null || accuracy != null
+                ? false
+                : true;
+          },
           child: BlocBuilder<ComplaintsRegistrationBloc,
               ComplaintsRegistrationState>(
             builder: (context, state) {
@@ -83,6 +103,10 @@ class _ComplaintsLocationPageState
                                 addressLine2: addressLine2,
                                 landmark: landmark,
                                 pincode: postalCode,
+                                latitude: form.control(_latKey).value,
+                                longitude: form.control(_lngKey).value,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
                               ),
                             ));
                           },
@@ -176,6 +200,15 @@ class _ComplaintsLocationPageState
           FormControl<String>(value: addressModel?.pincode, validators: [
         CustomValidator.requiredMin,
       ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
+        CustomValidator.requiredMin,
+      ]),
+      _lngKey: FormControl<double>(
+        value: addressModel?.longitude,
+      ),
+      _accuracyKey: FormControl<double>(
+        value: addressModel?.locationAccuracy,
+      ),
     });
   }
 }
