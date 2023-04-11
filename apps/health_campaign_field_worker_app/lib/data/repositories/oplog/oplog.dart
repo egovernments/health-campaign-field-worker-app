@@ -23,6 +23,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .serverGeneratedIdIsNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
         .findAll();
 
     final singleCreateOpLogs = await isar.opLogs
@@ -32,6 +33,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .serverGeneratedIdIsNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
         .findAll();
 
     final updateOpLogs = await isar.opLogs
@@ -41,6 +43,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .serverGeneratedIdIsNotNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
         .findAll();
 
     final deleteOpLogs = await isar.opLogs
@@ -50,6 +53,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .serverGeneratedIdIsNotNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
         .findAll();
 
     var entries = [
@@ -450,6 +454,82 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
   @override
   String? getServerGeneratedId(BoundaryModel entity) =>
       throw UnimplementedError();
+}
+
+class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
+  PgrServiceOpLogManager(super.isar);
+
+  @override
+  PgrServiceModel applyServerGeneratedIdToEntity(
+    PgrServiceModel entity,
+    String serverGeneratedId,
+  ) =>
+      entity.copyWith(id: serverGeneratedId);
+
+  @override
+  String getClientReferenceId(PgrServiceModel entity) {
+    return entity.clientReferenceId;
+  }
+
+  @override
+  String? getServerGeneratedId(PgrServiceModel entity) {
+    return entity.id;
+  }
+
+  @override
+  Future<List<OpLogEntry<PgrServiceModel>>> getPendingUpSync(
+    DataModelType type, {
+    required String createdBy,
+  }) async {
+    final pendingEntries = await isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .operationEqualTo(DataOperation.create)
+        .serverGeneratedIdIsNull()
+        .syncedUpEqualTo(false)
+        .syncedDownEqualTo(false)
+        .createdByEqualTo(createdBy)
+        .sortByCreatedAt()
+        .findAll();
+
+    final entriesList = pendingEntries.map((e) {
+      return OpLogEntry.fromOpLog<PgrServiceModel>(e);
+    }).toList();
+
+    return entriesList;
+  }
+
+  @override
+  Future<List<OpLogEntry<PgrServiceModel>>> getPendingDownSync(
+    DataModelType type, {
+    required String createdBy,
+  }) async {
+    final pendingEntries = await isar.opLogs
+        .filter()
+        .entityTypeEqualTo(type)
+        .serverGeneratedIdIsNotNull()
+        .syncedUpEqualTo(true)
+        .createdByEqualTo(createdBy)
+        .sortByCreatedAt()
+        .findAll();
+
+    final entriesList = pendingEntries
+        .map((e) {
+          final entity = e.getEntity<PgrServiceModel>();
+          if ([
+            PgrServiceApplicationStatus.created,
+            PgrServiceApplicationStatus.pendingForAssignment,
+          ].contains(entity.applicationStatus)) {
+            return OpLogEntry.fromOpLog<PgrServiceModel>(e);
+          }
+
+          return null;
+        })
+        .whereNotNull()
+        .toList();
+
+    return entriesList;
+  }
 }
 
 class UpdateServerGeneratedIdModel {
