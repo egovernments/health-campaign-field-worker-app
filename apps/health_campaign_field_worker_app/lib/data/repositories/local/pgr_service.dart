@@ -6,9 +6,9 @@ import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
-class PgrLocalRepository
+class PgrServiceLocalRepository
     extends LocalRepository<PgrServiceModel, PgrServiceSearchModel> {
-  PgrLocalRepository(super.sql, super.opLogManager);
+  PgrServiceLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
