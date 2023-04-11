@@ -464,7 +464,7 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
     PgrServiceModel entity,
     String serverGeneratedId,
   ) =>
-      entity.copyWith(id: serverGeneratedId);
+      entity.copyWith(serviceRequestId: serverGeneratedId);
 
   @override
   String getClientReferenceId(PgrServiceModel entity) {
@@ -473,7 +473,7 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
 
   @override
   String? getServerGeneratedId(PgrServiceModel entity) {
-    return entity.id;
+    return entity.serviceRequestId;
   }
 
   @override

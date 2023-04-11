@@ -473,6 +473,52 @@ class NetworkManager {
 
             break;
 
+          case DataModelType.pgrService:
+            final futures = entities
+                .whereType<PgrServiceModel>()
+                .map((e) => e.serviceRequestId)
+                .whereNotNull()
+                .map(
+              (e) {
+                final future = remote.search(PgrServiceSearchModel(
+                  serviceRequestId: e,
+                ));
+
+                return Future.sync(() => future);
+              },
+            );
+
+            final resolvedFutures = await Future.wait(futures);
+
+            responseEntities = resolvedFutures
+                .expand((element) => element)
+                .whereType<PgrServiceModel>()
+                .toList();
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as PgrServiceModel;
+              final responseEntity = responseEntities
+                  .whereType<PgrServiceModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.serviceRequestId;
+
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                  ),
+                );
+              }
+            }
+
+            break;
+
           default:
             continue;
         }
