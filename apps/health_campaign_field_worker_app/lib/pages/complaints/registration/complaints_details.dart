@@ -44,14 +44,17 @@ class _ComplaintsDetailsPageState
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: () => buildForm(bloc.state),
+        form: () => bloc.state.map(
+          create: (value) => buildForm(value),
+          persisted: (value) =>
+              throw const InvalidComplaintsRegistrationStateException(),
+        ),
         builder: (_, form, __) => BlocListener<ComplaintsRegistrationBloc,
             ComplaintsRegistrationState>(
           listener: (context, complaintState) {
             complaintState.mapOrNull(
-              saveComplaint: (value) {
-                //TODO: Add listener for complaint registration
-                router.push(AcknowledgementRoute());
+              persisted: (value) {
+                router.replace(AcknowledgementRoute());
               },
             );
           },
@@ -135,11 +138,9 @@ class _ComplaintsDetailsPageState
                         );
 
                         if (submit ?? false) {
-                          state.maybeWhen(
-                            orElse: () {
-                              return;
-                            },
-                            saveComplaint: (
+                          state.whenOrNull(
+                            create: (
+                              loading,
                               complaintType,
                               addressModel,
                               complaintsDetailsModel,
@@ -321,7 +322,7 @@ class _ComplaintsDetailsPageState
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationState state) {
+  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
     final complaintDetails = state.complaintsDetailsModel;
 
     return fb.group(<String, Object>{
