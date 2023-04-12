@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +7,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 
 class ComplaintsInboxSortPage extends LocalizedStatefulWidget {
@@ -44,8 +41,7 @@ class _ComplaintsInboxSortPageState
           return ReactiveFormBuilder(
             form: () => buildForm(state),
             builder: (context, formGroup, child) {
-              return BlocConsumer<ComplaintsInboxBloc, ComplaintInboxState>(
-                listener: (context, state) {},
+              return BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                 builder: (context, state) {
                   return ScrollableContent(
                     header: Column(
@@ -115,6 +111,7 @@ class _ComplaintsInboxSortPageState
                                         ...complaintInboxItems,
                                       ];
 
+                                      // TODO(neel): Move this logic to Bloc
                                       if (sortOrder ==
                                           "COMPLAINT_SORT_DATE_ASC") {
                                         listToSort.sort(
@@ -135,8 +132,8 @@ class _ComplaintsInboxSortPageState
                                       }
 
                                       bloc.add(
-                                        ComplaintInboxEvent.saveComplaints(
-                                          complaintInboxItems: listToSort,
+                                        ComplaintInboxEvent.loadComplaints(
+                                          listToSort,
                                         ),
                                       );
                                       router.pop();
@@ -163,6 +160,8 @@ class _ComplaintsInboxSortPageState
                               BlocBuilder<ComplaintsInboxBloc,
                                   ComplaintInboxState>(
                                 builder: (context, state) {
+                                  // TODO(neel): Use Reactive components if possible
+
                                   return RadioGroup<String>.builder(
                                     groupValue:
                                         formGroup.control(_sortOrder).value ??

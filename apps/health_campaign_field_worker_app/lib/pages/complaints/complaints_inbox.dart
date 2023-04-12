@@ -1,12 +1,14 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recase/recase.dart';
 
 import '../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../models/complaints/complaints.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -24,14 +26,14 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bloc = context.read<ComplaintsInboxBloc>();
     final router = context.router;
 
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
-          final inboxItems = state.complaintInboxItems;
+          final inboxItems = state.complaints;
 
+          // TODO(ajil): Fix this scrollable component
           return ScrollableContent(
             header: Column(
               children: const [
@@ -70,7 +72,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                   ),
                 ),
               ),
-              if (inboxItems == null)
+              if (inboxItems.isEmpty)
                 const SliverFillRemaining(
                   child: Center(
                     child: Padding(
@@ -165,7 +167,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
 
 class _ComplaintsInboxItem extends StatelessWidget {
   final AppLocalizations localizations;
-  final ComplaintsInboxItem item;
+  final PgrServiceModel item;
 
   const _ComplaintsInboxItem({
     Key? key,
@@ -198,7 +200,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.complaintNumber ?? "Not Generated\n(Sync required)",
+                    item.serviceRequestId ?? "Not Generated\n(Sync required)",
                     style: TextStyle(
                       color: theme.colorScheme.secondary,
                     ),
@@ -224,8 +226,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 3,
+                  // TODO(Neel): Add prefix for localization
                   child: Text(
-                    item.complaintType ?? "",
+                    localizations.translate(
+                      item.serviceCode,
+                    ),
                   ),
                 ),
               ],
@@ -249,7 +254,9 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.dateOfComplaint ?? "",
+                    item.auditDetails?.createdTime.toDateTime
+                            .getFormattedDate() ??
+                        "",
                   ),
                 ),
               ],
@@ -273,7 +280,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.area ?? "",
+                    item.address.boundary ?? "",
                   ),
                 ),
               ],
@@ -296,8 +303,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 3,
+                  // TODO(neel): Add localization
                   child: Text(
-                    item.status ?? "",
+                    localizations.translate(
+                      item.applicationStatus.name.snakeCase.toUpperCase(),
+                    ),
                   ),
                 ),
               ],
