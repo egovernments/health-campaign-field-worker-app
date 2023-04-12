@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/complaints/complaints.dart';
+import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
 part 'complaints_inbox.freezed.dart';
@@ -26,7 +28,13 @@ class ComplaintsInboxBloc
     ComplaintInboxLoadComplaintsEvent event,
     ComplaintsInboxEmitter emit,
   ) async {
+    final complaints = await pgrRepository.search(
+      PgrServiceSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ),
+    );
 
+    emit(state.copyWith(loading: false, complaintInboxItems: complaints));
   }
 }
 
@@ -34,7 +42,7 @@ class ComplaintsInboxBloc
 class ComplaintInboxState with _$ComplaintInboxState {
   const factory ComplaintInboxState.complaints({
     @Default(false) bool loading,
-    @Default([]) List<ComplaintsInboxItem> complaintInboxItems,
+    @Default([]) List<PgrServiceModel> complaintInboxItems,
   }) = _ComplaintInboxState;
 }
 
