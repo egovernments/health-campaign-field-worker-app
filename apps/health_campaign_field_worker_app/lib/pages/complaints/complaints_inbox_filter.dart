@@ -38,8 +38,6 @@ class _ComplaintsInboxFilterPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bloc = context.read<ComplaintsInboxBloc>();
-    final router = context.router;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
@@ -168,8 +166,7 @@ class _ComplaintsInboxFilterPageState
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        BlocConsumer<ComplaintsInboxBloc, ComplaintInboxState>(
-                          listener: (context, state) {},
+                        BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                           builder: (context, state) {
                             List<String> complaintTypes = [];
                             List<String> locality = [];
@@ -183,11 +180,10 @@ class _ComplaintsInboxFilterPageState
                               },
                               complaints: (loading, complaintInboxItems) {
                                 for (var e in complaintInboxItems) {
-                                  complaintTypes
-                                      .add(e.complaintType.toString());
-                                  locality.add(e.area.toString());
+                                  complaintTypes.add(e.serviceCode.toString());
+                                  locality.add(e.boundaryCode.toString());
 
-                                  var status = e.status.toString();
+                                  var status = e.applicationStatus.toString();
                                   if (statusCount.containsKey(status)) {
                                     int? count = statusCount[status];
                                     statusCount[status] = count! + 1;

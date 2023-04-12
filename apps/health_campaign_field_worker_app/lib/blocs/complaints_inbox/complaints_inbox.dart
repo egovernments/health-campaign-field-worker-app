@@ -28,13 +28,20 @@ class ComplaintsInboxBloc
     ComplaintInboxLoadComplaintsEvent event,
     ComplaintsInboxEmitter emit,
   ) async {
+    if (event.updatedModels != null) {
+      emit(state.copyWith(complaints: event.updatedModels!));
+
+      return;
+    }
+
+    emit(state.copyWith(loading: true));
     final complaints = await pgrRepository.search(
       PgrServiceSearchModel(
         tenantId: envConfig.variables.tenantId,
       ),
     );
 
-    emit(state.copyWith(loading: false, complaintInboxItems: complaints));
+    emit(state.copyWith(loading: false, complaints: complaints));
   }
 }
 
@@ -42,14 +49,15 @@ class ComplaintsInboxBloc
 class ComplaintInboxState with _$ComplaintInboxState {
   const factory ComplaintInboxState.complaints({
     @Default(false) bool loading,
-    @Default([]) List<PgrServiceModel> complaintInboxItems,
+    @Default([]) List<PgrServiceModel> complaints,
   }) = _ComplaintInboxState;
 }
 
 @freezed
 class ComplaintInboxEvent with _$ComplaintInboxEvent {
-  const factory ComplaintInboxEvent.loadComplaints() =
-      ComplaintInboxLoadComplaintsEvent;
+  const factory ComplaintInboxEvent.loadComplaints([
+    List<PgrServiceModel>? updatedModels,
+  ]) = ComplaintInboxLoadComplaintsEvent;
 
   const factory ComplaintInboxEvent.saveComplaints({
     List<ComplaintsInboxItem>? complaintInboxItems,
