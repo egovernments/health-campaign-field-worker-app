@@ -53,6 +53,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           case DataModelType.stock:
           case DataModelType.stockReconciliation:
           case DataModelType.service:
+          case DataModelType.pgrService:
             return true;
           default:
             return false;

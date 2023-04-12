@@ -101,14 +101,33 @@ class ComplaintsRegistrationBloc
 
         final description = complaintDetailsModel.complaintDescription;
 
+        var referenceId = IdGen.i.identifier;
+
+        var auditDetails = AuditDetails(
+          createdBy: event.userId,
+          createdTime: DateTime.now().millisecondsSinceEpoch,
+        );
+
         final pgrServiceModel = PgrServiceModel(
-          clientReferenceId: IdGen.i.identifier,
+          clientReferenceId: referenceId,
           tenantId: envConfig.variables.tenantId,
           serviceCode: serviceCode,
           description: description,
-          applicationStatus: applicationStatus,
-          employee: employee,
-          address: address,
+          applicationStatus: PgrServiceApplicationStatus.created,
+          employee: PgrComplainantModel(
+            tenantId: envConfig.variables.tenantId,
+            clientReferenceId: IdGen.i.identifier,
+            complaintClientReferenceId: referenceId,
+            name: complaintDetailsModel.complainantName,
+            mobileNumber: complaintDetailsModel.complainantContactNumber,
+            auditDetails: auditDetails,
+          ),
+          address: address.copyWith(
+            relatedClientReferenceId: referenceId,
+            auditDetails: auditDetails,
+            boundary: complaintDetailsModel.administrativeArea,
+          ),
+          auditDetails: auditDetails,
         );
 
         await pgrServiceRepository.create(pgrServiceModel);
@@ -134,8 +153,9 @@ class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
     ComplaintsDetailsModel? complaintsDetailsModel,
   }) = ComplaintsRegistrationSaveComplaintDetailsEvent;
 
-  const factory ComplaintsRegistrationEvent.submitComplaint() =
-      ComplaintsRegistrationSubmitComplaintEvent;
+  const factory ComplaintsRegistrationEvent.submitComplaint({
+    required String userId,
+  }) = ComplaintsRegistrationSubmitComplaintEvent;
 }
 
 @freezed

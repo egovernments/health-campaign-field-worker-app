@@ -5,6 +5,7 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/auth/auth.dart';
+import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../router/app_router.dart';
@@ -80,20 +81,20 @@ class _ComplaintsDetailsPageState
                         // TODO(neel) : Most of these fields shouldn't be nullable.
                         // Updated ComplaintsDetailsModel. Please update the form accordingly.
                         final dateOfComplaint =
-                            form.control(_dateOfComplaint).value as DateTime?;
+                            form.control(_dateOfComplaint).value as DateTime;
 
                         final complaintRaisedFor =
-                            form.control(_complaintRaisedFor).value as String?;
+                            form.control(_complaintRaisedFor).value as String;
 
                         final administrativeArea =
-                            form.control(_administrativeArea).value as String?;
+                            form.control(_administrativeArea).value as String;
 
                         final complainantName =
-                            form.control(_complainantName).value as String?;
+                            form.control(_complainantName).value as String;
 
                         final complainantContactNumber = form
                             .control(_complainantContactNumber)
-                            .value as String?;
+                            .value as String;
 
                         final supervisorName =
                             form.control(_supervisorName).value as String?;
@@ -102,9 +103,8 @@ class _ComplaintsDetailsPageState
                             .control(_supervisorContactNumber)
                             .value as String?;
 
-                        final complaintDescription = form
-                            .control(_complaintDescription)
-                            .value as String?;
+                        final complaintDescription =
+                            form.control(_complaintDescription).value as String;
 
                         state.whenOrNull(
                           create: (
@@ -131,6 +131,8 @@ class _ComplaintsDetailsPageState
                             );
                           },
                         );
+
+                        final userId = context.loggedInUserUuid;
 
                         //TODO: Add complaints submit logic here
                         final submit = await DigitDialog.show<bool>(
@@ -168,7 +170,8 @@ class _ComplaintsDetailsPageState
                         if (submit != true) return;
 
                         bloc.add(
-                          const ComplaintsRegistrationSubmitComplaintEvent(),
+                          ComplaintsRegistrationSubmitComplaintEvent(
+                              userId: userId),
                         );
                       },
                       child: Center(

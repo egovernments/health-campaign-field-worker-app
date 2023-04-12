@@ -29,6 +29,8 @@ class PgrComplainantModel extends EntityModel {
   final String tenantId;
   final String? uuid;
   final bool active;
+  final bool isDeleted;
+  final int rowVersion;
 
   const PgrComplainantModel({
     this.id,
@@ -41,8 +43,10 @@ class PgrComplainantModel extends EntityModel {
     this.emailId,
     this.roles = const [],
     required this.tenantId,
-     this.uuid,
+    this.uuid,
     this.active = true,
+    this.isDeleted = false,
+    this.rowVersion = 1,
     super.auditDetails,
   }) : super();
 
@@ -63,6 +67,8 @@ class PgrComplainantModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      isDeleted: Value(isDeleted),
+      rowVersion: Value(rowVersion),
     );
   }
 }
@@ -104,6 +110,8 @@ class PgrServiceModel extends EntityModel {
   final String? accountId;
   final PgrServiceApplicationStatus applicationStatus;
   final String? source;
+  final bool isDeleted;
+  final int rowVersion;
   final AddressModel address;
 
   const PgrServiceModel({
@@ -118,6 +126,8 @@ class PgrServiceModel extends EntityModel {
     required this.applicationStatus,
     this.source,
     required this.employee,
+    this.isDeleted = false,
+    this.rowVersion = 1,
     required this.address,
     super.auditDetails,
   }) : super();
@@ -138,6 +148,8 @@ class PgrServiceModel extends EntityModel {
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      isDeleted: Value(isDeleted),
+      rowVersion: Value(rowVersion),
     );
   }
 }

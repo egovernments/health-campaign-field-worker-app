@@ -18,7 +18,9 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
         const ComplaintInboxState.complaints(),
         pgrRepository:
             context.repository<PgrServiceModel, PgrServiceSearchModel>(),
-      ),
+      )..add(
+          const ComplaintInboxLoadComplaintsEvent(),
+        ),
       child: const AutoRouter(),
     );
   }
