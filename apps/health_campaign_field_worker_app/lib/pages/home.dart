@@ -293,7 +293,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
-          onPressed: () => context.router.push(ReasonForDeletionRoute()),
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
         ),
         HomeItemCard(
           icon: Icons.sync_alt,
