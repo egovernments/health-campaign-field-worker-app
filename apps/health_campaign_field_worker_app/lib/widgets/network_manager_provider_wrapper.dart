@@ -397,7 +397,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.pgrService)
+        if (value == DataModelType.complaints)
           RepositoryProvider<
               RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
             create: (_) => PgrServiceRemoteRepository(

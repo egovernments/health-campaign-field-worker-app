@@ -123,7 +123,7 @@ enum DataModelType {
   task,
   serviceDefinition,
   service,
-  pgrService,
+  complaints,
   attributes,
   boundary,
   serviceAttributes,

@@ -192,5 +192,5 @@ class PgrServiceLocalRepository
   }
 
   @override
-  DataModelType get type => DataModelType.pgrService;
+  DataModelType get type => DataModelType.complaints;
 }
