@@ -110,9 +110,9 @@ class _ComplaintsInboxSortPageState
                                     orElse: () {
                                       return;
                                     },
-                                    complaints: (complaintInboxItems) {
+                                    complaints: (loading, complaintInboxItems) {
                                       var listToSort = [
-                                        ...?complaintInboxItems,
+                                        ...complaintInboxItems,
                                       ];
 
                                       if (sortOrder ==

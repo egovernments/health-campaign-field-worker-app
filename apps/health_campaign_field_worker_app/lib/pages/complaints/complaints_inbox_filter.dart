@@ -181,8 +181,8 @@ class _ComplaintsInboxFilterPageState
                               orElse: () {
                                 return;
                               },
-                              complaints: (complaintInboxItems) {
-                                complaintInboxItems?.forEach((e) {
+                              complaints: (loading, complaintInboxItems) {
+                                for (var e in complaintInboxItems) {
                                   complaintTypes
                                       .add(e.complaintType.toString());
                                   locality.add(e.area.toString());
@@ -194,7 +194,7 @@ class _ComplaintsInboxFilterPageState
                                   } else {
                                     statusCount[status] = 1;
                                   }
-                                });
+                                }
                                 for (var key in statusCount.keys) {
                                   statuses.add(
                                     '${key.toString()} (${statusCount[key].toString()})',
@@ -252,7 +252,8 @@ class _ComplaintsInboxFilterPageState
                                                   .contains(e.toString()),
                                               onChanged: (value) {
                                                 setState(() {
-                                                  if (_selectedStatuses.contains(
+                                                  if (_selectedStatuses
+                                                      .contains(
                                                     e.toString(),
                                                   )) {
                                                     _selectedStatuses
