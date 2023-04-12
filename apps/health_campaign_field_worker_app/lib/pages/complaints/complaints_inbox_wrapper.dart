@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/complaints_inbox/complaints_inbox.dart';
+import '../../models/data_model.dart';
+import '../../utils/utils.dart';
 
 class ComplaintsInboxWrapperPage extends StatelessWidget {
   const ComplaintsInboxWrapperPage({
@@ -14,6 +16,8 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ComplaintsInboxBloc(
         const ComplaintInboxState.complaints(),
+        pgrRepository:
+            context.repository<PgrServiceModel, PgrServiceSearchModel>(),
       ),
       child: const AutoRouter(),
     );
