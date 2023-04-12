@@ -45,8 +45,15 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
               child: DigitCard(
                 margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                 child: DigitElevatedButton(
-                  onPressed: () {
-                    router.push(const ComplaintsRegistrationWrapperRoute());
+                  onPressed: () async {
+                    final bloc = context.read<ComplaintsInboxBloc>();
+
+                    await router
+                        .push(const ComplaintsRegistrationWrapperRoute());
+
+                    bloc.add(
+                      const ComplaintInboxLoadComplaintsEvent(),
+                    );
                   },
                   child: Center(
                     child: Text(

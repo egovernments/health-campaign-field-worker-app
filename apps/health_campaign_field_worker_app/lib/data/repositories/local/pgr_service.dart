@@ -158,6 +158,7 @@ class PgrServiceLocalRepository
           relatedClientReferenceId: pgrService.clientReferenceId,
           tenantId: address.tenantId,
           doorNo: address.doorNo,
+          boundary: address.boundary,
           latitude: address.latitude,
           longitude: address.longitude,
           landmark: address.landmark,

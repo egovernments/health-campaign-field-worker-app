@@ -362,6 +362,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   LocalRepository<StockReconciliationModel,
                       StockReconciliationSearchModel>>(),
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -381,6 +383,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   RemoteRepository<StockReconciliationModel,
                       StockReconciliationSearchModel>>(),
+              context.read<
+                  RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
             ],
           ),
         );

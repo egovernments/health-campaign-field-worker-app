@@ -1,19 +1,20 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'complaints.freezed.dart';
+
 part 'complaints.g.dart';
 
 @freezed
 class ComplaintsDetailsModel with _$ComplaintsDetailsModel {
   const factory ComplaintsDetailsModel({
-    DateTime dateOfComplaint,
-    String administrativeArea,
-    String complaintRaisedFor,
-    String complainantName,
-    String? complainantContactNumber,
-    String supervisorName,
+    required DateTime dateOfComplaint,
+    required String administrativeArea,
+    required String complaintRaisedFor,
+    required String complainantName,
+    required String complainantContactNumber,
+    required String complaintDescription,
+    String? supervisorName,
     String? supervisorContactNumber,
-    String complaintDescription,
   }) = _ComplaintsDetailsModel;
 
   factory ComplaintsDetailsModel.fromJson(Map<String, dynamic> json) =>
