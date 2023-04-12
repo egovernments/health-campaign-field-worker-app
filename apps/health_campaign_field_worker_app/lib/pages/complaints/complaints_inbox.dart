@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/complaints_inbox/complaints_inbox.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../models/complaints/complaints.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -29,7 +30,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
-          var inboxItems = state.complaintInboxItems;
+          final inboxItems = state.complaintInboxItems;
 
           return ScrollableContent(
             header: Column(
@@ -54,84 +55,105 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                 ),
               ),
             ),
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    localizations.translate(
-                      i18.complaints.inboxHeading,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      localizations.translate(
+                        i18.complaints.inboxHeading,
+                      ),
+                      style: theme.textTheme.displayMedium,
                     ),
-                    style: theme.textTheme.displayMedium,
                   ),
                 ),
               ),
-              if (inboxItems == null) ...[
-                const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "No complaints exist",
+              if (inboxItems == null)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        // TODO(Neel): Add localization
+                        "No complaints exist",
+                      ),
+                    ),
+                  ),
+                )
+              else ...[
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: theme.colorScheme.secondary,
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          router.push(ComplaintsInboxSearchRoute());
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.search),
+                            Text(localizations.translate(
+                              i18.complaints.searchCTA,
+                            )),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: theme.colorScheme.secondary,
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          router.push(ComplaintsInboxFilterRoute());
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.filter_list_alt),
+                            Text(localizations.translate(
+                              i18.complaints.filterCTA,
+                            )),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: theme.colorScheme.secondary,
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          router.push(ComplaintsInboxSortRoute());
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.segment),
+                            Text(localizations.translate(
+                              i18.complaints.sortCTA,
+                            )),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ] else ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.secondary,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        router.push(ComplaintsInboxSearchRoute());
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.search),
-                          Text(localizations.translate(
-                            i18.complaints.searchCTA,
-                          )),
-                        ],
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.secondary,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        router.push(ComplaintsInboxFilterRoute());
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.filter_list_alt),
-                          Text(localizations.translate(
-                            i18.complaints.filterCTA,
-                          )),
-                        ],
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.secondary,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        router.push(ComplaintsInboxSortRoute());
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.segment),
-                          Text(localizations.translate(
-                            i18.complaints.sortCTA,
-                          )),
-                        ],
-                      ),
-                    ),
-                  ],
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = inboxItems.elementAt(index);
+
+                      return _ComplaintsInboxItem(
+                        item: item,
+                        localizations: localizations,
+                      );
+                    },
+                    childCount: inboxItems.length,
+                  ),
                 ),
-                getInboxCards(inboxItems, theme),
               ],
             ],
           );
@@ -139,170 +161,177 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
       ),
     );
   }
+}
 
-  Widget getInboxCards(List<ComplaintsInboxItem> inboxItems, ThemeData theme) {
-    var cards = inboxItems.map((e) {
-      return DigitCard(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Complaint Number",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
+class _ComplaintsInboxItem extends StatelessWidget {
+  final AppLocalizations localizations;
+  final ComplaintsInboxItem item;
+
+  const _ComplaintsInboxItem({
+    Key? key,
+    required this.localizations,
+    required this.item,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return DigitCard(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Complaint Number",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.complaintNumber ?? "Not Generated\n(Sync required)",
+                    style: TextStyle(
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Complaint Type",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.complaintType ?? "",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Complaint Date",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.dateOfComplaint ?? "",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Area",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.area ?? "",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: Text(
+                    "Status",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.status ?? "",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      //TODO: Open complaint
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        width: 1.0,
+                        color: theme.colorScheme.secondary,
+                      ),
+                    ),
                     child: Text(
-                      e.complaintNumber ?? "Not Generated\n(Sync required)",
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
                       style: TextStyle(
                         color: theme.colorScheme.secondary,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Complaint Type",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      e.complaintType ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Complaint Date",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      e.dateOfComplaint ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Area",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      e.area ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Status",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      e.status ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        //TODO: Open complaint
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          width: 1.0,
-                          color: theme.colorScheme.secondary,
-                        ),
-                      ),
-                      child: Text(
-                        localizations
-                            .translate(i18.searchBeneficiary.iconLabel),
-                        style: TextStyle(
-                          color: theme.colorScheme.secondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-
-    return Column(
-      children: cards.toList(),
+          ),
+        ],
+      ),
     );
   }
 }
