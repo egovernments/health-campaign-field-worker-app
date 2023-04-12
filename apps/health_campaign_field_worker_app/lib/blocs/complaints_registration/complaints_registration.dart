@@ -3,9 +3,11 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart';
 
 import '../../models/complaints/complaints.dart';
 import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
 part 'complaints_registration.freezed.dart';
@@ -74,7 +76,42 @@ class ComplaintsRegistrationBloc
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) async {
         emit(value.copyWith(loading: true));
-        await pgrServiceRepository.create(event.pgrServiceModel);
+
+        final serviceCode = value.complaintType;
+        final complaintDetailsModel = value.complaintsDetailsModel;
+        final address = value.addressModel;
+
+        if (serviceCode == null) {
+          throw (const InvalidComplaintsRegistrationStateException(
+            'Complaint type is not provided',
+          ));
+        }
+
+        if (complaintDetailsModel == null) {
+          throw (const InvalidComplaintsRegistrationStateException(
+            'Complaint details are not provided',
+          ));
+        }
+
+        if (address == null) {
+          throw (const InvalidComplaintsRegistrationStateException(
+            'Address is not provided',
+          ));
+        }
+
+        final description = complaintDetailsModel.complaintDescription;
+
+        final pgrServiceModel = PgrServiceModel(
+          clientReferenceId: IdGen.i.identifier,
+          tenantId: envConfig.variables.tenantId,
+          serviceCode: serviceCode,
+          description: description,
+          applicationStatus: applicationStatus,
+          employee: employee,
+          address: address,
+        );
+
+        await pgrServiceRepository.create(pgrServiceModel);
         emit(value.copyWith(loading: false));
 
         emit(const ComplaintsRegistrationPersistedState());
@@ -97,9 +134,8 @@ class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
     ComplaintsDetailsModel? complaintsDetailsModel,
   }) = ComplaintsRegistrationSaveComplaintDetailsEvent;
 
-  const factory ComplaintsRegistrationEvent.submitComplaint({
-    required PgrServiceModel pgrServiceModel,
-  }) = ComplaintsRegistrationSubmitComplaintEvent;
+  const factory ComplaintsRegistrationEvent.submitComplaint() =
+      ComplaintsRegistrationSubmitComplaintEvent;
 }
 
 @freezed

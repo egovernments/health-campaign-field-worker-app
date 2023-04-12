@@ -77,6 +77,8 @@ class _ComplaintsDetailsPageState
 
                         if (!form.valid) return;
 
+                        // TODO(neel) : Most of these fields shouldn't be nullable.
+                        // Updated ComplaintsDetailsModel. Please update the form accordingly.
                         final dateOfComplaint =
                             form.control(_dateOfComplaint).value as DateTime?;
 
@@ -103,6 +105,32 @@ class _ComplaintsDetailsPageState
                         final complaintDescription = form
                             .control(_complaintDescription)
                             .value as String?;
+
+                        state.whenOrNull(
+                          create: (
+                            loading,
+                            complaintType,
+                            addressModel,
+                            complaintsDetailsModel,
+                          ) {
+                            bloc.add(
+                              ComplaintsRegistrationEvent.saveComplaintDetails(
+                                complaintsDetailsModel: ComplaintsDetailsModel(
+                                  administrativeArea: administrativeArea,
+                                  dateOfComplaint: dateOfComplaint,
+                                  complaintRaisedFor: complaintRaisedFor,
+                                  complainantName: complainantName,
+                                  complainantContactNumber:
+                                      complainantContactNumber,
+                                  supervisorName: supervisorName,
+                                  supervisorContactNumber:
+                                      supervisorContactNumber,
+                                  complaintDescription: complaintDescription,
+                                ),
+                              ),
+                            );
+                          },
+                        );
 
                         //TODO: Add complaints submit logic here
                         final submit = await DigitDialog.show<bool>(
@@ -137,35 +165,11 @@ class _ComplaintsDetailsPageState
                           ),
                         );
 
-                        if (submit ?? false) {
-                          state.whenOrNull(
-                            create: (
-                              loading,
-                              complaintType,
-                              addressModel,
-                              complaintsDetailsModel,
-                            ) {
-                              bloc.add(
-                                ComplaintsRegistrationEvent
-                                    .saveComplaintDetails(
-                                  complaintsDetailsModel:
-                                      ComplaintsDetailsModel(
-                                    administrativeArea: administrativeArea,
-                                    dateOfComplaint: dateOfComplaint,
-                                    complaintRaisedFor: complaintRaisedFor,
-                                    complainantName: complainantName,
-                                    complainantContactNumber:
-                                        complainantContactNumber,
-                                    supervisorName: supervisorName,
-                                    supervisorContactNumber:
-                                        supervisorContactNumber,
-                                    complaintDescription: complaintDescription,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }
+                        if (submit != true) return;
+
+                        bloc.add(
+                          const ComplaintsRegistrationSubmitComplaintEvent(),
+                        );
                       },
                       child: Center(
                         child: Text(
