@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../blocs/auth/auth.dart';
-import '../../blocs/complaints_registration/complaints_registration.dart';
-import '../../models/complaints/complaints.dart';
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../../../blocs/auth/auth.dart';
+import '../../../blocs/complaints_registration/complaints_registration.dart';
+import '../../../models/complaints/complaints.dart';
+import '../../../router/app_router.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
 class ComplaintsDetailsPage extends LocalizedStatefulWidget {
   const ComplaintsDetailsPage({
