@@ -33,10 +33,16 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: () => buildForm(bloc.state),
-        builder: (context, form, child) => BlocConsumer<
+        form: () {
+          return bloc.state.map(
+            create: (value) => buildForm(value),
+            persisted: (value) {
+              throw const InvalidComplaintsRegistrationStateException();
+            },
+          );
+        },
+        builder: (context, form, child) => BlocBuilder<
             ComplaintsRegistrationBloc, ComplaintsRegistrationState>(
-          listener: (context, state) {},
           builder: (context, state) {
             return ScrollableContent(
               header: Column(children: const [
@@ -63,11 +69,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                             otherComplaintTypeValue;
                       }
 
-                      state.maybeWhen(
-                        orElse: () {
-                          return;
-                        },
-                        saveComplaint: (
+                      state.whenOrNull(
+                        create: (
+                          loading,
                           complaintType,
                           addressModel,
                           complaintsDetailsModel,
@@ -157,7 +161,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationState state) {
+  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
     return fb.group(<String, Object>{
       _complaintType: FormControl<String>(
         validators: [Validators.required],

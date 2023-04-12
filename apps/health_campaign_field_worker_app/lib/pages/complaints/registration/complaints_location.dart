@@ -39,7 +39,11 @@ class _ComplaintsLocationPageState
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: () => buildForm(bloc.state),
+        form: () => bloc.state.map(
+          create: (value) => buildForm(value),
+          persisted: (value) =>
+              throw const InvalidComplaintsRegistrationStateException(),
+        ),
         builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
           listener: (context, locationState) {
             final lat = locationState.latitude;
@@ -87,11 +91,9 @@ class _ComplaintsLocationPageState
                         final postalCode =
                             form.control(_postalCodeKey).value as String?;
 
-                        state.maybeWhen(
-                          orElse: () {
-                            return;
-                          },
-                          saveComplaint: (
+                        state.whenOrNull(
+                          create: (
+                            loading,
                             complaintType,
                             addressModel,
                             complaintsDetailsModel,
@@ -179,7 +181,7 @@ class _ComplaintsLocationPageState
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationState state) {
+  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
     final addressModel = state.addressModel;
 
     return fb.group(<String, Object>{
