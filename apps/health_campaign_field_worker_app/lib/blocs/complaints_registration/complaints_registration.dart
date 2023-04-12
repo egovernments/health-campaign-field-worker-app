@@ -113,6 +113,7 @@ class ComplaintsRegistrationBloc
           tenantId: envConfig.variables.tenantId,
           serviceCode: serviceCode,
           description: description,
+          source: 'mobile',
           applicationStatus: PgrServiceApplicationStatus.created,
           employee: PgrComplainantModel(
             tenantId: envConfig.variables.tenantId,

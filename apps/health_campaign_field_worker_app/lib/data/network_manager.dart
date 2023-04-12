@@ -159,6 +159,13 @@ class NetworkManager {
 
         if (operationGroupedEntity.key == DataOperation.create) {
           await Future.delayed(const Duration(seconds: 1));
+
+          if (typeGroupedEntity.key == DataModelType.complaints) {
+            for (final entity in entities) {
+              await remote.create(entity);
+            }
+          }
+
           await remote.bulkCreate(entities);
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);
@@ -473,7 +480,7 @@ class NetworkManager {
 
             break;
 
-          case DataModelType.pgrService:
+          case DataModelType.complaints:
             final futures = entities
                 .whereType<PgrServiceModel>()
                 .map((e) => e.serviceRequestId)

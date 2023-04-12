@@ -15,7 +15,7 @@ class PgrServiceRemoteRepository
   });
 
   @override
-  DataModelType get type => DataModelType.pgrService;
+  DataModelType get type => DataModelType.complaints;
 
   @override
   FutureOr<Response> create(PgrServiceModel entity) async {
