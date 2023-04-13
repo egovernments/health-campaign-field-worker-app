@@ -112,6 +112,7 @@ class _ComplaintsDetailsPageState
                           ) {
                             bloc.add(
                               ComplaintsRegistrationEvent.saveComplaintDetails(
+                                boundaryModel: context.boundary,
                                 complaintsDetailsModel: ComplaintsDetailsModel(
                                   administrativeArea: administrativeArea,
                                   dateOfComplaint: dateOfComplaint,
@@ -335,7 +336,7 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
-        value: complaintDetails?.administrativeArea ?? context.boundary.code,
+        value: complaintDetails?.administrativeArea ?? context.boundary.name,
         validators: [Validators.required],
       ),
       _complaintRaisedFor: FormControl<String>(

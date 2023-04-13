@@ -4,12 +4,12 @@ import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../utils/utils.dart';
 
 import '../../models/complaints/complaints.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
+import '../../utils/utils.dart';
 
 part 'complaints_registration.freezed.dart';
 
@@ -60,9 +60,17 @@ class ComplaintsRegistrationBloc
     state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) {
+        final code = event.boundaryModel.code;
+        final name = event.boundaryModel.name;
+
         emit(
           value.copyWith(
             complaintsDetailsModel: event.complaintsDetailsModel,
+            addressModel: value.addressModel?.copyWith(
+              locality: code != null && name != null
+                  ? LocalityModel(code: code, name: name)
+                  : null,
+            ),
           ),
         );
       },
@@ -159,15 +167,16 @@ class ComplaintsRegistrationBloc
 @freezed
 class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
   const factory ComplaintsRegistrationEvent.saveComplaintType({
-    String? complaintType,
+    required String complaintType,
   }) = ComplaintsRegistrationSaveComplaintTypeEvent;
 
   const factory ComplaintsRegistrationEvent.saveAddress({
-    PgrAddressModel? addressModel,
+    required PgrAddressModel addressModel,
   }) = ComplaintsRegistrationSaveAddressEvent;
 
   const factory ComplaintsRegistrationEvent.saveComplaintDetails({
-    ComplaintsDetailsModel? complaintsDetailsModel,
+    required ComplaintsDetailsModel complaintsDetailsModel,
+    required BoundaryModel boundaryModel,
   }) = ComplaintsRegistrationSaveComplaintDetailsEvent;
 
   const factory ComplaintsRegistrationEvent.submitComplaint({
