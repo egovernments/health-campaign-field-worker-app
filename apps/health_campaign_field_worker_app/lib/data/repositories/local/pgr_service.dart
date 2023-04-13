@@ -53,17 +53,31 @@ class PgrServiceLocalRepository
     PgrServiceModel entity, {
     bool createOpLog = true,
   }) async {
-    if (entity.serviceRequestId == null) return;
+    final clientReferenceId = entity.clientReferenceId;
+    final serviceRequestId = entity.serviceRequestId;
 
-    await sql.batch((batch) async {
-      batch.update(
-        sql.pgrService,
-        PgrServiceCompanion(
-          applicationStatus: Value(entity.applicationStatus),
-        ),
-        where: (tbl) => tbl.serviceRequestId.equals(entity.serviceRequestId),
-      );
-    });
+    if (serviceRequestId != null && clientReferenceId.isEmpty) {
+      await sql.batch((batch) async {
+        batch.update(
+          sql.pgrService,
+          PgrServiceCompanion(
+            applicationStatus: Value(entity.applicationStatus),
+          ),
+          where: (tbl) => tbl.serviceRequestId.equals(serviceRequestId),
+        );
+      });
+    } else if (clientReferenceId.isNotEmpty && serviceRequestId != null) {
+      await sql.batch((batch) async {
+        batch.update(
+          sql.pgrService,
+          PgrServiceCompanion(
+            applicationStatus: Value(entity.applicationStatus),
+            serviceRequestId: Value(serviceRequestId),
+          ),
+          where: (tbl) => tbl.clientReferenceId.equals(clientReferenceId),
+        );
+      });
+    }
 
     await super.update(
       entity,

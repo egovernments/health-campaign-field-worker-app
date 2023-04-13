@@ -146,10 +146,6 @@ class ComplaintsRegistrationBloc
           ),
           address: address.copyWith(
             relatedClientReferenceId: referenceId,
-            locality: LocalityModel(
-              code: '',
-              name: complaintDetailsModel.administrativeArea,
-            ),
           ),
           auditDetails: auditDetails,
           additionalDetail: additionalDetail,
