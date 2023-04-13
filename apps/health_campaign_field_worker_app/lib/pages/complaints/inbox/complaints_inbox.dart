@@ -36,138 +36,149 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
               : state.complaints;
 
           // TODO(ajil): Fix this scrollable component
-          return ScrollableContent(
-            header: Column(
-              children: const [
-                BackNavigationHelpHeaderWidget(),
-              ],
-            ),
-            footer: SizedBox(
-              height: 85,
-              child: DigitCard(
-                margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                child: DigitElevatedButton(
-                  onPressed: () async {
-                    final bloc = context.read<ComplaintsInboxBloc>();
-
-                    await router
-                        .push(const ComplaintsRegistrationWrapperRoute());
-
-                    bloc.add(
-                      const ComplaintInboxLoadComplaintsEvent(),
-                    );
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations
-                          .translate(i18.complaints.fileComplaintAction),
-                    ),
+          return Column(
+            children: [
+              Expanded(
+                child: ScrollableContent(
+                  header: Column(
+                    children: const [
+                      BackNavigationHelpHeaderWidget(),
+                    ],
                   ),
-                ),
-              ),
-            ),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      localizations.translate(
-                        i18.complaints.inboxHeading,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          top: 16,
+                          bottom: 16,
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            localizations.translate(
+                              i18.complaints.inboxHeading,
+                            ),
+                            style: theme.textTheme.displayMedium,
+                          ),
+                        ),
                       ),
-                      style: theme.textTheme.displayMedium,
                     ),
-                  ),
-                ),
-              ),
-              ...[
-                SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: theme.colorScheme.secondary,
-                          padding: EdgeInsets.zero,
-                        ),
-                        onPressed: () {
-                          router.push(ComplaintsInboxSearchRoute());
-                        },
+                    ...[
+                      SliverToBoxAdapter(
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            const Icon(Icons.search),
-                            Text(localizations.translate(
-                              i18.complaints.searchCTA,
-                            )),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: theme.colorScheme.secondary,
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: () {
+                                router.push(ComplaintsInboxSearchRoute());
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.search),
+                                  Text(localizations.translate(
+                                    i18.complaints.searchCTA,
+                                  )),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: theme.colorScheme.secondary,
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: () {
+                                router.push(ComplaintsInboxFilterRoute());
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.filter_list_alt),
+                                  Text(localizations.translate(
+                                    i18.complaints.filterCTA,
+                                  )),
+                                ],
+                              ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: theme.colorScheme.secondary,
+                                padding: EdgeInsets.zero,
+                              ),
+                              onPressed: () {
+                                router.push(ComplaintsInboxSortRoute());
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.segment),
+                                  Text(localizations.translate(
+                                    i18.complaints.sortCTA,
+                                  )),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: theme.colorScheme.secondary,
-                          padding: EdgeInsets.zero,
-                        ),
-                        onPressed: () {
-                          router.push(ComplaintsInboxFilterRoute());
-                        },
-                        child: Row(
-                          children: [
-                            const Icon(Icons.filter_list_alt),
-                            Text(localizations.translate(
-                              i18.complaints.filterCTA,
-                            )),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: theme.colorScheme.secondary,
-                          padding: EdgeInsets.zero,
-                        ),
-                        onPressed: () {
-                          router.push(ComplaintsInboxSortRoute());
-                        },
-                        child: Row(
-                          children: [
-                            const Icon(Icons.segment),
-                            Text(localizations.translate(
-                              i18.complaints.sortCTA,
-                            )),
-                          ],
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final item = inboxItems.elementAt(index);
+
+                            return _ComplaintsInboxItem(
+                              item: item,
+                              localizations: localizations,
+                            );
+                          },
+                          childCount: inboxItems.length,
                         ),
                       ),
                     ],
-                  ),
+                  ],
+                  children: [
+                    if (inboxItems.isEmpty)
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              localizations
+                                  .translate(i18.complaints.noComplaintsExist),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = inboxItems.elementAt(index);
+              ),
+              SizedBox(
+                height: 85,
+                child: DigitCard(
+                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                  child: DigitElevatedButton(
+                    onPressed: () async {
+                      final bloc = context.read<ComplaintsInboxBloc>();
 
-                      return _ComplaintsInboxItem(
-                        item: item,
-                        localizations: localizations,
+                      await router
+                          .push(const ComplaintsRegistrationWrapperRoute());
+
+                      bloc.add(
+                        const ComplaintInboxLoadComplaintsEvent(),
                       );
                     },
-                    childCount: inboxItems.length,
-                  ),
-                ),
-              ],
-            ],
-            children: [
-              if (inboxItems.isEmpty)
-                Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
+                    child: Center(
                       child: Text(
-                        localizations
-                            .translate(i18.complaints.noComplaintsExist),
+                        localizations.translate(
+                          i18.complaints.fileComplaintAction,
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ),
             ],
           );
         },
