@@ -109,8 +109,45 @@ abstract class OpLogManager<T extends EntityModel> {
     });
   }
 
-  Future<void> markSyncUp(OpLogEntry<T> entry) async {
-    await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+  Future<void> markSyncUp({
+    OpLogEntry<T>? entry,
+    int? id,
+    String? clientReferenceId,
+  }) async {
+    if (entry != null) {
+      await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+    } else if (id != null) {
+      OpLog? oplog;
+
+      oplog = await isar.opLogs.get(id);
+      if (oplog == null) return;
+      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+
+      await put(
+        fetchedEntry.copyWith(
+          syncedUp: true,
+          syncedUpOn: DateTime.now(),
+        ),
+      );
+    } else if (clientReferenceId != null) {
+      final oplog = await isar.opLogs
+          .filter()
+          .clientReferenceIdEqualTo(clientReferenceId)
+          .findFirst();
+
+      if (oplog == null) return;
+
+      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+
+      await put(
+        fetchedEntry.copyWith(
+          syncedUp: true,
+          syncedUpOn: DateTime.now(),
+        ),
+      );
+    } else {
+      throw AppException('Invalid arguments');
+    }
   }
 
   Future<void> updateServerGeneratedIds({

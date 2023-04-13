@@ -179,7 +179,7 @@ class NetworkManager {
                   }
 
                   PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
-                  PgrComplaintModel pgrComplaintModel;
+                  PgrComplaintResponseModel pgrComplaintModel;
                   try {
                     pgrServiceCreateResponseModel =
                         Mapper.fromMap<PgrServiceCreateResponseModel>(
@@ -202,6 +202,10 @@ class NetworkManager {
                     );
                     continue;
                   }
+
+                  await local.markSyncedUp(
+                    clientReferenceId: entity.clientReferenceId,
+                  );
 
                   await local.opLogManager.updateServerGeneratedIds(
                     model: UpdateServerGeneratedIdModel(
@@ -238,7 +242,8 @@ class NetworkManager {
         }
 
         for (final syncedEntity in operationGroupedEntity.value) {
-          local.markSyncedUp(syncedEntity);
+          if (syncedEntity.type == DataModelType.complaints) continue;
+          local.markSyncedUp(entry: syncedEntity);
         }
       }
     }

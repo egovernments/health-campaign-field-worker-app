@@ -5,15 +5,6 @@ import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
 @MappableClass(ignoreNull: true)
-class PgrServiceCreateResponseModel extends EntityModel {
-  final List<PgrComplaintModel> serviceWrappers;
-
-  const PgrServiceCreateResponseModel({
-    @MappableField(key: 'ServiceWrappers') this.serviceWrappers = const [],
-  }) : super();
-}
-
-@MappableClass(ignoreNull: true)
 class PgrComplaintModel extends EntityModel {
   final PgrServiceModel service;
   final PgrWorkflowModel? workflow;
