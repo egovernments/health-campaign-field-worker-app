@@ -17,7 +17,7 @@ class PgrServiceLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final address = entity.address;
-    final complainant = entity.employee;
+    final complainant = entity.citizen;
 
     final addressCompanion = address.companion;
     final complainantCompanion = complainant.companion;
@@ -53,7 +53,7 @@ class PgrServiceLocalRepository
     bool createOpLog = true,
   }) async {
     final companion = entity.companion;
-    final complainant = entity.employee;
+    final complainant = entity.citizen;
     final address = entity.address;
 
     final complainantCompanion = complainant.companion;
@@ -136,9 +136,9 @@ class PgrServiceLocalRepository
                 if (query.locality != null)
                   sql.address.boundary.equals(query.locality),
                 if (query.complaintStatus != null)
-                  if(query.complaintStatus?.isNotEmpty ?? false)
-                  sql.pgrService.applicationStatus
-                      .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
+                  if (query.complaintStatus?.isNotEmpty ?? false)
+                    sql.pgrService.applicationStatus
+                        .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
               ],
             ),
           ))
@@ -155,7 +155,7 @@ class PgrServiceLocalRepository
         serviceCode: pgrService.serviceCode,
         description: pgrService.description,
         applicationStatus: pgrService.applicationStatus,
-        employee: PgrComplainantModel(
+        citizen: PgrComplainantModel(
           complaintClientReferenceId: pgrComplainant.complaintClientReferenceId,
           clientReferenceId: pgrComplainant.clientReferenceId,
           tenantId: pgrComplainant.tenantId,

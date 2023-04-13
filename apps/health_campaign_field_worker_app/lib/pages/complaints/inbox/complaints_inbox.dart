@@ -233,7 +233,6 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 3,
-                  // TODO(Neel): Add prefix for localization
                   child: Text(
                     localizations.translate(
                       item.serviceCode,
@@ -250,6 +249,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
               children: [
                 const Expanded(
                   flex: 2,
+                  // TODO(Neel): Add prefix for localization
                   child: Text(
                     "Complaint Date",
                     style: TextStyle(
@@ -276,6 +276,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
               children: [
                 const Expanded(
                   flex: 2,
+                  // TODO(Neel): Add prefix for localization
                   child: Text(
                     "Area",
                     style: TextStyle(
@@ -300,6 +301,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
               children: [
                 const Expanded(
                   flex: 2,
+                  // TODO(Neel): Add prefix for localization
                   child: Text(
                     "Status",
                     style: TextStyle(
@@ -310,7 +312,6 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 3,
-                  // TODO(neel): Add localization
                   child: Text(
                     localizations.translate(
                       item.applicationStatus.name.snakeCase.toUpperCase(),
