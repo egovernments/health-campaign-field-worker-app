@@ -28,7 +28,7 @@ void main() async {
   ]);
 
   final sql = LocalSqlDataStore();
-  Dio client = Client().init();
+  Dio client = DioClient().init();
 
   runApp(
     MainApplication(
