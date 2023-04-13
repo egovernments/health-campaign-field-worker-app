@@ -1,11 +1,12 @@
-import 'package:intl/intl.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
   const ChecklistBoundaryViewPage({
@@ -69,7 +70,9 @@ class _ChecklistBoundaryViewPageState
                   label: localizations.translate(
                     i18.householdLocation.administrationAreaFormLabel,
                   ),
-                  controller: TextEditingController(text: context.boundaryCode),
+                  controller: TextEditingController(
+                    text: context.boundary.code,
+                  ),
                 ),
               ],
             ),
