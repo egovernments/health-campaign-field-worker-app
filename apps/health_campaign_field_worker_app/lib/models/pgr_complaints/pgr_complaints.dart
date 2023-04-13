@@ -89,8 +89,18 @@ class PgrServiceSearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? serviceRequestId;
   final String? clientReferenceId;
+  final String? complaintAssignedTo;
+  final String? currentUserId;
+  final String? complaintTypeCode;
+  final String? locality;
+  final List<PgrServiceApplicationStatus>? complaintStatus;
 
   const PgrServiceSearchModel({
+    this.complaintAssignedTo,
+    this.currentUserId,
+    this.complaintTypeCode,
+    this.locality,
+    this.complaintStatus,
     this.tenantId,
     this.serviceRequestId,
     this.clientReferenceId,

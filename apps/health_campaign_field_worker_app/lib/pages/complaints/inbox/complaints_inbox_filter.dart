@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recase/recase.dart';
 
+import '../../../blocs/auth/auth.dart';
 import '../../../blocs/complaints_inbox/complaints_inbox.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
@@ -29,11 +32,11 @@ class _ComplaintsInboxFilterPageState
   static const _complaintLocality = "complaintLocality";
   static const _complaintAssignmentType = "complaintAssignmentType";
   static const _complaintStatus = "complaintStatus";
-  static const _complaintAssignmentTypes = [
-    "Assigned to all",
-    "Assigned to me",
+  static final _complaintAssignmentTypes = [
+    i18.complaints.assignedToAll,
+    i18.complaints.assignedToSelf,
   ];
-  final _selectedStatuses = [];
+  final List<PgrServiceApplicationStatus> _selectedStatuses = [];
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +89,7 @@ class _ComplaintsInboxFilterPageState
                             padding: const EdgeInsets.only(left: 5),
                             child: TextButton(
                               onPressed: () {
-                                // TODO: Implement reset filters
+                                clearFilters(formGroup);
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.onBackground,
@@ -120,7 +123,7 @@ class _ComplaintsInboxFilterPageState
                           flex: 1,
                           child: OutlinedButton(
                             onPressed: () {
-                              context.router.pop();
+                              clearFilters(formGroup);
                             },
                             style: OutlinedButton.styleFrom(
                               shape: const BeveledRectangleBorder(),
@@ -147,6 +150,36 @@ class _ComplaintsInboxFilterPageState
                             onPressed: () {
                               if (!formGroup.valid) return;
 
+                              final bloc = context.read<ComplaintsInboxBloc>();
+                              final userBloc = context.read<AuthBloc>();
+
+                              final assignedTo = formGroup
+                                  .control(_complaintAssignmentType)
+                                  .value as String?;
+
+                              final complaintType = formGroup
+                                  .control(_complaintType)
+                                  .value as String?;
+
+                              final locality = formGroup
+                                  .control(_complaintLocality)
+                                  .value as String?;
+
+                              bloc.add(
+                                ComplaintInboxFilterComplaintsEvent(
+                                  assignedTo,
+                                  userBloc.state.whenOrNull(
+                                    authenticated:
+                                        (accessToken, refreshToken, userModel) {
+                                      return userModel.uuid;
+                                    },
+                                  ),
+                                  complaintType,
+                                  locality,
+                                  _selectedStatuses,
+                                ),
+                              );
+
                               context.router.pop();
                             },
                             child: Center(
@@ -169,10 +202,11 @@ class _ComplaintsInboxFilterPageState
                         BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                           builder: (context, state) {
                             List<String> complaintTypes = [];
-                            List<String> locality = [];
+                            Set<String> locality = HashSet();
 
-                            List<String> statuses = [];
-                            Map<String, int> statusCount = HashMap();
+                            Set<PgrServiceApplicationStatus> uniqueStatuses =
+                                HashSet();
+                            Map<int, int> statusCount = HashMap();
 
                             state.maybeWhen(
                               orElse: () {
@@ -181,20 +215,16 @@ class _ComplaintsInboxFilterPageState
                               complaints: (loading, complaintInboxItems) {
                                 for (var e in complaintInboxItems) {
                                   complaintTypes.add(e.serviceCode.toString());
-                                  locality.add(e.boundaryCode.toString());
+                                  locality.add(e.address.boundary.toString());
 
-                                  var status = e.applicationStatus.toString();
+                                  var status = e.applicationStatus;
+                                  uniqueStatuses.add(status);
                                   if (statusCount.containsKey(status)) {
                                     int? count = statusCount[status];
-                                    statusCount[status] = count! + 1;
+                                    statusCount[status.index] = count! + 1;
                                   } else {
-                                    statusCount[status] = 1;
+                                    statusCount[status.index] = 1;
                                   }
-                                }
-                                for (var key in statusCount.keys) {
-                                  statuses.add(
-                                    '${key.toString()} (${statusCount[key].toString()})',
-                                  );
                                 }
                               },
                             );
@@ -218,7 +248,7 @@ class _ComplaintsInboxFilterPageState
                                       },
                                       items: _complaintAssignmentTypes,
                                       itemBuilder: (item) => RadioButtonBuilder(
-                                        item.trim(),
+                                        localizations.translate(item.trim()),
                                       ),
                                     );
                                   },
@@ -232,34 +262,31 @@ class _ComplaintsInboxFilterPageState
                                 DigitDropdown<String>(
                                   formControlName: _complaintLocality,
                                   label: "Locality",
-                                  menuItems: locality,
+                                  menuItems: locality.toList(),
                                   valueMapper: (value) => value.trim(),
                                 ),
                                 LabeledField(
                                   label: "Status",
                                   child: Column(
                                     children: [
-                                      ...statuses.map((e) => Padding(
+                                      ...uniqueStatuses.map((e) => Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 16),
                                             child: DigitCheckbox(
-                                              label: e.toString(),
-                                              value: _selectedStatuses
-                                                  .contains(e.toString()),
+                                              label:
+                                                  'COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()} (${statusCount[e.index]})',
+                                              value:
+                                                  _selectedStatuses.contains(e),
                                               onChanged: (value) {
                                                 setState(() {
                                                   if (_selectedStatuses
-                                                      .contains(
-                                                    e.toString(),
-                                                  )) {
-                                                    _selectedStatuses
-                                                        .remove(e.toString());
+                                                      .contains(e)) {
+                                                    _selectedStatuses.remove(e);
 
                                                     return;
                                                   }
 
-                                                  _selectedStatuses
-                                                      .add(e.toString());
+                                                  _selectedStatuses.add(e);
                                                 });
                                               },
                                             ),
@@ -281,6 +308,16 @@ class _ComplaintsInboxFilterPageState
         },
       ),
     );
+  }
+
+  void clearFilters(FormGroup formGroup) {
+    setState(() {
+      formGroup.control(_complaintType).value = "";
+      formGroup.control(_complaintAssignmentType).value = "";
+      formGroup.control(_complaintStatus).value = "";
+      _selectedStatuses.clear();
+      formGroup.control(_complaintLocality).value = "";
+    });
   }
 
   FormGroup buildForm(ComplaintInboxState state) {
