@@ -124,11 +124,9 @@ class PgrServiceLocalRepository
                 if (query.complaintAssignedTo != null) ...[
                   if (query.complaintAssignedTo ==
                       "COMPLAINTS_ASSIGNED_TO_SELF") ...[
-                    sql.pgrService.auditCreatedBy.equals(query.currentUserId),
+                    sql.pgrComplainant.name.equals(query.currentUserName),
                   ] else ...[
-                    sql.pgrService.auditCreatedBy
-                        .equals(query.currentUserId)
-                        .not(),
+                    sql.pgrComplainant.name.equals(query.currentUserName).not(),
                   ],
                 ],
                 if (query.complaintTypeCode != null)
@@ -139,6 +137,12 @@ class PgrServiceLocalRepository
                   if (query.complaintStatus?.isNotEmpty ?? false)
                     sql.pgrService.applicationStatus
                         .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
+                if (query.complainantMobileNumber != null)
+                  sql.pgrComplainant.mobileNumber
+                      .contains(query.complainantMobileNumber.toString()),
+                if (query.serviceRequestId != null)
+                  sql.pgrService.serviceRequestId
+                      .contains(query.serviceRequestId.toString()),
               ],
             ),
           ))

@@ -89,7 +89,13 @@ class _ComplaintsInboxSearchPageState
                             onPressed: () {
                               if (!formGroup.valid) return;
 
-                              //TODO: Implement search logic
+                              bloc.add(
+                                ComplaintInboxSearchComplaintsEvent(
+                                  formGroup.control(_complaintNumber).value,
+                                  formGroup.control(_mobileNumber).value,
+                                ),
+                              );
+
                               context.router.pop();
                             },
                             child: Center(
@@ -107,8 +113,7 @@ class _ComplaintsInboxSearchPageState
                 children: [
                   Column(
                     children: [
-                      BlocConsumer<ComplaintsInboxBloc, ComplaintInboxState>(
-                        listener: (context, state) {},
+                      BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                         builder: (context, state) {
                           return Padding(
                             padding: const EdgeInsets.all(22),
@@ -151,9 +156,11 @@ class _ComplaintsInboxSearchPageState
     return fb.group(<String, Object>{
       _complaintNumber: FormControl<String>(
         validators: [],
+        value: state.searchKeys?.complaintNumber,
       ),
       _mobileNumber: FormControl<String>(
         validators: [CustomValidator.validMobileNumber],
+        value: state.searchKeys?.complainantMobileNumber,
       ),
     });
   }

@@ -23,8 +23,8 @@ class ComplaintsInboxBloc
   }) {
     on(_handleLoadComplaints);
     on(_handleFilterComplaints);
-    on(_handleSaveFilters);
     on(_handleSortComplaints);
+    on(_handleSearchComplaints);
   }
 
   FutureOr<void> _handleLoadComplaints(
@@ -57,25 +57,23 @@ class ComplaintsInboxBloc
       PgrServiceSearchModel(
         tenantId: envConfig.variables.tenantId,
         complaintAssignedTo: event.complaintAssignedTo,
+        currentUserName: event.currentUserName,
         complaintStatus: event.complaintStatus,
         complaintTypeCode: event.complaintTypeCode,
         locality: event.locality,
       ),
     );
 
-    emit(state.copyWith(loading: false, filteredComplaints: complaints));
-  }
-
-  FutureOr<void> _handleSaveFilters(
-    ComplaintInboxSaveFiltersEvent event,
-    ComplaintsInboxEmitter emit,
-  ) async {
-    emit(state.copyWith(loading: true));
-
     emit(state.copyWith(
       loading: false,
-      filters: event.filters,
+      filters: PgrFilters(
+        complaintAssignedTo: event.complaintAssignedTo,
+        complaintStatus: event.complaintStatus,
+        complaintTypeCode: event.complaintTypeCode,
+        locality: event.locality,
+      ),
     ));
+    emit(state.copyWith(loading: false, filteredComplaints: complaints));
   }
 
   FutureOr<void> _handleSortComplaints(
@@ -112,6 +110,31 @@ class ComplaintsInboxBloc
       filteredComplaints: listToSort,
     ));
   }
+
+  FutureOr<void> _handleSearchComplaints(
+    ComplaintInboxSearchComplaintsEvent event,
+    ComplaintsInboxEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+
+    emit(state.copyWith(
+      loading: false,
+      searchKeys: PgrSearchKeys(
+        complaintNumber: event.complaintNumber,
+        complainantMobileNumber: event.mobileNumber,
+      ),
+    ));
+
+    final complaints = await pgrRepository.search(
+      PgrServiceSearchModel(
+        tenantId: envConfig.variables.tenantId,
+        serviceRequestId: event.complaintNumber,
+        complainantMobileNumber: event.mobileNumber,
+      ),
+    );
+
+    emit(state.copyWith(loading: false, filteredComplaints: complaints));
+  }
 }
 
 @freezed
@@ -121,6 +144,7 @@ class ComplaintInboxState with _$ComplaintInboxState {
     @Default([]) List<PgrServiceModel> complaints,
     @Default([]) List<PgrServiceModel> filteredComplaints,
     PgrFilters? filters,
+    PgrSearchKeys? searchKeys,
   }) = _ComplaintInboxState;
 }
 
@@ -134,16 +158,18 @@ class ComplaintInboxEvent with _$ComplaintInboxEvent {
     @Default("COMPLAINT_SORT_DATE_ASC") String sortOrder,
   ]) = ComplaintInboxSortComplaintsEvent;
 
-  const factory ComplaintInboxEvent.saveFilters([PgrFilters? filters]) =
-      ComplaintInboxSaveFiltersEvent;
-
   const factory ComplaintInboxEvent.filterComplaints([
     String? complaintAssignedTo,
-    String? currentUserId,
+    String? currentUserName,
     String? complaintTypeCode,
     String? locality,
     List<PgrServiceApplicationStatus>? complaintStatus,
   ]) = ComplaintInboxFilterComplaintsEvent;
+
+  const factory ComplaintInboxEvent.searchComplaints([
+    String? complaintNumber,
+    String? mobileNumber,
+  ]) = ComplaintInboxSearchComplaintsEvent;
 
   const factory ComplaintInboxEvent.saveComplaints({
     List<ComplaintsInboxItem>? complaintInboxItems,
