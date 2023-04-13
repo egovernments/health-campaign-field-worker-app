@@ -518,7 +518,7 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
           final entity = e.getEntity<PgrServiceModel>();
           if ([
             PgrServiceApplicationStatus.created,
-            PgrServiceApplicationStatus.pendingForAssignment,
+            PgrServiceApplicationStatus.pendingAssignment,
           ].contains(entity.applicationStatus)) {
             return OpLogEntry.fromOpLog<PgrServiceModel>(e);
           }
