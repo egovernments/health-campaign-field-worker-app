@@ -26,6 +26,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
@@ -49,10 +50,13 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       }
     });
 
-    emit(BoundaryFetchedState(
-      boundaryList: boundaryList,
-      boundaryMapperList: mapperArray.toSet().toList(),
-    ));
+    emit(
+      state.copyWith(
+        loading: false,
+        boundaryList: boundaryList,
+        boundaryMapperList: mapperArray.toSet().toList(),
+      ),
+    );
     // handle logic for search here
   }
 
@@ -60,17 +64,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    state.maybeMap(
-      orElse: () {},
-      fetched: (value) {
-        emit(value.copyWith(
-          selectedBoundary: event.selectedBoundary,
-        ));
-      },
-      empty: (value) {},
-    );
-
-    // handle logic for select here
+    emit(state.copyWith(selectedBoundary: event.selectedBoundary));
   }
 }
 
@@ -80,19 +74,17 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required String selectedBoundary,
+    required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
 }
 
 @freezed
 class BoundaryState with _$BoundaryState {
-  const factory BoundaryState.loading() = BoundaryLoadingState;
-
-  const factory BoundaryState.fetched({
+  const factory BoundaryState({
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
-    String? selectedBoundary,
-  }) = BoundaryFetchedState;
-
-  const factory BoundaryState.empty() = BoundaryEmptyState;
+    @Default(false) bool isPickerVisible,
+    @Default(false) bool loading,
+    BoundaryModel? selectedBoundary,
+  }) = _BoundaryState;
 }
