@@ -1,9 +1,10 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:health_campaign_field_worker_app/utils/utils.dart';
+import '../../utils/utils.dart';
 
 import '../../models/complaints/complaints.dart';
 import '../../models/data_model.dart';
@@ -108,6 +109,16 @@ class ComplaintsRegistrationBloc
           createdTime: DateTime.now().millisecondsSinceEpoch,
         );
 
+        Map<String, dynamic> additionalDetail = HashMap();
+        additionalDetail.putIfAbsent(
+          "supervisorName",
+          () => complaintDetailsModel.supervisorName,
+        );
+        additionalDetail.putIfAbsent(
+          "supervisorContactNumber",
+          () => complaintDetailsModel.supervisorContactNumber,
+        );
+
         final pgrServiceModel = PgrServiceModel(
           clientReferenceId: referenceId,
           tenantId: envConfig.variables.tenantId,
@@ -127,10 +138,13 @@ class ComplaintsRegistrationBloc
           ),
           address: address.copyWith(
             relatedClientReferenceId: referenceId,
-            auditDetails: auditDetails,
-            boundary: complaintDetailsModel.administrativeArea,
+            locality: LocalityModel(
+              code: '',
+              name: complaintDetailsModel.administrativeArea,
+            ),
           ),
           auditDetails: auditDetails,
+          additionalDetail: additionalDetail,
         );
 
         await pgrServiceRepository.create(pgrServiceModel);
@@ -149,7 +163,7 @@ class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
   }) = ComplaintsRegistrationSaveComplaintTypeEvent;
 
   const factory ComplaintsRegistrationEvent.saveAddress({
-    AddressModel? addressModel,
+    PgrAddressModel? addressModel,
   }) = ComplaintsRegistrationSaveAddressEvent;
 
   const factory ComplaintsRegistrationEvent.saveComplaintDetails({
@@ -166,7 +180,7 @@ class ComplaintsRegistrationState with _$ComplaintsRegistrationState {
   const factory ComplaintsRegistrationState.create({
     @Default(false) bool loading,
     String? complaintType,
-    AddressModel? addressModel,
+    PgrAddressModel? addressModel,
     ComplaintsDetailsModel? complaintsDetailsModel,
   }) = ComplaintsRegistrationCreateState;
 

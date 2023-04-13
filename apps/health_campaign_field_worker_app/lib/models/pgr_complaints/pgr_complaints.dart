@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
+import 'dart:convert';
 
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
@@ -124,7 +125,8 @@ class PgrServiceModel extends EntityModel {
   final String? source;
   final bool isDeleted;
   final int rowVersion;
-  final AddressModel address;
+  final PgrAddressModel address;
+  final Map<String, dynamic>? additionalDetail;
 
   const PgrServiceModel({
     required this.clientReferenceId,
@@ -141,6 +143,7 @@ class PgrServiceModel extends EntityModel {
     this.isDeleted = false,
     this.rowVersion = 1,
     required this.address,
+    this.additionalDetail,
     super.auditDetails,
   }) : super();
 
@@ -162,6 +165,7 @@ class PgrServiceModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      additionalFields: Value(json.encode(additionalDetail)),
     );
   }
 }
