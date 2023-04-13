@@ -48,8 +48,8 @@ class _ComplaintsInboxFilterPageState
           return ReactiveFormBuilder(
             form: () => buildForm(state),
             builder: (context, formGroup, child) {
-              final List<PgrServiceApplicationStatus> selectedStatuses =
-                  state.filters?.complaintStatus ?? [];
+              List<PgrServiceApplicationStatus> selectedStatuses =
+                  state.filters?.complaintStatus?.toList() ?? [];
 
               return ScrollableContent(
                 header: Column(
@@ -170,27 +170,12 @@ class _ComplaintsInboxFilterPageState
                                   .value as String?;
 
                               bloc.add(
-                                ComplaintInboxSaveFiltersEvent(PgrFilters(
-                                  locality: locality,
-                                  complaintTypeCode: complaintType,
-                                  complaintStatus: selectedStatuses,
-                                  complaintAssignedTo: assignedTo,
-                                  currentUserId: userBloc.state.whenOrNull(
-                                    authenticated:
-                                        (accessToken, refreshToken, userModel) {
-                                      return userModel.uuid;
-                                    },
-                                  ),
-                                )),
-                              );
-
-                              bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
                                   assignedTo,
                                   userBloc.state.whenOrNull(
                                     authenticated:
                                         (accessToken, refreshToken, userModel) {
-                                      return userModel.uuid;
+                                      return userModel.name;
                                     },
                                   ),
                                   complaintType,
@@ -236,6 +221,7 @@ class _ComplaintsInboxFilterPageState
                                 complaints,
                                 filteredComplaints,
                                 filters,
+                                searchKeys,
                               ) {
                                 for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());

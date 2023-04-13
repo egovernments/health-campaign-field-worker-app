@@ -90,20 +90,22 @@ class PgrServiceSearchModel extends EntitySearchModel {
   final String? serviceRequestId;
   final String? clientReferenceId;
   final String? complaintAssignedTo;
-  final String? currentUserId;
+  final String? currentUserName;
   final String? complaintTypeCode;
   final String? locality;
+  final String? complainantMobileNumber;
   final List<PgrServiceApplicationStatus>? complaintStatus;
 
   const PgrServiceSearchModel({
     this.complaintAssignedTo,
-    this.currentUserId,
+    this.currentUserName,
     this.complaintTypeCode,
     this.locality,
     this.complaintStatus,
     this.tenantId,
     this.serviceRequestId,
     this.clientReferenceId,
+    this.complainantMobileNumber,
   }) : super();
 }
 
@@ -194,16 +196,25 @@ enum PgrServiceApplicationStatus {
 @MappableClass(ignoreNull: true)
 class PgrFilters {
   String? complaintAssignedTo;
-  String? currentUserId;
   String? complaintTypeCode;
   String? locality;
   List<PgrServiceApplicationStatus>? complaintStatus;
 
   PgrFilters({
     this.complaintAssignedTo,
-    this.currentUserId,
     this.complaintTypeCode,
     this.locality,
     this.complaintStatus,
+  });
+}
+
+@MappableClass(ignoreNull: true)
+class PgrSearchKeys {
+  String? complaintNumber;
+  String? complainantMobileNumber;
+
+  PgrSearchKeys({
+    this.complaintNumber,
+    this.complainantMobileNumber,
   });
 }
