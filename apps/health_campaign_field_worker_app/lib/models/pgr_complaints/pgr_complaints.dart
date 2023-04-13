@@ -110,7 +110,7 @@ class PgrServiceSearchModel extends EntitySearchModel {
 @MappableClass(ignoreNull: true)
 class PgrServiceModel extends EntityModel {
   final bool active;
-  final PgrComplainantModel employee;
+  final PgrComplainantModel citizen;
   final String clientReferenceId;
   final String? id;
   final String tenantId;
@@ -135,7 +135,7 @@ class PgrServiceModel extends EntityModel {
     this.accountId,
     required this.applicationStatus,
     this.source,
-    required this.employee,
+    required this.citizen,
     this.isDeleted = false,
     this.rowVersion = 1,
     required this.address,

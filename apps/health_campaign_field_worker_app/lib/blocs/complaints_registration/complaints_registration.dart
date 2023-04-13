@@ -115,13 +115,15 @@ class ComplaintsRegistrationBloc
           description: description,
           source: 'mobile',
           applicationStatus: PgrServiceApplicationStatus.created,
-          employee: PgrComplainantModel(
+          citizen: PgrComplainantModel(
             tenantId: envConfig.variables.tenantId,
             clientReferenceId: IdGen.i.identifier,
             complaintClientReferenceId: referenceId,
             name: complaintDetailsModel.complainantName,
             mobileNumber: complaintDetailsModel.complainantContactNumber,
             auditDetails: auditDetails,
+            uuid: event.userId,
+            userName: complaintDetailsModel.complainantContactNumber,
           ),
           address: address.copyWith(
             relatedClientReferenceId: referenceId,
