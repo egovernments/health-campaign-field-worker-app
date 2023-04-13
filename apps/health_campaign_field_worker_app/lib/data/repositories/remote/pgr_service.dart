@@ -29,7 +29,7 @@ class PgrServiceRemoteRepository
           data: PgrComplaintModel(
             service: entity,
             workflow: const PgrWorkflowModel(
-              action: "APPLY",
+              action: "CREATE",
               comments: "",
               assignees: [],
             ),

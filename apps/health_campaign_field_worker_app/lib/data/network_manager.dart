@@ -160,13 +160,15 @@ class NetworkManager {
         if (operationGroupedEntity.key == DataOperation.create) {
           await Future.delayed(const Duration(seconds: 1));
 
-          if (typeGroupedEntity.key == DataModelType.complaints) {
-            for (final entity in entities) {
-              await remote.create(entity);
-            }
+          switch (typeGroupedEntity.key) {
+            case DataModelType.complaints:
+              for (final entity in entities) {
+                await remote.create(entity);
+              }
+              break;
+            default:
+              await remote.bulkCreate(entities);
           }
-
-          await remote.bulkCreate(entities);
         } else if (operationGroupedEntity.key == DataOperation.update) {
           await remote.bulkUpdate(entities);
         } else if (operationGroupedEntity.key == DataOperation.delete) {
