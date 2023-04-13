@@ -3,13 +3,13 @@ import "package:dio/dio.dart";
 import '../utils/environment_config.dart';
 import 'repositories/api_interceptors.dart';
 
-class Client {
+class DioClient {
   Dio init() {
     final Dio dio = Dio()
       ..options = BaseOptions(
-        connectTimeout: const Duration(minutes: 2).inMilliseconds,
-        sendTimeout: const Duration(minutes: 2).inMilliseconds,
-        receiveTimeout: const Duration(minutes: 2).inMilliseconds,
+        connectTimeout: envConfig.variables.connectTimeout,
+        sendTimeout: envConfig.variables.sendTimeout,
+        receiveTimeout: envConfig.variables.receiveTimeout,
       )
       ..interceptors.add(ApiInterceptors())
       ..options.baseUrl = envConfig.variables.baseUrl;

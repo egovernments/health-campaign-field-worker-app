@@ -46,7 +46,24 @@ class Variables {
   final DotEnv _dotEnv;
   final bool useFallbackValues;
 
-  static const _connectTimeout = EnvEntry('CONNECT_TIMEOUT', '120000');
+  static const _connectTimeoutValue = 6000;
+  static const _receiveTimeoutValue = 6000;
+  static const _sendTimeoutValue = 6000;
+
+  static const _connectTimeout = EnvEntry(
+    'CONNECT_TIMEOUT',
+    '$_connectTimeoutValue',
+  );
+
+  static const _receiveTimeout = EnvEntry(
+    'RECEIVE_TIMEOUT',
+    '$_connectTimeoutValue',
+  );
+
+  static const _sendTimeout = EnvEntry(
+    'SEND_TIMEOUT',
+    '$_connectTimeoutValue',
+  );
 
   static const _baseUrl = EnvEntry(
     'BASE_URL',
@@ -79,6 +96,30 @@ class Variables {
   String get tenantId => useFallbackValues
       ? _tenantId.value
       : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+
+  int get connectTimeout => useFallbackValues
+      ? int.tryParse(_connectTimeout.value) ?? _connectTimeoutValue
+      : int.tryParse(_dotEnv.get(
+            _connectTimeout.key,
+            fallback: _connectTimeout.value,
+          )) ??
+          _connectTimeoutValue;
+
+  int get receiveTimeout => useFallbackValues
+      ? int.tryParse(_receiveTimeout.value) ?? _receiveTimeoutValue
+      : int.tryParse(_dotEnv.get(
+            _receiveTimeout.key,
+            fallback: _receiveTimeout.value,
+          )) ??
+          _receiveTimeoutValue;
+
+  int get sendTimeout => useFallbackValues
+      ? int.tryParse(_sendTimeout.value) ?? _sendTimeoutValue
+      : int.tryParse(_dotEnv.get(
+            _sendTimeout.key,
+            fallback: _sendTimeout.value,
+          )) ??
+          _sendTimeoutValue;
 }
 
 class EnvEntry {
