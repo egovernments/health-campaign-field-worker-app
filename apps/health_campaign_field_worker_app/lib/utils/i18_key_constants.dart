@@ -485,20 +485,24 @@ class ManageStock {
 
   String get recordstockReceiptDescription =>
       'MANAGE_STOCK_RECEIPT_DESCRIPTION';
+
   String get recordstockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
 
   String get recordstockIssuedtDescription =>
       'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
+
   String get recordstockReturnedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
 
   String get recordstockReturnedtDescription =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_DESCRIPTION';
+
   String get recordstockDamagedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_LABEL';
 
   String get recordstockDamagedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_DESCRIPTION';
+
   String get recordstockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
 
   String get recordstockLossDescription =>
@@ -524,7 +528,8 @@ class Complaints {
 
   String get complainantName => 'COMPLAINTS_COMPLAINANT_NAME';
 
-  String get complainantContactNumber => 'COMPLAINTS_COMPLAINANT_CONTACT_NUMBER';
+  String get complainantContactNumber =>
+      'COMPLAINTS_COMPLAINANT_CONTACT_NUMBER';
 
   String get supervisorName => 'COMPLAINTS_SUPERVISOR_NAME';
 
@@ -556,7 +561,11 @@ class Complaints {
 
   String get complaintsSortDateAsc => 'COMPLAINT_SORT_DATE_ASC';
 
-  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';  
+  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';
+
+  String get assignedToAll => 'COMPLAINTS_ASSIGNED_TO_ALL';
+
+  String get assignedToSelf => 'COMPLAINTS_ASSIGNED_TO_SELF';
 }
 
 class ReasonForDeletion {

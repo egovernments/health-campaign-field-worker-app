@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:recase/recase.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
@@ -119,7 +120,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                   (appConfiguration, serviceRegistryList) {
                                 var complaintTypes = appConfiguration
                                     .complaintTypes
-                                    ?.map((e) => e.name)
+                                    ?.map((e) => e.code)
                                     .toList();
                                 complaintTypes?.add("Other");
 
@@ -134,7 +135,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                   },
                                   items: complaintTypes ?? [],
                                   itemBuilder: (item) => RadioButtonBuilder(
-                                    item.trim(),
+                                    item.snakeCase.toUpperCase().trim(),
                                   ),
                                 );
                               },

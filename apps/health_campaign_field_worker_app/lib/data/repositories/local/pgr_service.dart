@@ -121,6 +121,24 @@ class PgrServiceLocalRepository
                 if (query.serviceRequestId != null)
                   sql.pgrService.serviceRequestId
                       .equals(query.serviceRequestId),
+                if (query.complaintAssignedTo != null) ...[
+                  if (query.complaintAssignedTo ==
+                      "COMPLAINTS_ASSIGNED_TO_SELF") ...[
+                    sql.pgrService.auditCreatedBy.equals(query.currentUserId),
+                  ] else ...[
+                    sql.pgrService.auditCreatedBy
+                        .equals(query.currentUserId)
+                        .not(),
+                  ],
+                ],
+                if (query.complaintTypeCode != null)
+                  sql.pgrService.serviceCode.equals(query.complaintTypeCode),
+                if (query.locality != null)
+                  sql.address.boundary.equals(query.locality),
+                if (query.complaintStatus != null)
+                  if(query.complaintStatus?.isNotEmpty ?? false)
+                  sql.pgrService.applicationStatus
+                      .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
               ],
             ),
           ))

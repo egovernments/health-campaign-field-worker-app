@@ -5,7 +5,6 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/auth/auth.dart';
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../router/app_router.dart';
@@ -78,8 +77,6 @@ class _ComplaintsDetailsPageState
 
                         if (!form.valid) return;
 
-                        // TODO(neel) : Most of these fields shouldn't be nullable.
-                        // Updated ComplaintsDetailsModel. Please update the form accordingly.
                         final dateOfComplaint =
                             form.control(_dateOfComplaint).value as DateTime;
 
@@ -134,7 +131,6 @@ class _ComplaintsDetailsPageState
 
                         final userId = context.loggedInUserUuid;
 
-                        //TODO: Add complaints submit logic here
                         final submit = await DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
@@ -171,7 +167,8 @@ class _ComplaintsDetailsPageState
 
                         bloc.add(
                           ComplaintsRegistrationSubmitComplaintEvent(
-                              userId: userId),
+                            userId: userId,
+                          ),
                         );
                       },
                       child: Center(

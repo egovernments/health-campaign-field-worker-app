@@ -26,7 +26,14 @@ class PgrServiceRemoteRepository
           options: Options(headers: {
             "content-type": 'application/json',
           }),
-          data: PgrComplaintModel(service: entity).toMap(),
+          data: PgrComplaintModel(
+            service: entity,
+            workflow: const PgrWorkflowModel(
+              action: "APPLY",
+              comments: "",
+              assignees: [],
+            ),
+          ).toMap(),
         );
 
         return response;
