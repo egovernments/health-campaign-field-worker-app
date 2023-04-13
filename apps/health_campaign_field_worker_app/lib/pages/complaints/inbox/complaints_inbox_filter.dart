@@ -36,7 +36,6 @@ class _ComplaintsInboxFilterPageState
     i18.complaints.assignedToAll,
     i18.complaints.assignedToSelf,
   ];
-  final List<PgrServiceApplicationStatus> _selectedStatuses = [];
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +48,9 @@ class _ComplaintsInboxFilterPageState
           return ReactiveFormBuilder(
             form: () => buildForm(state),
             builder: (context, formGroup, child) {
+              final List<PgrServiceApplicationStatus> selectedStatuses =
+                  state.filters?.complaintStatus ?? [];
+
               return ScrollableContent(
                 header: Column(
                   children: [
@@ -89,6 +91,7 @@ class _ComplaintsInboxFilterPageState
                             padding: const EdgeInsets.only(left: 5),
                             child: TextButton(
                               onPressed: () {
+                                selectedStatuses.clear();
                                 clearFilters(formGroup);
                               },
                               style: TextButton.styleFrom(
@@ -123,6 +126,7 @@ class _ComplaintsInboxFilterPageState
                           flex: 1,
                           child: OutlinedButton(
                             onPressed: () {
+                              selectedStatuses.clear();
                               clearFilters(formGroup);
                             },
                             style: OutlinedButton.styleFrom(
@@ -166,6 +170,21 @@ class _ComplaintsInboxFilterPageState
                                   .value as String?;
 
                               bloc.add(
+                                ComplaintInboxSaveFiltersEvent(PgrFilters(
+                                  locality: locality,
+                                  complaintTypeCode: complaintType,
+                                  complaintStatus: selectedStatuses,
+                                  complaintAssignedTo: assignedTo,
+                                  currentUserId: userBloc.state.whenOrNull(
+                                    authenticated:
+                                        (accessToken, refreshToken, userModel) {
+                                      return userModel.uuid;
+                                    },
+                                  ),
+                                )),
+                              );
+
+                              bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
                                   assignedTo,
                                   userBloc.state.whenOrNull(
@@ -176,7 +195,7 @@ class _ComplaintsInboxFilterPageState
                                   ),
                                   complaintType,
                                   locality,
-                                  _selectedStatuses,
+                                  selectedStatuses,
                                 ),
                               );
 
@@ -201,7 +220,7 @@ class _ComplaintsInboxFilterPageState
                       children: [
                         BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                           builder: (context, state) {
-                            List<String> complaintTypes = [];
+                            Set<String> complaintTypes = HashSet();
                             Set<String> locality = HashSet();
 
                             Set<PgrServiceApplicationStatus> uniqueStatuses =
@@ -212,8 +231,13 @@ class _ComplaintsInboxFilterPageState
                               orElse: () {
                                 return;
                               },
-                              complaints: (loading, complaintInboxItems) {
-                                for (var e in complaintInboxItems) {
+                              complaints: (
+                                loading,
+                                complaints,
+                                filteredComplaints,
+                                filters,
+                              ) {
+                                for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());
                                   locality.add(e.address.boundary.toString());
 
@@ -256,7 +280,7 @@ class _ComplaintsInboxFilterPageState
                                 DigitDropdown<String>(
                                   formControlName: _complaintType,
                                   label: "Complaint Type",
-                                  menuItems: complaintTypes,
+                                  menuItems: complaintTypes.toList(),
                                   valueMapper: (value) => value.trim(),
                                 ),
                                 DigitDropdown<String>(
@@ -276,17 +300,17 @@ class _ComplaintsInboxFilterPageState
                                               label:
                                                   'COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()} (${statusCount[e.index]})',
                                               value:
-                                                  _selectedStatuses.contains(e),
+                                                  selectedStatuses.contains(e),
                                               onChanged: (value) {
                                                 setState(() {
-                                                  if (_selectedStatuses
+                                                  if (selectedStatuses
                                                       .contains(e)) {
-                                                    _selectedStatuses.remove(e);
+                                                    selectedStatuses.remove(e);
 
                                                     return;
                                                   }
 
-                                                  _selectedStatuses.add(e);
+                                                  selectedStatuses.add(e);
                                                 });
                                               },
                                             ),
@@ -312,23 +336,25 @@ class _ComplaintsInboxFilterPageState
 
   void clearFilters(FormGroup formGroup) {
     setState(() {
-      formGroup.control(_complaintType).value = "";
-      formGroup.control(_complaintAssignmentType).value = "";
-      formGroup.control(_complaintStatus).value = "";
-      _selectedStatuses.clear();
-      formGroup.control(_complaintLocality).value = "";
+      formGroup.control(_complaintType).value = null;
+      formGroup.control(_complaintAssignmentType).value = null;
+      formGroup.control(_complaintStatus).value = null;
+      formGroup.control(_complaintLocality).value = null;
     });
   }
 
   FormGroup buildForm(ComplaintInboxState state) {
     return fb.group(<String, Object>{
       _complaintType: FormControl<String>(
+        value: state.filters?.complaintTypeCode,
         validators: [],
       ),
       _complaintLocality: FormControl<String>(
+        value: state.filters?.locality,
         validators: [],
       ),
       _complaintAssignmentType: FormControl<String>(
+        value: state.filters?.complaintAssignedTo,
         validators: [],
       ),
       _complaintStatus: FormControl<String>(

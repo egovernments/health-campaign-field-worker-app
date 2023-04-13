@@ -190,3 +190,20 @@ enum PgrServiceApplicationStatus {
   @MappableValue('CANCELLED')
   cancelled,
 }
+
+@MappableClass(ignoreNull: true)
+class PgrFilters {
+  String? complaintAssignedTo;
+  String? currentUserId;
+  String? complaintTypeCode;
+  String? locality;
+  List<PgrServiceApplicationStatus>? complaintStatus;
+
+  PgrFilters({
+    this.complaintAssignedTo,
+    this.currentUserId,
+    this.complaintTypeCode,
+    this.locality,
+    this.complaintStatus,
+  });
+}
