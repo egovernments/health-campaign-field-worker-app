@@ -346,8 +346,16 @@ abstract class LocalRepository<D extends EntityModel,
     return opLogManager.getPendingDownSync(type, createdBy: createdBy);
   }
 
-  FutureOr<void> markSyncedUp(OpLogEntry<D> entry) async {
-    return opLogManager.markSyncUp(entry);
+  FutureOr<void> markSyncedUp({
+    OpLogEntry<D>? entry,
+    String? clientReferenceId,
+    int? id,
+  }) async {
+    return opLogManager.markSyncUp(
+      entry: entry,
+      clientReferenceId: clientReferenceId,
+      id: id,
+    );
   }
 }
 
