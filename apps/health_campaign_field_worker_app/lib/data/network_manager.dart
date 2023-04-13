@@ -32,7 +32,7 @@ class NetworkManager {
     }
   }
 
-  Future<void> syncUp({
+  Future<void> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
     required String userId,
@@ -42,7 +42,7 @@ class NetworkManager {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
-    await getServerGeneratedIds(
+    await syncDown(
       createdBy: userId,
       localRepositories: localRepositories.toSet().toList(),
       remoteRepositories: remoteRepositories.toSet().toList(),
@@ -249,14 +249,14 @@ class NetworkManager {
     }
   }
 
-  FutureOr<void> getServerGeneratedIds({
+  FutureOr<void> syncDown({
     required String createdBy,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
-      throw Exception('Sync up is not valid for online only configuration');
+      throw Exception('Sync down is not valid for online only configuration');
     }
 
     final futures = await Future.wait(
@@ -286,6 +286,14 @@ class NetworkManager {
 
       for (final operationGroupedEntity in groupedOperations.entries) {
         final entities = operationGroupedEntity.value.map((e) {
+          final serverGeneratedId = e.serverGeneratedId;
+          if (serverGeneratedId != null) {
+            return local.opLogManager.applyServerGeneratedIdToEntity(
+              e.entity,
+              serverGeneratedId,
+            );
+          }
+
           return e.entity;
         }).toList();
 
@@ -610,16 +618,6 @@ class NetworkManager {
       })))
           .expand((element) => element)
           .length;
-
-  Future<void> syncDown({
-    required List<LocalRepository> localRepositories,
-    required List<RemoteRepository> remoteRepositories,
-  }) async {
-    if (configuration.persistenceConfig ==
-        PersistenceConfiguration.onlineOnly) {
-      throw Exception('Sync down is not valid for online only configuration');
-    }
-  }
 
   RemoteRepository _getRemoteForType(
     DataModelType type,

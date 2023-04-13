@@ -72,7 +72,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   ) async {
     try {
       emit(const SyncInProgressState());
-      await networkManager.syncUp(
+      await networkManager.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
         userId: event.userId,

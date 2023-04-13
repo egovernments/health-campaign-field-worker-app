@@ -55,7 +55,7 @@ class PgrServiceRemoteRepository
               'limit': 100,
               'tenantId': envConfig.variables.tenantId,
             }..addAll(query.toMap()),
-            data: {},
+            data: query.toMap(),
           );
         },
       );

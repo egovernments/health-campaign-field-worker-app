@@ -49,7 +49,7 @@ class ApiLoggerInterceptor extends Interceptor {
     if (options.data is Map || options.data is List) {
       AppLogger.instance.info(
         _getIndentedJson(json.encode(options.data)),
-        title: '[REQUEST] ${options.path}',
+        title: '[REQUEST] ${options.uri.toString()}',
       );
     }
     super.onRequest(options, handler);
@@ -60,7 +60,8 @@ class ApiLoggerInterceptor extends Interceptor {
     try {
       AppLogger.instance.info(
         _getIndentedJson(json.encode(response.data)),
-        title: '[RESPONSE] ${response.requestOptions.path}',
+        title:
+            '[RESPONSE - ${response.statusCode}] ${response.requestOptions.uri.toString()}',
       );
     } catch (error) {
       AppLogger.instance.info(
