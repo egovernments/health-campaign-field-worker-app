@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class PgrServiceLocalRepository
     extends LocalRepository<PgrServiceModel, PgrServiceSearchModel> {
@@ -52,34 +53,15 @@ class PgrServiceLocalRepository
     PgrServiceModel entity, {
     bool createOpLog = true,
   }) async {
-    final companion = entity.companion;
-    final complainant = entity.citizen;
-    final address = entity.address;
-
-    final complainantCompanion = complainant.companion;
-    final addressCompanion = address.companion;
+    if (entity.serviceRequestId == null) return;
 
     await sql.batch((batch) async {
       batch.update(
         sql.pgrService,
-        companion,
-        where: (tbl) => tbl.clientReferenceId.equals(
-          entity.clientReferenceId,
+        PgrServiceCompanion(
+          applicationStatus: Value(entity.applicationStatus),
         ),
-      );
-      batch.update(
-        sql.pgrComplainant,
-        complainantCompanion,
-        where: (tbl) => tbl.complaintClientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
-      );
-      batch.update(
-        sql.address,
-        addressCompanion,
-        where: (tbl) => tbl.relatedClientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
+        where: (tbl) => tbl.serviceRequestId.equals(entity.serviceRequestId),
       );
     });
 
@@ -180,6 +162,7 @@ class PgrServiceLocalRepository
           relatedClientReferenceId: pgrService.clientReferenceId,
           tenantId: address.tenantId,
           doorNo: address.doorNo,
+
           /// boundary: address.boundary,
           geoLocation: GeoLocation(
             latitude: address.latitude,

@@ -553,15 +553,19 @@ class NetworkManager {
             break;
 
           case DataModelType.complaints:
+            if (remote is! PgrServiceRemoteRepository) continue;
+
             final futures = entities
                 .whereType<PgrServiceModel>()
                 .map((e) => e.serviceRequestId)
                 .whereNotNull()
                 .map(
               (e) {
-                final future = remote.search(PgrServiceSearchModel(
-                  serviceRequestId: e,
-                ));
+                final future = remote.searchWithoutClientReferenceId(
+                  PgrServiceSearchModel(
+                    serviceRequestId: e,
+                  ),
+                );
 
                 return Future.sync(() => future);
               },
@@ -569,9 +573,31 @@ class NetworkManager {
 
             final resolvedFutures = await Future.wait(futures);
 
+            final updatedPgrModel = resolvedFutures
+                .expand((element) => element)
+                .whereType<PgrServiceResponseModel>()
+                .map((e) {})
+                .toList();
+
             responseEntities = resolvedFutures
                 .expand((element) => element)
-                .whereType<PgrServiceModel>()
+                .whereType<PgrServiceResponseModel>()
+                // We only need serviceRequestId and application status
+                .map((e) => PgrServiceModel(
+                      clientReferenceId: '',
+                      tenantId: e.tenantId ?? '',
+                      serviceCode: e.serviceCode ?? '',
+                      description: e.description ?? '',
+                      serviceRequestId: e.serviceRequestId,
+                      applicationStatus: e.applicationStatus ??
+                          PgrServiceApplicationStatus.pendingAssignment,
+                      citizen: PgrComplainantModel(
+                        clientReferenceId: '',
+                        tenantId: '',
+                        complaintClientReferenceId: e.serviceRequestId ?? '',
+                      ),
+                      address: PgrAddressModel(),
+                    ))
                 .toList();
 
             for (var element in typeGroupedEntity.value) {

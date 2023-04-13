@@ -41,8 +41,8 @@ class PgrServiceRemoteRepository
     );
   }
 
-  @override
-  FutureOr<List<PgrServiceModel>> search(PgrServiceSearchModel query) async {
+  FutureOr<List<PgrServiceResponseModel>> searchWithoutClientReferenceId(
+      PgrServiceSearchModel query) async {
     Response response;
 
     try {
@@ -73,7 +73,15 @@ class PgrServiceRemoteRepository
       );
     }
 
-    if (!responseMap.containsKey(entityName)) {
+    PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
+    List<PgrComplaintResponseModel> pgrComplaintModel;
+    try {
+      pgrServiceCreateResponseModel =
+          Mapper.fromMap<PgrServiceCreateResponseModel>(
+        responseMap,
+      );
+      pgrComplaintModel = pgrServiceCreateResponseModel.serviceWrappers;
+    } catch (e) {
       throw InvalidApiResponseException(
         data: query.toMap(),
         path: searchPath,
@@ -81,18 +89,9 @@ class PgrServiceRemoteRepository
       );
     }
 
-    final entityResponse = await responseMap[entityName];
-    if (entityResponse is! List) {
-      throw InvalidApiResponseException(
-        data: query.toMap(),
-        path: searchPath,
-        response: responseMap,
-      );
-    }
-
-    final entityList = entityResponse.whereType<Map<String, dynamic>>();
-
-    return entityList.map((e) => Mapper.fromMap<PgrServiceModel>(e)).toList();
+    return pgrComplaintModel.map((e) {
+      return e.service;
+    }).toList();
   }
 
   @override
@@ -100,6 +99,10 @@ class PgrServiceRemoteRepository
 
   @override
   FutureOr<Response> delete(EntityModel entity) => throw UnimplementedError();
+
+  @override
+  FutureOr<List<PgrServiceModel>> search(PgrServiceSearchModel query) =>
+      throw UnimplementedError();
 
   @override
   FutureOr<Response> bulkCreate(List<EntityModel> entities) {
