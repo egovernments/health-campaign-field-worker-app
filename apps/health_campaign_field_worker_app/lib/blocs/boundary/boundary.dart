@@ -20,6 +20,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   }) {
     on(_handleSearch);
     on(_handleSelect);
+    on(_handleToggleVisibility);
   }
 
   FutureOr<void> _handleSearch(
@@ -66,6 +67,13 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   ) async {
     emit(state.copyWith(selectedBoundary: event.selectedBoundary));
   }
+
+  FutureOr<void> _handleToggleVisibility(
+    BoundaryToggleVisibilityEvent event,
+    BoundaryEmitter emit,
+  ) async {
+    emit(state.copyWith(isPickerVisible: !state.isPickerVisible));
+  }
 }
 
 @freezed
@@ -76,6 +84,9 @@ class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.select({
     required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
+
+  const factory BoundaryEvent.toggleVisibility() =
+      BoundaryToggleVisibilityEvent;
 }
 
 @freezed

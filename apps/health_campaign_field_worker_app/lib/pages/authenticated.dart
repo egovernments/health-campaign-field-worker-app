@@ -26,9 +26,7 @@ class AuthenticatedPageWrapper extends StatefulWidget {
 }
 
 class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
-  bool isPickerVisible = false;
   BoundaryModel? selectedBoundaryValue;
-  int random = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +37,19 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             BlocConsumer<BoundaryBloc, BoundaryState>(
               listener: (ctx, state) {
                 if (state.boundaryList.isNotEmpty &&
-                    state.selectedBoundary == null) {
-                  setState(() {
-                    isPickerVisible = true;
-                  });
+                    state.selectedBoundary == null &&
+                    !state.isPickerVisible) {
+                  ctx.read<BoundaryBloc>().add(
+                        const BoundaryToggleVisibilityEvent(),
+                      );
                 }
               },
               builder: (context, boundaryState) {
                 final boundaryList = boundaryState.boundaryList;
                 final boundaryMapperList = boundaryState.boundaryMapperList;
-                final selectedBoundary = boundaryState.selectedBoundary;
 
                 return PortalTarget(
-                  visible: isPickerVisible,
+                  visible: boundaryState.isPickerVisible,
                   portalFollower: DigitCard(
                     margin: const EdgeInsets.only(
                       top: kToolbarHeight * 2,
@@ -111,9 +109,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                       (form
                                                           .control(item)
                                                           .value = value);
-                                                      setBuiderState(() {
-                                                        random = random + 1;
-                                                      });
+                                                      setBuiderState(() {});
                                                     }
 
                                                     if (form
@@ -155,9 +151,11 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                               selectedBoundaryValue!,
                                                         ),
                                                       );
-                                                  setState(() {
-                                                    isPickerVisible = false;
-                                                  });
+                                                  context
+                                                      .read<BoundaryBloc>()
+                                                      .add(
+                                                        const BoundaryToggleVisibilityEvent(),
+                                                      );
                                                   context.router.replace(
                                                     HomeRoute(),
                                                   );
@@ -180,9 +178,9 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
                   child: TextButton(
                     onPressed: () {
-                      setState(() {
-                        isPickerVisible = true;
-                      });
+                      context.read<BoundaryBloc>().add(
+                            const BoundaryToggleVisibilityEvent(),
+                          );
                     },
                     child: Text(selectedBoundaryValue?.name ?? ''),
                   ),
@@ -191,30 +189,30 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
             ),
           ],
         ),
-        drawer:
-            (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
-                    isPickerVisible == false)
-                ? const Drawer(child: SideBar())
-                : null,
+        drawer: BlocBuilder<BoundaryBloc, BoundaryState>(
+          builder: (context, state) => (context.router.currentUrl !=
+                      '/${ProjectSelectionRoute().path}' &&
+                  !state.isPickerVisible)
+              ? const Drawer(child: SideBar())
+              : const SizedBox.shrink(),
+        ),
         body: MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) {
-                return SearchHouseholdsBloc(
-                  userUid: context.loggedInUserUuid,
-                  projectId: context.projectId,
-                  projectBeneficiary: context.repository<
-                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
-                  householdMember: context.repository<HouseholdMemberModel,
-                      HouseholdMemberSearchModel>(),
-                  household: context
-                      .repository<HouseholdModel, HouseholdSearchModel>(),
-                  individual: context
-                      .repository<IndividualModel, IndividualSearchModel>(),
-                  taskDataRepository:
-                      context.repository<TaskModel, TaskSearchModel>(),
-                )..add(const SearchHouseholdsClearEvent());
-              },
+              create: (context) => SearchHouseholdsBloc(
+                userUid: context.loggedInUserUuid,
+                projectId: context.projectId,
+                projectBeneficiary: context.repository<ProjectBeneficiaryModel,
+                    ProjectBeneficiarySearchModel>(),
+                householdMember: context.repository<HouseholdMemberModel,
+                    HouseholdMemberSearchModel>(),
+                household:
+                    context.repository<HouseholdModel, HouseholdSearchModel>(),
+                individual: context
+                    .repository<IndividualModel, IndividualSearchModel>(),
+                taskDataRepository:
+                    context.repository<TaskModel, TaskSearchModel>(),
+              )..add(const SearchHouseholdsClearEvent()),
             ),
             BlocProvider(
               create: (context) {
