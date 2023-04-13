@@ -566,6 +566,24 @@ class Complaints {
   String get assignedToAll => 'COMPLAINTS_ASSIGNED_TO_ALL';
 
   String get assignedToSelf => 'COMPLAINTS_ASSIGNED_TO_SELF';
+
+  String get noComplaintsExist => 'COMPLAINTS_NO_COMPLAINTS_EXIST';
+
+  String get inboxDateLabel => 'COMPLAINTS_INBOX_DATE_LABEL';
+
+  String get inboxNumberLabel => 'COMPLAINTS_INBOX_NUMBER_LABEL';
+
+  String get inboxTypeLabel => 'COMPLAINTS_INBOX_TYPE_LABEL';
+
+  String get inboxAreaLabel => 'COMPLAINTS_INBOX_AREA_LABEL';
+
+  String get inboxStatusLabel => 'COMPLAINTS_INBOX_STATUS_LABEL';
+
+  String get inboxNotGeneratedLabel => 'COMPLAINTS_INBOX_NOT_GENERATED_LABEL';
+
+  String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
+
+  String get locality => 'COMPLAINTS_LOCALITY';
 }
 
 class ReasonForDeletion {

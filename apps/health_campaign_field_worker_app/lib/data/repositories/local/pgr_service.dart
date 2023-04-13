@@ -176,27 +176,19 @@ class PgrServiceLocalRepository
           id: pgrComplainant.id,
           uuid: pgrComplainant.uuid,
         ),
-        address: AddressModel(
+        address: PgrAddressModel(
           relatedClientReferenceId: pgrService.clientReferenceId,
           tenantId: address.tenantId,
           doorNo: address.doorNo,
-          boundary: address.boundary,
-          latitude: address.latitude,
-          longitude: address.longitude,
+          /// boundary: address.boundary,
+          geoLocation: GeoLocation(
+            latitude: address.latitude,
+            longitude: address.longitude,
+          ),
           landmark: address.landmark,
-          locationAccuracy: address.locationAccuracy,
-          addressLine1: address.addressLine1,
-          addressLine2: address.addressLine2,
           city: address.city,
           pincode: address.pincode,
-          type: address.type,
           rowVersion: address.rowVersion,
-          auditDetails: AuditDetails(
-            createdBy: address.auditCreatedBy!,
-            createdTime: address.auditCreatedTime!,
-            lastModifiedBy: address.auditModifiedBy,
-            lastModifiedTime: address.auditModifiedTime,
-          ),
         ),
         id: pgrService.id,
         auditDetails: AuditDetails(

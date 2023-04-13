@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/complaints_registration/complaints_registration.dart';
-import '../../../models/data_model.dart';
+import '../../../models/pgr_complaints/pgr_address.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -99,15 +99,15 @@ class _ComplaintsLocationPageState
                             complaintsDetailsModel,
                           ) {
                             bloc.add(ComplaintsRegistrationEvent.saveAddress(
-                              addressModel: AddressModel(
-                                addressLine1: addressLine1,
-                                addressLine2: addressLine2,
+                              addressModel: PgrAddressModel(
+                                buildingName: addressLine1,
+                                street: addressLine2,
                                 landmark: landmark,
                                 pincode: postalCode,
-                                latitude: form.control(_latKey).value,
-                                longitude: form.control(_lngKey).value,
-                                locationAccuracy:
-                                    form.control(_accuracyKey).value,
+                                geoLocation: GeoLocation(
+                                  latitude: form.control(_latKey).value,
+                                  longitude: form.control(_lngKey).value,
+                                ),
                               ),
                             ));
                           },
@@ -186,11 +186,11 @@ class _ComplaintsLocationPageState
 
     return fb.group(<String, Object>{
       _addressLine1Key:
-          FormControl<String>(value: addressModel?.addressLine1, validators: [
+          FormControl<String>(value: addressModel?.buildingName, validators: [
         CustomValidator.requiredMin,
       ]),
       _addressLine2Key: FormControl<String>(
-        value: addressModel?.addressLine2,
+        value: addressModel?.street,
         validators: [CustomValidator.requiredMin],
       ),
       _landmarkKey:
@@ -201,15 +201,16 @@ class _ComplaintsLocationPageState
           FormControl<String>(value: addressModel?.pincode, validators: [
         CustomValidator.requiredMin,
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        CustomValidator.requiredMin,
-      ]),
+      _latKey: FormControl<double>(
+        value: addressModel?.geoLocation?.latitude,
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
       _lngKey: FormControl<double>(
-        value: addressModel?.longitude,
+        value: addressModel?.geoLocation?.longitude,
       ),
-      _accuracyKey: FormControl<double>(
-        value: addressModel?.locationAccuracy,
-      ),
+      _accuracyKey: FormControl<double>(),
     });
   }
 }

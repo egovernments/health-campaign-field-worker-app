@@ -82,13 +82,13 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                 ),
               ),
               if (inboxItems.isEmpty)
-                const SliverFillRemaining(
+                SliverFillRemaining(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Text(
-                        // TODO(Neel): Add localization
-                        "No complaints exist",
+                        localizations
+                            .translate(i18.complaints.noComplaintsExist),
                       ),
                     ),
                   ),
@@ -196,11 +196,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
                   child: Text(
-                    "Complaint Number",
-                    style: TextStyle(
+                    localizations.translate(i18.complaints.inboxNumberLabel),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -209,7 +209,8 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.serviceRequestId ?? "Not Generated\n(Sync required)",
+                    item.serviceRequestId ??
+                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
                     style: TextStyle(
                       color: theme.colorScheme.secondary,
                     ),
@@ -223,11 +224,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
                   child: Text(
-                    "Complaint Type",
-                    style: TextStyle(
+                    localizations.translate(i18.complaints.inboxTypeLabel),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -237,7 +238,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 3,
                   child: Text(
                     localizations.translate(
-                      item.serviceCode,
+                      item.serviceCode.snakeCase.toUpperCase().trim(),
                     ),
                   ),
                 ),
@@ -249,12 +250,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
-                  // TODO(Neel): Add prefix for localization
                   child: Text(
-                    "Complaint Date",
-                    style: TextStyle(
+                    localizations.translate(i18.complaints.inboxDateLabel),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -276,12 +276,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
-                  // TODO(Neel): Add prefix for localization
                   child: Text(
-                    "Area",
-                    style: TextStyle(
+                    localizations.translate(i18.complaints.inboxAreaLabel),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -290,7 +289,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    item.address.boundary ?? "",
+                    item.address.locality?.name ?? "",
                   ),
                 ),
               ],
@@ -301,12 +300,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 2,
-                  // TODO(Neel): Add prefix for localization
                   child: Text(
-                    "Status",
-                    style: TextStyle(
+                    localizations.translate(i18.complaints.inboxStatusLabel),
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -316,7 +314,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 3,
                   child: Text(
                     localizations.translate(
-                      item.applicationStatus.name.snakeCase.toUpperCase(),
+                      "COMPLAINTS_STATUS_${item.applicationStatus.name.snakeCase.toUpperCase()}",
                     ),
                   ),
                 ),

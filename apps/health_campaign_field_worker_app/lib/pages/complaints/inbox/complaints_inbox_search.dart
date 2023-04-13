@@ -119,14 +119,18 @@ class _ComplaintsInboxSearchPageState
                             padding: const EdgeInsets.all(22),
                             child: Column(
                               children: [
-                                const DigitTextFormField(
+                                DigitTextFormField(
                                   formControlName: _complaintNumber,
-                                  label: "Complaint Number",
+                                  label: localizations.translate(
+                                    i18.complaints.inboxNumberLabel,
+                                  ),
                                   maxLength: 65,
                                 ),
                                 DigitTextFormField(
                                   formControlName: _mobileNumber,
-                                  label: "Mobile Number",
+                                  label: localizations.translate(
+                                    i18.common.coreCommonMobileNumber,
+                                  ),
                                   maxLength: 10,
                                   keyboardType: TextInputType.number,
                                   validationMessages: {

@@ -225,7 +225,13 @@ class _ComplaintsInboxFilterPageState
                               ) {
                                 for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());
-                                  locality.add(e.address.boundary.toString());
+
+                                  if (e.address.locality?.boundaryCode !=
+                                      null) {
+                                    locality.add(
+                                      e.address.locality?.boundaryCode ?? "",
+                                    );
+                                  }
 
                                   var status = e.applicationStatus;
                                   uniqueStatuses.add(status);
@@ -265,18 +271,27 @@ class _ComplaintsInboxFilterPageState
                                 ),
                                 DigitDropdown<String>(
                                   formControlName: _complaintType,
-                                  label: "Complaint Type",
+                                  label: localizations.translate(
+                                    i18.complaints.complaintsTypeHeading,
+                                  ),
                                   menuItems: complaintTypes.toList(),
-                                  valueMapper: (value) => value.trim(),
+                                  valueMapper: (value) {
+                                    return localizations.translate(
+                                      value.snakeCase.toUpperCase().trim(),
+                                    );
+                                  },
                                 ),
                                 DigitDropdown<String>(
                                   formControlName: _complaintLocality,
-                                  label: "Locality",
+                                  label: localizations
+                                      .translate(i18.complaints.locality),
                                   menuItems: locality.toList(),
                                   valueMapper: (value) => value.trim(),
                                 ),
                                 LabeledField(
-                                  label: "Status",
+                                  label: localizations.translate(
+                                    i18.complaints.inboxStatusLabel,
+                                  ),
                                   child: Column(
                                     children: [
                                       ...uniqueStatuses.map((e) => Padding(
@@ -284,7 +299,7 @@ class _ComplaintsInboxFilterPageState
                                                 const EdgeInsets.only(top: 16),
                                             child: DigitCheckbox(
                                               label:
-                                                  'COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()} (${statusCount[e.index]})',
+                                                  '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
                                               value:
                                                   selectedStatuses.contains(e),
                                               onChanged: (value) {

@@ -40,6 +40,7 @@ export 'entities/transaction_type.dart';
 export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
+export 'pgr_complaints/pgr_address.dart';
 
 @MappableClass()
 abstract class DataModel {

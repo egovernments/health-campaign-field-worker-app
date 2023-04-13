@@ -135,7 +135,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                   },
                                   items: complaintTypes ?? [],
                                   itemBuilder: (item) => RadioButtonBuilder(
-                                    item.snakeCase.toUpperCase().trim(),
+                                    localizations.translate(
+                                      item.snakeCase.toUpperCase().trim(),
+                                    ),
                                   ),
                                 );
                               },
