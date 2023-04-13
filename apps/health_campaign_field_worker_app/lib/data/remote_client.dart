@@ -4,16 +4,28 @@ import '../utils/environment_config.dart';
 import 'repositories/api_interceptors.dart';
 
 class DioClient {
-  Dio init() {
-    final Dio dio = Dio()
+  late Dio _dio;
+
+  static final DioClient _instance = DioClient._internal();
+
+  factory DioClient() {
+    return _instance;
+  }
+
+  DioClient._internal() {
+    init();
+  }
+
+  Dio get dio => _dio;
+
+  void init() {
+    _dio = Dio()
+      ..interceptors.add(ApiInterceptors())
       ..options = BaseOptions(
         connectTimeout: envConfig.variables.connectTimeout,
         sendTimeout: envConfig.variables.sendTimeout,
         receiveTimeout: envConfig.variables.receiveTimeout,
-      )
-      ..interceptors.add(ApiInterceptors())
-      ..options.baseUrl = envConfig.variables.baseUrl;
-
-    return dio;
+        baseUrl: envConfig.variables.baseUrl,
+      );
   }
 }

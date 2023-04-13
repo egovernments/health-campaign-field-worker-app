@@ -1,5 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -28,13 +27,12 @@ void main() async {
   ]);
 
   final sql = LocalSqlDataStore();
-  Dio client = DioClient().init();
 
   runApp(
     MainApplication(
       appRouter: AppRouter(),
       isar: isar,
-      client: client,
+      client: DioClient().dio,
       sql: sql,
     ),
   );

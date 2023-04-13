@@ -98,7 +98,7 @@ class MainApplication extends StatelessWidget {
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
-                      return MaterialApp(
+                      return const MaterialApp(
                         home: Scaffold(
                           body: Center(
                             child: Text('Loading'),
@@ -200,6 +200,29 @@ class MainApplication extends StatelessWidget {
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
                           return MaterialApp.router(
+                            debugShowCheckedModeBanner: false,
+                            builder: (context, child) {
+                              final env = envConfig.variables.envType;
+                              if (env == EnvType.prod) {
+                                return child ?? const SizedBox.shrink();
+                              }
+
+                              return Banner(
+                                message: envConfig.variables.envType.name,
+                                location: BannerLocation.topEnd,
+                                color: () {
+                                  switch (envConfig.variables.envType) {
+                                    case EnvType.uat:
+                                      return Colors.green;
+                                    case EnvType.qa:
+                                      return Colors.pink;
+                                    default:
+                                      return Colors.red;
+                                  }
+                                }(),
+                                child: child,
+                              );
+                            },
                             supportedLocales: languages != null
                                 ? languages.map((e) {
                                     final results = e.value.split('_');
@@ -239,7 +262,7 @@ class MainApplication extends StatelessWidget {
                                   const UnauthenticatedRouteWrapper(),
                                 ],
                                 authenticated: (_, __, ___) => [
-                                  AuthenticatedRouteWrapper(),
+                                  const AuthenticatedRouteWrapper(),
                                 ],
                               ),
                             ),
