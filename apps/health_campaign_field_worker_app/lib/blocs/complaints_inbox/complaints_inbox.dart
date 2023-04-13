@@ -23,6 +23,8 @@ class ComplaintsInboxBloc
   }) {
     on(_handleLoadComplaints);
     on(_handleFilterComplaints);
+    on(_handleSaveFilters);
+    on(_handleSortComplaints);
   }
 
   FutureOr<void> _handleLoadComplaints(
@@ -53,6 +55,7 @@ class ComplaintsInboxBloc
 
     final complaints = await pgrRepository.search(
       PgrServiceSearchModel(
+        tenantId: envConfig.variables.tenantId,
         complaintAssignedTo: event.complaintAssignedTo,
         complaintStatus: event.complaintStatus,
         complaintTypeCode: event.complaintTypeCode,
@@ -60,7 +63,54 @@ class ComplaintsInboxBloc
       ),
     );
 
-    emit(state.copyWith(loading: false, complaints: complaints));
+    emit(state.copyWith(loading: false, filteredComplaints: complaints));
+  }
+
+  FutureOr<void> _handleSaveFilters(
+    ComplaintInboxSaveFiltersEvent event,
+    ComplaintsInboxEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+
+    emit(state.copyWith(
+      loading: false,
+      filters: event.filters,
+    ));
+  }
+
+  FutureOr<void> _handleSortComplaints(
+    ComplaintInboxSortComplaintsEvent event,
+    ComplaintsInboxEmitter emit,
+  ) async {
+    var listToSort = (state.filteredComplaints.isNotEmpty)
+        ? [...state.filteredComplaints]
+        : [...state.complaints];
+
+    if (event.sortOrder == "COMPLAINT_SORT_DATE_ASC") {
+      listToSort.sort(
+        (a, b) {
+          final d1 = a.auditDetails?.createdTime ?? 0;
+          final d2 = b.auditDetails?.createdTime ?? 0;
+
+          return d1.compareTo(d2);
+        },
+      );
+    } else {
+      listToSort.sort(
+        (a, b) {
+          final d1 = b.auditDetails?.createdTime ?? 0;
+          final d2 = a.auditDetails?.createdTime ?? 0;
+
+          return d1.compareTo(d2);
+        },
+      );
+    }
+
+    emit(state.copyWith(
+      loading: false,
+      complaints: listToSort,
+      filteredComplaints: listToSort,
+    ));
   }
 }
 
@@ -69,6 +119,8 @@ class ComplaintInboxState with _$ComplaintInboxState {
   const factory ComplaintInboxState.complaints({
     @Default(false) bool loading,
     @Default([]) List<PgrServiceModel> complaints,
+    @Default([]) List<PgrServiceModel> filteredComplaints,
+    PgrFilters? filters,
   }) = _ComplaintInboxState;
 }
 
@@ -77,6 +129,13 @@ class ComplaintInboxEvent with _$ComplaintInboxEvent {
   const factory ComplaintInboxEvent.loadComplaints([
     List<PgrServiceModel>? updatedModels,
   ]) = ComplaintInboxLoadComplaintsEvent;
+
+  const factory ComplaintInboxEvent.sortComplaints([
+    @Default("COMPLAINT_SORT_DATE_ASC") String sortOrder,
+  ]) = ComplaintInboxSortComplaintsEvent;
+
+  const factory ComplaintInboxEvent.saveFilters([PgrFilters? filters]) =
+      ComplaintInboxSaveFiltersEvent;
 
   const factory ComplaintInboxEvent.filterComplaints([
     String? complaintAssignedTo,

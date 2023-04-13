@@ -7,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
 class ComplaintsInboxSortPage extends LocalizedStatefulWidget {
@@ -102,43 +103,12 @@ class _ComplaintsInboxSortPageState
                                     return;
                                   }
 
-                                  state.maybeWhen(
-                                    orElse: () {
-                                      return;
-                                    },
-                                    complaints: (loading, complaintInboxItems) {
-                                      var listToSort = [
-                                        ...complaintInboxItems,
-                                      ];
-
-                                      // TODO(neel): Move this logic to Bloc
-                                      if (sortOrder ==
-                                          "COMPLAINT_SORT_DATE_ASC") {
-                                        listToSort.sort(
-                                          (a, b) {
-                                            return b
-                                                .toString()
-                                                .compareTo(a.toString());
-                                          },
-                                        );
-                                      } else {
-                                        listToSort.sort(
-                                          (a, b) {
-                                            return a
-                                                .toString()
-                                                .compareTo(b.toString());
-                                          },
-                                        );
-                                      }
-
-                                      bloc.add(
-                                        ComplaintInboxEvent.loadComplaints(
-                                          listToSort,
-                                        ),
-                                      );
-                                      router.pop();
-                                    },
+                                  bloc.add(
+                                    ComplaintInboxSortComplaintsEvent(
+                                      sortOrder,
+                                    ),
                                   );
+                                  router.pop();
                                 },
                                 child: Center(
                                   child: Text(
