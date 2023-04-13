@@ -24,22 +24,16 @@ extension ContextUtilityExtensions on BuildContext {
     );
   }
 
-  String get boundaryCode {
+  BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
 
-    return boundaryState.maybeWhen(
-      orElse: () {
-        throw AppException('Invalid project state');
-      },
-      fetched: (bondaries, boundaryMapper, selectedBoundary) {
-        if (selectedBoundary == null) {
-          throw AppException('No project is selected');
-        }
+    final selectedBoundary = boundaryState.selectedBoundary;
+    if (selectedBoundary == null) {
+      throw AppException('No boundary is selected');
+    }
 
-        return selectedBoundary;
-      },
-    );
+    return selectedBoundary;
   }
 
   String get loggedInUserUuid {

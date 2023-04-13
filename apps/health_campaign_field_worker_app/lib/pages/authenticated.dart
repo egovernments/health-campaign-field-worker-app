@@ -26,8 +26,8 @@ class AuthenticatedPageWrapper extends StatefulWidget {
 }
 
 class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
-  bool visiable = false;
-  String selectedBoundaryValue = '';
+  bool isPickerVisible = false;
+  BoundaryModel? selectedBoundaryValue;
   int random = 0;
 
   @override
@@ -38,69 +38,55 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           actions: [
             BlocConsumer<BoundaryBloc, BoundaryState>(
               listener: (ctx, state) {
-                state.maybeWhen(
-                  orElse: () {},
-                  loading: () {
-                    Loaders.showLoadingDialog(context);
-                  },
-                  fetched:
-                      (boundaryList, boundaryMapperList, selectedBoundary) {
-                    if (boundaryList.isEmpty) return;
-
-                    if (selectedBoundary == null) {
-                      setState(() {
-                        visiable = true;
-                      });
-                    }
-                  },
-                );
+                if (state.boundaryList.isNotEmpty &&
+                    state.selectedBoundary == null) {
+                  setState(() {
+                    isPickerVisible = true;
+                  });
+                }
               },
               builder: (context, boundaryState) {
-                return PortalTarget(
-                  visible: visiable,
-                  portalFollower: boundaryState.maybeWhen(
-                    orElse: () {},
-                    loading: () {
-                      Loaders.showLoadingDialog(context);
-                    },
-                    fetched:
-                        (boundaryList, boundaryMapperList, selectedBoundary) {
-                      return DigitCard(
-                        margin: const EdgeInsets.only(
-                          top: kToolbarHeight * 2,
-                        ),
-                        child: ReactiveFormBuilder(
-                          form: buildForm,
-                          builder: (context, form, child) {
-                            form.addAll(
-                              Map.fromEntries(
-                                boundaryMapperList.map(
-                                  (e) => MapEntry(
-                                    e,
-                                    FormControl<String>(),
-                                  ),
-                                ),
-                              ),
-                            );
+                final boundaryList = boundaryState.boundaryList;
+                final boundaryMapperList = boundaryState.boundaryMapperList;
+                final selectedBoundary = boundaryState.selectedBoundary;
 
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Container(
-                                color: Colors.white,
-                                height: MediaQuery.of(context).size.height / 4,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      ...boundaryMapperList
-                                          .map((e) => StatefulBuilder(
-                                                builder:
-                                                    (contex, setBuiderState) {
-                                                  return DigitDropdown<String>(
-                                                    label: e,
-                                                    menuItems: boundaryList
-                                                        .where((ele) => form
-                                                                    .control(e)
-                                                                    .value !=
+                return PortalTarget(
+                  visible: isPickerVisible,
+                  portalFollower: DigitCard(
+                    margin: const EdgeInsets.only(
+                      top: kToolbarHeight * 2,
+                    ),
+                    child: ReactiveFormBuilder(
+                      form: buildForm,
+                      builder: (context, form, child) {
+                        form.addAll(
+                          Map.fromEntries(
+                            boundaryMapperList.map(
+                              (e) => MapEntry(
+                                e,
+                                FormControl<BoundaryModel>(),
+                              ),
+                            ),
+                          ),
+                        );
+
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                            color: Colors.white,
+                            height: MediaQuery.of(context).size.height / 4,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ...boundaryMapperList
+                                      .map((e) => StatefulBuilder(
+                                            builder: (ctx, setBuiderState) {
+                                              return DigitDropdown<
+                                                  BoundaryModel>(
+                                                label: e,
+                                                menuItems: boundaryList
+                                                    .where((ele) =>
+                                                        form.control(e).value !=
                                                                 null
                                                             ? ele.label == e &&
                                                                 ele.name
@@ -114,105 +100,91 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                                           .toString(),
                                                                     )
                                                             : ele.label == e)
-                                                        .toList()
-                                                        .map((ele) =>
-                                                            ele.name.toString())
-                                                        .toList()
-                                                        .toSet()
-                                                        .toList(),
-                                                    formControlName: e,
-                                                    valueMapper: (value) =>
-                                                        value,
-                                                    onChanged: (value) {
-                                                      (boundaryMapperList
-                                                          .forEach((item) {
-                                                        if (e == item) {
-                                                          (form
-                                                              .control(item)
-                                                              .value = value);
-                                                          setBuiderState(() {
-                                                            random = random + 1;
-                                                          });
-                                                        }
+                                                    .toList(),
+                                                formControlName: e,
+                                                valueMapper: (value) =>
+                                                    value.name ?? '',
+                                                onChanged: (value) {
+                                                  (boundaryMapperList
+                                                      .forEach((item) {
+                                                    if (e == item) {
+                                                      (form
+                                                          .control(item)
+                                                          .value = value);
+                                                      setBuiderState(() {
+                                                        random = random + 1;
+                                                      });
+                                                    }
 
-                                                        if (form
-                                                                .control(item)
-                                                                .value !=
-                                                            null) {
-                                                          setState(() {
-                                                            selectedBoundaryValue =
-                                                                form
-                                                                    .control(
-                                                                      item,
-                                                                    )
-                                                                    .value;
-                                                          });
-                                                        }
-                                                      }));
-                                                    },
+                                                    if (form
+                                                            .control(item)
+                                                            .value !=
+                                                        null) {
+                                                      setState(() {
+                                                        selectedBoundaryValue =
+                                                            form
+                                                                .control(
+                                                                  item,
+                                                                )
+                                                                .value;
+                                                      });
+                                                    }
+                                                  }));
+                                                },
+                                              );
+                                            },
+                                          ))
+                                      .toList(),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 16,
+                                      bottom: 16,
+                                    ),
+                                    child: ReactiveFormConsumer(
+                                      builder: (context, form, child) {
+                                        return DigitElevatedButton(
+                                          onPressed: selectedBoundaryValue ==
+                                                  null
+                                              ? null
+                                              : () {
+                                                  context
+                                                      .read<BoundaryBloc>()
+                                                      .add(
+                                                        BoundaryEvent.select(
+                                                          selectedBoundary:
+                                                              selectedBoundaryValue!,
+                                                        ),
+                                                      );
+                                                  setState(() {
+                                                    isPickerVisible = false;
+                                                  });
+                                                  context.router.replace(
+                                                    HomeRoute(),
                                                   );
                                                 },
-                                              ))
-                                          .toList(),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                          top: 16,
-                                          bottom: 16,
-                                        ),
-                                        child: ReactiveFormConsumer(
-                                          builder: (context, form, child) =>
-                                              DigitElevatedButton(
-                                            onPressed: selectedBoundaryValue
-                                                    .trim()
-                                                    .isEmpty
-                                                ? null
-                                                : () {
-                                                    context
-                                                        .read<BoundaryBloc>()
-                                                        .add(BoundaryEvent
-                                                            .select(
-                                                          selectedBoundary:
-                                                              selectedBoundaryValue,
-                                                        ));
-                                                    setState(() {
-                                                      visiable = false;
-                                                    });
-                                                    context.router
-                                                        .replace(HomeRoute());
-                                                  },
-                                            child: const Text('Submit'),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                          child: const Text('Submit'),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
 
                   // 3. Align the "follower" relative to the "child" anywhere you like
 
                   child: TextButton(
                     onPressed: () {
-                      boundaryState.maybeWhen(
-                        fetched: (
-                          value,
-                          boundaryMapperList,
-                          selectedBoundary,
-                        ) async {
-                          setState(() {
-                            visiable = true;
-                          });
-                        },
-                        orElse: () {},
-                      );
+                      setState(() {
+                        isPickerVisible = true;
+                      });
                     },
-                    child: Text(selectedBoundaryValue),
+                    child: Text(selectedBoundaryValue?.name ?? ''),
                   ),
                 );
               },
@@ -221,7 +193,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
         ),
         drawer:
             (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
-                    visiable == false)
+                    isPickerVisible == false)
                 ? const Drawer(child: SideBar())
                 : null,
         body: MultiBlocProvider(

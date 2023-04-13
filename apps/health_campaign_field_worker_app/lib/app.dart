@@ -76,15 +76,7 @@ class MainApplication extends StatelessWidget {
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
-                  const BoundaryState.empty(),
-                  boundaryRepository: ctx
-                      .read<NetworkManager>()
-                      .repository<BoundaryModel, BoundarySearchModel>(ctx),
-                ),
-              ),
-              BlocProvider(
-                create: (ctx) => BoundaryBloc(
-                  const BoundaryState.empty(),
+                  const BoundaryState(),
                   boundaryRepository: ctx
                       .read<NetworkManager>()
                       .repository<BoundaryModel, BoundarySearchModel>(ctx),

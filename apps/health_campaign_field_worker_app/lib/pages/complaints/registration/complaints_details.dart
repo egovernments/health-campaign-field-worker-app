@@ -335,7 +335,7 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
-        value: complaintDetails?.administrativeArea ?? context.boundaryCode,
+        value: complaintDetails?.administrativeArea ?? context.boundary.code,
         validators: [Validators.required],
       ),
       _complaintRaisedFor: FormControl<String>(

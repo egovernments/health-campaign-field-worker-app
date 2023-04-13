@@ -32,8 +32,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
-        _administrativeUnitKey:
-            FormControl<String>(value: context.boundaryCode),
+        _administrativeUnitKey: FormControl<String>(
+          value: context.boundary.code,
+        ),
         _warehouseKey: FormControl<FacilityModel>(
           validators: [Validators.required],
         ),
@@ -79,7 +80,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                           footer: SizedBox(
                             height: 85,
                             child: DigitCard(
-                              margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                              margin: const EdgeInsets.only(
+                                  left: 0, right: 0, top: 10),
                               child: ReactiveFormConsumer(
                                 builder: (context, form, child) {
                                   return DigitElevatedButton(
