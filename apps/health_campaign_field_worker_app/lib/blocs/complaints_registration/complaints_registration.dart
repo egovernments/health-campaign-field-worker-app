@@ -189,6 +189,13 @@ class ComplaintsRegistrationState with _$ComplaintsRegistrationState {
     ComplaintsDetailsModel? complaintsDetailsModel,
   }) = ComplaintsRegistrationCreateState;
 
+  // TODO(neel): Add view state. You can use this state to view the complaint
+  // const factory ComplaintsRegistrationState.view({
+  //   required String complaintType,
+  //   required PgrAddressModel addressModel,
+  //   required ComplaintsDetailsModel complaintsDetailsModel,
+  // }) = ComplaintsRegistrationViewState;
+
   const factory ComplaintsRegistrationState.persisted() =
       ComplaintsRegistrationPersistedState;
 }
