@@ -20,7 +20,10 @@ class DioClient {
 
   void init() {
     _dio = Dio()
-      ..interceptors.add(ApiInterceptors())
+      ..interceptors.addAll([
+        AuthTokenInterceptor(),
+        if (envConfig.variables.envType == EnvType.dev) ApiLoggerInterceptor(),
+      ])
       ..options = BaseOptions(
         connectTimeout: envConfig.variables.connectTimeout,
         sendTimeout: envConfig.variables.sendTimeout,
