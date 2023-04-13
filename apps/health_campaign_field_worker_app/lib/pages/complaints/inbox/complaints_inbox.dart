@@ -156,16 +156,18 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
               ],
             ],
             children: [
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      localizations.translate(i18.complaints.noComplaintsExist),
+              if (inboxItems.isEmpty)
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        localizations
+                            .translate(i18.complaints.noComplaintsExist),
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           );
         },
