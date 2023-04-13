@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -49,6 +50,11 @@ class Variables {
   static const _connectTimeoutValue = 6000;
   static const _receiveTimeoutValue = 6000;
   static const _sendTimeoutValue = 6000;
+
+  static const _envName = EnvEntry(
+    'ENV_NAME',
+    'DEV',
+  );
 
   static const _connectTimeout = EnvEntry(
     'CONNECT_TIMEOUT',
@@ -120,6 +126,15 @@ class Variables {
             fallback: _sendTimeout.value,
           )) ??
           _sendTimeoutValue;
+
+  EnvType get envType {
+    final envName = useFallbackValues
+        ? _envName.value
+        : _dotEnv.get(_envName.key, fallback: _envName.value);
+
+    return EnvType.values.firstWhereOrNull((env) => env.name == envName) ??
+        EnvType.dev;
+  }
 }
 
 class EnvEntry {
@@ -127,4 +142,17 @@ class EnvEntry {
   final String value;
 
   const EnvEntry(this.key, this.value);
+}
+
+enum EnvType {
+  dev("DEV"),
+  uat("UAT"),
+  qa("QA"),
+  prod("PROD");
+
+  final String env;
+
+  const EnvType(this.env);
+
+  String get name => env;
 }
