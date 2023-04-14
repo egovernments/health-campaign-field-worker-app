@@ -9,12 +9,12 @@ APP_DIR="apps/health_campaign_field_worker_app"
 # Ask user for environment to build for
 echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
 read env
-env=${env:-ALL}
+env="${env:-ALL}"
 
 # Ask user for build config
 echo "Please select a build config (release or profile):"
 read build_config
-build_config=${build_config:-release}
+build_config="${build_config:-release}"
 
 # Build APK for specified environment(s) and build config
 if [ "$env" == "ALL" ]; then
