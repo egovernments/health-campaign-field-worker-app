@@ -29,20 +29,24 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
-    boundaryList.forEach((ele) => print(ele.code));
 
     boundaryList.sort((a, b) {
+      if (a.boundaryNum == null || b.boundaryNum == null) {
+        return 0;
+      }
+
       // Extract the numeric part of each string using a regular expression
-      RegExp regex = RegExp(r'\d+');
-      int aNum = int.tryParse(regex.stringMatch(a.code!.toString())!) ?? 0;
-      int bNum = int.tryParse(regex.stringMatch(b.code!.toString())!) ?? 0;
+      // RegExp regex = RegExp(r'\d+');
+      // int aNum = int.tryParse(regex.stringMatch(a.code!.toString()) ?? '') ?? 0;
+      // int bNum = int.tryParse(regex.stringMatch(b.code!.toString()) ?? '') ?? 0;
 
       // Compare the numeric parts
-      return aNum.compareTo(bNum);
+      return b.boundaryNum!.compareTo(a.boundaryNum!);
     });
 
     final List<String> mapperArray = [];
     for (var element in boundaryList) {
+      if (mapperArray.contains(element.label)) continue;
       mapperArray.add(element.label.toString());
     }
 

@@ -6,6 +6,7 @@ class Boundary extends Table {
   TextColumn get code => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get label => text().nullable()();
+  IntColumn get boundaryNum => integer().nullable()();
   TextColumn get latitude => text().nullable()();
   TextColumn get longitude => text().nullable()();
   TextColumn get materializedPath => text().nullable()();

@@ -2,8 +2,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
@@ -26,6 +26,7 @@ class BoundaryModel extends EntityModel {
   final String? code;
   final String? name;
   final String? label;
+  final int? boundaryNum;
   final String? latitude;
   final String? longitude;
   final String? materializedPath;
@@ -37,6 +38,7 @@ class BoundaryModel extends EntityModel {
     this.code,
     this.name,
     this.label,
+    this.boundaryNum,
     this.latitude,
     this.longitude,
     this.materializedPath,
@@ -54,6 +56,7 @@ class BoundaryModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       code: Value(code),
       name: Value(name),
+      boundaryNum: Value(boundaryNum),
       label: Value(label),
       latitude: Value(latitude),
       longitude: Value(longitude),
