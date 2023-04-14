@@ -29,7 +29,7 @@ extension ContextUtilityExtensions on BuildContext {
     final boundaryState = boundaryBloc.state;
 
     final selectedBoundary =
-        boundaryState.selectedBoundary.whereNotNull().firstOrNull;
+        boundaryState.selectedBoundary.whereNotNull().lastOrNull;
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
