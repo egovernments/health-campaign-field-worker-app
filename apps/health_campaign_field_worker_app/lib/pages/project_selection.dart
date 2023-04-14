@@ -71,7 +71,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                               code: boundary,
                             ),
                           );
-                      context.router.replace(HomeRoute());
+                      context.router.replace(
+                        const BoundarySelectionRoute(),
+                      );
                     } else {
                       DigitToast.show(
                         context,
