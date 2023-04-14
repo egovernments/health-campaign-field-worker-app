@@ -222,3 +222,14 @@ class PgrSearchKeys {
     this.complainantMobileNumber,
   });
 }
+
+@MappableClass(ignoreNull: true)
+class PgrAdditionalDetails {
+  String? supervisorName;
+  String? supervisorMobileNumber;
+
+  PgrAdditionalDetails({
+    this.supervisorName,
+    this.supervisorMobileNumber,
+  });
+}

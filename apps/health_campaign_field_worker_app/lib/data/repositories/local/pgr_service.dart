@@ -178,7 +178,10 @@ class PgrServiceLocalRepository
           doorNo: address.doorNo,
           buildingName: address.addressLine1,
           street: address.addressLine2,
-          locality: LocalityModel(name: address.boundary ?? "", code: ""),
+          locality: LocalityModel(
+            name: address.localityBoundaryName ?? "",
+            code: address.localityBoundaryCode ?? "",
+          ),
 
           /// boundary: address.boundary,
           geoLocation: GeoLocation(
