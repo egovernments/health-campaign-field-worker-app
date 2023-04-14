@@ -56,6 +56,10 @@ class ApiLoggerInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
+    super.onResponse(response, handler);
+
+    if (response.requestOptions.path.contains('boundarys')) return;
+
     try {
       AppLogger.instance.info(
         _getIndentedJson(json.encode(response.data)),
@@ -69,7 +73,6 @@ class ApiLoggerInterceptor extends Interceptor {
         title: '[RESPONSE (error)] ${response.requestOptions.path}',
       );
     }
-    super.onResponse(response, handler);
   }
 
   String _getIndentedJson(String json) {
