@@ -34,7 +34,11 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     // TODO(ajil): Fix this last check
-    return selectedBoundary.where((e) => e != '').toList().last;
+    // return selectedBoundary.where((e) => e != '').toList().last;
+    return BoundaryModel(
+      code: selectedBoundary.where((e) => e != '').toList().last,
+      name: selectedBoundary.where((e) => e != '').toList().last,
+    );
   }
 
   String get loggedInUserUuid {

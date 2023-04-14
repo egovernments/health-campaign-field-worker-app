@@ -42,220 +42,200 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
           actions: [
             BlocConsumer<BoundaryBloc, BoundaryState>(
               listener: (ctx, state) {
-                state.maybeWhen(
-                  orElse: () {},
-                  loading: () {
-                    Loaders.showLoadingDialog(context);
-                  },
-                  fetched:
-                      (boundaryList, boundaryMapperList, selectedBoundary) {
-                    if (boundaryList.isEmpty) return;
+                final boundaryList = state.boundaryList;
+                final selectedBoundary = state.selectedBoundary;
+                final boundaryMapperList = state.boundaryMapperList;
 
-                    if (selectedBoundary.isEmpty) {
-                      setState(() {
-                        visiable = true;
-                        for (var element in boundaryMapperList) {
-                          selectedBoundaryhierarchy.add('');
-                          selectedBoundaryValuehierarchy.add('');
-                        }
-                        selectedBoundaryhierarchy.add('');
-                      });
+                if (boundaryList.isEmpty) return;
+
+                if (selectedBoundary.isEmpty) {
+                  setState(() {
+                    visiable = true;
+                    for (var element in boundaryMapperList) {
+                      selectedBoundaryhierarchy.add('');
+                      selectedBoundaryValuehierarchy.add('');
                     }
-                  },
-                );
+                    selectedBoundaryhierarchy.add('');
+                  });
+                }
               },
               builder: (context, boundaryState) {
+                var i = -1;
+                final boundaryList = boundaryState.boundaryList;
+                final selectedBoundary = boundaryState.selectedBoundary;
+                final boundaryMapperList = boundaryState.boundaryMapperList;
+
                 return PortalTarget(
                   visible: visiable,
-                  portalFollower: boundaryState.maybeWhen(
-                    orElse: () {},
-                    loading: () {
-                      Loaders.showLoadingDialog(context);
-                    },
-                    fetched:
-                        (boundaryList, boundaryMapperList, selectedBoundary) {
-                      var i = -1;
+                  portalFollower: DigitCard(
+                    margin: const EdgeInsets.only(
+                      top: kToolbarHeight * 2,
+                    ),
+                    child: ReactiveFormBuilder(
+                      form: buildForm,
+                      builder: (context, form, child) {
+                        var k = -1;
+                        form.addAll(
+                          Map.fromEntries(
+                            boundaryMapperList.map(
+                              (e) {
+                                k++;
 
-                      return DigitCard(
-                        margin: const EdgeInsets.only(
-                          top: kToolbarHeight * 2,
-                        ),
-                        child: ReactiveFormBuilder(
-                          form: buildForm,
-                          builder: (context, form, child) {
-                            var k = -1;
-                            form.addAll(
-                              Map.fromEntries(
-                                boundaryMapperList.map(
-                                  (e) {
-                                    k++;
+                                return MapEntry(
+                                  e,
+                                  FormControl<String>(
+                                    value: selectedBoundary.isEmpty
+                                        ? ''
+                                        : selectedBoundary[k],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
 
-                                    return MapEntry(
-                                      e,
-                                      FormControl<String>(
-                                        value: selectedBoundary.isEmpty
-                                            ? ''
-                                            : selectedBoundary[k],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                            color: Colors.white,
+                            height: MediaQuery.of(context).size.height / 4,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ...boundaryMapperList.map((
+                                    e,
+                                  ) {
+                                    return StatefulBuilder(
+                                      builder: (contex, setBuiderState) {
+                                        i++;
 
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Container(
-                                color: Colors.white,
-                                height: MediaQuery.of(context).size.height / 4,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      ...boundaryMapperList.map((
-                                        e,
-                                      ) {
-                                        return StatefulBuilder(
-                                          builder: (contex, setBuiderState) {
-                                            i++;
-
-                                            return DigitDropdown(
-                                              label: e,
-                                              menuItems: boundaryList
-                                                  .where(
-                                                    (ele) =>
-                                                        selectedBoundaryhierarchy[
-                                                                        i] !=
-                                                                    '' ||
-                                                                i != 0
-                                                            ? ele.label == e &&
-                                                                ele.materializedPath!
-                                                                    .split('.')
-                                                                    .contains(
-                                                                      selectedBoundaryhierarchy[
-                                                                          i],
-                                                                    )
-                                                            : ele.label == e,
-                                                  )
-                                                  .toList()
-                                                  .map((ele) =>
-                                                      ele.name.toString())
-                                                  .toList()
-                                                  .toSet()
-                                                  .toList(),
-                                              formControlName: e,
-                                              valueMapper: (value) => value,
-                                              onChanged: (value) {
-                                                final filterdValue =
-                                                    boundaryList
-                                                        .where((ele) =>
-                                                            ele.name == value)
-                                                        .toList()
-                                                        .first;
-
-                                                for (var item
-                                                    in boundaryMapperList) {
-                                                  if (e == item) {
+                                        return DigitDropdown(
+                                          label: e,
+                                          menuItems: boundaryList
+                                              .where(
+                                                (ele) =>
                                                     selectedBoundaryhierarchy[
+                                                                    i] !=
+                                                                '' ||
+                                                            i != 0
+                                                        ? ele.label == e &&
+                                                            ele.materializedPath!
+                                                                .split('.')
+                                                                .contains(
+                                                                  selectedBoundaryhierarchy[
+                                                                      i],
+                                                                )
+                                                        : ele.label == e,
+                                              )
+                                              .toList()
+                                              .map((ele) => ele.name.toString())
+                                              .toList()
+                                              .toSet()
+                                              .toList(),
+                                          formControlName: e,
+                                          valueMapper: (value) => value,
+                                          onChanged: (value) {
+                                            final filterdValue = boundaryList
+                                                .where(
+                                                    (ele) => ele.name == value)
+                                                .toList()
+                                                .first;
+
+                                            for (var item
+                                                in boundaryMapperList) {
+                                              if (e == item) {
+                                                selectedBoundaryhierarchy[
+                                                    boundaryMapperList
+                                                            .indexOf(e) +
+                                                        1] = filterdValue.code!;
+
+                                                selectedBoundaryValuehierarchy[
                                                         boundaryMapperList
-                                                                .indexOf(e) +
-                                                            1] = filterdValue
-                                                        .code!;
+                                                            .indexOf(e)] =
+                                                    filterdValue.name!;
 
-                                                    selectedBoundaryValuehierarchy[
-                                                            boundaryMapperList
-                                                                .indexOf(e)] =
-                                                        filterdValue.name!;
+                                                (form.control(item).value =
+                                                    value);
+                                                setBuiderState(() {
+                                                  random = random + 1;
+                                                });
+                                              }
 
-                                                    (form.control(item).value =
-                                                        value);
-                                                    setBuiderState(() {
-                                                      random = random + 1;
-                                                    });
-                                                  }
+                                              final temp = filterdValue.code;
 
-                                                  final temp =
-                                                      filterdValue.code;
-
-                                                  if (form
-                                                          .control(
-                                                            item,
-                                                          )
-                                                          .value !=
-                                                      null) {
-                                                    setState(() {
-                                                      selectedBoundaryValue =
-                                                          filterdValue.name!;
-                                                      selectedBoundaryCode =
-                                                          temp.toString();
-                                                    });
-                                                  }
-                                                }
-                                              },
-                                            );
+                                              if (form
+                                                      .control(
+                                                        item,
+                                                      )
+                                                      .value !=
+                                                  null) {
+                                                setState(() {
+                                                  selectedBoundaryValue =
+                                                      filterdValue.name!;
+                                                  selectedBoundaryCode =
+                                                      temp.toString();
+                                                });
+                                              }
+                                            }
                                           },
                                         );
-                                      }).toList(),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                          top: 16,
-                                          bottom: 16,
-                                        ),
-                                        child: ReactiveFormConsumer(
-                                          builder: (context, form, child) =>
-                                              DigitElevatedButton(
-                                            onPressed:
-                                                selectedBoundaryValuehierarchy
-                                                        .first
-                                                        .trim()
-                                                        .isEmpty
-                                                    ? null
-                                                    : () {
-                                                        context
-                                                            .read<
-                                                                BoundaryBloc>()
-                                                            .add(BoundaryEvent
-                                                                .select(
-                                                              selectedBoundary:
-                                                                  selectedBoundaryValuehierarchy,
-                                                            ));
-                                                        setState(() {
-                                                          visiable = false;
-                                                        });
-                                                        context.router.replace(
-                                                          HomeRoute(),
-                                                        );
-                                                      },
-                                            child: const Text('Submit'),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                      },
+                                    );
+                                  }).toList(),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 16,
+                                      bottom: 16,
+                                    ),
+                                    child: ReactiveFormConsumer(
+                                      builder: (context, form, child) {
+                                        return const Offstage(
+                                          child: Text(''),
+                                        );
+
+                                        return DigitElevatedButton(
+                                          onPressed:
+                                              selectedBoundaryValuehierarchy
+                                                      .first
+                                                      .trim()
+                                                      .isEmpty
+                                                  ? null
+                                                  : () {
+                                                      context
+                                                          .read<BoundaryBloc>()
+                                                          .add(BoundaryEvent
+                                                              .select(
+                                                            selectedBoundary:
+                                                                selectedBoundaryValuehierarchy,
+                                                          ));
+                                                      setState(() {
+                                                        visiable = false;
+                                                      });
+                                                      context.router.replace(
+                                                        HomeRoute(),
+                                                      );
+                                                    },
+                                          child: const Text('Submit'),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
 
                   // 3. Align the "follower" relative to the "child" anywhere you like
 
                   child: TextButton(
                     onPressed: () {
-                      boundaryState.maybeWhen(
-                        fetched: (
-                          value,
-                          boundaryMapperList,
-                          selectedBoundary,
-                        ) async {
-                          setState(() {
-                            visiable = true;
-                          });
-                        },
-                        orElse: () {},
-                      );
+                      setState(() {
+                        visiable = true;
+                      });
                     },
                     child: Text(selectedBoundaryValue),
                   ),
