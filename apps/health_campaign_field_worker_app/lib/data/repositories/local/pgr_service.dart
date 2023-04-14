@@ -135,11 +135,11 @@ class PgrServiceLocalRepository
                     sql.pgrService.applicationStatus
                         .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
                 if (query.complainantMobileNumber != null)
-                  sql.pgrComplainant.mobileNumber
-                      .contains(query.complainantMobileNumber.toString()),
-                if (query.serviceRequestId != null)
+                  sql.pgrComplainant.userName
+                      .contains(query.complainantMobileNumber!),
+                if (query.complaintNumber != null)
                   sql.pgrService.serviceRequestId
-                      .contains(query.serviceRequestId.toString()),
+                      .contains(query.complaintNumber!),
               ],
             ),
           ))

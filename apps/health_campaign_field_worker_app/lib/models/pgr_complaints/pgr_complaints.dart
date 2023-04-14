@@ -95,6 +95,7 @@ class PgrServiceSearchModel extends EntitySearchModel {
   final String? complaintTypeCode;
   final String? locality;
   final String? complainantMobileNumber;
+  final String? complaintNumber;
   final List<PgrServiceApplicationStatus>? complaintStatus;
 
   const PgrServiceSearchModel({
@@ -107,6 +108,7 @@ class PgrServiceSearchModel extends EntitySearchModel {
     this.serviceRequestId,
     this.clientReferenceId,
     this.complainantMobileNumber,
+    this.complaintNumber,
   }) : super();
 }
 

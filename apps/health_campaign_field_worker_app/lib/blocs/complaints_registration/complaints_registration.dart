@@ -133,6 +133,7 @@ class ComplaintsRegistrationBloc
             auditDetails: auditDetails,
             uuid: event.userId,
             userName: complaintDetailsModel.complainantContactNumber,
+            type: 'EMPLOYEE',
           ),
           address: address.copyWith(
             relatedClientReferenceId: referenceId,
