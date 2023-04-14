@@ -51,6 +51,21 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject.uuid;
   }
 
+  UserRequestModel get loggedInUser {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel) {
+        return userModel;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject;
+  }
+
   NetworkManager get networkManager => read<NetworkManager>();
 
   DataRepository<D, R>

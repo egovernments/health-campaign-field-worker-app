@@ -198,6 +198,7 @@ class PgrServiceLocalRepository
         serviceRequestId: pgrService.serviceRequestId,
         active: pgrService.active,
         source: pgrService.source,
+        // TODO(neel): Parse additional details
       );
     }).toList();
   }

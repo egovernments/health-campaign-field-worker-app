@@ -7,6 +7,7 @@ import '../../blocs/boundary/boundary.dart';
 import '../../blocs/project/project.dart';
 import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
+import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
 import '../app_exception.dart';
 
