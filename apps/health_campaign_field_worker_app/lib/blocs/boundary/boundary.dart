@@ -39,8 +39,9 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       if (aBoundaryNum == null || bBoundaryNum == null) {
         return 0;
       }
+      final comparison = aBoundaryNum.compareTo(bBoundaryNum);
 
-      return aBoundaryNum.compareTo(bBoundaryNum);
+      return comparison;
     });
 
     final List<String> boundaryLabelList = [];
@@ -81,10 +82,22 @@ class BoundaryEvent with _$BoundaryEvent {
 
 @freezed
 class BoundaryState with _$BoundaryState {
+  const BoundaryState._();
+
   const factory BoundaryState({
     @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
     @Default([]) List<String> selectedBoundary,
   }) = _BoundaryState;
+
+  @override
+  String toString() {
+    return '''
+BoundaryState(
+  loading: $loading, 
+  boundaryMapperList: $boundaryMapperList, 
+  selectedBoundary: $selectedBoundary
+)''';
+  }
 }

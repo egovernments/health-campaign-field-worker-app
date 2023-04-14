@@ -189,10 +189,6 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     ),
                                     child: ReactiveFormConsumer(
                                       builder: (context, form, child) {
-                                        return const Offstage(
-                                          child: Text(''),
-                                        );
-
                                         return DigitElevatedButton(
                                           onPressed:
                                               selectedBoundaryValuehierarchy
