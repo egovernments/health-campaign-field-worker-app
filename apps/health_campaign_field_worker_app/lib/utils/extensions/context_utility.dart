@@ -28,12 +28,13 @@ extension ContextUtilityExtensions on BuildContext {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
 
-    final selectedBoundary = boundaryState.selectedBoundary;
-    if (selectedBoundary.whereNotNull().isEmpty) {
+    final selectedBoundary =
+        boundaryState.selectedBoundary.whereNotNull().firstOrNull;
+    if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
 
-    return selectedBoundary.last!;
+    return selectedBoundary;
   }
 
   String get loggedInUserUuid {
