@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../utils/utils.dart';
 
 part 'boundary.freezed.dart';
 
@@ -26,48 +27,48 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
-    boundaryList.forEach((ele) => print(ele.code));
 
     boundaryList.sort((a, b) {
+      if (a.code == null || b.code == null) {
+        return 0;
+      }
+
       // Extract the numeric part of each string using a regular expression
       RegExp regex = RegExp(r'\d+');
-      int aNum = int.tryParse(regex.stringMatch(a.code!.toString())!) ?? 0;
-      int bNum = int.tryParse(regex.stringMatch(b.code!.toString())!) ?? 0;
+      int aNum = int.tryParse(regex.stringMatch(a.code!.toString()) ?? '') ?? 0;
+      int bNum = int.tryParse(regex.stringMatch(b.code!.toString()) ?? '') ?? 0;
 
       // Compare the numeric parts
       return aNum.compareTo(bNum);
     });
 
-    final List<String> mapperArray = [];
+    final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
-      mapperArray.add(element.label.toString());
+      if (!boundaryList.contains(element)) {
+        boundaryLabelList.add(element.label.toString());
+      }
     }
 
-    emit(BoundaryFetchedState(
-      boundaryList: boundaryList,
-      boundaryMapperList: mapperArray.toSet().toList(),
-    ));
-    // handle logic for search here
+    boundaryLabelList.removeDuplicates((element) => element);
+
+    emit(
+      state.copyWith(
+        boundaryList: boundaryList,
+        boundaryMapperList: boundaryLabelList,
+        loading: false,
+      ),
+    );
   }
 
   FutureOr<void> _handleSelect(
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    state.maybeMap(
-      orElse: () {},
-      fetched: (value) {
-        emit(value.copyWith(
-          selectedBoundary: event.selectedBoundary,
-        ));
-      },
-      empty: (value) {},
-    );
-
-    // handle logic for select here
+    emit(state.copyWith(selectedBoundary: event.selectedBoundary));
   }
 }
 
@@ -83,13 +84,10 @@ class BoundaryEvent with _$BoundaryEvent {
 
 @freezed
 class BoundaryState with _$BoundaryState {
-  const factory BoundaryState.loading() = BoundaryLoadingState;
-
-  const factory BoundaryState.fetched({
+  const factory BoundaryState({
+    @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
     @Default([]) List<String> selectedBoundary,
-  }) = BoundaryFetchedState;
-
-  const factory BoundaryState.empty() = BoundaryEmptyState;
+  }) = _BoundaryState;
 }
