@@ -42,7 +42,8 @@ class PgrServiceRemoteRepository
   }
 
   FutureOr<List<PgrServiceResponseModel>> searchWithoutClientReferenceId(
-      PgrServiceSearchModel query) async {
+    PgrServiceSearchModel query,
+  ) async {
     Response response;
 
     try {
