@@ -40,6 +40,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
             persisted: (value) {
               throw const InvalidComplaintsRegistrationStateException();
             },
+            view: (value) => buildForm(value),
           );
         },
         builder: (context, form, child) => BlocBuilder<
@@ -164,15 +165,19 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
+  FormGroup buildForm(ComplaintsRegistrationState state) {
+    final complaintTypeValue = state.mapOrNull(
+      view: (value) => value.complaintType,
+    );
+
     return fb.group(<String, Object>{
       _complaintType: FormControl<String>(
         validators: [Validators.required],
-        value: state.complaintType,
+        value: complaintTypeValue,
       ),
       _otherComplaintType: FormControl<String>(
         validators: [],
-        value: state.complaintType,
+        value: complaintTypeValue,
       ),
     });
   }

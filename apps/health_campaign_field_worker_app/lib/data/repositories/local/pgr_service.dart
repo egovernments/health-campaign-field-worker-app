@@ -176,6 +176,9 @@ class PgrServiceLocalRepository
           relatedClientReferenceId: pgrService.clientReferenceId,
           tenantId: address.tenantId,
           doorNo: address.doorNo,
+          buildingName: address.addressLine1,
+          street: address.addressLine2,
+          locality: LocalityModel(name: address.boundary ?? "", code: ""),
 
           /// boundary: address.boundary,
           geoLocation: GeoLocation(

@@ -48,6 +48,7 @@ class _ComplaintsDetailsPageState
           create: (value) => buildForm(value),
           persisted: (value) =>
               throw const InvalidComplaintsRegistrationStateException(),
+          view: (value) => buildForm(value),
         ),
         builder: (_, form, __) => BlocListener<ComplaintsRegistrationBloc,
             ComplaintsRegistrationState>(
@@ -327,8 +328,10 @@ class _ComplaintsDetailsPageState
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
-    final complaintDetails = state.complaintsDetailsModel;
+  FormGroup buildForm(ComplaintsRegistrationState state) {
+    final complaintDetails = state.mapOrNull(
+      view: (value) => value.complaintsDetailsModel,
+    );
 
     return fb.group(<String, Object>{
       _dateOfComplaint: FormControl<DateTime>(

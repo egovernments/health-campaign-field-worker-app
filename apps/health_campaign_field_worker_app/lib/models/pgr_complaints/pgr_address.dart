@@ -68,7 +68,7 @@ class PgrAddressModel extends EntityModel {
       pincode: Value(pincode),
       buildingName: Value(buildingName),
       street: Value(street),
-      boundary: Value(locality?.boundaryCode),
+      boundary: Value(locality?.name),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
