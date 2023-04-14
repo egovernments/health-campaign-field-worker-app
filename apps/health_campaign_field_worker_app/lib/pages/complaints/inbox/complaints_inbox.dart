@@ -162,8 +162,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     onPressed: () async {
                       final bloc = context.read<ComplaintsInboxBloc>();
 
-                      await router
-                          .push(const ComplaintsRegistrationWrapperRoute());
+                      await router.push(
+                        ComplaintsRegistrationWrapperRoute(),
+                      );
 
                       bloc.add(
                         const ComplaintInboxLoadComplaintsEvent(),
@@ -342,7 +343,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 1,
                   child: OutlinedButton(
                     onPressed: () {
-                      //TODO(neel): Open complaint
+                      context.router.push(
+                        ComplaintsRegistrationWrapperRoute(
+                          pgrServiceModel: item,
+                        ),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
