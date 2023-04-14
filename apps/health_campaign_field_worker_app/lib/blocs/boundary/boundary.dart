@@ -20,44 +20,36 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   }) {
     on(_handleSearch);
     on(_handleSelect);
-    on(_handleToggleVisibility);
   }
 
   FutureOr<void> _handleSearch(
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
+    boundaryList.forEach((ele) => print(ele.code));
 
-    final codesList =
-        boundaryList.where((e) => e.materializedPath != null).reduce(
-      (a, b) {
-        return a.materializedPath!.length > b.materializedPath!.length ? a : b;
-      },
-    ).materializedPath;
+    boundaryList.sort((a, b) {
+      // Extract the numeric part of each string using a regular expression
+      RegExp regex = RegExp(r'\d+');
+      int aNum = int.tryParse(regex.stringMatch(a.code!.toString())!) ?? 0;
+      int bNum = int.tryParse(regex.stringMatch(b.code!.toString())!) ?? 0;
 
-    final List<String> mapperArray = [];
-
-    codesList?.split('.').forEach((e) {
-      if (e.isNotEmpty) {
-        boundaryList.forEach((element) {
-          if (element.code == e) {
-            mapperArray.add(element.label.toString());
-          }
-        });
-      }
+      // Compare the numeric parts
+      return aNum.compareTo(bNum);
     });
 
-    emit(
-      state.copyWith(
-        loading: false,
-        boundaryList: boundaryList,
-        boundaryMapperList: mapperArray.toSet().toList(),
-      ),
-    );
+    final List<String> mapperArray = [];
+    for (var element in boundaryList) {
+      mapperArray.add(element.label.toString());
+    }
+
+    emit(BoundaryFetchedState(
+      boundaryList: boundaryList,
+      boundaryMapperList: mapperArray.toSet().toList(),
+    ));
     // handle logic for search here
   }
 
@@ -65,14 +57,17 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(selectedBoundary: event.selectedBoundary));
-  }
+    state.maybeMap(
+      orElse: () {},
+      fetched: (value) {
+        emit(value.copyWith(
+          selectedBoundary: event.selectedBoundary,
+        ));
+      },
+      empty: (value) {},
+    );
 
-  FutureOr<void> _handleToggleVisibility(
-    BoundaryToggleVisibilityEvent event,
-    BoundaryEmitter emit,
-  ) async {
-    emit(state.copyWith(isPickerVisible: !state.isPickerVisible));
+    // handle logic for select here
   }
 }
 
@@ -82,20 +77,19 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required BoundaryModel selectedBoundary,
+    required List<String> selectedBoundary,
   }) = BoundarySelectEvent;
-
-  const factory BoundaryEvent.toggleVisibility() =
-      BoundaryToggleVisibilityEvent;
 }
 
 @freezed
 class BoundaryState with _$BoundaryState {
-  const factory BoundaryState({
+  const factory BoundaryState.loading() = BoundaryLoadingState;
+
+  const factory BoundaryState.fetched({
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
-    @Default(false) bool isPickerVisible,
-    @Default(false) bool loading,
-    BoundaryModel? selectedBoundary,
-  }) = _BoundaryState;
+    @Default([]) List<String> selectedBoundary,
+  }) = BoundaryFetchedState;
+
+  const factory BoundaryState.empty() = BoundaryEmptyState;
 }

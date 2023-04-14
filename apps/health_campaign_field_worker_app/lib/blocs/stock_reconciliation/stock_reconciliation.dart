@@ -48,7 +48,6 @@ class StockReconciliationBloc
     StockReconciliationCalculateEvent event,
     StockReconciliationEmitter emit,
   ) async {
-    print("Calculate");
     emit(state.copyWith(loading: true, stockModels: []));
 
     final productVariantId = state.productVariantId;

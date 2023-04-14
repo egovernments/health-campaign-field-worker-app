@@ -33,7 +33,8 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No boundary is selected');
     }
 
-    return selectedBoundary;
+    // TODO(ajil): Fix this last check
+    return selectedBoundary.where((e) => e != '').toList().last;
   }
 
   String get loggedInUserUuid {
