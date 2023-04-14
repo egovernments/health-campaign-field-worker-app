@@ -33,22 +33,19 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     );
 
     boundaryList.sort((a, b) {
-      if (a.code == null || b.code == null) {
+      final aBoundaryNum = a.boundaryNum;
+      final bBoundaryNum = b.boundaryNum;
+
+      if (aBoundaryNum == null || bBoundaryNum == null) {
         return 0;
       }
 
-      // Extract the numeric part of each string using a regular expression
-      RegExp regex = RegExp(r'\d+');
-      int aNum = int.tryParse(regex.stringMatch(a.code!.toString()) ?? '') ?? 0;
-      int bNum = int.tryParse(regex.stringMatch(b.code!.toString()) ?? '') ?? 0;
-
-      // Compare the numeric parts
-      return aNum.compareTo(bNum);
+      return aBoundaryNum.compareTo(bBoundaryNum);
     });
 
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
-      if (!boundaryList.contains(element)) {
+      if (!boundaryLabelList.contains(element.label.toString())) {
         boundaryLabelList.add(element.label.toString());
       }
     }
