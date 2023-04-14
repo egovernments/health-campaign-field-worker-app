@@ -15,6 +15,7 @@ import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
+import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
 import '../pages/checklist/checklist_preview.dart';
@@ -139,6 +140,12 @@ part 'app_router.gr.dart';
           page: ProjectSelectionPage,
           path: 'select-project',
           initial: true,
+        ),
+
+        /// Boundary Selection
+        AutoRoute(
+          page: BoundarySelectionPage,
+          path: 'select-boundary',
         ),
 
         /// Complaints Inbox
