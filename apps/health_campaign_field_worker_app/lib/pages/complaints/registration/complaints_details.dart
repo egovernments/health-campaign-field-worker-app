@@ -223,6 +223,12 @@ class _ComplaintsDetailsPageState
                                     form.control(_complaintRaisedFor).value ??
                                         "",
                                 onChanged: (changedValue) {
+                                  if (changedValue == "Another user") {
+                                    form.control(_complainantName).value = "";
+                                    form
+                                        .control(_complainantContactNumber)
+                                        .value = "";
+                                  }
                                   setState(() {
                                     form.control(_complaintRaisedFor).value =
                                         changedValue;
@@ -248,11 +254,6 @@ class _ComplaintsDetailsPageState
                                     form
                                         .control(_complainantContactNumber)
                                         .value = user.mobileNumber;
-                                  } else {
-                                    form.control(_complainantName).value = "";
-                                    form
-                                        .control(_complainantContactNumber)
-                                        .value = "";
                                   }
                                 },
                               );

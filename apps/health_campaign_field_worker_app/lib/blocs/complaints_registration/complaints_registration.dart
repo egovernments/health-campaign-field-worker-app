@@ -117,16 +117,6 @@ class ComplaintsRegistrationBloc
           createdTime: DateTime.now().millisecondsSinceEpoch,
         );
 
-        Map<String, dynamic> additionalDetail = HashMap();
-        additionalDetail.putIfAbsent(
-          "supervisorName",
-          () => complaintDetailsModel.supervisorName,
-        );
-        additionalDetail.putIfAbsent(
-          "supervisorContactNumber",
-          () => complaintDetailsModel.supervisorContactNumber,
-        );
-
         final pgrServiceModel = PgrServiceModel(
           clientReferenceId: referenceId,
           tenantId: envConfig.variables.tenantId,
@@ -148,7 +138,11 @@ class ComplaintsRegistrationBloc
             relatedClientReferenceId: referenceId,
           ),
           auditDetails: auditDetails,
-          additionalDetail: additionalDetail,
+          additionalDetail: PgrAdditionalDetails(
+            supervisorName: complaintDetailsModel.supervisorName,
+            supervisorContactNumber:
+                complaintDetailsModel.supervisorContactNumber,
+          ).toString(),
         );
 
         await pgrServiceRepository.create(pgrServiceModel);
