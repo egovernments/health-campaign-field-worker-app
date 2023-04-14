@@ -43,6 +43,7 @@ class _ComplaintsLocationPageState
           create: (value) => buildForm(value),
           persisted: (value) =>
               throw const InvalidComplaintsRegistrationStateException(),
+          view: (value) => buildForm(value),
         ),
         builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
           listener: (context, locationState) {
@@ -181,8 +182,10 @@ class _ComplaintsLocationPageState
     );
   }
 
-  FormGroup buildForm(ComplaintsRegistrationCreateState state) {
-    final addressModel = state.addressModel;
+  FormGroup buildForm(ComplaintsRegistrationState state) {
+    final addressModel = state.mapOrNull(
+      view: (value) => value.addressModel,
+    );
 
     return fb.group(<String, Object>{
       _addressLine1Key:
