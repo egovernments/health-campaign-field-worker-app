@@ -76,7 +76,7 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required List<String> selectedBoundary,
+    required List<BoundaryModel?> selectedBoundary,
   }) = BoundarySelectEvent;
 }
 
@@ -88,7 +88,7 @@ class BoundaryState with _$BoundaryState {
     @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
     @Default([]) List<String> boundaryMapperList,
-    @Default([]) List<String> selectedBoundary,
+    @Default([]) List<BoundaryModel?> selectedBoundary,
   }) = _BoundaryState;
 
   @override
