@@ -29,16 +29,11 @@ extension ContextUtilityExtensions on BuildContext {
     final boundaryState = boundaryBloc.state;
 
     final selectedBoundary = boundaryState.selectedBoundary;
-    if (selectedBoundary == null) {
+    if (selectedBoundary.whereNotNull().isEmpty) {
       throw AppException('No boundary is selected');
     }
 
-    // TODO(ajil): Fix this last check
-    // return selectedBoundary.where((e) => e != '').toList().last;
-    return BoundaryModel(
-      code: selectedBoundary.where((e) => e != '').toList().last,
-      name: selectedBoundary.where((e) => e != '').toList().last,
-    );
+    return selectedBoundary.last!;
   }
 
   String get loggedInUserUuid {
