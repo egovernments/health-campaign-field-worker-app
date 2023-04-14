@@ -226,10 +226,10 @@ class _ComplaintsInboxFilterPageState
                                 for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());
 
-                                  if (e.address.locality?.boundaryCode !=
+                                  if (e.address.locality?.name !=
                                       null) {
                                     locality.add(
-                                      e.address.locality?.boundaryCode ?? "",
+                                      e.address.locality?.name ?? "",
                                     );
                                   }
 

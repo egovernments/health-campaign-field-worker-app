@@ -124,7 +124,7 @@ class ComplaintsRegistrationBloc
           description: description,
           source: 'mobile',
           applicationStatus: PgrServiceApplicationStatus.created,
-          citizen: PgrComplainantModel(
+          user: PgrComplainantModel(
             tenantId: envConfig.variables.tenantId,
             clientReferenceId: IdGen.i.identifier,
             complaintClientReferenceId: referenceId,

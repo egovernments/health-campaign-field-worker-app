@@ -584,6 +584,8 @@ class Complaints {
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
 
   String get locality => 'COMPLAINTS_LOCALITY';
+
+  String get backToInbox => 'COMPLAINTS_BACK_TO_INBOX';
 }
 
 class ReasonForDeletion {

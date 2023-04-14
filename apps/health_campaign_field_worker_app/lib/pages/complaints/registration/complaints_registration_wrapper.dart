@@ -35,11 +35,11 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget {
             addressModel: pgrItem.address,
             complaintsDetailsModel: ComplaintsDetailsModel(
               administrativeArea: pgrItem.address.locality?.name ?? '',
-              complainantContactNumber: pgrItem.citizen.mobileNumber ?? '',
-              complainantName: pgrItem.citizen.name ?? '',
+              complainantContactNumber: pgrItem.user.mobileNumber ?? '',
+              complainantName: pgrItem.user.name ?? '',
               complaintDescription: pgrItem.description,
               complaintRaisedFor:
-                  context.loggedInUser.mobileNumber != pgrItem.citizen.mobileNumber
+                  context.loggedInUser.mobileNumber != pgrItem.user.mobileNumber
                       ? 'Another user'
                       : 'Myself',
               dateOfComplaint: pgrItem.auditDetails?.createdTime.toDateTime ??
