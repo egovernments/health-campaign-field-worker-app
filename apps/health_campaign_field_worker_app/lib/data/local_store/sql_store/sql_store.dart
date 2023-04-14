@@ -80,7 +80,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
@@ -103,6 +103,20 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           try {
             AppLogger.instance.info('Applying migration $from to $to');
             await m.createTable($PgrServiceTable(attachedDatabase));
+          } catch (e) {
+            AppLogger.instance.error(
+              title: 'migration',
+              message: e.toString(),
+            );
+          }
+        }
+
+        if (from < 3) {
+          // Create table for PgrService
+          try {
+            AppLogger.instance.info('Applying migration $from to $to');
+            await m.addColumn(address, address.localityBoundaryName);
+            await m.addColumn(address, address.localityBoundaryCode);
           } catch (e) {
             AppLogger.instance.error(
               title: 'migration',

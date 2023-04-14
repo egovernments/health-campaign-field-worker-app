@@ -72,6 +72,8 @@ class PgrAddressModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      localityBoundaryCode: Value(locality?.code),
+      localityBoundaryName: Value(locality?.name),
     );
   }
 }

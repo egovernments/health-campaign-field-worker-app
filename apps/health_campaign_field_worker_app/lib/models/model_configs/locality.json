@@ -14,8 +14,7 @@
         {
             "name": "name",
             "type": "String",
-            "includeForQuery": true,
-            "nullable": false
+            "includeForQuery": true
         }
     ]
 }
