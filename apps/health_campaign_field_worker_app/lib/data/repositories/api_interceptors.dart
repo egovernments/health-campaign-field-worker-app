@@ -21,7 +21,6 @@ class AuthTokenInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final authToken = await localSecureStore.accessToken;
-
     if (options.data is Map) {
       options.data = {
         ...options.data,
