@@ -36,6 +36,14 @@ class _ComplaintsInboxFilterPageState
     i18.complaints.assignedToAll,
     i18.complaints.assignedToSelf,
   ];
+  Map<PgrServiceApplicationStatus, bool> selected = {
+    PgrServiceApplicationStatus.created: false,
+    PgrServiceApplicationStatus.cancelled: false,
+    PgrServiceApplicationStatus.pendingAssignment: false,
+    PgrServiceApplicationStatus.rejected: false,
+    PgrServiceApplicationStatus.resolved: false,
+  };
+  List<PgrServiceApplicationStatus> statuses = [];
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +188,7 @@ class _ComplaintsInboxFilterPageState
                                   ),
                                   complaintType,
                                   locality,
-                                  selectedStatuses,
+                                  statuses,
                                 ),
                               );
 
@@ -226,18 +234,17 @@ class _ComplaintsInboxFilterPageState
                                 for (var e in complaints) {
                                   complaintTypes.add(e.serviceCode.toString());
 
-                                  if (e.address.locality?.boundaryCode !=
-                                      null) {
+                                  if (e.address.locality?.name != null) {
                                     locality.add(
-                                      e.address.locality?.boundaryCode ?? "",
+                                      e.address.locality?.name ?? "",
                                     );
                                   }
 
                                   var status = e.applicationStatus;
                                   uniqueStatuses.add(status);
-                                  if (statusCount.containsKey(status)) {
-                                    int? count = statusCount[status];
-                                    statusCount[status.index] = count! + 1;
+                                  if (statusCount.containsKey(status.index)) {
+                                    int count = statusCount[status.index] ?? 0;
+                                    statusCount[status.index] = count + 1;
                                   } else {
                                     statusCount[status.index] = 1;
                                   }
@@ -300,18 +307,18 @@ class _ComplaintsInboxFilterPageState
                                             child: DigitCheckbox(
                                               label:
                                                   '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
-                                              value:
-                                                  selectedStatuses.contains(e),
+                                              value: selected[e] ?? false,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  if (selectedStatuses
-                                                      .contains(e)) {
-                                                    selectedStatuses.remove(e);
+                                                  if (selected[e]!) {
+                                                    statuses.remove(e);
+                                                    selected[e] = false;
 
                                                     return;
                                                   }
 
-                                                  selectedStatuses.add(e);
+                                                  selected[e] = true;
+                                                  statuses.add(e);
                                                 });
                                               },
                                             ),

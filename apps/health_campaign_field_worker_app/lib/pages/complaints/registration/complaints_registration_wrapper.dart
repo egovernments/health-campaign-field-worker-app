@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,37 +26,27 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget {
         final pgrItem = pgrServiceModel;
 
         if (pgrItem != null) {
-          String? supervisorContactNumber;
-          String? supervisorName;
-
-          final additionalDetails = pgrItem.additionalDetail;
-
-          if (additionalDetails != null) {
-            if (additionalDetails.containsKey('supervisorContactNumber')) {
-              supervisorContactNumber =
-                  additionalDetails['supervisorContactNumber'];
-            }
-            if (additionalDetails.containsKey('supervisorName')) {
-              supervisorName = additionalDetails['supervisorName'];
-            }
-          }
+          final additionalDetails = PgrAdditionalDetails.fromJson(
+            jsonDecode(pgrItem.additionalDetail!),
+          );
 
           initialState = ComplaintsRegistrationViewState(
             complaintType: pgrItem.serviceCode,
             addressModel: pgrItem.address,
             complaintsDetailsModel: ComplaintsDetailsModel(
               administrativeArea: pgrItem.address.locality?.name ?? '',
-              complainantContactNumber: pgrItem.citizen.mobileNumber ?? '',
-              complainantName: pgrItem.citizen.name ?? '',
+              complainantContactNumber: pgrItem.user.mobileNumber ?? '',
+              complainantName: pgrItem.user.name ?? '',
               complaintDescription: pgrItem.description,
               complaintRaisedFor:
-                  context.loggedInUser.mobileNumber == pgrItem.citizen.name
+                  context.loggedInUser.mobileNumber != pgrItem.user.mobileNumber
                       ? 'Another user'
                       : 'Myself',
               dateOfComplaint: pgrItem.auditDetails?.createdTime.toDateTime ??
                   DateTime.now(),
-              supervisorContactNumber: supervisorContactNumber ?? '',
-              supervisorName: supervisorName ?? '',
+              supervisorContactNumber:
+                  additionalDetails.supervisorContactNumber ?? '',
+              supervisorName: additionalDetails.supervisorName ?? '',
             ),
           );
         } else {
