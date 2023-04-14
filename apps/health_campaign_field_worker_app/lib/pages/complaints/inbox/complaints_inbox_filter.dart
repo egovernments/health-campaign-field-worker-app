@@ -188,7 +188,7 @@ class _ComplaintsInboxFilterPageState
                                   ),
                                   complaintType,
                                   locality,
-                                  selectedStatuses,
+                                  statuses,
                                 ),
                               );
 
@@ -311,14 +311,14 @@ class _ComplaintsInboxFilterPageState
                                               onChanged: (value) {
                                                 setState(() {
                                                   if (selected[e]!) {
-                                                    selectedStatuses.remove(e);
+                                                    statuses.remove(e);
                                                     selected[e] = false;
 
                                                     return;
                                                   }
 
                                                   selected[e] = true;
-                                                  selectedStatuses.add(e);
+                                                  statuses.add(e);
                                                 });
                                               },
                                             ),
