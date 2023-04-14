@@ -28,7 +28,7 @@ class AuthenticatedPageWrapper extends StatefulWidget {
 
 class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
   bool visible = false;
-  String selectedBoundaryValue = '';
+  BoundaryModel? selectedBoundaryValue;
   List<BoundaryModel?> selectedBoundaryHierarchy = [];
 
   String selectedBoundaryCode = '';
@@ -108,37 +108,39 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                       builder: (contex, setBuiderState) {
                                         i++;
 
-                                        return DigitDropdown(
+                                        return DigitDropdown<BoundaryModel>(
                                           label: e,
                                           menuItems: boundaryList
                                               .where(
-                                                (ele) =>
-                                                    selectedBoundaryHierarchy[
-                                                                    i] !=
-                                                                '' ||
-                                                            i != 0
-                                                        ? ele.label == e &&
-                                                            ele.materializedPath!
-                                                                .split('.')
-                                                                .contains(
-                                                                  selectedBoundaryHierarchy[
-                                                                      i],
-                                                                )
-                                                        : ele.label == e,
+                                                (ele) {
+                                                  final code =
+                                                      selectedBoundaryHierarchy[
+                                                              i]
+                                                          ?.code;
+
+                                                  return code != null || i != 0
+                                                      ? ele.label == e &&
+                                                          ele.materializedPath!
+                                                              .split('.')
+                                                              .contains(code)
+                                                      : ele.label == e;
+                                                },
                                               )
                                               .toList()
-                                              .map((ele) => ele.name.toString())
+                                              .map((ele) => ele)
                                               .toList()
                                               .toSet()
                                               .toList(),
                                           formControlName: e,
-                                          valueMapper: (value) => value,
+                                          valueMapper: (value) =>
+                                              value.name ?? '',
                                           onChanged: (value) {
-                                            final filterdValue = boundaryList
-                                                .where(
-                                                    (ele) => ele.name == value)
-                                                .toList()
-                                                .first;
+                                            final filteredValue =
+                                                boundaryList.where(
+                                              (ele) {
+                                                return ele.code == value.code;
+                                              },
+                                            ).firstOrNull;
 
                                             for (var item
                                                 in boundaryMapperList) {
@@ -146,7 +148,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                 selectedBoundaryHierarchy[
                                                     boundaryMapperList
                                                             .indexOf(e) +
-                                                        1] = filterdValue;
+                                                        1] = filteredValue;
 
                                                 (form.control(item).value =
                                                     value);
@@ -155,7 +157,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                 });
                                               }
 
-                                              final temp = filterdValue.code;
+                                              final temp = filteredValue?.code;
 
                                               if (form
                                                       .control(
@@ -165,7 +167,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                   null) {
                                                 setState(() {
                                                   selectedBoundaryValue =
-                                                      filterdValue.name!;
+                                                      filteredValue;
                                                   selectedBoundaryCode =
                                                       temp.toString();
                                                 });
@@ -183,14 +185,19 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                     ),
                                     child: ReactiveFormConsumer(
                                       builder: (context, form, child) {
+                                        final boundaryName =
+                                            selectedBoundaryHierarchy
+                                                .whereNotNull()
+                                                .firstOrNull
+                                                ?.name;
+
+                                        final isSelected =
+                                            boundaryName != null &&
+                                                boundaryName.isNotEmpty;
+
                                         return DigitElevatedButton(
-                                          onPressed: (selectedBoundaryHierarchy
-                                                      .firstOrNull?.name
-                                                      ?.trim()
-                                                      .isEmpty ??
-                                                  true)
-                                              ? null
-                                              : () {
+                                          onPressed: isSelected
+                                              ? () {
                                                   context
                                                       .read<BoundaryBloc>()
                                                       .add(BoundaryEvent.select(
@@ -203,7 +210,8 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                                                   context.router.replace(
                                                     HomeRoute(),
                                                   );
-                                                },
+                                                }
+                                              : null,
                                           child: const Text('Submit'),
                                         );
                                       },
@@ -226,7 +234,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                         visible = true;
                       });
                     },
-                    child: Text(selectedBoundaryValue),
+                    child: Text(selectedBoundaryValue?.name ?? ''),
                   ),
                 );
               },
@@ -235,7 +243,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
         ),
         drawer:
             (context.router.currentUrl != '/${ProjectSelectionRoute().path}' &&
-                    visible == false)
+                    !visible)
                 ? const Drawer(child: SideBar())
                 : null,
         body: MultiBlocProvider(
