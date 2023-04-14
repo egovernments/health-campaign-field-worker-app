@@ -310,6 +310,8 @@ abstract class LocalRepository<D extends EntityModel,
     if (createOpLog) await createOplogEntry(entity, dataOperation);
   }
 
+  FutureOr<void> bulkCreate(List<D> entities) => throw UnimplementedError();
+
   @override
   @mustCallSuper
   FutureOr<void> update(D entity, {bool createOpLog = true}) async {
