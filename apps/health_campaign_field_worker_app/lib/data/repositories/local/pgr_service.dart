@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
@@ -204,7 +205,7 @@ class PgrServiceLocalRepository
         serviceRequestId: pgrService.serviceRequestId,
         active: pgrService.active,
         source: pgrService.source,
-        // TODO(neel): Parse additional details
+        additionalDetail: pgrService.additionalFields,
       );
     }).toList();
   }

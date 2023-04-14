@@ -126,7 +126,7 @@ class PgrServiceModel extends EntityModel {
   final bool isDeleted;
   final int rowVersion;
   final PgrAddressModel address;
-  final Map<String, dynamic>? additionalDetail;
+  final String? additionalDetail;
 
   const PgrServiceModel({
     required this.clientReferenceId,
@@ -165,7 +165,7 @@ class PgrServiceModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      additionalFields: Value(json.encode(additionalDetail)),
+      additionalFields: Value(additionalDetail),
     );
   }
 }
@@ -226,10 +226,27 @@ class PgrSearchKeys {
 @MappableClass(ignoreNull: true)
 class PgrAdditionalDetails {
   String? supervisorName;
-  String? supervisorMobileNumber;
+  String? supervisorContactNumber;
 
   PgrAdditionalDetails({
     this.supervisorName,
-    this.supervisorMobileNumber,
+    this.supervisorContactNumber,
   });
+
+  factory PgrAdditionalDetails.fromJson(Map<String, dynamic> json) {
+    return PgrAdditionalDetails(
+      supervisorName: json['supervisorName'] ?? "",
+      supervisorContactNumber: json['supervisorContactNumber'] ?? "",
+    );
+  }
+
+  @override
+  String toString() {
+    final map = {
+      "supervisorName": supervisorName,
+      "supervisorContactNumber": supervisorContactNumber,
+    };
+
+    return jsonEncode(map);
+  }
 }
