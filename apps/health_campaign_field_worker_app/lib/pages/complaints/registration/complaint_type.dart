@@ -125,15 +125,25 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                     .toList();
                                 complaintTypes?.add("Other");
 
+                                final isDisabled =
+                                    form.control(_complaintType).disabled;
+
                                 return RadioGroup<String>.builder(
                                   groupValue:
                                       form.control(_complaintType).value ?? "",
                                   onChanged: (changedValue) {
+                                    if (isDisabled) return;
+
                                     setState(() {
                                       form.control(_complaintType).value =
                                           changedValue;
                                     });
                                   },
+                                  textStyle: TextStyle(
+                                    color: isDisabled
+                                        ? theme.colorScheme.shadow
+                                        : theme.colorScheme.onBackground,
+                                  ),
                                   items: complaintTypes ?? [],
                                   itemBuilder: (item) => RadioButtonBuilder(
                                     localizations.translate(
@@ -170,10 +180,14 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
       view: (value) => value.complaintType,
     );
 
+    final bool shouldDisableForm =
+        complaintTypeValue != null && complaintTypeValue.isNotEmpty;
+
     return fb.group(<String, Object>{
       _complaintType: FormControl<String>(
         validators: [Validators.required],
         value: complaintTypeValue,
+        disabled: shouldDisableForm,
       ),
       _otherComplaintType: FormControl<String>(
         validators: [],

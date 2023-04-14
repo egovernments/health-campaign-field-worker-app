@@ -187,23 +187,35 @@ class _ComplaintsLocationPageState
       view: (value) => value.addressModel,
     );
 
+    final shouldDisableForm = addressModel != null;
+
     return fb.group(<String, Object>{
-      _addressLine1Key:
-          FormControl<String>(value: addressModel?.buildingName, validators: [
-        CustomValidator.requiredMin,
-      ]),
+      _addressLine1Key: FormControl<String>(
+        value: addressModel?.buildingName,
+        disabled: shouldDisableForm,
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.street,
+        disabled: shouldDisableForm,
         validators: [CustomValidator.requiredMin],
       ),
-      _landmarkKey:
-          FormControl<String>(value: addressModel?.landmark, validators: [
-        CustomValidator.requiredMin,
-      ]),
-      _postalCodeKey:
-          FormControl<String>(value: addressModel?.pincode, validators: [
-        CustomValidator.requiredMin,
-      ]),
+      _landmarkKey: FormControl<String>(
+        value: addressModel?.landmark,
+        disabled: shouldDisableForm,
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
+      _postalCodeKey: FormControl<String>(
+        value: addressModel?.pincode,
+        disabled: shouldDisableForm,
+        validators: [
+          CustomValidator.requiredMin,
+        ],
+      ),
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [

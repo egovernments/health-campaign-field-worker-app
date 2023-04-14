@@ -35,6 +35,7 @@ class _ComplaintsDetailsPageState
   static const _supervisorName = 'supervisorName';
   static const _supervisorContactNumber = 'supervisorContactNumber';
   static const _complaintDescription = 'complaintDescription';
+  static const _complaintDetailsForm = 'complaintDetailsForm';
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +76,10 @@ class _ComplaintsDetailsPageState
                     child: DigitElevatedButton(
                       onPressed: () async {
                         form.markAllAsTouched();
+
+                        if (form.control(_complaintDetailsForm).disabled) {
+                          router.parent()?.pop();
+                        }
 
                         if (!form.valid) return;
 
@@ -175,7 +180,11 @@ class _ComplaintsDetailsPageState
                       },
                       child: Center(
                         child: Text(
-                          localizations.translate(i18.common.coreCommonSubmit),
+                          form.control(_complaintDetailsForm).disabled
+                              ? localizations
+                                  .translate(i18.complaints.backToInbox)
+                              : localizations
+                                  .translate(i18.common.coreCommonSubmit),
                         ),
                       ),
                     ),
@@ -223,11 +232,27 @@ class _ComplaintsDetailsPageState
                                     form.control(_complaintRaisedFor).value ??
                                         "",
                                 onChanged: (changedValue) {
+                                  if (form
+                                      .control(_complaintRaisedFor)
+                                      .disabled) return;
+
+                                  if (changedValue == "Another user") {
+                                    form.control(_complainantName).value = "";
+                                    form
+                                        .control(_complainantContactNumber)
+                                        .value = "";
+                                  }
                                   setState(() {
                                     form.control(_complaintRaisedFor).value =
                                         changedValue;
                                   });
                                 },
+                                textStyle: TextStyle(
+                                  color:
+                                      form.control(_complaintRaisedFor).disabled
+                                          ? theme.colorScheme.shadow
+                                          : theme.colorScheme.onBackground,
+                                ),
                                 items: complainantRaisedFor,
                                 itemBuilder: (item) => RadioButtonBuilder(
                                   item.trim(),
@@ -248,11 +273,6 @@ class _ComplaintsDetailsPageState
                                     form
                                         .control(_complainantContactNumber)
                                         .value = user.mobileNumber;
-                                  } else {
-                                    form.control(_complainantName).value = "";
-                                    form
-                                        .control(_complainantContactNumber)
-                                        .value = "";
                                   }
                                 },
                               );
@@ -302,8 +322,10 @@ class _ComplaintsDetailsPageState
                             keyboardType: TextInputType.number,
                             validationMessages: {
                               'mobileNumber': (object) =>
-                                  localizations.translate(i18.individualDetails
-                                      .mobileNumberInvalidFormatValidationMessage),
+                                  localizations.translate(
+                                    i18.individualDetails
+                                        .mobileNumberInvalidFormatValidationMessage,
+                                  ),
                             },
                           ),
                           DigitTextFormField(
@@ -333,37 +355,50 @@ class _ComplaintsDetailsPageState
       view: (value) => value.complaintsDetailsModel,
     );
 
+    final shouldDisableForm = complaintDetails != null;
+
     return fb.group(<String, Object>{
       _dateOfComplaint: FormControl<DateTime>(
         value: complaintDetails?.dateOfComplaint ?? DateTime.now(),
+        disabled: shouldDisableForm,
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
         value: complaintDetails?.administrativeArea ?? context.boundary.name,
+        disabled: shouldDisableForm,
         validators: [Validators.required],
       ),
       _complaintRaisedFor: FormControl<String>(
         value: complaintDetails?.complaintRaisedFor,
+        disabled: shouldDisableForm,
         validators: [Validators.required],
       ),
       _complainantName: FormControl<String>(
         value: complaintDetails?.complainantName,
+        disabled: shouldDisableForm,
         validators: [Validators.required],
       ),
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
+        disabled: shouldDisableForm,
         validators: [Validators.required, CustomValidator.validMobileNumber],
       ),
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,
+        disabled: shouldDisableForm,
       ),
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
+        disabled: shouldDisableForm,
         validators: [CustomValidator.validMobileNumber],
       ),
       _complaintDescription: FormControl<String>(
         value: complaintDetails?.complaintDescription,
+        disabled: shouldDisableForm,
         validators: [Validators.required],
+      ),
+      _complaintDetailsForm: FormControl<String>(
+        disabled: shouldDisableForm,
       ),
     });
   }

@@ -95,6 +95,7 @@ class PgrServiceSearchModel extends EntitySearchModel {
   final String? complaintTypeCode;
   final String? locality;
   final String? complainantMobileNumber;
+  final String? complaintNumber;
   final List<PgrServiceApplicationStatus>? complaintStatus;
 
   const PgrServiceSearchModel({
@@ -107,13 +108,14 @@ class PgrServiceSearchModel extends EntitySearchModel {
     this.serviceRequestId,
     this.clientReferenceId,
     this.complainantMobileNumber,
+    this.complaintNumber,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
 class PgrServiceModel extends EntityModel {
   final bool active;
-  final PgrComplainantModel citizen;
+  final PgrComplainantModel user;
   final String clientReferenceId;
   final String? id;
   final String tenantId;
@@ -126,7 +128,7 @@ class PgrServiceModel extends EntityModel {
   final bool isDeleted;
   final int rowVersion;
   final PgrAddressModel address;
-  final Map<String, dynamic>? additionalDetail;
+  final String? additionalDetail;
 
   const PgrServiceModel({
     required this.clientReferenceId,
@@ -139,7 +141,7 @@ class PgrServiceModel extends EntityModel {
     this.accountId,
     required this.applicationStatus,
     this.source,
-    required this.citizen,
+    required this.user,
     this.isDeleted = false,
     this.rowVersion = 1,
     required this.address,
@@ -165,7 +167,7 @@ class PgrServiceModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      additionalFields: Value(json.encode(additionalDetail)),
+      additionalFields: Value(additionalDetail),
     );
   }
 }
@@ -226,10 +228,27 @@ class PgrSearchKeys {
 @MappableClass(ignoreNull: true)
 class PgrAdditionalDetails {
   String? supervisorName;
-  String? supervisorMobileNumber;
+  String? supervisorContactNumber;
 
   PgrAdditionalDetails({
     this.supervisorName,
-    this.supervisorMobileNumber,
+    this.supervisorContactNumber,
   });
+
+  factory PgrAdditionalDetails.fromJson(Map<String, dynamic> json) {
+    return PgrAdditionalDetails(
+      supervisorName: json['supervisorName'] ?? "",
+      supervisorContactNumber: json['supervisorContactNumber'] ?? "",
+    );
+  }
+
+  @override
+  String toString() {
+    final map = {
+      "supervisorName": supervisorName,
+      "supervisorContactNumber": supervisorContactNumber,
+    };
+
+    return jsonEncode(map);
+  }
 }

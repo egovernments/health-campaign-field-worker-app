@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
@@ -18,7 +19,7 @@ class PgrServiceLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final address = entity.address;
-    final complainant = entity.citizen;
+    final complainant = entity.user;
 
     final addressCompanion = address.companion;
     final complainantCompanion = complainant.companion;
@@ -134,11 +135,11 @@ class PgrServiceLocalRepository
                     sql.pgrService.applicationStatus
                         .isIn(query.complaintStatus?.map((e) => e.index) ?? []),
                 if (query.complainantMobileNumber != null)
-                  sql.pgrComplainant.mobileNumber
-                      .contains(query.complainantMobileNumber.toString()),
-                if (query.serviceRequestId != null)
+                  sql.pgrComplainant.userName
+                      .contains(query.complainantMobileNumber!),
+                if (query.complaintNumber != null)
                   sql.pgrService.serviceRequestId
-                      .contains(query.serviceRequestId.toString()),
+                      .contains(query.complaintNumber!),
               ],
             ),
           ))
@@ -155,7 +156,7 @@ class PgrServiceLocalRepository
         serviceCode: pgrService.serviceCode,
         description: pgrService.description,
         applicationStatus: pgrService.applicationStatus,
-        citizen: PgrComplainantModel(
+        user: PgrComplainantModel(
           complaintClientReferenceId: pgrComplainant.complaintClientReferenceId,
           clientReferenceId: pgrComplainant.clientReferenceId,
           tenantId: pgrComplainant.tenantId,
@@ -204,7 +205,7 @@ class PgrServiceLocalRepository
         serviceRequestId: pgrService.serviceRequestId,
         active: pgrService.active,
         source: pgrService.source,
-        // TODO(neel): Parse additional details
+        additionalDetail: pgrService.additionalFields,
       );
     }).toList();
   }
