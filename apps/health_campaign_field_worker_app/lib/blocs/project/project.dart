@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -276,13 +277,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         return;
       },
       fetched: (value) async {
-        for (var element in boundaries) {
-          await boundaryLocalRepository.create(
-            element,
-            createOpLog: false,
-            dataOperation: DataOperation.create,
-          );
-        }
+        final initial = DateTime.now();
+        await boundaryLocalRepository.bulkCreate(boundaries);
+        final end = DateTime.now();
+        AppLogger.instance.debug(
+          '${end.difference(initial).inMilliseconds}',
+          title: 'Boundary Duration',
+        );
         emit(value.copyWith(selectedProject: event.model));
       },
     );

@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -25,6 +27,21 @@ class BoundaryLocalRepository
     });
 
     await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<BoundaryModel> entities,
+  ) async {
+    final boundaryCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.boundary,
+        boundaryCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override
