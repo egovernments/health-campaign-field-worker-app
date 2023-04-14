@@ -6,6 +6,18 @@
 # Placeholder for app directory path
 APP_DIR="apps/health_campaign_field_worker_app"
 
+# Function to build APK based on build config
+build_apk() {
+  if [ "$build_config" == "release" ]; then
+    flutter build apk --release
+  elif [ "$build_config" == "profile" ]; then
+    flutter build apk -t lib/main_driver.dart --profile
+  else
+    echo "Invalid build config selected."
+    exit 1
+  fi
+}
+
 # Ask user for environment to build for
 echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
 read env
@@ -25,45 +37,21 @@ fi
 
 for env_option in "${env_list[@]}"
 do
-
   cd "$APP_DIR" || exit
 
   case $env_option in
     "UAT")
       cp ".env.uat" ".env"
-      if [ "$build_config" == "release" ]; then
-          flutter build apk --release
-        elif [ "$build_config" == "profile" ]; then
-          flutter build apk --profile
-        else
-          echo "Invalid build config selected."
-          exit 1
-        fi
       ;;
     "QA")
       cp ".env.qa" ".env"
-      if [ "$build_config" == "release" ]; then
-          flutter build apk --release
-        elif [ "$build_config" == "profile" ]; then
-          flutter build apk --profile
-        else
-          echo "Invalid build config selected."
-          exit 1
-        fi
       ;;
     "DEV")
       cp ".env.dev" ".env"
-      if [ "$build_config" == "release" ]; then
-          flutter build apk --release
-        elif [ "$build_config" == "profile" ]; then
-          flutter build apk --profile
-        else
-          echo "Invalid build config selected."
-          exit 1
-        fi
       ;;
   esac
 
+  build_apk
   cd ../../ || exit
 
   mkdir -p outputs
