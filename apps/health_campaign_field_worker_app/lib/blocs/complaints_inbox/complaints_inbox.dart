@@ -128,11 +128,16 @@ class ComplaintsInboxBloc
     final complaints = await pgrRepository.search(
       PgrServiceSearchModel(
         tenantId: envConfig.variables.tenantId,
-        serviceRequestId: event.complaintNumber,
+        complaintNumber: event.complaintNumber,
         complainantMobileNumber: event.mobileNumber,
       ),
     );
 
+    if (event.complaintNumber == "" && event.mobileNumber == "") {
+      emit(state.copyWith(loading: false, filteredComplaints: []));
+
+      return;
+    }
     emit(state.copyWith(loading: false, filteredComplaints: complaints));
   }
 }
