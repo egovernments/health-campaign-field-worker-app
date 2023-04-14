@@ -1,92 +1,73 @@
 #!/bin/bash
 
-# Define variables
+# Placeholder for script to run before apk generation
+./tools/install_bricks.sh
+
+# Placeholder for app directory path
 APP_DIR="apps/health_campaign_field_worker_app"
-RELEASE_DIR="release-apk"
-QA_ENV_FILE=".env.qa"
-UAT_ENV_FILE=".env.uat"
-APK_MODE="release"
-ENVIRONMENTS=()
 
-# Ask if user wants to generate APKs for all environments
-echo "Do you want to generate APKs for all environments in release mode? (y/n)"
-read -r AUTO_GENERATE
-if [[ "$AUTO_GENERATE" == "y" ]]; then
-    ENVIRONMENTS=("qa" "uat")
+# Ask user for environment to build for
+echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
+read env
+env=${env:-ALL}
+
+# Ask user for build config
+echo "Please select a build config (release or profile):"
+read build_config
+build_config=${build_config:-release}
+
+# Build APK for specified environment(s) and build config
+if [ "$env" == "ALL" ]; then
+  env_list=("UAT" "QA" "DEV")
 else
-    # Ask which environments to generate APKs for
-    while true; do
-        echo "Which environments do you want to generate APKs for? (Enter 'qa', 'uat', or 'done' to finish)"
-        read -r ENV
-        if [[ "$ENV" == "qa" || "$ENV" == "uat" ]]; then
-            ENVIRONMENTS+=("$ENV")
-        elif [[ "$ENV" == "done" ]]; then
-            break
-        else
-            echo "Error: Invalid environment specified"
-        fi
-    done
-
-    # Ask which APK mode to generate
-    echo "Which APK mode do you want to generate? (Enter 1 for Release, 2 for Profile)"
-    read -r APK_MODE_OPTION
-    if [[ "$APK_MODE_OPTION" == "2" ]]; then
-        APK_MODE="profile"
-    fi
+  env_list=("$env")
 fi
 
-# Install dependencies
-echo "Installing bricks"
-echo "-----------------"
-./tools/install_bricks.sh
-echo
+for env_option in "${env_list[@]}"
+do
 
-# Navigate to app directory
-cd "$APP_DIR" || exit
+  cd "$APP_DIR" || exit
 
-# Function to generate APKs for a specific environment
-generate_apk() {
-    # Set environment file
-    if [ "$1" == "qa" ]; then
-        ENV_FILE="$QA_ENV_FILE"
-    elif [ "$1" == "uat" ]; then
-        ENV_FILE="$UAT_ENV_FILE"
-    else
-        echo "Error: Invalid environment specified"
-        exit 1
-    fi
+  case $env_option in
+    "UAT")
+      cp ".env.uat" ".env"
+      if [ "$build_config" == "release" ]; then
+          flutter build apk --release
+        elif [ "$build_config" == "profile" ]; then
+          flutter build apk --profile
+        else
+          echo "Invalid build config selected."
+          exit 1
+        fi
+      ;;
+    "QA")
+      cp ".env.qa" ".env"
+      if [ "$build_config" == "release" ]; then
+          flutter build apk --release
+        elif [ "$build_config" == "profile" ]; then
+          flutter build apk --profile
+        else
+          echo "Invalid build config selected."
+          exit 1
+        fi
+      ;;
+    "DEV")
+      cp ".env.dev" ".env"
+      if [ "$build_config" == "release" ]; then
+          flutter build apk --release
+        elif [ "$build_config" == "profile" ]; then
+          flutter build apk --profile
+        else
+          echo "Invalid build config selected."
+          exit 1
+        fi
+      ;;
+  esac
 
-    # Copy environment file
-    echo "Creating env configs"
-    echo "--------------------"
-    cp -fr "$ENV_FILE" .env || { echo "Error: Unable to copy environment file"; exit 1; }
-    echo
+  cd ../../ || exit
 
-    # Generate APK
-    echo "Generating $1 APK"
-    echo "-----------------"
-    flutter build apk --$APK_MODE || { echo "Error: Unable to generate APK"; exit 1; }
-    echo
-
-    # Copy APK to release folder
-    echo "Copying APK to release folder"
-    echo "----------------------------"
-    cp -fr "build/app/outputs/flutter-apk/app-release.apk" "$RELEASE_DIR/apk-$1.apk" || { echo "Error: Unable to copy APK"; exit 1; }
-    echo
-}
-
-# Create release folder
-echo "Creating release folder"
-echo "-----------------------"
-mkdir -p "$RELEASE_DIR" || { echo "Error: Unable to create release folder"; exit 1; }
-echo
-
-# Generate APKs for selected environments
-for ENVIRONMENT in "${ENVIRONMENTS[@]}"; do
-    yes | head -n 1 | generate_apk "$ENVIRONMENT"
+  mkdir -p outputs
+  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 done
 
-# Open release folder
-echo "Opening release folder"
-echo "----------------------"
-open "$RELEASE_DIR"
+echo "APK generation complete."
