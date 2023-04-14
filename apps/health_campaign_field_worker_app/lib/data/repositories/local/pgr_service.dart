@@ -19,7 +19,7 @@ class PgrServiceLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final address = entity.address;
-    final complainant = entity.citizen;
+    final complainant = entity.user;
 
     final addressCompanion = address.companion;
     final complainantCompanion = complainant.companion;
@@ -156,7 +156,7 @@ class PgrServiceLocalRepository
         serviceCode: pgrService.serviceCode,
         description: pgrService.description,
         applicationStatus: pgrService.applicationStatus,
-        citizen: PgrComplainantModel(
+        user: PgrComplainantModel(
           complaintClientReferenceId: pgrComplainant.complaintClientReferenceId,
           clientReferenceId: pgrComplainant.clientReferenceId,
           tenantId: pgrComplainant.tenantId,

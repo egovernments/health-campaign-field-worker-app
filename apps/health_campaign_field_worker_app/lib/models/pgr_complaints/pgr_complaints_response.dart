@@ -57,7 +57,7 @@ class PgrComplainantResponseModel extends EntityModel {
 @MappableClass(ignoreNull: true)
 class PgrServiceResponseModel extends EntityModel {
   final bool? active;
-  final PgrComplainantResponseModel? citizen;
+  final PgrComplainantResponseModel? user;
   final String? id;
   final String? tenantId;
   final String? serviceCode;
@@ -79,7 +79,7 @@ class PgrServiceResponseModel extends EntityModel {
     this.accountId,
     this.applicationStatus,
     this.source,
-    this.citizen,
+    this.user,
     this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,

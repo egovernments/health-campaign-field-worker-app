@@ -591,7 +591,7 @@ class NetworkManager {
                       serviceRequestId: e.serviceRequestId,
                       applicationStatus: e.applicationStatus ??
                           PgrServiceApplicationStatus.pendingAssignment,
-                      citizen: PgrComplainantModel(
+                      user: PgrComplainantModel(
                         clientReferenceId: '',
                         tenantId: '',
                         complaintClientReferenceId: e.serviceRequestId ?? '',
