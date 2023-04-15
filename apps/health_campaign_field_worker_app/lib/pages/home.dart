@@ -330,7 +330,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ..where((_) => const Constant(true));
               count += await selector.go();
             }
-            debugPrint('deleted: $count');
 
             await isar.writeTxn(() async => await isar.opLogs.clear());
           },

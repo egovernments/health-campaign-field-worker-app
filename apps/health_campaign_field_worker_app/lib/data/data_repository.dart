@@ -251,8 +251,6 @@ abstract class RemoteRepository<D extends EntityModel,
       String? errorResponse;
       String? requestBody;
 
-      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
-
       try {
         errorResponse = encoder.convert(
           error.response?.data,
@@ -275,10 +273,6 @@ abstract class RemoteRepository<D extends EntityModel,
       AppLogger.instance.error(
         message: '${error.error}\n$errorResponse',
         title: '${runtimeType.toString()} | DIO_ERROR',
-      );
-
-      debugPrint(
-        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
       );
 
       rethrow;

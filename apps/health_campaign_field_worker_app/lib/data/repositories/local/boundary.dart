@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -35,7 +34,6 @@ class BoundaryLocalRepository
     List<BoundaryModel> entities,
   ) async {
     final boundaryCompanions = entities.map((e) => e.companion).toList();
-    debugPrint(entities.map((e) => e.boundaryNum).join(', '));
 
     await sql.batch((batch) async {
       batch.insertAll(
