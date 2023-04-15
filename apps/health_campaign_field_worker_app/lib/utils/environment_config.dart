@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 EnvironmentConfiguration envConfig = EnvironmentConfiguration.instance;
@@ -25,9 +25,11 @@ class EnvironmentConfiguration {
       await _dotEnv.load();
       _variables = Variables(dotEnv: _dotEnv);
     } catch (error) {
-      debugPrint(
-        '\n.ENV: Error while accessing .env file. Using fallback values\n',
+      AppLogger.instance.error(
+        title: runtimeType.toString(),
+        message: 'Error while accessing .env file. Using fallback values',
       );
+
       _variables = Variables(useFallbackValues: true, dotEnv: _dotEnv);
     } finally {
       _initialized = true;

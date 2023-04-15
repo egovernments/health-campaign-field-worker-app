@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
@@ -77,23 +77,32 @@ class MdmsRepository {
       return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
-    } catch (e) {
-      debugPrint('MDMS.dart: $e');
+    } on DioError catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
       rethrow;
     }
   }
 
   Future<PGRServiceDefinitions> searchPGRServiceDefinitions(
-      String apiEndPoint,
-      Map<String, dynamic> body,
-      ) async {
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
       return PGRServiceDefinitions.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
-    } catch (_) {
+    } on DioError catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
       rethrow;
     }
   }

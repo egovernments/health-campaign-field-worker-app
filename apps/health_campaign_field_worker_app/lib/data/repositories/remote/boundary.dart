@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
@@ -144,6 +143,7 @@ class BoundaryRemoteRepository
     }
   }
 
+  @override
   FutureOr<T> executeFuture<T>({
     required Future<T> Function() future,
   }) async {
@@ -154,8 +154,6 @@ class BoundaryRemoteRepository
 
       String? errorResponse;
       String? requestBody;
-
-      debugPrint('${'-' * 40} ${runtimeType.toString()} ${'-' * 40}');
 
       try {
         errorResponse = encoder.convert(
@@ -180,10 +178,6 @@ class BoundaryRemoteRepository
       AppLogger.instance.error(
         message: '${error.error}\n$errorResponse',
         title: '${runtimeType.toString()} | DIO_ERROR',
-      );
-
-      debugPrint(
-        '${'-' * 40}${'-' * (runtimeType.toString().length + 2)}${'-' * 40}',
       );
 
       rethrow;
