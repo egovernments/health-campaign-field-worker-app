@@ -1,9 +1,8 @@
 // Generated using mason. Do not modify by hand
 
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:digit_components/digit_components.dart';
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 
 import '../../../models/data_model.dart';
@@ -21,174 +20,108 @@ class BoundaryRemoteRepository
   @override
   FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
     Response response;
-    try {
-      response = await executeFuture(
-        future: () async {
-          return await dio.post(
-            searchPath,
-            queryParameters: {
-              'offset': 0,
-              'limit': 100,
-              'tenantId': envConfig.variables.tenantId,
-              ...query.toMap(),
-            },
-            data: {},
-          );
-        },
-      );
 
-      final responseMap = (response.data);
-
-      if (responseMap is! Map<String, dynamic>) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
+    response = await executeFuture(
+      future: () async {
+        return await dio.post(
+          searchPath,
+          queryParameters: {
+            'offset': 0,
+            'limit': 100,
+            'tenantId': envConfig.variables.tenantId,
+            ...query.toMap(),
+          },
+          data: {},
         );
-      }
+      },
+    );
 
-      if (!responseMap.containsKey(
+    final responseMap = (response.data);
+
+    if (responseMap is! Map<String, dynamic>) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    if (!responseMap.containsKey(
+      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+          ? entityNamePlural
+          : entityName,
+    )) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    final entityResponse = await responseMap[
         (isSearchResponsePlural || entityName == 'ServiceDefinition')
             ? entityNamePlural
-            : entityName,
-      )) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
-
-      final entityResponse = await responseMap[
-          (isSearchResponsePlural || entityName == 'ServiceDefinition')
-              ? entityNamePlural
-              : entityName];
-      if (entityResponse is! List) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
-
-      List<BoundaryModel> boundaryModelList = [];
-
-      processJsonArray(
-        List<Map<String, dynamic>> jsonArray,
-        int level,
-        String code,
-        String unchanged,
-      ) {
-        for (final element in jsonArray) {
-          final r = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
-
-          code = '$code.${r.code}';
-
-          if (List.castFrom(element['children']).isNotEmpty) {
-            element['materializedPath'] = code;
-
-            boundaryModelList.add(
-              Mapper.fromMap<BoundaryModel>(
-                Map.castFrom(element),
-              ),
-            );
-
-            final childR = Mapper.fromMap<BoundaryModel>(Map.castFrom(element));
-
-            final List codeList = code.split('.');
-            codeList.removeLast();
-
-            code = codeList.join('.');
-
-            processJsonArray(
-              List.castFrom(element['children']),
-              level + 1,
-              '$code.${childR.code}',
-              unchanged,
-            );
-          } else if (List.castFrom(element['children']).isEmpty) {
-            element['materializedPath'] = code;
-
-            boundaryModelList.add(
-              Mapper.fromMap<BoundaryModel>(
-                Map.castFrom(element),
-              ),
-            );
-          }
-        }
-      }
-
-      final entityList = entityResponse.whereType<Map<String, dynamic>>();
-
-      List<BoundaryModel> boundaryList =
-          List.castFrom(entityList.first['boundary']).map((e) {
-        int level = 0;
-        processJsonArray(
-          List.castFrom(e['children']),
-          level,
-          Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString(),
-          Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString(),
-        );
-
-        e['materializedPath'] =
-            Mapper.fromMap<BoundaryModel>(Map.castFrom(e)).code.toString();
-        boundaryModelList.add(Mapper.fromMap<BoundaryModel>(Map.castFrom(e)));
-
-        return Mapper.fromMap<BoundaryModel>(Map.castFrom(e));
-      }).toList();
-
-      return boundaryModelList;
-    } on DioError catch (e) {
-      rethrow;
+            : entityName];
+    if (entityResponse is! List) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
     }
+
+    final entityList = entityResponse.whereType<Map<String, dynamic>>();
+
+    final boundaryRoot = entityList.firstOrNull;
+
+    if (boundaryRoot == null) return [];
+    if (!boundaryRoot.containsKey('boundary')) return [];
+
+    final boundaryList = entityList.first['boundary'];
+
+    /// We can combine both into one function. But better to keep it separate
+    /// to help with readability
+    List<BoundaryModel> boundaryModelList = _castToBoundaryModel(
+      List.castFrom(boundaryList),
+    );
+    boundaryModelList = _flattenBoundaryMap(boundaryModelList);
+
+    return boundaryModelList;
   }
 
-  @override
-  FutureOr<T> executeFuture<T>({
-    required Future<T> Function() future,
-  }) async {
-    try {
-      return await future();
-    } on DioError catch (error) {
-      const encoder = JsonEncoder.withIndent('  ');
-
-      String? errorResponse;
-      String? requestBody;
-
-      try {
-        errorResponse = encoder.convert(
-          error.response?.data,
-        );
-      } catch (_) {
-        errorResponse = 'Could not parse error';
-      }
-
-      try {
-        requestBody =
-            encoder.convert(error.requestOptions.data['TenantBoundary'][0]);
-      } catch (_) {
-        requestBody = 'Could not parse request body';
-      }
-
-      AppLogger.instance.debug(
-        requestBody,
-        title: runtimeType.toString(),
+  /// Flattens the boundary map
+  ///  - Adds the materialized path to each boundary
+  ///  - Removes the children from the boundary
+  List<BoundaryModel> _flattenBoundaryMap(
+    List<BoundaryModel> boundaryList, {
+    BoundaryModel? parent,
+  }) {
+    List<BoundaryModel> boundaryModelList = [];
+    for (final e in boundaryList) {
+      final materializedPath = parent?.materializedPath?.split('.') ?? [];
+      final boundary = e.copyWith(
+        materializedPath: [...materializedPath, e.code ?? ''].join('.'),
       );
 
-      AppLogger.instance.error(
-        message: '${error.error}\n$errorResponse',
-        title: '${runtimeType.toString()} | DIO_ERROR',
-      );
-
-      rethrow;
-    } catch (error) {
-      AppLogger.instance.error(
-        message: error.toString(),
-        title: runtimeType.toString(),
-      );
-
-      rethrow;
+      boundaryModelList.add(boundary.copyWith(children: []));
+      boundaryModelList.addAll(_flattenBoundaryMap(
+        boundary.children,
+        parent: boundary,
+      ));
     }
+
+    return boundaryModelList;
+  }
+
+  /// Casts the list of [Map] to [BoundaryModel]
+  List<BoundaryModel> _castToBoundaryModel(
+    Iterable<Map<String, dynamic>> entityList,
+  ) {
+    final boundaryModelList = entityList.map((e) {
+      return Mapper.fromMap<BoundaryModel>(e);
+    }).toList();
+
+    return boundaryModelList;
   }
 
   @override

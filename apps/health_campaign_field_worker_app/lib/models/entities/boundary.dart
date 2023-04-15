@@ -33,6 +33,7 @@ class BoundaryModel extends EntityModel {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final List<BoundaryModel> children;
 
   BoundaryModel({
     this.code,
@@ -45,6 +46,7 @@ class BoundaryModel extends EntityModel {
     this.isDeleted,
     this.boundaryNum,
     this.rowVersion,
+    this.children = const [],
     super.auditDetails,
   }) : super();
 
