@@ -50,7 +50,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
 
                 if (selectedBoundary.isEmpty) {
                   setState(() {
-                    visible = true;
+                    visible = false;
                     for (var _ in boundaryMapperList) {
                       selectedBoundaryHierarchy.add(null);
                     }
@@ -231,7 +231,7 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        visible = true;
+                        visible = false;
                       });
                     },
                     child: Text(selectedBoundaryValue?.name ?? ''),
