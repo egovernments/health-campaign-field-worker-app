@@ -157,8 +157,6 @@ class StockReconciliationState with _$StockReconciliationState {
       (stockIssued + stockDamaged + stockLost);
 
   num _getQuantityCount(Iterable<StockModel> stocks) {
-    print(stocks);
-
     return stocks.fold<num>(
       0.0,
       (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,

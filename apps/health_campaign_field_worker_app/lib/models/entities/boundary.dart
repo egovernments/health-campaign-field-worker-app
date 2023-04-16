@@ -1,4 +1,3 @@
-// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
@@ -67,5 +66,15 @@ class BoundaryModel extends EntityModel {
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
     );
+  }
+
+  List<String> get materializedPathList {
+    if (materializedPath == null || materializedPath!.isEmpty) {
+      throw ArgumentError(
+        'materializedPath cannot be null or empty. code: $code',
+      );
+    }
+
+    return materializedPath!.split('.');
   }
 }

@@ -50,11 +50,15 @@ class BoundaryLocalRepository
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.code != null)
-              sql.boundary.materializedPath.like('%${query.code}%'),
+              sql.boundary.materializedPath.like('${query.code}%'),
+            sql.boundary.materializedPath.isNotNull(),
+            sql.boundary.materializedPath.isNotIn(['']),
+            sql.boundary.code.isNotNull(),
+            sql.boundary.code.isNotIn(['']),
           ])))
         .get();
 
-    return results.map((e) {
+    final queriedBoundaries = results.map((e) {
       final data = e.readTable(sql.boundary);
 
       return BoundaryModel(
@@ -65,8 +69,12 @@ class BoundaryLocalRepository
         label: data.label,
         boundaryNum: data.boundaryNum,
         materializedPath: data.materializedPath,
+        latitude: data.latitude,
+        longitude: data.longitude,
       );
     }).toList();
+
+    return queriedBoundaries;
   }
 
   @override

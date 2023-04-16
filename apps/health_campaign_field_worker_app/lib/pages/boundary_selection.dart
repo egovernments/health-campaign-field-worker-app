@@ -32,8 +32,6 @@ class BoundarySelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('------------------------------------');
-
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
