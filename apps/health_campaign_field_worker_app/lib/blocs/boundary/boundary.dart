@@ -48,7 +48,11 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     emit(
       state.copyWith(
         boundaryList: boundaryList,
-        boundaryMapperList: boundaryLabelList,
+        selectedBoundaryMap: Map.fromEntries(
+          boundaryLabelList.map(
+            (e) => MapEntry(e, null),
+          ),
+        ),
         loading: false,
       ),
     );
@@ -58,7 +62,28 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(selectedBoundary: event.selectedBoundary));
+    final currentValue = state.selectedBoundaryMap[event.label];
+    if (currentValue?.code == event.selectedBoundary.code) return;
+
+    bool hasChanged = false;
+    final selectedBoundaryMap = Map.fromEntries(
+      state.selectedBoundaryMap.entries.map(
+        (e) {
+          if (hasChanged) {
+            return MapEntry(e.key, null);
+          }
+          if (e.key == event.label) {
+            hasChanged = true;
+
+            return MapEntry(e.key, event.selectedBoundary);
+          }
+
+          return e;
+        },
+      ),
+    );
+
+    emit(state.copyWith(selectedBoundaryMap: selectedBoundaryMap));
   }
 }
 
@@ -68,7 +93,8 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required List<BoundaryModel?> selectedBoundary,
+    required String label,
+    required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
 }
 
@@ -79,17 +105,15 @@ class BoundaryState with _$BoundaryState {
   const factory BoundaryState({
     @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
-    @Default([]) List<String> boundaryMapperList,
-    @Default([]) List<BoundaryModel?> selectedBoundary,
+    @Default({}) Map<String, BoundaryModel?> selectedBoundaryMap,
   }) = _BoundaryState;
 
   @override
   String toString() {
     return '''
 BoundaryState(
-  loading: $loading, 
-  boundaryMapperList: $boundaryMapperList, 
-  selectedBoundary: $selectedBoundary
+  loading: $loading,
+  selectedBoundaryMap: $selectedBoundaryMap,
 )''';
   }
 }

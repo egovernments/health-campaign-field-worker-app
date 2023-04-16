@@ -4,6 +4,7 @@ export './atoms/digit_date_form_picker.dart';
 export './atoms/digit_dropdown.dart';
 export './atoms/digit_integer_form_picker.dart';
 export './atoms/digit_outline_icon_button.dart';
+export './atoms/digit_reactive_dropdown.dart';
 export './atoms/digit_table_item.dart';
 export './atoms/digit_table_item_title.dart';
 export './atoms/digit_text_form_field.dart';

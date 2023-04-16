@@ -276,7 +276,7 @@ class _ComplaintsInboxFilterPageState
                                     );
                                   },
                                 ),
-                                DigitDropdown<String>(
+                                DigitReactiveDropdown<String>(
                                   formControlName: _complaintType,
                                   label: localizations.translate(
                                     i18.complaints.complaintsTypeHeading,
@@ -288,7 +288,7 @@ class _ComplaintsInboxFilterPageState
                                     );
                                   },
                                 ),
-                                DigitDropdown<String>(
+                                DigitReactiveDropdown<String>(
                                   formControlName: _complaintLocality,
                                   label: localizations
                                       .translate(i18.complaints.locality),

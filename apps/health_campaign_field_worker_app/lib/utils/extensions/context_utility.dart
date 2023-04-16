@@ -28,8 +28,11 @@ extension ContextUtilityExtensions on BuildContext {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
 
-    final selectedBoundary =
-        boundaryState.selectedBoundary.whereNotNull().lastOrNull;
+    final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+        .where((element) => element.value != null)
+        .lastOrNull
+        ?.value;
+
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
