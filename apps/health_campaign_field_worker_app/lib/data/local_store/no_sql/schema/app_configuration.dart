@@ -39,6 +39,9 @@ class AppConfiguration {
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
 
+  @Name('CALL_SUPPORT')
+  late List<CallSupportList>? callSupportOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -93,6 +96,12 @@ class ChecklistTypes {
 
 @embedded
 class TransportTypes {
+  late String name;
+  late String code;
+}
+
+@embedded
+class CallSupportList {
   late String name;
   late String code;
 }

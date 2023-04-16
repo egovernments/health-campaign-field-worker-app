@@ -21,6 +21,7 @@ class ApiInterceptors extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     AppLogger.instance.info(options.path, title: 'onRequest');
+    print(localSecureStore);
     final authToken = await localSecureStore.accessToken;
 
     if (options.data is Map) {
@@ -44,17 +45,6 @@ class ApiInterceptors extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    try {
-      AppLogger.instance.info(
-        response.data.toString(),
-        title: 'onResponse: ${response.requestOptions.path}',
-      );
-    } catch (error) {
-      AppLogger.instance.info(
-        response.statusCode.toString(),
-        title: 'onResponse: ${response.requestOptions.path}',
-      );
-    }
     super.onResponse(response, handler);
   }
 }

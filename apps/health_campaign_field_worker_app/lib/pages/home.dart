@@ -7,20 +7,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
+import 'package:path/path.dart';
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../models/app_config/app_config_model.dart';
 import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart'
+    as appConfig;
 import '../widgets/progress_indicator/progress_indicator.dart';
 
 class HomePage extends LocalizedStatefulWidget {
@@ -73,8 +80,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       onTap: () =>
                           {overlayWrapperkey.currentState?.onSelectedTap()},
                       key: walkthroughWidgetStateList[index + 1],
-                      description:
-                          '${_getItems(context).elementAt(index).label}_HELP',
+                      description: localizations.translate(
+                        '${_getItems(context).elementAt(index).label}_HELP',
+                      ),
                       overlayWidget: overlayWidgetStateList[index + 1],
                       titleAlignment: TextAlign.center,
                       child: _getItems(context).elementAt(index),
@@ -103,7 +111,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   overlayWrapperkey.currentState?.onSelectedTap(),
                 },
                 key: walkthroughWidgetStateList[0],
-                description: i18.home.progressIndicatorHelp,
+                description:
+                    localizations.translate(i18.home.progressIndicatorHelp),
                 overlayWidget: overlayWidgetStateList[0],
                 titleAlignment: TextAlign.center,
                 child: ProgressIndicatorContainer(
@@ -354,6 +363,42 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.call,
           label: i18.home.callbackLabel,
+          onPressed: () => DigitActionDialog.show(
+            context,
+            widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
+              builder: (context, state) {
+                if (state is! AppInitialized) {
+                  return const Offstage();
+                }
+
+                final supportList = state.appConfiguration.callSupportOptions ??
+                    <appConfig.CallSupportList>[];
+
+                return ActionCard(
+                  items: supportList
+                      .map(
+                        (e) => ActionCardModel(
+                          action: () async {
+                            if (!await launchUrl(
+                              Uri(
+                                scheme: 'tel',
+                                path: e.code,
+                              ),
+                              mode: LaunchMode.externalApplication,
+                            )) {
+                              throw Exception('Could not launch $url');
+                            }
+                            ;
+                          },
+                          icon: Icons.call,
+                          label: e.name,
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          ),
         ),
         HomeItemCard(
           icon: Icons.table_chart,

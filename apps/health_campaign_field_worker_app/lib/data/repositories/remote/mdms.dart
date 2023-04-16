@@ -102,6 +102,19 @@ class MdmsRepository {
 
         return languages;
       }).toList();
+      final List<CallSupportList> callSupportList = [];
+      if (element.callSupportOptions != null) {
+        element.callSupportOptions!.map((element) {
+          final callnumber = CallSupportList()
+            ..name = element.name
+            ..code = element.code;
+
+          return callnumber;
+        }).toList();
+      }
+      callSupportList.add(CallSupportList()
+        ..code = '+91-9686151676'
+        ..name = 'Support desk-1');
 
       final List<GenderOptions> genderOptions =
           element.genderOptions.map((element) {
@@ -167,7 +180,7 @@ class MdmsRepository {
       appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.transportTypes = transportTypes;
       appConfiguration.backendInterface = backendInterface;
-
+      appConfiguration.callSupportOptions = callSupportList;
       appConfiguration.languages = languageList;
     });
 
