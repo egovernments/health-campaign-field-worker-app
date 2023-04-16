@@ -1,4 +1,4 @@
-import 'package:digit_components/widgets/atoms/digit_dropdown.dart';
+import 'package:digit_components/widgets/atoms/digit_reactive_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
@@ -202,7 +202,7 @@ void main() {
 
         expect(
           find.widgetWithText(
-            DigitDropdown,
+            DigitReactiveDropdown,
             i18.individualDetails.idTypeLabelText,
           ),
           findsOneWidget,
@@ -226,7 +226,7 @@ void main() {
 
         expect(
           find.widgetWithText(
-            DigitDropdown,
+            DigitReactiveDropdown,
             i18.individualDetails.genderLabelText,
           ),
           findsOneWidget,
