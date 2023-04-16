@@ -32,17 +32,9 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       BoundarySearchModel(code: event.code),
     );
 
-    boundaryList.sort((a, b) {
-      final aBoundaryNum = a.boundaryNum;
-      final bBoundaryNum = b.boundaryNum;
-
-      if (aBoundaryNum == null || bBoundaryNum == null) {
-        return 0;
-      }
-      final comparison = aBoundaryNum.compareTo(bBoundaryNum);
-
-      return comparison;
-    });
+    boundaryList.sort((boundary1, boundary2) => boundary1
+        .materializedPathList.length
+        .compareTo(boundary2.materializedPathList.length));
 
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
