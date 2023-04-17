@@ -342,11 +342,9 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 1,
                   child: OutlinedButton(
                     onPressed: () {
-                      context.router.push(
-                        ComplaintsRegistrationWrapperRoute(
-                          pgrServiceModel: item,
-                        ),
-                      );
+                      context.router.push(ComplaintsDetailsViewRoute(
+                        complaint: item,
+                      ));
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
