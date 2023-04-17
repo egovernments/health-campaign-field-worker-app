@@ -586,6 +586,16 @@ class Complaints {
   String get locality => 'COMPLAINTS_LOCALITY';
 
   String get backToInbox => 'COMPLAINTS_BACK_TO_INBOX';
+
+  String get acknowledgementAction => 'COMPLAINTS_ACKNOWLEDGEMENT_ACTION';
+
+  String get acknowledgementDescription => 'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
+
+  String get acknowledgementLabel => 'COMPLAINTS_ACKNOWLEDGEMENT_LABEL';
+
+  String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
+
+  String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 }
 
 class ReasonForDeletion {
