@@ -21,6 +21,7 @@ import '../pages/checklist/checklist_boundary_view.dart';
 import '../pages/checklist/checklist_preview.dart';
 import '../pages/checklist/checklist_view.dart';
 import '../pages/checklist/checklist_wrapper.dart';
+import '../pages/complaints/inbox/complaints_details_view.dart';
 import '../pages/complaints/inbox/complaints_inbox.dart';
 import '../pages/complaints/inbox/complaints_inbox_filter.dart';
 import '../pages/complaints/inbox/complaints_inbox_search.dart';
@@ -169,6 +170,10 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: ComplaintsInboxSortPage,
               path: 'complaints-inbox-sort',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsViewPage,
+              path: 'complaints-inbox-view-details',
             ),
           ],
         ),
