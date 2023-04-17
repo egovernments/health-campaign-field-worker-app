@@ -56,31 +56,39 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
                     onPressed: () async {
-                      form.markAllAsTouched();
-
                       var complaintType = form.control(_complaintType).value;
                       var otherComplaintTypeValue =
                           form.control(_otherComplaintType).value;
 
-                      if (!form.valid) return;
-
                       if (complaintType == "Other") {
-                        if (otherComplaintTypeValue == null) return;
-
-                        form.control(_complaintType).value =
-                            otherComplaintTypeValue;
+                        form.control(_otherComplaintType).setValidators(
+                          [Validators.required],
+                          autoValidate: true,
+                        );
+                      } else {
+                        form.control(_otherComplaintType).setValidators(
+                          [],
+                          autoValidate: true,
+                        );
                       }
+
+                      form.markAllAsTouched();
+
+                      if (!form.valid) return;
 
                       state.whenOrNull(
                         create: (
                           loading,
                           complaintType,
+                          _,
                           addressModel,
                           complaintsDetailsModel,
                         ) {
                           bloc.add(
                             ComplaintsRegistrationEvent.saveComplaintType(
                               complaintType: form.control(_complaintType).value,
+                              otherComplaintDescription:
+                                  otherComplaintTypeValue,
                             ),
                           );
                         },
@@ -189,7 +197,6 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
         disabled: shouldDisableForm,
       ),
       _otherComplaintType: FormControl<String>(
-        validators: [],
         value: complaintTypeValue,
       ),
     });

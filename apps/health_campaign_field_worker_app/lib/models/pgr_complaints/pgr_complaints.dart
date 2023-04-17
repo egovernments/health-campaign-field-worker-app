@@ -229,16 +229,19 @@ class PgrSearchKeys {
 class PgrAdditionalDetails {
   String? supervisorName;
   String? supervisorContactNumber;
+  String? otherComplaintDescription;
 
   PgrAdditionalDetails({
     this.supervisorName,
     this.supervisorContactNumber,
+    this.otherComplaintDescription,
   });
 
   factory PgrAdditionalDetails.fromJson(Map<String, dynamic> json) {
     return PgrAdditionalDetails(
       supervisorName: json['supervisorName'] ?? "",
       supervisorContactNumber: json['supervisorContactNumber'] ?? "",
+      otherComplaintDescription: json['otherComplaintDescription'] ?? "",
     );
   }
 
@@ -247,6 +250,7 @@ class PgrAdditionalDetails {
     final map = {
       "supervisorName": supervisorName,
       "supervisorContactNumber": supervisorContactNumber,
+      "otherComplaintDescription": otherComplaintDescription,
     };
 
     return jsonEncode(map);
