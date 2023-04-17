@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Placeholder for script to run before apk generation
-#./tools/install_bricks.sh
-
-# Placeholder for app directory path
 APP_DIR="apps/health_campaign_field_worker_app"
 
 # Function to build APK based on build config
@@ -35,20 +31,21 @@ else
   env_list=("$env")
 fi
 
-for env_option in "${env_list[@]}"
-do
+./tools/install_bricks.sh
+
+for env_option in "${env_list[@]}"; do
   cd "$APP_DIR" || exit
 
   case $env_option in
-    "UAT")
-      cp ".env.uat" ".env"
-      ;;
-    "QA")
-      cp ".env.qa" ".env"
-      ;;
-    "DEV")
-      cp ".env.dev" ".env"
-      ;;
+  "UAT")
+    cp ".env.uat" ".env"
+    ;;
+  "QA")
+    cp ".env.qa" ".env"
+    ;;
+  "DEV")
+    cp ".env.dev" ".env"
+    ;;
   esac
 
   build_apk
