@@ -233,6 +233,7 @@ class _ComplaintsInboxFilterPageState
                               },
                               complaints: (
                                 loading,
+                                isFiltered,
                                 complaints,
                                 filteredComplaints,
                                 filters,

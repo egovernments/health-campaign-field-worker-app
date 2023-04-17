@@ -123,7 +123,6 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                     .complaintTypes
                                     ?.map((e) => e.code)
                                     .toList();
-                                complaintTypes?.add("Other");
 
                                 final isDisabled =
                                     form.control(_complaintType).disabled;
