@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Placeholder for script to run before apk generation
-./tools/install_bricks.sh
+#./tools/install_bricks.sh
 
 # Placeholder for app directory path
 APP_DIR="apps/health_campaign_field_worker_app"
@@ -58,4 +58,5 @@ do
   mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 done
 
+open outputs
 echo "APK generation complete."
