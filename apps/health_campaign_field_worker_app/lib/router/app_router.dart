@@ -7,6 +7,7 @@ import '../blocs/record_stock/record_stock.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
+import '../pages/complaints_acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
@@ -115,6 +116,7 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
+        AutoRoute(page: ComplaintsAcknowledgementPage, path: 'complaints-acknowledgement'),
 
         /// Inventory Routes
         AutoRoute(
