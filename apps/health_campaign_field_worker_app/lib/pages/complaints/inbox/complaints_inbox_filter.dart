@@ -43,7 +43,8 @@ class _ComplaintsInboxFilterPageState
     PgrServiceApplicationStatus.rejected: false,
     PgrServiceApplicationStatus.resolved: false,
   };
-  List<PgrServiceApplicationStatus> statuses = [];
+  bool isFirstBuild = true;
+  Set<PgrServiceApplicationStatus> statuses = HashSet();
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,14 @@ class _ComplaintsInboxFilterPageState
             builder: (context, formGroup, child) {
               List<PgrServiceApplicationStatus> selectedStatuses =
                   state.filters?.complaintStatus?.toList() ?? [];
+
+              if (isFirstBuild) {
+                for (var element in selectedStatuses) {
+                  selected[element] = true;
+                  statuses.add(element);
+                }
+                isFirstBuild = false;
+              }
 
               return ScrollableContent(
                 header: Column(
@@ -99,7 +108,6 @@ class _ComplaintsInboxFilterPageState
                             padding: const EdgeInsets.only(left: 5),
                             child: TextButton(
                               onPressed: () {
-                                selectedStatuses.clear();
                                 clearFilters(formGroup);
                               },
                               style: TextButton.styleFrom(
@@ -134,7 +142,6 @@ class _ComplaintsInboxFilterPageState
                           flex: 1,
                           child: OutlinedButton(
                             onPressed: () {
-                              selectedStatuses.clear();
                               clearFilters(formGroup);
                             },
                             style: OutlinedButton.styleFrom(
@@ -188,7 +195,7 @@ class _ComplaintsInboxFilterPageState
                                   ),
                                   complaintType,
                                   locality,
-                                  statuses,
+                                  statuses.toList(),
                                 ),
                               );
 
@@ -344,6 +351,10 @@ class _ComplaintsInboxFilterPageState
 
   void clearFilters(FormGroup formGroup) {
     setState(() {
+      selected.forEach((key, value) {
+        selected[key] = false;
+      });
+      statuses.clear();
       formGroup.control(_complaintType).value = null;
       formGroup.control(_complaintAssignmentType).value = null;
       formGroup.control(_complaintStatus).value = null;
