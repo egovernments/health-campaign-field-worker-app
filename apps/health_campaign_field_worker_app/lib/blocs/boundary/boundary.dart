@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../utils/utils.dart';
 
 part 'boundary.freezed.dart';
 
@@ -32,18 +31,12 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       BoundarySearchModel(code: event.code),
     );
 
-    boundaryList.sort((boundary1, boundary2) => boundary1
-        .materializedPathList.length
-        .compareTo(boundary2.materializedPathList.length));
-
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
       if (!boundaryLabelList.contains(element.label.toString())) {
         boundaryLabelList.add(element.label.toString());
       }
     }
-
-    boundaryLabelList.removeDuplicates((element) => element);
 
     emit(
       state.copyWith(
