@@ -32,7 +32,10 @@ class ComplaintsInboxBloc
     ComplaintsInboxEmitter emit,
   ) async {
     if (event.updatedModels != null) {
-      emit(state.copyWith(complaints: event.updatedModels!));
+      emit(state.copyWith(
+        complaints: event.updatedModels!,
+        isFiltered: false,
+      ));
 
       return;
     }
@@ -44,7 +47,11 @@ class ComplaintsInboxBloc
       ),
     );
 
-    emit(state.copyWith(loading: false, complaints: complaints));
+    emit(state.copyWith(
+      loading: false,
+      complaints: complaints,
+      isFiltered: false,
+    ));
   }
 
   FutureOr<void> _handleFilterComplaints(
@@ -73,7 +80,11 @@ class ComplaintsInboxBloc
         locality: event.locality,
       ),
     ));
-    emit(state.copyWith(loading: false, filteredComplaints: complaints));
+    emit(state.copyWith(
+      loading: false,
+      filteredComplaints: complaints,
+      isFiltered: true,
+    ));
   }
 
   FutureOr<void> _handleSortComplaints(
@@ -125,6 +136,16 @@ class ComplaintsInboxBloc
       ),
     ));
 
+    if (event.complaintNumber == null && event.mobileNumber == null) {
+      emit(state.copyWith(
+        loading: false,
+        filteredComplaints: [],
+        isFiltered: false,
+      ));
+
+      return;
+    }
+
     final complaints = await pgrRepository.search(
       PgrServiceSearchModel(
         tenantId: envConfig.variables.tenantId,
@@ -133,12 +154,11 @@ class ComplaintsInboxBloc
       ),
     );
 
-    if (event.complaintNumber == "" && event.mobileNumber == "") {
-      emit(state.copyWith(loading: false, filteredComplaints: []));
-
-      return;
-    }
-    emit(state.copyWith(loading: false, filteredComplaints: complaints));
+    emit(state.copyWith(
+      loading: false,
+      filteredComplaints: complaints,
+      isFiltered: true,
+    ));
   }
 }
 
@@ -146,6 +166,7 @@ class ComplaintsInboxBloc
 class ComplaintInboxState with _$ComplaintInboxState {
   const factory ComplaintInboxState.complaints({
     @Default(false) bool loading,
+    @Default(false) bool isFiltered,
     @Default([]) List<PgrServiceModel> complaints,
     @Default([]) List<PgrServiceModel> filteredComplaints,
     PgrFilters? filters,

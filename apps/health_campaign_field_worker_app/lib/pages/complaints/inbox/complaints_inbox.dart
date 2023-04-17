@@ -31,9 +31,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
-          final inboxItems = state.filteredComplaints.isNotEmpty
-              ? state.filteredComplaints
-              : state.complaints;
+          final inboxItems =
+              state.isFiltered ? state.filteredComplaints : state.complaints;
 
           // TODO(ajil): Fix this scrollable component
           return Column(

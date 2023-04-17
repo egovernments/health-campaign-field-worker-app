@@ -29,7 +29,6 @@ class _ComplaintsInboxSearchPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsInboxBloc>();
-    final router = context.router;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
@@ -89,10 +88,13 @@ class _ComplaintsInboxSearchPageState
                             onPressed: () {
                               if (!formGroup.valid) return;
 
+                              final complaintNumberValue = formGroup.control(_complaintNumber).value;
+                              final mobileNumberValue = formGroup.control(_mobileNumber).value;
+
                               bloc.add(
                                 ComplaintInboxSearchComplaintsEvent(
-                                  formGroup.control(_complaintNumber).value,
-                                  formGroup.control(_mobileNumber).value,
+                                  complaintNumberValue == "" ? null : complaintNumberValue,
+                                  mobileNumberValue == "" ? null : mobileNumberValue,
                                 ),
                               );
 
