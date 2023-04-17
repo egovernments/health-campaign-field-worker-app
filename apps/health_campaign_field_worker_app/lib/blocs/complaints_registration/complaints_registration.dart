@@ -36,7 +36,10 @@ class ComplaintsRegistrationBloc
     state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) {
-        emit(value.copyWith(complaintType: event.complaintType));
+        emit(value.copyWith(
+          complaintType: event.complaintType,
+          otherComplaintTypeDescription: event.otherComplaintDescription,
+        ));
       },
     );
   }
@@ -87,6 +90,8 @@ class ComplaintsRegistrationBloc
         emit(value.copyWith(loading: true));
 
         final serviceCode = value.complaintType;
+        final otherComplaintTypeDescription =
+            value.otherComplaintTypeDescription;
         final complaintDetailsModel = value.complaintsDetailsModel;
         final address = value.addressModel;
 
@@ -143,6 +148,7 @@ class ComplaintsRegistrationBloc
             supervisorName: complaintDetailsModel.supervisorName,
             supervisorContactNumber:
                 complaintDetailsModel.supervisorContactNumber,
+            otherComplaintDescription: otherComplaintTypeDescription,
           ).toString(),
         );
 
@@ -159,6 +165,7 @@ class ComplaintsRegistrationBloc
 class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
   const factory ComplaintsRegistrationEvent.saveComplaintType({
     required String complaintType,
+    String? otherComplaintDescription,
   }) = ComplaintsRegistrationSaveComplaintTypeEvent;
 
   const factory ComplaintsRegistrationEvent.saveAddress({
@@ -180,6 +187,7 @@ class ComplaintsRegistrationState with _$ComplaintsRegistrationState {
   const factory ComplaintsRegistrationState.create({
     @Default(false) bool loading,
     String? complaintType,
+    String? otherComplaintTypeDescription,
     PgrAddressModel? addressModel,
     ComplaintsDetailsModel? complaintsDetailsModel,
   }) = ComplaintsRegistrationCreateState;
