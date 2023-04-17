@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
@@ -36,7 +37,28 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
     return Portal(
       child: Scaffold(
         appBar: AppBar(
-          actions: [],
+          actions: [
+            BlocBuilder<BoundaryBloc, BoundaryState>(
+              builder: (ctx, state) {
+                BoundaryModel? selectedBoundary;
+                try {
+                  selectedBoundary = ctx.boundary;
+                } catch (_) {
+                  debugPrint('');
+                }
+                final boundaryName =
+                    selectedBoundary?.name ?? selectedBoundary?.code;
+                if (boundaryName == null) return const SizedBox.shrink();
+
+                return TextButton(
+                  onPressed: () {
+                    ctx.router.navigate(const BoundarySelectionRoute());
+                  },
+                  child: Text(boundaryName),
+                );
+              },
+            ),
+          ],
         ),
         drawer: const Drawer(child: SideBar()),
         body: MultiBlocProvider(
