@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
@@ -25,13 +24,8 @@ class AuthenticatedPageWrapper extends StatefulWidget {
   }
 }
 
-class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
-  BoundaryModel? selectedBoundaryValue;
-  List<BoundaryModel?> selectedBoundaryHierarchy = [];
-
-  String selectedBoundaryCode = '';
-  int random = 0;
-
+class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper>
+    with AutoRouteAwareStateMixin {
   @override
   Widget build(BuildContext context) {
     return Portal(
@@ -139,6 +133,4 @@ class AuthenticatedPageWrapperState extends State<AuthenticatedPageWrapper> {
       ),
     );
   }
-
-  FormGroup buildForm() => fb.group({});
 }

@@ -50,7 +50,7 @@ class BoundaryLocalRepository
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.code != null)
-              sql.boundary.materializedPath.like('${query.code}%'),
+              sql.boundary.materializedPath.like('%${query.code}%'),
             sql.boundary.materializedPath.isNotNull(),
             sql.boundary.materializedPath.isNotIn(['']),
             sql.boundary.code.isNotNull(),
