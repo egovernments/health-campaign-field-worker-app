@@ -75,7 +75,9 @@ class _ComplaintsDetailsPageState
                     margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                     child: DigitElevatedButton(
                       onPressed: () async {
-                        form.markAllAsTouched();
+                        setState(() {
+                          form.markAllAsTouched();
+                        });
 
                         if (form.control(_complaintDetailsForm).disabled) {
                           router.parent()?.pop();
@@ -228,36 +230,64 @@ class _ComplaintsDetailsPageState
                               label: "${localizations.translate(
                                 i18.complaints.complainantTypeQuestion,
                               )} *",
-                              child: RadioGroup<String>.builder(
-                                groupValue:
-                                    form.control(_complaintRaisedFor).value ??
+                              child: Column(
+                                children: [
+                                  RadioGroup<String>.builder(
+                                    groupValue: form
+                                            .control(_complaintRaisedFor)
+                                            .value ??
                                         "",
-                                onChanged: (changedValue) {
-                                  if (form
-                                      .control(_complaintRaisedFor)
-                                      .disabled) return;
+                                    onChanged: (changedValue) {
+                                      if (form
+                                          .control(_complaintRaisedFor)
+                                          .disabled) return;
 
-                                  if (changedValue == "Another user") {
-                                    form.control(_complainantName).value = "";
-                                    form
-                                        .control(_complainantContactNumber)
-                                        .value = "";
-                                  }
-                                  setState(() {
-                                    form.control(_complaintRaisedFor).value =
-                                        changedValue;
-                                  });
-                                },
-                                textStyle: TextStyle(
-                                  color:
-                                      form.control(_complaintRaisedFor).disabled
+                                      if (changedValue == "Another user") {
+                                        form.control(_complainantName).value =
+                                            "";
+                                        form
+                                            .control(_complainantContactNumber)
+                                            .value = "";
+                                      }
+                                      setState(() {
+                                        form
+                                            .control(_complaintRaisedFor)
+                                            .value = changedValue;
+                                      });
+                                    },
+                                    textStyle: TextStyle(
+                                      color: form
+                                              .control(_complaintRaisedFor)
+                                              .disabled
                                           ? theme.colorScheme.shadow
                                           : theme.colorScheme.onBackground,
-                                ),
-                                items: complainantRaisedFor,
-                                itemBuilder: (item) => RadioButtonBuilder(
-                                  item.trim(),
-                                ),
+                                    ),
+                                    items: complainantRaisedFor,
+                                    itemBuilder: (item) => RadioButtonBuilder(
+                                      item.trim(),
+                                    ),
+                                  ),
+                                  if (form.touched && form
+                                      .control(_complaintRaisedFor)
+                                      .invalid) ...[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 5,
+                                          bottom: 5,
+                                        ),
+                                        child: Text(
+                                          "required",
+                                          style: TextStyle(
+                                            color: DigitTheme
+                                                .instance.colors.lavaRed,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
                           ),
