@@ -8,6 +8,7 @@ class DigitColors {
   Color get woodsmokeBlack => const Color(0xFF0B0C0C);
   Color get black => const Color(0xFF000000);
   Color get davyGray => const Color(0xFF505A5F);
+  Color get hintGrey => const Color.fromRGBO(80, 90, 95, 1);
   Color get cloudGray => const Color(0xFFB1B4B6);
   Color get seaShellGray => const Color(0xFFEEEEEE);
   Color get white => const Color(0xFFFFFFFF);
