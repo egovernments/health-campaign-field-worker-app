@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -251,7 +250,7 @@ class _IndividualDetailsPageState
                                     appConfiguration.idTypeOptions ??
                                         <IdTypeOptions>[];
 
-                                return DigitDropdown<String>(
+                                return DigitReactiveDropdown<String>(
                                   isRequired: true,
                                   label: localizations.translate(
                                     i18.individualDetails.idTypeLabelText,
@@ -325,7 +324,7 @@ class _IndividualDetailsPageState
                                     appConfiguration.genderOptions ??
                                         <GenderOptions>[];
 
-                                return DigitDropdown<String>(
+                                return DigitReactiveDropdown<String>(
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),

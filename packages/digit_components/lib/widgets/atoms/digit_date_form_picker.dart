@@ -43,7 +43,7 @@ class DigitDateFormPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: label,
+      label: '$label ${isRequired ? '*' : ''}',
       child: ReactiveDatePicker(
         formControlName: formControlName,
         firstDate: start ?? DateTime(1900),

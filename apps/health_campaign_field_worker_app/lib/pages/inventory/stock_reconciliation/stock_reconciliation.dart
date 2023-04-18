@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import '../../../blocs/localization/app_localization.dart';
+
 import '../../../blocs/facility/facility.dart';
+import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
@@ -322,7 +323,7 @@ class _StockReconciliationPageState
                                           return state.maybeWhen(
                                             orElse: () => const Offstage(),
                                             fetched: (productVariants) {
-                                              return DigitDropdown<
+                                              return DigitReactiveDropdown<
                                                   ProductVariantModel>(
                                                 formControlName:
                                                     _productVariantKey,

@@ -147,14 +147,14 @@ void main() {
 
         expect(
           find.widgetWithText(
-            DigitDropdown,
+            DigitReactiveDropdown,
             i18.deliverIntervention.deliveryCommentLabel,
           ),
           findsOneWidget,
         );
         expect(
           find.widgetWithText(
-            DigitDropdown,
+            DigitReactiveDropdown,
             i18.deliverIntervention.resourceDeliveredLabel,
           ),
           findsOneWidget,

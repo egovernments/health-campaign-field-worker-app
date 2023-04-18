@@ -13,17 +13,18 @@ import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/product_variant.dart';
 import '../data/repositories/local/project.dart';
 import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/service.dart';
+import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
-import '../data/repositories/local/service_definition.dart';
-import '../data/repositories/local/service.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
@@ -31,6 +32,7 @@ import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
+import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project.dart';
@@ -45,7 +47,6 @@ import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
-
 import '../models/data_model.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -204,6 +205,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => BoundaryLocalRepository(
           sql,
           BoundaryOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        create: (_) => PgrServiceLocalRepository(
+          sql,
+          PgrServiceOpLogManager(isar),
         ),
       ),
     ];
@@ -385,6 +393,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<ProductVariantModel, ProductVariantSearchModel>>(
             create: (_) => ProductVariantRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.complaints)
+          RepositoryProvider<
+              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+            create: (_) => PgrServiceRemoteRepository(
               dio,
               actionMap: actions,
             ),

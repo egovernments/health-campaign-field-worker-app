@@ -1,5 +1,6 @@
 {
   "name": "address",
+  "persistBoundaryParameters": true,
   "attributes": [
     {
       "name": "id",
@@ -78,8 +79,11 @@
       "name": "type",
       "type": "AddressType",
       "isEnum": true
+    },
+    {
+      "name": "locality",
+      "type": "locality"
     }
-
   ],
   "isEnum": false
 }
