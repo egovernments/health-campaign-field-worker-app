@@ -86,6 +86,7 @@ part 'app_router.gr.dart';
               page: DeliverInterventionPage,
               path: 'deliver-intervention',
             ),
+            AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
         ),
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [

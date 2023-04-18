@@ -133,7 +133,7 @@ class MemberCard extends StatelessWidget {
           ],
         ),
         Offstage(
-          offstage: true,
+          offstage: false,
           child: !isDelivered
               ? Align(
                   alignment: Alignment.centerLeft,
@@ -159,8 +159,8 @@ class MemberCard extends StatelessWidget {
                 ),
         ),
         Offstage(
-          offstage: true,
-          child: isDelivered
+          offstage: false,
+          child: !isDelivered
               ? DigitElevatedButton(
                   onPressed: () {
                     // TODO: Complete implementation
