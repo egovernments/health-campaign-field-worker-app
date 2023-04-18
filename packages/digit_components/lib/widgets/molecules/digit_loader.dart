@@ -34,8 +34,10 @@ class Loaders {
         ));
   }
 
-  static Future<void> showLoadingDialog(BuildContext context,
-      {String? label}) async {
+  static Future<void> showLoadingDialog(
+    BuildContext context, {
+    String? label,
+  }) async {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,

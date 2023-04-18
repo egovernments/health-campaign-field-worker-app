@@ -24,22 +24,20 @@ extension ContextUtilityExtensions on BuildContext {
     );
   }
 
-  String get boundaryCode {
+  BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
 
-    return boundaryState.maybeWhen(
-      orElse: () {
-        throw AppException('Invalid project state');
-      },
-      fetched: (bondaries, boundaryMapper, selectedBoundary) {
-        if (selectedBoundary == null) {
-          throw AppException('No project is selected');
-        }
+    final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+        .where((element) => element.value != null)
+        .lastOrNull
+        ?.value;
 
-        return selectedBoundary;
-      },
-    );
+    if (selectedBoundary == null) {
+      throw AppException('No boundary is selected');
+    }
+
+    return selectedBoundary;
   }
 
   String get loggedInUserUuid {
@@ -55,6 +53,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return userRequestObject.uuid;
+  }
+
+  UserRequestModel get loggedInUser {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel) {
+        return userModel;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject;
   }
 
   NetworkManager get networkManager => read<NetworkManager>();

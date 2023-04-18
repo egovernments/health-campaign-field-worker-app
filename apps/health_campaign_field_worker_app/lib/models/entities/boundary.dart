@@ -1,9 +1,8 @@
-// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 @MappableClass(ignoreNull: true)
 class BoundarySearchModel extends EntitySearchModel {
@@ -27,11 +26,13 @@ class BoundaryModel extends EntityModel {
   final String? name;
   final String? label;
   final String? latitude;
+  final int? boundaryNum;
   final String? longitude;
   final String? materializedPath;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final List<BoundaryModel> children;
 
   BoundaryModel({
     this.code,
@@ -42,7 +43,9 @@ class BoundaryModel extends EntityModel {
     this.materializedPath,
     this.tenantId,
     this.isDeleted,
+    this.boundaryNum,
     this.rowVersion,
+    this.children = const [],
     super.auditDetails,
   }) : super();
 
@@ -55,6 +58,7 @@ class BoundaryModel extends EntityModel {
       code: Value(code),
       name: Value(name),
       label: Value(label),
+      boundaryNum: Value(boundaryNum),
       latitude: Value(latitude),
       longitude: Value(longitude),
       materializedPath: Value(materializedPath),
@@ -62,5 +66,15 @@ class BoundaryModel extends EntityModel {
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
     );
+  }
+
+  List<String> get materializedPathList {
+    if (materializedPath == null || materializedPath!.isEmpty) {
+      throw ArgumentError(
+        'materializedPath cannot be null or empty. code: $code',
+      );
+    }
+
+    return materializedPath!.split('.');
   }
 }

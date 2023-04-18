@@ -10,6 +10,7 @@ class Boundary extends Table {
   TextColumn get longitude => text().nullable()();
   TextColumn get materializedPath => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
+  IntColumn get boundaryNum => integer().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();

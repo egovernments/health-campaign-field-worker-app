@@ -26,51 +26,57 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySearchEvent event,
     BoundaryEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(code: event.code),
     );
 
-    final codesList =
-        boundaryList.where((e) => e.materializedPath != null).reduce(
-      (a, b) {
-        return a.materializedPath!.length > b.materializedPath!.length ? a : b;
-      },
-    ).materializedPath;
-
-    final List<String> mapperArray = [];
-
-    codesList?.split('.').forEach((e) {
-      if (e.isNotEmpty) {
-        boundaryList.forEach((element) {
-          if (element.code == e) {
-            mapperArray.add(element.label.toString());
-          }
-        });
+    final List<String> boundaryLabelList = [];
+    for (var element in boundaryList) {
+      if (!boundaryLabelList.contains(element.label.toString())) {
+        boundaryLabelList.add(element.label.toString());
       }
-    });
+    }
 
-    emit(BoundaryFetchedState(
-      boundaryList: boundaryList,
-      boundaryMapperList: mapperArray.toSet().toList(),
-    ));
-    // handle logic for search here
+    emit(
+      state.copyWith(
+        boundaryList: boundaryList,
+        selectedBoundaryMap: Map.fromEntries(
+          boundaryLabelList.map(
+            (e) => MapEntry(e, null),
+          ),
+        ),
+        loading: false,
+      ),
+    );
   }
 
   FutureOr<void> _handleSelect(
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    state.maybeMap(
-      orElse: () {},
-      fetched: (value) {
-        emit(value.copyWith(
-          selectedBoundary: event.selectedBoundary,
-        ));
-      },
-      empty: (value) {},
+    final currentValue = state.selectedBoundaryMap[event.label];
+    if (currentValue?.code == event.selectedBoundary.code) return;
+
+    bool hasChanged = false;
+    final selectedBoundaryMap = Map.fromEntries(
+      state.selectedBoundaryMap.entries.map(
+        (e) {
+          if (hasChanged) {
+            return MapEntry(e.key, null);
+          }
+          if (e.key == event.label) {
+            hasChanged = true;
+
+            return MapEntry(e.key, event.selectedBoundary);
+          }
+
+          return e;
+        },
+      ),
     );
 
-    // handle logic for select here
+    emit(state.copyWith(selectedBoundaryMap: selectedBoundaryMap));
   }
 }
 
@@ -80,19 +86,27 @@ class BoundaryEvent with _$BoundaryEvent {
       BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
-    required String selectedBoundary,
+    required String label,
+    required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
 }
 
 @freezed
 class BoundaryState with _$BoundaryState {
-  const factory BoundaryState.loading() = BoundaryLoadingState;
+  const BoundaryState._();
 
-  const factory BoundaryState.fetched({
+  const factory BoundaryState({
+    @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
-    @Default([]) List<String> boundaryMapperList,
-    String? selectedBoundary,
-  }) = BoundaryFetchedState;
+    @Default({}) Map<String, BoundaryModel?> selectedBoundaryMap,
+  }) = _BoundaryState;
 
-  const factory BoundaryState.empty() = BoundaryEmptyState;
+  @override
+  String toString() {
+    return '''
+BoundaryState(
+  loading: $loading,
+  selectedBoundaryMap: $selectedBoundaryMap,
+)''';
+  }
 }

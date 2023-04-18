@@ -53,6 +53,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           case DataModelType.stock:
           case DataModelType.stockReconciliation:
           case DataModelType.service:
+          case DataModelType.complaints:
             return true;
           default:
             return false;
@@ -71,7 +72,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   ) async {
     try {
       emit(const SyncInProgressState());
-      await networkManager.syncUp(
+      await networkManager.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
         userId: event.userId,

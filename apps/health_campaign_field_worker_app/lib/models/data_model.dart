@@ -15,6 +15,7 @@ export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
 export 'entities/individual.dart';
+export 'entities/locality.dart';
 export 'entities/name.dart';
 export 'entities/product.dart';
 export 'entities/product_variant.dart';
@@ -36,8 +37,10 @@ export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
-export 'entities/locality.dart';
 export 'oplog/oplog_entry.dart';
+export 'pgr_complaints/pgr_complaints.dart';
+export 'pgr_complaints/pgr_complaints_response.dart';
+export 'pgr_complaints/pgr_address.dart';
 
 @MappableClass()
 abstract class DataModel {
@@ -122,6 +125,7 @@ enum DataModelType {
   task,
   serviceDefinition,
   service,
+  complaints,
   attributes,
   boundary,
   serviceAttributes,

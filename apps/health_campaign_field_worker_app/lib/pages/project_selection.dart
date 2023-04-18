@@ -1,7 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,7 +71,11 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                               code: boundary,
                             ),
                           );
-                      context.router.replace(HomeRoute());
+
+                      context.router.replaceAll([
+                        HomeRoute(),
+                        const BoundarySelectionRoute(),
+                      ]);
                     } else {
                       DigitToast.show(
                         context,
