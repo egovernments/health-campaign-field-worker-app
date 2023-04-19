@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/boundary/boundary.dart';
 import '../router/app_router.dart';
 
+/// Wraps the [child] widget with a [BlocListener] that listens to
+/// [BoundaryState] changes and navigates to [HomeRoute] when submitted.
 class BoundarySelectionWrapper extends StatelessWidget {
   final Widget child;
-  final StackRouter? router;
 
   const BoundarySelectionWrapper({
     Key? key,
     required this.child,
-    this.router,
   }) : super(key: key);
 
   @override
