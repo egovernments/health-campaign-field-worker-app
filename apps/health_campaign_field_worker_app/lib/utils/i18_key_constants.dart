@@ -18,6 +18,8 @@ const stockDetails = StockDetails();
 const checklist = Checklist();
 const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
+const complaints = Complaints();
+const reasonForDeletion = ReasonForDeletion();
 
 class Common {
   const Common();
@@ -483,22 +485,121 @@ class ManageStock {
 
   String get recordstockReceiptDescription =>
       'MANAGE_STOCK_RECEIPT_DESCRIPTION';
+
   String get recordstockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
 
   String get recordstockIssuedtDescription =>
       'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
+
   String get recordstockReturnedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
 
   String get recordstockReturnedtDescription =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_DESCRIPTION';
+
   String get recordstockDamagedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_LABEL';
 
   String get recordstockDamagedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_DESCRIPTION';
+
   String get recordstockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
 
   String get recordstockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+}
+
+class Complaints {
+  const Complaints();
+
+  String get complaintsTypeHeading => 'COMPLAINTS_TYPE_HEADING';
+
+  String get complaintsTypeLabel => 'COMPLAINTS_TYPE_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+
+  String get complaintsLocationLabel => 'COMPLAINTS_LOCATION_LABEL';
+
+  String get complaintsDetailsLabel => 'COMPLAINTS_DETAILS_LABEL';
+
+  String get dateOfComplaint => 'COMPLAINTS_DATE';
+
+  String get complainantTypeQuestion => 'COMPLAINTS_COMPLAINANT_TYPE_QUESTION';
+
+  String get complainantName => 'COMPLAINTS_COMPLAINANT_NAME';
+
+  String get complainantContactNumber =>
+      'COMPLAINTS_COMPLAINANT_CONTACT_NUMBER';
+
+  String get supervisorName => 'COMPLAINTS_SUPERVISOR_NAME';
+
+  String get supervisorContactNumber => 'COMPLAINTS_SUPERVISOR_CONTACT_NUMBER';
+
+  String get complaintDescription => 'COMPLAINTS_DESCRIPTION';
+
+  String get dialogTitle => 'COMPLAINTS_DIALOG_TITLE';
+
+  String get dialogContent => 'COMPLAINTS_DIALOG_MESSAGE';
+
+  String get fileComplaintAction => 'COMPLAINTS_FILE_COMPLAINT_ACTION';
+
+  String get inboxHeading => 'COMPLAINTS_INBOX_HEADING';
+
+  String get searchCTA => 'COMPLAINTS_INBOX_SEARCH_CTA';
+
+  String get filterCTA => 'COMPLAINTS_INBOX_FILTER_CTA';
+
+  String get sortCTA => 'COMPLAINTS_INBOX_SORT_CTA';
+
+  String get complaintInboxFilterHeading => 'COMPLAINTS_INBOX_FILTER_HEADING';
+
+  String get complaintsFilterClearAll => 'COMPLAINTS_FILTER_CLEAR_ALL';
+
+  String get complaintInboxSearchHeading => 'COMPLAINTS_INBOX_SEARCH_HEADING';
+
+  String get complaintInboxSortHeading => 'COMPLAINTS_INBOX_SORT_HEADING';
+
+  String get complaintsSortDateAsc => 'COMPLAINT_SORT_DATE_ASC';
+
+  String get complaintsSortDateDesc => 'COMPLAINT_SORT_DATE_DESC';
+
+  String get assignedToAll => 'COMPLAINTS_ASSIGNED_TO_ALL';
+
+  String get assignedToSelf => 'COMPLAINTS_ASSIGNED_TO_SELF';
+
+  String get noComplaintsExist => 'COMPLAINTS_NO_COMPLAINTS_EXIST';
+
+  String get inboxDateLabel => 'COMPLAINTS_INBOX_DATE_LABEL';
+
+  String get inboxNumberLabel => 'COMPLAINTS_INBOX_NUMBER_LABEL';
+
+  String get inboxTypeLabel => 'COMPLAINTS_INBOX_TYPE_LABEL';
+
+  String get inboxAreaLabel => 'COMPLAINTS_INBOX_AREA_LABEL';
+
+  String get inboxStatusLabel => 'COMPLAINTS_INBOX_STATUS_LABEL';
+
+  String get inboxNotGeneratedLabel => 'COMPLAINTS_INBOX_NOT_GENERATED_LABEL';
+
+  String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
+
+  String get locality => 'COMPLAINTS_LOCALITY';
+
+  String get backToInbox => 'COMPLAINTS_BACK_TO_INBOX';
+
+  String get acknowledgementAction => 'COMPLAINTS_ACKNOWLEDGEMENT_ACTION';
+
+  String get acknowledgementDescription => 'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
+
+  String get acknowledgementLabel => 'COMPLAINTS_ACKNOWLEDGEMENT_LABEL';
+
+  String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
+
+  String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+}
+
+class ReasonForDeletion {
+  const ReasonForDeletion();
+
+  String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
 }
