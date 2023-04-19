@@ -1,6 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
-import 'package:collection/collection.dart';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -57,9 +57,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundarySelectEvent event,
     BoundaryEmitter emit,
   ) async {
-    final currentValue = state.selectedBoundaryMap[event.label];
-    if (currentValue?.code == event.selectedBoundary.code) return;
-
     bool hasChanged = false;
     final selectedBoundaryMap = Map.fromEntries(
       state.selectedBoundaryMap.entries.map(
@@ -78,8 +75,12 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
 
-    if (const DeepCollectionEquality()
-        .equals(selectedBoundaryMap, state.selectedBoundaryMap)) {
+    final hasSelectedBoundaryChanged = const DeepCollectionEquality().equals(
+      selectedBoundaryMap,
+      state.selectedBoundaryMap,
+    );
+
+    if (hasSelectedBoundaryChanged) {
       return;
     }
 
@@ -122,11 +123,17 @@ class BoundaryState with _$BoundaryState {
   }) = _BoundaryState;
 
   @override
-  String toString() {
-    return '''
-BoundaryState(
-  loading: $loading,
-  selectedBoundaryMap: $selectedBoundaryMap,
-)''';
-  }
+  String toString() => const JsonEncoder.withIndent('  ').convert({
+        'loading': loading,
+        'selectedBoundaryMap': Map.fromEntries(
+          selectedBoundaryMap.entries.map(
+            (e) => MapEntry(
+              e.key,
+              e.value?.toMap(),
+            ),
+          ),
+        ),
+        'hasSubmitted': hasSubmitted,
+        'boundaryList.length': boundaryList.length,
+      });
 }

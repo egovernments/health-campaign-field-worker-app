@@ -166,11 +166,18 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                         ComplaintsRegistrationWrapperRoute(),
                       );
 
-                      bloc.add(
-                         ComplaintInboxLoadComplaintsEvent(
-                          createdByUserId: loggedInUserUuid,
-                        ),
-                      );
+                      try {
+                        bloc.add(
+                          ComplaintInboxLoadComplaintsEvent(
+                            createdByUserId: loggedInUserUuid,
+                          ),
+                        );
+                      } catch (error) {
+                        AppLogger.instance.error(
+                          title: 'Error',
+                          message: 'Error while loading complaints',
+                        );
+                      }
                     },
                     child: Center(
                       child: Text(
