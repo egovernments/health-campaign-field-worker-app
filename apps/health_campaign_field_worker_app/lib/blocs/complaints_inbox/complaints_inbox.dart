@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/repositories/local/pgr_service.dart';
+import '../../data/repositories/remote/pgr_service.dart';
 import '../../models/complaints/complaints.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
@@ -40,12 +42,22 @@ class ComplaintsInboxBloc
       return;
     }
 
+    List<PgrServiceModel> complaints = [];
     emit(state.copyWith(loading: true));
-    final complaints = await pgrRepository.search(
-      PgrServiceSearchModel(
-        tenantId: envConfig.variables.tenantId,
-      ),
-    );
+    if (pgrRepository is PgrServiceLocalRepository) {
+      complaints = await (pgrRepository as PgrServiceLocalRepository).search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+        ),
+        event.createdByUserId,
+      );
+    } else if (pgrRepository is PgrServiceRemoteRepository) {
+      complaints = await pgrRepository.search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+        ),
+      );
+    }
 
     emit(state.copyWith(
       loading: false,
@@ -176,9 +188,10 @@ class ComplaintInboxState with _$ComplaintInboxState {
 
 @freezed
 class ComplaintInboxEvent with _$ComplaintInboxEvent {
-  const factory ComplaintInboxEvent.loadComplaints([
+  const factory ComplaintInboxEvent.loadComplaints({
     List<PgrServiceModel>? updatedModels,
-  ]) = ComplaintInboxLoadComplaintsEvent;
+    required String createdByUserId,
+  }) = ComplaintInboxLoadComplaintsEvent;
 
   const factory ComplaintInboxEvent.sortComplaints([
     @Default("COMPLAINT_SORT_DATE_ASC") String sortOrder,
