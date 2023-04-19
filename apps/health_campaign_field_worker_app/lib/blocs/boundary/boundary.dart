@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'package:collection/collection.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -20,6 +21,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   }) {
     on(_handleSearch);
     on(_handleSelect);
+    on(_handleSubmit);
   }
 
   FutureOr<void> _handleSearch(
@@ -76,7 +78,22 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
 
-    emit(state.copyWith(selectedBoundaryMap: selectedBoundaryMap));
+    if (const DeepCollectionEquality()
+        .equals(selectedBoundaryMap, state.selectedBoundaryMap)) {
+      return;
+    }
+
+    emit(state.copyWith(
+      selectedBoundaryMap: selectedBoundaryMap,
+      hasSubmitted: false,
+    ));
+  }
+
+  FutureOr<void> _handleSubmit(
+    BoundarySubmitEvent event,
+    BoundaryEmitter emit,
+  ) async {
+    emit(state.copyWith(hasSubmitted: true));
   }
 }
 
@@ -89,6 +106,8 @@ class BoundaryEvent with _$BoundaryEvent {
     required String label,
     required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
+
+  const factory BoundaryEvent.submit() = BoundarySubmitEvent;
 }
 
 @freezed
@@ -99,6 +118,7 @@ class BoundaryState with _$BoundaryState {
     @Default(false) bool loading,
     @Default([]) List<BoundaryModel> boundaryList,
     @Default({}) Map<String, BoundaryModel?> selectedBoundaryMap,
+    @Default(false) bool hasSubmitted,
   }) = _BoundaryState;
 
   @override

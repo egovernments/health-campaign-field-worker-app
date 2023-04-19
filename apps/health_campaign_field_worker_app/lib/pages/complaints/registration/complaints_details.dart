@@ -54,8 +54,7 @@ class _ComplaintsDetailsPageState
         ),
         builder: (_, form, __) => BlocListener<BoundaryBloc, BoundaryState>(
           listener: (context, state) {
-            final selectedBoundary = context.boundary.name;
-            form.control(_administrativeArea).value = selectedBoundary;
+            context.navigateTo(HomeRoute());
           },
           child: BlocConsumer<ComplaintsRegistrationBloc,
               ComplaintsRegistrationState>(
