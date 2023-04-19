@@ -4,6 +4,7 @@ class DigitIconTile extends StatelessWidget {
   final String title;
   final Widget? content;
   final IconData? icon;
+  final ImageIcon? imageIcon;
   final VoidCallback onPressed;
 
   const DigitIconTile({
@@ -11,6 +12,7 @@ class DigitIconTile extends StatelessWidget {
     required this.title,
     this.content,
     this.icon,
+    this.imageIcon,
     required this.onPressed,
   });
 
@@ -18,10 +20,11 @@ class DigitIconTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       minVerticalPadding: 16,
-      leading: Icon(
-        icon,
-        color: Theme.of(context).colorScheme.shadow,
-      ),
+      leading: imageIcon ??
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.shadow,
+          ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
