@@ -47,7 +47,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         selectedBoundary?.name ?? selectedBoundary?.code;
                     if (boundaryName == null) return const SizedBox.shrink();
 
+                    final theme = Theme.of(context);
+
                     return TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.onPrimary,
+                      ),
                       onPressed: () {
                         ctx.router.navigate(const BoundarySelectionRoute());
                       },

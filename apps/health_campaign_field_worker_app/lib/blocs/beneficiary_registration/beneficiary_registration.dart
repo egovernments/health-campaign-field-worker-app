@@ -217,6 +217,7 @@ class BeneficiaryRegistrationBloc
         try {
           await householdRepository.update(
             value.householdModel.copyWith(
+              memberCount: event.household.memberCount,
               address: value.addressModel.copyWith(
                 relatedClientReferenceId:
                     value.householdModel.clientReferenceId,
@@ -234,8 +235,6 @@ class BeneficiaryRegistrationBloc
               ),
             );
           }
-
-          // await taskDataRepository.update(elment.)
         } catch (error) {
           rethrow;
         } finally {
