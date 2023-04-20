@@ -13,6 +13,7 @@ import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
 class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
@@ -186,16 +187,17 @@ class _ComplaintsInboxFilterPageState
 
                               bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
-                                  assignedTo,
-                                  userBloc.state.whenOrNull(
+                                  complaintAssignedTo: assignedTo,
+                                  currentUserName: userBloc.state.whenOrNull(
                                     authenticated:
                                         (accessToken, refreshToken, userModel) {
                                       return userModel.name;
                                     },
                                   ),
-                                  complaintType,
-                                  locality,
-                                  statuses.toList(),
+                                  complaintTypeCode: complaintType,
+                                  locality: locality,
+                                  complaintStatus: statuses.toList(),
+                                  createdByUserId: context.loggedInUserUuid,
                                 ),
                               );
 

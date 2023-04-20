@@ -72,16 +72,32 @@ class ComplaintsInboxBloc
   ) async {
     emit(state.copyWith(loading: true));
 
-    final complaints = await pgrRepository.search(
-      PgrServiceSearchModel(
-        tenantId: envConfig.variables.tenantId,
-        complaintAssignedTo: event.complaintAssignedTo,
-        currentUserName: event.currentUserName,
-        complaintStatus: event.complaintStatus,
-        complaintTypeCode: event.complaintTypeCode,
-        locality: event.locality,
-      ),
-    );
+    List<PgrServiceModel> complaints = [];
+
+    if (pgrRepository is PgrServiceLocalRepository) {
+      complaints = await (pgrRepository as PgrServiceLocalRepository).search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          complaintAssignedTo: event.complaintAssignedTo,
+          currentUserName: event.currentUserName,
+          complaintStatus: event.complaintStatus,
+          complaintTypeCode: event.complaintTypeCode,
+          locality: event.locality,
+        ),
+        event.createdByUserId,
+      );
+    } else if (pgrRepository is PgrServiceRemoteRepository) {
+      complaints = await pgrRepository.search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          complaintAssignedTo: event.complaintAssignedTo,
+          currentUserName: event.currentUserName,
+          complaintStatus: event.complaintStatus,
+          complaintTypeCode: event.complaintTypeCode,
+          locality: event.locality,
+        ),
+      );
+    }
 
     emit(state.copyWith(
       loading: false,
@@ -158,13 +174,26 @@ class ComplaintsInboxBloc
       return;
     }
 
-    final complaints = await pgrRepository.search(
-      PgrServiceSearchModel(
-        tenantId: envConfig.variables.tenantId,
-        complaintNumber: event.complaintNumber,
-        complainantMobileNumber: event.mobileNumber,
-      ),
-    );
+    List<PgrServiceModel> complaints = [];
+
+    if (pgrRepository is PgrServiceLocalRepository) {
+      complaints = await (pgrRepository as PgrServiceLocalRepository).search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          complaintNumber: event.complaintNumber,
+          complainantMobileNumber: event.mobileNumber,
+        ),
+        event.createdByUserId,
+      );
+    } else if (pgrRepository is PgrServiceRemoteRepository) {
+      complaints = await pgrRepository.search(
+        PgrServiceSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          complaintNumber: event.complaintNumber,
+          complainantMobileNumber: event.mobileNumber,
+        ),
+      );
+    }
 
     emit(state.copyWith(
       loading: false,
@@ -197,18 +226,20 @@ class ComplaintInboxEvent with _$ComplaintInboxEvent {
     @Default("COMPLAINT_SORT_DATE_ASC") String sortOrder,
   ]) = ComplaintInboxSortComplaintsEvent;
 
-  const factory ComplaintInboxEvent.filterComplaints([
+  const factory ComplaintInboxEvent.filterComplaints({
     String? complaintAssignedTo,
     String? currentUserName,
     String? complaintTypeCode,
     String? locality,
+    required String createdByUserId,
     List<PgrServiceApplicationStatus>? complaintStatus,
-  ]) = ComplaintInboxFilterComplaintsEvent;
+  }) = ComplaintInboxFilterComplaintsEvent;
 
-  const factory ComplaintInboxEvent.searchComplaints([
+  const factory ComplaintInboxEvent.searchComplaints({
     String? complaintNumber,
     String? mobileNumber,
-  ]) = ComplaintInboxSearchComplaintsEvent;
+    required String createdByUserId,
+  }) = ComplaintInboxSearchComplaintsEvent;
 
   const factory ComplaintInboxEvent.saveComplaints({
     List<ComplaintsInboxItem>? complaintInboxItems,
