@@ -19,6 +19,13 @@ class ChecklistWrapperPage extends StatelessWidget with AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
+    return const BoundarySelectionWrapper(
+      child: AutoRouter(),
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
 
@@ -40,13 +47,6 @@ class ChecklistWrapperPage extends StatelessWidget with AutoRouteWrapper {
         ),
       ],
       child: this,
-    );
-  }
-
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return const BoundarySelectionWrapper(
-      child: AutoRouter(),
     );
   }
 }
