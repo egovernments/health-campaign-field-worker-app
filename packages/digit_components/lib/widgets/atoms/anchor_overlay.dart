@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import './triangularpointer.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/material.dart';
 import 'package:overlay_builder/overlay_builder.dart';
+
+import './triangularpointer.dart';
 
 class AnchoredOverlay extends StatelessWidget {
   final bool showOverlay;
@@ -29,16 +30,15 @@ class AnchoredOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    late double postion = 0.0;
+    double localPosition = 0.0;
 
     if (MediaQuery.of(context).size.width / 2 < childWidth) {
-      postion = position.dx;
+      localPosition = position.dx;
     } else {
       if (position.dx > MediaQuery.of(context).size.width / 2) {
-        postion = childWidth;
+        localPosition = childWidth;
       } else {
-        postion = position.dx;
+        localPosition = position.dx;
       }
     }
     return OverlayBuilder(
@@ -55,7 +55,7 @@ class AnchoredOverlay extends StatelessWidget {
             ),
             Positioned(
                 top: position.dy + childHeight + 12,
-                left: postion,
+                left: localPosition,
                 child: Card(
                     elevation: 10,
                     margin: DigitTheme.instance.containerMargin,
@@ -100,7 +100,7 @@ class AnchoredOverlay extends StatelessWidget {
                                           ),
                                           onPressed: onTap,
                                           child: const Text(
-                                            true ? 'Next' : 'End',
+                                            'Next',
                                             style: TextStyle(fontSize: 10),
                                           ),
                                         ))

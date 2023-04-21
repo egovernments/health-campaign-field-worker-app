@@ -1,4 +1,3 @@
-import 'package:digit_components/widgets/atoms/anchor_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_builder/overlay_builder.dart';
 
@@ -18,6 +17,7 @@ class DigitWalkthroughWrapper extends StatefulWidget {
     required this.keysArray,
     required this.widgetKey,
   });
+
   @override
   State<StatefulWidget> createState() {
     return DigitWalkthroughWrapperState();
@@ -62,42 +62,24 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
   }
 
   void onSelectedSkip() {
-    widget.widgetKey[index - 1].currentState?.setState(() {
-      widget.widgetKey[index - 1].currentState?.showOverlay = false;
-    });
-    widget.widgetKey[index - 1].currentState?.onButtonTap();
-    setState(() {
-      index = 0;
-    });
+    final currentState = widget.widgetKey[index - 1].currentState;
+    if (currentState == null) return;
+
+    currentState.setState(() => currentState.showOverlay = false);
+    currentState.onButtonTap();
+    setState(() => index = 0);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return OverlayBuilder(
-      type: OverlayType.fullscreen,
-      opaque: true,
-      key: overlaykey,
-      overlayChild: widget.child,
-      child: Material(
-        elevation: 6,
-        type: MaterialType.transparency,
-        child: widget.child,
-      ),
-
-      // : GestureDetector(
-      // onTap: () {
-      //   setState(() {
-      //     showOverlay = true;
-      //   });
-      //   widget.widgetKey[index].currentState?.setState(() {
-      //     widget.widgetKey[index].currentState?.showOverlay = true;
-      //   });
-      //   setState(() {
-      //     index = index + 1;
-      //   });
-      //   widget.widgetKey[index].currentState?.onButtonTap();
-      // },
-      // child: widget.child),
-    );
-  }
+  Widget build(BuildContext context) => OverlayBuilder(
+        type: OverlayType.fullscreen,
+        opaque: true,
+        key: overlaykey,
+        overlayChild: widget.child,
+        child: Material(
+          elevation: 6,
+          type: MaterialType.transparency,
+          child: widget.child,
+        ),
+      );
 }

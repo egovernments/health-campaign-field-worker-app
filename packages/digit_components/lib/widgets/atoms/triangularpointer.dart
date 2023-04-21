@@ -35,12 +35,12 @@ class TriangularClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+  bool shouldReclip(TriangularClipper oldClipper) => false;
 }
 
 class TriangularBorder extends ShapeBorder {
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.only();
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.only();
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) => Path();
@@ -58,6 +58,7 @@ class TriangularBorder extends ShapeBorder {
 
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
+
   @override
   ShapeBorder scale(double t) => TriangularBorder();
 }
