@@ -58,37 +58,31 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
-              state.maybeWhen(
-                orElse: () {
-                  return;
-                },
-                fetched: (projects, selectedProject) {
-                  if (selectedProject != null) {
-                    final boundary = selectedProject.address?.boundary;
-                    if (boundary != null) {
-                      context.read<BoundaryBloc>().add(
-                            BoundarySearchEvent(
-                              code: boundary,
-                            ),
-                          );
-
-                      context.router.replaceAll([
-                        HomeRoute(),
-                        const BoundarySelectionRoute(),
-                      ]);
-                    } else {
-                      DigitToast.show(
-                        context,
-                        options: DigitToastOptions(
-                          'No boundary data associated with this project.',
-                          true,
-                          theme,
+              final selectedProject = state.selectedProject;
+              if (selectedProject != null) {
+                final boundary = selectedProject.address?.boundary;
+                if (boundary != null) {
+                  context.read<BoundaryBloc>().add(
+                        BoundarySearchEvent(
+                          code: boundary,
                         ),
                       );
-                    }
-                  }
-                },
-              );
+
+                  context.router.replaceAll([
+                    HomeRoute(),
+                    const BoundarySelectionRoute(),
+                  ]);
+                } else {
+                  DigitToast.show(
+                    context,
+                    options: DigitToastOptions(
+                      'No boundary data associated with this project.',
+                      true,
+                      theme,
+                    ),
+                  );
+                }
+              }
             },
             builder: (context, state) {
               return state.maybeMap(

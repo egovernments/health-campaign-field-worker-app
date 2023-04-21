@@ -5,7 +5,7 @@ class DigitSyncDialogContent extends StatelessWidget {
   final String label;
   final DigitSyncDialogType type;
 
-  const DigitSyncDialogContent._({
+  const DigitSyncDialogContent({
     super.key,
     required this.label,
     required this.type,
@@ -20,10 +20,28 @@ class DigitSyncDialogContent extends StatelessWidget {
     DigitDialogActions? primaryAction,
     DigitDialogActions? secondaryAction,
   }) async {
-    final content = DigitSyncDialogContent._(
+    return DigitDialog.show<T>(
+      context,
+      options: getDialogOptions(
+        type: type,
+        label: label,
+        primaryAction: primaryAction,
+        secondaryAction: secondaryAction,
+        barrierDismissible: barrierDismissible,
+      ),
+    );
+  }
+
+  static DigitDialogOptions getDialogOptions({
+    required DigitSyncDialogType type,
+    required String label,
+    DigitDialogActions? primaryAction,
+    DigitDialogActions? secondaryAction,
+    bool barrierDismissible = false,
+  }) {
+    final content = DigitSyncDialogContent(
       label: label,
       type: type,
-      key: key,
     );
 
     switch (type) {
@@ -49,21 +67,11 @@ class DigitSyncDialogContent extends StatelessWidget {
         break;
     }
 
-    return DigitDialog.show<T>(
-      context,
-      options: DigitDialogOptions(
-        content: content,
-        primaryAction: primaryAction,
-        secondaryAction: secondaryAction,
-        barrierDismissible: barrierDismissible,
-        contentPadding: const EdgeInsets.fromLTRB(
-          kPadding,
-          kPadding * 3,
-          kPadding,
-          kPadding * 2,
-        ),
-        key: key,
-      ),
+    return DigitSyncDialogOptions(
+      content: content,
+      primaryAction: primaryAction,
+      secondaryAction: secondaryAction,
+      barrierDismissible: barrierDismissible,
     );
   }
 
@@ -101,6 +109,21 @@ class DigitSyncDialogContent extends StatelessWidget {
       ],
     );
   }
+}
+
+class DigitSyncDialogOptions extends DigitDialogOptions {
+  DigitSyncDialogOptions({
+    required super.content,
+    super.primaryAction,
+    super.secondaryAction,
+    super.barrierDismissible = false,
+    super.contentPadding = const EdgeInsets.fromLTRB(
+      kPadding,
+      kPadding * 3,
+      kPadding,
+      kPadding * 2,
+    ),
+  });
 }
 
 enum DigitSyncDialogType { inProgress, complete, failed }

@@ -27,38 +27,29 @@ class RecordStockWrapperPage extends StatelessWidget {
           child: Text('No project selected'),
         );
 
-        return projectState.maybeWhen(
-          orElse: () => noProjectSelected,
-          loading: () => const Center(child: CircularProgressIndicator()),
-          fetched: (projects, selectedProject) {
-            final projectId = selectedProject?.id;
+        final selectedProject = projectState.selectedProject;
+        if (projectState.loading) {
+          const Center(child: CircularProgressIndicator());
+        } else if (selectedProject != null) {
+          final projectId = selectedProject.id;
 
-            if (projectId == null) {
-              return noProjectSelected;
-            }
-
-            if (selectedProject == null) {
-              return const Center(
-                child: Text('Project not selected'),
-              );
-            }
-
-            return FacilityBlocWrapper(
-              child: ProductVariantBlocWrapper(
-                child: BlocProvider(
-                  create: (_) => RecordStockBloc(
-                    RecordStockCreateState(
-                      entryType: type,
-                      projectId: projectId,
-                    ),
-                    stockRepository: stockRepository,
+          return FacilityBlocWrapper(
+            child: ProductVariantBlocWrapper(
+              child: BlocProvider(
+                create: (_) => RecordStockBloc(
+                  RecordStockCreateState(
+                    entryType: type,
+                    projectId: projectId,
                   ),
-                  child: const AutoRouter(),
+                  stockRepository: stockRepository,
                 ),
+                child: const AutoRouter(),
               ),
-            );
-          },
-        );
+            ),
+          );
+        }
+
+        return noProjectSelected;
       },
     );
   }
