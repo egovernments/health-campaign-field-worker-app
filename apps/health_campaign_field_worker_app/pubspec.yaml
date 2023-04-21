@@ -45,6 +45,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   group_radio_button: ^1.3.0
   flutter_portal: ^1.1.3
+  url_launcher: ^6.1.10
   connectivity_plus: ^3.0.3
   material_design_icons_flutter: ^6.0.7096
   shared_preferences: ^2.1.0

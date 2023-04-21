@@ -103,6 +103,7 @@ part 'app_router.gr.dart';
               page: ReasonForDeletionPage,
               path: 'reason-for-deletion',
             ),
+            AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
         ),
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
@@ -116,7 +117,9 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ComplaintsAcknowledgementPage, path: 'complaints-acknowledgement'),
+        AutoRoute(
+            page: ComplaintsAcknowledgementPage,
+            path: 'complaints-acknowledgement'),
 
         /// Inventory Routes
         AutoRoute(

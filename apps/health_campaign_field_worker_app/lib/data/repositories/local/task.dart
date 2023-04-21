@@ -77,6 +77,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     TaskSearchModel query, [
     String? userId,
   ]) async {
+    print("----Query---");
+    print(query.projectBeneficiaryClientReferenceId);
+    print(query.clientReferenceId);
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.address,
@@ -99,7 +102,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 query.clientReferenceId!,
               ),
             if (query.projectBeneficiaryClientReferenceId != null)
-              sql.task.projectBeneficiaryClientReferenceId.equals(
+              sql.task.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
             if (userId != null)
@@ -108,6 +111,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               ),
           ])))
         .get();
+    print(results);
+    print("----");
 
     return results
         .map((e) {
@@ -125,6 +130,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             isDeleted: task.isDeleted,
             projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
+            projectBeneficiaryClientReferenceId:
+                task.projectBeneficiaryClientReferenceId,
             createdDate: task.createdDate,
             address: address == null
                 ? null

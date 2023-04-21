@@ -21,6 +21,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
+  final String beneficiaryType;
   final String projectId;
   final String userUid;
   final IndividualDataRepository individual;
@@ -37,6 +38,7 @@ class SearchHouseholdsBloc
     required this.household,
     required this.projectBeneficiary,
     required this.taskDataRepository,
+    required this.beneficiaryType,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -136,11 +138,15 @@ class SearchHouseholdsBloc
       final projectBeneficiaries = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
           projectId: event.projectId,
-          beneficiaryClientReferenceId: event.householdModel.clientReferenceId,
+          beneficiaryClientReferenceId: beneficiaryType == 'INDIVIDUAL'
+              ? individuals.map((e) => e.clientReferenceId).toList()
+              : [event.householdModel.clientReferenceId],
+
+          //[TODO] Need to check for beneficiaryId
         ),
       );
 
-      final projectBeneficiaryModel = projectBeneficiaries.firstOrNull;
+      final projectBeneficiaryModel = projectBeneficiaries;
       final headOfHousehold = individuals.firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
@@ -210,6 +216,7 @@ class SearchHouseholdsBloc
     );
 
     final householdMembers = <HouseholdMemberModel>[];
+
     for (final element in results) {
       final members = await householdMember.search(
         HouseholdMemberSearchModel(
@@ -266,26 +273,45 @@ class SearchHouseholdsBloc
 
       if (head == null) continue;
 
-      final projectBeneficiaries = await projectBeneficiary.search(
-        ProjectBeneficiarySearchModel(
-          beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
-          projectId: event.projectId,
-        ),
-      );
+      print(individualIds);
+
+      final projectBeneficiaries = beneficiaryType != 'INDIVIDUAL'
+          ? await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: [
+                  resultHousehold.clientReferenceId,
+                ],
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            )
+          : await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: individualIds,
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            );
+      print(individualIds.length);
+      print(projectBeneficiaries);
+      print("-------Length----");
+      print(projectBeneficiaries.map((e) => e.clientReferenceId).toList());
 
       if (projectBeneficiaries.isEmpty) continue;
       final tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.first.clientReferenceId,
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
+      print(tasks.length);
+      print("-------Task----");
 
       containers.add(
         HouseholdMemberWrapper(
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          projectBeneficiary: projectBeneficiaries.first,
-          task: tasks.isEmpty ? null : tasks.first,
+          projectBeneficiary: projectBeneficiaries,
+          task: tasks.isEmpty ? null : tasks,
         ),
       );
     }
@@ -351,7 +377,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required HouseholdModel household,
     required IndividualModel headOfHousehold,
     required List<IndividualModel> members,
-    required ProjectBeneficiaryModel projectBeneficiary,
-    TaskModel? task,
+    required List<ProjectBeneficiaryModel> projectBeneficiary,
+    List<TaskModel>? task,
   }) = _HouseholdMemberWrapper;
 }

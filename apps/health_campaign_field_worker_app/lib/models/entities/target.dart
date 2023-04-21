@@ -23,6 +23,7 @@ class TargetModel extends EntityModel {
   static const schemaName = 'Target';
 
   final String id;
+  final String? clientReferenceId;
   final String? beneficiaryType;
   final String? baseline;
   final String? target;
@@ -34,6 +35,7 @@ class TargetModel extends EntityModel {
   TargetModel({
     this.additionalFields,
     required this.id,
+    this.clientReferenceId,
     this.beneficiaryType,
     this.baseline,
     this.target,
@@ -51,6 +53,7 @@ class TargetModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
+      clientReferenceId: Value(clientReferenceId),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),

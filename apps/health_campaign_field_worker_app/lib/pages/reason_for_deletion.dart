@@ -48,7 +48,7 @@ class _ReasonForDeletionPageState
 
                   return DigitElevatedButton(
                     onPressed: () {
-                      widget.isHousholdDelete
+                      !widget.isHousholdDelete
                           ? context.read<HouseholdOverviewBloc>().add(
                                 HouseholdOverviewDeleteIndividualEvent(
                                   projectId: ctx.projectId,
@@ -65,7 +65,8 @@ class _ReasonForDeletionPageState
                                   members: state.householdMemberWrapper.members,
                                   projectBeneficiaryModel: state
                                       .householdMemberWrapper
-                                      .projectBeneficiary,
+                                      .projectBeneficiary
+                                      .first,
                                 ),
                               );
 

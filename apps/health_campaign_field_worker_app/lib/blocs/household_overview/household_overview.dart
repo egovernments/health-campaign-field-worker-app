@@ -106,8 +106,10 @@ class HouseholdOverviewBloc
 
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
-        beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
+        beneficiaryClientReferenceId: [resultHousehold.clientReferenceId],
         projectId: event.projectId,
+
+        // [TODO] Need to pass as a  based on Beneficiary Type
       ),
     );
 
@@ -119,7 +121,7 @@ class HouseholdOverviewBloc
 
     final tasks = await taskDataRepository.search(TaskSearchModel(
       projectBeneficiaryClientReferenceId:
-          projectBeneficiaries.first.clientReferenceId,
+          projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
     ));
 
     emit(
@@ -128,8 +130,8 @@ class HouseholdOverviewBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          task: tasks.isEmpty ? null : tasks.first,
-          projectBeneficiary: projectBeneficiaries.first,
+          task: tasks.isEmpty ? null : tasks,
+          projectBeneficiary: projectBeneficiaries,
         ),
         loading: false,
       ),

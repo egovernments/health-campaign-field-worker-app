@@ -49,7 +49,7 @@ class DeliverInterventionBloc
     try {
       final List<TaskModel> tasks =
           await taskRepository.search(event.taskSearch);
-      if (tasks.isNotEmpty) emit(state.copyWith(task: tasks.first));
+      if (tasks.isNotEmpty) emit(state.copyWith(task: tasks));
     } catch (error) {
       rethrow;
     } finally {
@@ -75,6 +75,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
   const factory DeliverInterventionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
-    TaskModel? task,
+    List<TaskModel>? task,
   }) = _DeliverInterventionState;
 }

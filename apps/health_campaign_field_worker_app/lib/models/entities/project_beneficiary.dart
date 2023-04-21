@@ -10,12 +10,12 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
-  final String? beneficiaryClientReferenceId;
+  final List<String>? beneficiaryClientReferenceId;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
   final DateTime? dateOfRegistrationTime;
-  
+
   ProjectBeneficiarySearchModel({
     this.id,
     this.projectId,
@@ -26,18 +26,16 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.isDeleted,
     int? dateOfRegistration,
     super.boundaryCode,
-  }): dateOfRegistrationTime = dateOfRegistration == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-   super();
+  })  : dateOfRegistrationTime = dateOfRegistration == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
+        super();
 
   int? get dateOfRegistration => dateOfRegistrationTime?.millisecondsSinceEpoch;
-  
 }
 
 @MappableClass(ignoreNull: true)
 class ProjectBeneficiaryModel extends EntityModel {
-
   static const schemaName = 'ProjectBeneficiary';
 
   final String? id;
@@ -63,11 +61,11 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.rowVersion,
     required int dateOfRegistration,
     super.auditDetails,
-  }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
-      super();
+  })  : dateOfRegistrationTime =
+            DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
+        super();
 
-  int  get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
-  
+  int get dateOfRegistration => dateOfRegistrationTime.millisecondsSinceEpoch;
 
   ProjectBeneficiaryCompanion get companion {
     return ProjectBeneficiaryCompanion(
@@ -85,7 +83,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       dateOfRegistration: Value(dateOfRegistration),
-      );
+    );
   }
 }
 

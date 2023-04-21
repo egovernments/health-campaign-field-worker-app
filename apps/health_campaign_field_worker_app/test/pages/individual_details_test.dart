@@ -144,6 +144,7 @@ void main() {
                 householdMemberRepository: MockHouseholdMemberRepository(),
                 projectBeneficiaryRepository:
                     MockProjectBeneficiaryRepository(),
+                beneficiaryType: '',
               ),
             ),
           ],

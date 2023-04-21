@@ -163,6 +163,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
 
         final selectedProject = await localSecureStore.selectedProject;
+
         emit(
           ProjectSelectionFetchedState(
             projects: projects,

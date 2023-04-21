@@ -16,6 +16,8 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final beneficiaryType = context.beneficiaryType;
+
     final individual =
         context.repository<IndividualModel, IndividualSearchModel>();
 
@@ -35,6 +37,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
         householdRepository: household,
         householdMemberRepository: householdMember,
         projectBeneficiaryRepository: projectBeneficiary,
+        beneficiaryType: beneficiaryType,
       ),
       child: const AutoRouter(),
     );

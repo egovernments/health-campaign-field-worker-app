@@ -401,6 +401,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       context,
                                       rootNavigator: true,
                                     ).pop(true);
+                                    if (context.router.stackData.first.path ==
+                                        'overview') {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: false,
+                                      ).pop(true);
+                                    }
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(
@@ -415,6 +422,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                               ),
                             );
+
                             if (shouldSubmit ?? false) {
                               router.navigate(ChecklistRoute());
                               router.push(AcknowledgementRoute());

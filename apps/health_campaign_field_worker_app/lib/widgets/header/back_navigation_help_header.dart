@@ -9,12 +9,14 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
   final bool showBackNavigation;
   final bool showLogoutCTA;
+  final VoidCallback? helpClicked;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
     this.showHelp = true,
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
+    this.helpClicked,
   });
 
   @override
@@ -60,7 +62,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
         if (showHelp) ...[
           TextButton(
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
-            onPressed: null,
+            onPressed: helpClicked,
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)

@@ -17,6 +17,8 @@ class ProjectLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectCompanion = entity.companion;
+
+    final targets = entity.targets;
     final addressCompanion =
         entity.address?.copyWith(relatedClientReferenceId: entity.id).companion;
     await sql.batch((batch) {
@@ -29,6 +31,17 @@ class ProjectLocalRepository
         batch.insert(
           sql.address,
           addressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+      if (targets != null) {
+        final targetsCompanions = targets.map((e) {
+          return e.copyWith(clientReferenceId: entity.id).companion;
+        }).toList();
+
+        batch.insertAll(
+          sql.target,
+          targetsCompanions,
           mode: InsertMode.insertOrReplace,
         );
       }
@@ -62,6 +75,18 @@ class ProjectLocalRepository
           ])))
         .get();
 
+    final targetresults = await (selectQuery
+          ..where(buildAnd([
+            if (query.id != null) sql.target.clientReferenceId.equals(query.id),
+          ])))
+        .get();
+
+    final targetList = targetresults.map((e) {
+      final target = e.readTableOrNull(sql.target);
+    });
+
+    print(targetList);
+
     return results.map((e) {
       final data = e.readTable(sql.project);
       final address = e.readTableOrNull(sql.address);
@@ -91,6 +116,16 @@ class ProjectLocalRepository
                 boundaryType: address.boundary,
                 rowVersion: address.rowVersion,
               ),
+        targets: targetresults.isEmpty
+            ? null
+            : targetresults.map((e) {
+                final target = e.readTableOrNull(sql.target);
+
+                return TargetModel(
+                  id: target!.id,
+                  beneficiaryType: target.beneficiaryType,
+                );
+              }).toList(),
       );
     }).toList();
   }

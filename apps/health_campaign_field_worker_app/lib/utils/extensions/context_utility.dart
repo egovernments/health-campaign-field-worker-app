@@ -40,6 +40,24 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  String get beneficiaryType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+
+    final selectedBeneficiary = projectState.maybeWhen(
+      orElse: () => '',
+      fetched: (projects, selectedProject) =>
+          selectedProject!.targets!.first.beneficiaryType!,
+    );
+
+    if (selectedBeneficiary == '') {
+      throw AppException('Beneficiary Type No selected');
+    }
+
+    return selectedBeneficiary;
+  }
+
   String get loggedInUserUuid {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(

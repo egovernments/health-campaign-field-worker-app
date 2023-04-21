@@ -55,5 +55,20 @@ for env_option in "${env_list[@]}"; do
   mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 done
 
+<<<<<<< HEAD
 open outputs
 echo "APK generation complete."
+=======
+echo "Creating env configs"
+echo "--------------------"
+cp -fr .env-uat .env
+echo
+
+echo "Generating UAT APK"
+echo "------------------"
+flutter build apk
+cp -fr build/app/outputs/flutter-apk/app-release.apk release-apk/apk-uat.apk
+echo
+
+open release-apkge
+>>>>>>> 104821bfaa7383664dff0a28ac6aae3e508f4c36

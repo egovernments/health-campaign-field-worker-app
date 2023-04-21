@@ -1,8 +1,14 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/household_overview/household_overview.dart';
+import '../../data/local_store/sql_store/tables/individual.dart';
+import '../../models/entities/individual.dart';
+import '../../models/entities/task.dart';
+import '../../router/app_router.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../action_card/action_card.dart';
 
 class MemberCard extends StatelessWidget {
@@ -10,6 +16,7 @@ class MemberCard extends StatelessWidget {
   final String gender;
   final int age;
   final bool isHead;
+  final IndividualModel individual;
   final bool isDelivered;
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
@@ -18,6 +25,7 @@ class MemberCard extends StatelessWidget {
 
   const MemberCard({
     super.key,
+    required this.individual,
     required this.name,
     required this.gender,
     required this.age,
@@ -32,6 +40,8 @@ class MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final beneficiaryType = context.beneficiaryType;
+    print(isDelivered);
 
     return Container(
       decoration: BoxDecoration(
@@ -133,7 +143,7 @@ class MemberCard extends StatelessWidget {
           ],
         ),
         Offstage(
-          offstage: true,
+          offstage: beneficiaryType != 'INDIVIDUAL',
           child: !isDelivered
               ? Align(
                   alignment: Alignment.centerLeft,
@@ -159,29 +169,44 @@ class MemberCard extends StatelessWidget {
                 ),
         ),
         Offstage(
-          offstage: true,
-          child: isDelivered
+          offstage: beneficiaryType != 'INDIVIDUAL',
+          child: !isDelivered
               ? DigitElevatedButton(
-                  onPressed: () {
-                    // TODO: Complete implementation
+                  onPressed: () async {
+                    context.read<HouseholdOverviewBloc>().add(
+                          HouseholdOverviewEvent.selectedIndividual(
+                            individualModel: individual,
+                          ),
+                        );
+                    await context.router.push(DeliverInterventionRoute());
                   },
                   child: Center(
                     child: Text(
                       localizations.translate(
-                        i18.memberCard.deliverInterventionSubmitLabel,
+                        i18.householdOverView.householdOverViewActionText,
                       ),
                     ),
                   ),
                 )
-              : SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: DigitOutLineButton(
-                    label: localizations
-                        .translate(i18.memberCard.deliverDetailsUpdateLabel),
-                    onPressed: () {
-                      // TODO: Complete implementation
-                    },
-                  ),
+              : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                  builder: (ctx, state) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: DigitOutLineButton(
+                        label: localizations.translate(
+                          i18.memberCard.deliverDetailsUpdateLabel,
+                        ),
+                        onPressed: () async {
+                          context.read<HouseholdOverviewBloc>().add(
+                                HouseholdOverviewEvent.selectedIndividual(
+                                  individualModel: individual,
+                                ),
+                              );
+                          await context.router.push(DeliverInterventionRoute());
+                        },
+                      ),
+                    );
+                  },
                 ),
         ),
       ]),

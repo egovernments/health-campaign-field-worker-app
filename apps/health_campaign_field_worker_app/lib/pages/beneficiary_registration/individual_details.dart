@@ -189,6 +189,7 @@ class _IndividualDetailsPageState
                               individualModel: individual,
                               addressModel: addressModel,
                               userUuid: userId,
+                              projectId: context.projectId,
                             ),
                           );
                         },
