@@ -305,37 +305,40 @@ class _ComplaintsInboxFilterPageState
                                   menuItems: locality.toList(),
                                   valueMapper: (value) => value.trim(),
                                 ),
-                                LabeledField(
-                                  label: localizations.translate(
-                                    i18.complaints.inboxStatusLabel,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ...uniqueStatuses.map((e) => Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 16),
-                                            child: DigitCheckbox(
-                                              label:
-                                                  '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
-                                              value: selected[e] ?? false,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  if (selected[e]!) {
-                                                    statuses.remove(e);
-                                                    selected[e] = false;
+                                if (uniqueStatuses.isNotEmpty) ...[
+                                  LabeledField(
+                                    label: localizations.translate(
+                                      i18.complaints.inboxStatusLabel,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ...uniqueStatuses.map((e) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 16,
+                                              ),
+                                              child: DigitCheckbox(
+                                                label:
+                                                    '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
+                                                value: selected[e] ?? false,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    if (selected[e]!) {
+                                                      statuses.remove(e);
+                                                      selected[e] = false;
 
-                                                    return;
-                                                  }
+                                                      return;
+                                                    }
 
-                                                  selected[e] = true;
-                                                  statuses.add(e);
-                                                });
-                                              },
-                                            ),
-                                          )),
-                                    ],
+                                                    selected[e] = true;
+                                                    statuses.add(e);
+                                                  });
+                                                },
+                                              ),
+                                            )),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ],
                             );
                           },
