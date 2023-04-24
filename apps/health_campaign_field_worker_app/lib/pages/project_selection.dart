@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,8 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 }
 
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
+  DialogRoute? syncDialogRoute;
+
   @override
   void initState() {
     context.read<ProjectBloc>().add(const ProjectInitializeEvent());
@@ -58,35 +61,115 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
-              final selectedProject = state.selectedProject;
-              if (selectedProject != null) {
-                final boundary = selectedProject.address?.boundary;
-                if (boundary != null) {
-                  context.read<BoundaryBloc>().add(
-                        BoundarySearchEvent(
-                          code: boundary,
-                        ),
-                      );
+              state.whenOrNull(
+                syncInProgress: () {
+                  if (syncDialogRoute?.isActive ?? false) {
+                    Navigator.of(context).removeRoute(syncDialogRoute!);
+                  }
 
-                  context.router.replaceAll([
-                    HomeRoute(),
-                    const BoundarySelectionRoute(),
-                  ]);
-                } else {
-                  DigitToast.show(
-                    context,
-                    options: DigitToastOptions(
-                      'No boundary data associated with this project.',
-                      true,
-                      theme,
+                  syncDialogRoute = DialogRoute(
+                    context: context,
+                    builder: (context) => DigitDialog(
+                      options: DigitSyncDialog.getDigitDialog(
+                        type: DigitSyncDialogType.inProgress,
+                        label: 'In progress',
+                        barrierDismissible: false,
+                      ),
                     ),
                   );
-                }
-              }
+
+                  Navigator.of(context).push(syncDialogRoute!);
+                },
+                syncSuccess: () {
+                  if (syncDialogRoute?.isActive ?? false) {
+                    Navigator.of(context).removeRoute(syncDialogRoute!);
+                  }
+
+                  syncDialogRoute = DialogRoute(
+                    context: context,
+                    builder: (context) => DigitDialog(
+                      options: DigitSyncDialog.getDigitDialog(
+                        type: DigitSyncDialogType.complete,
+                        label: 'Data synced',
+                        primaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Close',
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                  Navigator.of(context).push(syncDialogRoute!);
+                },
+                syncFailed: () {
+                  if (syncDialogRoute?.isActive ?? false) {
+                    Navigator.of(context).removeRoute(syncDialogRoute!);
+                  }
+
+                  syncDialogRoute = DialogRoute(
+                    context: context,
+                    builder: (context) => DigitDialog(
+                      options: DigitSyncDialog.getDigitDialog(
+                        type: DigitSyncDialogType.failed,
+                        label: 'Sync Failed !',
+                        primaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Retry',
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                            context.read<ProjectBloc>().add(
+                                  const ProjectInitializeEvent(),
+                                );
+                          },
+                        ),
+                        secondaryAction: DigitDialogActions(
+                          // TODO: Localization Pending
+                          label: 'Close',
+                          action: (ctx) => Navigator.pop(ctx),
+                        ),
+                      ),
+                    ),
+                  );
+                  Navigator.of(context).push(syncDialogRoute!);
+                },
+                fetched: (projects, selectedProject) {
+                  if (selectedProject == null) return;
+
+                  final boundary = selectedProject.address?.boundary;
+                  if (boundary != null) {
+                    context.read<BoundaryBloc>().add(
+                          BoundarySearchEvent(
+                            code: boundary,
+                          ),
+                        );
+
+                    context.router.replaceAll([
+                      HomeRoute(),
+                      const BoundarySelectionRoute(),
+                    ]);
+                  } else {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        'No boundary data associated with this project.',
+                        true,
+                        theme,
+                      ),
+                    );
+                  }
+                },
+              );
             },
             builder: (context, state) {
+              const loadingWidget = Expanded(
+                child: Center(child: CircularProgressIndicator()),
+              );
+
               return state.maybeMap(
-                orElse: () => Center(
+                orElse: () => const SizedBox.shrink(),
+                empty: (value) => Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Column(
@@ -121,11 +204,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     ),
                   ),
                 ),
-                loading: (value) => const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                loading: (value) => loadingWidget,
+                syncInProgress: (value) => loadingWidget,
                 fetched: (ProjectSelectionFetchedState value) => Column(
                   children: value.projects
                       .map(

@@ -44,154 +44,158 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
-        final selectedProject = projectState.selectedProject;
-
-        if (selectedProject == null) {
-          return const Center(
-            child: Text('Projects not initialized'),
-          );
-        }
-
-        final theme = Theme.of(context);
-
-        return BlocConsumer<FacilityBloc, FacilityState>(
-          listener: (context, state) {
-            state.whenOrNull(
-              empty: () => NoFacilitiesAssignedDialog.show(context),
+        return projectState.maybeWhen(
+          orElse: () {
+            return const Center(
+              child: Text('Projects not initialized'),
             );
           },
-          builder: (ctx, facilityState) {
-            final facilities = facilityState.whenOrNull(
-                  fetched: (facilities, _) => facilities,
-                ) ??
-                [];
+          fetched: (projects, selectedProject) {
+            final theme = Theme.of(context);
 
-            return Scaffold(
-              body: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: ReactiveFormBuilder(
-                  form: buildForm,
-                  builder: (context, form, child) {
-                    return ScrollableContent(
-                      header: Column(children: const [
-                        BackNavigationHelpHeaderWidget(),
-                      ]),
-                      footer: SizedBox(
-                        height: 85,
-                        child: DigitCard(
-                          margin: const EdgeInsets.only(
-                            left: 0,
-                            right: 0,
-                            top: 10,
-                          ),
-                          child: ReactiveFormConsumer(
-                            builder: (context, form, child) {
-                              return DigitElevatedButton(
-                                onPressed: !form.valid
-                                    ? null
-                                    : () {
-                                        form.markAllAsTouched();
-                                        if (!form.valid) {
-                                          return;
-                                        }
-                                        final dateOfRecord = form
-                                            .control(_dateOfEntryKey)
-                                            .value as DateTime;
+            return BlocConsumer<FacilityBloc, FacilityState>(
+              listener: (context, state) {
+                state.whenOrNull(
+                  empty: () => NoFacilitiesAssignedDialog.show(context),
+                );
+              },
+              builder: (ctx, facilityState) {
+                final facilities = facilityState.whenOrNull(
+                      fetched: (facilities, _) => facilities,
+                    ) ??
+                    [];
 
-                                        final facility = form
-                                            .control(_warehouseKey)
-                                            .value as FacilityModel;
+                return Scaffold(
+                  body: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: ReactiveFormBuilder(
+                      form: buildForm,
+                      builder: (context, form, child) {
+                        return ScrollableContent(
+                          header: Column(children: const [
+                            BackNavigationHelpHeaderWidget(),
+                          ]),
+                          footer: SizedBox(
+                            height: 85,
+                            child: DigitCard(
+                              margin: const EdgeInsets.only(
+                                left: 0,
+                                right: 0,
+                                top: 10,
+                              ),
+                              child: ReactiveFormConsumer(
+                                builder: (context, form, child) {
+                                  return DigitElevatedButton(
+                                    onPressed: !form.valid
+                                        ? null
+                                        : () {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) {
+                                              return;
+                                            }
+                                            final dateOfRecord = form
+                                                .control(_dateOfEntryKey)
+                                                .value as DateTime;
 
-                                        context.read<RecordStockBloc>().add(
-                                              RecordStockSaveWarehouseDetailsEvent(
-                                                dateOfRecord: dateOfRecord,
-                                                facilityModel: facility,
-                                              ),
+                                            final facility = form
+                                                .control(_warehouseKey)
+                                                .value as FacilityModel;
+
+                                            context.read<RecordStockBloc>().add(
+                                                  RecordStockSaveWarehouseDetailsEvent(
+                                                    dateOfRecord: dateOfRecord,
+                                                    facilityModel: facility,
+                                                  ),
+                                                );
+                                            context.router.push(
+                                              StockDetailsRoute(),
                                             );
-                                        context.router.push(
-                                          StockDetailsRoute(),
-                                        );
-                                      },
-                                child: child!,
-                              );
-                            },
-                            child: Center(
-                              child: Text(
-                                localizations.translate(
-                                  i18.householdDetails.actionLabel,
+                                          },
+                                    child: child!,
+                                  );
+                                },
+                                child: Center(
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.householdDetails.actionLabel,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      children: [
-                        DigitCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                localizations.translate(
-                                  i18.warehouseDetails.warehouseDetailsLabel,
-                                ),
-                                style: theme.textTheme.displayMedium,
-                              ),
-                              Column(children: [
-                                DigitDateFormPicker(
-                                  isEnabled: false,
-                                  formControlName: _dateOfEntryKey,
-                                  label: localizations.translate(
-                                    i18.warehouseDetails.dateOfReceipt,
-                                  ),
-                                  isRequired: false,
-                                ),
-                                DigitTextFormField(
-                                  readOnly: true,
-                                  formControlName: _administrativeUnitKey,
-                                  label: localizations.translate(
-                                    i18.warehouseDetails.administrativeUnit,
-                                  ),
-                                ),
-                              ]),
-                              DigitTextFormField(
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
-                                isRequired: true,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
-                                ),
-                                suffix: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                                formControlName: _warehouseKey,
-                                readOnly: true,
-                                onTap: () async {
-                                  final parent =
-                                      context.router.parent() as StackRouter;
-                                  final facility =
-                                      await parent.push<FacilityModel>(
-                                    FacilitySelectionRoute(
-                                      facilities: facilities,
+                          children: [
+                            DigitCard(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                      i18.warehouseDetails
+                                          .warehouseDetailsLabel,
                                     ),
-                                  );
+                                    style: theme.textTheme.displayMedium,
+                                  ),
+                                  Column(children: [
+                                    DigitDateFormPicker(
+                                      isEnabled: false,
+                                      formControlName: _dateOfEntryKey,
+                                      label: localizations.translate(
+                                        i18.warehouseDetails.dateOfReceipt,
+                                      ),
+                                      isRequired: false,
+                                    ),
+                                    DigitTextFormField(
+                                      readOnly: true,
+                                      formControlName: _administrativeUnitKey,
+                                      label: localizations.translate(
+                                        i18.warehouseDetails.administrativeUnit,
+                                      ),
+                                    ),
+                                  ]),
+                                  DigitTextFormField(
+                                    valueAccessor: FacilityValueAccessor(
+                                      facilities,
+                                    ),
+                                    isRequired: true,
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails
+                                          .facilityLabel,
+                                    ),
+                                    suffix: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search),
+                                    ),
+                                    formControlName: _warehouseKey,
+                                    readOnly: true,
+                                    onTap: () async {
+                                      final parent = context.router.parent()
+                                          as StackRouter;
+                                      final facility =
+                                          await parent.push<FacilityModel>(
+                                        FacilitySelectionRoute(
+                                          facilities: facilities,
+                                        ),
+                                      );
 
-                                  if (facility == null) return;
-                                  form.control(_warehouseKey).value = facility;
-                                },
+                                      if (facility == null) return;
+                                      form.control(_warehouseKey).value =
+                                          facility;
+                                    },
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
             );
           },
         );

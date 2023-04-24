@@ -89,121 +89,118 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
-        super(const ProjectState(projects: [])) {
-    on<ProjectInitializeEvent>(_handleProjectInit);
-    on<ProjectLoadProjectsEvent>(_handleLoadProjects);
-    on<ProjectSelectProjectEvent>(_handleProjectSelection);
+        super(const ProjectsEmptyState()) {
+    on(_handleProjectInit);
+    on(_handleProjectSelection);
   }
 
   FutureOr<void> _handleProjectInit(
     ProjectInitializeEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(state.copyWith(
-      loading: true,
-      isSyncSuccess: false,
-    ));
+    emit(const ProjectLoadingState());
 
     final connectivityResult = await (Connectivity().checkConnectivity());
+
+    List<ProjectModel> projects;
 
     switch (connectivityResult) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
-        emit(state.copyWith(isOffline: false));
-        add(const ProjectLoadProjectsEvent(offline: false));
+        projects = await _loadProjectsOnline();
+
+        if (projects.isEmpty) {
+          emit(const ProjectsEmptyState());
+
+          return;
+        }
+
+        emit(const ProjectStateSyncInProgress());
+        try {
+          await _loadProjectFacilities(projects);
+          await _loadProductVariants(projects);
+          await _loadServiceDefinition(projects);
+        } catch (error) {
+          emit(const ProjectStateSyncFailed());
+          emit(const ProjectsEmptyState());
+        }
+
+        emit(const ProjectStateSyncSuccess());
+        emit(ProjectSelectionFetchedState(projects: projects));
+        if (projects.length == 1) {
+          add(ProjectSelectProjectEvent(projects.first));
+        }
+
         break;
       default:
-        emit(state.copyWith(isOffline: true));
-        add(const ProjectLoadProjectsEvent(offline: true));
+        projects = await _loadProjectsOffline();
+        ProjectModel? selectedProject;
+
+        selectedProject = await localSecureStore.selectedProject;
+
+        emit(
+          ProjectSelectionFetchedState(
+            projects: projects,
+            selectedProject: selectedProject,
+          ),
+        );
     }
   }
 
-  Future<void> _handleLoadProjects(
-    ProjectLoadProjectsEvent event,
-    ProjectEmitter emit,
-  ) async {
-    ProjectModel? selectedProject;
+  Future<List<ProjectModel>> _loadProjectsOnline() async {
+    final userObject = await localSecureStore.userRequestModel;
+    final uuid = userObject?.uuid;
+
+    List<ProjectStaffModel> projectStaffList =
+        await projectStaffRemoteRepository.search(
+      ProjectStaffSearchModel(staffId: uuid),
+    );
+
+    projectStaffList.removeDuplicates((e) => e.id);
+
+    if (projectStaffList.isEmpty) return [];
+
     List<ProjectModel> projects = [];
 
-    if (event.offline) {
-      projects = await projectLocalRepository.search(
+    for (final projectStaff in projectStaffList) {
+      await projectStaffLocalRepository.create(
+        projectStaff,
+        createOpLog: false,
+      );
+
+      final staffProjects = await projectRemoteRepository.search(
         ProjectSearchModel(
-          tenantId: envConfig.variables.tenantId,
+          id: projectStaff.projectId,
+          tenantId: projectStaff.tenantId,
         ),
       );
 
-      selectedProject = projects.length == 1
-          ? projects.first
-          : await localSecureStore.selectedProject;
-    } else {
-      final userObject = await localSecureStore.userRequestModel;
-      final uuid = userObject?.uuid;
-
-      List<ProjectStaffModel> projectStaffList =
-          await projectStaffRemoteRepository.search(
-        ProjectStaffSearchModel(staffId: uuid),
-      );
-
-      projectStaffList.removeDuplicates((e) => e.id);
-
-      if (projectStaffList.isNotEmpty) {
-        for (final projectStaff in projectStaffList) {
-          await projectStaffLocalRepository.create(
-            projectStaff,
-            createOpLog: false,
-          );
-
-          final staffProjects = await projectRemoteRepository.search(
-            ProjectSearchModel(
-              id: projectStaff.projectId,
-              tenantId: projectStaff.tenantId,
-            ),
-          );
-
-          projects.addAll(staffProjects);
-        }
-        projects.removeDuplicates((e) => e.id);
-
-        if (projects.length == 1) {
-          selectedProject ??= projects.first;
-        }
-
-        for (final project in projects) {
-          await projectLocalRepository.create(
-            project,
-            createOpLog: false,
-          );
-        }
-
-        if (projects.isNotEmpty) {
-          if (!state.hasSyncedProjectFacilities) {
-            await _loadProjectFacilities(projects, emit);
-          }
-          if (state.hasSyncedProductVariants) {
-            await _loadProductVariants(projects, emit);
-          }
-          if (!state.hasSyncedServiceDefinitions) {
-            await _loadServiceDefinition(projects, emit);
-          }
-        }
-      }
+      projects.addAll(staffProjects);
     }
 
-    emit(
-      state.copyWith(
-        projects: projects,
-        selectedProject: selectedProject,
-        hasSyncedProjects: true,
-        isSyncSuccess: true,
-        loading: false,
-      ),
-    );
+    projects.removeDuplicates((e) => e.id);
+
+    for (final project in projects) {
+      await projectLocalRepository.create(
+        project,
+        createOpLog: false,
+      );
+    }
+
+    return projects;
   }
 
-  FutureOr<void> _loadProjectFacilities(
-    List<ProjectModel> projects,
-    ProjectEmitter emit,
-  ) async {
+  Future<List<ProjectModel>> _loadProjectsOffline() async {
+    final projects = await projectLocalRepository.search(
+      ProjectSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ),
+    );
+
+    return projects;
+  }
+
+  FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
@@ -231,14 +228,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
       }
     }
-
-    emit(state.copyWith(hasSyncedProjectFacilities: true));
   }
 
-  FutureOr<void> _loadServiceDefinition(
-    List<ProjectModel> projects,
-    ProjectEmitter emit,
-  ) async {
+  FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
     final configs = await isar.appConfigurations.where().findAll();
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
@@ -264,14 +256,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         createOpLog: false,
       );
     }
-
-    emit(state.copyWith(hasSyncedServiceDefinitions: true));
   }
 
-  FutureOr<void> _loadProductVariants(
-    List<ProjectModel> projects,
-    ProjectEmitter emit,
-  ) async {
+  FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
         ProjectResourceSearchModel(projectId: project.id),
@@ -297,32 +284,40 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         }
       }
     }
-    emit(state.copyWith(hasSyncedProductVariants: true));
   }
 
   Future<void> _handleProjectSelection(
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
-
-    final List<BoundaryModel> boundaries =
-        await boundaryRemoteRepository.search(
-      BoundarySearchModel(
-        boundaryType: event.model.address?.boundaryType,
-        code: event.model.address?.boundaryCode.toString(),
-      ),
+    final projects = state.maybeMap(
+      orElse: () => <ProjectModel>[],
+      fetched: (value) => value.projects,
     );
 
-    await localSecureStore.setSelectedProject(event.model);
-    await boundaryLocalRepository.bulkCreate(boundaries);
+    if (projects.isEmpty) throw AppException('Projects cannot be empty');
 
+    emit(const ProjectStateSyncInProgress());
+
+    List<BoundaryModel> boundaries;
+    try {
+      boundaries = await boundaryRemoteRepository.search(
+        BoundarySearchModel(
+          boundaryType: event.model.address?.boundaryType,
+          code: event.model.address?.boundaryCode.toString(),
+        ),
+      );
+      await boundaryLocalRepository.bulkCreate(boundaries);
+      emit(const ProjectStateSyncSuccess());
+    } catch (error) {
+      emit(const ProjectStateSyncFailed());
+    }
+
+    await localSecureStore.setSelectedProject(event.model);
     emit(
-      state.copyWith(
+      ProjectSelectionFetchedState(
+        projects: projects,
         selectedProject: event.model,
-        hasSyncedBoundaries: true,
-        isSyncSuccess: true,
-        loading: false,
       ),
     );
   }
@@ -332,36 +327,26 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 class ProjectEvent with _$ProjectEvent {
   const factory ProjectEvent.initialize() = ProjectInitializeEvent;
 
-  const factory ProjectEvent.loadProjects({
-    @Default(false) bool offline,
-  }) = ProjectLoadProjectsEvent;
-
   const factory ProjectEvent.selectProject(ProjectModel model) =
       ProjectSelectProjectEvent;
 }
 
 @freezed
 class ProjectState with _$ProjectState {
-  const ProjectState._();
+  const factory ProjectState.uninitialized() = ProjectUninitializedState;
 
-  const factory ProjectState({
-    @Default(false) bool isOffline,
-    @Default(false) bool loading,
-    @Default(false) bool hasSyncedProjects,
-    @Default(false) bool hasSyncedProjectFacilities,
-    @Default(false) bool hasSyncedProductVariants,
-    @Default(false) bool hasSyncedServiceDefinitions,
-    @Default(false) bool hasSyncedBoundaries,
-    @Default([]) List<ProjectModel> projects,
-    @Default(false) bool isSyncSuccess,
+  const factory ProjectState.loading() = ProjectLoadingState;
+
+  const factory ProjectState.empty() = ProjectsEmptyState;
+
+  const factory ProjectState.syncInProgress() = ProjectStateSyncInProgress;
+
+  const factory ProjectState.syncFailed() = ProjectStateSyncFailed;
+
+  const factory ProjectState.syncSuccess() = ProjectStateSyncSuccess;
+
+  const factory ProjectState.fetched({
+    required List<ProjectModel> projects,
     ProjectModel? selectedProject,
-  }) = _ProjectState;
-
-  bool get isEmpty => projects.isEmpty;
-
-  bool get hasSyncedAll =>
-      hasSyncedProjects &&
-      hasSyncedProjectFacilities &&
-      hasSyncedProductVariants &&
-      hasSyncedServiceDefinitions;
+  }) = ProjectSelectionFetchedState;
 }
