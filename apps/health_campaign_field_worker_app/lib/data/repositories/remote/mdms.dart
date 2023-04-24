@@ -138,9 +138,6 @@ class MdmsRepository {
           return callnumber;
         }).toList();
       }
-      callSupportList.add(CallSupportList()
-        ..code = '+91-9686151676'
-        ..name = 'Support desk-1');
 
       final List<HouseholdDeletionReasonOptions>
           householdDeletionReasonOptions =
