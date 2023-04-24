@@ -13,6 +13,7 @@ import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
 class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
@@ -186,16 +187,17 @@ class _ComplaintsInboxFilterPageState
 
                               bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
-                                  assignedTo,
-                                  userBloc.state.whenOrNull(
+                                  complaintAssignedTo: assignedTo,
+                                  currentUserName: userBloc.state.whenOrNull(
                                     authenticated:
                                         (accessToken, refreshToken, userModel) {
                                       return userModel.name;
                                     },
                                   ),
-                                  complaintType,
-                                  locality,
-                                  statuses.toList(),
+                                  complaintTypeCode: complaintType,
+                                  locality: locality,
+                                  complaintStatus: statuses.toList(),
+                                  createdByUserId: context.loggedInUserUuid,
                                 ),
                               );
 
@@ -303,37 +305,40 @@ class _ComplaintsInboxFilterPageState
                                   menuItems: locality.toList(),
                                   valueMapper: (value) => value.trim(),
                                 ),
-                                LabeledField(
-                                  label: localizations.translate(
-                                    i18.complaints.inboxStatusLabel,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ...uniqueStatuses.map((e) => Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 16),
-                                            child: DigitCheckbox(
-                                              label:
-                                                  '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
-                                              value: selected[e] ?? false,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  if (selected[e]!) {
-                                                    statuses.remove(e);
-                                                    selected[e] = false;
+                                if (uniqueStatuses.isNotEmpty) ...[
+                                  LabeledField(
+                                    label: localizations.translate(
+                                      i18.complaints.inboxStatusLabel,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ...uniqueStatuses.map((e) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 16,
+                                              ),
+                                              child: DigitCheckbox(
+                                                label:
+                                                    '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
+                                                value: selected[e] ?? false,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    if (selected[e]!) {
+                                                      statuses.remove(e);
+                                                      selected[e] = false;
 
-                                                    return;
-                                                  }
+                                                      return;
+                                                    }
 
-                                                  selected[e] = true;
-                                                  statuses.add(e);
-                                                });
-                                              },
-                                            ),
-                                          )),
-                                    ],
+                                                    selected[e] = true;
+                                                    statuses.add(e);
+                                                  });
+                                                },
+                                              ),
+                                            )),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ],
                             );
                           },

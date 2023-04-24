@@ -159,15 +159,25 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
                     onPressed: () async {
+                      var loggedInUserUuid = context.loggedInUserUuid;
                       final bloc = context.read<ComplaintsInboxBloc>();
 
                       await router.push(
                         ComplaintsRegistrationWrapperRoute(),
                       );
 
-                      bloc.add(
-                        const ComplaintInboxLoadComplaintsEvent(),
-                      );
+                      try {
+                        bloc.add(
+                          ComplaintInboxLoadComplaintsEvent(
+                            createdByUserId: loggedInUserUuid,
+                          ),
+                        );
+                      } catch (error) {
+                        AppLogger.instance.error(
+                          title: 'Error',
+                          message: 'Error while loading complaints',
+                        );
+                      }
                     },
                     child: Center(
                       child: Text(

@@ -88,13 +88,20 @@ class _ComplaintsInboxSearchPageState
                             onPressed: () {
                               if (!formGroup.valid) return;
 
-                              final complaintNumberValue = formGroup.control(_complaintNumber).value;
-                              final mobileNumberValue = formGroup.control(_mobileNumber).value;
+                              final complaintNumberValue =
+                                  formGroup.control(_complaintNumber).value;
+                              final mobileNumberValue =
+                                  formGroup.control(_mobileNumber).value;
 
                               bloc.add(
                                 ComplaintInboxSearchComplaintsEvent(
-                                  complaintNumberValue == "" ? null : complaintNumberValue,
-                                  mobileNumberValue == "" ? null : mobileNumberValue,
+                                  mobileNumber: mobileNumberValue == ""
+                                      ? null
+                                      : mobileNumberValue,
+                                  complaintNumber: complaintNumberValue == ""
+                                      ? null
+                                      : complaintNumberValue,
+                                  createdByUserId: context.loggedInUserUuid,
                                 ),
                               );
 

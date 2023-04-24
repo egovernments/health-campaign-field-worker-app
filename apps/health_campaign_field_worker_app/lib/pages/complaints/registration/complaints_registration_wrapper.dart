@@ -8,8 +8,10 @@ import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/boundary_selection_wrapper.dart';
 
-class ComplaintsRegistrationWrapperPage extends StatelessWidget {
+class ComplaintsRegistrationWrapperPage extends StatelessWidget
+    with AutoRouteWrapper {
   final PgrServiceModel? pgrServiceModel;
 
   const ComplaintsRegistrationWrapperPage({
@@ -19,6 +21,13 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const BoundarySelectionWrapper(
+      child: AutoRouter(),
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
       create: (context) {
         ComplaintsRegistrationState initialState;
@@ -59,7 +68,7 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget {
               context.repository<PgrServiceModel, PgrServiceSearchModel>(),
         );
       },
-      child: const AutoRouter(),
+      child: this,
     );
   }
 }

@@ -98,6 +98,9 @@ class BoundarySelectionPage extends StatelessWidget {
                           onPressed: selectedBoundary == null
                               ? null
                               : () {
+                                  context.read<BoundaryBloc>().add(
+                                        const BoundarySubmitEvent(),
+                                      );
                                   context.router.pop();
                                 },
                           child: const Text('Submit'),

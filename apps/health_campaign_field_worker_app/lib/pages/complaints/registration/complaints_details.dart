@@ -5,6 +5,7 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/auth/auth.dart';
+import '../../../blocs/boundary/boundary.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../router/app_router.dart';
@@ -51,17 +52,19 @@ class _ComplaintsDetailsPageState
               throw const InvalidComplaintsRegistrationStateException(),
           view: (value) => buildForm(value),
         ),
-        builder: (_, form, __) => BlocListener<ComplaintsRegistrationBloc,
-            ComplaintsRegistrationState>(
-          listener: (context, complaintState) {
-            complaintState.mapOrNull(
-              persisted: (value) {
-                router.replace(ComplaintsAcknowledgementRoute());
-              },
-            );
+        builder: (_, form, __) => BlocListener<BoundaryBloc, BoundaryState>(
+          listener: (context, state) {
+            context.navigateTo(HomeRoute());
           },
-          child: BlocBuilder<ComplaintsRegistrationBloc,
+          child: BlocConsumer<ComplaintsRegistrationBloc,
               ComplaintsRegistrationState>(
+            listener: (context, complaintState) {
+              complaintState.mapOrNull(
+                persisted: (value) {
+                  router.replace(ComplaintsAcknowledgementRoute());
+                },
+              );
+            },
             builder: (context, state) {
               return ScrollableContent(
                 header: Column(
@@ -267,9 +270,10 @@ class _ComplaintsDetailsPageState
                                       item.trim(),
                                     ),
                                   ),
-                                  if (form.touched && form
-                                      .control(_complaintRaisedFor)
-                                      .invalid) ...[
+                                  if (form.touched &&
+                                      form
+                                          .control(_complaintRaisedFor)
+                                          .invalid) ...[
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Padding(
