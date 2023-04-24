@@ -21,7 +21,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final DateTime? end;
   final String? hint;
   final IconData? icon;
-  final String? toolTipMsg;
+  final String? tooltipMessage;
 
   const DigitDateFormPicker({
     super.key,
@@ -41,7 +41,7 @@ class DigitDateFormPicker extends StatelessWidget {
     this.start,
     this.hint,
     this.icon,
-    this.toolTipMsg,
+    this.tooltipMessage,
   });
 
   @override
@@ -49,7 +49,7 @@ class DigitDateFormPicker extends StatelessWidget {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
       icon: icon,
-      toolTipMsg: toolTipMsg,
+      tooltipMessage: tooltipMessage,
       child: ReactiveDatePicker(
         formControlName: formControlName,
         firstDate: start ?? DateTime(1900),
