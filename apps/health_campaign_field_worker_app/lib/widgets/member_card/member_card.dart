@@ -41,7 +41,6 @@ class MemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
-    print(isDelivered);
 
     return Container(
       decoration: BoxDecoration(

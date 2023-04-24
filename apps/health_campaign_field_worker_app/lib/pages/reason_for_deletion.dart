@@ -55,6 +55,8 @@ class _ReasonForDeletionPageState
                                   householdModel:
                                       state.householdMemberWrapper.household,
                                   individualModel: state.selectedIndividual!,
+                                  projectBeneficiaryType:
+                                      context.beneficiaryType,
                                 ),
                               )
                           : context.read<HouseholdOverviewBloc>().add(
@@ -67,6 +69,8 @@ class _ReasonForDeletionPageState
                                       .householdMemberWrapper
                                       .projectBeneficiary
                                       .first,
+                                  projectBeneficiaryType:
+                                      context.beneficiaryType,
                                 ),
                               );
 

@@ -433,6 +433,8 @@ class StockReconciliationDetails {
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
 
+  String get stockLabel => 'STOCK_LABEL';
+
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
 
   String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
@@ -591,13 +593,16 @@ class Complaints {
 
   String get acknowledgementAction => 'COMPLAINTS_ACKNOWLEDGEMENT_ACTION';
 
-  String get acknowledgementDescription => 'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
+  String get acknowledgementDescription =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
 
   String get acknowledgementLabel => 'COMPLAINTS_ACKNOWLEDGEMENT_LABEL';
 
-  String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
+  String get acknowledgementSubLabelMain =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
 
-  String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+  String get acknowledgementSubLabelSub =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 }
 
 class ReasonForDeletion {

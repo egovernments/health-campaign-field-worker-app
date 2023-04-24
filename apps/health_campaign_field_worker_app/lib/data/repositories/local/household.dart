@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class HouseholdLocalRepository
     extends LocalRepository<HouseholdModel, HouseholdSearchModel> {
@@ -105,6 +106,7 @@ class HouseholdLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final householdCompanion = entity.companion;
+    final localityCompanion = entity.address?.locality?.companion;
     final addressCompanion = entity.address?.companion;
 
     await sql.batch((batch) async {
@@ -118,6 +120,13 @@ class HouseholdLocalRepository
         batch.insert(
           sql.address,
           addressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+      if (localityCompanion != null) {
+        batch.insert(
+          sql.locality,
+          localityCompanion,
           mode: InsertMode.insertOrReplace,
         );
       }

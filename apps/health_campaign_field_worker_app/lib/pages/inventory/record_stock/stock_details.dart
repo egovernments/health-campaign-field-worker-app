@@ -405,8 +405,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     facilities,
                                   ),
                                   label: localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .facilityLabel,
+                                    '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
                                   ),
                                   isRequired: true,
                                   suffix: const Padding(

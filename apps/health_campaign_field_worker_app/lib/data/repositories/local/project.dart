@@ -81,12 +81,6 @@ class ProjectLocalRepository
           ])))
         .get();
 
-    final targetList = targetresults.map((e) {
-      final target = e.readTableOrNull(sql.target);
-    });
-
-    print(targetList);
-
     return results.map((e) {
       final data = e.readTable(sql.project);
       final address = e.readTableOrNull(sql.address);

@@ -308,21 +308,24 @@ class BeneficiaryRegistrationBloc
           );
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
-          await projectBeneficiaryRepository.create(
-            ProjectBeneficiaryModel(
-              rowVersion: 1,
-              tenantId: envConfig.variables.tenantId,
-              clientReferenceId: IdGen.i.identifier,
-              dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
-              projectId: event.projectId,
-              beneficiaryClientReferenceId:
-                  event.individualModel.clientReferenceId,
-              auditDetails: AuditDetails(
-                createdBy: event.userUuid,
-                createdTime: createdAt,
+
+          if (event.beneficiaryType == 'INDIVIDUAL') {
+            await projectBeneficiaryRepository.create(
+              ProjectBeneficiaryModel(
+                rowVersion: 1,
+                tenantId: envConfig.variables.tenantId,
+                clientReferenceId: IdGen.i.identifier,
+                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                projectId: event.projectId,
+                beneficiaryClientReferenceId:
+                    event.individualModel.clientReferenceId,
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
               ),
-            ),
-          );
+            );
+          }
 
           await householdMemberRepository.create(
             HouseholdMemberModel(
@@ -375,6 +378,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
     required String userUuid,
     required String projectId,
+    required String beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({

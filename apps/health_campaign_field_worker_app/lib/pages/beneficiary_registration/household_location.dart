@@ -111,6 +111,10 @@ class _HouseholdLocationPageState
                               longitude: form.control(_lngKey).value,
                               locationAccuracy:
                                   form.control(_accuracyKey).value,
+                              locality: LocalityModel(
+                                code: context.boundary.code!,
+                                name: context.boundary.name,
+                              ),
                               tenantId: envConfig.variables.tenantId,
                               rowVersion: 1,
                               auditDetails: AuditDetails(
@@ -137,6 +141,7 @@ class _HouseholdLocationPageState
                               addressLine1: addressLine1,
                               addressLine2: addressLine2,
                               landmark: landmark,
+                              locality: address.locality,
                               pincode: postalCode,
                               type: AddressType.correspondence,
                               latitude: form.control(_latKey).value,

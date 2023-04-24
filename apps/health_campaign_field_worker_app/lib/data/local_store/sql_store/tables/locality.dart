@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 
 class Locality extends Table {
+  TextColumn get relatedClientReferenceId => text().nullable()();
   TextColumn get code => text()();
   TextColumn get name => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
@@ -17,5 +18,5 @@ class Locality extends Table {
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { code, auditCreatedBy,  };
+  Set<Column> get primaryKey => { relatedClientReferenceId, code, auditCreatedBy,  };
 }

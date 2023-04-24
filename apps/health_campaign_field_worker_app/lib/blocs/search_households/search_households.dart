@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,6 +91,8 @@ class SearchHouseholdsBloc
     );
 
     final interventionDelivered = tasks
+        .where((element) => element.projectId == projectId)
+        .whereNotNull()
         .map(
           (task) {
             return task.resources?.where((element) {
@@ -273,8 +276,6 @@ class SearchHouseholdsBloc
 
       if (head == null) continue;
 
-      print(individualIds);
-
       final projectBeneficiaries = beneficiaryType != 'INDIVIDUAL'
           ? await projectBeneficiary.search(
               ProjectBeneficiarySearchModel(
@@ -292,18 +293,12 @@ class SearchHouseholdsBloc
                 projectId: event.projectId,
               ),
             );
-      print(individualIds.length);
-      print(projectBeneficiaries);
-      print("-------Length----");
-      print(projectBeneficiaries.map((e) => e.clientReferenceId).toList());
 
       if (projectBeneficiaries.isEmpty) continue;
       final tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
-      print(tasks.length);
-      print("-------Task----");
 
       containers.add(
         HouseholdMemberWrapper(

@@ -36,24 +36,28 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
 
   void onSelectedTap() {
     if (widget.keysArray.length == index) {
-      widget.widgetKey[index - 1].currentState?.setState(() {
-        widget.widgetKey[index - 1].currentState?.showOverlay = false;
-      });
       widget.widgetKey[index - 1].currentState?.onButtonTap();
+      widget.widgetKey[index - 1].currentState?.setState(() {
+        widget.widgetKey[index - 1].currentState?.showROverlay = false;
+      });
+
       setState(() {
         index = 0;
       });
     } else {
       if (index > 0) {
-        widget.widgetKey[index - 1].currentState?.onButtonTap();
         widget.widgetKey[index - 1].currentState?.setState(() {
-          widget.widgetKey[index - 1].currentState?.showOverlay = false;
+          widget.widgetKey[index - 1].currentState?.showROverlay = false;
         });
+        widget.widgetKey[index - 1].currentState?.onButtonTap();
       }
-      widget.widgetKey[index].currentState?.onButtonTap();
 
       widget.widgetKey[index].currentState?.setState(() {
-        widget.widgetKey[index].currentState?.showOverlay = true;
+        widget.widgetKey[index].currentState?.showROverlay = false;
+      });
+      widget.widgetKey[index].currentState?.onButtonTap();
+      widget.widgetKey[index].currentState?.setState(() {
+        widget.widgetKey[index].currentState?.showROverlay = true;
       });
       setState(() {
         index = index + 1;
@@ -63,7 +67,7 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
 
   void onSelectedSkip() {
     widget.widgetKey[index - 1].currentState?.setState(() {
-      widget.widgetKey[index - 1].currentState?.showOverlay = false;
+      widget.widgetKey[index - 1].currentState?.showROverlay = false;
     });
     widget.widgetKey[index - 1].currentState?.onButtonTap();
     setState(() {
@@ -74,8 +78,8 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
   @override
   Widget build(BuildContext context) {
     return OverlayBuilder(
-      type: OverlayType.fullscreen,
       opaque: true,
+      type: OverlayType.fullscreen,
       key: overlaykey,
       overlayChild: widget.child,
       child: Material(
@@ -83,21 +87,6 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
         type: MaterialType.transparency,
         child: widget.child,
       ),
-
-      // : GestureDetector(
-      // onTap: () {
-      //   setState(() {
-      //     showOverlay = true;
-      //   });
-      //   widget.widgetKey[index].currentState?.setState(() {
-      //     widget.widgetKey[index].currentState?.showOverlay = true;
-      //   });
-      //   setState(() {
-      //     index = index + 1;
-      //   });
-      //   widget.widgetKey[index].currentState?.onButtonTap();
-      // },
-      // child: widget.child),
     );
   }
 }

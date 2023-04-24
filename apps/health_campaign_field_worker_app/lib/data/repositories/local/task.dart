@@ -77,9 +77,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     TaskSearchModel query, [
     String? userId,
   ]) async {
-    print("----Query---");
-    print(query.projectBeneficiaryClientReferenceId);
-    print(query.clientReferenceId);
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.address,
@@ -111,8 +108,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               ),
           ])))
         .get();
-    print(results);
-    print("----");
 
     return results
         .map((e) {

@@ -53,9 +53,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                     query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
-                  sql.projectBeneficiary.beneficiaryClientReferenceId.isIn(
-                    query.beneficiaryClientReferenceId!,
-                  ),
+                  sql.projectBeneficiary.beneficiaryClientReferenceId
+                      .isIn(query.beneficiaryClientReferenceId!),
                 if (query.id != null)
                   sql.projectBeneficiary.id.equals(
                     query.id,

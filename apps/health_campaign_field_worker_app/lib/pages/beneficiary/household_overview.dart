@@ -27,6 +27,7 @@ class _HouseholdOverviewPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final beneficiaryType = context.beneficiaryType;
 
     return BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
       builder: (ctx, state) {
@@ -124,6 +125,8 @@ class _HouseholdOverviewPageState
                                               bloc.add(
                                                 HouseholdOverviewReloadEvent(
                                                   projectId: projectId,
+                                                  projectBeneficiaryType:
+                                                      beneficiaryType,
                                                 ),
                                               );
                                             },
@@ -188,8 +191,7 @@ class _HouseholdOverviewPageState
                               BlocBuilder<DeliverInterventionBloc,
                                   DeliverInterventionState>(
                                 builder: (ctx, state) => Offstage(
-                                  offstage:
-                                      context.beneficiaryType == 'INDIVIDUAL',
+                                  offstage: beneficiaryType == 'INDIVIDUAL',
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: DigitIconButton(
@@ -231,7 +233,7 @@ class _HouseholdOverviewPageState
                                   localizations.translate(
                                     i18.householdLocation
                                         .administrationAreaFormLabel,
-                                  ): 'Solimbo',
+                                  ): context.boundary.name,
                                   localizations.translate(
                                     i18.deliverIntervention.memberCountText,
                                   ): state.householdMemberWrapper.household
@@ -252,8 +254,7 @@ class _HouseholdOverviewPageState
                                         DeliverInterventionState>(
                                       builder: (ctx, deliverState) {
                                         final projectBeneficiary =
-                                            context.beneficiaryType !=
-                                                    'INDIVIDUAL'
+                                            beneficiaryType != 'INDIVIDUAL'
                                                 ? [
                                                     state
                                                         .householdMemberWrapper
@@ -320,6 +321,8 @@ class _HouseholdOverviewPageState
                                             bloc.add(
                                               HouseholdOverviewReloadEvent(
                                                 projectId: projectId,
+                                                projectBeneficiaryType:
+                                                    beneficiaryType,
                                               ),
                                             );
                                           },
@@ -333,6 +336,8 @@ class _HouseholdOverviewPageState
                                                     householdModel: state
                                                         .householdMemberWrapper
                                                         .household,
+                                                    projectBeneficiaryType:
+                                                        beneficiaryType,
                                                   ),
                                                 );
 
@@ -438,10 +443,10 @@ class _HouseholdOverviewPageState
                                         ],
                                       ),
                                     );
-
                                     bloc.add(
                                       HouseholdOverviewReloadEvent(
                                         projectId: projectId,
+                                        projectBeneficiaryType: beneficiaryType,
                                       ),
                                     );
                                   },
@@ -460,7 +465,7 @@ class _HouseholdOverviewPageState
                   },
                 ),
           bottomNavigationBar: Offstage(
-            offstage: context.beneficiaryType == 'INDIVIDUAL',
+            offstage: beneficiaryType == 'INDIVIDUAL',
             child: SizedBox(
               height: 85,
               child: BlocBuilder<DeliverInterventionBloc,
@@ -489,6 +494,7 @@ class _HouseholdOverviewPageState
                             bloc.add(
                               HouseholdOverviewReloadEvent(
                                 projectId: projectId,
+                                projectBeneficiaryType: beneficiaryType,
                               ),
                             );
                           },

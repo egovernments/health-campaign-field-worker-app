@@ -90,13 +90,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 projectBeneficiary.first.clientReferenceId)
             .toList();
 
-        print("--------END---------");
-        print(
-          [
-            e.name?.givenName,
-            e.name?.familyName,
-          ].whereNotNull().join('-'),
-        );
         final rowTableData = [
           TableData(
             [

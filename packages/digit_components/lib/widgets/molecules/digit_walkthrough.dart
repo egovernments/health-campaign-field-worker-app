@@ -29,27 +29,21 @@ class DigitWalkthrough extends StatefulWidget {
 }
 
 class DigitWalkthroughState extends State<DigitWalkthrough> {
-  final _overlayFullscreen = GlobalKey<OverlayWidgetState>();
-  bool showOverlay = false;
-  late double childHeight;
-  late double childWidth;
-  late Offset position;
+  bool showROverlay = false;
+  double childHeight = 0.0;
+  double childWidth = 0.0;
+  Offset position = Offset.zero;
 
-  DigitWalkthroughState(
-      {this.position = Offset.zero,
-      this.childHeight = 0.0,
-      this.childWidth = 0.0}) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initOffsetsPositions();
-    });
-  }
-
-  OverlayWidgetState? get overlayWidgetController {
+  OverlayWidgetState? get overlayFullscreenController {
     return widget.overlayWidget.currentState;
   }
 
-  OverlayWidgetState? get overlayFullscreenController {
-    return _overlayFullscreen.currentState;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initOffsetsPositions();
+    });
   }
 
   void initOffsetsPositions() {
@@ -63,26 +57,28 @@ class DigitWalkthroughState extends State<DigitWalkthrough> {
   }
 
   void onButtonTap() {
-    overlayWidgetController?.toggle();
     overlayFullscreenController?.toggle();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: widget.widgetHeight,
-        child: AnchoredOverlay(
-            showOverlay: showOverlay,
-            description: widget.description,
-            paramKey: widget.overlayWidget,
-            onTap: widget.onTap,
-            onSkip: widget.onSkip,
-            position: position,
-            childHeight: childHeight,
-            childWidth: childWidth,
-            child: IgnorePointer(
-              ignoring: showOverlay,
-              child: widget.child,
-            )));
+      height: widget.widgetHeight,
+      child: GestureDetector(
+          onTap: () => initOffsetsPositions(),
+          child: AnchoredOverlay(
+              showOverlay: showROverlay,
+              description: widget.description,
+              paramKey: widget.overlayWidget,
+              onTap: widget.onTap,
+              onSkip: widget.onSkip,
+              position: position,
+              childHeight: childHeight,
+              childWidth: childWidth,
+              child: IgnorePointer(
+                ignoring: showROverlay,
+                child: widget.child,
+              ))),
+    );
   }
 }

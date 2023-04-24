@@ -185,6 +185,7 @@ class _IndividualDetailsPageState
 
                           bloc.add(
                             BeneficiaryRegistrationAddMemberEvent(
+                              beneficiaryType: context.beneficiaryType,
                               householdModel: householdModel,
                               individualModel: individual,
                               addressModel: addressModel,

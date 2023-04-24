@@ -115,6 +115,12 @@ class IndividualLocalRepository
                     otherNames: name.otherNames,
                     rowVersion: name.rowVersion,
                     tenantId: name.tenantId,
+                    auditDetails: AuditDetails(
+                      createdBy: name.auditCreatedBy!,
+                      createdTime: name.auditCreatedTime!,
+                      lastModifiedBy: name.auditModifiedBy,
+                      lastModifiedTime: name.auditModifiedTime,
+                    ),
                   ),
             bloodGroup: individual.bloodGroup,
             address: [

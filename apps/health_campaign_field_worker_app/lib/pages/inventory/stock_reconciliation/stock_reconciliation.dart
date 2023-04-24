@@ -475,18 +475,22 @@ class _StockReconciliationPageState
                                           decimal: false,
                                         ),
                                         validationMessages: {
-                                          "required": (object) => i18
-                                              .stockReconciliationDetails
-                                              .manualCountRequiredError,
-                                          "number": (object) => i18
-                                              .stockReconciliationDetails
-                                              .manualCountInvalidType,
-                                          "min": (object) => i18
-                                              .stockReconciliationDetails
-                                              .manualCountMinError,
-                                          "max": (object) => i18
-                                              .stockReconciliationDetails
-                                              .manualCountMaxError,
+                                          "required": (object) =>
+                                              localizations.translate(i18
+                                                  .stockReconciliationDetails
+                                                  .manualCountRequiredError),
+                                          "number": (object) =>
+                                              localizations.translate(i18
+                                                  .stockReconciliationDetails
+                                                  .manualCountInvalidType),
+                                          "min": (object) =>
+                                              localizations.translate(i18
+                                                  .stockReconciliationDetails
+                                                  .manualCountMinError),
+                                          "max": (object) =>
+                                              localizations.translate(i18
+                                                  .stockReconciliationDetails
+                                                  .manualCountMaxError),
                                         },
                                       ),
                                       DigitTextFormField(
