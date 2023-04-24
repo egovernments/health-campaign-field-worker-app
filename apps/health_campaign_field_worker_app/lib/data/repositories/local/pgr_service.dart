@@ -110,6 +110,8 @@ class PgrServiceLocalRepository
           ..where(
             buildAnd(
               [
+                if(userId != null)
+                  sql.pgrService.auditCreatedBy.equals(userId),
                 if (query.tenantId != null)
                   sql.pgrService.tenantId.equals(query.tenantId),
                 if (query.clientReferenceId != null)
