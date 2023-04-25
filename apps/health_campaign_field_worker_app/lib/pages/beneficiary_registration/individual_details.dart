@@ -231,7 +231,9 @@ class _IndividualDetailsPageState
                             maxLength: 200,
                             isRequired: true,
                             validationMessages: {
-                              'required': (object) => 'Name is required',
+                              'required': (object) => localizations.translate(
+                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                  ),
                             },
                           ),
                           Offstage(
@@ -297,7 +299,7 @@ class _IndividualDetailsPageState
                                     ),
                                     validationMessages: {
                                       'required': (object) =>
-                                          'ID Number is required',
+                                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
                                     },
                                   );
                                 },
@@ -314,6 +316,9 @@ class _IndividualDetailsPageState
                               i18.individualDetails.ageLabelText,
                             ),
                             separatorLabel: localizations.translate(
+                              i18.individualDetails.separatorLabelText,
+                            ),
+                            errorMessage: localizations.translate(
                               i18.individualDetails.separatorLabelText,
                             ),
                           ),

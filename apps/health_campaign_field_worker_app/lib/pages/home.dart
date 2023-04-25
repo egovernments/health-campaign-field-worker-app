@@ -15,7 +15,6 @@ import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../models/app_config/app_config_model.dart';
 import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
@@ -149,7 +148,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         context,
                         type: DigitSyncDialogType.inProgress,
                         // TODO: Localization pending
-                        label: 'Sync in Progress', barrierDismissible: false,
+                        label: localizations.translate(
+                          i18.common.coreCommonSyncProgress,
+                        ),
+                        barrierDismissible: false,
                       ),
                       completedSync: () {
                         Navigator.of(context, rootNavigator: true).pop();
@@ -158,10 +160,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                           context,
                           type: DigitSyncDialogType.complete,
                           // TODO: Localization Pending
-                          label: 'Data Synced',
+                          label: localizations
+                              .translate(i18.common.coreCommonDataSynced),
                           primaryAction: DigitDialogActions(
                             // TODO: Localization Pending
-                            label: 'Close',
+                            label: localizations
+                                .translate(i18.common.corecommonclose),
                             action: (ctx) {
                               Navigator.pop(ctx);
                             },
@@ -174,19 +178,19 @@ class _HomePageState extends LocalizedState<HomePage> {
                         DigitSyncDialogContent.show(
                           context,
                           type: DigitSyncDialogType.failed,
-                          // TODO: Localization Pending
-                          label: 'Sync Failed !',
+                          label: localizations
+                              .translate(i18.common.coreCommonDataSyncFailed),
                           primaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: 'Retry',
+                            label: localizations
+                                .translate(i18.common.coreCommonDataSyncRetry),
                             action: (ctx) {
                               Navigator.pop(ctx);
                               _attemptSyncUp(context);
                             },
                           ),
                           secondaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: 'Close',
+                            label: localizations
+                                .translate(i18.common.corecommonclose),
                             action: (ctx) => Navigator.pop(ctx),
                           ),
                         );

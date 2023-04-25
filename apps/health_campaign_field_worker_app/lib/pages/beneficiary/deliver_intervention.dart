@@ -281,7 +281,10 @@ class _DeliverInterventionPageState
                                       parent
                                         ..pop()
                                         ..pop();
-                                      router.push(AcknowledgementRoute());
+
+                                      router.push(ChecklistViewRoute());
+
+                                      // router.push(AcknowledgementRoute());
                                     }
                                   },
                                   child: Center(
@@ -470,7 +473,10 @@ class _DeliverInterventionPageState
                                           menuItems: productVariants,
                                           validationMessages: {
                                             'required': (object) =>
-                                                'Field is required',
+                                                localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .resourceDeliveredError,
+                                                ),
                                           },
                                           formControlName:
                                               _resourceDeliveredKey,

@@ -438,6 +438,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 decimal: true,
                               ),
                               isRequired: true,
+                              validationMessages: {
+                                "required": (object) => localizations.translate(
+                                      '${quantityCountLabel}_REQUIRED',
+                                    ),
+                              },
                               label: localizations.translate(
                                 quantityCountLabel,
                               ),

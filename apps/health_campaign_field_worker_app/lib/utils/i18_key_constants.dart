@@ -53,6 +53,14 @@ class Common {
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
+
+  String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
+
+  String get coreCommonDataSynced => 'CORE_COMMON_DATA_SYNCED';
+
+  String get coreCommonDataSyncFailed => 'CORE_COMMON_DATA_SYNC_FAILED';
+
+  String get coreCommonDataSyncRetry => 'CORE_COMMON_DATA_SYNC_RETRY';
 }
 
 class Login {
@@ -176,6 +184,8 @@ class IndividualDetails {
   String get separatorLabelText => 'SEPARATOR_LABEL_TEXT';
 
   String get genderLabelText => 'GENDER_LABEL_TEXT';
+
+  String get dobErrorText => 'DOB_ERROR_MESSAGE';
 
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
@@ -304,6 +314,9 @@ class DeliverIntervention {
 
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
+
+  String get resourceDeliveredError =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';

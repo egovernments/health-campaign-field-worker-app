@@ -65,14 +65,14 @@ class _SearchBeneficiaryPageState
                               title:
                                   searchState.registeredHouseholds.toString(),
                               content: localizations.translate(
-                                i18.searchBeneficiary.noOfHouseholdsRegistered,
+                                '${context.beneficiaryType}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
                               ),
                             ),
                             BeneficiaryStatisticsModel(
                               title:
                                   searchState.deliveredInterventions.toString(),
                               content: localizations.translate(
-                                i18.searchBeneficiary.noOfResourcesDelivered,
+                                '${context.beneficiaryType}_${i18.searchBeneficiary.noOfResourcesDelivered}',
                               ),
                             ),
                           ],
