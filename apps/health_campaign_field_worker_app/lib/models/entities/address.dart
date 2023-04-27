@@ -73,6 +73,8 @@ class AddressModel extends EntityModel {
 
   AddressCompanion get companion {
     return AddressCompanion(
+      localityBoundaryCode: Value(locality?.code),
+      localityBoundaryName: Value(locality?.name),
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
