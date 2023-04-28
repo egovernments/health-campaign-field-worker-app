@@ -28,6 +28,7 @@ class DigitTextFormField extends StatelessWidget {
   final Map<String, String Function(Object control)>? validationMessages;
   final String? prefixText;
   final Widget? prefixIcon;
+  final TextStyle? labelStyle;
 
   const DigitTextFormField(
       {super.key,
@@ -53,11 +54,13 @@ class DigitTextFormField extends StatelessWidget {
       this.inputFormatter,
       this.prefixIcon,
       this.prefixText,
-      this.hintText});
+      this.hintText,
+      this.labelStyle});
 
   @override
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
+        labelStyle: labelStyle,
         child: Column(
           children: [
             ReactiveTextField(

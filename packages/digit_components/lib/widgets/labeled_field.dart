@@ -5,13 +5,15 @@ class LabeledField extends StatelessWidget {
   final String label;
   final IconData? icon;
   final String? toolTipMsg;
+  final TextStyle? labelStyle;
 
   const LabeledField(
       {super.key,
       required this.child,
       required this.label,
       this.icon,
-      this.toolTipMsg});
+      this.toolTipMsg,
+      this.labelStyle});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -24,7 +26,7 @@ class LabeledField extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.labelSmall,
+                  style: labelStyle ?? Theme.of(context).textTheme.labelSmall,
                 ),
                 icon != null
                     ? Tooltip(
