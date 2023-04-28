@@ -68,6 +68,9 @@ class _ComplaintsDetailsPageState
               );
             },
             builder: (context, state) {
+              final isRaisedForSelf = form.control(_complaintRaisedFor).value ==
+                  i18.complaints.raisedForMyself;
+
               return ScrollableContent(
                 header: Column(
                   children: const [
@@ -305,8 +308,7 @@ class _ComplaintsDetailsPageState
                                 authenticated: (value) {
                                   var user = value.userModel;
 
-                                  if (form.control(_complaintRaisedFor).value ==
-                                      i18.complaints.raisedForMyself) {
+                                  if (isRaisedForSelf) {
                                     form.control(_complainantName).value =
                                         user.name;
                                     form
@@ -323,10 +325,7 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantName,
                                     ),
-                                    readOnly: form
-                                            .control(_complaintRaisedFor)
-                                            .value ==
-                                        i18.complaints.raisedForMyself,
+                                    readOnly: isRaisedForSelf,
                                     maxLength: 64,
                                     isRequired: true,
                                     validationMessages: {
@@ -340,10 +339,7 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantContactNumber,
                                     ),
-                                    readOnly: form
-                                            .control(_complaintRaisedFor)
-                                            .value ==
-                                        i18.complaints.raisedForMyself,
+                                    readOnly: isRaisedForSelf,
                                     maxLength: 10,
                                     isRequired: true,
                                     keyboardType: TextInputType.number,
