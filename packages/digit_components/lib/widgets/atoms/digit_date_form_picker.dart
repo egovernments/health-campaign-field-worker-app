@@ -49,6 +49,7 @@ class DigitDateFormPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
+      labelStyle: Theme.of(context).textTheme.bodyLarge,
       icon: icon,
       toolTipMsg: toolTipMsg,
       child: ReactiveDatePicker(
