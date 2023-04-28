@@ -150,6 +150,7 @@ class _IndividualDetailsPageState
                               BeneficiaryRegistrationCreateEvent(
                                 projectId: projectId,
                                 userUuid: userId,
+                                boundary: context.boundary,
                               ),
                             );
                           }
