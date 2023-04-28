@@ -26,8 +26,6 @@ class ComplaintsDetailsPage extends LocalizedStatefulWidget {
 
 class _ComplaintsDetailsPageState
     extends LocalizedState<ComplaintsDetailsPage> {
-  static const complainantRaisedFor = ["Myself", "Another user"];
-
   static const _dateOfComplaint = 'dateOfComplaint';
   static const _administrativeArea = 'administrativeArea';
   static const _complaintRaisedFor = 'complaintRaisedFor';
@@ -43,6 +41,10 @@ class _ComplaintsDetailsPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
+    final complainantRaisedFor = [
+      i18.complaints.raisedForMyself,
+      i18.complaints.raisedForAnotherUser,
+    ];
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -245,7 +247,8 @@ class _ComplaintsDetailsPageState
                                           .control(_complaintRaisedFor)
                                           .disabled) return;
 
-                                      if (changedValue == "Another user") {
+                                      if (changedValue ==
+                                          i18.complaints.raisedForAnotherUser) {
                                         form.control(_complainantName).value =
                                             "";
                                         form
@@ -267,7 +270,7 @@ class _ComplaintsDetailsPageState
                                     ),
                                     items: complainantRaisedFor,
                                     itemBuilder: (item) => RadioButtonBuilder(
-                                      item.trim(),
+                                      localizations.translate(item.trim()),
                                     ),
                                   ),
                                   if (form.touched &&
@@ -282,7 +285,8 @@ class _ComplaintsDetailsPageState
                                           bottom: 5,
                                         ),
                                         child: Text(
-                                          "required",
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
                                           style: TextStyle(
                                             color: DigitTheme
                                                 .instance.colors.lavaRed,
@@ -302,7 +306,7 @@ class _ComplaintsDetailsPageState
                                   var user = value.userModel;
 
                                   if (form.control(_complaintRaisedFor).value ==
-                                      "Myself") {
+                                      i18.complaints.raisedForMyself) {
                                     form.control(_complainantName).value =
                                         user.name;
                                     form
@@ -319,6 +323,10 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantName,
                                     ),
+                                    readOnly: form
+                                            .control(_complaintRaisedFor)
+                                            .value ==
+                                        i18.complaints.raisedForMyself,
                                     maxLength: 64,
                                     isRequired: true,
                                     validationMessages: {
@@ -332,6 +340,10 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantContactNumber,
                                     ),
+                                    readOnly: form
+                                            .control(_complaintRaisedFor)
+                                            .value ==
+                                        i18.complaints.raisedForMyself,
                                     maxLength: 10,
                                     isRequired: true,
                                     keyboardType: TextInputType.number,
