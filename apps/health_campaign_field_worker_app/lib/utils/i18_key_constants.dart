@@ -596,6 +596,10 @@ class Complaints {
   String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
 
   String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+
+  String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
+
+  String get validationMinLengthError => 'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 }
 
 class ReasonForDeletion {

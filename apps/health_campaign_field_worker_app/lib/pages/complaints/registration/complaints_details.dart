@@ -321,6 +321,11 @@ class _ComplaintsDetailsPageState
                                     ),
                                     maxLength: 64,
                                     isRequired: true,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                    },
                                   ),
                                   DigitTextFormField(
                                     formControlName: _complainantContactNumber,
@@ -335,6 +340,12 @@ class _ComplaintsDetailsPageState
                                           localizations.translate(i18
                                               .individualDetails
                                               .mobileNumberInvalidFormatValidationMessage),
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                      'minLength': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationMinLengthError),
                                     },
                                   ),
                                 ],
@@ -370,6 +381,11 @@ class _ComplaintsDetailsPageState
                             ),
                             maxLength: 1000,
                             isRequired: true,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    i18.complaints.validationRequiredError,
+                                  ),
+                            },
                           ),
                         ]),
                         const SizedBox(height: 16),
@@ -416,7 +432,11 @@ class _ComplaintsDetailsPageState
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
         disabled: shouldDisableForm,
-        validators: [Validators.required, CustomValidator.validMobileNumber],
+        validators: [
+          Validators.required,
+          CustomValidator.validMobileNumber,
+          Validators.minLength(10),
+        ],
       ),
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,
