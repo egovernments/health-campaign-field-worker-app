@@ -60,7 +60,7 @@ class DigitTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
-        labelStyle: labelStyle,
+        labelStyle: labelStyle ?? Theme.of(context).textTheme.bodyLarge,
         child: Column(
           children: [
             ReactiveTextField(
