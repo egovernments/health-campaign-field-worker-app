@@ -56,6 +56,7 @@ class DigitDobPicker extends StatelessWidget {
               keyboardType: TextInputType.number,
               readOnly: isVerified,
               onChanged: (formControl) {
+                // TODO(Ajil): Fix localization to presentation layer
                 /// Validates that control's value must be `true`
                 Map<String, dynamic>? requiredTrue(
                     AbstractControl<dynamic> control) {
