@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
@@ -100,6 +101,18 @@ class IndividualLocalRepository
             mobileNumber: individual.mobileNumber,
             isDeleted: individual.isDeleted,
             rowVersion: individual.rowVersion,
+            additionalFields: individual.additionalFields != null
+                ? IndividualAdditionalFields(
+                    version: 1,
+                    fields: [
+                      AdditionalField(
+                        'height',
+                        jsonDecode(individual.additionalFields!)['fields'][0]
+                            ['value'],
+                      ),
+                    ],
+                  )
+                : null,
             auditDetails: AuditDetails(
               createdBy: individual.auditCreatedBy!,
               createdTime: individual.auditCreatedTime!,

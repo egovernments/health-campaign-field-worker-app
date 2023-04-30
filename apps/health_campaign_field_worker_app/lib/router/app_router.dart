@@ -118,8 +118,9 @@ part 'app_router.gr.dart';
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
         AutoRoute(
-            page: ComplaintsAcknowledgementPage,
-            path: 'complaints-acknowledgement'),
+          page: ComplaintsAcknowledgementPage,
+          path: 'complaints-acknowledgement',
+        ),
 
         /// Inventory Routes
         AutoRoute(

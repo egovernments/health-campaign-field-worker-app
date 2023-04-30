@@ -1,4 +1,4 @@
-package org.egov.health_campaign_field_worker_app
+package org.egov.salama
 
 import io.flutter.embedding.android.FlutterActivity
 

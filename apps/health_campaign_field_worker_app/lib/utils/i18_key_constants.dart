@@ -189,6 +189,8 @@ class IndividualDetails {
 
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
 
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
 
   String get mobileNumberInvalidFormatValidationMessage =>
@@ -302,6 +304,8 @@ class MemberCard {
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
 
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
+
+  String get heightLabel => 'HEIGHT_LABEL';
 }
 
 class DeliverIntervention {
@@ -336,6 +340,8 @@ class DeliverIntervention {
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
 }
 
 class ProjectSelection {

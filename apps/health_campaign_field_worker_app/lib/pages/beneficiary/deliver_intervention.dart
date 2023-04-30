@@ -86,9 +86,19 @@ class _DeliverInterventionPageState
                               return serviceDefinationState.maybeMap(
                                 orElse: () =>
                                     Text(state.runtimeType.toString()),
-                                serviceDefinitionFetch: (value) =>
+                                serviceDefinitionFetch: (r) =>
                                     DigitElevatedButton(
                                   onPressed: () async {
+                                    if (context.beneficiaryType !=
+                                        'INDIVIDUAL') {
+                                      context.read<ServiceDefinitionBloc>().add(
+                                            ServiceDefinitionSelectionEvent(
+                                              serviceDefinition:
+                                                  r.serviceDefinitionList.first,
+                                            ),
+                                          );
+                                    }
+
                                     form.markAllAsTouched();
                                     if (!form.valid) return;
                                     final router = context.router;
@@ -276,15 +286,23 @@ class _DeliverInterventionPageState
                                     );
 
                                     if (shouldSubmit ?? false) {
-                                      final parent =
-                                          router.parent() as StackRouter;
-                                      parent
-                                        ..pop()
-                                        ..pop();
+                                      if (context.beneficiaryType !=
+                                          'INDIVIDUAL') {
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: false,
+                                        ).pop();
 
-                                      router.push(ChecklistViewRoute());
+                                        router.push(ChecklistViewRoute());
+                                      } else {
+                                        final parent =
+                                            router.parent() as StackRouter;
+                                        parent
+                                          ..pop()
+                                          ..pop();
 
-                                      // router.push(AcknowledgementRoute());
+                                        router.push(AcknowledgementRoute());
+                                      }
                                     }
                                   },
                                   child: Center(
@@ -409,6 +427,24 @@ class _DeliverInterventionPageState
                                 ),
                                 DigitTableCard(
                                   element: {
+                                    state.selectedIndividual != null
+                                            ? localizations.translate(
+                                                i18.deliverIntervention
+                                                    .heightLabelText,
+                                              )
+                                            : '':
+                                        state.selectedIndividual != null
+                                            ? state
+                                                .selectedIndividual
+                                                ?.additionalFields
+                                                ?.fields
+                                                .first
+                                                .value
+                                            : '',
+                                  },
+                                ),
+                                DigitTableCard(
+                                  element: {
                                     localizations.translate(
                                       i18.deliverIntervention.memberCountText,
                                     ): householdMemberWrapper
@@ -419,15 +455,67 @@ class _DeliverInterventionPageState
                                 const DigitDivider(),
                                 DigitTableCard(
                                   element: {
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .noOfResourcesForDelivery): () {
-                                      final count = householdMemberWrapper
-                                              .household.memberCount ??
-                                          householdMemberWrapper.members.length;
+                                    localizations.translate(
+                                      '${i18.deliverIntervention.noOfResourcesForDelivery}_${context.beneficiaryType}',
+                                    ): context.beneficiaryType == 'INDIVIDUAL'
+                                        ? () {
+                                            final dob = householdMemberWrapper
+                                                .headOfHousehold.dateOfBirth;
+                                            final date = dob != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .parse(dob)
+                                                : null;
+                                            final ageNum = date?.age;
+                                            final res = int.parse(state
+                                                .selectedIndividual
+                                                ?.additionalFields
+                                                ?.fields
+                                                .first
+                                                .value);
 
-                                      return min(count / 1.8, 3).round();
-                                    }(),
+                                            if (ageNum != null) {
+                                              if (ageNum < 5) {
+                                                return 0;
+                                              }
+                                              if (res < 89) {
+                                                return 0;
+                                              } else if (res >= 90 &&
+                                                  res <= 119) {
+                                                return 1;
+                                              } else if (res >= 120 &&
+                                                  res <= 140) {
+                                                return 2;
+                                              } else if (res >= 141 &&
+                                                  res <= 158) {
+                                                return 3;
+                                              } else {
+                                                return 4;
+                                              }
+                                            } else {
+                                              if (res < 89) {
+                                                return 0;
+                                              } else if (res >= 90 &&
+                                                  res <= 119) {
+                                                return 1;
+                                              } else if (res >= 120 &&
+                                                  res <= 140) {
+                                                return 2;
+                                              } else if (res >= 141 &&
+                                                  res <= 158) {
+                                                return 3;
+                                              } else {
+                                                return 4;
+                                              }
+                                            }
+                                          }()
+                                        : () {
+                                            final count = householdMemberWrapper
+                                                    .household.memberCount ??
+                                                householdMemberWrapper
+                                                    .members.length;
+
+                                            return min(count / 1.8, 3).round();
+                                          }(),
                                   },
                                 ),
                                 const DigitDivider(),
@@ -564,6 +652,9 @@ class _DeliverInterventionPageState
                 taskdata!.first.resources!.first.quantity!,
               )
             : 1,
+        validators: [
+          Validators.required,
+        ],
       ),
       _deliveryCommentKey: FormControl<String>(
         value: taskdata?.firstOrNull?.resources?.firstOrNull?.deliveryComment,

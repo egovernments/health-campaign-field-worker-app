@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.egov.health_campaign_field_worker_app">
+    package="org.egov.salama">
    <uses-permission android:name="android.permission.INTERNET"/>
    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -16,7 +16,7 @@
   </queries>
   <!--#enddocregion android-queries-->
    <application
-        android:label="health_campaign_field_worker_app"
+        android:label="salama"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
