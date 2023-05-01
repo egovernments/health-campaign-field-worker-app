@@ -26,8 +26,6 @@ class ComplaintsDetailsPage extends LocalizedStatefulWidget {
 
 class _ComplaintsDetailsPageState
     extends LocalizedState<ComplaintsDetailsPage> {
-  static const complainantRaisedFor = ["Myself", "Another user"];
-
   static const _dateOfComplaint = 'dateOfComplaint';
   static const _administrativeArea = 'administrativeArea';
   static const _complaintRaisedFor = 'complaintRaisedFor';
@@ -43,6 +41,10 @@ class _ComplaintsDetailsPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
+    final complainantRaisedFor = [
+      i18.complaints.raisedForMyself,
+      i18.complaints.raisedForAnotherUser,
+    ];
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -66,6 +68,9 @@ class _ComplaintsDetailsPageState
               );
             },
             builder: (context, state) {
+              final isRaisedForSelf = form.control(_complaintRaisedFor).value ==
+                  i18.complaints.raisedForMyself;
+
               return ScrollableContent(
                 header: Column(
                   children: const [
@@ -245,7 +250,8 @@ class _ComplaintsDetailsPageState
                                           .control(_complaintRaisedFor)
                                           .disabled) return;
 
-                                      if (changedValue == "Another user") {
+                                      if (changedValue ==
+                                          i18.complaints.raisedForAnotherUser) {
                                         form.control(_complainantName).value =
                                             "";
                                         form
@@ -267,7 +273,7 @@ class _ComplaintsDetailsPageState
                                     ),
                                     items: complainantRaisedFor,
                                     itemBuilder: (item) => RadioButtonBuilder(
-                                      item.trim(),
+                                      localizations.translate(item.trim()),
                                     ),
                                   ),
                                   if (form.touched &&
@@ -282,7 +288,8 @@ class _ComplaintsDetailsPageState
                                           bottom: 5,
                                         ),
                                         child: Text(
-                                          "required",
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
                                           style: TextStyle(
                                             color: DigitTheme
                                                 .instance.colors.lavaRed,
@@ -301,8 +308,7 @@ class _ComplaintsDetailsPageState
                                 authenticated: (value) {
                                   var user = value.userModel;
 
-                                  if (form.control(_complaintRaisedFor).value ==
-                                      "Myself") {
+                                  if (isRaisedForSelf) {
                                     form.control(_complainantName).value =
                                         user.name;
                                     form
@@ -319,14 +325,21 @@ class _ComplaintsDetailsPageState
                                     label: localizations.translate(
                                       i18.complaints.complainantName,
                                     ),
+                                    readOnly: isRaisedForSelf,
                                     maxLength: 64,
                                     isRequired: true,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                    },
                                   ),
                                   DigitTextFormField(
                                     formControlName: _complainantContactNumber,
                                     label: localizations.translate(
                                       i18.complaints.complainantContactNumber,
                                     ),
+                                    readOnly: isRaisedForSelf,
                                     maxLength: 10,
                                     isRequired: true,
                                     keyboardType: TextInputType.number,
@@ -335,6 +348,12 @@ class _ComplaintsDetailsPageState
                                           localizations.translate(i18
                                               .individualDetails
                                               .mobileNumberInvalidFormatValidationMessage),
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                      'minLength': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationMinLengthError),
                                     },
                                   ),
                                 ],
@@ -370,6 +389,11 @@ class _ComplaintsDetailsPageState
                             ),
                             maxLength: 1000,
                             isRequired: true,
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    i18.complaints.validationRequiredError,
+                                  ),
+                            },
                           ),
                         ]),
                         const SizedBox(height: 16),
@@ -416,7 +440,11 @@ class _ComplaintsDetailsPageState
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
         disabled: shouldDisableForm,
-        validators: [Validators.required, CustomValidator.validMobileNumber],
+        validators: [
+          Validators.required,
+          CustomValidator.validMobileNumber,
+          Validators.minLength(10),
+        ],
       ),
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,

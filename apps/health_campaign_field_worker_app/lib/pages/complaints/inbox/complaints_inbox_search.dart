@@ -86,6 +86,8 @@ class _ComplaintsInboxSearchPageState
                           flex: 1,
                           child: DigitElevatedButton(
                             onPressed: () {
+                              formGroup.markAllAsTouched();
+
                               if (!formGroup.valid) return;
 
                               final complaintNumberValue =
