@@ -23,6 +23,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final String? hint;
   final IconData? icon;
   final String? toolTipMsg;
+  final EdgeInsets? padding;
 
   const DigitDateFormPicker(
       {super.key,
@@ -43,12 +44,14 @@ class DigitDateFormPicker extends StatelessWidget {
       this.start,
       this.hint,
       this.toolTipMsg,
-      this.icon});
+      this.icon,
+      this.padding});
 
   @override
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
+      padding: padding,
       labelStyle: Theme.of(context).textTheme.bodyLarge,
       icon: icon,
       toolTipMsg: toolTipMsg,
