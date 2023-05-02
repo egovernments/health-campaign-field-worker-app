@@ -77,9 +77,11 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
         key: overlaykey,
         overlayChild: widget.child,
         child: Material(
-          elevation: 6,
-          type: MaterialType.transparency,
-          child: widget.child,
-        ),
+            elevation: 6,
+            type: MaterialType.transparency,
+            child: IgnorePointer(
+              ignoring: index > 0 ?? false,
+              child: widget.child,
+            )),
       );
 }

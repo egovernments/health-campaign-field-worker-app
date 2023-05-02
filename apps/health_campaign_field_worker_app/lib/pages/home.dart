@@ -48,10 +48,10 @@ class _HomePageState extends LocalizedState<HomePage> {
       ));
     }
 
-    GlobalKey<OverlayWidgetState> overlaykey = GlobalKey(debugLabel: 'new');
+    GlobalKey<OverlayWidgetState> overlaykey = GlobalKey(debugLabel: 'HOME');
 
     GlobalKey<DigitWalkthroughWrapperState> overlayWrapperkey =
-        GlobalKey(debugLabel: 'newwrapper');
+        GlobalKey(debugLabel: 'HOME_WRAPPER');
 
     return Scaffold(
       body: SizedBox(
@@ -68,10 +68,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                   (context, index) {
                     return DigitWalkthrough(
                       onSkip: () =>
-                          {overlayWrapperkey.currentState?.onSelectedSkip()},
+                          overlayWrapperkey.currentState?.onSelectedSkip(),
                       widgetHeight: 130,
                       onTap: () =>
-                          {overlayWrapperkey.currentState?.onSelectedTap()},
+                          overlayWrapperkey.currentState?.onSelectedTap(),
                       key: walkthroughWidgetStateList[index + 1],
                       description:
                           '${_getItems(context).elementAt(index).label}_HELP',
@@ -96,12 +96,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 },
               ),
               DigitWalkthrough(
-                onSkip: () =>
-                    {overlayWrapperkey.currentState?.onSelectedSkip()},
+                onSkip: () => overlayWrapperkey.currentState?.onSelectedSkip(),
                 widgetHeight: 150,
-                onTap: () => {
-                  overlayWrapperkey.currentState?.onSelectedTap(),
-                },
+                onTap: () => overlayWrapperkey.currentState?.onSelectedTap(),
                 key: walkthroughWidgetStateList[0],
                 description: i18.home.progressIndicatorHelp,
                 overlayWidget: overlayWidgetStateList[0],
