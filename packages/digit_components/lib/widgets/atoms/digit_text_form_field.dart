@@ -29,6 +29,7 @@ class DigitTextFormField extends StatelessWidget {
   final String? prefixText;
   final Widget? prefixIcon;
   final TextStyle? labelStyle;
+  final EdgeInsets? padding;
 
   const DigitTextFormField(
       {super.key,
@@ -55,11 +56,13 @@ class DigitTextFormField extends StatelessWidget {
       this.prefixIcon,
       this.prefixText,
       this.hintText,
-      this.labelStyle});
+      this.labelStyle,
+      this.padding});
 
   @override
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
+        padding: padding,
         labelStyle: labelStyle ?? Theme.of(context).textTheme.bodyLarge,
         child: Column(
           children: [

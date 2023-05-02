@@ -6,6 +6,7 @@ class LabeledField extends StatelessWidget {
   final IconData? icon;
   final String? toolTipMsg;
   final TextStyle? labelStyle;
+  final EdgeInsets? padding;
 
   const LabeledField(
       {super.key,
@@ -13,11 +14,12 @@ class LabeledField extends StatelessWidget {
       required this.label,
       this.icon,
       this.toolTipMsg,
-      this.labelStyle});
+      this.labelStyle,
+      this.padding});
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 16),
+        padding: padding ?? const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
