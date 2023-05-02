@@ -140,11 +140,19 @@ class BeneficiaryRegistrationBloc
         emit(value.copyWith(loading: true));
 
         try {
+          final code = event.boundary.code;
+          final name = event.boundary.name;
+
+          final locality = code == null || name == null
+              ? null
+              : LocalityModel(code: code, name: name);
+
           await householdRepository.create(
             household.copyWith(
               address: address.copyWith(
                 relatedClientReferenceId: household.clientReferenceId,
                 auditDetails: individual.auditDetails,
+                locality: locality,
               ),
             ),
           );
@@ -155,6 +163,7 @@ class BeneficiaryRegistrationBloc
                 address.copyWith(
                   relatedClientReferenceId: individual.clientReferenceId,
                   auditDetails: individual.auditDetails,
+                  locality: locality,
                 ),
               ],
             ),
@@ -217,6 +226,7 @@ class BeneficiaryRegistrationBloc
         try {
           await householdRepository.update(
             value.householdModel.copyWith(
+              memberCount: event.household.memberCount,
               address: value.addressModel.copyWith(
                 relatedClientReferenceId:
                     value.householdModel.clientReferenceId,
@@ -234,8 +244,6 @@ class BeneficiaryRegistrationBloc
               ),
             );
           }
-
-          // await taskDataRepository.update(elment.)
         } catch (error) {
           rethrow;
         } finally {
@@ -370,6 +378,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationEvent.create({
     required String userUuid,
     required String projectId,
+    required BoundaryModel boundary,
   }) = BeneficiaryRegistrationCreateEvent;
 }
 

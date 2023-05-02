@@ -10,6 +10,7 @@ class LocalSecureStore {
   static const refreshTokenKey = 'refreshTokenKey';
   static const userObjectKey = 'userObject';
   static const selectedProjectKey = 'selectedProject';
+  static const hasAppRunBeforeKey = 'hasAppRunBefore';
 
   final storage = const FlutterSecureStorage();
 
@@ -66,6 +67,21 @@ class LocalSecureStore {
       key: userObjectKey,
       value: json.encode(model.userRequestModel),
     );
+  }
+
+  Future<void> setHasAppRunBefore(bool hasRunBefore) async {
+    await storage.write(key: hasAppRunBeforeKey, value: '$hasRunBefore');
+  }
+
+  Future<bool> get hasAppRunBefore async {
+    final hasRun = await storage.read(key: hasAppRunBeforeKey);
+
+    switch (hasRun) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
   }
 
   Future<void> deleteAll() async {

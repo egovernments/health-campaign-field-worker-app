@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitDropdown<T> extends StatelessWidget {
   final String label;
-  final T? initialValue;
+  final T? value;
   final List<T> menuItems;
-  final String formControlName;
   final bool isRequired;
-  final ValueChanged<T>? onChanged;
+  final ValueChanged<T?>? onChanged;
   final String Function(T value) valueMapper;
-  final Map<String, String Function(Object object)>? validationMessages;
 
   const DigitDropdown({
     super.key,
+    required this.value,
     required this.label,
     required this.menuItems,
-    required this.formControlName,
     this.isRequired = false,
     required this.valueMapper,
-    this.initialValue,
     this.onChanged,
-    this.validationMessages,
   });
 
   @override
@@ -35,14 +30,9 @@ class DigitDropdown<T> extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 8),
-          ReactiveDropdownField(
-            onChanged: (control) {
-              final value = control.value;
-              if (value == null) return;
-              onChanged?.call(value);
-            },
-            validationMessages: validationMessages,
-            formControlName: formControlName,
+          DropdownButtonFormField<T>(
+            value: value,
+            onChanged: onChanged,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(16, 12, 0, 12),
             ),
@@ -59,14 +49,4 @@ class DigitDropdown<T> extends StatelessWidget {
       ),
     );
   }
-}
-
-class MenuItemModel {
-  final String name;
-  final String code;
-
-  const MenuItemModel({
-    required this.name,
-    required this.code,
-  });
 }

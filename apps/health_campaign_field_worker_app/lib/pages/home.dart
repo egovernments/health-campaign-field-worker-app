@@ -311,6 +311,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               HomeItemCard(
                 icon: Icons.menu_book,
                 label: i18.home.stockReconciliationLabel,
+                onPressed: () => context.router.push(ReasonForDeletionRoute()),
               ),
               HomeItemCard(
                 icon: Icons.all_inbox,
@@ -342,6 +343,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.announcement,
           label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
         ),
         HomeItemCard(
           icon: Icons.sync_alt,
@@ -377,7 +380,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ..where((_) => const Constant(true));
               count += await selector.go();
             }
-            debugPrint('deleted: $count');
 
             await isar.writeTxn(() async => await isar.opLogs.clear());
           },
@@ -409,6 +411,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   LocalRepository<StockReconciliationModel,
                       StockReconciliationSearchModel>>(),
+              context.read<
+                  LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
             ],
             remoteRepositories: [
               context.read<
@@ -428,6 +432,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               context.read<
                   RemoteRepository<StockReconciliationModel,
                       StockReconciliationSearchModel>>(),
+              context.read<
+                  RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
             ],
           ),
         );

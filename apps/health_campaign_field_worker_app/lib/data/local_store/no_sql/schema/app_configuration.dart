@@ -27,6 +27,13 @@ class AppConfiguration {
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
+  @Name('HOUSEHOLD_DELETION_REASON_OPTIONS')
+  late List<HouseholdDeletionReasonOptions>? householdDeletionReasonOptions;
+
+  @Name('HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+  late List<HouseholdMemberDeletionReasonOptions>?
+      householdMemberDeletionReasonOptions;
+
   @Name('CHECKLIST_TYPES')
   late List<ChecklistTypes>? checklistTypes;
 
@@ -38,6 +45,9 @@ class AppConfiguration {
 
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
+
+  @Name('COMPLAINT_TYPES')
+  late List<ComplaintTypes>? complaintTypes;
 
   @Name("TENANT_ID")
   late String? tenantId;
@@ -93,6 +103,24 @@ class ChecklistTypes {
 
 @embedded
 class TransportTypes {
+  late String name;
+  late String code;
+}
+
+@embedded
+class ComplaintTypes {
+  late String name;
+  late String code;
+}
+
+@embedded
+class HouseholdDeletionReasonOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class HouseholdMemberDeletionReasonOptions {
   late String name;
   late String code;
 }
