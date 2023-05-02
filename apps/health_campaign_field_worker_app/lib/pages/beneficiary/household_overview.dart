@@ -157,7 +157,7 @@ class _HouseholdOverviewPageState
                                                       ..pop();
                                                     context.router.push(
                                                       ReasonForDeletionRoute(
-                                                        isHousholdDelete: false,
+                                                        isHousholdDelete: true,
                                                       ),
                                                     );
                                                   },
@@ -377,7 +377,7 @@ class _HouseholdOverviewPageState
                                                         );
                                                     context.router.push(
                                                       ReasonForDeletionRoute(
-                                                        isHousholdDelete: true,
+                                                        isHousholdDelete: false,
                                                       ),
                                                     );
                                                   },
