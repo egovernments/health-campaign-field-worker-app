@@ -93,6 +93,8 @@ class _ComplaintsDetailsPageState
 
                         if (!form.valid) return;
 
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         final dateOfComplaint =
                             form.control(_dateOfComplaint).value as DateTime;
 

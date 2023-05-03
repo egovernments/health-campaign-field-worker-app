@@ -78,6 +78,7 @@ class _HouseholdLocationPageState
                       onPressed: () {
                         form.markAllAsTouched();
                         if (!form.valid) return;
+                        FocusManager.instance.primaryFocus?.unfocus();
 
                         final addressLine1 =
                             form.control(_addressLine1Key).value as String?;
