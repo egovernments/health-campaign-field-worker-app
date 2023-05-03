@@ -188,7 +188,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                             ),
                             child: Text(
                               localizations.translate(
-                                i18.complaints.validationRequiredError,
+                                i18.complaints.validationRadioRequiredError,
                               ),
                               style: TextStyle(
                                 color: DigitTheme.instance.colors.lavaRed,

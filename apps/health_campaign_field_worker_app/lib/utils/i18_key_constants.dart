@@ -599,6 +599,8 @@ class Complaints {
 
   String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
 
+  String get validationRadioRequiredError => 'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
+
   String get validationMinLengthError => 'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';

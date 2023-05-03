@@ -291,7 +291,7 @@ class _ComplaintsDetailsPageState
                                         ),
                                         child: Text(
                                           localizations.translate(i18.complaints
-                                              .validationRequiredError),
+                                              .validationRadioRequiredError),
                                           style: TextStyle(
                                             color: DigitTheme
                                                 .instance.colors.lavaRed,
