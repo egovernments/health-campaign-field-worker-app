@@ -276,7 +276,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 ),
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.isEmpty) {
+                                                      value.toString().trim().isEmpty) {
                                                     return localizations
                                                         .translate(
                                                       i18.checklist
