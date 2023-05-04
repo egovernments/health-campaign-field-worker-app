@@ -153,7 +153,7 @@ class _SearchBeneficiaryPageState
           },
         ),
         bottomNavigationBar: Offstage(
-          offstage: isKeyboardVisible,
+          offstage: false,
           child: SizedBox(
             height: 85,
             child: DigitCard(
@@ -169,11 +169,15 @@ class _SearchBeneficiaryPageState
                           searchQuery == null ||
                           searchQuery.isEmpty
                       ? null
-                      : () => router.push(BeneficiaryRegistrationWrapperRoute(
+                      : () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+
+                          router.push(BeneficiaryRegistrationWrapperRoute(
                             initialState: BeneficiaryRegistrationCreateState(
                               searchQuery: state.searchQuery,
                             ),
                           ));
+                        };
 
                   return DigitElevatedButton(
                     onPressed: onPressed,
