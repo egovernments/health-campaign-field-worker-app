@@ -52,7 +52,7 @@ class DigitTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: label,
+      label: isRequired ? "$label *" : label,
       child: TextFormField(
         style: TextStyle(
             color: readOnly == true

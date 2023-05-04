@@ -90,6 +90,8 @@ class Checklist {
       'CHECKLIST_DIALOG_SECONDARY_ACTION';
 
   String get checklistdate => 'CHECKLIST_DATE';
+
+  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
 }
 
 class ForgotPassword {
