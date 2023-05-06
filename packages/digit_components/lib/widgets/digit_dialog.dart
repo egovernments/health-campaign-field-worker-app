@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class DigitDialog extends StatelessWidget {
   final DigitDialogOptions options;
 
-  @visibleForTesting
   const DigitDialog({
     super.key,
     required this.options,
