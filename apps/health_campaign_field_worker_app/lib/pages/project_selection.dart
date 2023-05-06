@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,8 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 }
 
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
+  DialogRoute? syncDialogRoute;
+
   @override
   void initState() {
     context.read<ProjectBloc>().add(const ProjectInitializeEvent());
@@ -58,9 +61,29 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
+              if (syncDialogRoute?.isActive ?? false) {
+                Navigator.of(context).removeRoute(syncDialogRoute!);
+              }
+
+              if (state.loading) {
+                syncDialogRoute = DialogRoute(
+                  context: context,
+                  builder: (context) => DigitDialog(
+                    options: DigitSyncDialog.getDigitDialog(
+                      type: DigitSyncDialogType.inProgress,
+                      label: 'Sync in progress',
+                      barrierDismissible: false,
+                    ),
+                  ),
+                );
+
+                Navigator.of(context).push(syncDialogRoute!);
+              }
+
               final selectedProject = state.selectedProject;
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
+
                 if (boundary != null) {
                   context.read<BoundaryBloc>().add(
                         BoundarySearchEvent(
@@ -87,9 +110,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
             builder: (context, state) {
               if (state.loading) {
                 return const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: Center(child: Offstage()),
                 );
               }
 
