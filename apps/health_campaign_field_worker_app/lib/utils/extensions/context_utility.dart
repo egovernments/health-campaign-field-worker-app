@@ -9,19 +9,13 @@ extension ContextUtilityExtensions on BuildContext {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
+    final selectedProject = projectState.selectedProject;
 
-    return projectState.maybeWhen(
-      orElse: () {
-        throw AppException('Invalid project state');
-      },
-      fetched: (projects, selectedProject) {
-        if (selectedProject == null) {
-          throw AppException('No project is selected');
-        }
+    if (selectedProject == null) {
+      throw AppException('No project is selected');
+    }
 
-        return selectedProject.id;
-      },
-    );
+    return selectedProject.id;
   }
 
   BoundaryModel get boundary {

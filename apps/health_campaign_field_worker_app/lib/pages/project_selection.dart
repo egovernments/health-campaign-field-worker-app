@@ -58,41 +58,37 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
-              state.maybeWhen(
-                orElse: () {
-                  return;
-                },
-                fetched: (projects, selectedProject) {
-                  if (selectedProject != null) {
-                    final boundary = selectedProject.address?.boundary;
-                    if (boundary != null) {
-                      context.read<BoundaryBloc>().add(
-                            BoundarySearchEvent(
-                              code: boundary,
-                            ),
-                          );
-
-                      context.router.replaceAll([
-                        HomeRoute(),
-                        const BoundarySelectionRoute(),
-                      ]);
-                    } else {
-                      DigitToast.show(
-                        context,
-                        options: DigitToastOptions(
-                          'No boundary data associated with this project.',
-                          true,
-                          theme,
+              final selectedProject = state.selectedProject;
+              if (selectedProject != null) {
+                final boundary = selectedProject.address?.boundary;
+                if (boundary != null) {
+                  context.read<BoundaryBloc>().add(
+                        BoundarySearchEvent(
+                          code: boundary,
                         ),
                       );
-                    }
-                  }
-                },
-              );
+
+                  context.router.replaceAll([
+                    HomeRoute(),
+                    const BoundarySelectionRoute(),
+                  ]);
+                } else {
+                  DigitToast.show(
+                    context,
+                    options: DigitToastOptions(
+                      'No boundary data associated with this project.',
+                      true,
+                      theme,
+                    ),
+                  );
+                }
+              }
             },
             builder: (context, state) {
-              return state.maybeMap(
-                orElse: () => Center(
+              final projects = state.projects;
+
+              if (projects.isEmpty) {
+                return Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Column(
@@ -126,24 +122,28 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ],
                     ),
                   ),
-                ),
-                loading: (value) => const Expanded(
+                );
+              }
+
+              if (state.loading) {
+                return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
-                ),
-                fetched: (ProjectSelectionFetchedState value) => Column(
-                  children: value.projects
-                      .map(
-                        (element) => DigitProjectCell(
-                          projectText: element.name,
-                          onTap: () => context.read<ProjectBloc>().add(
-                                ProjectSelectProjectEvent(element),
-                              ),
-                        ),
-                      )
-                      .toList(),
-                ),
+                );
+              }
+
+              return Column(
+                children: projects
+                    .map(
+                      (element) => DigitProjectCell(
+                        projectText: element.name,
+                        onTap: () => context.read<ProjectBloc>().add(
+                              ProjectSelectProjectEvent(element),
+                            ),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
