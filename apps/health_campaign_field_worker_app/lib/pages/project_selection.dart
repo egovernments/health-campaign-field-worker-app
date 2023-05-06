@@ -85,6 +85,14 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               }
             },
             builder: (context, state) {
+              if (state.loading) {
+                return const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
               final projects = state.projects;
 
               if (projects.isEmpty) {
@@ -121,14 +129,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                         ),
                       ],
                     ),
-                  ),
-                );
-              }
-
-              if (state.loading) {
-                return const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
                   ),
                 );
               }
