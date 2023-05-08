@@ -86,6 +86,7 @@ class _IndividualDetailsPageState
 
                       form.markAllAsTouched();
                       if (!form.valid) return;
+                      FocusManager.instance.primaryFocus?.unfocus();
 
                       state.maybeWhen(
                         orElse: () {

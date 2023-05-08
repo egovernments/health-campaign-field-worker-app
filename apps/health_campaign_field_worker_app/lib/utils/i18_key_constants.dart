@@ -90,6 +90,8 @@ class Checklist {
       'CHECKLIST_DIALOG_SECONDARY_ACTION';
 
   String get checklistdate => 'CHECKLIST_DATE';
+
+  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
 }
 
 class ForgotPassword {
@@ -598,6 +600,8 @@ class Complaints {
   String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 
   String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
+
+  String get validationRadioRequiredError => 'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
 
   String get validationMinLengthError => 'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
