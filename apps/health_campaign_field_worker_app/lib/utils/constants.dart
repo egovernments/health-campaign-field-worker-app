@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -25,6 +26,9 @@ class Constants {
 
 /// By using this key, we can push pages without context
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+GlobalKey<DigitWalkthroughWrapperState> overlayWrapperkey =
+    GlobalKey(debugLabel: 'HOME_WRAPPER');
 
 class RequestInfoData {
   static const String apiId = 'hcm';

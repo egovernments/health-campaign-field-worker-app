@@ -54,6 +54,9 @@ class SideBar extends StatelessWidget {
             ),
             icon: Icons.home,
             onPressed: () {
+              if (overlayWrapperkey.currentState!.index > 0) {
+                overlayWrapperkey.currentState?.onSelectedSkip();
+              }
               Navigator.of(context, rootNavigator: true).pop();
               context.router.replace(HomeRoute());
             },
@@ -73,6 +76,9 @@ class SideBar extends StatelessWidget {
                 ),
                 icon: Icons.language,
                 onPressed: () {
+                  if (overlayWrapperkey.currentState!.index > 0) {
+                    overlayWrapperkey.currentState?.onSelectedSkip();
+                  }
                   // TODO: Complete implementation
                 },
                 content: Offstage(

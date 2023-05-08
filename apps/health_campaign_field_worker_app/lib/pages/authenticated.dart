@@ -54,6 +54,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         foregroundColor: theme.colorScheme.onPrimary,
                       ),
                       onPressed: () {
+                        if (overlayWrapperkey.currentState!.index > 0) {
+                          overlayWrapperkey.currentState?.onSelectedSkip();
+                        }
+
                         ctx.router.navigate(const BoundarySelectionRoute());
                       },
                       child: Text(boundaryName),

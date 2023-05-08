@@ -50,9 +50,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     GlobalKey<OverlayWidgetState> overlaykey = GlobalKey(debugLabel: 'HOME');
 
-    GlobalKey<DigitWalkthroughWrapperState> overlayWrapperkey =
-        GlobalKey(debugLabel: 'HOME_WRAPPER');
-
     return Scaffold(
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -92,6 +89,11 @@ class _HomePageState extends LocalizedState<HomePage> {
               BackNavigationHelpHeaderWidget(
                 showBackNavigation: false,
                 helpClicked: () {
+                  for (var i = 0; i < _getItems(context).length; i++) {
+                    walkthroughWidgetStateList[i]
+                        .currentState
+                        ?.initOffsetsPositions();
+                  }
                   overlayWrapperkey.currentState?.onSelectedTap();
                 },
               ),
