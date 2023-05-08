@@ -71,6 +71,7 @@ class DigitDateFormPicker extends StatelessWidget {
               suffixIcon: const Icon(Icons.date_range),
               label: hint == null ? null : Text(hint!),
             ),
+            enableInteractiveSelection: isEnabled!,
             onTap: isEnabled == true
                 ? (control) {
                     picker.showPicker();

@@ -141,6 +141,7 @@ class _StockReconciliationPageState
                                             : () async {
                                                 form.markAllAsTouched();
                                                 if (!form.valid) return;
+                                                FocusManager.instance.primaryFocus?.unfocus();
 
                                                 final bloc = ctx.read<
                                                     StockReconciliationBloc>();

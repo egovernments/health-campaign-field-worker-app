@@ -33,7 +33,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
-          value: context.boundary.code,
+          value: context.boundary.name,
         ),
         _warehouseKey: FormControl<FacilityModel>(
           validators: [Validators.required],

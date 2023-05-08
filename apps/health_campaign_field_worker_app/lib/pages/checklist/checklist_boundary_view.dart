@@ -71,7 +71,7 @@ class _ChecklistBoundaryViewPageState
                     i18.householdLocation.administrationAreaFormLabel,
                   ),
                   controller: TextEditingController(
-                    text: context.boundary.code,
+                    text: context.boundary.name,
                   ),
                 ),
               ],
