@@ -20,7 +20,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
-import '../widgets/progress_indicator/progress_indicator.dart';
+import '../widgets/progress_bar/beneficiary_progress.dart';
 
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
@@ -56,15 +56,13 @@ class _HomePageState extends LocalizedState<HomePage> {
             const BackNavigationHelpHeaderWidget(
               showBackNavigation: false,
             ),
-            ProgressIndicatorContainer(
+            BeneficiaryProgressBar(
               label: localizations.translate(
                 i18.home.progressIndicatorTitle,
               ),
               prefixLabel: localizations.translate(
                 i18.home.progressIndicatorPrefixLabel,
               ),
-              suffixLabel: '200',
-              value: .08,
             ),
           ],
         ),

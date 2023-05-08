@@ -11,6 +11,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? projectId;
   final String? beneficiaryId;
   final String? beneficiaryClientReferenceId;
+  final DateTime? beneficiaryRegistrationDateLte;
+  final DateTime? beneficiaryRegistrationDateGte;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;
@@ -21,6 +23,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.projectId,
     this.beneficiaryId,
     this.beneficiaryClientReferenceId,
+    this.beneficiaryRegistrationDateLte,
+    this.beneficiaryRegistrationDateGte,
     this.clientReferenceId,
     this.tenantId,
     this.isDeleted,
