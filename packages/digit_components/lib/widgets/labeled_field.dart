@@ -4,7 +4,7 @@ class LabeledField extends StatelessWidget {
   final Widget child;
   final String label;
   final IconData? icon;
-  final String? toolTipMsg;
+  final String? tooltipMessage;
   final TextStyle? labelStyle;
   final EdgeInsets? padding;
 
@@ -13,7 +13,7 @@ class LabeledField extends StatelessWidget {
       required this.child,
       required this.label,
       this.icon,
-      this.toolTipMsg,
+      this.tooltipMessage,
       this.labelStyle,
       this.padding});
 
@@ -32,7 +32,7 @@ class LabeledField extends StatelessWidget {
                 ),
                 icon != null
                     ? Tooltip(
-                        message: toolTipMsg ?? '',
+                        message: tooltipMessage ?? '',
                         preferBelow: false,
                         triggerMode: TooltipTriggerMode.tap,
                         child: Icon(icon ?? Icons.info_outline))

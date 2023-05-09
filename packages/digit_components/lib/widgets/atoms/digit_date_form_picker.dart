@@ -22,33 +22,36 @@ class DigitDateFormPicker extends StatelessWidget {
   final String? hint;
   final IconData? icon;
   final String? tooltipMessage;
+  final EdgeInsets? padding;
 
-  const DigitDateFormPicker({
-    super.key,
-    required this.label,
-    this.isRequired = false,
-    this.firstDate,
-    this.lastDate,
-    this.initialDate,
-    this.onChangeOfDate,
-    required this.formControlName,
-    this.isEnabled = true,
-    this.requiredMessage,
-    this.validator,
-    this.autoValidation,
-    this.margin,
-    this.end,
-    this.start,
-    this.hint,
-    this.icon,
-    this.tooltipMessage,
-  });
+  const DigitDateFormPicker(
+      {super.key,
+      required this.label,
+      this.isRequired = false,
+      this.firstDate,
+      this.lastDate,
+      this.initialDate,
+      this.onChangeOfDate,
+      required this.formControlName,
+      this.isEnabled = true,
+      this.requiredMessage,
+      this.validator,
+      this.autoValidation,
+      this.margin,
+      this.end,
+      this.start,
+      this.hint,
+      this.icon,
+      this.tooltipMessage,
+      this.padding});
 
   @override
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
       icon: icon,
+      padding: padding,
+      labelStyle: Theme.of(context).textTheme.bodyLarge,
       tooltipMessage: tooltipMessage,
       child: ReactiveDatePicker(
         formControlName: formControlName,
