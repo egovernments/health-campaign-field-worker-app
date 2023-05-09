@@ -152,39 +152,40 @@ class _SearchBeneficiaryPageState
             );
           },
         ),
-        bottomNavigationBar: Offstage(
-          offstage: isKeyboardVisible,
-          child: SizedBox(
-            height: 85,
-            child: DigitCard(
-              margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-              child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
-                builder: (context, state) {
-                  final router = context.router;
+        bottomNavigationBar: SizedBox(
+          height: 85,
+          child: DigitCard(
+            margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+            child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
+              builder: (context, state) {
+                final router = context.router;
 
-                  final searchQuery = state.searchQuery;
-                  VoidCallback? onPressed;
+                final searchQuery = state.searchQuery;
+                VoidCallback? onPressed;
 
-                  onPressed = state.loading ||
-                          searchQuery == null ||
-                          searchQuery.isEmpty
-                      ? null
-                      : () => router.push(BeneficiaryRegistrationWrapperRoute(
-                            initialState: BeneficiaryRegistrationCreateState(
-                              searchQuery: state.searchQuery,
-                            ),
-                          ));
+                onPressed = state.loading ||
+                        searchQuery == null ||
+                        searchQuery.isEmpty
+                    ? null
+                    : () {
+                        FocusManager.instance.primaryFocus?.unfocus();
 
-                  return DigitElevatedButton(
-                    onPressed: onPressed,
-                    child: Center(
-                      child: Text(localizations.translate(
-                        i18.searchBeneficiary.beneficiaryAddActionLabel,
-                      )),
-                    ),
-                  );
-                },
-              ),
+                        router.push(BeneficiaryRegistrationWrapperRoute(
+                          initialState: BeneficiaryRegistrationCreateState(
+                            searchQuery: state.searchQuery,
+                          ),
+                        ));
+                      };
+
+                return DigitElevatedButton(
+                  onPressed: onPressed,
+                  child: Center(
+                    child: Text(localizations.translate(
+                      i18.searchBeneficiary.beneficiaryAddActionLabel,
+                    )),
+                  ),
+                );
+              },
             ),
           ),
         ),

@@ -74,7 +74,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             listener: (context, state) {
               state.maybeWhen(
                 orElse: () => null,
-                syncInProgress: () => DigitSyncDialogContent.show(
+                syncInProgress: () => DigitSyncDialog.show(
                   context,
                   type: DigitSyncDialogType.inProgress,
                   // TODO: Localization pending
@@ -83,7 +83,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 completedSync: () {
                   Navigator.of(context, rootNavigator: true).pop();
 
-                  DigitSyncDialogContent.show(
+                  DigitSyncDialog.show(
                     context,
                     type: DigitSyncDialogType.complete,
                     // TODO: Localization Pending
@@ -100,7 +100,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 failedSync: () {
                   Navigator.of(context, rootNavigator: true).pop();
 
-                  DigitSyncDialogContent.show(
+                  DigitSyncDialog.show(
                     context,
                     type: DigitSyncDialogType.failed,
                     // TODO: Localization Pending
@@ -332,11 +332,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             final sql = context.read<LocalSqlDataStore>();
             final isar = context.read<Isar>();
-            int count = 0;
+
             for (var element in sql.allTables) {
               final selector = sql.delete(element)
                 ..where((_) => const Constant(true));
-              count += await selector.go();
+              await selector.go();
             }
 
             await isar.writeTxn(() async => await isar.opLogs.clear());

@@ -93,6 +93,8 @@ class _ComplaintsDetailsPageState
 
                         if (!form.valid) return;
 
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         final dateOfComplaint =
                             form.control(_dateOfComplaint).value as DateTime;
 
@@ -289,7 +291,7 @@ class _ComplaintsDetailsPageState
                                         ),
                                         child: Text(
                                           localizations.translate(i18.complaints
-                                              .validationRequiredError),
+                                              .validationRadioRequiredError),
                                           style: TextStyle(
                                             color: DigitTheme
                                                 .instance.colors.lavaRed,
