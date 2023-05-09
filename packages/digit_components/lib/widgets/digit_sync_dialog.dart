@@ -1,16 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-class DigitSyncDialogContent extends StatelessWidget {
-  final String label;
-  final DigitSyncDialogType type;
-
-  const DigitSyncDialogContent._({
-    super.key,
-    required this.label,
-    required this.type,
-  });
-
+class DigitSyncDialog {
   static Future<T?> show<T>(
     BuildContext context, {
     Key? key,
@@ -20,7 +11,28 @@ class DigitSyncDialogContent extends StatelessWidget {
     DigitDialogActions? primaryAction,
     DigitDialogActions? secondaryAction,
   }) async {
-    final content = DigitSyncDialogContent._(
+    return await DigitDialog.show<T>(
+      context,
+      options: getDigitDialog(
+        type: type,
+        label: label,
+        barrierDismissible: barrierDismissible,
+        key: key,
+        primaryAction: primaryAction,
+        secondaryAction: secondaryAction,
+      ),
+    );
+  }
+
+  static DigitDialogOptions getDigitDialog({
+    Key? key,
+    bool barrierDismissible = false,
+    required DigitSyncDialogType type,
+    required String label,
+    DigitDialogActions? primaryAction,
+    DigitDialogActions? secondaryAction,
+  }) {
+    final content = DigitSyncDialogContent(
       label: label,
       type: type,
       key: key,
@@ -49,23 +61,36 @@ class DigitSyncDialogContent extends StatelessWidget {
         break;
     }
 
-    return DigitDialog.show<T>(
-      context,
-      options: DigitDialogOptions(
-        content: content,
-        primaryAction: primaryAction,
-        secondaryAction: secondaryAction,
-        barrierDismissible: barrierDismissible,
-        contentPadding: const EdgeInsets.fromLTRB(
-          kPadding,
-          kPadding * 3,
-          kPadding,
-          kPadding * 2,
-        ),
-        key: key,
+    return DigitDialogOptions(
+      content: content,
+      primaryAction: primaryAction,
+      secondaryAction: secondaryAction,
+      barrierDismissible: barrierDismissible,
+      contentPadding: const EdgeInsets.fromLTRB(
+        kPadding,
+        kPadding * 3,
+        kPadding,
+        kPadding * 2,
       ),
+      key: key,
     );
   }
+}
+
+class DigitSyncDialogContent extends StatelessWidget {
+  final String label;
+  final DigitSyncDialogType type;
+
+  final DigitDialogActions? primaryAction;
+  final DigitDialogActions? secondaryAction;
+
+  const DigitSyncDialogContent({
+    super.key,
+    required this.label,
+    required this.type,
+    this.primaryAction,
+    this.secondaryAction,
+  });
 
   @override
   Widget build(BuildContext context) {
