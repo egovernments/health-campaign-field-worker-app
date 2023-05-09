@@ -34,6 +34,14 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  BoundaryModel? get boundaryOrNull {
+    try {
+      return boundary;
+    } catch (_) {
+      return null;
+    }
+  }
+
   String get loggedInUserUuid {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
