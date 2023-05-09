@@ -6,7 +6,7 @@ import 'digit_walkthrough.dart';
 
 class DigitWalkthroughWrapper extends StatefulWidget {
   final Widget child;
-
+  final int initialIndex;
   final List<GlobalKey> keysArray;
   final GlobalKey<OverlayWidgetState> overlayWidget;
   final List<GlobalKey<DigitWalkthroughState>> widgetKey;
@@ -17,6 +17,7 @@ class DigitWalkthroughWrapper extends StatefulWidget {
     required this.overlayWidget,
     required this.keysArray,
     required this.widgetKey,
+    required this.initialIndex,
   });
   @override
   State<StatefulWidget> createState() {
@@ -25,10 +26,16 @@ class DigitWalkthroughWrapper extends StatefulWidget {
 }
 
 class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
+  int index = 0;
+  @override
+  void initState() {
+    super.initState();
+    index = widget.initialIndex;
+  }
+
   bool showOverlay = false;
   GlobalKey<OverlayWidgetState> overlaykey =
       GlobalKey(debugLabel: 'Digit-Wrapper');
-  int index = 0;
 
   OverlayWidgetState? get overlayWidgetController {
     return widget.overlayWidget.currentState;
@@ -42,10 +49,10 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
       });
 
       setState(() {
-        index = 0;
+        index = widget.initialIndex;
       });
     } else {
-      if (index > 0) {
+      if (index > widget.initialIndex) {
         widget.widgetKey[index - 1].currentState?.setState(() {
           widget.widgetKey[index - 1].currentState?.showROverlay = false;
         });
@@ -71,7 +78,7 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
     });
     widget.widgetKey[index - 1].currentState?.onButtonTap();
     setState(() {
-      index = 0;
+      index = widget.initialIndex;
     });
   }
 
@@ -83,10 +90,12 @@ class DigitWalkthroughWrapperState extends State<DigitWalkthroughWrapper> {
       key: overlaykey,
       overlayChild: widget.child,
       child: Material(
-        elevation: 6,
-        type: MaterialType.transparency,
-        child: widget.child,
-      ),
+          elevation: 6,
+          type: MaterialType.transparency,
+          child: IgnorePointer(
+            ignoring: index > widget.initialIndex,
+            child: widget.child,
+          )),
     );
   }
 }

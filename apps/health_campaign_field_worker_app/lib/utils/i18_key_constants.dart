@@ -592,6 +592,8 @@ class Complaints {
 
   String get noComplaintsExist => 'COMPLAINTS_NO_COMPLAINTS_EXIST';
 
+  String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
+
   String get inboxDateLabel => 'COMPLAINTS_INBOX_DATE_LABEL';
 
   String get inboxNumberLabel => 'COMPLAINTS_INBOX_NUMBER_LABEL';
@@ -605,6 +607,12 @@ class Complaints {
   String get inboxNotGeneratedLabel => 'COMPLAINTS_INBOX_NOT_GENERATED_LABEL';
 
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
+
+  String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
+  String get validationMinLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+
+  String get raisedForAnotherUser => 'COMPLAINTS_RAISED_FOR_ANOTHER_USER';
 
   String get locality => 'COMPLAINTS_LOCALITY';
 
@@ -622,6 +630,8 @@ class Complaints {
 
   String get acknowledgementSubLabelSub =>
       'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+
+  String get complaintsError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
 }
 
 class ReasonForDeletion {

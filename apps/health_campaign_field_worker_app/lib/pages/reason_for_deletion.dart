@@ -137,7 +137,9 @@ class _ReasonForDeletionPageState
                                     .toList()
                                 : householdMemberDeletionReasonOptions
                                     .map((e) => ReactiveRadioListTile(
-                                          title: Text(e.name),
+                                          title: Text(
+                                            localizations.translate(e.name),
+                                          ),
                                           value: e.code,
                                           formControlName:
                                               _reasonForDeletionKey,

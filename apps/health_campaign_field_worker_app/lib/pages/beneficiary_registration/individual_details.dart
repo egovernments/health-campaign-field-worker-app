@@ -261,6 +261,12 @@ class _IndividualDetailsPageState
                                   label: localizations.translate(
                                     i18.individualDetails.idTypeLabelText,
                                   ),
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          '${i18.individualDetails.idTypeLabelText}_IS_REQUIRED',
+                                        ),
+                                  },
                                   valueMapper: (e) => e,
                                   onChanged: (value) {
                                     setState(() {
@@ -301,7 +307,9 @@ class _IndividualDetailsPageState
                                     ),
                                     validationMessages: {
                                       'required': (object) =>
-                                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                          localizations.translate(
+                                            '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                          ),
                                     },
                                   );
                                 },
@@ -337,11 +345,12 @@ class _IndividualDetailsPageState
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
-                                  valueMapper: (value) => value,
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
                                   initialValue: genderOptions.firstOrNull?.name,
                                   menuItems: genderOptions.map(
                                     (e) {
-                                      return localizations.translate(e.name);
+                                      return e.code;
                                     },
                                   ).toList(),
                                   formControlName: _genderKey,
@@ -391,6 +400,8 @@ class _IndividualDetailsPageState
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
+    print(form.control(_genderKey).value);
+
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
@@ -501,7 +512,7 @@ class _IndividualDetailsPageState
                     appConfiguration.genderOptions ?? <GenderOptions>[];
 
                 return options
-                    .map((e) => localizations.translate(e.code))
+                    .map((e) => localizations.translate(e.name))
                     .firstWhereOrNull(
                       (element) => element == individual?.gender?.name,
                     );

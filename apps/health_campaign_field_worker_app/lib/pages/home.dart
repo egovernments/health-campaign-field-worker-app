@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 
@@ -44,6 +45,10 @@ class _HomePageState extends LocalizedState<HomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final loggedinUser = context.loggedInUser.roles
+        .where((e) => e.code == UserRoleCodeEnum.distributor)
+        .toList();
+
     List<GlobalKey<OverlayWidgetState>> overlayWidgetStateList = [];
     List<GlobalKey<DigitWalkthroughState>> walkthroughWidgetStateList = [];
     for (var i = 0; i < _getItems(context).length + 1; i++) {
@@ -63,6 +68,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: DigitWalkthroughWrapper(
+          initialIndex: loggedinUser.isEmpty ? 1 : 0,
           key: overlayWrapperkey,
           overlayWidget: overlaykey,
           keysArray: overlayWidgetStateList,
@@ -113,27 +119,30 @@ class _HomePageState extends LocalizedState<HomePage> {
                     overlayWrapperkey.currentState?.onSelectedTap();
                   },
                 ),
-                DigitWalkthrough(
-                  onSkip: () =>
-                      {overlayWrapperkey.currentState?.onSelectedSkip()},
-                  widgetHeight: 150,
-                  onTap: () {
-                    overlayWrapperkey.currentState?.onSelectedTap();
-                  },
-                  key: walkthroughWidgetStateList[0],
-                  description:
-                      localizations.translate(i18.home.progressIndicatorHelp),
-                  overlayWidget: overlayWidgetStateList[0],
-                  titleAlignment: TextAlign.center,
-                  child: ProgressIndicatorContainer(
-                    label: localizations.translate(
-                      i18.home.progressIndicatorTitle,
+                Offstage(
+                  offstage: loggedinUser.isEmpty,
+                  child: DigitWalkthrough(
+                    onSkip: () =>
+                        {overlayWrapperkey.currentState?.onSelectedSkip()},
+                    widgetHeight: 150,
+                    onTap: () {
+                      overlayWrapperkey.currentState?.onSelectedTap();
+                    },
+                    key: walkthroughWidgetStateList[0],
+                    description:
+                        localizations.translate(i18.home.progressIndicatorHelp),
+                    overlayWidget: overlayWidgetStateList[0],
+                    titleAlignment: TextAlign.center,
+                    child: ProgressIndicatorContainer(
+                      label: localizations.translate(
+                        i18.home.progressIndicatorTitle,
+                      ),
+                      prefixLabel: localizations.translate(
+                        i18.home.progressIndicatorPrefixLabel,
+                      ),
+                      suffixLabel: '200',
+                      value: .08,
                     ),
-                    prefixLabel: localizations.translate(
-                      i18.home.progressIndicatorPrefixLabel,
-                    ),
-                    suffixLabel: '200',
-                    value: .08,
                   ),
                 ),
               ]),

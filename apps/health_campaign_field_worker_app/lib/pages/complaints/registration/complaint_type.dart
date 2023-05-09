@@ -164,10 +164,15 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         ),
                       ),
                       if (form.control(_complaintType).value == "Other") ...[
-                        const DigitTextFormField(
+                        DigitTextFormField(
                           formControlName: _otherComplaintType,
                           label: "",
                           maxLength: 100,
+                          validationMessages: {
+                            'required': (object) => localizations.translate(
+                                  i18.complaints.complaintsError,
+                                ),
+                          },
                         ),
                       ],
                       const SizedBox(height: 16),

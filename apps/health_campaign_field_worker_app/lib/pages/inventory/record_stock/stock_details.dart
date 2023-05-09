@@ -373,7 +373,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       menuItems: productVariants,
                                       validationMessages: {
                                         'required': (object) =>
-                                            'Field is required',
+                                            '${module.selectProductLabel}_IS_REQUIRED',
                                       },
                                     );
                                   },
@@ -439,8 +439,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               ),
                               isRequired: true,
                               validationMessages: {
-                                "required": (object) => localizations.translate(
-                                      '${quantityCountLabel}_REQUIRED',
+                                "number": (object) => localizations.translate(
+                                      '${quantityCountLabel}_ERROR',
                                     ),
                               },
                               label: localizations.translate(
@@ -459,6 +459,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     .quantityOfProductIndicatedOnWaybillLabel,
                               ),
                               formControlName: _waybillQuantityKey,
+                              validationMessages: {
+                                "number": (object) => localizations.translate(
+                                      '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
+                                    ),
+                              },
                             ),
                             BlocBuilder<AppInitializationBloc,
                                 AppInitializationState>(
