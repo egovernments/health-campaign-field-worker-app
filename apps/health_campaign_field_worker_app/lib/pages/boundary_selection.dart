@@ -7,21 +7,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/boundary/boundary.dart';
 import '../models/data_model.dart';
 
-class BoundarySelectionPage extends StatelessWidget {
+class BoundarySelectionPage extends StatefulWidget {
   const BoundarySelectionPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<BoundaryBloc, BoundaryState>(
-      builder: (context, state) {
-        final selectedBoundary = state.selectedBoundaryMap.entries
-            .lastWhereOrNull((element) => element.value != null);
+  State<BoundarySelectionPage> createState() => _BoundarySelectionPageState();
+}
 
-        return WillPopScope(
-          onWillPop: () async {
-            return selectedBoundary != null;
-          },
-          child: Scaffold(
+class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
+  bool shouldPop = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => shouldPop,
+      child: BlocBuilder<BoundaryBloc, BoundaryState>(
+        builder: (context, state) {
+          final selectedBoundary = state.selectedBoundaryMap.entries
+              .lastWhereOrNull((element) => element.value != null);
+
+          return Scaffold(
             body: Builder(
               builder: (context) {
                 if (state.loading) {
@@ -97,11 +102,19 @@ class BoundarySelectionPage extends StatelessWidget {
                         child: DigitElevatedButton(
                           onPressed: selectedBoundary == null
                               ? null
-                              : () {
+                              : () async {
+                                  setState(() {
+                                    shouldPop = true;
+                                  });
+
                                   context.read<BoundaryBloc>().add(
                                         const BoundarySubmitEvent(),
                                       );
-                                  context.router.pop();
+
+                                  Future.delayed(
+                                    const Duration(milliseconds: 100),
+                                    () => context.router.pop(),
+                                  );
                                 },
                           child: const Text('Submit'),
                         ),
@@ -111,9 +124,9 @@ class BoundarySelectionPage extends StatelessWidget {
                 );
               },
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

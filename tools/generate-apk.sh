@@ -26,7 +26,7 @@ build_config="${build_config:-release}"
 
 # Build APK for specified environment(s) and build config
 if [ "$env" == "ALL" ]; then
-  env_list=("UAT" "QA" "DEV")
+  env_list=("UAT" "DEV" "QA")
 else
   env_list=("$env")
 fi

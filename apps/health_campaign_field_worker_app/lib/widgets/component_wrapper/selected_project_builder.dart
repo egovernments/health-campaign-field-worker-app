@@ -23,17 +23,17 @@ class SelectedProjectBuilder extends StatelessWidget {
           child: Text('No project selected'),
         );
 
-        return projectState.maybeWhen(
-          orElse: () => noProjectSelected,
-          loading: () => const Center(child: CircularProgressIndicator()),
-          fetched: (projects, selectedProject) {
-            if (selectedProject == null) {
-              return noProjectSelected;
-            }
+        final selectedProject = projectState.selectedProject;
 
-            return projectBuilder(context, selectedProject);
-          },
-        );
+        if (projectState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (selectedProject == null) {
+          return noProjectSelected;
+        }
+
+        return projectBuilder(context, selectedProject);
       },
     );
   }
