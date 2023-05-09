@@ -19,19 +19,17 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     super.initialState, {
     required this.boundaryRepository,
   }) {
-    on(_handleEdit);
+    on(_handleReset);
     on(_handleSearch);
     on(_handleSelect);
     on(_handleSubmit);
   }
 
-  Future<void> _handleEdit(
-    BoundaryEditEvent event,
+  Future<void> _handleReset(
+    BoundaryResetEvent event,
     BoundaryEmitter emit,
   ) async {
-    emit(state.copyWith(
-      hasSubmitted: false,
-    ));
+    emit(const BoundaryState());
   }
 
   FutureOr<void> _handleSearch(
@@ -110,7 +108,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
 
 @freezed
 class BoundaryEvent with _$BoundaryEvent {
-  const factory BoundaryEvent.edit() = BoundaryEditEvent;
+  const factory BoundaryEvent.reset() = BoundaryResetEvent;
 
   const factory BoundaryEvent.search({required String code}) =
       BoundarySearchEvent;
