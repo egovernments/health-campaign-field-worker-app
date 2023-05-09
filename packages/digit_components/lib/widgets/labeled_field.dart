@@ -26,9 +26,11 @@ class LabeledField extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  label,
-                  style: labelStyle ?? Theme.of(context).textTheme.labelSmall,
+                Flexible(
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
                 icon != null
                     ? Tooltip(
@@ -36,7 +38,7 @@ class LabeledField extends StatelessWidget {
                         preferBelow: false,
                         triggerMode: TooltipTriggerMode.tap,
                         child: Icon(icon ?? Icons.info_outline))
-                    : Container()
+                    : const SizedBox.shrink()
               ],
             ),
             const SizedBox(height: 8),
