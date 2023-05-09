@@ -4,7 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class DigitRadioListTile extends StatelessWidget {
   final Object groupValue;
   final Widget title;
-  final Function onchange;
+  final ReactiveFormFieldCallback onchange;
   final Object value;
   final String formControlName;
 
