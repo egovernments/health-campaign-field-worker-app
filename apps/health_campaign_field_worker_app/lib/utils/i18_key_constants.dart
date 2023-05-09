@@ -20,6 +20,7 @@ const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
 const complaints = Complaints();
 const reasonForDeletion = ReasonForDeletion();
+const inventoryReportSelection = InventoryReportSelection();
 
 class Common {
   const Common();
@@ -480,33 +481,69 @@ class ManageStock {
 
   String get label => 'MANAGE_STOCK_LABEL';
 
-  String get recordstockReceiptLabel =>
+  String get recordStockReceiptLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RECEIPT_LABEL';
 
-  String get recordstockReceiptDescription =>
+  String get recordStockReceiptDescription =>
       'MANAGE_STOCK_RECEIPT_DESCRIPTION';
 
-  String get recordstockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
+  String get recordStockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
 
-  String get recordstockIssuedtDescription =>
+  String get recordStockIssuedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
 
-  String get recordstockReturnedLabel =>
+  String get recordStockReturnedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
 
-  String get recordstockReturnedtDescription =>
+  String get recordStockReturnedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_DESCRIPTION';
 
-  String get recordstockDamagedLabel =>
+  String get recordStockDamagedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_LABEL';
 
-  String get recordstockDamagedDescription =>
+  String get recordStockDamagedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_DESCRIPTION';
 
-  String get recordstockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
+  String get recordStockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
 
-  String get recordstockLossDescription =>
+  String get recordStockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+}
+
+class InventoryReportSelection {
+  const InventoryReportSelection();
+
+  String get label => 'MANAGE_STOCK_LABEL';
+
+  String get inventoryReportReceiptLabel =>
+      'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL';
+
+  String get inventoryReportReceiptDescription =>
+      'MANAGE_STOCK_RECEIPT_DESCRIPTION';
+
+  String get inventoryReportIssuedLabel =>
+      'INVENTORY_REPORT_SELECTION_ISSUED_LABEL';
+
+  String get inventoryReportIssuedDescription =>
+      'INVENTORY_REPORT_SELECTION_ISSUED_DESCRIPTION';
+
+  String get inventoryReportReturnedLabel =>
+      'INVENTORY_REPORT_SELECTION_RETURNED_LABEL';
+
+  String get inventoryReportReturnedDescription =>
+      'INVENTORY_REPORT_SELECTION_RETURNED_DESCRIPTION';
+
+  String get inventoryReportDamagedLabel =>
+      'INVENTORY_REPORT_SELECTION_DAMAGED_LABEL';
+
+  String get inventoryReportDamagedDescription =>
+      'INVENTORY_REPORT_SELECTION_DAMAGED_DESCRIPTION';
+
+  String get inventoryReportLossLabel =>
+      'INVENTORY_REPORT_SELECTION_LOSS_LABEL';
+
+  String get inventoryReportLossDescription =>
+      'INVENTORY_REPORT_SELECTION_LOSS_DESCRIPTION';
 }
 
 class Complaints {
@@ -589,17 +626,21 @@ class Complaints {
 
   String get acknowledgementAction => 'COMPLAINTS_ACKNOWLEDGEMENT_ACTION';
 
-  String get acknowledgementDescription => 'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
+  String get acknowledgementDescription =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
 
   String get acknowledgementLabel => 'COMPLAINTS_ACKNOWLEDGEMENT_LABEL';
 
-  String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
+  String get acknowledgementSubLabelMain =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
 
-  String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+  String get acknowledgementSubLabelSub =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 
   String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
 
-  String get validationMinLengthError => 'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get validationMinLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
 

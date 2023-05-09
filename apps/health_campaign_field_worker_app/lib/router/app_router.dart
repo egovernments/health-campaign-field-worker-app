@@ -7,7 +7,6 @@ import '../blocs/record_stock/record_stock.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
-import '../pages/complaints_acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
@@ -32,12 +31,14 @@ import '../pages/complaints/registration/complaint_type.dart';
 import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
+import '../pages/complaints_acknowledgement.dart';
 import '../pages/home.dart';
 import '../pages/inventory/facility_selection.dart';
 import '../pages/inventory/manage_stocks.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
 import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
+import '../pages/inventory/reports/report_selection.dart';
 import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -116,7 +117,10 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-        AutoRoute(page: ComplaintsAcknowledgementPage, path: 'complaints-acknowledgement'),
+        AutoRoute(
+          page: ComplaintsAcknowledgementPage,
+          path: 'complaints-acknowledgement',
+        ),
 
         /// Inventory Routes
         AutoRoute(
@@ -136,6 +140,10 @@ part 'app_router.gr.dart';
         AutoRoute<FacilityModel>(
           page: FacilitySelectionPage,
           path: 'select-facilities',
+        ),
+        AutoRoute(
+          page: InventoryReportSelectionPage,
+          path: 'inventory-report-selection',
         ),
 
         /// Project Selection

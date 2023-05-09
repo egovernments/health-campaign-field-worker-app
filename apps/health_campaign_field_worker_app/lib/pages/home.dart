@@ -21,6 +21,7 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
+import 'inventory/reports/report_selection.dart';
 
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
@@ -189,6 +190,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 label: i18.home.stockReconciliationLabel,
                 onPressed: () {
                   context.router.push(StockReconciliationRoute());
+                },
+              ),
+              HomeItemCard(
+                icon: Icons.announcement,
+                label: 'Reports',
+                onPressed: () {
+                  context.router.push(
+                    InventoryReportSelectionPage(),
+                  );
                 },
               ),
             ],

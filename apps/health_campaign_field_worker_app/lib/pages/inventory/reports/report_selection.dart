@@ -1,23 +1,24 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../blocs/record_stock/record_stock.dart';
-import '../../router/app_router.dart';
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/localized.dart';
 
-class ManageStocksPage extends LocalizedStatefulWidget {
-  const ManageStocksPage({
-    super.key,
+class InventoryReportSelectionPage extends LocalizedStatefulWidget {
+  const InventoryReportSelectionPage({
+    Key? key,
     super.appLocalizations,
-  });
-`
+  }) : super(key: key);
+
   @override
-  State<ManageStocksPage> createState() => _ManageStocksPageState();
+  State<InventoryReportSelectionPage> createState() =>
+      _InventoryReportSelectionPageState();
 }
 
-class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
+class _InventoryReportSelectionPageState
+    extends LocalizedState<InventoryReportSelectionPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -37,7 +38,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    localizations.translate(i18.manageStock.label),
+                    localizations.translate(i18.inventoryReportSelection.label),
                     style: theme.textTheme.displayMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -45,10 +46,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               ),
               Column(children: [
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReceiptLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockReceiptDescription),
+                  title: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportReceiptLabel),
+                  description: localizations.translate(i18
+                      .inventoryReportSelection
+                      .inventoryReportReceiptDescription),
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -58,10 +60,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
+                  title: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportIssuedLabel),
+                  description: localizations.translate(i18
+                      .inventoryReportSelection
+                      .inventoryReportIssuedDescription),
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -71,10 +74,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReturnedLabel),
+                  title: localizations.translate(i18
+                      .inventoryReportSelection.inventoryReportReturnedLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordStockReturnedDescription,
+                    i18.inventoryReportSelection
+                        .inventoryReportReturnedDescription,
                   ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
@@ -85,10 +89,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockDamagedLabel),
+                  title: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportDamagedLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
+                    i18.inventoryReportSelection
+                        .inventoryReportDamagedDescription,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
@@ -99,10 +104,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockLossLabel),
+                  title: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportLossLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
+                    i18.inventoryReportSelection
+                        .inventoryReportDamagedDescription,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,

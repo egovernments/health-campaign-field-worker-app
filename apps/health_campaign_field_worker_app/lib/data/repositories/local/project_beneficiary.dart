@@ -19,11 +19,11 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
         (tbl) => buildOr([
           if (query.projectId != null) tbl.projectId.equals(query.projectId),
           if (query.beneficiaryRegistrationDateGte != null)
-            tbl.auditCreatedTime.isBiggerOrEqualValue(
+            tbl.dateOfRegistration.isBiggerOrEqualValue(
               query.beneficiaryRegistrationDateGte!.millisecondsSinceEpoch,
             ),
           if (query.beneficiaryRegistrationDateLte != null)
-            tbl.auditCreatedTime.isSmallerOrEqualValue(
+            tbl.dateOfRegistration.isSmallerOrEqualValue(
               query.beneficiaryRegistrationDateLte!.millisecondsSinceEpoch,
             ),
         ]),
