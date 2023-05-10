@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -43,16 +45,17 @@ class StockLocalRepository
                     userId,
                   ),
                 if (query.transactionReason != null)
-                  sql.stock.transactionReason.isIn(
-                    query.transactionReason!.map((e) => e.index),
-                  )
-                // else
-                //   sql.stock.transactionReason.isNull()
-                ,
+                  query.transactionReason!.isEmpty
+                      ? sql.stock.transactionReason.isNull()
+                      : sql.stock.transactionReason.isIn(
+                          query.transactionReason!.map((e) => e.index),
+                        ),
                 if (query.transactionType != null)
-                  sql.stock.transactionType.isIn(
-                    query.transactionType!.map((e) => e.index),
-                  ),
+                  query.transactionType!.isEmpty
+                      ? sql.stock.transactionType.isNull()
+                      : sql.stock.transactionType.isIn(
+                          query.transactionType!.map((e) => e.index),
+                        ),
               ],
             ),
           ))

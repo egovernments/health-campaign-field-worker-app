@@ -158,7 +158,7 @@ class _InventoryReportDetailsPageState
                               label:
                                   i18.inventoryReportDetails.receivedCountLabel,
                               key: receivedKey,
-                              width: 100,
+                              width: 110,
                             ),
                             DigitGridColumn(
                               label: i18
@@ -170,30 +170,30 @@ class _InventoryReportDetailsPageState
                               label:
                                   i18.inventoryReportDetails.returnedCountLabel,
                               key: returnedKey,
-                              width: 100,
+                              width: 120,
                             ),
                             DigitGridColumn(
                               label:
                                   i18.inventoryReportDetails.damagedCountLabel,
                               key: damagedKey,
-                              width: 100,
+                              width: 120,
                             ),
                             DigitGridColumn(
                               label: i18.inventoryReportDetails.lostCountLabel,
                               key: lossKey,
-                              width: 100,
+                              width: 120,
                             ),
                             DigitGridColumn(
                               label:
                                   i18.inventoryReportDetails.stockInHandLabel,
                               key: stockInHandKey,
-                              width: 100,
+                              width: 150,
                             ),
                             DigitGridColumn(
                               label:
                                   i18.inventoryReportDetails.manualCountLabel,
                               key: manualCountKey,
-                              width: 200,
+                              width: 150,
                             ),
                           ],
                           rows: [
