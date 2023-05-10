@@ -20,8 +20,8 @@ import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
-import 'utils/constants.dart';
 import 'utils/environment_config.dart';
+import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
 class MainApplication extends StatelessWidget {
