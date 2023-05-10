@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +63,13 @@ class _InventoryReportDetailsPageState
                       child: CircularProgressIndicator(),
                     ),
                     stock: (data) {
+                      if (data.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(kPadding * 2),
+                          child: _NoReportContent(title: title),
+                        );
+                      }
+
                       const dateKey = 'date';
                       const quantityKey = 'quantity';
                       const transactingPartyKey = 'transactingParty';
@@ -113,9 +121,21 @@ class _InventoryReportDetailsPageState
                       );
                     },
                     stockReconciliation: (data) {
+                      if (data.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(kPadding * 2),
+                          child: _NoReportContent(title: title),
+                        );
+                      }
+
                       const dateKey = 'date';
+                      const receivedKey = 'received';
+                      const dispatchedKey = 'dispatched';
+                      const returnedKey = 'returned';
+                      const damagedKey = 'damaged';
+                      const lossKey = 'loss';
+                      const stockInHandKey = 'stockInHand';
                       const manualCountKey = 'manualCount';
-                      const calculatedCountKey = 'calculatedCount';
 
                       return _ReportDetailsContent(
                         title: title,
@@ -127,12 +147,43 @@ class _InventoryReportDetailsPageState
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label: quantityLabel,
-                              key: calculatedCountKey,
+                              label:
+                                  i18.inventoryReportDetails.receivedCountLabel,
+                              key: receivedKey,
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label: transactingPartyLabel,
+                              label: i18
+                                  .inventoryReportDetails.dispatchedCountLabel,
+                              key: dispatchedKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label:
+                                  i18.inventoryReportDetails.returnedCountLabel,
+                              key: returnedKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label:
+                                  i18.inventoryReportDetails.damagedCountLabel,
+                              key: damagedKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: i18.inventoryReportDetails.lostCountLabel,
+                              key: lossKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label:
+                                  i18.inventoryReportDetails.stockInHandLabel,
+                              key: stockInHandKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label:
+                                  i18.inventoryReportDetails.manualCountLabel,
                               key: manualCountKey,
                               width: 200,
                             ),
@@ -147,14 +198,51 @@ class _InventoryReportDetailsPageState
                                       value: entry.key,
                                     ),
                                     DigitGridCell(
-                                      key: calculatedCountKey,
-                                      value: (model.calculatedCount ?? 0)
-                                          .toString(),
+                                      key: receivedKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'received',
+                                      ),
+                                    ),
+                                    DigitGridCell(
+                                      key: dispatchedKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'issued',
+                                      ),
+                                    ),
+                                    DigitGridCell(
+                                      key: returnedKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'returned',
+                                      ),
+                                    ),
+                                    DigitGridCell(
+                                      key: lossKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'lost',
+                                      ),
+                                    ),
+                                    DigitGridCell(
+                                      key: damagedKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'damaged',
+                                      ),
+                                    ),
+                                    DigitGridCell(
+                                      key: stockInHandKey,
+                                      value: _getCountFromAdditionalDetails(
+                                        model,
+                                        'inHand',
+                                      ),
                                     ),
                                     DigitGridCell(
                                       key: manualCountKey,
-                                      value:
-                                          (model.physicalCount ?? 0).toString(),
+                                      value: (model.physicalCount ?? '0')
+                                          .toString(),
                                     ),
                                   ],
                                 ),
@@ -230,6 +318,24 @@ class _InventoryReportDetailsPageState
         return i18.inventoryReportDetails.lossTransactingPartyLabel;
     }
   }
+
+  String _getCountFromAdditionalDetails(
+    StockReconciliationModel model,
+    String key,
+  ) {
+    final additionalDetails = model.additionalFields;
+    if (additionalDetails == null) {
+      return '0';
+    }
+    final count = additionalDetails.fields.firstWhereOrNull(
+      (e) => e.key == key,
+    );
+    if (count == null) {
+      return '0';
+    }
+
+    return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
+  }
 }
 
 class _ReportDetailsContent extends StatelessWidget {
@@ -263,6 +369,38 @@ class _ReportDetailsContent extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _NoReportContent extends StatelessWidget {
+  final String title;
+
+  const _NoReportContent({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        Text(
+          title,
+          maxLines: 1,
+          style: theme.textTheme.displayMedium,
+        ),
+        const SizedBox(height: kPadding * 2),
+        Text(
+          'No records are available\nPlease create some records to view the report',
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.disabledColor,
+          ),
+        ),
+      ],
     );
   }
 }

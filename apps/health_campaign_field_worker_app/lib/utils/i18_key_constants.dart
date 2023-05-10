@@ -739,4 +739,32 @@ class InventoryReportDetails {
   String get lossTransactingPartyLabel {
     return 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL';
   }
+
+  String get stockInHandLabel {
+    return 'INVENTORY_REPORT_DETAILS_STOCK_IN_HAND_LABEL';
+  }
+
+  String get manualCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_MANUAL_COUNT_LABEL';
+  }
+
+  String get receivedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIVED_COUNT_LABEL';
+  }
+
+  String get dispatchedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCHED_COUNT_LABEL';
+  }
+
+  String get returnedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_COUNT_LABEL';
+  }
+
+  String get damagedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_COUNT_LABEL';
+  }
+
+  String get lostCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOST_COUNT_LABEL';
+  }
 }

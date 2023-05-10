@@ -67,6 +67,11 @@ class StockReconciliationLocalRepository extends LocalRepository<
         commentsOnReconciliation: data.commentsOnReconciliation,
         dateOfReconciliation: data.dateOfReconciliation,
         clientReferenceId: data.clientReferenceId,
+        additionalFields: data.additionalFields == null
+            ? null
+            : Mapper.fromJson<StockReconciliationAdditionalFields>(
+                data.additionalFields!,
+              ),
         isDeleted: data.isDeleted,
         rowVersion: data.rowVersion,
       );

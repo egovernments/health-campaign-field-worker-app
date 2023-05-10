@@ -75,6 +75,17 @@ class StockReconciliationBloc
         tenantId: envConfig.variables.tenantId,
         referenceId: state.projectId,
         referenceIdType: 'PROJECT',
+        additionalFields: StockReconciliationAdditionalFields(
+          version: 1,
+          fields: [
+            AdditionalField('received', state.stockReceived),
+            AdditionalField('issued', state.stockIssued),
+            AdditionalField('returned', state.stockReturned),
+            AdditionalField('lost', state.stockLost),
+            AdditionalField('damaged', state.stockDamaged),
+            AdditionalField('inHand', state.stockInHand),
+          ],
+        ),
         rowVersion: 1,
       ),
     );
