@@ -54,7 +54,6 @@ class _InventoryReportDetailsPageState
           return Column(
             children: [
               const BackNavigationHelpHeaderWidget(),
-              const SizedBox(height: kPadding * 2),
               Expanded(
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -113,13 +112,60 @@ class _InventoryReportDetailsPageState
                         ),
                       );
                     },
-                    stockReconciliation: () {
-                      return const Placeholder();
+                    stockReconciliation: (data) {
+                      const dateKey = 'date';
+                      const manualCountKey = 'manualCount';
+                      const calculatedCountKey = 'calculatedCount';
+
+                      return _ReportDetailsContent(
+                        title: title,
+                        data: DigitGridData(
+                          columns: [
+                            DigitGridColumn(
+                              label: i18.inventoryReportDetails.dateLabel,
+                              key: dateKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: quantityLabel,
+                              key: calculatedCountKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: transactingPartyLabel,
+                              key: manualCountKey,
+                              width: 200,
+                            ),
+                          ],
+                          rows: [
+                            for (final entry in data.entries) ...[
+                              for (final model in entry.value)
+                                DigitGridRow(
+                                  [
+                                    DigitGridCell(
+                                      key: dateKey,
+                                      value: entry.key,
+                                    ),
+                                    DigitGridCell(
+                                      key: calculatedCountKey,
+                                      value: (model.calculatedCount ?? 0)
+                                          .toString(),
+                                    ),
+                                    DigitGridCell(
+                                      key: manualCountKey,
+                                      value:
+                                          (model.physicalCount ?? 0).toString(),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: kPadding * 2),
               DigitCard(
                 margin: EdgeInsets.zero,
                 child: DigitElevatedButton(

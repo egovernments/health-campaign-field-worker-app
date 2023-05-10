@@ -1,9 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/app_exception.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
 part 'inventory_report.freezed.dart';
@@ -61,37 +63,22 @@ class InventoryReportBloc
       ];
     }
 
-    final data = await stockRepository.search(
+    final data = (await stockRepository.search(
       StockSearchModel(
         transactionType: transactionType,
         transactionReason: transactionReason,
+        tenantId: envConfig.variables.tenantId,
+      ),
+    ))
+        .where((element) => element.auditDetails != null);
+
+    final groupedData = data.groupListsBy(
+      (element) => DateFormat('dd MMM yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(
+          element.auditDetails!.createdTime,
+        ),
       ),
     );
-
-    final auditDetailsData =
-        data.where((element) => element.auditDetails != null);
-
-    final groupedData = <String, List<StockModel>>{};
-
-    for (final element in auditDetailsData) {
-      final date = DateTime.fromMillisecondsSinceEpoch(
-        element.auditDetails!.createdTime,
-      );
-
-      final key = DateFormat('dd MMM yyyy').format(
-        DateTime(
-          date.year,
-          date.month,
-          date.day,
-        ),
-      );
-
-      if (groupedData.containsKey(key)) {
-        groupedData[key]!.add(element);
-      } else {
-        groupedData[key] = [element];
-      }
-    }
 
     emit(InventoryReportStockState(stockData: groupedData));
   }
@@ -101,6 +88,21 @@ class InventoryReportBloc
     InventoryReportEmitter emit,
   ) async {
     emit(const InventoryReportLoadingState());
+    final data = await stockReconciliationRepository.search(
+      StockReconciliationSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ),
+    );
+
+    final groupedData = data.groupListsBy(
+      (element) => DateFormat('dd MMM yyyy').format(
+        element.dateOfReconciliationTime,
+      ),
+    );
+
+    emit(InventoryReportStockReconciliationState(
+      data: groupedData,
+    ));
   }
 }
 
@@ -122,8 +124,9 @@ class InventoryReportState with _$InventoryReportState {
     @Default({}) Map<String, List<StockModel>> stockData,
   }) = InventoryReportStockState;
 
-  const factory InventoryReportState.stockReconciliation() =
-      InventoryReportStockReconciliationState;
+  const factory InventoryReportState.stockReconciliation({
+    @Default({}) Map<String, List<StockReconciliationModel>> data,
+  }) = InventoryReportStockReconciliationState;
 }
 
 enum InventoryReportType {
