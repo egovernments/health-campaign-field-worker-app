@@ -91,7 +91,7 @@ class _InventoryReportDetailsPageState
                             DigitGridColumn(
                               label: quantityLabel,
                               key: quantityKey,
-                              width: 100,
+                              width: 150,
                             ),
                             DigitGridColumn(
                               label: transactingPartyLabel,
