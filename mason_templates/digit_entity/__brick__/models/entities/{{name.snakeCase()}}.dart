@@ -50,7 +50,9 @@ class {{name.pascalCase()}}Model extends EntityModel {
   {{/dateTimeAttributes}}
 
   {{name.pascalCase()}}Companion get companion {
-    return {{name.pascalCase()}}Companion(
+    return {{name.pascalCase()}}Companion({{#persistBoundaryParameters}}
+      localityBoundaryCode: Value(locality?.code),
+      localityBoundaryName: Value(locality?.name),{{/persistBoundaryParameters}}
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),

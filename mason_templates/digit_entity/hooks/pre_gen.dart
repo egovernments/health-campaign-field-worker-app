@@ -43,6 +43,24 @@ void run(HookContext context) {
         includeForTable: true,
         nullable: true,
       ),
+      if (model.persistBoundaryParameters) ...[
+        AttributeModel(
+          name: 'localityBoundaryCode',
+          type: 'String',
+          includeForQuery: false,
+          includeForEntity: false,
+          includeForTable: true,
+          nullable: true,
+        ),
+        AttributeModel(
+          name: 'localityBoundaryName',
+          type: 'String',
+          includeForQuery: false,
+          includeForEntity: false,
+          includeForTable: true,
+          nullable: true,
+        ),
+      ],
     ],
   );
 

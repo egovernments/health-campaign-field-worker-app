@@ -32,8 +32,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
-        _administrativeUnitKey:
-            FormControl<String>(value: context.boundaryCode),
+        _administrativeUnitKey: FormControl<String>(
+          value: context.boundary.name,
+        ),
         _warehouseKey: FormControl<FacilityModel>(
           validators: [Validators.required],
         ),
@@ -43,154 +44,152 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
-        return projectState.maybeWhen(
-          orElse: () {
-            return const Center(
-              child: Text('Projects not initialized'),
+        final selectedProject = projectState.selectedProject;
+
+        if (selectedProject == null) {
+          return const Center(child: Text('No project selected'));
+        }
+
+        final theme = Theme.of(context);
+
+        return BlocConsumer<FacilityBloc, FacilityState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              empty: () => NoFacilitiesAssignedDialog.show(context),
             );
           },
-          fetched: (projects, selectedProject) {
-            final theme = Theme.of(context);
+          builder: (ctx, facilityState) {
+            final facilities = facilityState.whenOrNull(
+                  fetched: (facilities, _) => facilities,
+                ) ??
+                [];
 
-            return BlocConsumer<FacilityBloc, FacilityState>(
-              listener: (context, state) {
-                state.whenOrNull(
-                  empty: () => NoFacilitiesAssignedDialog.show(context),
-                );
-              },
-              builder: (ctx, facilityState) {
-                final facilities = facilityState.whenOrNull(
-                      fetched: (facilities, _) => facilities,
-                    ) ??
-                    [];
+            return Scaffold(
+              body: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: ReactiveFormBuilder(
+                  form: buildForm,
+                  builder: (context, form, child) {
+                    return ScrollableContent(
+                      header: Column(children: const [
+                        BackNavigationHelpHeaderWidget(),
+                      ]),
+                      footer: SizedBox(
+                        height: 85,
+                        child: DigitCard(
+                          margin: const EdgeInsets.only(
+                            left: 0,
+                            right: 0,
+                            top: 10,
+                          ),
+                          child: ReactiveFormConsumer(
+                            builder: (context, form, child) {
+                              return DigitElevatedButton(
+                                onPressed: !form.valid
+                                    ? null
+                                    : () {
+                                        form.markAllAsTouched();
+                                        if (!form.valid) {
+                                          return;
+                                        }
+                                        final dateOfRecord = form
+                                            .control(_dateOfEntryKey)
+                                            .value as DateTime;
 
-                return Scaffold(
-                  body: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: ReactiveFormBuilder(
-                      form: buildForm,
-                      builder: (context, form, child) {
-                        return ScrollableContent(
-                          header: Column(children: const [
-                            BackNavigationHelpHeaderWidget(),
-                          ]),
-                          footer: SizedBox(
-                            height: 85,
-                            child: DigitCard(
-                              margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                              child: ReactiveFormConsumer(
-                                builder: (context, form, child) {
-                                  return DigitElevatedButton(
-                                    onPressed: !form.valid
-                                        ? null
-                                        : () {
-                                            form.markAllAsTouched();
-                                            if (!form.valid) {
-                                              return;
-                                            }
-                                            final dateOfRecord = form
-                                                .control(_dateOfEntryKey)
-                                                .value as DateTime;
+                                        final facility = form
+                                            .control(_warehouseKey)
+                                            .value as FacilityModel;
 
-                                            final facility = form
-                                                .control(_warehouseKey)
-                                                .value as FacilityModel;
-
-                                            context.read<RecordStockBloc>().add(
-                                                  RecordStockSaveWarehouseDetailsEvent(
-                                                    dateOfRecord: dateOfRecord,
-                                                    facilityModel: facility,
-                                                  ),
-                                                );
-                                            context.router.push(
-                                              StockDetailsRoute(),
+                                        context.read<RecordStockBloc>().add(
+                                              RecordStockSaveWarehouseDetailsEvent(
+                                                dateOfRecord: dateOfRecord,
+                                                facilityModel: facility,
+                                              ),
                                             );
-                                          },
-                                    child: child!,
-                                  );
-                                },
-                                child: Center(
-                                  child: Text(
-                                    localizations.translate(
-                                      i18.householdDetails.actionLabel,
-                                    ),
-                                  ),
+                                        context.router.push(
+                                          StockDetailsRoute(),
+                                        );
+                                      },
+                                child: child!,
+                              );
+                            },
+                            child: Center(
+                              child: Text(
+                                localizations.translate(
+                                  i18.householdDetails.actionLabel,
                                 ),
                               ),
                             ),
                           ),
-                          children: [
-                            DigitCard(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    localizations.translate(
-                                      i18.warehouseDetails
-                                          .warehouseDetailsLabel,
-                                    ),
-                                    style: theme.textTheme.displayMedium,
-                                  ),
-                                  Column(children: [
-                                    DigitDateFormPicker(
-                                      isEnabled: false,
-                                      formControlName: _dateOfEntryKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.dateOfReceipt,
-                                      ),
-                                      isRequired: false,
-                                    ),
-                                    DigitTextFormField(
-                                      readOnly: true,
-                                      formControlName: _administrativeUnitKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.administrativeUnit,
-                                      ),
-                                    ),
-                                  ]),
-                                  DigitTextFormField(
-                                    valueAccessor: FacilityValueAccessor(
-                                      facilities,
-                                    ),
-                                    isRequired: true,
-                                    label: localizations.translate(
-                                      i18.stockReconciliationDetails
-                                          .facilityLabel,
-                                    ),
-                                    suffix: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(Icons.search),
-                                    ),
-                                    formControlName: _warehouseKey,
-                                    readOnly: true,
-                                    onTap: () async {
-                                      final parent = context.router.parent()
-                                          as StackRouter;
-                                      final facility =
-                                          await parent.push<FacilityModel>(
-                                        FacilitySelectionRoute(
-                                          facilities: facilities,
-                                        ),
-                                      );
-
-                                      if (facility == null) return;
-                                      form.control(_warehouseKey).value =
-                                          facility;
-                                    },
-                                  ),
-                                ],
+                        ),
+                      ),
+                      children: [
+                        DigitCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                localizations.translate(
+                                  i18.warehouseDetails.warehouseDetailsLabel,
+                                ),
+                                style: theme.textTheme.displayMedium,
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
+                              Column(children: [
+                                DigitDateFormPicker(
+                                  isEnabled: false,
+                                  formControlName: _dateOfEntryKey,
+                                  label: localizations.translate(
+                                    i18.warehouseDetails.dateOfReceipt,
+                                  ),
+                                  isRequired: false,
+                                ),
+                                DigitTextFormField(
+                                  readOnly: true,
+                                  formControlName: _administrativeUnitKey,
+                                  label: localizations.translate(
+                                    i18.warehouseDetails.administrativeUnit,
+                                  ),
+                                ),
+                              ]),
+                              DigitTextFormField(
+                                valueAccessor: FacilityValueAccessor(
+                                  facilities,
+                                ),
+                                isRequired: true,
+                                label: localizations.translate(
+                                  i18.stockReconciliationDetails.facilityLabel,
+                                ),
+                                suffix: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.search),
+                                ),
+                                formControlName: _warehouseKey,
+                                readOnly: true,
+                                onTap: () async {
+                                  final parent =
+                                      context.router.parent() as StackRouter;
+                                  final facility =
+                                      await parent.push<FacilityModel>(
+                                    FacilitySelectionRoute(
+                                      facilities: facilities,
+                                    ),
+                                  );
+
+                                  if (facility == null) return;
+                                  form.control(_warehouseKey).value = facility;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             );
           },
         );

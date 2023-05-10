@@ -38,6 +38,8 @@ migrate_working_dir/
 coverage/
 coverage_report/
 Test Results - **.html
+*.apk
+*.APK
 
 # Symbolication related
 app.*.symbols

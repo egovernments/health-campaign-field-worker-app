@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/task.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -32,7 +31,18 @@ class DeliverInterventionBloc
       if (event.isEditing) {
         await taskRepository.update(event.task);
       } else {
-        await taskRepository.create(event.task);
+        final code = event.boundaryModel.code;
+        final name = event.boundaryModel.name;
+
+        final localityModel = code == null || name == null
+            ? null
+            : LocalityModel(code: code, name: name);
+
+        await taskRepository.create(event.task.copyWith(
+          address: event.task.address?.copyWith(
+            locality: localityModel,
+          ),
+        ));
       }
     } catch (error) {
       rethrow;
@@ -63,6 +73,7 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSubmit(
     TaskModel task,
     bool isEditing,
+    BoundaryModel boundaryModel,
   ) = DeliverInterventionSubmitEvent;
 
   const factory DeliverInterventionEvent.handleSearch(

@@ -27,7 +27,7 @@ class LocalityModel extends EntityModel {
   static const schemaName = 'Locality';
 
   final String code;
-  final String name;
+  final String? name;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -36,7 +36,7 @@ class LocalityModel extends EntityModel {
   LocalityModel({
     this.additionalFields,
     required this.code,
-    required this.name,
+    this.name,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,

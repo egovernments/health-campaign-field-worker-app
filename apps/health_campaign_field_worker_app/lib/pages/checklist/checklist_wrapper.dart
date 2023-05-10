@@ -7,8 +7,9 @@ import '../../blocs/service_definition/service_definition.dart';
 import '../../models/entities/service.dart';
 import '../../models/entities/service_definition.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../widgets/boundary_selection_wrapper.dart';
 
-class ChecklistWrapperPage extends StatelessWidget {
+class ChecklistWrapperPage extends StatelessWidget with AutoRouteWrapper {
   final bool isEditing;
 
   const ChecklistWrapperPage({
@@ -18,6 +19,13 @@ class ChecklistWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const BoundarySelectionWrapper(
+      child: AutoRouter(),
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
 
@@ -38,7 +46,7 @@ class ChecklistWrapperPage extends StatelessWidget {
           ),
         ),
       ],
-      child: const AutoRouter(),
+      child: this,
     );
   }
 }

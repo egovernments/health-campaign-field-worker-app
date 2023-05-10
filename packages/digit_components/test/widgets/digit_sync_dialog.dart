@@ -28,7 +28,7 @@ void main() {
             builder: (context) => ElevatedButton(
               child: const Text(testButton),
               onPressed: () {
-                DigitSyncDialogContent.show(
+                DigitSyncDialog.show(
                   context,
                   type: DigitSyncDialogType.inProgress,
                   label: syncInProgressTitleText,
@@ -80,7 +80,7 @@ void main() {
             builder: (context) => ElevatedButton(
                   child: const Text(testButton),
                   onPressed: () {
-                    DigitSyncDialogContent.show(
+                    DigitSyncDialog.show(
                       context,
                       type: DigitSyncDialogType.complete,
                       label: syncCompleteTitleText,
@@ -139,7 +139,7 @@ void main() {
             builder: (context) => ElevatedButton(
               child: const Text(testButton),
               onPressed: () {
-                DigitSyncDialogContent.show(
+                DigitSyncDialog.show(
                   context,
                   type: DigitSyncDialogType.failed,
                   label: syncFailedTitleText,

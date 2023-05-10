@@ -24,6 +24,8 @@ class Address extends Table {
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
+  TextColumn get localityBoundaryCode => text().nullable()();
+  TextColumn get localityBoundaryName => text().nullable()();
   TextColumn get tenantId => text().nullable()();
   BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
