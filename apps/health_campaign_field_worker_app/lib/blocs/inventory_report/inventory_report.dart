@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/data_model.dart';
+import '../../utils/app_exception.dart';
 import '../../utils/typedefs.dart';
 
 part 'inventory_report.freezed.dart';
@@ -16,7 +19,7 @@ class InventoryReportBloc
   InventoryReportBloc({
     required this.stockRepository,
     required this.stockReconciliationRepository,
-  }) : super(const InventoryReportState()) {
+  }) : super(const InventoryReportLoadingState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadStockReconciliationDataEvent);
   }
@@ -25,55 +28,72 @@ class InventoryReportBloc
     InventoryReportLoadStockDataEvent event,
     InventoryReportEmitter emit,
   ) async {
-    emit(const InventoryReportStockState(loading: true));
+    final reportType = event.reportType;
+
+    if (reportType == InventoryReportType.reconciliation) {
+      throw AppException(
+        'Invalid report type: ${event.reportType}',
+      );
+    }
+    emit(const InventoryReportLoadingState());
 
     List<TransactionReason>? transactionReason;
-    TransactionType? transactionType;
+    List<TransactionType>? transactionType;
 
-    switch (event.reportType) {
-      case InventoryReportType.receipt:
-        transactionType = TransactionType.received;
-        transactionReason = [TransactionReason.received];
-        break;
-      case InventoryReportType.dispatch:
-        transactionType = TransactionType.dispatched;
-        break;
-      case InventoryReportType.returned:
-        transactionType = TransactionType.received;
-        transactionReason = [TransactionReason.returned];
-        break;
-      case InventoryReportType.damage:
-        transactionType = TransactionType.dispatched;
-        transactionReason = [
-          TransactionReason.damagedInStorage,
-          TransactionReason.damagedInTransit,
-        ];
-
-        break;
-      case InventoryReportType.loss:
-        transactionType = TransactionType.dispatched;
-        transactionReason = [
-          TransactionReason.lostInStorage,
-          TransactionReason.lostInTransit,
-        ];
-
-        break;
+    if (reportType == InventoryReportType.receipt) {
+      transactionType = [TransactionType.received];
+      transactionReason = [TransactionReason.received];
+    } else if (reportType == InventoryReportType.dispatch) {
+      transactionType = [TransactionType.dispatched];
+    } else if (reportType == InventoryReportType.returned) {
+      transactionType = [TransactionType.received];
+      transactionReason = [TransactionReason.returned];
+    } else if (reportType == InventoryReportType.damage) {
+      transactionType = [TransactionType.dispatched];
+      transactionReason = [
+        TransactionReason.damagedInStorage,
+        TransactionReason.damagedInTransit,
+      ];
+    } else if (reportType == InventoryReportType.loss) {
+      transactionType = [TransactionType.dispatched];
+      transactionReason = [
+        TransactionReason.lostInStorage,
+        TransactionReason.lostInTransit,
+      ];
     }
 
-    final data = await stockRepository.search(
-      StockSearchModel(),
-    );
+    final data = (await stockRepository.search(
+      StockSearchModel(
+        transactionType: transactionType,
+        transactionReason: transactionReason,
+      ),
+    ))
+        .where((element) => element.auditDetails != null);
 
-    emit(const InventoryReportStockState(loading: false));
+    emit(InventoryReportStockState(
+      stockData: data.groupListsBy(
+        (element) {
+          final date = DateTime.fromMillisecondsSinceEpoch(
+            element.auditDetails!.createdTime,
+          );
+
+          return DateFormat('dd MMM yyyy').format(
+            DateTime(
+              date.year,
+              date.month,
+              date.day,
+            ),
+          );
+        },
+      ),
+    ));
   }
 
   Future<void> _handleLoadStockReconciliationDataEvent(
     InventoryReportLoadStockReconciliationDataEvent event,
     InventoryReportEmitter emit,
   ) async {
-    emit(const InventoryReportStockReconciliationState(loading: true));
-
-    emit(const InventoryReportStockReconciliationState(loading: false));
+    emit(const InventoryReportLoadingState());
   }
 }
 
@@ -89,15 +109,14 @@ class InventoryReportEvent with _$InventoryReportEvent {
 
 @freezed
 class InventoryReportState with _$InventoryReportState {
-  const factory InventoryReportState() = InventoryReportInitialState;
+  const factory InventoryReportState.loading() = InventoryReportLoadingState;
 
   const factory InventoryReportState.stock({
-    @Default(false) bool loading,
+    @Default({}) Map<String, List<StockModel>> stockData,
   }) = InventoryReportStockState;
 
-  const factory InventoryReportState.stockReconciliation({
-    @Default(false) bool loading,
-  }) = InventoryReportStockReconciliationState;
+  const factory InventoryReportState.stockReconciliation() =
+      InventoryReportStockReconciliationState;
 }
 
 enum InventoryReportType {
@@ -106,4 +125,5 @@ enum InventoryReportType {
   returned,
   damage,
   loss,
+  reconciliation,
 }

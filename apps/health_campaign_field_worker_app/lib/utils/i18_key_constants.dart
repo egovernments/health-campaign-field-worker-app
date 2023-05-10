@@ -671,4 +671,52 @@ class InventoryReportDetails {
   String get backToHomeButtonLabel {
     return 'INVENTORY_REPORT_DETAILS_BACK_TO_HOME_BUTTON_LABEL';
   }
+
+  String get receiptReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_REPORT_TITLE';
+  }
+
+  String get dispatchReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_REPORT_TITLE';
+  }
+
+  String get returnedReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_REPORT_TITLE';
+  }
+
+  String get damageReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGE_REPORT_TITLE';
+  }
+
+  String get lossReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_REPORT_TITLE';
+  }
+
+  String get reconciliationReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RECONCILIATION_REPORT_TITLE';
+  }
+
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get receiptQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_QUANTITY_LABEL';
+  }
+
+  String get dispatchQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_QUANTITY_LABEL';
+  }
+
+  String get returnedQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_QUANTITY_LABEL';
+  }
+
+  String get damagedQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_QUANTITY_LABEL';
+  }
+
+  String get lossQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_QUANTITY_LABEL';
+  }
 }
