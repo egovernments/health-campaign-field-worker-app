@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class DigitAcknowledgement extends StatelessWidget {
   final String label;
+  final String? subLabel;
   final String description;
   final IconData icon;
   final VoidCallback action;
@@ -12,6 +13,7 @@ class DigitAcknowledgement extends StatelessWidget {
   DigitAcknowledgement.success({
     super.key,
     required this.label,
+    this.subLabel,
     required this.description,
     required this.action,
     required this.actionLabel,
@@ -23,6 +25,7 @@ class DigitAcknowledgement extends StatelessWidget {
   DigitAcknowledgement.error({
     super.key,
     required this.label,
+    this.subLabel,
     required this.description,
     required this.action,
     required this.actionLabel,
@@ -69,7 +72,18 @@ class DigitAcknowledgement extends StatelessWidget {
                         size: 32,
                         color: theme.colorScheme.onPrimary,
                       ),
-                    )
+                    ),
+                    if (subLabel != null) ...[
+                      Text(
+                        textAlign: TextAlign.center,
+                        subLabel!,
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      )
+                    ],
                   ],
                 ),
               ),

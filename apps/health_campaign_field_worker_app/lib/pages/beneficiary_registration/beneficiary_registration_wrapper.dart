@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/data_model.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../widgets/boundary_selection_wrapper.dart';
 
-class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
+class BeneficiaryRegistrationWrapperPage extends StatelessWidget
+    with AutoRouteWrapper {
   final BeneficiaryRegistrationState initialState;
 
   const BeneficiaryRegistrationWrapperPage({
@@ -16,6 +18,11 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const BoundarySelectionWrapper(child: AutoRouter());
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
     final individual =
         context.repository<IndividualModel, IndividualSearchModel>();
 
@@ -36,7 +43,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget {
         householdMemberRepository: householdMember,
         projectBeneficiaryRepository: projectBeneficiary,
       ),
-      child: const AutoRouter(),
+      child: this,
     );
   }
 }

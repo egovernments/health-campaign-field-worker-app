@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../models/data_model.dart';
+import '../../../router/app_router.dart';
 import '../../../utils/extensions/extensions.dart';
+import '../../../widgets/boundary_selection_wrapper.dart';
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
-class RecordStockWrapperPage extends StatelessWidget {
+class RecordStockWrapperPage extends StatelessWidget with AutoRouteWrapper {
   final StockRecordEntryType type;
 
   const RecordStockWrapperPage({
@@ -19,6 +21,13 @@ class RecordStockWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const BoundarySelectionWrapper(
+      child: AutoRouter(),
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
     final stockRepository = context.repository<StockModel, StockSearchModel>();
 
     return BlocBuilder<ProjectBloc, ProjectState>(
@@ -27,37 +36,31 @@ class RecordStockWrapperPage extends StatelessWidget {
           child: Text('No project selected'),
         );
 
-        return projectState.maybeWhen(
-          orElse: () => noProjectSelected,
-          loading: () => const Center(child: CircularProgressIndicator()),
-          fetched: (projects, selectedProject) {
-            final projectId = selectedProject?.id;
+        if (projectState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            if (projectId == null) {
-              return noProjectSelected;
-            }
+        final selectedProject = projectState.selectedProject;
 
-            if (selectedProject == null) {
-              return const Center(
-                child: Text('Project not selected'),
-              );
-            }
+        if (selectedProject == null) {
+          return noProjectSelected;
+        }
 
-            return FacilityBlocWrapper(
-              child: ProductVariantBlocWrapper(
-                child: BlocProvider(
-                  create: (_) => RecordStockBloc(
-                    RecordStockCreateState(
-                      entryType: type,
-                      projectId: projectId,
-                    ),
-                    stockRepository: stockRepository,
-                  ),
-                  child: const AutoRouter(),
+        final projectId = selectedProject.id;
+
+        return FacilityBlocWrapper(
+          child: ProductVariantBlocWrapper(
+            child: BlocProvider(
+              create: (_) => RecordStockBloc(
+                RecordStockCreateState(
+                  entryType: type,
+                  projectId: projectId,
                 ),
+                stockRepository: stockRepository,
               ),
-            );
-          },
+              child: this,
+            ),
+          ),
         );
       },
     );

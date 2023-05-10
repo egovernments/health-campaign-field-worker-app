@@ -1,7 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +24,8 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 }
 
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
+  DialogRoute? syncDialogRoute;
+
   @override
   void initState() {
     context.read<ProjectBloc>().add(const ProjectInitializeEvent());
@@ -40,6 +42,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const BackNavigationHelpHeaderWidget(
+              showBackNavigation: false,
               showLogoutCTA: true,
             ),
             Padding(
@@ -59,37 +62,63 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
-              state.maybeWhen(
-                orElse: () {
-                  return;
-                },
-                fetched: (projects, selectedProject) {
-                  if (selectedProject != null) {
-                    final boundary = selectedProject.address?.boundary;
-                    if (boundary != null) {
-                      context.read<BoundaryBloc>().add(
-                            BoundarySearchEvent(
-                              code: boundary,
-                            ),
-                          );
-                      context.router.replace(HomeRoute());
-                    } else {
-                      DigitToast.show(
-                        context,
-                        options: DigitToastOptions(
-                          'No boundary data associated with this project.',
-                          true,
-                          theme,
+              if (syncDialogRoute?.isActive ?? false) {
+                Navigator.of(context).removeRoute(syncDialogRoute!);
+              }
+
+              if (state.loading) {
+                syncDialogRoute = DialogRoute(
+                  context: context,
+                  builder: (context) => DigitDialog(
+                    options: DigitSyncDialog.getDigitDialog(
+                      type: DigitSyncDialogType.inProgress,
+                      label: 'Sync in progress',
+                      barrierDismissible: false,
+                    ),
+                  ),
+                );
+
+                Navigator.of(context).push(syncDialogRoute!);
+              }
+
+              final selectedProject = state.selectedProject;
+              if (selectedProject != null) {
+                final boundary = selectedProject.address?.boundary;
+
+                if (boundary != null) {
+                  context.read<BoundaryBloc>().add(
+                        BoundarySearchEvent(
+                          code: boundary,
                         ),
                       );
-                    }
-                  }
-                },
-              );
+
+                  context.router.replaceAll([
+                    HomeRoute(),
+                    const BoundarySelectionRoute(),
+                  ]);
+                } else {
+                  DigitToast.show(
+                    context,
+                    options: DigitToastOptions(
+                      'No boundary data associated with this project.',
+                      true,
+                      theme,
+                    ),
+                  );
+                }
+              }
             },
             builder: (context, state) {
-              return state.maybeMap(
-                orElse: () => Center(
+              if (state.loading) {
+                return const Expanded(
+                  child: Center(child: Offstage()),
+                );
+              }
+
+              final projects = state.projects;
+
+              if (projects.isEmpty) {
+                return Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Column(
@@ -123,24 +152,20 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                       ],
                     ),
                   ),
-                ),
-                loading: (value) => const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                fetched: (ProjectSelectionFetchedState value) => Column(
-                  children: value.projects
-                      .map(
-                        (element) => DigitProjectCell(
-                          projectText: element.name,
-                          onTap: () => context.read<ProjectBloc>().add(
-                                ProjectSelectProjectEvent(element),
-                              ),
-                        ),
-                      )
-                      .toList(),
-                ),
+                );
+              }
+
+              return Column(
+                children: projects
+                    .map(
+                      (element) => DigitProjectCell(
+                        projectText: element.name,
+                        onTap: () => context.read<ProjectBloc>().add(
+                              ProjectSelectProjectEvent(element),
+                            ),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
