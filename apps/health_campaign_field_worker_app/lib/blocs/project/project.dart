@@ -179,8 +179,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     emit(ProjectState(
       projects: projects,
       loading: false,
-      selectedProject: projects.length == 1 ? projects.first : null,
     ));
+
+    if (projects.length == 1) {
+      add(ProjectSelectProjectEvent(projects.first));
+    }
   }
 
   FutureOr<void> _loadOffline(ProjectEmitter emit) async {
