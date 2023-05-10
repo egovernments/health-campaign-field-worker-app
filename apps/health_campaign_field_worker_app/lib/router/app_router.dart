@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../blocs/inventory_report/inventory_report.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/record_stock/record_stock.dart';
 import '../blocs/search_households/search_households.dart';
@@ -38,6 +39,7 @@ import '../pages/inventory/manage_stocks.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
 import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
+import '../pages/inventory/reports/report_details.dart';
 import '../pages/inventory/reports/report_selection.dart';
 import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 import '../pages/language_selection.dart';
@@ -144,6 +146,10 @@ part 'app_router.gr.dart';
         AutoRoute(
           page: InventoryReportSelectionPage,
           path: 'inventory-report-selection',
+        ),
+        AutoRoute(
+          page: InventoryReportDetailsPage,
+          path: 'inventory-report-details',
         ),
 
         /// Project Selection

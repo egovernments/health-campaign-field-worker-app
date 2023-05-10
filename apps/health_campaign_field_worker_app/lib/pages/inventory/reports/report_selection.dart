@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
+import '../../../blocs/inventory_report/inventory_report.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/header/back_navigation_help_header.dart';
@@ -47,29 +48,31 @@ class _InventoryReportSelectionPageState
               Column(children: [
                 DigitListView(
                   title: localizations.translate(
-                      i18.inventoryReportSelection.inventoryReportReceiptLabel),
+                    i18.inventoryReportSelection.inventoryReportReceiptLabel,
+                  ),
                   description: localizations.translate(i18
                       .inventoryReportSelection
                       .inventoryReportReceiptDescription),
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.receipt,
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.receipt,
                     ),
                   ),
                 ),
                 DigitListView(
                   title: localizations.translate(
-                      i18.inventoryReportSelection.inventoryReportIssuedLabel),
+                    i18.inventoryReportSelection.inventoryReportIssuedLabel,
+                  ),
                   description: localizations.translate(i18
                       .inventoryReportSelection
                       .inventoryReportIssuedDescription),
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.dispatch,
                     ),
                   ),
                 ),
@@ -83,14 +86,15 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.returned,
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.returned,
                     ),
                   ),
                 ),
                 DigitListView(
                   title: localizations.translate(
-                      i18.inventoryReportSelection.inventoryReportDamagedLabel),
+                    i18.inventoryReportSelection.inventoryReportDamagedLabel,
+                  ),
                   description: localizations.translate(
                     i18.inventoryReportSelection
                         .inventoryReportDamagedDescription,
@@ -98,23 +102,40 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.damaged,
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.damage,
                     ),
                   ),
                 ),
                 DigitListView(
                   title: localizations.translate(
-                      i18.inventoryReportSelection.inventoryReportLossLabel),
+                    i18.inventoryReportSelection.inventoryReportLossLabel,
+                  ),
                   description: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportDamagedDescription,
+                    i18.inventoryReportSelection.inventoryReportLossDescription,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.loss,
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.loss,
+                    ),
+                  ),
+                ),
+                DigitListView(
+                  title: localizations.translate(
+                    i18.inventoryReportSelection
+                        .inventoryReportReconciliationLabel,
+                  ),
+                  description: localizations.translate(
+                    i18.inventoryReportSelection
+                        .inventoryReportReconciliationDescription,
+                  ),
+                  prefixIcon: Icons.store,
+                  sufixIcon: Icons.arrow_circle_right,
+                  onPressed: () => context.router.push(
+                    InventoryReportDetailsRoute(
+                      reportType: InventoryReportType.reconciliation,
                     ),
                   ),
                 ),

@@ -21,6 +21,7 @@ const manageStock = ManageStock();
 const complaints = Complaints();
 const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
+const inventoryReportDetails = InventoryReportDetails();
 
 class Common {
   const Common();
@@ -536,16 +537,22 @@ class InventoryReportSelection {
       'INVENTORY_REPORT_SELECTION_RETURNED_DESCRIPTION';
 
   String get inventoryReportDamagedLabel =>
-      'INVENTORY_REPORT_SELECTION_DAMAGED_LABEL';
+      'INVENTORY_REPORT_SELECTION_DAMAGE_LABEL';
 
   String get inventoryReportDamagedDescription =>
-      'INVENTORY_REPORT_SELECTION_DAMAGED_DESCRIPTION';
+      'INVENTORY_REPORT_SELECTION_DAMAGE_DESCRIPTION';
 
   String get inventoryReportLossLabel =>
       'INVENTORY_REPORT_SELECTION_LOSS_LABEL';
 
   String get inventoryReportLossDescription =>
       'INVENTORY_REPORT_SELECTION_LOSS_DESCRIPTION';
+
+  String get inventoryReportReconciliationLabel =>
+      'INVENTORY_REPORT_SELECTION_RECONCILIATION_LABEL';
+
+  String get inventoryReportReconciliationDescription =>
+      'INVENTORY_REPORT_SELECTION_RECONCILIATION_DESCRIPTION';
 }
 
 class Complaints {
@@ -656,4 +663,12 @@ class ReasonForDeletion {
   const ReasonForDeletion();
 
   String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+
+  String get backToHomeButtonLabel {
+    return 'INVENTORY_REPORT_DETAILS_BACK_TO_HOME_BUTTON_LABEL';
+  }
 }

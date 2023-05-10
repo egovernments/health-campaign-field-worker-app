@@ -12,7 +12,7 @@ class ManageStocksPage extends LocalizedStatefulWidget {
     super.key,
     super.appLocalizations,
   });
-`
+
   @override
   State<ManageStocksPage> createState() => _ManageStocksPageState();
 }
