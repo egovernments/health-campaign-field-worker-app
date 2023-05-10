@@ -396,18 +396,25 @@ class _NoReportContent extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           maxLines: 1,
+          textAlign: TextAlign.start,
           style: theme.textTheme.displayMedium,
         ),
-        const SizedBox(height: kPadding * 2),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.disabledColor,
+        const SizedBox(
+          height: kPadding * 2,
+          width: double.maxFinite,
+        ),
+        Center(
+          child: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.disabledColor,
+            ),
           ),
         ),
       ],

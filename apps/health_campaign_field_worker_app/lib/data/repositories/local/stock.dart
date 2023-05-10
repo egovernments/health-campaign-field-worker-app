@@ -45,7 +45,10 @@ class StockLocalRepository
                 if (query.transactionReason != null)
                   sql.stock.transactionReason.isIn(
                     query.transactionReason!.map((e) => e.index),
-                  ),
+                  )
+                // else
+                //   sql.stock.transactionReason.isNull()
+                ,
                 if (query.transactionType != null)
                   sql.stock.transactionType.isIn(
                     query.transactionType!.map((e) => e.index),

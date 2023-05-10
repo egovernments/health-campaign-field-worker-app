@@ -46,6 +46,7 @@ class InventoryReportBloc
       transactionReason = [TransactionReason.received];
     } else if (reportType == InventoryReportType.dispatch) {
       transactionType = [TransactionType.dispatched];
+      transactionReason = [];
     } else if (reportType == InventoryReportType.returned) {
       transactionType = [TransactionType.received];
       transactionReason = [TransactionReason.returned];
