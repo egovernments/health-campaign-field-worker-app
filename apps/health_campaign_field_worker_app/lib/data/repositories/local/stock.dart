@@ -58,6 +58,9 @@ class StockLocalRepository
     return results.map((e) {
       final data = e.readTable(sql.stock);
 
+      final createdBy = data.auditCreatedBy;
+      final createdTime = data.auditCreatedTime;
+
       return StockModel(
         id: data.id,
         tenantId: data.tenantId,
@@ -74,6 +77,9 @@ class StockLocalRepository
         clientReferenceId: data.clientReferenceId,
         isDeleted: data.isDeleted,
         rowVersion: data.rowVersion,
+        auditDetails: createdTime == null || createdBy == null
+            ? null
+            : AuditDetails(createdTime: createdTime, createdBy: createdBy),
       );
     }).toList();
   }

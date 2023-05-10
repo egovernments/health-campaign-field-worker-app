@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -25,9 +26,7 @@ class ReadonlyDigitGrid extends StatelessWidget {
         ),
         style: PlutoGridStyleConfig(
           gridBorderColor: const DigitColors().seaShellGray,
-          oddRowColor: const DigitColors().seaShellGray.withOpacity(
-                0.5,
-              ),
+          oddRowColor: const DigitColors().seaShellGray,
           borderColor: const DigitColors().seaShellGray,
           iconColor: Colors.transparent,
           evenRowColor: Colors.transparent,
@@ -41,166 +40,43 @@ class ReadonlyDigitGrid extends StatelessWidget {
         ),
       ),
       columns: [
-        ...data.columns.map(
-          (e) => PlutoColumn(
-            title: e.label,
-            field: e.key,
-            type: PlutoColumnType.text(),
-            enableContextMenu: false,
-            enableColumnDrag: false,
-            width: e.width,
-          ),
-        ),
-        PlutoColumn(
-          cellPadding: EdgeInsets.zero,
-          title: 'Date',
-          field: 'date',
-          type: PlutoColumnType.text(),
-          enableContextMenu: false,
-          enableColumnDrag: false,
-          width: 100,
-          frozen: PlutoColumnFrozen.start,
-          renderer: (rendererContext) => Container(
-            color: Colors.white,
-            child: Center(
-              child: Text(
-                rendererContext.cell.value.toString(),
-              ),
-            ),
-          ),
-        ),
-        PlutoColumn(
-          title: 'Quantity',
-          field: 'quantity',
-          type: PlutoColumnType.text(),
-          width: 100,
-          enableContextMenu: false,
-          enableColumnDrag: false,
-        ),
-        PlutoColumn(
-          title: 'Received From',
-          field: 'received_from',
-          type: PlutoColumnType.text(),
-          width: 200,
-          enableContextMenu: false,
-          enableColumnDrag: false,
-        ),
-        PlutoColumn(
-          title: 'Bill Date',
-          field: 'bill_date',
-          type: PlutoColumnType.text(),
-          width: 100,
-          enableContextMenu: false,
-          enableColumnDrag: false,
-        ),
-        PlutoColumn(
-          title: 'Paid Date',
-          field: 'paid_date',
-          type: PlutoColumnType.text(),
-          width: 100,
-          enableContextMenu: false,
-          enableColumnDrag: false,
+        ...data.columns.mapIndexed(
+          (index, element) {
+            final first = index == 0;
+
+            return PlutoColumn(
+              title: element.label,
+              field: element.key,
+              type: PlutoColumnType.text(),
+              enableContextMenu: false,
+              enableColumnDrag: false,
+              width: element.width,
+              cellPadding: first ? EdgeInsets.zero : null,
+              frozen: first ? PlutoColumnFrozen.start : PlutoColumnFrozen.none,
+              renderer: first
+                  ? (rendererContext) => Container(
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(rendererContext.cell.value.toString()),
+                        ),
+                      )
+                  : null,
+            );
+          },
         ),
       ],
       rows: [
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
-        ),
-        PlutoRow(
-          cells: {
-            'date': PlutoCell(value: '2021-09-01'),
-            'quantity': PlutoCell(value: '10'),
-            'received_from': PlutoCell(value: 'John Doe'),
-            'bill_date': PlutoCell(value: '2021-09-01'),
-            'paid_date': PlutoCell(value: '2021-09-01'),
-          },
+        ...data.rows.map(
+          (e) => PlutoRow(
+            cells: Map.fromEntries(
+              e.cells.map(
+                (e) => MapEntry(
+                  e.key,
+                  PlutoCell(value: e.value),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

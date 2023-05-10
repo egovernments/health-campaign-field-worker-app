@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -62,31 +61,39 @@ class InventoryReportBloc
       ];
     }
 
-    final data = (await stockRepository.search(
+    final data = await stockRepository.search(
       StockSearchModel(
         transactionType: transactionType,
         transactionReason: transactionReason,
       ),
-    ))
-        .where((element) => element.auditDetails != null);
+    );
 
-    emit(InventoryReportStockState(
-      stockData: data.groupListsBy(
-        (element) {
-          final date = DateTime.fromMillisecondsSinceEpoch(
-            element.auditDetails!.createdTime,
-          );
+    final auditDetailsData =
+        data.where((element) => element.auditDetails != null);
 
-          return DateFormat('dd MMM yyyy').format(
-            DateTime(
-              date.year,
-              date.month,
-              date.day,
-            ),
-          );
-        },
-      ),
-    ));
+    final groupedData = <String, List<StockModel>>{};
+
+    for (final element in auditDetailsData) {
+      final date = DateTime.fromMillisecondsSinceEpoch(
+        element.auditDetails!.createdTime,
+      );
+
+      final key = DateFormat('dd MMM yyyy').format(
+        DateTime(
+          date.year,
+          date.month,
+          date.day,
+        ),
+      );
+
+      if (groupedData.containsKey(key)) {
+        groupedData[key]!.add(element);
+      } else {
+        groupedData[key] = [element];
+      }
+    }
+
+    emit(InventoryReportStockState(stockData: groupedData));
   }
 
   Future<void> _handleLoadStockReconciliationDataEvent(

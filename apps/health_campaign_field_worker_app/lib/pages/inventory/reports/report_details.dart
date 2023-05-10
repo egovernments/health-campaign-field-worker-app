@@ -58,7 +58,65 @@ class _InventoryReportDetailsPageState
               Expanded(
                 child: Align(
                   alignment: Alignment.topCenter,
-                  child: _ReportDetailsContent(title: title),
+                  child: inventoryReportState.when(
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    stock: (data) {
+                      const dateKey = 'date';
+                      const quantityKey = 'quantity';
+                      const transactingPartyKey = 'transactingParty';
+
+                      return _ReportDetailsContent(
+                        title: title,
+                        data: DigitGridData(
+                          columns: [
+                            DigitGridColumn(
+                              label: i18.inventoryReportDetails.dateLabel,
+                              key: dateKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: quantityLabel,
+                              key: quantityKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: transactingPartyLabel,
+                              key: transactingPartyKey,
+                              width: 200,
+                            ),
+                          ],
+                          rows: [
+                            for (final entry in data.entries) ...[
+                              for (final model in entry.value)
+                                DigitGridRow(
+                                  [
+                                    DigitGridCell(
+                                      key: dateKey,
+                                      value: entry.key,
+                                    ),
+                                    DigitGridCell(
+                                      key: quantityKey,
+                                      value: model.quantity ?? '',
+                                    ),
+                                    DigitGridCell(
+                                      key: transactingPartyKey,
+                                      value: model.transactingPartyId ??
+                                          model.transactingPartyType ??
+                                          '',
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ],
+                        ),
+                      );
+                    },
+                    stockReconciliation: () {
+                      return const Placeholder();
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: kPadding * 2),
@@ -94,6 +152,36 @@ class _InventoryReportDetailsPageState
         return i18.inventoryReportDetails.lossReportTitle;
       case InventoryReportType.reconciliation:
         return i18.inventoryReportDetails.reconciliationReportTitle;
+    }
+  }
+
+  String get quantityLabel {
+    switch (widget.reportType) {
+      case InventoryReportType.receipt:
+        return i18.inventoryReportDetails.receiptQuantityLabel;
+      case InventoryReportType.dispatch:
+        return i18.inventoryReportDetails.dispatchQuantityLabel;
+      case InventoryReportType.returned:
+        return i18.inventoryReportDetails.returnedQuantityLabel;
+      case InventoryReportType.damage:
+        return i18.inventoryReportDetails.damagedQuantityLabel;
+      default:
+        return i18.inventoryReportDetails.lossQuantityLabel;
+    }
+  }
+
+  String get transactingPartyLabel {
+    switch (widget.reportType) {
+      case InventoryReportType.receipt:
+        return i18.inventoryReportDetails.receiptTransactingPartyLabel;
+      case InventoryReportType.dispatch:
+        return i18.inventoryReportDetails.dispatchTransactingPartyLabel;
+      case InventoryReportType.returned:
+        return i18.inventoryReportDetails.returnedTransactingPartyLabel;
+      case InventoryReportType.damage:
+        return i18.inventoryReportDetails.damagedTransactingPartyLabel;
+      default:
+        return i18.inventoryReportDetails.lossTransactingPartyLabel;
     }
   }
 }

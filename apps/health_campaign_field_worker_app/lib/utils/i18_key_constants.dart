@@ -719,4 +719,24 @@ class InventoryReportDetails {
   String get lossQuantityLabel {
     return 'INVENTORY_REPORT_DETAILS_LOSS_QUANTITY_LABEL';
   }
+
+  String get receiptTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get dispatchTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get returnedTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get damagedTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get lossTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL';
+  }
 }
