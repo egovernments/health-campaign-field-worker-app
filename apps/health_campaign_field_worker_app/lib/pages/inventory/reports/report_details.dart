@@ -52,6 +52,8 @@ class _InventoryReportDetailsPageState
     return Scaffold(
       body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
         builder: (context, inventoryReportState) {
+          final noRecordsMessage = i18.inventoryReportDetails.noRecordsMessage;
+
           return Column(
             children: [
               const BackNavigationHelpHeaderWidget(),
@@ -66,7 +68,10 @@ class _InventoryReportDetailsPageState
                       if (data.isEmpty) {
                         return Padding(
                           padding: const EdgeInsets.all(kPadding * 2),
-                          child: _NoReportContent(title: title),
+                          child: _NoReportContent(
+                            title: title,
+                            message: noRecordsMessage,
+                          ),
                         );
                       }
 
@@ -124,7 +129,10 @@ class _InventoryReportDetailsPageState
                       if (data.isEmpty) {
                         return Padding(
                           padding: const EdgeInsets.all(kPadding * 2),
-                          child: _NoReportContent(title: title),
+                          child: _NoReportContent(
+                            title: title,
+                            message: noRecordsMessage,
+                          ),
                         );
                       }
 
@@ -375,10 +383,12 @@ class _ReportDetailsContent extends StatelessWidget {
 
 class _NoReportContent extends StatelessWidget {
   final String title;
+  final String message;
 
   const _NoReportContent({
     Key? key,
     required this.title,
+    required this.message,
   }) : super(key: key);
 
   @override
@@ -394,7 +404,7 @@ class _NoReportContent extends StatelessWidget {
         ),
         const SizedBox(height: kPadding * 2),
         Text(
-          'No records are available\nPlease create some records to view the report',
+          message,
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.disabledColor,

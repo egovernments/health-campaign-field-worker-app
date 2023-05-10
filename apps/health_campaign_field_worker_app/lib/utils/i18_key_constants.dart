@@ -767,4 +767,8 @@ class InventoryReportDetails {
   String get lostCountLabel {
     return 'INVENTORY_REPORT_DETAILS_LOST_COUNT_LABEL';
   }
+
+  String get noRecordsMessage {
+    return 'INVENTORY_REPORT_DETAILS_NO_RECORDS_MESSAGE';
+  }
 }
