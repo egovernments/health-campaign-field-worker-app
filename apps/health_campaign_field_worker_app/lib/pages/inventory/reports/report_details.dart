@@ -52,7 +52,9 @@ class _InventoryReportDetailsPageState
     return Scaffold(
       body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
         builder: (context, inventoryReportState) {
-          final noRecordsMessage = i18.inventoryReportDetails.noRecordsMessage;
+          final noRecordsMessage = localizations.translate(
+            i18.inventoryReportDetails.noRecordsMessage,
+          );
 
           return Column(
             children: [
@@ -84,7 +86,9 @@ class _InventoryReportDetailsPageState
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
-                              label: i18.inventoryReportDetails.dateLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.dateLabel,
+                              ),
                               key: dateKey,
                               width: 100,
                             ),
@@ -150,48 +154,58 @@ class _InventoryReportDetailsPageState
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
-                              label: i18.inventoryReportDetails.dateLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.dateLabel,
+                              ),
                               key: dateKey,
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label:
-                                  i18.inventoryReportDetails.receivedCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.receivedCountLabel,
+                              ),
                               key: receivedKey,
                               width: 110,
                             ),
                             DigitGridColumn(
-                              label: i18
-                                  .inventoryReportDetails.dispatchedCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.dispatchedCountLabel,
+                              ),
                               key: dispatchedKey,
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label:
-                                  i18.inventoryReportDetails.returnedCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.returnedCountLabel,
+                              ),
                               key: returnedKey,
                               width: 120,
                             ),
                             DigitGridColumn(
-                              label:
-                                  i18.inventoryReportDetails.damagedCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.damagedCountLabel,
+                              ),
                               key: damagedKey,
                               width: 120,
                             ),
                             DigitGridColumn(
-                              label: i18.inventoryReportDetails.lostCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.lostCountLabel,
+                              ),
                               key: lossKey,
                               width: 120,
                             ),
                             DigitGridColumn(
-                              label:
-                                  i18.inventoryReportDetails.stockInHandLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.stockInHandLabel,
+                              ),
                               key: stockInHandKey,
                               width: 150,
                             ),
                             DigitGridColumn(
-                              label:
-                                  i18.inventoryReportDetails.manualCountLabel,
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.manualCountLabel,
+                              ),
                               key: manualCountKey,
                               width: 150,
                             ),
@@ -267,7 +281,9 @@ class _InventoryReportDetailsPageState
                 child: DigitElevatedButton(
                   onPressed: () => context.router.popUntilRoot(),
                   child: Text(
-                    i18.inventoryReportDetails.backToHomeButtonLabel,
+                    localizations.translate(
+                      i18.inventoryReportDetails.backToHomeButtonLabel,
+                    ),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                   ),
@@ -281,50 +297,76 @@ class _InventoryReportDetailsPageState
   }
 
   String get title {
+    String value;
     switch (widget.reportType) {
       case InventoryReportType.receipt:
-        return i18.inventoryReportDetails.receiptReportTitle;
+        value = i18.inventoryReportDetails.receiptReportTitle;
+        break;
       case InventoryReportType.dispatch:
-        return i18.inventoryReportDetails.dispatchReportTitle;
+        value = i18.inventoryReportDetails.dispatchReportTitle;
+        break;
       case InventoryReportType.returned:
-        return i18.inventoryReportDetails.returnedReportTitle;
+        value = i18.inventoryReportDetails.returnedReportTitle;
+        break;
       case InventoryReportType.damage:
-        return i18.inventoryReportDetails.damageReportTitle;
+        value = i18.inventoryReportDetails.damageReportTitle;
+        break;
       case InventoryReportType.loss:
-        return i18.inventoryReportDetails.lossReportTitle;
+        value = i18.inventoryReportDetails.lossReportTitle;
+        break;
       case InventoryReportType.reconciliation:
-        return i18.inventoryReportDetails.reconciliationReportTitle;
+        value = i18.inventoryReportDetails.reconciliationReportTitle;
+        break;
     }
+
+    return localizations.translate(value);
   }
 
   String get quantityLabel {
+    String value;
     switch (widget.reportType) {
       case InventoryReportType.receipt:
-        return i18.inventoryReportDetails.receiptQuantityLabel;
+        value = i18.inventoryReportDetails.receiptQuantityLabel;
+        break;
       case InventoryReportType.dispatch:
-        return i18.inventoryReportDetails.dispatchQuantityLabel;
+        value = i18.inventoryReportDetails.dispatchQuantityLabel;
+        break;
       case InventoryReportType.returned:
-        return i18.inventoryReportDetails.returnedQuantityLabel;
+        value = i18.inventoryReportDetails.returnedQuantityLabel;
+        break;
       case InventoryReportType.damage:
-        return i18.inventoryReportDetails.damagedQuantityLabel;
+        value = i18.inventoryReportDetails.damagedQuantityLabel;
+        break;
       default:
-        return i18.inventoryReportDetails.lossQuantityLabel;
+        value = i18.inventoryReportDetails.lossQuantityLabel;
+        break;
     }
+
+    return localizations.translate(value);
   }
 
   String get transactingPartyLabel {
+    String value;
+
     switch (widget.reportType) {
       case InventoryReportType.receipt:
-        return i18.inventoryReportDetails.receiptTransactingPartyLabel;
+        value = i18.inventoryReportDetails.receiptTransactingPartyLabel;
+        break;
       case InventoryReportType.dispatch:
-        return i18.inventoryReportDetails.dispatchTransactingPartyLabel;
+        value = i18.inventoryReportDetails.dispatchTransactingPartyLabel;
+        break;
       case InventoryReportType.returned:
-        return i18.inventoryReportDetails.returnedTransactingPartyLabel;
+        value = i18.inventoryReportDetails.returnedTransactingPartyLabel;
+        break;
       case InventoryReportType.damage:
-        return i18.inventoryReportDetails.damagedTransactingPartyLabel;
+        value = i18.inventoryReportDetails.damagedTransactingPartyLabel;
+        break;
       default:
-        return i18.inventoryReportDetails.lossTransactingPartyLabel;
+        value = i18.inventoryReportDetails.lossTransactingPartyLabel;
+        break;
     }
+
+    return localizations.translate(value);
   }
 
   String _getCountFromAdditionalDetails(
