@@ -1,7 +1,8 @@
-import 'package:digit_components/widgets/atoms/digit_date_form_picker.dart';
-import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import 'atoms/digit_date_form_picker.dart';
+import 'atoms/digit_text_form_field.dart';
 
 class DigitDobPicker extends StatelessWidget {
   final String datePickerFormControl;
@@ -35,7 +36,10 @@ class DigitDobPicker extends StatelessWidget {
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
-              color: Colors.grey, style: BorderStyle.solid, width: 1.0),
+            color: Colors.grey,
+            style: BorderStyle.solid,
+            width: 1.0,
+          ),
         ),
         child: Column(
           children: [
@@ -58,12 +62,14 @@ class DigitDobPicker extends StatelessWidget {
               onChanged: (formControl) {
                 /// Validates that control's value must be `true`
                 Map<String, dynamic>? requiredTrue(
-                    AbstractControl<dynamic> control) {
+                  AbstractControl<dynamic> control,
+                ) {
                   String value =
                       (DateTime.now().difference(formControl.value).inDays /
                               365)
                           .round()
                           .toStringAsFixed(0);
+
                   return int.parse(value) <= 150
                       ? null
                       : {'Age Shoud be less than 150': true};
@@ -71,7 +77,7 @@ class DigitDobPicker extends StatelessWidget {
 
                 formControl.setValidators([requiredTrue]);
               },
-            )
+            ),
           ],
         ),
       ),
@@ -83,6 +89,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, String> {
   @override
   String? modelToViewValue(DateTime? modelValue) {
     if (modelValue == null) return null;
+
     return (DateTime.now().difference(modelValue).inDays / 365)
         .round()
         .toStringAsFixed(0);
@@ -93,6 +100,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, String> {
     if (viewValue == null) return null;
     final value = int.tryParse(viewValue);
     if (value == null) return null;
+
     return DateTime(
       DateTime.now().subtract(Duration(days: value * 365)).year,
       1,

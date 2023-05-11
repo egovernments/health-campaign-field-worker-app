@@ -1,7 +1,7 @@
 library digit_theme;
 
-import 'package:digit_components/theme/colors.dart';
-import 'package:digit_components/theme/typography.dart';
+import 'colors.dart';
+import 'typography.dart';
 import 'package:flutter/material.dart';
 
 const kPadding = 8.0;

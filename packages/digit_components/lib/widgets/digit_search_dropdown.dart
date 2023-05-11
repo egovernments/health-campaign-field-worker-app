@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import '../digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_flutter_typeahead/reactive_flutter_typeahead.dart';
 

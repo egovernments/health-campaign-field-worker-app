@@ -86,7 +86,7 @@ class _ReasonForDeletionPageState
                 },
               ),
             ),
-            header: Column(children: const [
+            header: const Column(children: [
               BackNavigationHelpHeaderWidget(),
             ]),
             children: [

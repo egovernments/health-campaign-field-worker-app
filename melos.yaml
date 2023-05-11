@@ -38,19 +38,19 @@ scripts:
     description: Generate a coverage report using lcov.info. Requires genhtml to be installed.
 
   generate:build-runner:
-    exec: flutter packages run build_runner build --delete-conflicting-outputs --enable-experiment=records
+    exec: flutter packages run build_runner build --delete-conflicting-outputs
     select-package:
       flutter: true
       depends-on: build_runner
 
   hooks:build-runner:
-    exec: dart run build_runner build --delete-conflicting-outputs  --enable-experiment=records
+    exec: dart run build_runner build --delete-conflicting-outputs
     select-package:
       dart: true
       depends-on: [build_runner, mason]
 
   watch:build-runner:
-    exec: flutter packages run build_runner watch  --enable-experiment=records
+    exec: flutter packages run build_runner watch
     select-package:
       flutter: true
       depends-on: build_runner
@@ -60,5 +60,8 @@ scripts:
 
   upgrade-deps:
     run: melos exec -- dart pub upgrade
+
+  fix-lints:
+    run: melos exec -- dart fix --apply
 
 

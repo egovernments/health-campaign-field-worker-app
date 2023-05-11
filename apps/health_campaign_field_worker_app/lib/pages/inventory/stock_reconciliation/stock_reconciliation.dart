@@ -116,7 +116,7 @@ class _StockReconciliationPageState
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
-                            header: Column(children: const [
+                            header: const Column(children: [
                               BackNavigationHelpHeaderWidget(),
                             ]),
                             footer: SizedBox(

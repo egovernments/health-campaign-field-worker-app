@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:digit_components/widgets/molecules/digit_language_card.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import '../widget_app.dart';
 
 const _target = """
@@ -19,6 +21,7 @@ const _target = """
     }
   ]
   """;
+
 void main() {
   bool languageChangeTriggered = false;
   bool languageChangeSubmitTriggered = false;
@@ -31,13 +34,14 @@ void main() {
       await widgetTester.pumpWidget(
         WidgetApp(
           child: DigitLanguageCard(
-              digitRowCardItems: languageList,
-              languageSubmitLabel: 'Continue',
-              onLanguageSubmit: () => languageChangeSubmitTriggered =
-                  !languageChangeSubmitTriggered,
-              onLanguageChange: (data) {
-                languageChangeTriggered = !languageChangeTriggered;
-              }),
+            digitRowCardItems: languageList,
+            languageSubmitLabel: 'Continue',
+            onLanguageSubmit: () =>
+                languageChangeSubmitTriggered = !languageChangeSubmitTriggered,
+            onLanguageChange: (data) {
+              languageChangeTriggered = !languageChangeTriggered;
+            },
+          ),
         ),
       );
 

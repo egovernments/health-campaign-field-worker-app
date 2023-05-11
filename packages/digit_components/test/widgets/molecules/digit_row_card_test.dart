@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:digit_components/widgets/digit_row_card/digit_row_card.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../widget_app.dart';
@@ -21,6 +22,7 @@ const _target = """
     }
   ]
   """;
+
 void main() {
   group('Digit Row card widget', () {
     final List list = json.decode(_target);
@@ -34,11 +36,12 @@ void main() {
       }
 
       await widgetTester.pumpWidget(WidgetApp(
-          child: DigitRowCard(
-        rowItems: languageList,
-        onChanged: (data) => onPressed(data),
-        width: 90,
-      )));
+        child: DigitRowCard(
+          rowItems: languageList,
+          onChanged: (data) => onPressed(data),
+          width: 90,
+        ),
+      ));
 
       expect(
         find.widgetWithText(DigitRowCard, 'ENGLISH'),
@@ -54,11 +57,12 @@ void main() {
       }
 
       await widgetTester.pumpWidget(WidgetApp(
-          child: DigitRowCard(
-        rowItems: languageList,
-        onChanged: (data) => onPressed(data),
-        width: 90,
-      )));
+        child: DigitRowCard(
+          rowItems: languageList,
+          onChanged: (data) => onPressed(data),
+          width: 90,
+        ),
+      ));
 
       await widgetTester.pumpAndSettle();
       await widgetTester.tap(find.widgetWithText(Center, 'ENGLISH'));

@@ -37,7 +37,10 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
               top: _borderSide,
             ),
             icon: Icons.remove,
-            onPressed: () => form.control(formControlName).value -= 1,
+            onPressed: () {
+              final value = form.control(formControlName).value as int;
+              form.control(formControlName).value = value - 1;
+            },
           ),
           Expanded(
             child: ReactiveTextField(
@@ -56,7 +59,10 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
               top: _borderSide,
             ),
             icon: Icons.add,
-            onPressed: () => form.control(formControlName).value += 1,
+            onPressed: () {
+              final value = form.control(formControlName).value as int;
+              form.control(formControlName).value = value + 1;
+            },
           ),
         ],
       ),

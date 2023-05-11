@@ -48,8 +48,8 @@ class _HouseholdLocationPageState
             return BlocBuilder<LocationBloc, LocationState>(
               builder: (locationContext, locationState) {
                 return ScrollableContent(
-                  header: Column(
-                    children: const [
+                  header: const Column(
+                    children: [
                       BackNavigationHelpHeaderWidget(),
                     ],
                   ),

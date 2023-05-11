@@ -25,10 +25,10 @@ class ServiceAttributesModel extends EntityModel {
   static const schemaName = 'ServiceAttributes';
 
   final String? attributeCode;
-  final dynamic? value;
+  final dynamic value;
   final String? dataType;
   final String? referenceId;
-  final dynamic? additionalDetails;
+  final dynamic additionalDetails;
   final String clientReferenceId;
   final String? tenantId;
   final bool? isDeleted;

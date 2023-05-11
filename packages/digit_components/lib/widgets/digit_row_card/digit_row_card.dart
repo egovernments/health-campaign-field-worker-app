@@ -1,4 +1,4 @@
-import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
+import '../../models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 
 class DigitRowCard extends StatelessWidget {

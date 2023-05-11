@@ -104,8 +104,12 @@ void main() {
     testWidgets('has UI components', (widgetTester) async {
       await buildTester(
         widgetTester,
-        primaryAction: (context) {},
-        secondaryAction: (context) {},
+        primaryAction: (context) {
+          // TODO: implement primaryAction
+        },
+        secondaryAction: (context) {
+          // TODO: implement secondaryAction
+        },
       );
 
       expect(find.text(alertTitle), findsOneWidget);

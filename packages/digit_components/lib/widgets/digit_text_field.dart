@@ -1,7 +1,7 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/labeled_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../digit_components.dart';
 
 class DigitTextField extends StatelessWidget {
   final String label;
@@ -55,9 +55,10 @@ class DigitTextField extends StatelessWidget {
       label: isRequired ? "$label *" : label,
       child: TextFormField(
         style: TextStyle(
-            color: readOnly == true
-                ? DigitTheme.instance.colorScheme.shadow
-                : DigitTheme.instance.colorScheme.onSurface),
+          color: readOnly
+              ? DigitTheme.instance.colorScheme.shadow
+              : DigitTheme.instance.colorScheme.onSurface,
+        ),
         controller: controller,
         enabled: !isDisabled,
         maxLength: maxLength,

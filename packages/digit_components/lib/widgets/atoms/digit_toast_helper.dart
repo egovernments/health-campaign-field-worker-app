@@ -1,4 +1,4 @@
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'digit_toaster.dart';
 import 'package:flutter/material.dart';
 
 class ToastHelper extends StatefulWidget {

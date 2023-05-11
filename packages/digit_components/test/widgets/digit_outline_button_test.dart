@@ -14,10 +14,11 @@ void main() {
           await widgetTester.pumpWidget(
             WidgetApp(
               child: DigitOutLineButton(
-                  label: 'Button',
-                  onPressed: () {
-                    primary = !primary;
-                  }),
+                label: 'Button',
+                onPressed: () {
+                  primary = !primary;
+                },
+              ),
             ),
           );
           expect(

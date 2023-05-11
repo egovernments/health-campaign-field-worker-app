@@ -77,20 +77,21 @@ void main() {
       await widgetTester.pumpWidget(WidgetApp(
         navigatorObserver: mockObserver,
         child: Builder(
-            builder: (context) => ElevatedButton(
-                  child: const Text(testButton),
-                  onPressed: () {
-                    DigitSyncDialog.show(
-                      context,
-                      type: DigitSyncDialogType.complete,
-                      label: syncCompleteTitleText,
-                      primaryAction: DigitDialogActions(
-                        label: syncCompleteButtonText,
-                        action: (_) {},
-                      ),
-                    );
-                  },
-                )),
+          builder: (context) => ElevatedButton(
+            child: const Text(testButton),
+            onPressed: () {
+              DigitSyncDialog.show(
+                context,
+                type: DigitSyncDialogType.complete,
+                label: syncCompleteTitleText,
+                primaryAction: DigitDialogActions(
+                  label: syncCompleteButtonText,
+                  action: (_) {},
+                ),
+              );
+            },
+          ),
+        ),
       ));
 
       await widgetTester.tap(find.widgetWithText(ElevatedButton, testButton));

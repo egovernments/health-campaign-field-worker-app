@@ -1,5 +1,6 @@
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
+
+import '../theme/digit_theme.dart';
 
 class DigitInfoCard extends StatelessWidget {
   final String title;
@@ -52,7 +53,7 @@ class DigitInfoCard extends StatelessWidget {
                   title,
                   style: theme.textTheme.headlineMedium,
                 ),
-              )
+              ),
             ],
           ),
           Padding(
@@ -62,7 +63,7 @@ class DigitInfoCard extends StatelessWidget {
               style: theme.textTheme.bodyLarge,
               textAlign: TextAlign.start,
             ),
-          )
+          ),
         ],
       ),
     );

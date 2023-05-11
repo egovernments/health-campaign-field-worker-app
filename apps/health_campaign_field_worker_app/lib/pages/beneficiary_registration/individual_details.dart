@@ -72,7 +72,7 @@ class _IndividualDetailsPageState
           },
           builder: (context, state) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(

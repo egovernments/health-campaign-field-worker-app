@@ -1,6 +1,7 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../digit_components.dart';
 
 class DigitTextFormField extends StatelessWidget {
   final bool readOnly;
@@ -50,47 +51,48 @@ class DigitTextFormField extends StatelessWidget {
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
         child: ReactiveTextField(
-            onChanged: onChanged,
-            readOnly: readOnly,
-            formControlName: formControlName,
-            maxLength: maxLength,
-            validationMessages: validationMessages,
-            autofocus: false,
-            textCapitalization: textCapitalization,
-            minLines: minLines,
-            maxLines: maxLines,
-            obscureText: obscureText,
-            focusNode: focusNode,
-            keyboardType: keyboardType,
-            valueAccessor: valueAccessor,
-            decoration: readOnly == true
-                ? InputDecoration(
-                    enabledBorder:
-                        DigitTheme.instance.inputDecorationTheme.disabledBorder,
-                    fillColor: DigitTheme.instance.colors.cloudGray,
-                    focusedBorder:
-                        DigitTheme.instance.inputDecorationTheme.disabledBorder,
-                    focusColor: DigitTheme.instance.colors.cloudGray,
-                    suffixIcon: suffix == null
-                        ? null
-                        : InkWell(
-                            onTap: onTap,
-                            child: suffix,
-                          ),
-                  )
-                : InputDecoration(
-                    labelText: hint,
-                    contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-                    suffixIconConstraints: const BoxConstraints(
-                      maxHeight: 40,
-                      maxWidth: 40,
-                    ),
-                    suffixIcon: suffix == null
-                        ? null
-                        : InkWell(
-                            onTap: onTap,
-                            child: suffix,
-                          ),
-                  )),
+          onChanged: onChanged,
+          readOnly: readOnly,
+          formControlName: formControlName,
+          maxLength: maxLength,
+          validationMessages: validationMessages,
+          autofocus: false,
+          textCapitalization: textCapitalization,
+          minLines: minLines,
+          maxLines: maxLines,
+          obscureText: obscureText,
+          focusNode: focusNode,
+          keyboardType: keyboardType,
+          valueAccessor: valueAccessor,
+          decoration: readOnly
+              ? InputDecoration(
+                  enabledBorder:
+                      DigitTheme.instance.inputDecorationTheme.disabledBorder,
+                  fillColor: DigitTheme.instance.colors.cloudGray,
+                  focusedBorder:
+                      DigitTheme.instance.inputDecorationTheme.disabledBorder,
+                  focusColor: DigitTheme.instance.colors.cloudGray,
+                  suffixIcon: suffix == null
+                      ? null
+                      : InkWell(
+                          onTap: onTap,
+                          child: suffix,
+                        ),
+                )
+              : InputDecoration(
+                  labelText: hint,
+                  contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
+                  suffixIconConstraints: const BoxConstraints(
+                    maxHeight: 40,
+                    maxWidth: 40,
+                  ),
+                  suffixIcon: suffix == null
+                      ? null
+                      : InkWell(
+                          onTap: onTap,
+                          child: suffix,
+                        ),
+                ),
+        ),
       );
 }

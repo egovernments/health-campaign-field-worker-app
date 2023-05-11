@@ -29,7 +29,7 @@ class DigitIconTile extends StatelessWidget {
             title,
             textAlign: TextAlign.start,
           ),
-          content ?? const Offstage()
+          content ?? const Offstage(),
         ],
       ),
       onTap: onPressed,

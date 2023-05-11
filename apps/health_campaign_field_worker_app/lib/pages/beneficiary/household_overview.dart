@@ -42,7 +42,7 @@ class _HouseholdOverviewPageState
                     }
 
                     return ScrollableContent(
-                      header: Column(children: const [
+                      header: const Column(children: [
                         BackNavigationHelpHeaderWidget(),
                       ]),
                       children: [

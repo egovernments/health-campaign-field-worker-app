@@ -141,8 +141,8 @@ class MemberCard extends StatelessWidget {
                     icon: Icons.info_rounded,
                     iconText: localizations.translate(i18.householdOverView
                         .householdOverViewNotDeliveredIconLabel),
-                    iconTextColor: theme.errorColor,
-                    iconColor: theme.errorColor,
+                    iconTextColor: theme.colorScheme.error,
+                    iconColor: theme.colorScheme.error,
                   ),
                 )
               : Align(

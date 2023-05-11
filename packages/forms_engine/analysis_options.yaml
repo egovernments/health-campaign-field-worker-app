@@ -2,5 +2,37 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - "**/*.g.dart"
+    - build/**
+    - "**/*.gr.dart"
     - "**/*.freezed.dart"
+    - "**/*.g.dart"
+  errors:
+    invalid_annotation_target: ignore
+  plugins:
+    - dart_code_metrics
+
+linter:
+  rules:
+    - prefer_single_quotes: true
+    - avoid_dynamic_calls
+    - prefer_relative_imports
+
+dart_code_metrics:
+  metrics:
+    cyclomatic-complexity: 20
+    number-of-parameters: 4
+    maximum-nesting-level: 5
+  metrics-exclude:
+    - test/**
+  rules:
+    - newline-before-return
+    - no-boolean-literal-compare
+    - no-empty-block
+    - prefer-trailing-comma
+    - prefer-conditional-expressions
+    - no-equal-then-else
+  anti-patterns:
+    - long-parameter-list
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options

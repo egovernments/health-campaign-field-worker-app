@@ -573,12 +573,6 @@ class NetworkManager {
 
             final resolvedFutures = await Future.wait(futures);
 
-            final updatedPgrModel = resolvedFutures
-                .expand((element) => element)
-                .whereType<PgrServiceResponseModel>()
-                .map((e) {})
-                .toList();
-
             responseEntities = resolvedFutures
                 .expand((element) => element)
                 .whereType<PgrServiceResponseModel>()

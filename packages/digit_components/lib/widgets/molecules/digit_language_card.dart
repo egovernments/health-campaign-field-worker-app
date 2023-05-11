@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import '../../digit_components.dart';
 import 'package:flutter/material.dart';
 import '../../models/digit_row_card/digit_row_card_model.dart';
 

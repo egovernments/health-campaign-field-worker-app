@@ -1,5 +1,6 @@
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
+
+import '../../theme/digit_theme.dart';
 
 class DigitTableCard extends StatelessWidget {
   final Map<String, dynamic> element;
@@ -22,13 +23,15 @@ class DigitTableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Container(
         decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
-            border: border),
+          color: color,
+          borderRadius: BorderRadius.circular(4),
+          border: border,
+        ),
         child: Padding(
           padding: padding ?? const EdgeInsets.only(right: 8, bottom: 16),
           child: Column(
@@ -42,16 +45,17 @@ class DigitTableCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width / fraction,
                             child: Text(
                               e,
-                              style: theme.textTheme.headline5,
+                              style: theme.textTheme.headlineSmall,
                               textAlign: TextAlign.start,
                             ),
                           ),
                           SizedBox(width: gap),
                           Flexible(
-                              child: Padding(
-                            padding: const EdgeInsets.only(top: 1.4),
-                            child: Text(element[e].toString()),
-                          )),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 1.4),
+                              child: Text(element[e].toString()),
+                            ),
+                          ),
                         ],
                       ),
                     ))

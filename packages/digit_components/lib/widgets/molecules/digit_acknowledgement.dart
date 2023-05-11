@@ -1,5 +1,6 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
+import '../../digit_components.dart';
 
 class DigitAcknowledgement extends StatelessWidget {
   final String label;
@@ -82,7 +83,7 @@ class DigitAcknowledgement extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                           color: theme.colorScheme.onPrimary,
                         ),
-                      )
+                      ),
                     ],
                   ],
                 ),
@@ -108,7 +109,7 @@ class DigitAcknowledgement extends StatelessWidget {
                   onPressed: action,
                   child: Text(actionLabel),
                 ),
-              )
+              ),
             ],
           ),
         ),

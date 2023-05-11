@@ -1,6 +1,7 @@
-import 'package:digit_components/widgets/atoms/anchor_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_builder/overlay_builder.dart';
+
+import '../atoms/anchor_overlay.dart';
 
 class DigitWalkthrough extends StatefulWidget {
   final Widget child;
@@ -9,13 +10,14 @@ class DigitWalkthrough extends StatefulWidget {
   final TextAlign titleAlignment;
   final String description;
 
-  const DigitWalkthrough(
-      {super.key,
-      required this.child,
-      required this.overlayWidget,
-      this.title,
-      required this.titleAlignment,
-      required this.description});
+  const DigitWalkthrough({
+    super.key,
+    required this.child,
+    required this.overlayWidget,
+    this.title,
+    required this.titleAlignment,
+    required this.description,
+  });
 
   @override
   State<DigitWalkthrough> createState() => _DigitWalkthroughState();
@@ -27,7 +29,8 @@ class _DigitWalkthroughState extends State<DigitWalkthrough> {
   late double childHeight;
   late Offset position;
 
-  _DigitWalkthroughState({this.position = Offset.zero, this.childHeight = 0.0});
+  _DigitWalkthroughState();
+
   OverlayWidgetState? get overlayWidgetController {
     return widget.overlayWidget.currentState;
   }
@@ -49,8 +52,7 @@ class _DigitWalkthroughState extends State<DigitWalkthrough> {
             .currentContext
             ?.findRenderObject() as RenderBox)
         .localToGlobal(Offset.zero);
-    this.childHeight =
-        (widget.child.key as GlobalKey).currentContext!.size!.height;
+    childHeight = (widget.child.key as GlobalKey).currentContext!.size!.height;
     this.position = position;
   }
 
@@ -65,12 +67,13 @@ class _DigitWalkthroughState extends State<DigitWalkthrough> {
   @override
   Widget build(BuildContext context) {
     return AnchoredOverlay(
-        showOverlay: showOverlay,
-        description: widget.description,
-        paramKey: widget.overlayWidget,
-        onTap: onTap,
-        position: position,
-        childHeight: childHeight,
-        child: widget.child);
+      showOverlay: showOverlay,
+      description: widget.description,
+      paramKey: widget.overlayWidget,
+      onTap: onTap,
+      position: position,
+      childHeight: childHeight,
+      child: widget.child,
+    );
   }
 }

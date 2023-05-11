@@ -25,11 +25,13 @@ class DigitSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Card(
       shape: RoundedRectangleBorder(
         side: BorderSide(color: theme.scaffoldBackgroundColor, width: 1),
         borderRadius: BorderRadius.circular(
-            borderRadius != null ? (borderRadius! * 3) : 30),
+          borderRadius != null ? (borderRadius! * 3) : 30,
+        ),
       ),
       margin: margin,
       child: Padding(

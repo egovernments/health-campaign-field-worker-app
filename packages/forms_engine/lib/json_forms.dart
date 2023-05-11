@@ -1,7 +1,7 @@
 library json_forms;
 
 import 'package:flutter/material.dart';
-import 'package:forms_engine/widgets/widgets.dart';
+import 'widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'models/property_schema/property_schema.dart';

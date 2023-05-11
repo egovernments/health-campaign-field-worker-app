@@ -84,7 +84,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               const module = i18.stockDetails;
 
               String pageTitle;
-              String transactionPartyLabel;
               String quantityCountLabel;
               String? transactionReasonLabel;
               TransactionType transactionType;
@@ -95,26 +94,21 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               switch (entryType) {
                 case StockRecordEntryType.receipt:
                   pageTitle = module.receivedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReceived;
                   quantityCountLabel = module.quantityReceivedLabel;
                   transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.dispatch:
                   pageTitle = module.issuedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyIssued;
                   quantityCountLabel = module.quantitySentLabel;
                   transactionType = TransactionType.dispatched;
                   break;
                 case StockRecordEntryType.returned:
                   pageTitle = module.returnedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReturned;
                   quantityCountLabel = module.quantityReturnedLabel;
                   transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.loss:
                   pageTitle = module.lostPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromLost;
                   quantityCountLabel = module.quantityLostLabel;
                   transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonLost;
@@ -125,8 +119,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   break;
                 case StockRecordEntryType.damaged:
                   pageTitle = module.damagedPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromDamaged;
                   quantityCountLabel = module.quantityDamagedLabel;
                   transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonDamaged;
@@ -143,7 +135,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 form: _form,
                 builder: (context, form, child) {
                   return ScrollableContent(
-                    header: Column(children: const [
+                    header: const Column(children: [
                       BackNavigationHelpHeaderWidget(),
                     ]),
                     footer: SizedBox(
@@ -161,7 +153,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
-                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
 
                                     final bloc =
                                         context.read<RecordStockBloc>();

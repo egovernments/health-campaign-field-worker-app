@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forms_engine/forms_engine.dart';
-import 'package:forms_engine/models/schema_object/schema_object.dart';
+import '../../forms_engine.dart';
+import '../../models/schema_object/schema_object.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'forms.freezed.dart';

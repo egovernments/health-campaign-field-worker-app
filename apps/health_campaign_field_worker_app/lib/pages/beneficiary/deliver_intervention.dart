@@ -59,7 +59,7 @@ class _DeliverInterventionPageState
                     form: () => buildForm(context),
                     builder: (context, form, child) {
                       return ScrollableContent(
-                        header: Column(children: const [
+                        header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
                         footer: DigitCard(

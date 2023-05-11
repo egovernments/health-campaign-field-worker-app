@@ -19,6 +19,7 @@ class DigitIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return TextButton(
       style: TextButton.styleFrom(
         foregroundColor: theme.colorScheme.onBackground,
@@ -39,12 +40,14 @@ class DigitIconButton extends StatelessWidget {
           ),
           if (iconText != null)
             Flexible(
-                child: Text(
-              iconText!,
-              style: TextStyle(
+              child: Text(
+                iconText!,
+                style: TextStyle(
                   color: iconTextColor ?? theme.colorScheme.secondary,
-                  fontSize: 16),
-            )),
+                  fontSize: 16,
+                ),
+              ),
+            ),
         ],
       ),
     );

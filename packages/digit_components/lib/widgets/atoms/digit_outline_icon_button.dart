@@ -1,5 +1,6 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
+import '../../digit_components.dart';
 
 class DigitOutlineIconButton extends StatelessWidget {
   final String label;
@@ -17,15 +18,13 @@ class DigitOutlineIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(child: Icon(icon)),
-          SizedBox(width: kPadding),
+          const SizedBox(width: kPadding),
           Text(label),
         ],
       ),

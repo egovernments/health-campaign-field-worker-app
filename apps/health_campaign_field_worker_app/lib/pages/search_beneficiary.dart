@@ -37,7 +37,7 @@ class _SearchBeneficiaryPageState
         body: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
           builder: (context, searchState) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               slivers: [

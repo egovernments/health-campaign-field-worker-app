@@ -1,5 +1,6 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
+import '../digit_components.dart';
 
 class DigitProjectCell extends StatelessWidget {
   final VoidCallback onTap;
@@ -46,7 +47,7 @@ class DigitProjectCell extends StatelessWidget {
                             projectText,
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -56,13 +57,14 @@ class DigitProjectCell extends StatelessWidget {
                 height: 32,
                 width: 32,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary,
-                    shape: BoxShape.circle),
+                  color: Theme.of(context).colorScheme.secondary,
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(
                   Icons.arrow_forward,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
-              )
+              ),
             ],
           ),
         ),

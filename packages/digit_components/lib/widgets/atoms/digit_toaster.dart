@@ -1,6 +1,7 @@
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../theme/digit_theme.dart';
 
 class DigitToast {
   final DigitToastOptions options;
@@ -35,10 +36,11 @@ class DigitToast {
               width: 12.0,
             ),
             Expanded(
-                child: Text(
-              options.message,
-              style: const TextStyle(color: Colors.white),
-            )),
+              child: Text(
+                options.message,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
           ],
         ),
       ),

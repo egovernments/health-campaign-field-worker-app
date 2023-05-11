@@ -34,6 +34,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   json_serializable: ^6.4.0
+  dart_code_metrics: ^4.19.1
   freezed: ^2.2.0
   bloc_test: ^9.1.0
   mocktail: ^0.3.0

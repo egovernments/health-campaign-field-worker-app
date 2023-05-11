@@ -19,7 +19,9 @@ void main() {
           );
           expect(
             find.widgetWithText(
-                DigitSearchBar, 'Enter the name of household head'),
+              DigitSearchBar,
+              'Enter the name of household head',
+            ),
             findsOneWidget,
           );
         },

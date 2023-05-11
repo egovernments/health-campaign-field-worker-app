@@ -3,7 +3,7 @@ library json_schema_builder;
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forms_engine/models/property_schema/property_schema.dart';
+import '../models/property_schema/property_schema.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 part 'boolean_builder.dart';

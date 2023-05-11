@@ -6,12 +6,13 @@ class LabeledField extends StatelessWidget {
   final IconData? icon;
   final String? tooltipMessage;
 
-  const LabeledField(
-      {super.key,
-      required this.child,
-      required this.label,
-      this.icon,
-      this.tooltipMessage});
+  const LabeledField({
+    super.key,
+    required this.child,
+    required this.label,
+    this.icon,
+    this.tooltipMessage,
+  });
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -33,8 +34,9 @@ class LabeledField extends StatelessWidget {
                         message: tooltipMessage ?? '',
                         preferBelow: false,
                         triggerMode: TooltipTriggerMode.tap,
-                        child: Icon(icon ?? Icons.info_outline))
-                    : const SizedBox.shrink()
+                        child: Icon(icon ?? Icons.info_outline),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
             const SizedBox(height: 8),

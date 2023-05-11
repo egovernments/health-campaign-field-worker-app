@@ -1,6 +1,7 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../digit_components.dart';
 
 class DigitIntegerFormPicker extends StatelessWidget {
   final int? minimum;
@@ -10,6 +11,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   final String label;
   final FormGroup form;
   final String formControlName;
+
   const DigitIntegerFormPicker({
     super.key,
     this.minimum,
@@ -25,54 +27,58 @@ class DigitIntegerFormPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!incrementer) {
       return LabeledField(
-          label: label,
-          child: ReactiveTextField(
-            formControlName: formControlName,
-            decoration: InputDecoration(labelText: hint),
-            keyboardType: TextInputType.number,
-          ));
+        label: label,
+        child: ReactiveTextField(
+          formControlName: formControlName,
+          decoration: InputDecoration(labelText: hint),
+          keyboardType: TextInputType.number,
+        ),
+      );
     }
 
     return LabeledField(
-        label: label,
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              _buildButton(
-                context,
-                border: Border(
-                  left: _borderSide,
-                  bottom: _borderSide,
-                  top: _borderSide,
-                ),
-                icon: Icons.remove,
-                onPressed: () => minimum != null
-                    ? form.control(formControlName).value > minimum ||
-                            form.control(formControlName).value == null
-                        ? form.control(formControlName).value -= 1
-                        : 1
-                    : form.control(formControlName).value -= 1,
+      label: label,
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            _buildButton(
+              context,
+              border: Border(
+                left: _borderSide,
+                bottom: _borderSide,
+                top: _borderSide,
               ),
-              Expanded(
-                child: ReactiveTextField(
-                  readOnly: true,
-                  textAlign: TextAlign.center,
-                  formControlName: formControlName,
-                  decoration: InputDecoration(labelText: hint),
-                  keyboardType: TextInputType.number,
-                ),
+              icon: Icons.remove,
+              onPressed: () => minimum != null
+                  ? form.control(formControlName).value > minimum ||
+                          form.control(formControlName).value == null
+                      ? form.control(formControlName).value -= 1
+                      : 1
+                  : form.control(formControlName).value -= 1,
+            ),
+            Expanded(
+              child: ReactiveTextField(
+                readOnly: true,
+                textAlign: TextAlign.center,
+                formControlName: formControlName,
+                decoration: InputDecoration(labelText: hint),
+                keyboardType: TextInputType.number,
               ),
-              _buildButton(context,
-                  border: Border(
-                    right: _borderSide,
-                    bottom: _borderSide,
-                    top: _borderSide,
-                  ),
-                  icon: Icons.add,
-                  onPressed: () => form.control(formControlName).value += 1),
-            ],
-          ),
-        ));
+            ),
+            _buildButton(
+              context,
+              border: Border(
+                right: _borderSide,
+                bottom: _borderSide,
+                top: _borderSide,
+              ),
+              icon: Icons.add,
+              onPressed: () => form.control(formControlName).value += 1,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildButton(

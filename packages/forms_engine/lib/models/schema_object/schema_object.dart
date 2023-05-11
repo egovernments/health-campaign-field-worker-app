@@ -1,6 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:forms_engine/models/property_schema/property_schema.dart';
+import '../property_schema/property_schema.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'schema_object.freezed.dart';
