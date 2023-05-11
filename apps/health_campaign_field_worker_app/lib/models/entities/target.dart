@@ -4,27 +4,27 @@ import 'package:drift/drift.dart';
 
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import 'beneficiary_type.dart';
 
 @MappableClass(ignoreNull: true)
 class TargetSearchModel extends EntitySearchModel {
   final String? tenantId;
   final bool? isDeleted;
-  
+
   TargetSearchModel({
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
-  }):  super();
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)
 class TargetModel extends EntityModel {
-
   static const schemaName = 'Target';
 
   final String id;
   final String? clientReferenceId;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final String? baseline;
   final String? target;
   final String? tenantId;
@@ -43,7 +43,7 @@ class TargetModel extends EntityModel {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-  }): super();
+  }) : super();
 
   TargetCompanion get companion {
     return TargetCompanion(
@@ -60,7 +60,7 @@ class TargetModel extends EntityModel {
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 

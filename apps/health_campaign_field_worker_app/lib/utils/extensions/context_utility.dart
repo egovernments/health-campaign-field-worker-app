@@ -45,17 +45,13 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
 
-    final selectedBeneficiary = projectState.maybeWhen(
-      orElse: () => '',
+    final BeneficiaryType selectedBeneficiary = projectState.maybeWhen(
+      orElse: () => BeneficiaryType.household,
       fetched: (projects, selectedProject) =>
           selectedProject!.targets!.first.beneficiaryType!,
     );
 
-    if (selectedBeneficiary == '') {
-      throw AppException('Beneficiary Type No selected');
-    }
-
-    return selectedBeneficiary;
+    return selectedBeneficiary.name;
   }
 
   String get loggedInUserUuid {

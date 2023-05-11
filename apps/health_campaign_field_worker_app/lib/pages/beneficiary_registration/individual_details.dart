@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/search_households/search_households.dart';
@@ -40,7 +39,6 @@ class _IndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
-  static const _heightKey = 'height';
 
   @override
   Widget build(BuildContext context) {
@@ -371,16 +369,6 @@ class _IndividualDetailsPageState
                                       .mobileNumberInvalidFormatValidationMessage),
                             },
                           ),
-                          context.beneficiaryType == 'INDIVIDUAL'
-                              ? DigitTextFormField(
-                                  keyboardType: TextInputType.number,
-                                  formControlName: _heightKey,
-                                  label: localizations.translate(
-                                    i18.individualDetails.heightLabelText,
-                                  ),
-                                  maxLength: 10,
-                                )
-                              : const SizedBox(),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -417,12 +405,6 @@ class _IndividualDetailsPageState
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),
-      additionalFields: IndividualAdditionalFields(version: 1, fields: [
-        AdditionalField(
-          'height',
-          form.control(_heightKey).value,
-        ),
-      ]),
     );
 
     var name = individual.name;
@@ -518,12 +500,6 @@ class _IndividualDetailsPageState
                     );
               },
             ),
-      ),
-      _heightKey: FormControl<String>(
-        value: individual?.additionalFields?.fields.first.value ?? "95",
-        validators: context.beneficiaryType == 'INDIVIDUAL'
-            ? []
-            : [Validators.required],
       ),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [

@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/household_overview/household_overview.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../models/entities/beneficiary_type.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';

@@ -14,7 +14,8 @@
   
     {
       "name": "beneficiaryType",
-      "type": "String"
+      "type": "beneficiaryType",
+      "isEnum": true
     },
     {
       "name": "baseline",
