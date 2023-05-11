@@ -513,48 +513,6 @@ class ManageStock {
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
 }
 
-class InventoryReportSelection {
-  const InventoryReportSelection();
-
-  String get label => 'MANAGE_STOCK_LABEL';
-
-  String get inventoryReportReceiptLabel =>
-      'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL';
-
-  String get inventoryReportReceiptDescription =>
-      'MANAGE_STOCK_RECEIPT_DESCRIPTION';
-
-  String get inventoryReportIssuedLabel =>
-      'INVENTORY_REPORT_SELECTION_ISSUED_LABEL';
-
-  String get inventoryReportIssuedDescription =>
-      'INVENTORY_REPORT_SELECTION_ISSUED_DESCRIPTION';
-
-  String get inventoryReportReturnedLabel =>
-      'INVENTORY_REPORT_SELECTION_RETURNED_LABEL';
-
-  String get inventoryReportReturnedDescription =>
-      'INVENTORY_REPORT_SELECTION_RETURNED_DESCRIPTION';
-
-  String get inventoryReportDamagedLabel =>
-      'INVENTORY_REPORT_SELECTION_DAMAGE_LABEL';
-
-  String get inventoryReportDamagedDescription =>
-      'INVENTORY_REPORT_SELECTION_DAMAGE_DESCRIPTION';
-
-  String get inventoryReportLossLabel =>
-      'INVENTORY_REPORT_SELECTION_LOSS_LABEL';
-
-  String get inventoryReportLossDescription =>
-      'INVENTORY_REPORT_SELECTION_LOSS_DESCRIPTION';
-
-  String get inventoryReportReconciliationLabel =>
-      'INVENTORY_REPORT_SELECTION_RECONCILIATION_LABEL';
-
-  String get inventoryReportReconciliationDescription =>
-      'INVENTORY_REPORT_SELECTION_RECONCILIATION_DESCRIPTION';
-}
-
 class Complaints {
   const Complaints();
 
@@ -663,6 +621,62 @@ class ReasonForDeletion {
   const ReasonForDeletion();
 
   String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
+}
+
+class InventoryReportSelection {
+  const InventoryReportSelection();
+
+  String get label {
+    return 'INVENTORY_REPORT_SELECTION_LABEL';
+  }
+
+  String get inventoryReportReceiptLabel {
+    return 'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL';
+  }
+
+  String get inventoryReportReceiptDescription {
+    return 'INVENTORY_REPORT_SELECTION_RECEIPT_DESCRIPTION';
+  }
+
+  String get inventoryReportIssuedLabel {
+    return 'INVENTORY_REPORT_SELECTION_ISSUED_LABEL';
+  }
+
+  String get inventoryReportIssuedDescription {
+    return 'INVENTORY_REPORT_SELECTION_ISSUED_DESCRIPTION';
+  }
+
+  String get inventoryReportReturnedLabel {
+    return 'INVENTORY_REPORT_SELECTION_RETURNED_LABEL';
+  }
+
+  String get inventoryReportReturnedDescription {
+    return 'INVENTORY_REPORT_SELECTION_RETURNED_DESCRIPTION';
+  }
+
+  String get inventoryReportDamagedLabel {
+    return 'INVENTORY_REPORT_SELECTION_DAMAGE_LABEL';
+  }
+
+  String get inventoryReportDamagedDescription {
+    return 'INVENTORY_REPORT_SELECTION_DAMAGE_DESCRIPTION';
+  }
+
+  String get inventoryReportLossLabel {
+    return 'INVENTORY_REPORT_SELECTION_LOSS_LABEL';
+  }
+
+  String get inventoryReportLossDescription {
+    return 'INVENTORY_REPORT_SELECTION_LOSS_DESCRIPTION';
+  }
+
+  String get inventoryReportReconciliationLabel {
+    return 'INVENTORY_REPORT_SELECTION_RECONCILIATION_LABEL';
+  }
+
+  String get inventoryReportReconciliationDescription {
+    return 'INVENTORY_REPORT_SELECTION_RECONCILIATION_DESCRIPTION';
+  }
 }
 
 class InventoryReportDetails {
