@@ -388,8 +388,6 @@ class _IndividualDetailsPageState
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
-    print(form.control(_genderKey).value);
-
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {

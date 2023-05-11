@@ -10,6 +10,7 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
@@ -141,9 +142,10 @@ class SearchHouseholdsBloc
       final projectBeneficiaries = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
           projectId: event.projectId,
-          beneficiaryClientReferenceId: beneficiaryType == 'INDIVIDUAL'
-              ? individuals.map((e) => e.clientReferenceId).toList()
-              : [event.householdModel.clientReferenceId],
+          beneficiaryClientReferenceId:
+              beneficiaryType == BeneficiaryType.individual.name
+                  ? individuals.map((e) => e.clientReferenceId).toList()
+                  : [event.householdModel.clientReferenceId],
 
           //[TODO] Need to check for beneficiaryId
         ),
@@ -276,23 +278,24 @@ class SearchHouseholdsBloc
 
       if (head == null) continue;
 
-      final projectBeneficiaries = beneficiaryType != 'INDIVIDUAL'
-          ? await projectBeneficiary.search(
-              ProjectBeneficiarySearchModel(
-                beneficiaryClientReferenceId: [
-                  resultHousehold.clientReferenceId,
-                ],
-                //[TODO] Need to check for beneficiaryId
-                projectId: event.projectId,
-              ),
-            )
-          : await projectBeneficiary.search(
-              ProjectBeneficiarySearchModel(
-                beneficiaryClientReferenceId: individualIds,
-                //[TODO] Need to check for beneficiaryId
-                projectId: event.projectId,
-              ),
-            );
+      final projectBeneficiaries =
+          beneficiaryType != BeneficiaryType.individual.name
+              ? await projectBeneficiary.search(
+                  ProjectBeneficiarySearchModel(
+                    beneficiaryClientReferenceId: [
+                      resultHousehold.clientReferenceId,
+                    ],
+                    //[TODO] Need to check for beneficiaryId
+                    projectId: event.projectId,
+                  ),
+                )
+              : await projectBeneficiary.search(
+                  ProjectBeneficiarySearchModel(
+                    beneficiaryClientReferenceId: individualIds,
+                    //[TODO] Need to check for beneficiaryId
+                    projectId: event.projectId,
+                  ),
+                );
 
       if (projectBeneficiaries.isEmpty) continue;
       final tasks = await taskDataRepository.search(TaskSearchModel(

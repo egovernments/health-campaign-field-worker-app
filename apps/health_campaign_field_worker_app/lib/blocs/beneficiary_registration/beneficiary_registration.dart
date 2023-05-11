@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
@@ -179,9 +180,10 @@ class BeneficiaryRegistrationBloc
               clientReferenceId: IdGen.i.identifier,
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
               projectId: event.projectId,
-              beneficiaryClientReferenceId: beneficiaryType == 'INDIVIDUAL'
-                  ? individual.clientReferenceId
-                  : household.clientReferenceId,
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual.name
+                      ? individual.clientReferenceId
+                      : household.clientReferenceId,
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -318,7 +320,7 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
 
-          if (event.beneficiaryType == 'INDIVIDUAL') {
+          if (event.beneficiaryType == BeneficiaryType.individual.name) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
                 rowVersion: 1,

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
 
@@ -107,7 +108,7 @@ class HouseholdOverviewBloc
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
         beneficiaryClientReferenceId:
-            event.projectBeneficiaryType == 'INDIVIDUAL'
+            event.projectBeneficiaryType == BeneficiaryType.individual.name
                 ? individualIds
                 : [resultHousehold.clientReferenceId],
         projectId: event.projectId,

@@ -13,6 +13,7 @@ import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:health_campaign_field_worker_app/utils/typedefs.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../router/router.dart';
@@ -144,7 +145,7 @@ void main() {
                 householdMemberRepository: MockHouseholdMemberRepository(),
                 projectBeneficiaryRepository:
                     MockProjectBeneficiaryRepository(),
-                beneficiaryType: '',
+                beneficiaryType: context.beneficiaryType,
               ),
             ),
           ],

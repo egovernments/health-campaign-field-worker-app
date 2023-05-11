@@ -34,7 +34,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     GlobalKey<FormState> abcKey = GlobalKey<FormState>();
-    print(context.router.stackData.first.path);
 
     return Scaffold(
       body: ScrollableContent(
@@ -402,14 +401,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       context,
                                       rootNavigator: true,
                                     ).pop(true);
-                                    if (context.router.stackData.first.path ==
-                                        'overview') {
-                                      final parent =
-                                          router.parent() as StackRouter;
-                                      parent
-                                        ..pop()
-                                        ..pop();
-                                    }
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(

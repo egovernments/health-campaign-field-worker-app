@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../data/local_store/sql_store/tables/individual.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/individual.dart';
 import '../../models/entities/task.dart';
 import '../../router/app_router.dart';
@@ -142,7 +143,7 @@ class MemberCard extends StatelessWidget {
           ],
         ),
         Offstage(
-          offstage: beneficiaryType != 'INDIVIDUAL',
+          offstage: beneficiaryType != BeneficiaryType.individual.name,
           child: !isDelivered
               ? Align(
                   alignment: Alignment.centerLeft,
@@ -168,7 +169,7 @@ class MemberCard extends StatelessWidget {
                 ),
         ),
         Offstage(
-          offstage: beneficiaryType != 'INDIVIDUAL',
+          offstage: beneficiaryType != BeneficiaryType.individual.name,
           child: !isDelivered
               ? DigitElevatedButton(
                   onPressed: () async {

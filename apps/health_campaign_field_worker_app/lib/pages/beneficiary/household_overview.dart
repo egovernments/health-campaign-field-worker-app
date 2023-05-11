@@ -7,6 +7,7 @@ import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -191,7 +192,8 @@ class _HouseholdOverviewPageState
                               BlocBuilder<DeliverInterventionBloc,
                                   DeliverInterventionState>(
                                 builder: (ctx, state) => Offstage(
-                                  offstage: beneficiaryType == 'INDIVIDUAL',
+                                  offstage: beneficiaryType ==
+                                      BeneficiaryType.individual.name,
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: DigitIconButton(
@@ -254,7 +256,9 @@ class _HouseholdOverviewPageState
                                         DeliverInterventionState>(
                                       builder: (ctx, deliverState) {
                                         final projectBeneficiary =
-                                            beneficiaryType != 'INDIVIDUAL'
+                                            beneficiaryType !=
+                                                    BeneficiaryType
+                                                        .individual.name
                                                 ? [
                                                     state
                                                         .householdMemberWrapper
@@ -465,7 +469,7 @@ class _HouseholdOverviewPageState
                   },
                 ),
           bottomNavigationBar: Offstage(
-            offstage: beneficiaryType == 'INDIVIDUAL',
+            offstage: beneficiaryType == BeneficiaryType.individual.name,
             child: SizedBox(
               height: 85,
               child: BlocBuilder<DeliverInterventionBloc,

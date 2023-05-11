@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../blocs/search_households/search_households.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
@@ -68,21 +69,23 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         cellKey: 'gender',
       ),
     ];
-    final filterdHeaderList = context.beneficiaryType != 'INDIVIDUAL'
+    final filterdHeaderList = context.beneficiaryType !=
+            BeneficiaryType.individual.name
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
 
     final tableData = householdMember.members.map(
       (e) {
-        final projectBeneficiary = context.beneficiaryType != 'INDIVIDUAL'
-            ? [householdMember.projectBeneficiary.first]
-            : householdMember.projectBeneficiary
-                .where(
-                  (element) =>
-                      element.beneficiaryClientReferenceId ==
-                      e.clientReferenceId,
-                )
-                .toList();
+        final projectBeneficiary =
+            context.beneficiaryType != BeneficiaryType.individual.name
+                ? [householdMember.projectBeneficiary.first]
+                : householdMember.projectBeneficiary
+                    .where(
+                      (element) =>
+                          element.beneficiaryClientReferenceId ==
+                          e.clientReferenceId,
+                    )
+                    .toList();
 
         final taskdata = householdMember.task
             ?.where((element) =>
@@ -132,11 +135,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           ),
         ];
 
-        return TableDataRow(context.beneficiaryType != 'INDIVIDUAL'
-            ? rowTableData
-                .where((element) => element.cellKey != 'delivery')
-                .toList()
-            : rowTableData);
+        return TableDataRow(
+          context.beneficiaryType != BeneficiaryType.individual.name
+              ? rowTableData
+                  .where((element) => element.cellKey != 'delivery')
+                  .toList()
+              : rowTableData,
+        );
         // rowTableData
       },
     ).toList();
@@ -161,11 +166,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} ${'Members'}',
-                  status: context.beneficiaryType != 'INDIVIDUAL'
-                      ? householdMember.task?.first.status != null
-                          ? 'delivered'
-                          : 'Not Delivered'
-                      : null,
+                  status:
+                      context.beneficiaryType != BeneficiaryType.individual.name
+                          ? householdMember.task?.first.status != null
+                              ? 'delivered'
+                              : 'Not Delivered'
+                          : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
