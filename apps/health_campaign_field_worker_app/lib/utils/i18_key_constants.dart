@@ -20,6 +20,8 @@ const stockReconciliationDetails = StockReconciliationDetails();
 const manageStock = ManageStock();
 const complaints = Complaints();
 const reasonForDeletion = ReasonForDeletion();
+const inventoryReportSelection = InventoryReportSelection();
+const inventoryReportDetails = InventoryReportDetails();
 
 class Common {
   const Common();
@@ -482,32 +484,32 @@ class ManageStock {
 
   String get label => 'MANAGE_STOCK_LABEL';
 
-  String get recordstockReceiptLabel =>
+  String get recordStockReceiptLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RECEIPT_LABEL';
 
-  String get recordstockReceiptDescription =>
+  String get recordStockReceiptDescription =>
       'MANAGE_STOCK_RECEIPT_DESCRIPTION';
 
-  String get recordstockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
+  String get recordStockIssuedLabel => 'MANAGE_STOCK_RECORDSTOCK_ISSUED_LABEL';
 
-  String get recordstockIssuedtDescription =>
+  String get recordStockIssuedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
 
-  String get recordstockReturnedLabel =>
+  String get recordStockReturnedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
 
-  String get recordstockReturnedtDescription =>
+  String get recordStockReturnedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_DESCRIPTION';
 
-  String get recordstockDamagedLabel =>
+  String get recordStockDamagedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_LABEL';
 
-  String get recordstockDamagedDescription =>
+  String get recordStockDamagedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_DAMAGED_DESCRIPTION';
 
-  String get recordstockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
+  String get recordStockLossLabel => 'MANAGE_STOCK_RECORDSTOCK_LOSS_LABEL';
 
-  String get recordstockLossDescription =>
+  String get recordStockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
 }
 
@@ -591,19 +593,24 @@ class Complaints {
 
   String get acknowledgementAction => 'COMPLAINTS_ACKNOWLEDGEMENT_ACTION';
 
-  String get acknowledgementDescription => 'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
+  String get acknowledgementDescription =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION';
 
   String get acknowledgementLabel => 'COMPLAINTS_ACKNOWLEDGEMENT_LABEL';
 
-  String get acknowledgementSubLabelMain => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
+  String get acknowledgementSubLabelMain =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN';
 
-  String get acknowledgementSubLabelSub => 'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
+  String get acknowledgementSubLabelSub =>
+      'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 
   String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
 
-  String get validationRadioRequiredError => 'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
+  String get validationRadioRequiredError =>
+      'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
 
-  String get validationMinLengthError => 'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+  String get validationMinLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
 
   String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
 
@@ -614,4 +621,168 @@ class ReasonForDeletion {
   const ReasonForDeletion();
 
   String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
+}
+
+class InventoryReportSelection {
+  const InventoryReportSelection();
+
+  String get label {
+    return 'INVENTORY_REPORT_SELECTION_LABEL';
+  }
+
+  String get inventoryReportReceiptLabel {
+    return 'INVENTORY_REPORT_SELECTION_RECEIPT_LABEL';
+  }
+
+  String get inventoryReportReceiptDescription {
+    return 'INVENTORY_REPORT_SELECTION_RECEIPT_DESCRIPTION';
+  }
+
+  String get inventoryReportIssuedLabel {
+    return 'INVENTORY_REPORT_SELECTION_ISSUED_LABEL';
+  }
+
+  String get inventoryReportIssuedDescription {
+    return 'INVENTORY_REPORT_SELECTION_ISSUED_DESCRIPTION';
+  }
+
+  String get inventoryReportReturnedLabel {
+    return 'INVENTORY_REPORT_SELECTION_RETURNED_LABEL';
+  }
+
+  String get inventoryReportReturnedDescription {
+    return 'INVENTORY_REPORT_SELECTION_RETURNED_DESCRIPTION';
+  }
+
+  String get inventoryReportDamagedLabel {
+    return 'INVENTORY_REPORT_SELECTION_DAMAGE_LABEL';
+  }
+
+  String get inventoryReportDamagedDescription {
+    return 'INVENTORY_REPORT_SELECTION_DAMAGE_DESCRIPTION';
+  }
+
+  String get inventoryReportLossLabel {
+    return 'INVENTORY_REPORT_SELECTION_LOSS_LABEL';
+  }
+
+  String get inventoryReportLossDescription {
+    return 'INVENTORY_REPORT_SELECTION_LOSS_DESCRIPTION';
+  }
+
+  String get inventoryReportReconciliationLabel {
+    return 'INVENTORY_REPORT_SELECTION_RECONCILIATION_LABEL';
+  }
+
+  String get inventoryReportReconciliationDescription {
+    return 'INVENTORY_REPORT_SELECTION_RECONCILIATION_DESCRIPTION';
+  }
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+
+  String get backToHomeButtonLabel {
+    return 'INVENTORY_REPORT_DETAILS_BACK_TO_HOME_BUTTON_LABEL';
+  }
+
+  String get receiptReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_REPORT_TITLE';
+  }
+
+  String get dispatchReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_REPORT_TITLE';
+  }
+
+  String get returnedReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_REPORT_TITLE';
+  }
+
+  String get damageReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGE_REPORT_TITLE';
+  }
+
+  String get lossReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_REPORT_TITLE';
+  }
+
+  String get reconciliationReportTitle {
+    return 'INVENTORY_REPORT_DETAILS_RECONCILIATION_REPORT_TITLE';
+  }
+
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get receiptQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_QUANTITY_LABEL';
+  }
+
+  String get dispatchQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_QUANTITY_LABEL';
+  }
+
+  String get returnedQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_QUANTITY_LABEL';
+  }
+
+  String get damagedQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_QUANTITY_LABEL';
+  }
+
+  String get lossQuantityLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_QUANTITY_LABEL';
+  }
+
+  String get receiptTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIPT_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get dispatchTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCH_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get returnedTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get damagedTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get lossTransactingPartyLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOSS_TRANSACTING_PARTY_LABEL';
+  }
+
+  String get stockInHandLabel {
+    return 'INVENTORY_REPORT_DETAILS_STOCK_IN_HAND_LABEL';
+  }
+
+  String get manualCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_MANUAL_COUNT_LABEL';
+  }
+
+  String get receivedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_RECEIVED_COUNT_LABEL';
+  }
+
+  String get dispatchedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_DISPATCHED_COUNT_LABEL';
+  }
+
+  String get returnedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_RETURNED_COUNT_LABEL';
+  }
+
+  String get damagedCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_DAMAGED_COUNT_LABEL';
+  }
+
+  String get lostCountLabel {
+    return 'INVENTORY_REPORT_DETAILS_LOST_COUNT_LABEL';
+  }
+
+  String get noRecordsMessage {
+    return 'INVENTORY_REPORT_DETAILS_NO_RECORDS_MESSAGE';
+  }
 }
