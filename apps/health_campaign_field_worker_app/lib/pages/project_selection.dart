@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/project/project.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -24,6 +25,11 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 }
 
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
+  /// [_selectedProject] is to keep track of the project the user selected.
+  /// Primary intention is to use this project during the retry mechanism of a
+  /// failing down-sync. At this point, the [ProjectState] has not persisted the
+  /// selected project yet
+  ProjectModel? _selectedProject;
   DialogRoute? syncDialogRoute;
 
   @override
@@ -62,18 +68,67 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
+              final error = state.syncError;
+
               if (syncDialogRoute?.isActive ?? false) {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
               }
 
-              if (state.loading) {
+              if (error != null) {
                 syncDialogRoute = DialogRoute(
                   context: context,
+                  barrierDismissible: false,
+                  builder: (context) => DigitDialog(
+                    options: DigitSyncDialog.getDigitDialog(
+                      type: DigitSyncDialogType.failed,
+                      label: localizations.translate(
+                        i18.projectSelection.syncFailedTitleText,
+                      ),
+                      primaryAction: DigitDialogActions(
+                        label: localizations.translate(
+                          i18.projectSelection.retryButtonText,
+                        ),
+                        action: _selectedProject == null
+                            ? null
+                            : (context) {
+                                if (syncDialogRoute?.isActive ?? false) {
+                                  Navigator.of(context)
+                                      .removeRoute(syncDialogRoute!);
+                                }
+                                context.read<ProjectBloc>().add(
+                                      ProjectSelectProjectEvent(
+                                        _selectedProject!,
+                                      ),
+                                    );
+                              },
+                      ),
+                      secondaryAction: DigitDialogActions(
+                        label: localizations.translate(
+                          i18.projectSelection.dismissButtonText,
+                        ),
+                        action: (context) {
+                          if (syncDialogRoute?.isActive ?? false) {
+                            Navigator.of(context).removeRoute(syncDialogRoute!);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                );
+
+                Navigator.of(context).push(syncDialogRoute!);
+
+                return;
+              } else if (state.loading) {
+                syncDialogRoute = DialogRoute(
+                  context: context,
+                  barrierDismissible: false,
                   builder: (context) => DigitDialog(
                     options: DigitSyncDialog.getDigitDialog(
                       type: DigitSyncDialogType.inProgress,
-                      label: 'Sync in progress',
-                      barrierDismissible: false,
+                      label: localizations.translate(
+                        i18.projectSelection.syncInProgressTitleText,
+                      ),
                     ),
                   ),
                 );
@@ -160,9 +215,13 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     .map(
                       (element) => DigitProjectCell(
                         projectText: element.name,
-                        onTap: () => context.read<ProjectBloc>().add(
-                              ProjectSelectProjectEvent(element),
-                            ),
+                        onTap: () {
+                          _selectedProject = element;
+
+                          context.read<ProjectBloc>().add(
+                                ProjectSelectProjectEvent(element),
+                              );
+                        },
                       ),
                     )
                     .toList(),

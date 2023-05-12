@@ -107,7 +107,7 @@ class ProjectLocalRepository
                 pincode: address.pincode,
                 type: address.type,
                 boundary: address.boundary,
-                boundaryType: address.boundary,
+                boundaryType: address.boundaryType,
                 rowVersion: address.rowVersion,
               ),
         targets: targetresults.isEmpty
