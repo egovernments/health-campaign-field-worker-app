@@ -6,8 +6,6 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.0 <=3.0.0'
 
-
-
 dependencies:
   flutter:
     sdk: flutter
@@ -28,7 +26,7 @@ dependencies:
   reactive_forms: ^14.1.0
   location: ^4.4.0
   dart_mappable: ^1.2.0
-  dio: ^4.0.6
+  dio: ^5.1.2
   flutter_keyboard_visibility: ^5.4.0
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
@@ -50,6 +48,7 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   shared_preferences: ^2.1.0
   pretty_dio_logger: ^1.2.0-beta-1
+  pluto_grid: ^7.0.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +67,8 @@ dev_dependencies:
   dart_mappable_builder: ^1.2.1
   isar_generator: ^3.0.5
 
+dependency_overrides:
+  intl: ^0.18.0
 
 flutter:
   assets:

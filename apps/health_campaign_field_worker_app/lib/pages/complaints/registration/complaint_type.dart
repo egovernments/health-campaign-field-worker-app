@@ -72,7 +72,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         );
                       }
 
-                      form.markAllAsTouched();
+                      setState(() {
+                        form.markAllAsTouched();
+                      });
 
                       if (!form.valid) return;
 
@@ -170,9 +172,29 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           maxLength: 100,
                           validationMessages: {
                             'required': (object) => localizations.translate(
-                                  i18.complaints.complaintsError,
+                                  i18.complaints.validationRequiredError,
                                 ),
                           },
+                        ),
+                      ],
+                      if (form.touched &&
+                          form.control(_complaintType).invalid) ...[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 5,
+                              bottom: 5,
+                            ),
+                            child: Text(
+                              localizations.translate(
+                                i18.complaints.validationRadioRequiredError,
+                              ),
+                              style: TextStyle(
+                                color: DigitTheme.instance.colors.lavaRed,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                       const SizedBox(height: 16),

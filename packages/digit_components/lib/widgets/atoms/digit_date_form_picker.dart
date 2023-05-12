@@ -20,6 +20,8 @@ class DigitDateFormPicker extends StatelessWidget {
   final DateTime? start;
   final DateTime? end;
   final String? hint;
+  final IconData? icon;
+  final String? tooltipMessage;
 
   const DigitDateFormPicker({
     super.key,
@@ -38,12 +40,16 @@ class DigitDateFormPicker extends StatelessWidget {
     this.end,
     this.start,
     this.hint,
+    this.icon,
+    this.tooltipMessage,
   });
 
   @override
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
+      icon: icon,
+      tooltipMessage: tooltipMessage,
       child: ReactiveDatePicker(
         formControlName: formControlName,
         firstDate: start ?? DateTime(1900),
@@ -65,6 +71,7 @@ class DigitDateFormPicker extends StatelessWidget {
               suffixIcon: const Icon(Icons.date_range),
               label: hint == null ? null : Text(hint!),
             ),
+            enableInteractiveSelection: isEnabled!,
             onTap: isEnabled == true
                 ? (control) {
                     picker.showPicker();

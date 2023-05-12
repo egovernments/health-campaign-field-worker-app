@@ -122,6 +122,8 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                 form.markAllAsTouched();
                                 if (!form.valid) return;
 
+                                FocusManager.instance.primaryFocus?.unfocus();
+
                                 context.read<AuthBloc>().add(
                                       AuthLoginEvent(
                                         userId: (form.control(_userId).value

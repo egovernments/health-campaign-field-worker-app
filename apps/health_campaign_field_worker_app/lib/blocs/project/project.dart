@@ -90,7 +90,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
-        super(const ProjectsEmptyState()) {
+        super(const ProjectState()) {
     on(_handleProjectInit);
     on(_handleProjectSelection);
   }
@@ -99,78 +99,110 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectInitializeEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(const ProjectLoadingState());
+    emit(const ProjectState(
+      loading: true,
+      projects: [],
+      selectedProject: null,
+    ));
 
     final connectivityResult = await (Connectivity().checkConnectivity());
 
-    switch (connectivityResult) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-        final userObject = await localSecureStore.userRequestModel;
-        final uuid = userObject?.uuid;
+    AppLogger.instance.info(
+      'Connectivity Result: $connectivityResult',
+      title: 'ProjectBloc',
+    );
 
-        List<ProjectStaffModel> projectStaffList =
-            await projectStaffRemoteRepository.search(
-          ProjectStaffSearchModel(staffId: uuid),
-        );
+    final isOnline = connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile;
 
-        projectStaffList.removeDuplicates((e) => e.id);
-
-        if (projectStaffList.isEmpty) {
-          emit(const ProjectsEmptyState());
-        } else {
-          List<ProjectModel> projects = [];
-
-          for (final projectStaff in projectStaffList) {
-            await projectStaffLocalRepository.create(
-              projectStaff,
-              createOpLog: false,
-            );
-
-            final staffProjects = await projectRemoteRepository.search(
-              ProjectSearchModel(
-                id: projectStaff.projectId,
-                tenantId: projectStaff.tenantId,
-              ),
-            );
-
-            projects.addAll(staffProjects);
-          }
-
-          projects.removeDuplicates((e) => e.id);
-
-          for (final project in projects) {
-            await projectLocalRepository.create(
-              project,
-              createOpLog: false,
-            );
-          }
-
-          if (projects.isNotEmpty) {
-            await _loadProjectFacilities(projects);
-            await _loadProductVariants(projects);
-            await _loadServiceDefinition(projects);
-          }
-
-          emit(ProjectSelectionFetchedState(projects: projects));
-        }
-        break;
-      default:
-        final projects = await projectLocalRepository.search(
-          ProjectSearchModel(
-            tenantId: envConfig.variables.tenantId,
-          ),
-        );
-
-        final selectedProject = await localSecureStore.selectedProject;
-
-        emit(
-          ProjectSelectionFetchedState(
-            projects: projects,
-            selectedProject: selectedProject,
-          ),
-        );
+    if (isOnline) {
+      await _loadOnline(emit);
+    } else {
+      await _loadOffline(emit);
     }
+  }
+
+  FutureOr<void> _loadOnline(ProjectEmitter emit) async {
+    final userObject = await localSecureStore.userRequestModel;
+    final uuid = userObject?.uuid;
+
+    List<ProjectStaffModel> projectStaffList =
+        await projectStaffRemoteRepository.search(
+      ProjectStaffSearchModel(staffId: uuid),
+    );
+
+    projectStaffList.removeDuplicates((e) => e.id);
+
+    if (projectStaffList.isEmpty) {
+      emit(const ProjectState(
+        projects: [],
+        loading: false,
+        selectedProject: null,
+      ));
+
+      return;
+    }
+
+    List<ProjectModel> projects = [];
+
+    for (final projectStaff in projectStaffList) {
+      await projectStaffLocalRepository.create(
+        projectStaff,
+        createOpLog: false,
+      );
+
+      final staffProjects = await projectRemoteRepository.search(
+        ProjectSearchModel(
+          id: projectStaff.projectId,
+          tenantId: projectStaff.tenantId,
+        ),
+      );
+
+      projects.addAll(staffProjects);
+    }
+
+    projects.removeDuplicates((e) => e.id);
+
+    for (final project in projects) {
+      await projectLocalRepository.create(
+        project,
+        createOpLog: false,
+      );
+    }
+
+    if (projects.isNotEmpty) {
+      await _loadProjectFacilities(projects);
+      await _loadProductVariants(projects);
+      await _loadServiceDefinition(projects);
+    }
+
+    emit(ProjectState(
+      projects: projects,
+      loading: false,
+    ));
+
+    if (projects.length == 1) {
+      add(ProjectSelectProjectEvent(projects.first));
+    }
+  }
+
+  FutureOr<void> _loadOffline(ProjectEmitter emit) async {
+    final projects = await projectLocalRepository.search(
+      ProjectSearchModel(
+        tenantId: envConfig.variables.tenantId,
+      ),
+    );
+
+    projects.removeDuplicates((element) => element.id);
+
+    final selectedProject = await localSecureStore.selectedProject;
+    emit(
+      ProjectState(
+        loading: false,
+        projects: projects,
+        selectedProject: selectedProject,
+      ),
+    );
   }
 
   FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
@@ -263,6 +295,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
+
     final List<BoundaryModel> boundaries =
         await boundaryRemoteRepository.search(
       BoundarySearchModel(
@@ -271,23 +305,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
+    await boundaryLocalRepository.bulkCreate(boundaries);
     await localSecureStore.setSelectedProject(event.model);
-
-    await state.maybeMap(
-      orElse: () {
-        return;
-      },
-      fetched: (value) async {
-        final initial = DateTime.now();
-        await boundaryLocalRepository.bulkCreate(boundaries);
-        final end = DateTime.now();
-        AppLogger.instance.debug(
-          '${end.difference(initial).inMilliseconds}',
-          title: 'Boundary Duration',
-        );
-        emit(value.copyWith(selectedProject: event.model));
-      },
-    );
+    emit(state.copyWith(
+      selectedProject: event.model,
+      loading: false,
+    ));
   }
 }
 
@@ -301,14 +324,17 @@ class ProjectEvent with _$ProjectEvent {
 
 @freezed
 class ProjectState with _$ProjectState {
-  const factory ProjectState.uninitialized() = ProjectUninitializedState;
+  const ProjectState._();
 
-  const factory ProjectState.loading() = ProjectLoadingState;
-
-  const factory ProjectState.empty() = ProjectsEmptyState;
-
-  const factory ProjectState.fetched({
-    required List<ProjectModel> projects,
+  const factory ProjectState({
+    @Default([]) List<ProjectModel> projects,
     ProjectModel? selectedProject,
-  }) = ProjectSelectionFetchedState;
+    @Default(false) bool loading,
+  }) = _ProjectState;
+
+  bool get isEmpty => projects.isEmpty;
+
+  bool get isNotEmpty => !isEmpty;
+
+  bool get hasSelectedProject => selectedProject != null;
 }

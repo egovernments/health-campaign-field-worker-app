@@ -9,19 +9,13 @@ extension ContextUtilityExtensions on BuildContext {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
+    final selectedProject = projectState.selectedProject;
 
-    return projectState.maybeWhen(
-      orElse: () {
-        throw AppException('Invalid project state');
-      },
-      fetched: (projects, selectedProject) {
-        if (selectedProject == null) {
-          throw AppException('No project is selected');
-        }
+    if (selectedProject == null) {
+      throw AppException('No project is selected');
+    }
 
-        return selectedProject.id;
-      },
-    );
+    return selectedProject.id;
   }
 
   BoundaryModel get boundary {
@@ -45,13 +39,18 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
 
-    final BeneficiaryType selectedBeneficiary = projectState.maybeWhen(
-      orElse: () => BeneficiaryType.household,
-      fetched: (projects, selectedProject) =>
-          selectedProject!.targets!.first.beneficiaryType!,
-    );
+    final BeneficiaryType? selectedBeneficiary =
+        projectState.selectedProject!.targets?.first.beneficiaryType;
 
-    return selectedBeneficiary.name;
+    return selectedBeneficiary!.name;
+  }
+
+  BoundaryModel? get boundaryOrNull {
+    try {
+      return boundary;
+    } catch (_) {
+      return null;
+    }
   }
 
   String get loggedInUserUuid {

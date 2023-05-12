@@ -61,7 +61,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                   var submitTriggered = false;
 
                   return Form(
-                    key: abcKey, //assigning key to form
+                    key: abcKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: DigitCard(
                       child: Column(children: [
                         Padding(
@@ -267,11 +268,24 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               ),
                                               child: DigitTextField(
                                                 maxLength: 1000,
+                                                isRequired: true,
                                                 controller:
                                                     additionalController[index],
                                                 label: localizations.translate(
                                                   '${value.selectedServiceDefinition?.code}.${e.code}.ADDITIONAL_FIELD',
                                                 ),
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.toString().trim().isEmpty) {
+                                                    return localizations
+                                                        .translate(
+                                                      i18.checklist
+                                                          .checklistReasonRequiredError,
+                                                    );
+                                                  }
+
+                                                  return null;
+                                                },
                                               ),
                                             )
                                           : const SizedBox();
@@ -322,6 +336,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             if (!isValid!) {
                               return;
                             }
+                            FocusManager.instance.primaryFocus?.unfocus();
+
                             final itemsAttributes =
                                 value.selectedServiceDefinition!.attributes;
                             for (i = 0; i < controller.length; i++) {

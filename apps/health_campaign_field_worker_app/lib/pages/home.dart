@@ -1,15 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import 'package:overlay_builder/overlay_builder.dart';
-import 'package:path/path.dart';
-import '../blocs/app_initialization/app_initialization.dart';
+
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
@@ -21,14 +17,10 @@ import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
-import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart'
-    as appConfig;
-import '../widgets/progress_indicator/progress_indicator.dart';
+import '../widgets/progress_bar/beneficiary_progress.dart';
 
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
@@ -45,191 +37,110 @@ class _HomePageState extends LocalizedState<HomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final loggedinUser = context.loggedInUser.roles
-        .where((e) => e.code == UserRoleCodeEnum.distributor)
-        .toList();
-
-    List<GlobalKey<OverlayWidgetState>> overlayWidgetStateList = [];
-    List<GlobalKey<DigitWalkthroughState>> walkthroughWidgetStateList = [];
-    for (var i = 0; i < _getItems(context).length + 1; i++) {
-      overlayWidgetStateList
-          .add(GlobalKey<OverlayWidgetState>(debugLabel: 'home_Overlay_$i'));
-      walkthroughWidgetStateList.add(GlobalKey<DigitWalkthroughState>(
-        debugLabel: 'HOME_$i',
-      ));
-    }
-
-    GlobalKey<OverlayWidgetState> overlaykey = GlobalKey(debugLabel: 'new');
-
-    GlobalKey<DigitWalkthroughWrapperState> overlayWrapperkey =
-        GlobalKey(debugLabel: 'newwrapper');
-
     return Scaffold(
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: DigitWalkthroughWrapper(
-          initialIndex: loggedinUser.isEmpty ? 1 : 0,
-          key: overlayWrapperkey,
-          overlayWidget: overlaykey,
-          keysArray: overlayWidgetStateList,
-          widgetKey: walkthroughWidgetStateList,
-          child: IgnorePointer(
-            ignoring: overlayWrapperkey.currentState?.showOverlay ?? false,
-            child: ScrollableContent(
-              slivers: [
-                SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return DigitWalkthrough(
-                        onSkip: () =>
-                            {overlayWrapperkey.currentState?.onSelectedSkip()},
-                        widgetHeight: 130,
-                        onTap: () => {
-                          walkthroughWidgetStateList[index]
-                              .currentState
-                              ?.initOffsetsPositions(),
-                          overlayWrapperkey.currentState?.onSelectedTap(),
-                        },
-                        key: walkthroughWidgetStateList[index + 1],
-                        description: localizations.translate(
-                          '${_getItems(context).elementAt(index).label}_HELP',
-                        ),
-                        overlayWidget: overlayWidgetStateList[index + 1],
-                        titleAlignment: TextAlign.center,
-                        child: _getItems(context).elementAt(index),
-                      );
-                    },
-                    childCount: _getItems(context).length,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 145,
-                    childAspectRatio: 104 / 128,
-                  ),
-                ),
-              ],
-              header: Column(children: [
-                BackNavigationHelpHeaderWidget(
-                  showBackNavigation: false,
-                  helpClicked: () {
-                    for (var i = 0; i < _getItems(context).length; i++) {
-                      walkthroughWidgetStateList[i]
-                          .currentState
-                          ?.initOffsetsPositions();
-                    }
-                    overlayWrapperkey.currentState?.onSelectedTap();
-                  },
-                ),
-                Offstage(
-                  offstage: loggedinUser.isEmpty,
-                  child: DigitWalkthrough(
-                    onSkip: () =>
-                        {overlayWrapperkey.currentState?.onSelectedSkip()},
-                    widgetHeight: 150,
-                    onTap: () {
-                      overlayWrapperkey.currentState?.onSelectedTap();
-                    },
-                    key: walkthroughWidgetStateList[0],
-                    description:
-                        localizations.translate(i18.home.progressIndicatorHelp),
-                    overlayWidget: overlayWidgetStateList[0],
-                    titleAlignment: TextAlign.center,
-                    child: ProgressIndicatorContainer(
-                      label: localizations.translate(
-                        i18.home.progressIndicatorTitle,
-                      ),
-                      prefixLabel: localizations.translate(
-                        i18.home.progressIndicatorPrefixLabel,
-                      ),
-                      suffixLabel: '200',
-                      value: .08,
-                    ),
-                  ),
-                ),
-              ]),
-              footer: const PoweredByDigit(),
-              children: [
-                const SizedBox(height: kPadding * 2),
-                BlocConsumer<SyncBloc, SyncState>(
-                  listener: (context, state) {
-                    state.maybeWhen(
-                      orElse: () => null,
-                      syncInProgress: () => DigitSyncDialogContent.show(
-                        context,
-                        type: DigitSyncDialogType.inProgress,
-                        // TODO: Localization pending
-                        label: localizations.translate(
-                          i18.common.coreCommonSyncProgress,
-                        ),
-                        barrierDismissible: false,
-                      ),
-                      completedSync: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        DigitSyncDialogContent.show(
-                          context,
-                          type: DigitSyncDialogType.complete,
-                          // TODO: Localization Pending
-                          label: localizations
-                              .translate(i18.common.coreCommonDataSynced),
-                          primaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: localizations
-                                .translate(i18.common.corecommonclose),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                        );
-                      },
-                      failedSync: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        DigitSyncDialogContent.show(
-                          context,
-                          type: DigitSyncDialogType.failed,
-                          label: localizations
-                              .translate(i18.common.coreCommonDataSyncFailed),
-                          primaryAction: DigitDialogActions(
-                            label: localizations
-                                .translate(i18.common.coreCommonDataSyncRetry),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                              _attemptSyncUp(context);
-                            },
-                          ),
-                          secondaryAction: DigitDialogActions(
-                            label: localizations
-                                .translate(i18.common.corecommonclose),
-                            action: (ctx) => Navigator.pop(ctx),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  builder: (context, state) {
-                    return state.maybeWhen(
-                      orElse: () => const Offstage(),
-                      pendingSync: (count) => count == 0
-                          ? const Offstage()
-                          : DigitInfoCard(
-                              icon: Icons.info,
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              iconColor: theme.colorScheme.surfaceTint,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            ),
-                    );
-                  },
-                ),
-              ],
+      body: ScrollableContent(
+        slivers: [
+          SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _getItems(context).elementAt(index),
+              childCount: _getItems(context).length,
+            ),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 145,
+              childAspectRatio: 104 / 128,
             ),
           ),
+        ],
+        header: Column(
+          children: [
+            const BackNavigationHelpHeaderWidget(
+              showBackNavigation: false,
+            ),
+            BeneficiaryProgressBar(
+              label: localizations.translate(
+                i18.home.progressIndicatorTitle,
+              ),
+              prefixLabel: localizations.translate(
+                i18.home.progressIndicatorPrefixLabel,
+              ),
+            ),
+          ],
         ),
+        footer: const PoweredByDigit(),
+        children: [
+          const SizedBox(height: kPadding * 2),
+          BlocConsumer<SyncBloc, SyncState>(
+            listener: (context, state) {
+              state.maybeWhen(
+                orElse: () => null,
+                syncInProgress: () => DigitSyncDialog.show(
+                  context,
+                  type: DigitSyncDialogType.inProgress,
+                  // TODO: Localization pending
+                  label: 'Sync in Progress', barrierDismissible: false,
+                ),
+                completedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialog.show(
+                    context,
+                    type: DigitSyncDialogType.complete,
+                    // TODO: Localization Pending
+                    label: 'Data Synced',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                      },
+                    ),
+                  );
+                },
+                failedSync: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  DigitSyncDialog.show(
+                    context,
+                    type: DigitSyncDialogType.failed,
+                    // TODO: Localization Pending
+                    label: 'Sync Failed !',
+                    primaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Retry',
+                      action: (ctx) {
+                        Navigator.pop(ctx);
+                        _attemptSyncUp(context);
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      // TODO: Localization Pending
+                      label: 'Close',
+                      action: (ctx) => Navigator.pop(ctx),
+                    ),
+                  );
+                },
+              );
+            },
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => const Offstage(),
+                pendingSync: (count) => count == 0
+                    ? const Offstage()
+                    : DigitInfoCard(
+                        icon: Icons.info,
+                        backgroundColor: theme.colorScheme.tertiaryContainer,
+                        iconColor: theme.colorScheme.surfaceTint,
+                        description: localizations
+                            .translate(i18.home.dataSyncInfoContent)
+                            .replaceAll('{}', count.toString()),
+                        title: localizations.translate(
+                          i18.home.dataSyncInfoLabel,
+                        ),
+                      ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -278,6 +189,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 label: i18.home.stockReconciliationLabel,
                 onPressed: () {
                   context.router.push(StockReconciliationRoute());
+                },
+              ),
+              HomeItemCard(
+                icon: Icons.announcement,
+                label: 'Reports',
+                onPressed: () {
+                  context.router.push(
+                    InventoryReportSelectionRoute(),
+                  );
                 },
               ),
             ],
@@ -391,42 +311,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         HomeItemCard(
           icon: Icons.call,
           label: i18.home.callbackLabel,
-          onPressed: () => DigitActionDialog.show(
-            context,
-            widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
-              builder: (context, state) {
-                if (state is! AppInitialized) {
-                  return const Offstage();
-                }
-
-                final supportList = state.appConfiguration.callSupportOptions ??
-                    <appConfig.CallSupportList>[];
-
-                return ActionCard(
-                  items: supportList
-                      .map(
-                        (e) => ActionCardModel(
-                          action: () async {
-                            if (!await launchUrl(
-                              Uri(
-                                scheme: 'tel',
-                                path: e.code,
-                              ),
-                              mode: LaunchMode.externalApplication,
-                            )) {
-                              throw Exception('Could not launch $url');
-                            }
-                            ;
-                          },
-                          icon: Icons.call,
-                          label: e.name,
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
-          ),
         ),
         HomeItemCard(
           icon: Icons.table_chart,
@@ -447,11 +331,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             final sql = context.read<LocalSqlDataStore>();
             final isar = context.read<Isar>();
-            int count = 0;
+
             for (var element in sql.allTables) {
               final selector = sql.delete(element)
                 ..where((_) => const Constant(true));
-              count += await selector.go();
+              await selector.go();
             }
 
             await isar.writeTxn(() async => await isar.opLogs.clear());

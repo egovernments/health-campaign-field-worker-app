@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -16,6 +18,14 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       ..where(
         (tbl) => buildOr([
           if (query.projectId != null) tbl.projectId.equals(query.projectId),
+          if (query.beneficiaryRegistrationDateGte != null)
+            tbl.dateOfRegistration.isBiggerOrEqualValue(
+              query.beneficiaryRegistrationDateGte!.millisecondsSinceEpoch,
+            ),
+          if (query.beneficiaryRegistrationDateLte != null)
+            tbl.dateOfRegistration.isSmallerOrEqualValue(
+              query.beneficiaryRegistrationDateLte!.millisecondsSinceEpoch,
+            ),
         ]),
       );
 

@@ -161,6 +161,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
+                                    FocusManager.instance.primaryFocus?.unfocus();
 
                                     final bloc =
                                         context.read<RecordStockBloc>();

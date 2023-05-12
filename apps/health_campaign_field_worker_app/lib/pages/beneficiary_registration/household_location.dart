@@ -65,8 +65,8 @@ class _HouseholdLocationPageState
               BeneficiaryRegistrationState>(
             builder: (context, registrationState) {
               return ScrollableContent(
-                header: Column(
-                  children: const [
+                header: const Column(
+                  children: [
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),

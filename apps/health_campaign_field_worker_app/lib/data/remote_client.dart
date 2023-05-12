@@ -25,9 +25,15 @@ class DioClient {
         ApiLoggerInterceptor(),
       ])
       ..options = BaseOptions(
-        connectTimeout: envConfig.variables.connectTimeout,
-        sendTimeout: envConfig.variables.sendTimeout,
-        receiveTimeout: envConfig.variables.receiveTimeout,
+        connectTimeout: Duration(
+          milliseconds: envConfig.variables.connectTimeout,
+        ),
+        sendTimeout: Duration(
+          milliseconds: envConfig.variables.sendTimeout,
+        ),
+        receiveTimeout: Duration(
+          milliseconds: envConfig.variables.receiveTimeout,
+        ),
         baseUrl: envConfig.variables.baseUrl,
       );
   }

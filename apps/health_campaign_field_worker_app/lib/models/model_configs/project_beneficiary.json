@@ -28,9 +28,18 @@
       "isList": true
     },
     {
-      "name": "beneficiaryClientReferenceId",
-      "type": "String"
-
+      "name": "beneficiaryRegistrationDateLte",
+      "type": "DateTime",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "beneficiaryRegistrationDateGte",
+      "type": "DateTime",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "dateTimeAttributes": [

@@ -17,8 +17,8 @@ class StockSearchModel extends EntitySearchModel {
   final String? transactingPartyType;
   final List<String>? clientReferenceId;
   final bool? isDeleted;
-  final TransactionType? transactionType;
-  final TransactionReason? transactionReason;
+  final List<TransactionType>? transactionType;
+  final List<TransactionReason>? transactionReason;
   
   StockSearchModel({
     this.id,
