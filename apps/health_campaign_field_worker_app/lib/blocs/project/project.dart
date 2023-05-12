@@ -126,10 +126,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
-    List<ProjectStaffModel> projectStaffList =
-        await projectStaffRemoteRepository.search(
-      ProjectStaffSearchModel(staffId: uuid),
-    );
+    List<ProjectStaffModel> projectStaffList;
+    try {
+      projectStaffList = await projectStaffRemoteRepository.search(
+        ProjectStaffSearchModel(staffId: uuid),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          loading: false,
+          syncError: ProjectSyncErrorType.projectStaff,
+        ),
+      );
+
+      return;
+    }
 
     projectStaffList.removeDuplicates((e) => e.id);
 
@@ -138,6 +149,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         projects: [],
         loading: false,
         selectedProject: null,
+        syncError: null,
       ));
 
       return;
@@ -151,12 +163,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         createOpLog: false,
       );
 
-      final staffProjects = await projectRemoteRepository.search(
-        ProjectSearchModel(
-          id: projectStaff.projectId,
-          tenantId: projectStaff.tenantId,
-        ),
-      );
+      List<ProjectModel> staffProjects;
+      try {
+        staffProjects = await projectRemoteRepository.search(
+          ProjectSearchModel(
+            id: projectStaff.projectId,
+            tenantId: projectStaff.tenantId,
+          ),
+        );
+      } catch (_) {
+        emit(state.copyWith(
+          loading: false,
+          syncError: ProjectSyncErrorType.project,
+        ));
+
+        return;
+      }
 
       projects.addAll(staffProjects);
     }
@@ -171,14 +193,42 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-      await _loadProjectFacilities(projects);
-      await _loadProductVariants(projects);
-      await _loadServiceDefinition(projects);
+      try {
+        await _loadProjectFacilities(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.projectFacilities,
+          ),
+        );
+      }
+      try {
+        await _loadProductVariants(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.productVariants,
+          ),
+        );
+      }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
     }
 
     emit(ProjectState(
       projects: projects,
       loading: false,
+      syncError: null,
     ));
 
     if (projects.length == 1) {
@@ -295,21 +345,31 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
+    emit(state.copyWith(loading: true, syncError: null));
 
-    final List<BoundaryModel> boundaries =
-        await boundaryRemoteRepository.search(
-      BoundarySearchModel(
-        boundaryType: event.model.address?.boundaryType,
-        code: event.model.address?.boundaryCode.toString(),
-      ),
-    );
+    List<BoundaryModel> boundaries;
+    try {
+      boundaries = await boundaryRemoteRepository.search(
+        BoundarySearchModel(
+          boundaryType: event.model.address?.boundaryType,
+          code: event.model.address?.boundary,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.boundary,
+      ));
+
+      return;
+    }
 
     await boundaryLocalRepository.bulkCreate(boundaries);
     await localSecureStore.setSelectedProject(event.model);
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,
+      syncError: null,
     ));
   }
 }
@@ -330,6 +390,7 @@ class ProjectState with _$ProjectState {
     @Default([]) List<ProjectModel> projects,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
+    ProjectSyncErrorType? syncError,
   }) = _ProjectState;
 
   bool get isEmpty => projects.isEmpty;
@@ -337,4 +398,13 @@ class ProjectState with _$ProjectState {
   bool get isNotEmpty => !isEmpty;
 
   bool get hasSelectedProject => selectedProject != null;
+}
+
+enum ProjectSyncErrorType {
+  projectStaff,
+  project,
+  projectFacilities,
+  productVariants,
+  serviceDefinitions,
+  boundary
 }
