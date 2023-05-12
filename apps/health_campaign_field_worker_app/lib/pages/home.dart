@@ -193,7 +193,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               ),
               HomeItemCard(
                 icon: Icons.announcement,
-                label: 'Reports',
+                label: i18.home.viewReportsLabel,
                 onPressed: () {
                   context.router.push(
                     InventoryReportSelectionRoute(),
