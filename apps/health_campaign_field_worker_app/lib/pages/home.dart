@@ -267,6 +267,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                   context.router.push(StockReconciliationRoute());
                 },
               ),
+              HomeItemCard(
+                icon: Icons.announcement,
+                label: i18.home.viewReportsLabel,
+                onPressed: () {
+                  context.router.push(
+                    InventoryReportSelectionRoute(),
+                  );
+                },
+              ),
             ],
           );
           break;
