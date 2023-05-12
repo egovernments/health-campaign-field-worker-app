@@ -75,17 +75,19 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               }
 
               if (error != null) {
-                const syncErrorMessage = 'Sync failed !';
-
                 syncDialogRoute = DialogRoute(
                   context: context,
                   barrierDismissible: false,
                   builder: (context) => DigitDialog(
                     options: DigitSyncDialog.getDigitDialog(
                       type: DigitSyncDialogType.failed,
-                      label: syncErrorMessage,
+                      label: localizations.translate(
+                        i18.projectSelection.syncFailedTitleText,
+                      ),
                       primaryAction: DigitDialogActions(
-                        label: 'Retry',
+                        label: localizations.translate(
+                          i18.projectSelection.retryButtonText,
+                        ),
                         action: _selectedProject == null
                             ? null
                             : (context) {
@@ -101,7 +103,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                               },
                       ),
                       secondaryAction: DigitDialogActions(
-                        label: 'Back',
+                        label: localizations.translate(
+                          i18.projectSelection.dismissButtonText,
+                        ),
                         action: (context) {
                           if (syncDialogRoute?.isActive ?? false) {
                             Navigator.of(context).removeRoute(syncDialogRoute!);
@@ -122,7 +126,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   builder: (context) => DigitDialog(
                     options: DigitSyncDialog.getDigitDialog(
                       type: DigitSyncDialogType.inProgress,
-                      label: 'Sync in progress',
+                      label: localizations.translate(
+                        i18.projectSelection.syncInProgressTitleText,
+                      ),
                     ),
                   ),
                 );
