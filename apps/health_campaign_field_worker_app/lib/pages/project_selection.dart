@@ -62,6 +62,8 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         children: [
           BlocConsumer<ProjectBloc, ProjectState>(
             listener: (context, state) {
+              final error = state.syncError;
+
               if (syncDialogRoute?.isActive ?? false) {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
               }
@@ -79,6 +81,39 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 );
 
                 Navigator.of(context).push(syncDialogRoute!);
+              }
+
+              if (error != null) {
+                const syncErrorMessage = 'Sync failed !';
+
+                syncDialogRoute = DialogRoute(
+                  context: context,
+                  builder: (context) => DigitDialog(
+                    options: DigitSyncDialog.getDigitDialog(
+                      type: DigitSyncDialogType.failed,
+                      label: syncErrorMessage,
+                      barrierDismissible: false,
+                      primaryAction: DigitDialogActions(
+                        label: 'Back',
+                        action: (context) {
+                          if (syncDialogRoute?.isActive ?? false) {
+                            Navigator.of(context).removeRoute(syncDialogRoute!);
+                          }
+                        },
+                      ),
+                      secondaryAction: DigitDialogActions(
+                        label: 'Logout',
+                        action: (context) => context
+                            .read<AuthBloc>()
+                            .add(const AuthLogoutEvent()),
+                      ),
+                    ),
+                  ),
+                );
+
+                Navigator.of(context).push(syncDialogRoute!);
+
+                return;
               }
 
               final selectedProject = state.selectedProject;
