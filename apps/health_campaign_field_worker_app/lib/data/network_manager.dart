@@ -117,14 +117,14 @@ class NetworkManager {
                     // TODO: Modify this to work with multiple identifiers
                     identifiers: updatedEntity.identifiers?.map((e) {
                       return e.copyWith(
-                        id: identifierId,
+                        id: e.id ?? identifierId,
                       );
                     }).toList(),
 
                     // TODO: Modify this to work with multiple addresses
                     address: updatedEntity.address?.map((e) {
                       return e.copyWith(
-                        id: addressId,
+                        id: e.id ?? addressId,
                       );
                     }).toList(),
                   );
@@ -142,7 +142,7 @@ class NetworkManager {
                       if (resourceId != null) {
                         return e.copyWith(
                           taskId: serverGeneratedId,
-                          id: resourceId,
+                          id: e.id ?? resourceId,
                         );
                       }
 
