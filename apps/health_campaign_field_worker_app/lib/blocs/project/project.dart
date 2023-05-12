@@ -345,14 +345,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
+    emit(state.copyWith(loading: true, syncError: null));
 
     List<BoundaryModel> boundaries;
     try {
       boundaries = await boundaryRemoteRepository.search(
         BoundarySearchModel(
           boundaryType: event.model.address?.boundaryType,
-          code: event.model.address?.boundaryCode.toString(),
+          code: event.model.address?.boundary,
         ),
       );
     } catch (_) {
