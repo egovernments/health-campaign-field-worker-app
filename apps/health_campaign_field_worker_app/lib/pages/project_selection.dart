@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/project/project.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -24,6 +25,11 @@ class ProjectSelectionPage extends LocalizedStatefulWidget {
 }
 
 class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
+  /// [_selectedProject] is to keep track of the project the user selected.
+  /// Primary intention is to use this project during the retry mechanism of a
+  /// failing down-sync. At this point, the [ProjectState] has not persisted the
+  /// selected project yet
+  ProjectModel? _selectedProject;
   DialogRoute? syncDialogRoute;
 
   @override
@@ -68,44 +74,39 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 Navigator.of(context).removeRoute(syncDialogRoute!);
               }
 
-              if (state.loading) {
-                syncDialogRoute = DialogRoute(
-                  context: context,
-                  builder: (context) => DigitDialog(
-                    options: DigitSyncDialog.getDigitDialog(
-                      type: DigitSyncDialogType.inProgress,
-                      label: 'Sync in progress',
-                      barrierDismissible: false,
-                    ),
-                  ),
-                );
-
-                Navigator.of(context).push(syncDialogRoute!);
-              }
-
               if (error != null) {
                 const syncErrorMessage = 'Sync failed !';
 
                 syncDialogRoute = DialogRoute(
                   context: context,
+                  barrierDismissible: false,
                   builder: (context) => DigitDialog(
                     options: DigitSyncDialog.getDigitDialog(
                       type: DigitSyncDialogType.failed,
                       label: syncErrorMessage,
-                      barrierDismissible: false,
                       primaryAction: DigitDialogActions(
+                        label: 'Retry',
+                        action: _selectedProject == null
+                            ? null
+                            : (context) {
+                                if (syncDialogRoute?.isActive ?? false) {
+                                  Navigator.of(context)
+                                      .removeRoute(syncDialogRoute!);
+                                }
+                                context.read<ProjectBloc>().add(
+                                      ProjectSelectProjectEvent(
+                                        _selectedProject!,
+                                      ),
+                                    );
+                              },
+                      ),
+                      secondaryAction: DigitDialogActions(
                         label: 'Back',
                         action: (context) {
                           if (syncDialogRoute?.isActive ?? false) {
                             Navigator.of(context).removeRoute(syncDialogRoute!);
                           }
                         },
-                      ),
-                      secondaryAction: DigitDialogActions(
-                        label: 'Logout',
-                        action: (context) => context
-                            .read<AuthBloc>()
-                            .add(const AuthLogoutEvent()),
                       ),
                     ),
                   ),
@@ -114,6 +115,19 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 Navigator.of(context).push(syncDialogRoute!);
 
                 return;
+              } else if (state.loading) {
+                syncDialogRoute = DialogRoute(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => DigitDialog(
+                    options: DigitSyncDialog.getDigitDialog(
+                      type: DigitSyncDialogType.inProgress,
+                      label: 'Sync in progress',
+                    ),
+                  ),
+                );
+
+                Navigator.of(context).push(syncDialogRoute!);
               }
 
               final selectedProject = state.selectedProject;
@@ -195,9 +209,13 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                     .map(
                       (element) => DigitProjectCell(
                         projectText: element.name,
-                        onTap: () => context.read<ProjectBloc>().add(
-                              ProjectSelectProjectEvent(element),
-                            ),
+                        onTap: () {
+                          _selectedProject = element;
+
+                          context.read<ProjectBloc>().add(
+                                ProjectSelectProjectEvent(element),
+                              );
+                        },
                       ),
                     )
                     .toList(),
