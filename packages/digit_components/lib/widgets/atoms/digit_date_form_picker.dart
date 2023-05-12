@@ -24,28 +24,33 @@ class DigitDateFormPicker extends StatelessWidget {
   final IconData? icon;
   final String? toolTipMsg;
   final EdgeInsets? padding;
+  final String cancelText;
+  final String confirmText;
 
-  const DigitDateFormPicker(
-      {super.key,
-      required this.label,
-      this.isRequired = false,
-      this.firstDate,
-      this.lastDate,
-      this.initialDate,
-      this.onChangeOfDate,
-      required this.formControlName,
-      this.isEnabled = true,
-      this.requiredMessage,
-      this.validator,
-      this.validationMessages,
-      this.autoValidation,
-      this.margin,
-      this.end,
-      this.start,
-      this.hint,
-      this.toolTipMsg,
-      this.icon,
-      this.padding});
+  const DigitDateFormPicker({
+    super.key,
+    required this.label,
+    this.isRequired = false,
+    this.firstDate,
+    this.lastDate,
+    this.initialDate,
+    this.onChangeOfDate,
+    required this.formControlName,
+    this.isEnabled = true,
+    this.requiredMessage,
+    this.validator,
+    this.validationMessages,
+    this.autoValidation,
+    this.margin,
+    this.end,
+    this.start,
+    this.hint,
+    this.toolTipMsg,
+    this.icon,
+    this.padding,
+    required this.cancelText,
+    required this.confirmText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +64,8 @@ class DigitDateFormPicker extends StatelessWidget {
         formControlName: formControlName,
         firstDate: start ?? DateTime(1900),
         lastDate: end ?? DateTime.now(),
+        cancelText: cancelText,
+        confirmText: confirmText,
         builder: (context, picker, child) {
           return ReactiveTextField(
             style: TextStyle(

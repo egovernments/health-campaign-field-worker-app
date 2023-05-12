@@ -76,6 +76,12 @@ class DigitTextFormField extends StatelessWidget {
                 textCapitalization: textCapitalization,
                 minLines: minLines,
                 maxLines: maxLines,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: readOnly
+                        ? const DigitColors().hintGrey
+                        : DigitTheme.instance.colorScheme.onBackground),
                 obscureText: obscureText,
                 focusNode: focusNode,
                 keyboardType: keyboardType,
@@ -99,7 +105,7 @@ class DigitTextFormField extends StatelessWidget {
                             const BoxConstraints(minWidth: 0, minHeight: 0),
                         prefixStyle: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w200,
                             color: readOnly
                                 ? const DigitColors().hintGrey
                                 : DigitTheme.instance.colorScheme.onBackground),
@@ -116,7 +122,7 @@ class DigitTextFormField extends StatelessWidget {
                                       prefixText ?? '',
                                       style: TextStyle(
                                           fontSize: kIsWeb ? 15 : 16,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w200,
                                           color: readOnly
                                               ? const DigitColors().hintGrey
                                               : DigitTheme.instance.colorScheme

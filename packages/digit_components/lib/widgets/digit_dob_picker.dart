@@ -12,16 +12,19 @@ class DigitDobPicker extends StatelessWidget {
   final String datePickerLabel;
   final String ageFieldLabel;
   final String separatorLabel;
+  final String cancelText;
+  final String confirmText;
 
-  const DigitDobPicker({
-    super.key,
-    required this.datePickerFormControl,
-    this.isVerified = false,
-    this.valueAccessor,
-    required this.datePickerLabel,
-    required this.ageFieldLabel,
-    required this.separatorLabel,
-  });
+  const DigitDobPicker(
+      {super.key,
+      required this.datePickerFormControl,
+      this.isVerified = false,
+      this.valueAccessor,
+      required this.datePickerLabel,
+      required this.ageFieldLabel,
+      required this.separatorLabel,
+      required this.confirmText,
+      required this.cancelText});
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,8 @@ class DigitDobPicker extends StatelessWidget {
             DigitDateFormPicker(
               label: datePickerLabel,
               formControlName: datePickerFormControl,
+              cancelText: cancelText,
+              confirmText: confirmText,
             ),
             const SizedBox(height: 16),
             Text(

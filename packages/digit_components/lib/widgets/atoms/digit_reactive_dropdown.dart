@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -42,6 +43,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
               if (value == null) return;
               onChanged?.call(value);
             },
+            style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
             validationMessages: validationMessages,
             formControlName: formControlName,
             decoration: const InputDecoration(
