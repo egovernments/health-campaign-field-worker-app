@@ -84,6 +84,12 @@ class HouseholdLocalRepository
                     addressLine2: address.addressLine2,
                     city: address.city,
                     pincode: address.pincode,
+                    locality: address.localityBoundaryCode != null
+                        ? LocalityModel(
+                            code: address.localityBoundaryCode!,
+                            name: address.localityBoundaryName,
+                          )
+                        : null,
                     type: address.type,
                     rowVersion: address.rowVersion,
                     auditDetails: AuditDetails(

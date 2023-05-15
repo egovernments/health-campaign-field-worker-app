@@ -152,6 +152,12 @@ class IndividualLocalRepository
                       city: address.city,
                       pincode: address.pincode,
                       type: address.type,
+                      locality: address.localityBoundaryCode != null
+                          ? LocalityModel(
+                              code: address.localityBoundaryCode!,
+                              name: address.localityBoundaryName,
+                            )
+                          : null,
                       rowVersion: address.rowVersion,
                       auditDetails: AuditDetails(
                         createdBy: address.auditCreatedBy!,
