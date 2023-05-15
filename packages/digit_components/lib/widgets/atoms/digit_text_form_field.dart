@@ -78,7 +78,7 @@ class DigitTextFormField extends StatelessWidget {
                 maxLines: maxLines,
                 style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w400,
                     color: readOnly
                         ? const DigitColors().hintGrey
                         : DigitTheme.instance.colorScheme.onBackground),
