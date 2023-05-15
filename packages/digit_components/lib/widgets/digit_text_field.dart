@@ -61,6 +61,8 @@ class _DigitTextField extends State<DigitTextField> {
       label: widget.label,
       child: TextFormField(
         style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
             color: widget.readOnly == true
                 ? DigitTheme.instance.colorScheme.shadow
                 : DigitTheme.instance.colorScheme.onSurface),
