@@ -8,13 +8,18 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class TargetSearchModel extends EntitySearchModel {
   final String? tenantId;
-  final bool? isDeleted;
   
   TargetSearchModel({
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  TargetSearchModel.ignoreDeleted({
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -27,7 +32,6 @@ class TargetModel extends EntityModel {
   final String? baseline;
   final String? target;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final TargetAdditionalFields? additionalFields;
 
@@ -38,9 +42,9 @@ class TargetModel extends EntityModel {
     this.baseline,
     this.target,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   TargetCompanion get companion {
@@ -50,12 +54,12 @@ class TargetModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

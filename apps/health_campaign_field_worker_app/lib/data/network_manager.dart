@@ -307,6 +307,7 @@ class NetworkManager {
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
+              isDeleted: true,
             ));
 
             for (var element in typeGroupedEntity.value) {
@@ -349,6 +350,7 @@ class NetworkManager {
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
+              isDeleted: true,
             ));
 
             for (var element in typeGroupedEntity.value) {
@@ -415,6 +417,7 @@ class NetworkManager {
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
+              isDeleted: true,
             ));
 
             for (var element in typeGroupedEntity.value) {
@@ -439,6 +442,40 @@ class NetworkManager {
             }
 
             break;
+          //
+          // case DataModelType.householdMember:
+          //   responseEntities = await remote.search(HouseholdMemberSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<HouseholdMemberModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in typeGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as HouseholdMemberModel;
+          //     final responseEntity = responseEntities
+          //         .whereType<HouseholdMemberModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //     final serverGeneratedId = responseEntity?.id;
+          //
+          //     if (serverGeneratedId != null) {
+          //       local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //         ),
+          //       );
+          //     }
+          //   }
+          //
+          //   break;
+
           case DataModelType.task:
             responseEntities = await remote.search(TaskSearchModel(
               clientReferenceId: entities
@@ -446,6 +483,7 @@ class NetworkManager {
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
+              isDeleted: true,
             ));
 
             for (var element in typeGroupedEntity.value) {

@@ -38,22 +38,28 @@ export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
 export 'oplog/oplog_entry.dart';
+export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'pgr_complaints/pgr_address.dart';
 
-@MappableClass()
 abstract class DataModel {
   final String? boundaryCode;
+  final bool? isDeleted;
 
-  const DataModel({this.boundaryCode});
+  const DataModel({
+    this.boundaryCode,
+    this.isDeleted,
+  });
 }
 
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
 
-  const EntityModel({this.auditDetails});
+  const EntityModel({
+    this.auditDetails,
+    super.isDeleted = false,
+  });
 }
 
 @MappableClass(ignoreNull: true)
@@ -65,7 +71,15 @@ abstract class EntitySearchModel extends DataModel {
     super.boundaryCode,
     this.auditDetails,
     this.additionalFields,
+    super.isDeleted = false,
   });
+
+  @MappableConstructor()
+  const EntitySearchModel.ignoreDeleted({
+    super.boundaryCode,
+    this.auditDetails,
+    this.additionalFields,
+  }) : super(isDeleted: false);
 }
 
 @MappableClass()

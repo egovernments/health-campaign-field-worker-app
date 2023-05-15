@@ -12,7 +12,6 @@ class StockReconciliationSearchModel extends EntitySearchModel {
   final String? facilityId;
   final String? productVariantId;
   final List<String>? clientReferenceId;
-  final bool? isDeleted;
   final DateTime? dateOfReconciliationTime;
   
   StockReconciliationSearchModel({
@@ -21,13 +20,27 @@ class StockReconciliationSearchModel extends EntitySearchModel {
     this.facilityId,
     this.productVariantId,
     this.clientReferenceId,
-    this.isDeleted,
     int? dateOfReconciliation,
     super.boundaryCode,
+    super.isDeleted,
   }): dateOfReconciliationTime = dateOfReconciliation == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
    super();
+
+  @MappableConstructor()
+  StockReconciliationSearchModel.ignoreDeleted({
+    this.id,
+    this.tenantId,
+    this.facilityId,
+    this.productVariantId,
+    this.clientReferenceId,
+    int? dateOfReconciliation,
+    super.boundaryCode,
+  }): dateOfReconciliationTime = dateOfReconciliation == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
+   super(isDeleted: false);
 
   int? get dateOfReconciliation => dateOfReconciliationTime?.millisecondsSinceEpoch;
   
@@ -48,7 +61,6 @@ class StockReconciliationModel extends EntityModel {
   final int? calculatedCount;
   final String? commentsOnReconciliation;
   final String clientReferenceId;
-  final bool? isDeleted;
   final int? rowVersion;
   final DateTime dateOfReconciliationTime;
   final StockReconciliationAdditionalFields? additionalFields;
@@ -65,10 +77,10 @@ class StockReconciliationModel extends EntityModel {
     this.calculatedCount,
     this.commentsOnReconciliation,
     required this.clientReferenceId,
-    this.isDeleted,
     this.rowVersion,
     required int dateOfReconciliation,
     super.auditDetails,
+    super.isDeleted = false,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
       super();
 
@@ -82,6 +94,7 @@ class StockReconciliationModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       tenantId: Value(tenantId),
       facilityId: Value(facilityId),
@@ -92,7 +105,6 @@ class StockReconciliationModel extends EntityModel {
       calculatedCount: Value(calculatedCount),
       commentsOnReconciliation: Value(commentsOnReconciliation),
       clientReferenceId: Value(clientReferenceId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       dateOfReconciliation: Value(dateOfReconciliation),
       );
