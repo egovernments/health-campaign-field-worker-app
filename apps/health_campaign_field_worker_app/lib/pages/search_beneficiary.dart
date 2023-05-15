@@ -65,14 +65,14 @@ class _SearchBeneficiaryPageState
                               title:
                                   searchState.registeredHouseholds.toString(),
                               content: localizations.translate(
-                                '${context.beneficiaryType}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
+                                '${context.beneficiaryType.toUpperCase()}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
                               ),
                             ),
                             BeneficiaryStatisticsModel(
                               title:
                                   searchState.deliveredInterventions.toString(),
                               content: localizations.translate(
-                                '${context.beneficiaryType}_${i18.searchBeneficiary.noOfResourcesDelivered}',
+                                '${context.beneficiaryType.toUpperCase()}_${i18.searchBeneficiary.noOfResourcesDelivered}',
                               ),
                             ),
                           ],
@@ -163,19 +163,18 @@ class _SearchBeneficiaryPageState
                 final searchQuery = state.searchQuery;
                 VoidCallback? onPressed;
 
-                onPressed = state.loading ||
-                        searchQuery == null ||
-                        searchQuery.isEmpty
-                    ? null
-                    : () {
-                        FocusManager.instance.primaryFocus?.unfocus();
+                onPressed =
+                    state.loading || searchQuery == null || searchQuery.isEmpty
+                        ? null
+                        : () {
+                            FocusManager.instance.primaryFocus?.unfocus();
 
-                        router.push(BeneficiaryRegistrationWrapperRoute(
-                          initialState: BeneficiaryRegistrationCreateState(
-                            searchQuery: state.searchQuery,
-                          ),
-                        ));
-                      };
+                            router.push(BeneficiaryRegistrationWrapperRoute(
+                              initialState: BeneficiaryRegistrationCreateState(
+                                searchQuery: state.searchQuery,
+                              ),
+                            ));
+                          };
 
                 return DigitElevatedButton(
                   onPressed: onPressed,

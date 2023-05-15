@@ -101,18 +101,6 @@ class IndividualLocalRepository
             mobileNumber: individual.mobileNumber,
             isDeleted: individual.isDeleted,
             rowVersion: individual.rowVersion,
-            additionalFields: individual.additionalFields != null
-                ? IndividualAdditionalFields(
-                    version: 1,
-                    fields: [
-                      AdditionalField(
-                        'height',
-                        jsonDecode(individual.additionalFields!)['fields'][0]
-                            ['value'],
-                      ),
-                    ],
-                  )
-                : null,
             auditDetails: AuditDetails(
               createdBy: individual.auditCreatedBy!,
               createdTime: individual.auditCreatedTime!,
@@ -122,6 +110,7 @@ class IndividualLocalRepository
             name: name == null
                 ? null
                 : NameModel(
+                    id: name.id,
                     individualClientReferenceId: individual.clientReferenceId,
                     familyName: name.familyName,
                     givenName: name.givenName,
@@ -140,6 +129,7 @@ class IndividualLocalRepository
               address == null
                   ? null
                   : AddressModel(
+                      id: address.id,
                       relatedClientReferenceId: individual.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,
