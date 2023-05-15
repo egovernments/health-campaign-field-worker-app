@@ -78,7 +78,7 @@ class _ReasonForDeletionPageState
                       context.router.pop();
 
                       if (widget.isHousholdDelete) {
-                        context.router.pop();
+                        (context.router.parent() as StackRouter).pop();
                       }
                       context.router.push(AcknowledgementRoute());
                     },
