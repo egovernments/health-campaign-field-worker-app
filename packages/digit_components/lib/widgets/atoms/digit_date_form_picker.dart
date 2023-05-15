@@ -69,8 +69,6 @@ class DigitDateFormPicker extends StatelessWidget {
         builder: (context, picker, child) {
           return ReactiveTextField(
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
               color: isEnabled == true
                   ? DigitTheme.instance.colorScheme.onBackground
                   : DigitTheme.instance.colorScheme.shadow,
