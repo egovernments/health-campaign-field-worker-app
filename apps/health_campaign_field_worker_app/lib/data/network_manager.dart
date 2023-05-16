@@ -95,7 +95,7 @@ class NetworkManager {
 
                   updatedEntity = updatedEntity.copyWith(
                     address: updatedEntity.address?.copyWith(
-                      id: addressId,
+                      id: updatedEntity.address?.id ?? addressId,
                     ),
                   );
                 }
