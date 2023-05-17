@@ -66,9 +66,16 @@ dev_dependencies:
   mocktail: ^0.3.0
   dart_mappable_builder: ^1.2.1
   isar_generator: ^3.0.5
+  flutter_launcher_icons: ^0.11.0
 
 dependency_overrides:
   intl: ^0.18.0
+
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  min_sdk_android: 21
 
 flutter:
   assets:
