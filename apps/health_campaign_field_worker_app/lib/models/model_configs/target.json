@@ -12,12 +12,12 @@
       "type": "String"
     },
     {
-      "name": "baseline",
-      "type": "String"
+      "name": "totalNo",
+      "type": "double"
     },
     {
-      "name": "target",
-      "type": "String"
+      "name": "targetNo",
+      "type": "double"
     }
   ],
   "customAttributes": [

@@ -7,8 +7,8 @@ import '../../../../models/entities/beneficiary_type.dart';
 class Target extends Table {
   TextColumn get id => text()();
   TextColumn get clientReferenceId => text().nullable()();
-  TextColumn get baseline => text().nullable()();
-  TextColumn get target => text().nullable()();
+  RealColumn get totalNo => real().nullable()();
+  RealColumn get targetNo => real().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();

@@ -24,8 +24,8 @@ class TargetModel extends EntityModel {
 
   final String id;
   final String? clientReferenceId;
-  final String? baseline;
-  final String? target;
+  final double? totalNo;
+  final double? targetNo;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
@@ -36,8 +36,8 @@ class TargetModel extends EntityModel {
     this.additionalFields,
     required this.id,
     this.clientReferenceId,
-    this.baseline,
-    this.target,
+    this.totalNo,
+    this.targetNo,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
@@ -54,8 +54,8 @@ class TargetModel extends EntityModel {
       additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       clientReferenceId: Value(clientReferenceId),
-      baseline: Value(baseline),
-      target: Value(target),
+      totalNo: Value(totalNo),
+      targetNo: Value(targetNo),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
