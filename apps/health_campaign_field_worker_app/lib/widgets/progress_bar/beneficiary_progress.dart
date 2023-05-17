@@ -1,9 +1,13 @@
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/data_repository.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../models/data_model.dart';
+import '../../utils/utils.dart';
 import '../progress_indicator/progress_indicator.dart';
 
 class BeneficiaryProgressBar extends StatefulWidget {
@@ -21,7 +25,6 @@ class BeneficiaryProgressBar extends StatefulWidget {
 }
 
 class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
-  int target = 40;
   int current = 0;
 
   @override
@@ -63,10 +66,19 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedProject = context.selectedProject;
+    final beneficiaryType = context.beneficiaryType;
+
+    final targetModel = selectedProject.targets?.firstWhereOrNull(
+      (element) => element.beneficiaryType == beneficiaryType,
+    );
+
+    final target = targetModel?.targetNo ?? 0.0;
+
     return ProgressIndicatorContainer(
-      label: '${target - current} ${widget.label}',
+      label: '${max(target - current, 0).round()} ${widget.label}',
       prefixLabel: '$current ${widget.prefixLabel}',
-      suffixLabel: target.toString(),
+      suffixLabel: target.toStringAsFixed(0),
       value: target == 0 ? 0 : current / target,
     );
   }
