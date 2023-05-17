@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../blocs/search_households/search_households.dart';
+import '../../models/entities/beneficiary_type.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../localized.dart';
 import 'beneficiary_card.dart';
 
@@ -49,6 +51,101 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final headerList = [
+      TableHeader(
+        'Beneficiary',
+        cellKey: 'beneficiary',
+      ),
+      TableHeader(
+        'Delivery',
+        cellKey: 'delivery',
+      ),
+      TableHeader(
+        'Age',
+        cellKey: 'age',
+      ),
+      TableHeader(
+        'Gender',
+        cellKey: 'gender',
+      ),
+    ];
+    final filteredHeaderList = context.beneficiaryType !=
+            BeneficiaryType.individual
+        ? headerList.where((element) => element.cellKey != 'delivery').toList()
+        : headerList;
+
+    final tableData = householdMember.members.map(
+      (e) {
+        final projectBeneficiary =
+            context.beneficiaryType != BeneficiaryType.individual
+                ? [householdMember.projectBeneficiaries.first]
+                : householdMember.projectBeneficiaries
+                    .where(
+                      (element) =>
+                          element.beneficiaryClientReferenceId ==
+                          e.clientReferenceId,
+                    )
+                    .toList();
+
+        final taskdata = householdMember.tasks
+            ?.where((element) =>
+                element.projectBeneficiaryClientReferenceId ==
+                projectBeneficiary.first.clientReferenceId)
+            .toList();
+
+        final rowTableData = [
+          TableData(
+            [
+              e.name?.givenName,
+              e.name?.familyName,
+            ].whereNotNull().join('-'),
+            cellKey: 'beneficiary',
+          ),
+          TableData(
+            taskdata != null
+                ? taskdata.isEmpty
+                    ? 'Not delivered'
+                    : 'delivered'
+                : 'Not delivered',
+            cellKey: 'delivery',
+            style: TextStyle(
+              color: taskdata != null
+                  ? taskdata.isNotEmpty
+                      ? theme.colorScheme.onSurfaceVariant
+                      : theme.colorScheme.error
+                  : theme.colorScheme.error,
+            ),
+          ),
+          TableData(
+            e.dateOfBirth == null
+                ? ''
+                : (DateTime.now()
+                            .difference(DateTime.parse(DateFormat(
+                              'dd/MM/yyyy',
+                            ).parse(e.dateOfBirth!).toString()))
+                            .inDays /
+                        365)
+                    .round()
+                    .toStringAsFixed(0),
+            cellKey: 'age',
+          ),
+          TableData(
+            e.gender?.name ?? '',
+            cellKey: 'gender',
+          ),
+        ];
+
+        return TableDataRow(
+          context.beneficiaryType != BeneficiaryType.individual
+              ? rowTableData
+                  .where((element) => element.cellKey != 'delivery')
+                  .toList()
+              : rowTableData,
+        );
+        // rowTableData
+      },
+    ).toList();
+
     return DigitCard(
       child: Column(
         children: [
@@ -57,7 +154,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.8,
                 child: BeneficiaryCard(
                   description: [
                     householdMember.household.address?.doorNo,
@@ -69,9 +166,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} ${'Members'}',
-                  status: householdMember.task?.status != null
-                      ? 'delivered'
-                      : 'Not Delivered',
+                  status: context.beneficiaryType != BeneficiaryType.individual
+                      ? householdMember.tasks?.first.status != null
+                          ? 'delivered'
+                          : 'Not Delivered'
+                      : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
@@ -90,65 +189,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(
-              headerList: [
-                TableHeader(
-                  'Beneficiary',
-                  cellKey: 'beneficiary',
-                ),
-                // TableHeader(
-                //   'Delivery',
-                //   cellKey: 'delivery',
-                // ),
-                TableHeader(
-                  'Age',
-                  cellKey: 'age',
-                ),
-                TableHeader(
-                  'Gender',
-                  cellKey: 'gender',
-                ),
-              ],
-              tableData: householdMember.members
-                  .map(
-                    (e) => TableDataRow(
-                      [
-                        TableData(
-                          [
-                            e.name?.givenName,
-                            e.name?.familyName,
-                          ].whereNotNull().join('-'),
-                          cellKey: 'beneficiary',
-                        ),
-                        // TableData(
-                        //   'Not Delivered',
-                        //   cellKey: 'delivery',
-                        //   style: TextStyle(
-                        //     color: theme.colorScheme.error,
-                        //   ),
-                        // ),
-                        TableData(
-                          e.dateOfBirth == null
-                              ? ''
-                              : (DateTime.now()
-                                          .difference(DateTime.parse(DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).parse(e.dateOfBirth!).toString()))
-                                          .inDays /
-                                      365)
-                                  .round()
-                                  .toStringAsFixed(0),
-                          cellKey: 'age',
-                        ),
-                        TableData(
-                          e.gender?.name ?? '',
-                          cellKey: 'gender',
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+              headerList: filteredHeaderList,
+              tableData: tableData,
               leftColumnWidth: 130,
-              rightColumnWidth: 45 * 6,
+              rightColumnWidth: filteredHeaderList.length * 17 * 6,
               height: householdMember.members.length <= 5
                   ? (householdMember.members.length + 1) * 57
                   : 6 * 57,

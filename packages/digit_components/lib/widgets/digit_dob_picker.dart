@@ -12,6 +12,7 @@ class DigitDobPicker extends StatelessWidget {
   final String datePickerLabel;
   final String ageFieldLabel;
   final String separatorLabel;
+  final String errorMessage;
 
   const DigitDobPicker({
     super.key,
@@ -21,6 +22,7 @@ class DigitDobPicker extends StatelessWidget {
     required this.datePickerLabel,
     required this.ageFieldLabel,
     required this.separatorLabel,
+    required this.errorMessage,
   });
 
   @override
@@ -64,9 +66,7 @@ class DigitDobPicker extends StatelessWidget {
                               365)
                           .round()
                           .toStringAsFixed(0);
-                  return int.parse(value) <= 150
-                      ? null
-                      : {'Age Shoud be less than 150': true};
+                  return int.parse(value) <= 150 ? null : {errorMessage: true};
                 }
 
                 formControl.setValidators([requiredTrue]);

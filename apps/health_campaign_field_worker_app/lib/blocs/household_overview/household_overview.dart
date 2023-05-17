@@ -106,8 +106,13 @@ class HouseholdOverviewBloc
 
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
-        beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
+        beneficiaryClientReferenceId:
+            event.projectBeneficiaryType == BeneficiaryType.individual
+                ? individualIds
+                : [resultHousehold.clientReferenceId],
         projectId: event.projectId,
+
+        // [TODO] Need to pass as a  based on Beneficiary Type
       ),
     );
 
@@ -119,7 +124,7 @@ class HouseholdOverviewBloc
 
     final tasks = await taskDataRepository.search(TaskSearchModel(
       projectBeneficiaryClientReferenceId:
-          projectBeneficiaries.first.clientReferenceId,
+          projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
     ));
 
     emit(
@@ -128,8 +133,8 @@ class HouseholdOverviewBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          task: tasks.isEmpty ? null : tasks.first,
-          projectBeneficiary: projectBeneficiaries.first,
+          tasks: tasks.isEmpty ? null : tasks,
+          projectBeneficiaries: projectBeneficiaries,
         ),
         loading: false,
       ),
@@ -189,7 +194,10 @@ class HouseholdOverviewBloc
       );
     }
 
-    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
+    add(HouseholdOverviewReloadEvent(
+      projectId: event.projectId,
+      projectBeneficiaryType: event.projectBeneficiaryType,
+    ));
   }
 
   FutureOr<void> _handleSetAsHead(
@@ -233,7 +241,10 @@ class HouseholdOverviewBloc
       );
     }
 
-    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
+    add(HouseholdOverviewReloadEvent(
+      projectId: event.projectId,
+      projectBeneficiaryType: event.projectBeneficiaryType,
+    ));
   }
 }
 
@@ -244,18 +255,21 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required HouseholdModel householdModel,
     required List<IndividualModel> members,
     required ProjectBeneficiaryModel projectBeneficiaryModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteHouseholdEvent;
 
   const factory HouseholdOverviewEvent.deleteIndividual({
     required String projectId,
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteIndividualEvent;
 
   const factory HouseholdOverviewEvent.setAsHead({
     required String projectId,
     required IndividualModel individualModel,
     required HouseholdModel householdModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewSetAsHeadEvent;
 
   const factory HouseholdOverviewEvent.selectedIndividual({
@@ -264,6 +278,7 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
 
   const factory HouseholdOverviewEvent.reload({
     required String projectId,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewReloadEvent;
 }
 

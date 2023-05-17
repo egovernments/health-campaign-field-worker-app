@@ -55,6 +55,14 @@ class Common {
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
+
+  String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
+
+  String get coreCommonDataSynced => 'CORE_COMMON_DATA_SYNCED';
+
+  String get coreCommonDataSyncFailed => 'CORE_COMMON_DATA_SYNC_FAILED';
+
+  String get coreCommonDataSyncRetry => 'CORE_COMMON_DATA_SYNC_RETRY';
 }
 
 class Login {
@@ -127,6 +135,8 @@ class Home {
 
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
+  String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
+
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
 
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
@@ -179,7 +189,11 @@ class IndividualDetails {
 
   String get genderLabelText => 'GENDER_LABEL_TEXT';
 
+  String get dobErrorText => 'DOB_ERROR_MESSAGE';
+
   String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
+
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
 
   String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
 
@@ -294,6 +308,8 @@ class MemberCard {
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
 
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
+
+  String get heightLabel => 'HEIGHT_LABEL';
 }
 
 class DeliverIntervention {
@@ -306,6 +322,9 @@ class DeliverIntervention {
 
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
+
+  String get resourceDeliveredError =>
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
@@ -325,6 +344,8 @@ class DeliverIntervention {
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
+
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
 }
 
 class ProjectSelection {
@@ -434,6 +455,8 @@ class StockReconciliationDetails {
   String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+
+  String get stockLabel => 'STOCK_LABEL';
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
 
@@ -573,6 +596,8 @@ class Complaints {
 
   String get noComplaintsExist => 'COMPLAINTS_NO_COMPLAINTS_EXIST';
 
+  String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
+
   String get inboxDateLabel => 'COMPLAINTS_INBOX_DATE_LABEL';
 
   String get inboxNumberLabel => 'COMPLAINTS_INBOX_NUMBER_LABEL';
@@ -586,6 +611,12 @@ class Complaints {
   String get inboxNotGeneratedLabel => 'COMPLAINTS_INBOX_NOT_GENERATED_LABEL';
 
   String get inboxSyncRequiredLabel => 'COMPLAINTS_INBOX_SYNC_REQUIRED_LABEL';
+
+  String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
+  String get validationMinLengthError =>
+      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
+
+  String get raisedForAnotherUser => 'COMPLAINTS_RAISED_FOR_ANOTHER_USER';
 
   String get locality => 'COMPLAINTS_LOCALITY';
 
@@ -604,17 +635,10 @@ class Complaints {
   String get acknowledgementSubLabelSub =>
       'COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB';
 
-  String get validationRequiredError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
+  String get complaintsError => 'COMPLAINTS_VALIDATION_REQUIRED_ERROR';
 
   String get validationRadioRequiredError =>
       'COMPLAINTS_VALIDATION_RADIO_REQUIRED_ERROR';
-
-  String get validationMinLengthError =>
-      'COMPLAINTS_VALIDATION_MINLENGTH_ERROR';
-
-  String get raisedForMyself => 'COMPLAINTS_RAISED_FOR_MYSELF';
-
-  String get raisedForAnotherUser => 'COMPLAINTS_RAISED_FOR_ANOTHER_USER';
 }
 
 class ReasonForDeletion {

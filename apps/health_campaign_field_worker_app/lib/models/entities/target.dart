@@ -23,23 +23,25 @@ class TargetModel extends EntityModel {
   static const schemaName = 'Target';
 
   final String id;
-  final String? beneficiaryType;
-  final String? baseline;
-  final String? target;
+  final String? clientReferenceId;
+  final double? totalNo;
+  final double? targetNo;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final BeneficiaryType? beneficiaryType;
   final TargetAdditionalFields? additionalFields;
 
   TargetModel({
     this.additionalFields,
     required this.id,
-    this.beneficiaryType,
-    this.baseline,
-    this.target,
+    this.clientReferenceId,
+    this.totalNo,
+    this.targetNo,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
+    this.beneficiaryType,
     super.auditDetails,
   }): super();
 
@@ -51,12 +53,13 @@ class TargetModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
-      beneficiaryType: Value(beneficiaryType),
-      baseline: Value(baseline),
-      target: Value(target),
+      clientReferenceId: Value(clientReferenceId),
+      totalNo: Value(totalNo),
+      targetNo: Value(targetNo),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
+      beneficiaryType: Value(beneficiaryType),
       );
   }
 }

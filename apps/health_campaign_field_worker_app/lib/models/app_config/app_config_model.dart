@@ -94,6 +94,8 @@ class AppConfig with _$AppConfig {
         required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
         required BackendInterface backendInterface,
+    @JsonKey(name: 'CALL_SUPPORT')
+        required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
         required List<TransportTypes> transportTypes,
   }) = _AppConfig;
@@ -208,6 +210,17 @@ class CheckListTypes with _$CheckListTypes {
 
   factory CheckListTypes.fromJson(Map<String, dynamic> json) =>
       _$CheckListTypesFromJson(json);
+}
+
+@freezed
+class CallSupportList with _$CallSupportList {
+  factory CallSupportList({
+    required String name,
+    required String code,
+  }) = _CallSupportList;
+
+  factory CallSupportList.fromJson(Map<String, dynamic> json) =>
+      _$CallSupportListFromJson(json);
 }
 
 @freezed

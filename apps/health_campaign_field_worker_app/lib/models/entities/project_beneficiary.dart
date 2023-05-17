@@ -10,7 +10,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
-  final String? beneficiaryClientReferenceId;
+  final List<String>? beneficiaryClientReferenceId;
   final DateTime? beneficiaryRegistrationDateLte;
   final DateTime? beneficiaryRegistrationDateGte;
   final List<String>? clientReferenceId;

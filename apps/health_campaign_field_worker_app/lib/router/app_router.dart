@@ -106,6 +106,7 @@ part 'app_router.gr.dart';
               page: ReasonForDeletionPage,
               path: 'reason-for-deletion',
             ),
+            AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
         ),
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [

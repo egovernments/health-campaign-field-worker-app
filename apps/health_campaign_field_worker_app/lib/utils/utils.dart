@@ -42,7 +42,7 @@ class CustomValidator {
   static Map<String, dynamic>? requiredMin(AbstractControl<dynamic> control) {
     return control.value == null || control.value.toString().length >= 2
         ? null
-        : {'Min 2 characters Required': true};
+        : {'Min2 characters Required': true};
   }
 
   static Map<String, dynamic>? validMobileNumber(
@@ -69,7 +69,7 @@ class CustomValidator {
     var parsed = int.tryParse(control.value) ?? 0;
     if (parsed < 0) {
       return {'min': true};
-    } else if (parsed > 100000) {
+    } else if (parsed > 10000) {
       return {'max': true};
     }
 

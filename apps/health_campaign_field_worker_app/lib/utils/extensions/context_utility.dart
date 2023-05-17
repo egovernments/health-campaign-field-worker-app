@@ -5,7 +5,7 @@ extension ContextUtilityExtensions on BuildContext {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
   }
 
-  String get projectId {
+  ProjectModel get selectedProject {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
@@ -15,8 +15,10 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No project is selected');
     }
 
-    return selectedProject.id;
+    return selectedProject;
   }
+
+  String get projectId => selectedProject.id;
 
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
@@ -32,6 +34,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return selectedBoundary;
+  }
+
+  BeneficiaryType get beneficiaryType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+
+    final BeneficiaryType? selectedBeneficiary =
+        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+
+    if (selectedBeneficiary == null) {
+      throw AppException('No beneficiary type is selected');
+    }
+
+    return selectedBeneficiary;
   }
 
   BoundaryModel? get boundaryOrNull {

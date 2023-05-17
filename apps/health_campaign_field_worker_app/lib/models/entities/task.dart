@@ -10,7 +10,7 @@ class TaskSearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? projectBeneficiaryId;
-  final String? projectBeneficiaryClientReferenceId;
+  final List<String>? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
   final List<String>? clientReferenceId;

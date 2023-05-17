@@ -23,6 +23,8 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
+  final BeneficiaryType beneficiaryType;
+
   // final TaskDataRepository taskDataRepository;
 
   BeneficiaryRegistrationBloc(
@@ -31,6 +33,7 @@ class BeneficiaryRegistrationBloc
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    required this.beneficiaryType,
     // required this.taskDataRepository,
   }) {
     on(_handleSaveAddress);
@@ -176,7 +179,10 @@ class BeneficiaryRegistrationBloc
               clientReferenceId: IdGen.i.identifier,
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
               projectId: event.projectId,
-              beneficiaryClientReferenceId: household.clientReferenceId,
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual
+                      ? individual.clientReferenceId
+                      : household.clientReferenceId,
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -237,9 +243,13 @@ class BeneficiaryRegistrationBloc
             await individualRepository.update(
               element.copyWith(
                 address: [
-                  value.addressModel.copyWith(
-                    relatedClientReferenceId: element.clientReferenceId,
-                  ),
+                  if (element.address != null)
+                    ...element.address!.map((e) {
+                      return value.addressModel.copyWith(
+                        id: e.id,
+                        relatedClientReferenceId: e.relatedClientReferenceId,
+                      );
+                    }),
                 ],
               ),
             );
@@ -313,6 +323,24 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
 
+          if (event.beneficiaryType == BeneficiaryType.individual) {
+            await projectBeneficiaryRepository.create(
+              ProjectBeneficiaryModel(
+                rowVersion: 1,
+                tenantId: envConfig.variables.tenantId,
+                clientReferenceId: IdGen.i.identifier,
+                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                projectId: event.projectId,
+                beneficiaryClientReferenceId:
+                    event.individualModel.clientReferenceId,
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
+              ),
+            );
+          }
+
           await householdMemberRepository.create(
             HouseholdMemberModel(
               householdClientReferenceId:
@@ -363,6 +391,8 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required IndividualModel individualModel,
     required AddressModel addressModel,
     required String userUuid,
+    required String projectId,
+    required BeneficiaryType beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({

@@ -49,6 +49,9 @@ class AppConfiguration {
   @Name('COMPLAINT_TYPES')
   late List<ComplaintTypes>? complaintTypes;
 
+  @Name('CALL_SUPPORT')
+  late List<CallSupportList>? callSupportOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
 }
@@ -121,6 +124,12 @@ class HouseholdDeletionReasonOptions {
 
 @embedded
 class HouseholdMemberDeletionReasonOptions {
+  late String name;
+  late String code;
+}
+
+@embedded
+class CallSupportList {
   late String name;
   late String code;
 }

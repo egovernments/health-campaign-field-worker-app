@@ -129,6 +129,15 @@ class MdmsRepository {
         return languages;
       }).toList();
 
+      final List<CallSupportList> callSupportList =
+          element.callSupportOptions!.map((element) {
+        final callNumber = CallSupportList()
+          ..name = element.name
+          ..code = element.code;
+
+        return callNumber;
+      }).toList();
+
       final List<HouseholdDeletionReasonOptions>
           householdDeletionReasonOptions =
           element.householdDeletionReasonOptions.map((element) {
@@ -226,7 +235,7 @@ class MdmsRepository {
       appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.transportTypes = transportTypes;
       appConfiguration.backendInterface = backendInterface;
-
+      appConfiguration.callSupportOptions = callSupportList;
       appConfiguration.languages = languageList;
       appConfiguration.complaintTypes = complaintTypesList;
     });

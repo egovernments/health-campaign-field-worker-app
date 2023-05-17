@@ -95,7 +95,7 @@ class NetworkManager {
 
                   updatedEntity = updatedEntity.copyWith(
                     address: updatedEntity.address?.copyWith(
-                      id: addressId,
+                      id: updatedEntity.address?.id ?? addressId,
                     ),
                   );
                 }
@@ -117,14 +117,14 @@ class NetworkManager {
                     // TODO: Modify this to work with multiple identifiers
                     identifiers: updatedEntity.identifiers?.map((e) {
                       return e.copyWith(
-                        id: identifierId,
+                        id: e.id ?? identifierId,
                       );
                     }).toList(),
 
                     // TODO: Modify this to work with multiple addresses
                     address: updatedEntity.address?.map((e) {
                       return e.copyWith(
-                        id: addressId,
+                        id: e.id ?? addressId,
                       );
                     }).toList(),
                   );
@@ -142,7 +142,7 @@ class NetworkManager {
                       if (resourceId != null) {
                         return e.copyWith(
                           taskId: serverGeneratedId,
-                          id: resourceId,
+                          id: e.id ?? resourceId,
                         );
                       }
 
@@ -572,12 +572,6 @@ class NetworkManager {
             );
 
             final resolvedFutures = await Future.wait(futures);
-
-            final updatedPgrModel = resolvedFutures
-                .expand((element) => element)
-                .whereType<PgrServiceResponseModel>()
-                .map((e) {})
-                .toList();
 
             responseEntities = resolvedFutures
                 .expand((element) => element)

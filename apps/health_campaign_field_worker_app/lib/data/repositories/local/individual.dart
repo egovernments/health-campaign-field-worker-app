@@ -109,18 +109,26 @@ class IndividualLocalRepository
             name: name == null
                 ? null
                 : NameModel(
+                    id: name.id,
                     individualClientReferenceId: individual.clientReferenceId,
                     familyName: name.familyName,
                     givenName: name.givenName,
                     otherNames: name.otherNames,
                     rowVersion: name.rowVersion,
                     tenantId: name.tenantId,
+                    auditDetails: AuditDetails(
+                      createdBy: name.auditCreatedBy!,
+                      createdTime: name.auditCreatedTime!,
+                      lastModifiedBy: name.auditModifiedBy,
+                      lastModifiedTime: name.auditModifiedTime,
+                    ),
                   ),
             bloodGroup: individual.bloodGroup,
             address: [
               address == null
                   ? null
                   : AddressModel(
+                      id: address.id,
                       relatedClientReferenceId: individual.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,
@@ -133,6 +141,12 @@ class IndividualLocalRepository
                       city: address.city,
                       pincode: address.pincode,
                       type: address.type,
+                      locality: address.localityBoundaryCode != null
+                          ? LocalityModel(
+                              code: address.localityBoundaryCode!,
+                              name: address.localityBoundaryName,
+                            )
+                          : null,
                       rowVersion: address.rowVersion,
                       auditDetails: AuditDetails(
                         createdBy: address.auditCreatedBy!,
