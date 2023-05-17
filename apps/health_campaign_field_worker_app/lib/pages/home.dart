@@ -443,11 +443,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             final sql = context.read<LocalSqlDataStore>();
             final isar = context.read<Isar>();
-            int count = 0;
+
             for (var element in sql.allTables) {
-              final selector = sql.delete(element)
-                ..where((_) => const Constant(true));
-              count += await selector.go();
+              sql.delete(element).where((_) => const Constant(true));
             }
 
             await isar.writeTxn(() async => await isar.opLogs.clear());

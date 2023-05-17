@@ -29,7 +29,6 @@ class AnchoredOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     late double postion = 0.0;
 
     if (MediaQuery.of(context).size.width / 2 < childWidth) {
@@ -97,7 +96,7 @@ class AnchoredOverlay extends StatelessWidget {
                                       ),
                                       onPressed: onTap,
                                       child: const Text(
-                                        true ? 'Next' : 'End',
+                                        'Next',
                                         style: TextStyle(fontSize: 10),
                                       ),
                                     ))

@@ -13,7 +13,7 @@ dependencies:
   freezed_annotation: ^2.1.0
   json_annotation: ^4.7.0
   uuid: ^3.0.6
-  intl: ^0.18.1
+  intl: ^0.18.0
   drift: ^1.7.1
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11

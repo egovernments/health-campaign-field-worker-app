@@ -1,6 +1,5 @@
 // GENERATED using mason_cli
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
@@ -162,7 +160,7 @@ class SearchHouseholdsBloc
             )?.individualClientReferenceId,
       );
 
-      if (projectBeneficiaryModel == null || headOfHousehold == null) {
+      if (headOfHousehold == null) {
         emit(state.copyWith(
           loading: false,
           householdMembers: [],

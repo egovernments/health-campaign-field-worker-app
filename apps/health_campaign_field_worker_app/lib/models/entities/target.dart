@@ -4,46 +4,46 @@ import 'package:drift/drift.dart';
 
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
-import 'beneficiary_type.dart';
 
 @MappableClass(ignoreNull: true)
 class TargetSearchModel extends EntitySearchModel {
   final String? tenantId;
   final bool? isDeleted;
-
+  
   TargetSearchModel({
     this.tenantId,
     this.isDeleted,
     super.boundaryCode,
-  }) : super();
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true)
 class TargetModel extends EntityModel {
+
   static const schemaName = 'Target';
 
   final String id;
   final String? clientReferenceId;
-  final BeneficiaryType? beneficiaryType;
   final String? baseline;
   final String? target;
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final BeneficiaryType? beneficiaryType;
   final TargetAdditionalFields? additionalFields;
 
   TargetModel({
     this.additionalFields,
     required this.id,
     this.clientReferenceId,
-    this.beneficiaryType,
     this.baseline,
     this.target,
     this.tenantId,
     this.isDeleted,
     this.rowVersion,
+    this.beneficiaryType,
     super.auditDetails,
-  }) : super();
+  }): super();
 
   TargetCompanion get companion {
     return TargetCompanion(
@@ -54,13 +54,13 @@ class TargetModel extends EntityModel {
       additionalFields: Value(additionalFields?.toJson()),
       id: Value(id),
       clientReferenceId: Value(clientReferenceId),
-      beneficiaryType: Value(beneficiaryType),
       baseline: Value(baseline),
       target: Value(target),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-    );
+      beneficiaryType: Value(beneficiaryType),
+      );
   }
 }
 

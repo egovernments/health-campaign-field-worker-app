@@ -140,6 +140,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               }
 
               transactionReasonLabel ??= '';
+              debugPrint(transactionPartyLabel);
 
               return ReactiveFormBuilder(
                 form: _form,

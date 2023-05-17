@@ -18,7 +18,6 @@
       "type": "String",
       "includeForQuery": true
     },
-
     {
       "name": "beneficiaryClientReferenceId",
       "type": "String",
@@ -26,6 +25,13 @@
       "includeForEntity": false,
       "includeForTable": false,
       "isList": true
+    },
+    {
+      "name": "beneficiaryClientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "includeForEntity": true,
+      "includeForTable": true
     },
     {
       "name": "beneficiaryRegistrationDateLte",

@@ -11,12 +11,6 @@
       "name": "clientReferenceId",
       "type": "String"
     },
-  
-    {
-      "name": "beneficiaryType",
-      "type": "beneficiaryType",
-      "isEnum": true
-    },
     {
       "name": "baseline",
       "type": "String"
@@ -24,6 +18,13 @@
     {
       "name": "target",
       "type": "String"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "beneficiaryType",
+      "type": "beneficiaryType",
+      "isEnum": true
     }
   ],
   "isEnum": false
