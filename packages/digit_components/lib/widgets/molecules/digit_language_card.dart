@@ -31,7 +31,7 @@ class DigitLanguageCard extends StatelessWidget {
           DigitRowCard(
             onChanged: onLanguageChange,
             rowItems: digitRowCardItems,
-            width: MediaQuery.of(context).size.width > 760
+            width: MediaQuery.of(context).size.width > 720
                 ? (MediaQuery.of(context).size.width /
                         (digitRowCardItems.length * 3)) -
                     20
