@@ -53,7 +53,7 @@ class _DeliverInterventionPageState
           final householdMemberWrapper = state.householdMemberWrapper;
 
           final projectBeneficiary =
-              context.beneficiaryType != BeneficiaryType.individual.name
+              context.beneficiaryType != BeneficiaryType.individual
                   ? [householdMemberWrapper.projectBeneficiary.first]
                   : householdMemberWrapper.projectBeneficiary
                       .where(
@@ -76,7 +76,7 @@ class _DeliverInterventionPageState
                     form: () => buildForm(context),
                     builder: (context, form, child) {
                       return ScrollableContent(
-                        header: Column(children: const [
+                        header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
                         footer: DigitCard(
@@ -526,7 +526,7 @@ class _DeliverInterventionPageState
     final state = context.read<HouseholdOverviewBloc>().state;
 
     final projectBeneficiary =
-        context.beneficiaryType != BeneficiaryType.individual.name
+        context.beneficiaryType != BeneficiaryType.individual
             ? [state.householdMemberWrapper.projectBeneficiary.first]
             : state.householdMemberWrapper.projectBeneficiary
                 .where(

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
@@ -24,7 +23,7 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
-  final String beneficiaryType;
+  final BeneficiaryType beneficiaryType;
 
   // final TaskDataRepository taskDataRepository;
 
@@ -181,7 +180,7 @@ class BeneficiaryRegistrationBloc
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
               projectId: event.projectId,
               beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual.name
+                  beneficiaryType == BeneficiaryType.individual
                       ? individual.clientReferenceId
                       : household.clientReferenceId,
               auditDetails: AuditDetails(
@@ -241,7 +240,6 @@ class BeneficiaryRegistrationBloc
             ),
           );
           for (var element in value.individualModel) {
-            print(element.address?.first.id);
             await individualRepository.update(
               element.copyWith(
                 address: [
@@ -325,7 +323,7 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
 
-          if (event.beneficiaryType == BeneficiaryType.individual.name) {
+          if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
                 rowVersion: 1,
@@ -394,7 +392,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
     required String userUuid,
     required String projectId,
-    required String beneficiaryType,
+    required BeneficiaryType beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({

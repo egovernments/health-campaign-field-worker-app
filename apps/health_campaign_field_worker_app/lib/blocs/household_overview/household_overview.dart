@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
 
@@ -108,7 +107,7 @@ class HouseholdOverviewBloc
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
         beneficiaryClientReferenceId:
-            event.projectBeneficiaryType == BeneficiaryType.individual.name
+            event.projectBeneficiaryType == BeneficiaryType.individual
                 ? individualIds
                 : [resultHousehold.clientReferenceId],
         projectId: event.projectId,
@@ -256,21 +255,21 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required HouseholdModel householdModel,
     required List<IndividualModel> members,
     required ProjectBeneficiaryModel projectBeneficiaryModel,
-    required String projectBeneficiaryType,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteHouseholdEvent;
 
   const factory HouseholdOverviewEvent.deleteIndividual({
     required String projectId,
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
-    required String projectBeneficiaryType,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteIndividualEvent;
 
   const factory HouseholdOverviewEvent.setAsHead({
     required String projectId,
     required IndividualModel individualModel,
     required HouseholdModel householdModel,
-    required String projectBeneficiaryType,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewSetAsHeadEvent;
 
   const factory HouseholdOverviewEvent.selectedIndividual({
@@ -279,7 +278,7 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
 
   const factory HouseholdOverviewEvent.reload({
     required String projectId,
-    required String projectBeneficiaryType,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewReloadEvent;
 }
 

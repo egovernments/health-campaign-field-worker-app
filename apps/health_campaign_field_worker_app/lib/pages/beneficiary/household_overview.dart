@@ -44,7 +44,7 @@ class _HouseholdOverviewPageState
                     }
 
                     return ScrollableContent(
-                      header: Column(children: const [
+                      header: const Column(children: [
                         BackNavigationHelpHeaderWidget(),
                       ]),
                       children: [
@@ -193,7 +193,7 @@ class _HouseholdOverviewPageState
                                   DeliverInterventionState>(
                                 builder: (ctx, state) => Offstage(
                                   offstage: beneficiaryType ==
-                                      BeneficiaryType.individual.name,
+                                      BeneficiaryType.individual,
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: DigitIconButton(
@@ -257,8 +257,7 @@ class _HouseholdOverviewPageState
                                       builder: (ctx, deliverState) {
                                         final projectBeneficiary =
                                             beneficiaryType !=
-                                                    BeneficiaryType
-                                                        .individual.name
+                                                    BeneficiaryType.individual
                                                 ? [
                                                     state
                                                         .householdMemberWrapper
@@ -469,7 +468,7 @@ class _HouseholdOverviewPageState
                   },
                 ),
           bottomNavigationBar: Offstage(
-            offstage: beneficiaryType == BeneficiaryType.individual.name,
+            offstage: beneficiaryType == BeneficiaryType.individual,
             child: SizedBox(
               height: 85,
               child: BlocBuilder<DeliverInterventionBloc,

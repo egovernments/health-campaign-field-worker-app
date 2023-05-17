@@ -34,15 +34,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
-  String get beneficiaryType {
+  BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
 
     final BeneficiaryType? selectedBeneficiary =
-        projectState.selectedProject!.targets?.first.beneficiaryType;
+        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
 
-    return selectedBeneficiary!.name;
+    if (selectedBeneficiary == null) {
+      throw AppException('No beneficiary type is selected');
+    }
+
+    return selectedBeneficiary;
   }
 
   BoundaryModel? get boundaryOrNull {

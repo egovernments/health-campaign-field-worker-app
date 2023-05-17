@@ -69,15 +69,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         cellKey: 'gender',
       ),
     ];
-    final filterdHeaderList = context.beneficiaryType !=
-            BeneficiaryType.individual.name
+    final filteredHeaderList = context.beneficiaryType !=
+            BeneficiaryType.individual
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
 
     final tableData = householdMember.members.map(
       (e) {
         final projectBeneficiary =
-            context.beneficiaryType != BeneficiaryType.individual.name
+            context.beneficiaryType != BeneficiaryType.individual
                 ? [householdMember.projectBeneficiary.first]
                 : householdMember.projectBeneficiary
                     .where(
@@ -136,7 +136,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ];
 
         return TableDataRow(
-          context.beneficiaryType != BeneficiaryType.individual.name
+          context.beneficiaryType != BeneficiaryType.individual
               ? rowTableData
                   .where((element) => element.cellKey != 'delivery')
                   .toList()
@@ -166,12 +166,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} ${'Members'}',
-                  status:
-                      context.beneficiaryType != BeneficiaryType.individual.name
-                          ? householdMember.task?.first.status != null
-                              ? 'delivered'
-                              : 'Not Delivered'
-                          : null,
+                  status: context.beneficiaryType != BeneficiaryType.individual
+                      ? householdMember.task?.first.status != null
+                          ? 'delivered'
+                          : 'Not Delivered'
+                      : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
@@ -190,10 +189,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(
-              headerList: filterdHeaderList,
+              headerList: filteredHeaderList,
               tableData: tableData,
               leftColumnWidth: 130,
-              rightColumnWidth: filterdHeaderList.length * 17 * 6,
+              rightColumnWidth: filteredHeaderList.length * 17 * 6,
               height: householdMember.members.length <= 5
                   ? (householdMember.members.length + 1) * 57
                   : 6 * 57,

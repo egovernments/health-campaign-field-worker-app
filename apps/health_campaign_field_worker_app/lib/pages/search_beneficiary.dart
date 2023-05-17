@@ -37,7 +37,7 @@ class _SearchBeneficiaryPageState
         body: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
           builder: (context, searchState) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               slivers: [
@@ -65,14 +65,14 @@ class _SearchBeneficiaryPageState
                               title:
                                   searchState.registeredHouseholds.toString(),
                               content: localizations.translate(
-                                '${context.beneficiaryType.toUpperCase()}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
+                                '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
                               ),
                             ),
                             BeneficiaryStatisticsModel(
                               title:
                                   searchState.deliveredInterventions.toString(),
                               content: localizations.translate(
-                                '${context.beneficiaryType.toUpperCase()}_${i18.searchBeneficiary.noOfResourcesDelivered}',
+                                '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfResourcesDelivered}',
                               ),
                             ),
                           ],

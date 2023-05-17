@@ -1,11 +1,12 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/localization/app_localization.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/individual.dart';
 import '../../router/app_router.dart';
-import '../../blocs/localization/app_localization.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../action_card/action_card.dart';
@@ -141,16 +142,18 @@ class MemberCard extends StatelessWidget {
           ],
         ),
         Offstage(
-          offstage: beneficiaryType != BeneficiaryType.individual.name,
+          offstage: beneficiaryType != BeneficiaryType.individual,
           child: !isDelivered
               ? Align(
                   alignment: Alignment.centerLeft,
                   child: DigitIconButton(
                     icon: Icons.info_rounded,
-                    iconText: localizations.translate(i18.householdOverView
-                        .householdOverViewNotDeliveredIconLabel),
-                    iconTextColor: theme.errorColor,
-                    iconColor: theme.errorColor,
+                    iconText: localizations.translate(
+                      i18.householdOverView
+                          .householdOverViewNotDeliveredIconLabel,
+                    ),
+                    iconTextColor: theme.colorScheme.error,
+                    iconColor: theme.colorScheme.error,
                   ),
                 )
               : Align(
@@ -167,7 +170,7 @@ class MemberCard extends StatelessWidget {
                 ),
         ),
         Offstage(
-          offstage: beneficiaryType != BeneficiaryType.individual.name,
+          offstage: beneficiaryType != BeneficiaryType.individual,
           child: !isDelivered
               ? DigitElevatedButton(
                   onPressed: () async {

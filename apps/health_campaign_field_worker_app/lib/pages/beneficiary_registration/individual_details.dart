@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/search_households/search_households.dart';
@@ -71,7 +72,7 @@ class _IndividualDetailsPageState
           },
           builder: (context, state) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
@@ -105,6 +106,8 @@ class _IndividualDetailsPageState
                             form: form,
                             oldIndividual: null,
                           );
+
+                          final boundary = context.boundary;
 
                           bloc.add(
                             BeneficiaryRegistrationSaveIndividualDetailsEvent(
@@ -150,7 +153,7 @@ class _IndividualDetailsPageState
                               BeneficiaryRegistrationCreateEvent(
                                 projectId: projectId,
                                 userUuid: userId,
-                                boundary: context.boundary,
+                                boundary: boundary,
                               ),
                             );
                           }
