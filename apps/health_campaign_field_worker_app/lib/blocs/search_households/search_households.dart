@@ -149,7 +149,6 @@ class SearchHouseholdsBloc
         ),
       );
 
-      final projectBeneficiaryModel = projectBeneficiaries;
       final headOfHousehold = individuals.firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
@@ -170,7 +169,7 @@ class SearchHouseholdsBloc
           household: event.householdModel,
           headOfHousehold: headOfHousehold,
           members: individuals,
-          projectBeneficiaries: projectBeneficiaryModel,
+          projectBeneficiaries: projectBeneficiaries,
         );
 
         emit(
