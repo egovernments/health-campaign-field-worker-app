@@ -28,7 +28,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart'
     as appConfig;
 import '../widgets/progress_bar/beneficiary_progress.dart';
-import '../widgets/progress_indicator/progress_indicator.dart';
 
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
