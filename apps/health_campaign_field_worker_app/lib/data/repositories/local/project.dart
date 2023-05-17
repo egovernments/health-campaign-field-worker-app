@@ -66,16 +66,14 @@ class ProjectLocalRepository
         ),
       ),
     ]);
+
     final results = await (selectQuery
-          ..where(buildAnd([
-            if (query.id != null)
-              sql.project.id.equals(
-                query.id,
-              ),
-          ])))
+          ..where(
+            buildAnd([if (query.id != null) sql.project.id.equals(query.id)]),
+          ))
         .get();
 
-    final targetresults = await (selectQuery
+    final targetResults = await (selectQuery
           ..where(buildAnd([
             if (query.id != null) sql.target.clientReferenceId.equals(query.id),
           ])))
@@ -110,9 +108,9 @@ class ProjectLocalRepository
                 boundaryType: address.boundaryType,
                 rowVersion: address.rowVersion,
               ),
-        targets: targetresults.isEmpty
+        targets: targetResults.isEmpty
             ? null
-            : targetresults.map((e) {
+            : targetResults.map((e) {
                 final target = e.readTableOrNull(sql.target);
 
                 return TargetModel(

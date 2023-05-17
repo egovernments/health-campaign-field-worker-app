@@ -128,15 +128,15 @@ class MdmsRepository {
 
         return languages;
       }).toList();
- 
-         final List<CallSupportList> callSupportList = element.callSupportOptions!.map((element) {
-          final callnumber = CallSupportList()
-            ..name = element.name
-            ..code = element.code;
 
-          return callnumber;
-        }).toList();
- 
+      final List<CallSupportList> callSupportList =
+          element.callSupportOptions!.map((element) {
+        final callNumber = CallSupportList()
+          ..name = element.name
+          ..code = element.code;
+
+        return callNumber;
+      }).toList();
 
       final List<HouseholdDeletionReasonOptions>
           householdDeletionReasonOptions =
