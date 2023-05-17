@@ -112,8 +112,9 @@ void run(HookContext context) {
       AttributeModel(
         name: 'isDeleted',
         type: 'bool',
-        includeForQuery: true,
-        includeForEntity: true,
+        defaultValue: "false",
+        includeForQuery: false,
+        includeForEntity: false,
         nullable: true,
       ),
     );

@@ -18,7 +18,7 @@ class Attributes extends Table {
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  BoolColumn get isDeleted => boolean().nullable()();
+  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
   
   TextColumn get additionalFields => text().nullable()();

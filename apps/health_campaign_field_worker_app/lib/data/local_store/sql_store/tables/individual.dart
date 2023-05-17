@@ -21,7 +21,7 @@ class Individual extends Table {
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable()();
+  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get bloodGroup => intEnum<BloodGroup>().nullable()();
   IntColumn get gender => intEnum<Gender>().nullable()();

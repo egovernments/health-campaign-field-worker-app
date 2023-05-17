@@ -10,15 +10,22 @@ class ProjectResourceSearchModel extends EntitySearchModel {
   final List<String>? id;
   final String? projectId;
   final String? tenantId;
-  final bool? isDeleted;
   
   ProjectResourceSearchModel({
     this.id,
     this.projectId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProjectResourceSearchModel.ignoreDeleted({
+    this.id,
+    this.projectId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -29,7 +36,6 @@ class ProjectResourceModel extends EntityModel {
   final String? id;
   final String? projectId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ProjectProductVariantModel resource;
   final ProjectResourceAdditionalFields? additionalFields;
@@ -39,10 +45,10 @@ class ProjectResourceModel extends EntityModel {
     this.id,
     this.projectId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     required this.resource,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProjectResourceCompanion get companion {
@@ -52,10 +58,10 @@ class ProjectResourceModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       projectId: Value(projectId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       resource: Value(resource.productVariantId),
     );
