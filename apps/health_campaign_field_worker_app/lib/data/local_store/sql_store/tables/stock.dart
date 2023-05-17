@@ -4,6 +4,8 @@ import 'package:drift/drift.dart';
 
 import '../../../../models/entities/transaction_type.dart';
 import '../../../../models/entities/transaction_reason.dart';
+import '../../../../models/entities/transaction_type.dart';
+import '../../../../models/entities/transaction_reason.dart';
 
 class Stock extends Table {
   TextColumn get id => text().nullable()();
@@ -25,12 +27,9 @@ class Stock extends Table {
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get transactionType => intEnum<TransactionType>().nullable()();
   IntColumn get transactionReason => intEnum<TransactionReason>().nullable()();
-
+  
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => {
-        auditCreatedBy,
-        clientReferenceId,
-      };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

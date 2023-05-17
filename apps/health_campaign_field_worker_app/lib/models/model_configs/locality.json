@@ -5,11 +5,6 @@
       ],
     "attributes": [
         {
-            "name": "relatedClientReferenceId",
-            "type": "String",
-            "isPk": true
-          },
-        {
             "name": "code",
             "type": "String",
             "includeForQuery": true,

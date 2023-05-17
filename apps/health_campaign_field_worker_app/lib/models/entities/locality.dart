@@ -26,7 +26,6 @@ class LocalityModel extends EntityModel {
 
   static const schemaName = 'Locality';
 
-  final String? relatedClientReferenceId;
   final String code;
   final String? name;
   final String? tenantId;
@@ -36,7 +35,6 @@ class LocalityModel extends EntityModel {
 
   LocalityModel({
     this.additionalFields,
-    this.relatedClientReferenceId,
     required this.code,
     this.name,
     this.tenantId,
@@ -52,7 +50,6 @@ class LocalityModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      relatedClientReferenceId: Value(relatedClientReferenceId),
       code: Value(code),
       name: Value(name),
       tenantId: Value(tenantId),
