@@ -197,31 +197,30 @@ class _HouseholdOverviewPageState
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: DigitIconButton(
-                                      icon: state.task?.first.status ==
+                                      icon: state.tasks?.first.status ==
                                               'delivered'
                                           ? Icons.check_circle
                                           : Icons.info_rounded,
                                       iconText: localizations.translate(
-                                        state.task?.first.status == 'delivered'
+                                        state.tasks?.first.status == 'delivered'
                                             ? i18.householdOverView
                                                 .householdOverViewDeliveredIconLabel
                                             : i18.householdOverView
                                                 .householdOverViewNotDeliveredIconLabel,
                                       ),
                                       iconTextColor:
-                                          state.task?.first.status ==
+                                          state.tasks?.first.status ==
                                                   'delivered'
                                               ? DigitTheme.instance.colorScheme
                                                   .onSurfaceVariant
                                               : DigitTheme
                                                   .instance.colorScheme.error,
-                                      iconColor:
-                                          state.task?.first.status ==
-                                                  'delivered'
-                                              ? DigitTheme.instance.colorScheme
-                                                  .onSurfaceVariant
-                                              : DigitTheme
-                                                  .instance.colorScheme.error,
+                                      iconColor: state.tasks?.first.status ==
+                                              'delivered'
+                                          ? DigitTheme.instance.colorScheme
+                                              .onSurfaceVariant
+                                          : DigitTheme
+                                              .instance.colorScheme.error,
                                     ),
                                   ),
                                 ),
@@ -475,7 +474,7 @@ class _HouseholdOverviewPageState
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: state.task?.first.status == 'delivered'
+                  child: state.tasks?.first.status == 'delivered'
                       ? DigitOutLineButton(
                           label: localizations.translate(
                             i18.memberCard.deliverDetailsUpdateLabel,
