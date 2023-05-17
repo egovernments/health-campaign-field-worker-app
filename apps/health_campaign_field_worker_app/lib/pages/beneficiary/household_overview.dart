@@ -92,7 +92,7 @@ class _HouseholdOverviewPageState
                                                   state.householdMemberWrapper;
 
                                               final timestamp = wrapper
-                                                  .projectBeneficiary
+                                                  .projectBeneficiaries
                                                   .first
                                                   .dateOfRegistration;
                                               // [TODO ]
@@ -260,11 +260,11 @@ class _HouseholdOverviewPageState
                                                 ? [
                                                     state
                                                         .householdMemberWrapper
-                                                        .projectBeneficiary
+                                                        .projectBeneficiaries
                                                         .first,
                                                   ]
                                                 : state.householdMemberWrapper
-                                                    .projectBeneficiary
+                                                    .projectBeneficiaries
                                                     .where(
                                                       (element) =>
                                                           element
@@ -274,7 +274,7 @@ class _HouseholdOverviewPageState
                                                     .toList();
 
                                         final taskdata = state
-                                            .householdMemberWrapper.task
+                                            .householdMemberWrapper.tasks
                                             ?.where((element) =>
                                                 element
                                                     .projectBeneficiaryClientReferenceId ==

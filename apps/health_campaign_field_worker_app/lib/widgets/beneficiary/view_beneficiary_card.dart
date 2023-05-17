@@ -78,8 +78,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       (e) {
         final projectBeneficiary =
             context.beneficiaryType != BeneficiaryType.individual
-                ? [householdMember.projectBeneficiary.first]
-                : householdMember.projectBeneficiary
+                ? [householdMember.projectBeneficiaries.first]
+                : householdMember.projectBeneficiaries
                     .where(
                       (element) =>
                           element.beneficiaryClientReferenceId ==
@@ -87,7 +87,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     )
                     .toList();
 
-        final taskdata = householdMember.task
+        final taskdata = householdMember.tasks
             ?.where((element) =>
                 element.projectBeneficiaryClientReferenceId ==
                 projectBeneficiary.first.clientReferenceId)
@@ -167,7 +167,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} ${'Members'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
-                      ? householdMember.task?.first.status != null
+                      ? householdMember.tasks?.first.status != null
                           ? 'delivered'
                           : 'Not Delivered'
                       : null,

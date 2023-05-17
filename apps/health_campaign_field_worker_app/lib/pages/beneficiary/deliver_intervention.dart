@@ -54,8 +54,8 @@ class _DeliverInterventionPageState
 
           final projectBeneficiary =
               context.beneficiaryType != BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiary.first]
-                  : householdMemberWrapper.projectBeneficiary
+                  ? [householdMemberWrapper.projectBeneficiaries.first]
+                  : householdMemberWrapper.projectBeneficiaries
                       .where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
@@ -63,7 +63,7 @@ class _DeliverInterventionPageState
                       )
                       .toList();
 
-          final taskdata = state.householdMemberWrapper.task
+          final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
@@ -100,20 +100,20 @@ class _DeliverInterventionPageState
                                       i18.common.coreCommonSubmit,
                                     ),
                                     action: (ctx) {
-                                      final clientReferenceId = taskdata != null
-                                          ? taskdata.isEmpty
+                                      final clientReferenceId = taskData != null
+                                          ? taskData.isEmpty
                                               ? IdGen.i.identifier
-                                              : taskdata.first.clientReferenceId
+                                              : taskData.first.clientReferenceId
                                           : IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
                                             DeliverInterventionSubmitEvent(
                                               TaskModel(
-                                                id: taskdata != null
-                                                    ? taskdata.isEmpty
+                                                id: taskData != null
+                                                    ? taskData.isEmpty
                                                         ? null
-                                                        : taskdata.first.id
+                                                        : taskData.first.id
                                                     : null,
                                                 clientReferenceId:
                                                     clientReferenceId,
@@ -122,10 +122,10 @@ class _DeliverInterventionPageState
                                                         .clientReferenceId,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
-                                                rowVersion: taskdata != null
-                                                    ? taskdata.isEmpty
+                                                rowVersion: taskData != null
+                                                    ? taskData.isEmpty
                                                         ? 1
-                                                        : taskdata
+                                                        : taskData
                                                             .first.rowVersion
                                                     : 1,
                                                 projectId: context.projectId,
@@ -134,26 +134,26 @@ class _DeliverInterventionPageState
                                                     .millisecondsSinceEpoch(),
                                                 resources: [
                                                   TaskResourceModel(
-                                                    id: taskdata != null
-                                                        ? taskdata.isNotEmpty
-                                                            ? taskdata
+                                                    id: taskData != null
+                                                        ? taskData.isNotEmpty
+                                                            ? taskData
                                                                 .first
                                                                 .resources
                                                                 ?.first
                                                                 .id
                                                             : null
                                                         : null,
-                                                    taskId: taskdata != null
-                                                        ? taskdata.isNotEmpty
-                                                            ? taskdata.first.id
+                                                    taskId: taskData != null
+                                                        ? taskData.isNotEmpty
+                                                            ? taskData.first.id
                                                             : null
                                                         : null,
                                                     clientReferenceId:
                                                         clientReferenceId,
-                                                    rowVersion: taskdata != null
-                                                        ? taskdata.isEmpty
+                                                    rowVersion: taskData != null
+                                                        ? taskData.isEmpty
                                                             ? 1
-                                                            : taskdata
+                                                            : taskData
                                                                 .first
                                                                 .resources
                                                                 ?.first
@@ -183,10 +183,10 @@ class _DeliverInterventionPageState
                                                     auditDetails: AuditDetails(
                                                       createdBy: context
                                                           .loggedInUserUuid,
-                                                      createdTime: taskdata !=
+                                                      createdTime: taskData !=
                                                               null
-                                                          ? taskdata.isNotEmpty
-                                                              ? taskdata
+                                                          ? taskData.isNotEmpty
+                                                              ? taskData
                                                                       .first
                                                                       .resources
                                                                       ?.first
@@ -223,9 +223,9 @@ class _DeliverInterventionPageState
                                                       .millisecondsSinceEpoch(),
                                                 ),
                                               ),
-                                              taskdata == null
+                                              taskData == null
                                                   ? false
-                                                  : taskdata.isEmpty
+                                                  : taskData.isEmpty
                                                       ? false
                                                       : true,
                                               context.boundary,
@@ -423,7 +423,7 @@ class _DeliverInterventionPageState
                                     return productState.maybeWhen(
                                       orElse: () => const Offstage(),
                                       fetched: (productVariants) {
-                                        final productVariantId = taskdata
+                                        final productVariantId = taskData
                                             ?.firstOrNull
                                             ?.resources
                                             ?.firstOrNull
@@ -527,15 +527,15 @@ class _DeliverInterventionPageState
 
     final projectBeneficiary =
         context.beneficiaryType != BeneficiaryType.individual
-            ? [state.householdMemberWrapper.projectBeneficiary.first]
-            : state.householdMemberWrapper.projectBeneficiary
+            ? [state.householdMemberWrapper.projectBeneficiaries.first]
+            : state.householdMemberWrapper.projectBeneficiaries
                 .where(
                   (element) =>
                       element.beneficiaryClientReferenceId ==
                       state.selectedIndividual?.clientReferenceId,
                 )
                 .toList();
-    final taskdata = state.householdMemberWrapper.task
+    final taskData = state.householdMemberWrapper.tasks
         ?.where((element) =>
             element.projectBeneficiaryClientReferenceId ==
             projectBeneficiary.first.clientReferenceId)
@@ -546,17 +546,13 @@ class _DeliverInterventionPageState
         validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(
-        value: taskdata?.firstOrNull?.resources?.firstOrNull?.quantity != null
-            ? int.tryParse(
-                taskdata!.first.resources!.first.quantity!,
-              )
+        value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
+            ? int.tryParse(taskData!.first.resources!.first.quantity!)
             : 1,
-        validators: [
-          Validators.required,
-        ],
+        validators: [Validators.required],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: taskdata?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
+        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
       ),
     });
   }

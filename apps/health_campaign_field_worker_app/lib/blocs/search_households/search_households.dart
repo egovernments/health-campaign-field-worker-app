@@ -170,7 +170,7 @@ class SearchHouseholdsBloc
           household: event.householdModel,
           headOfHousehold: headOfHousehold,
           members: individuals,
-          projectBeneficiary: projectBeneficiaryModel,
+          projectBeneficiaries: projectBeneficiaryModel,
         );
 
         emit(
@@ -305,8 +305,8 @@ class SearchHouseholdsBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          projectBeneficiary: projectBeneficiaries,
-          task: tasks.isEmpty ? null : tasks,
+          projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isEmpty ? null : tasks,
         ),
       );
     }
@@ -372,7 +372,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required HouseholdModel household,
     required IndividualModel headOfHousehold,
     required List<IndividualModel> members,
-    required List<ProjectBeneficiaryModel> projectBeneficiary,
-    List<TaskModel>? task,
+    required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    List<TaskModel>? tasks,
   }) = _HouseholdMemberWrapper;
 }
