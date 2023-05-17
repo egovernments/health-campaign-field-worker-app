@@ -52,7 +52,9 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
     );
 
     repository.listenToChanges(
-      query: ProjectBeneficiarySearchModel(),
+      query: ProjectBeneficiarySearchModel(
+        projectId: context.projectId,
+      ),
       listener: (data) => setState(() {
         current = data
             .where((element) =>
@@ -79,7 +81,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       label: '${max(target - current, 0).round()} ${widget.label}',
       prefixLabel: '$current ${widget.prefixLabel}',
       suffixLabel: target.toStringAsFixed(0),
-      value: target == 0 ? 0 : current / target,
+      value: target == 0 ? 0 : min(current / target, 1),
     );
   }
 }
