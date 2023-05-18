@@ -12,17 +12,18 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   final Map<String, String Function(Object object)>? validationMessages;
   final EdgeInsets? padding;
 
-  const DigitReactiveDropdown(
-      {super.key,
-      required this.label,
-      required this.menuItems,
-      required this.formControlName,
-      this.isRequired = false,
-      required this.valueMapper,
-      this.initialValue,
-      this.onChanged,
-      this.validationMessages,
-      this.padding});
+  const DigitReactiveDropdown({
+    super.key,
+    required this.label,
+    required this.menuItems,
+    required this.formControlName,
+    this.isRequired = false,
+    required this.valueMapper,
+    this.initialValue,
+    this.onChanged,
+    this.validationMessages,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
