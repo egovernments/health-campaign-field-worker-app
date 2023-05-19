@@ -12,18 +12,21 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
   final EdgeInsets? padding;
+  final double menuMaxHeight;
 
-  const DigitReactiveDropdown(
-      {super.key,
-      required this.label,
-      required this.menuItems,
-      required this.formControlName,
-      this.isRequired = false,
-      required this.valueMapper,
-      this.initialValue,
-      this.onChanged,
-      this.validationMessages,
-      this.padding});
+  const DigitReactiveDropdown({
+    super.key,
+    required this.label,
+    required this.menuItems,
+    required this.formControlName,
+    this.isRequired = false,
+    required this.valueMapper,
+    this.initialValue,
+    this.onChanged,
+    this.validationMessages,
+    this.padding,
+    this.menuMaxHeight = 500,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ReactiveDropdownField(
+            menuMaxHeight: menuMaxHeight,
             onChanged: (control) {
               final value = control.value;
               if (value == null) return;
