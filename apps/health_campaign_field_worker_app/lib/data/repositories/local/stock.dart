@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/stock_base.dart';
 
-class StockLocalRepository
-    extends LocalRepository<StockModel, StockSearchModel> {
+class StockLocalRepository extends StockLocalBaseRepository {
   StockLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -109,7 +108,4 @@ class StockLocalRepository
 
     return super.update(entity, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.stock;
 }

@@ -10,11 +10,20 @@ void run(HookContext context) async {
 
   ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
   if (!model.createRepository) {
-    final path = p.join(
+    var path = p.join(
       'data',
       'repositories',
       'remote',
       '${model.name.snakeCase}.dart',
+    );
+    await _deleteFile(path);
+
+    path = p.join(
+      'data',
+      'repositories',
+      'local',
+      'base',
+      '${model.name.snakeCase}_base.dart',
     );
     await _deleteFile(path);
   }

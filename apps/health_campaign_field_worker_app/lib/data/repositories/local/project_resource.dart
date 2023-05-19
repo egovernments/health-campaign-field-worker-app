@@ -5,10 +5,10 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/project_resource_base.dart';
 
 class ProjectResourceLocalRepository
-    extends LocalRepository<ProjectResourceModel, ProjectResourceSearchModel> {
+    extends ProjectResourceLocalBaseRepository {
   ProjectResourceLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -85,7 +85,4 @@ class ProjectResourceLocalRepository
       createOpLog: createOpLog,
     );
   }
-
-  @override
-  DataModelType get type => DataModelType.projectResource;
 }

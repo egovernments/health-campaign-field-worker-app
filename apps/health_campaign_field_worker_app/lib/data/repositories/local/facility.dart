@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/facility_base.dart';
 
-class FacilityLocalRepository
-    extends LocalRepository<FacilityModel, FacilitySearchModel> {
+class FacilityLocalRepository extends FacilityLocalBaseRepository {
   FacilityLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -105,7 +104,4 @@ class FacilityLocalRepository
       createOpLog: createOpLog,
     );
   }
-
-  @override
-  DataModelType get type => DataModelType.facility;
 }

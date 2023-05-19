@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:health_campaign_field_worker_app/data/data_repository.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/data_model.dart';
 
 part 'auth.freezed.dart';
 
@@ -14,9 +16,12 @@ typedef AuthEmitter = Emitter<AuthState>;
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LocalSecureStore localSecureStore;
   final AuthRepository authRepository;
+  final LocalRepository<BoundaryModel, BoundarySearchModel>
+      boundaryLocalRepository;
 
   AuthBloc({
     required this.authRepository,
+    required this.boundaryLocalRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
         super(const AuthUnauthenticatedState()) {
@@ -82,6 +87,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     try {
       emit(const AuthLoadingState());
+      await boundaryLocalRepository.deleteAll();
       await localSecureStore.deleteAll();
     } catch (error) {
       rethrow;

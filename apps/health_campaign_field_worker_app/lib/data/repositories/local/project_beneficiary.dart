@@ -4,10 +4,10 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/project_beneficiary_base.dart';
 
-class ProjectBeneficiaryLocalRepository extends LocalRepository<
-    ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
+class ProjectBeneficiaryLocalRepository
+    extends ProjectBeneficiaryLocalBaseRepository {
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
   void listenToChanges({
@@ -170,7 +170,4 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
     return super.delete(updated);
   }
-
-  @override
-  DataModelType get type => DataModelType.projectBeneficiary;
 }

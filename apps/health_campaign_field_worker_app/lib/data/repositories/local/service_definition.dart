@@ -5,10 +5,10 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/service_definition_base.dart';
 
-class ServiceDefinitionLocalRepository extends LocalRepository<
-    ServiceDefinitionModel, ServiceDefinitionSearchModel> {
+class ServiceDefinitionLocalRepository
+    extends ServiceDefinitionLocalBaseRepository {
   ServiceDefinitionLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -112,7 +112,4 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
     return serviceDefinitionList;
   }
-
-  @override
-  DataModelType get type => DataModelType.serviceDefinition;
 }

@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/project_staff_base.dart';
 
-class ProjectStaffLocalRepository
-    extends LocalRepository<ProjectStaffModel, ProjectStaffSearchModel> {
+class ProjectStaffLocalRepository extends ProjectStaffLocalBaseRepository {
   ProjectStaffLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -63,7 +62,4 @@ class ProjectStaffLocalRepository
       );
     }).toList();
   }
-
-  @override
-  DataModelType get type => DataModelType.projectStaff;
 }

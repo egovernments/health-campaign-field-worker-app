@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/product_variant_base.dart';
 
-class ProductVariantLocalRepository
-    extends LocalRepository<ProductVariantModel, ProductVariantSearchModel> {
+class ProductVariantLocalRepository extends ProductVariantLocalBaseRepository {
   ProductVariantLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -58,7 +57,4 @@ class ProductVariantLocalRepository
       createOpLog: createOpLog,
     );
   }
-
-  @override
-  DataModelType get type => DataModelType.productVariant;
 }
