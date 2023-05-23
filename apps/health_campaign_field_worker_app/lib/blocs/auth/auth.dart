@@ -18,10 +18,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   final LocalRepository<BoundaryModel, BoundarySearchModel>
       boundaryLocalRepository;
+  final LocalRepository<FacilityModel, FacilitySearchModel>
+      facilityLocalRepository;
+  final LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>
+      staffLocalRepository;
+  final LocalRepository<ProjectModel, ProjectSearchModel>
+      projectLocalRepository;
+  final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
+      projectFacilityLocalRepository;
+  final LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>
+      projectResourceLocalRepository;
+  final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
+      productVariantLocalRepository;
 
   AuthBloc({
     required this.authRepository,
     required this.boundaryLocalRepository,
+    required this.facilityLocalRepository,
+    required this.staffLocalRepository,
+    required this.projectLocalRepository,
+    required this.projectFacilityLocalRepository,
+    required this.projectResourceLocalRepository,
+    required this.productVariantLocalRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
         super(const AuthUnauthenticatedState()) {
@@ -88,6 +106,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(const AuthLoadingState());
       await boundaryLocalRepository.deleteAll();
+      await facilityLocalRepository.deleteAll();
+      await staffLocalRepository.deleteAll();
+      await projectLocalRepository.deleteAll();
+      await projectFacilityLocalRepository.deleteAll();
+      await projectResourceLocalRepository.deleteAll();
+      await productVariantLocalRepository.deleteAll();
       await localSecureStore.deleteAll();
     } catch (error) {
       rethrow;

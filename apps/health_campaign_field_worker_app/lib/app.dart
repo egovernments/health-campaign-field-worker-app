@@ -67,8 +67,16 @@ class MainApplication extends StatelessWidget {
                 lazy: false,
               ),
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read())
-                  ..add(
+                create: (ctx) => AuthBloc(
+                  authRepository: ctx.read(),
+                  boundaryLocalRepository: ctx.read(),
+                  facilityLocalRepository: ctx.read(),
+                  projectLocalRepository: ctx.read(),
+                  productVariantLocalRepository: ctx.read(),
+                  projectFacilityLocalRepository: ctx.read(),
+                  projectResourceLocalRepository: ctx.read(),
+                  staffLocalRepository: ctx.read(),
+                )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
                     ),
