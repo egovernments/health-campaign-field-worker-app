@@ -164,9 +164,11 @@ class Variables {
             fallback: _basicAuthPassword.value,
           );
 
-    final token = 'Basic ${base64Encode(
+    final encoded = base64.encode(
       utf8.encode('$basicAuthUsername:$basicAuthPassword'),
-    )}';
+    );
+
+    final token = 'Basic $encoded';
 
     return token;
   }

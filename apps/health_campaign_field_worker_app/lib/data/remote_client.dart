@@ -4,7 +4,7 @@ import '../utils/environment_config.dart';
 import 'repositories/api_interceptors.dart';
 
 class DioClient {
-  late Dio _dio;
+  late final Dio _dio;
 
   static final DioClient _instance = DioClient._internal();
 
@@ -20,10 +20,6 @@ class DioClient {
 
   void init() {
     _dio = Dio()
-      ..interceptors.addAll([
-        AuthTokenInterceptor(),
-        ApiLoggerInterceptor(),
-      ])
       ..options = BaseOptions(
         connectTimeout: Duration(
           milliseconds: envConfig.variables.connectTimeout,
@@ -35,6 +31,10 @@ class DioClient {
           milliseconds: envConfig.variables.receiveTimeout,
         ),
         baseUrl: envConfig.variables.baseUrl,
-      );
+      )
+      ..interceptors.addAll([
+        AuthTokenInterceptor(),
+        ApiLoggerInterceptor(),
+      ]);
   }
 }

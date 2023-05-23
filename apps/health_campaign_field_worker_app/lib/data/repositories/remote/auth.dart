@@ -4,18 +4,24 @@ import 'package:dio/dio.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../utils/environment_config.dart';
+import '../../remote_client.dart';
 
 class AuthRepository {
   final Dio _client;
   final String loginPath;
 
-  const AuthRepository(this._client, {required this.loginPath});
+  AuthRepository({
+    required this.loginPath,
+    Dio? client,
+  }) : _client = client ?? DioClient().dio;
 
-  Future<AuthModel> fetchAuthToken({required LoginModel loginModel}) async {
+  Future<AuthModel> fetchAuthToken({
+    required LoginModel loginModel,
+  }) async {
     final headers = <String, String>{
-      "content-type": 'application/x-www-form-urlencoded',
+      "Content-Type": 'application/x-www-form-urlencoded',
       "Access-Control-Allow-Origin": "*",
-      "authorization": "Basic ${envConfig.variables.basicAuthToken}",
+      "Authorization": envConfig.variables.basicAuthToken,
     };
 
     final formData = FormData.fromMap(loginModel.toJson());

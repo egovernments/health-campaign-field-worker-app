@@ -45,12 +45,24 @@ class ApiLoggerInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    if (options.data is Map || options.data is List) {
-      AppLogger.instance.info(
-        _getIndentedJson(json.encode(options.data)),
-        title: '[REQUEST] ${options.uri.toString()}',
+    final data = options.data;
+    String indentedJson = 'Could not parse request';
+
+    if (data is Map || data is List) {
+      indentedJson = _getIndentedJson(json.encode(data));
+    }
+
+    if (data is FormData) {
+      indentedJson = _getIndentedJson(
+        json.encode(Map.fromEntries(data.fields)),
       );
     }
+
+    AppLogger.instance.info(
+      indentedJson,
+      title: '[REQUEST] ${options.uri.toString()}',
+    );
+
     super.onRequest(options, handler);
   }
 

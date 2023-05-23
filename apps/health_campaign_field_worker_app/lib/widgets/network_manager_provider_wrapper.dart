@@ -233,7 +233,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.user)
           RepositoryProvider<AuthRepository>(
             create: (_) => AuthRepository(
-              dio,
               loginPath: actions[ApiOperation.login] ?? '',
             ),
           ),
