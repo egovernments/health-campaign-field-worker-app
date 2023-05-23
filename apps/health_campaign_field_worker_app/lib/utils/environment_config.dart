@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
@@ -88,6 +89,16 @@ class Variables {
     'default',
   );
 
+  static const _basicAuthUsername = EnvEntry(
+    'BASIC_AUTH_USERNAME',
+    'egov-user-client',
+  );
+
+  static const _basicAuthPassword = EnvEntry(
+    'BASIC_AUTH_PASSWORD',
+    '',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -136,6 +147,28 @@ class Variables {
 
     return EnvType.values.firstWhereOrNull((env) => env.name == envName) ??
         EnvType.dev;
+  }
+
+  String get basicAuthToken {
+    final basicAuthUsername = useFallbackValues
+        ? _basicAuthUsername.value
+        : _dotEnv.get(
+            _basicAuthUsername.key,
+            fallback: _basicAuthUsername.value,
+          );
+
+    final basicAuthPassword = useFallbackValues
+        ? _basicAuthPassword.value
+        : _dotEnv.get(
+            _basicAuthPassword.key,
+            fallback: _basicAuthPassword.value,
+          );
+
+    final token = 'Basic ${base64Encode(
+      utf8.encode('$basicAuthUsername:$basicAuthPassword'),
+    )}';
+
+    return token;
   }
 }
 

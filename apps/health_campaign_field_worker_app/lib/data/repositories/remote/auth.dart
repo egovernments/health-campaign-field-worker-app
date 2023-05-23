@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import '../../../models/auth/auth_model.dart';
+import '../../../utils/environment_config.dart';
 
 class AuthRepository {
   final Dio _client;
@@ -14,7 +15,7 @@ class AuthRepository {
     final headers = <String, String>{
       "content-type": 'application/x-www-form-urlencoded',
       "Access-Control-Allow-Origin": "*",
-      "authorization": "Basic ZWdvdi11c2VyLWNsaWVudDo=",
+      "authorization": "Basic ${envConfig.variables.basicAuthToken}",
     };
 
     final formData = FormData.fromMap(loginModel.toJson());
