@@ -411,7 +411,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                             )) {
                               throw Exception('Could not launch $url');
                             }
-                            ;
                           },
                           icon: Icons.call,
                           label: e.name,

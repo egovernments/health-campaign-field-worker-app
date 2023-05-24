@@ -93,65 +93,11 @@ scripts:
     packageFilters:
       flutter: true
 
-
-#  test:
-#    run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
-#    description: Run Flutter tests for a specific package in this project.
-#    packageFilters:
-#      flutter: true
-#
-#  all-test:
-#    run: melos run test --no-select
-#    description: Run all Flutter tests in this project.
-#
-#  analyze:
-#    run: melos exec -- dart analyze . --no-fatal-infos --no-fatal-warnings
-#    description: Run `dart analyze` in all packages.
-#
-#  combine-coverage:
-#    run: melos exec -- "\$MELOS_ROOT_PATH/tools/combine_coverage.sh"
-#    description: Combine coverage report of all packages
-#
-#  generate:coverage-report:
-#    run: melos exec -- genhtml \$MELOS_ROOT_PATH/coverage_report/lcov.info -o \$MELOS_ROOT_PATH/coverage_report/html
-#    description: Generate a coverage report using lcov.info. Requires genhtml to be installed.
-#
-#  generate:
-#    exec: melos run generate-flutter --no-select && melos run generate-dart --no-select
-#    description: Generate code for all packages.
-#
-#  generate-flutter:
-#    exec: dart run build_runner build --delete-conflicting-outputs
-#    packageFilters:
-#      dependsOn:
-#        - build_runner
-#
-#  generate-dart:
-#    run: dart run build_runner build --delete-conflicting-outputs
-#    packageFilters:
-#      dart: true
-#      depends-on:
-#        - build_runner
-#        - flutter
-#
-#  watch-flutter:
-#    exec: flutter packages run build_runner watch
-#    packageFilters:
-#      flutter: true
-#      depends-on: build_runner
-#
-#  watch-dart:
-#    exec: dart packages run build_runner watch
-#    packageFilters:
-#      dart: true
-#      flutter: false
-#      depends-on: build_runner
-#
-#  open_report:
-#    run: melos exec -- melos run generate:coverage-report && open coverage_report/html/index.html
-#
-#  upgrade-dependencies:
-#    description: Upgrade all dependencies to their latest major versions.
-#    run: dart pub upgrade --major-versions
-
+  dart-fix:
+    description: Run `dart fix` in all packages.
+    run: dart fix --apply
+    exec:
+      concurrency: 1
+    packageFilters:
+      dart: true
 
