@@ -26,6 +26,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final EdgeInsets? padding;
   final String cancelText;
   final String confirmText;
+  final String? fieldHintText;
 
   const DigitDateFormPicker({
     super.key,
@@ -50,6 +51,7 @@ class DigitDateFormPicker extends StatelessWidget {
     this.padding,
     required this.cancelText,
     required this.confirmText,
+    this.fieldHintText,
   });
 
   @override
@@ -66,6 +68,7 @@ class DigitDateFormPicker extends StatelessWidget {
         lastDate: end ?? DateTime.now(),
         cancelText: cancelText,
         confirmText: confirmText,
+        fieldHintText: fieldHintText,
         builder: (context, picker, child) {
           return ReactiveTextField(
             style: TextStyle(
