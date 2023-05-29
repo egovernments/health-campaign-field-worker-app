@@ -39,8 +39,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
             children: [
               Expanded(
                 child: ScrollableContent(
-                  header: Column(
-                    children: const [
+                  header: const Column(
+                    children: [
                       BackNavigationHelpHeaderWidget(),
                     ],
                   ),

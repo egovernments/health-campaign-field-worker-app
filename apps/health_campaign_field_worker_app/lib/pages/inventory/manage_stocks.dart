@@ -24,7 +24,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         children: [
