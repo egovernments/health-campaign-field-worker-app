@@ -1,6 +1,5 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../data/local_store/no_sql/schema/app_configuration.dart'
+    as appConfig;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
@@ -24,9 +27,6 @@ import '../widgets/action_card/action_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart'
-    as appConfig;
 import '../widgets/progress_bar/beneficiary_progress.dart';
 
 class HomePage extends LocalizedStatefulWidget {
@@ -114,27 +114,28 @@ class _HomePageState extends LocalizedState<HomePage> {
                     overlayWrapperkey.currentState?.onSelectedTap();
                   },
                 ),
-                DigitWalkthrough(
-                  onSkip: () =>
-                      {overlayWrapperkey.currentState?.onSelectedSkip()},
-                  widgetHeight: 150,
-                  onTap: () {
-                    overlayWrapperkey.currentState?.onSelectedTap();
-                  },
-                  key: walkthroughWidgetStateList[0],
-                  description:
-                      localizations.translate(i18.home.progressIndicatorHelp),
-                  overlayWidget: overlayWidgetStateList[0],
-                  titleAlignment: TextAlign.center,
-                  child: BeneficiaryProgressBar(
-                    label: localizations.translate(
-                      i18.home.progressIndicatorTitle,
-                    ),
-                    prefixLabel: localizations.translate(
-                      i18.home.progressIndicatorPrefixLabel,
+                if (context.showProgressBar)
+                  DigitWalkthrough(
+                    onSkip: () =>
+                        {overlayWrapperkey.currentState?.onSelectedSkip()},
+                    widgetHeight: 150,
+                    onTap: () {
+                      overlayWrapperkey.currentState?.onSelectedTap();
+                    },
+                    key: walkthroughWidgetStateList[0],
+                    description:
+                        localizations.translate(i18.home.progressIndicatorHelp),
+                    overlayWidget: overlayWidgetStateList[0],
+                    titleAlignment: TextAlign.center,
+                    child: BeneficiaryProgressBar(
+                      label: localizations.translate(
+                        i18.home.progressIndicatorTitle,
+                      ),
+                      prefixLabel: localizations.translate(
+                        i18.home.progressIndicatorPrefixLabel,
+                      ),
                     ),
                   ),
-                ),
               ]),
               footer: const PoweredByDigit(),
               children: [
