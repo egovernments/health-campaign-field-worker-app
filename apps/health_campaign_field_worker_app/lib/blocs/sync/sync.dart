@@ -78,6 +78,13 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         userId: event.userId,
       );
       emit(const SyncCompletedState());
+    } on SyncError catch (error) {
+      final errorState = switch (error) {
+        SyncDownError() => const DownSyncFailedState(),
+        SyncUpError() => const UpSyncFailedState(),
+      };
+      emit(errorState);
+      rethrow;
     } catch (error) {
       emit(const SyncFailedState());
       rethrow;
@@ -111,4 +118,8 @@ class SyncState with _$SyncState {
   const factory SyncState.completedSync() = SyncCompletedState;
 
   const factory SyncState.failedSync() = SyncFailedState;
+
+  const factory SyncState.failedDownSync() = DownSyncFailedState;
+
+  const factory SyncState.failedUpSync() = UpSyncFailedState;
 }

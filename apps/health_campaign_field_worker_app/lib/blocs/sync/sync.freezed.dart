@@ -465,6 +465,8 @@ mixin _$SyncState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -474,6 +476,8 @@ mixin _$SyncState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -483,6 +487,8 @@ mixin _$SyncState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -493,6 +499,8 @@ mixin _$SyncState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -502,6 +510,8 @@ mixin _$SyncState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -511,6 +521,8 @@ mixin _$SyncState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -576,6 +588,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) {
     return loading();
   }
@@ -588,6 +602,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) {
     return loading?.call();
   }
@@ -600,6 +616,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -616,6 +634,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) {
     return loading(this);
   }
@@ -628,6 +648,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) {
     return loading?.call(this);
   }
@@ -640,6 +662,8 @@ class _$SyncLoadingState implements SyncLoadingState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -696,6 +720,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) {
     return syncInProgress();
   }
@@ -708,6 +734,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) {
     return syncInProgress?.call();
   }
@@ -720,6 +748,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) {
     if (syncInProgress != null) {
@@ -736,6 +766,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) {
     return syncInProgress(this);
   }
@@ -748,6 +780,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) {
     return syncInProgress?.call(this);
   }
@@ -760,6 +794,8 @@ class _$SyncInProgressState implements SyncInProgressState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) {
     if (syncInProgress != null) {
@@ -843,6 +879,8 @@ class _$SyncPendingState implements SyncPendingState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) {
     return pendingSync(count);
   }
@@ -855,6 +893,8 @@ class _$SyncPendingState implements SyncPendingState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) {
     return pendingSync?.call(count);
   }
@@ -867,6 +907,8 @@ class _$SyncPendingState implements SyncPendingState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -883,6 +925,8 @@ class _$SyncPendingState implements SyncPendingState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) {
     return pendingSync(this);
   }
@@ -895,6 +939,8 @@ class _$SyncPendingState implements SyncPendingState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) {
     return pendingSync?.call(this);
   }
@@ -907,6 +953,8 @@ class _$SyncPendingState implements SyncPendingState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) {
     if (pendingSync != null) {
@@ -968,6 +1016,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) {
     return completedSync();
   }
@@ -980,6 +1030,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) {
     return completedSync?.call();
   }
@@ -992,6 +1044,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) {
     if (completedSync != null) {
@@ -1008,6 +1062,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) {
     return completedSync(this);
   }
@@ -1020,6 +1076,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) {
     return completedSync?.call(this);
   }
@@ -1032,6 +1090,8 @@ class _$SyncCompletedState implements SyncCompletedState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) {
     if (completedSync != null) {
@@ -1088,6 +1148,8 @@ class _$SyncFailedState implements SyncFailedState {
     required TResult Function(int count) pendingSync,
     required TResult Function() completedSync,
     required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
   }) {
     return failedSync();
   }
@@ -1100,6 +1162,8 @@ class _$SyncFailedState implements SyncFailedState {
     TResult? Function(int count)? pendingSync,
     TResult? Function()? completedSync,
     TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
   }) {
     return failedSync?.call();
   }
@@ -1112,6 +1176,8 @@ class _$SyncFailedState implements SyncFailedState {
     TResult Function(int count)? pendingSync,
     TResult Function()? completedSync,
     TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
     required TResult orElse(),
   }) {
     if (failedSync != null) {
@@ -1128,6 +1194,8 @@ class _$SyncFailedState implements SyncFailedState {
     required TResult Function(SyncPendingState value) pendingSync,
     required TResult Function(SyncCompletedState value) completedSync,
     required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
   }) {
     return failedSync(this);
   }
@@ -1140,6 +1208,8 @@ class _$SyncFailedState implements SyncFailedState {
     TResult? Function(SyncPendingState value)? pendingSync,
     TResult? Function(SyncCompletedState value)? completedSync,
     TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
   }) {
     return failedSync?.call(this);
   }
@@ -1152,6 +1222,8 @@ class _$SyncFailedState implements SyncFailedState {
     TResult Function(SyncPendingState value)? pendingSync,
     TResult Function(SyncCompletedState value)? completedSync,
     TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
     required TResult orElse(),
   }) {
     if (failedSync != null) {
@@ -1163,4 +1235,268 @@ class _$SyncFailedState implements SyncFailedState {
 
 abstract class SyncFailedState implements SyncState {
   const factory SyncFailedState() = _$SyncFailedState;
+}
+
+/// @nodoc
+abstract class _$$DownSyncFailedStateCopyWith<$Res> {
+  factory _$$DownSyncFailedStateCopyWith(_$DownSyncFailedState value,
+          $Res Function(_$DownSyncFailedState) then) =
+      __$$DownSyncFailedStateCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$DownSyncFailedStateCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$DownSyncFailedState>
+    implements _$$DownSyncFailedStateCopyWith<$Res> {
+  __$$DownSyncFailedStateCopyWithImpl(
+      _$DownSyncFailedState _value, $Res Function(_$DownSyncFailedState) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$DownSyncFailedState implements DownSyncFailedState {
+  const _$DownSyncFailedState();
+
+  @override
+  String toString() {
+    return 'SyncState.failedDownSync()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DownSyncFailedState);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function() syncInProgress,
+    required TResult Function(int count) pendingSync,
+    required TResult Function() completedSync,
+    required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
+  }) {
+    return failedDownSync();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function()? syncInProgress,
+    TResult? Function(int count)? pendingSync,
+    TResult? Function()? completedSync,
+    TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
+  }) {
+    return failedDownSync?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function()? syncInProgress,
+    TResult Function(int count)? pendingSync,
+    TResult Function()? completedSync,
+    TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (failedDownSync != null) {
+      return failedDownSync();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SyncLoadingState value) loading,
+    required TResult Function(SyncInProgressState value) syncInProgress,
+    required TResult Function(SyncPendingState value) pendingSync,
+    required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
+  }) {
+    return failedDownSync(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SyncLoadingState value)? loading,
+    TResult? Function(SyncInProgressState value)? syncInProgress,
+    TResult? Function(SyncPendingState value)? pendingSync,
+    TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
+  }) {
+    return failedDownSync?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SyncLoadingState value)? loading,
+    TResult Function(SyncInProgressState value)? syncInProgress,
+    TResult Function(SyncPendingState value)? pendingSync,
+    TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (failedDownSync != null) {
+      return failedDownSync(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DownSyncFailedState implements SyncState {
+  const factory DownSyncFailedState() = _$DownSyncFailedState;
+}
+
+/// @nodoc
+abstract class _$$UpSyncFailedStateCopyWith<$Res> {
+  factory _$$UpSyncFailedStateCopyWith(
+          _$UpSyncFailedState value, $Res Function(_$UpSyncFailedState) then) =
+      __$$UpSyncFailedStateCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$UpSyncFailedStateCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$UpSyncFailedState>
+    implements _$$UpSyncFailedStateCopyWith<$Res> {
+  __$$UpSyncFailedStateCopyWithImpl(
+      _$UpSyncFailedState _value, $Res Function(_$UpSyncFailedState) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$UpSyncFailedState implements UpSyncFailedState {
+  const _$UpSyncFailedState();
+
+  @override
+  String toString() {
+    return 'SyncState.failedUpSync()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$UpSyncFailedState);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function() syncInProgress,
+    required TResult Function(int count) pendingSync,
+    required TResult Function() completedSync,
+    required TResult Function() failedSync,
+    required TResult Function() failedDownSync,
+    required TResult Function() failedUpSync,
+  }) {
+    return failedUpSync();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function()? syncInProgress,
+    TResult? Function(int count)? pendingSync,
+    TResult? Function()? completedSync,
+    TResult? Function()? failedSync,
+    TResult? Function()? failedDownSync,
+    TResult? Function()? failedUpSync,
+  }) {
+    return failedUpSync?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function()? syncInProgress,
+    TResult Function(int count)? pendingSync,
+    TResult Function()? completedSync,
+    TResult Function()? failedSync,
+    TResult Function()? failedDownSync,
+    TResult Function()? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (failedUpSync != null) {
+      return failedUpSync();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SyncLoadingState value) loading,
+    required TResult Function(SyncInProgressState value) syncInProgress,
+    required TResult Function(SyncPendingState value) pendingSync,
+    required TResult Function(SyncCompletedState value) completedSync,
+    required TResult Function(SyncFailedState value) failedSync,
+    required TResult Function(DownSyncFailedState value) failedDownSync,
+    required TResult Function(UpSyncFailedState value) failedUpSync,
+  }) {
+    return failedUpSync(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SyncLoadingState value)? loading,
+    TResult? Function(SyncInProgressState value)? syncInProgress,
+    TResult? Function(SyncPendingState value)? pendingSync,
+    TResult? Function(SyncCompletedState value)? completedSync,
+    TResult? Function(SyncFailedState value)? failedSync,
+    TResult? Function(DownSyncFailedState value)? failedDownSync,
+    TResult? Function(UpSyncFailedState value)? failedUpSync,
+  }) {
+    return failedUpSync?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SyncLoadingState value)? loading,
+    TResult Function(SyncInProgressState value)? syncInProgress,
+    TResult Function(SyncPendingState value)? pendingSync,
+    TResult Function(SyncCompletedState value)? completedSync,
+    TResult Function(SyncFailedState value)? failedSync,
+    TResult Function(DownSyncFailedState value)? failedDownSync,
+    TResult Function(UpSyncFailedState value)? failedUpSync,
+    required TResult orElse(),
+  }) {
+    if (failedUpSync != null) {
+      return failedUpSync(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpSyncFailedState implements SyncState {
+  const factory UpSyncFailedState() = _$UpSyncFailedState;
 }
