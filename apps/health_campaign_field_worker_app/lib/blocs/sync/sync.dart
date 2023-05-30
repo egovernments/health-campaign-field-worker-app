@@ -79,11 +79,12 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       );
       emit(const SyncCompletedState());
     } on SyncError catch (error) {
-      final errorState = switch (error) {
-        SyncDownError() => const DownSyncFailedState(),
-        SyncUpError() => const UpSyncFailedState(),
-      };
-      emit(errorState);
+      if (error is SyncDownError) {
+        emit(const DownSyncFailedState());
+      } else {
+        emit(const UpSyncFailedState());
+      }
+
       rethrow;
     } catch (error) {
       emit(const SyncFailedState());

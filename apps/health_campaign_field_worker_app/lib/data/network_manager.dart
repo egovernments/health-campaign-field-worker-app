@@ -746,7 +746,7 @@ class NetworkManagerConfiguration {
 
 enum PersistenceConfiguration { offlineFirst, onlineOnly }
 
-sealed class SyncError implements Exception {
+abstract class SyncError implements Exception {
   final dynamic error;
 
   const SyncError([this.error]);
