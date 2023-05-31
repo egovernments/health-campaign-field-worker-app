@@ -4,10 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/utils.dart';
 import 'data_repository.dart';
 import 'repositories/oplog/oplog.dart';
 import 'repositories/remote/pgr_service.dart';
@@ -59,8 +61,7 @@ class NetworkManager {
     final pendingSyncEntries = futures.expand((e) => e).toList();
 
     if (pendingSyncEntries.isEmpty) {
-      print("Empty Records");
-      // service!.stopSelf();
+      performBackgroundService(context, true, true);
     }
 
     final groupedEntries = pendingSyncEntries.groupListsBy(

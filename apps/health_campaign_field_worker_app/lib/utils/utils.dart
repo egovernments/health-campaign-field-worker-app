@@ -1,6 +1,9 @@
 library app_utils;
 
+import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
@@ -74,5 +77,37 @@ class CustomValidator {
     }
 
     return null;
+  }
+}
+
+performBackgroundService(context, stopService, inBackground) async {
+  final service = FlutterBackgroundService();
+  var isRunning = await service.isRunning();
+
+  if (stopService) {
+    service.invoke("stopService");
+    if (!inBackground) {
+      DigitToast.show(
+        context,
+        options: DigitToastOptions(
+          'Background Service Stopped',
+          true,
+          DigitTheme.instance.mobileTheme,
+        ),
+      );
+    }
+  } else {
+    if (!isRunning) {
+      service.startService();
+
+      DigitToast.show(
+        context,
+        options: DigitToastOptions(
+          'Background Service Running',
+          false,
+          DigitTheme.instance.mobileTheme,
+        ),
+      );
+    }
   }
 }
