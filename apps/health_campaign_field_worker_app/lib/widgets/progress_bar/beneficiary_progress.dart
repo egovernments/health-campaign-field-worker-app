@@ -55,13 +55,17 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       query: ProjectBeneficiarySearchModel(
         projectId: context.projectId,
       ),
-      listener: (data) => setState(() {
-        current = data
-            .where((element) =>
-                element.dateOfRegistrationTime.isAfter(gte) &&
-                element.dateOfRegistrationTime.isBefore(lte))
-            .length;
-      }),
+      listener: (data) {
+        if (mounted) {
+          setState(() {
+            current = data
+                .where((element) =>
+                    element.dateOfRegistrationTime.isAfter(gte) &&
+                    element.dateOfRegistrationTime.isBefore(lte))
+                .length;
+          });
+        }
+      },
     );
     super.didChangeDependencies();
   }
