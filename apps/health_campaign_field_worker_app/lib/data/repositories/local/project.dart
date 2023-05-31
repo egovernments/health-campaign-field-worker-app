@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
@@ -110,14 +111,18 @@ class ProjectLocalRepository
               ),
         targets: targetResults.isEmpty
             ? null
-            : targetResults.map((e) {
-                final target = e.readTableOrNull(sql.target);
+            : targetResults
+                .map((e) {
+                  final target = e.readTableOrNull(sql.target);
+                  if (target == null) return null;
 
-                return TargetModel(
-                  id: target!.id,
-                  beneficiaryType: target.beneficiaryType,
-                );
-              }).toList(),
+                  return TargetModel(
+                    id: target.id,
+                    beneficiaryType: target.beneficiaryType,
+                  );
+                })
+                .whereNotNull()
+                .toList(),
       );
     }).toList();
   }

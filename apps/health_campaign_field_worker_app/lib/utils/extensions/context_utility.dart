@@ -89,6 +89,24 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject;
   }
 
+  bool get showProgressBar {
+    bool showProgressBar = false;
+
+    for (final role in loggedInUser.roles) {
+      switch (role.code) {
+        case UserRoleCodeEnum.distributor:
+        case UserRoleCodeEnum.registrar:
+          showProgressBar = true;
+        default:
+          showProgressBar = false;
+      }
+
+      if (showProgressBar) return true;
+    }
+
+    return false;
+  }
+
   NetworkManager get networkManager => read<NetworkManager>();
 
   DataRepository<D, R>
