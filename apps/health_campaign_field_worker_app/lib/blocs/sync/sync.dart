@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/oplog.dart';
 import '../../data/network_manager.dart';
+import '../../models/bandwidth/bandwidth_model.dart';
 import '../../models/data_model.dart';
 
 part 'sync.freezed.dart';
@@ -71,11 +72,15 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     SyncEmitter emit,
   ) async {
     try {
+      final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+        'userId': event.userId,
+        'batchSize': 5,
+      });
       emit(const SyncInProgressState());
       await networkManager.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
-        userId: event.userId,
+        bandwidthModel: bandwidthModel,
       );
       emit(const SyncCompletedState());
     } catch (error) {

@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
@@ -14,6 +15,7 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
@@ -136,7 +138,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                   ),
                 ),
               ]),
-              footer: const PoweredByDigit(),
+              footer: StreamBuilder<Map<String, dynamic>?>(
+                stream: FlutterBackgroundService().on('update'),
+                builder: (context, snapshot) {
+                  print(snapshot);
+                  print("---Function called---");
+                  return const Text("Data sync in progress");
+                },
+              ),
               children: [
                 const SizedBox(height: kPadding * 2),
                 BlocConsumer<SyncBloc, SyncState>(
@@ -240,11 +249,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.all_inbox,
               label: i18.home.beneficiaryLabel,
               onPressed: () async {
-                final searchBloc = context.read<SearchHouseholdsBloc>();
-                await context.router.push(
-                  SearchBeneficiaryRoute(),
-                );
-                searchBloc.add(const SearchHouseholdsClearEvent());
+                final userRequestModel =
+                    await LocalSecureStore.instance.userRequestModel;
+                // final searchBloc = context.read<SearchHouseholdsBloc>();
+                // await context.router.push(
+                //   SearchBeneficiaryRoute(),
+                // );
+                // searchBloc.add(const SearchHouseholdsClearEvent());
+                print(userRequestModel?.uuid);
               },
             ),
           );
@@ -436,20 +448,20 @@ class _HomePageState extends LocalizedState<HomePage> {
             );
           },
         ),
-        HomeItemCard(
-          icon: Icons.delete_forever,
-          label: 'Delete all',
-          onPressed: () async {
-            final sql = context.read<LocalSqlDataStore>();
-            final isar = context.read<Isar>();
+        // HomeItemCard(
+        //   icon: Icons.delete_forever,
+        //   label: 'Delete all',
+        //   onPressed: () async {
+        //     final sql = context.read<LocalSqlDataStore>();
+        //     final isar = context.read<Isar>();
 
-            for (var element in sql.allTables) {
-              sql.delete(element).where((_) => const Constant(true));
-            }
+        //     for (var element in sql.allTables) {
+        //       sql.delete(element).where((_) => const Constant(true));
+        //     }
 
-            await isar.writeTxn(() async => await isar.opLogs.clear());
-          },
-        ),
+        //     await isar.writeTxn(() async => await isar.opLogs.clear());
+        //   },
+        // ),
       ],
     );
 

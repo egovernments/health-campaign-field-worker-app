@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
 
+import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
 import 'data_repository.dart';
 import 'repositories/oplog/oplog.dart';
@@ -35,7 +37,8 @@ class NetworkManager {
   Future<void> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
-    required String userId,
+    required BandwidthModel bandwidthModel,
+    ServiceInstance? service,
   }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -43,16 +46,21 @@ class NetworkManager {
     }
 
     await syncDown(
-      createdBy: userId,
+      createdBy: bandwidthModel.userId,
       localRepositories: localRepositories.toSet().toList(),
       remoteRepositories: remoteRepositories.toSet().toList(),
     );
 
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
+
+    if (pendingSyncEntries.isEmpty) {
+      service!.stopSelf();
+    }
 
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
@@ -228,20 +236,47 @@ class NetworkManager {
               }
               break;
             default:
-              await remote.bulkCreate(entities);
+              final List<EntityModel> items =
+                  filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+              if (entities.isNotEmpty) {
+                if (items.isNotEmpty) {
+                  await remote.bulkCreate(items.toList());
+                }
+              }
           }
         } else if (operationGroupedEntity.key == DataOperation.update) {
-          await remote.bulkUpdate(entities);
+          final List<EntityModel> items =
+              filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+          if (entities.isNotEmpty) {
+            if (items.isNotEmpty) {
+              await remote.bulkUpdate(entities);
+            }
+          }
         } else if (operationGroupedEntity.key == DataOperation.delete) {
-          await remote.bulkDelete(entities);
+          final List<EntityModel> items =
+              filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+          if (entities.isNotEmpty) {
+            if (items.isNotEmpty) {
+              await remote.bulkDelete(entities);
+            }
+          }
         }
         if (operationGroupedEntity.key == DataOperation.singleCreate) {
           for (var element in entities) {
             await remote.singleCreate(element);
           }
         }
+        final List<OpLogEntry<EntityModel>> syncedEntityList = [];
 
-        for (final syncedEntity in operationGroupedEntity.value) {
+        final int size =
+            bandwidthModel.batchSize < operationGroupedEntity.value.length
+                ? bandwidthModel.batchSize
+                : operationGroupedEntity.value.length;
+        for (var i = 0; i < size; i++) {
+          syncedEntityList.add(operationGroupedEntity.value[i]);
+        }
+
+        for (final syncedEntity in syncedEntityList) {
           if (syncedEntity.type == DataModelType.complaints) continue;
           local.markSyncedUp(entry: syncedEntity);
         }
@@ -665,6 +700,20 @@ class NetworkManager {
         }
       }
     }
+  }
+
+  List<EntityModel> filterEntitybyBandwidth(
+    int batchSize,
+    List<EntityModel> entities,
+  ) {
+    final List<EntityModel> items = [];
+    final int size = batchSize < entities.length ? batchSize : entities.length;
+
+    for (var i = 0; i < size; i++) {
+      items.add(entities[i]);
+    }
+
+    return items;
   }
 
   FutureOr<int> getPendingSyncRecordsCount(

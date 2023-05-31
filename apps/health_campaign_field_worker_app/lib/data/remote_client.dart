@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import "package:dio/dio.dart";
+import 'package:dio/io.dart';
 
 import '../utils/environment_config.dart';
 import 'repositories/api_interceptors.dart';
@@ -36,5 +39,24 @@ class DioClient {
         ),
         baseUrl: envConfig.variables.baseUrl,
       );
+
+    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (client) {
+      // config the http client
+      client.findProxy = (uri) {
+        //proxy all request to localhost:8888
+        return "PROXY 192.168.115.114:8888";
+      };
+
+      client.badCertificateCallback = ((
+        X509Certificate cert,
+        String host,
+        int port,
+      ) =>
+          // TODO Disable in release mode
+          true);
+
+      return client;
+    };
   }
 }

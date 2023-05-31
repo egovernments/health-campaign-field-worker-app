@@ -74,7 +74,8 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (actionMap.isEmpty) {
           return const Offstage();
         }
-
+        print(actionMap);
+        print("----Actions---");
         final remote = _getRemoteRepositories(dio, actionMap);
         final local = _getLocalRepositories(sql, isar);
 
