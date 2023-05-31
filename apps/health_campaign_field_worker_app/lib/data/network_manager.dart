@@ -59,7 +59,8 @@ class NetworkManager {
     final pendingSyncEntries = futures.expand((e) => e).toList();
 
     if (pendingSyncEntries.isEmpty) {
-      service!.stopSelf();
+      print("Empty Records");
+      // service!.stopSelf();
     }
 
     final groupedEntries = pendingSyncEntries.groupListsBy(

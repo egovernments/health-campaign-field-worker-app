@@ -7,13 +7,10 @@ import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
-import '../blocs/auth/auth.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
-import '../data/background_service.dart';
-import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';

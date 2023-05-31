@@ -9,20 +9,15 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class AddressSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   AddressSearchModel({
     this.id,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  AddressSearchModel.ignoreDeleted({
-    this.id,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -46,6 +41,8 @@ class AddressModel extends EntityModel {
   final String? boundaryType;
   final String? boundary;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final AddressType? type;
   final LocalityModel? locality;
@@ -69,11 +66,11 @@ class AddressModel extends EntityModel {
     this.boundaryType,
     this.boundary,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     this.type,
     this.locality,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   AddressCompanion get companion {
@@ -85,7 +82,6 @@ class AddressModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),
@@ -102,6 +98,7 @@ class AddressModel extends EntityModel {
       boundaryType: Value(boundaryType),
       boundary: Value(boundary),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       type: Value(type),
       );

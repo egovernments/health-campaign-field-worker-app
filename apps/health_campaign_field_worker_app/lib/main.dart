@@ -24,7 +24,6 @@ import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'models/bandwidth/bandwidth_model.dart';
 import 'models/data_model.dart';
-import 'models/oplog/oplog_entry.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';

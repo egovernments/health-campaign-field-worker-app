@@ -9,20 +9,15 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ServiceAttributesSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  ServiceAttributesSearchModel.ignoreDeleted({
-    this.clientReferenceId,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -31,12 +26,14 @@ class ServiceAttributesModel extends EntityModel {
   static const schemaName = 'ServiceAttributes';
 
   final String? attributeCode;
-  final dynamic? value;
+  final dynamic value;
   final String? dataType;
   final String? referenceId;
-  final dynamic? additionalDetails;
+  final dynamic additionalDetails;
   final String clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
 
@@ -49,9 +46,9 @@ class ServiceAttributesModel extends EntityModel {
     this.additionalDetails,
     required this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   ServiceAttributesCompanion get companion {
@@ -61,7 +58,6 @@ class ServiceAttributesModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
@@ -69,6 +65,7 @@ class ServiceAttributesModel extends EntityModel {
       additionalDetails: Value(additionalDetails),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

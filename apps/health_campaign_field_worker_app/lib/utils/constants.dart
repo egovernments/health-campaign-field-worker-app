@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -25,7 +24,6 @@ import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
-import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
@@ -45,7 +43,6 @@ import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
-import '../models/entities/household.dart';
 
 class Constants {
   static const String localizationApiPath = 'localization/messages/v1/_search';

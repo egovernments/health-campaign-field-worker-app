@@ -13,10 +13,10 @@ class NotificationService {
   NotificationService._internal();
 
   Future<void> init() async {
-    final AndroidInitializationSettings initializationSettingsAndroid =
+    const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
 
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid, iOS: null, macOS: null);
     await flutterLocalNotificationsPlugin.initialize(

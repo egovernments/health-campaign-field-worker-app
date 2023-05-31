@@ -12,6 +12,8 @@ class FacilitySearchModel extends EntitySearchModel {
   final String? usage;
   final int? storageCapacity;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   FacilitySearchModel({
     this.id,
@@ -19,19 +21,9 @@ class FacilitySearchModel extends EntitySearchModel {
     this.usage,
     this.storageCapacity,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  FacilitySearchModel.ignoreDeleted({
-    this.id,
-    this.isPermanent,
-    this.usage,
-    this.storageCapacity,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -44,6 +36,8 @@ class FacilityModel extends EntityModel {
   final String? usage;
   final int? storageCapacity;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
   final FacilityAdditionalFields? additionalFields;
@@ -55,10 +49,10 @@ class FacilityModel extends EntityModel {
     this.usage,
     this.storageCapacity,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     this.address,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   FacilityCompanion get companion {
@@ -68,12 +62,12 @@ class FacilityModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

@@ -45,7 +45,7 @@ class DioClient {
       // config the http client
       client.findProxy = (uri) {
         //proxy all request to localhost:8888
-        return "PROXY 192.168.115.114:8888";
+        return "PROXY 172.16.2.175:8888";
       };
 
       client.badCertificateCallback = ((

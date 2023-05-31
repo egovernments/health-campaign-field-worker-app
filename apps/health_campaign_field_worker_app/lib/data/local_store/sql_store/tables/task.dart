@@ -16,7 +16,7 @@ class Task extends Table {
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted => boolean().nullable()();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get plannedStartDate => integer().nullable()();
   IntColumn get plannedEndDate => integer().nullable()();

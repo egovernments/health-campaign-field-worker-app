@@ -11,24 +11,17 @@ class HouseholdSearchModel extends EntitySearchModel {
   final int? memberCount;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   HouseholdSearchModel({
     this.id,
     this.memberCount,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  HouseholdSearchModel.ignoreDeleted({
-    this.id,
-    this.memberCount,
-    this.clientReferenceId,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -40,6 +33,8 @@ class HouseholdModel extends EntityModel {
   final int? memberCount;
   final String clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
   final HouseholdAdditionalFields? additionalFields;
@@ -50,10 +45,10 @@ class HouseholdModel extends EntityModel {
     this.memberCount,
     required this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     this.address,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   HouseholdCompanion get companion {
@@ -63,11 +58,11 @@ class HouseholdModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       memberCount: Value(memberCount),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

@@ -13,6 +13,8 @@ class ProductSearchModel extends EntitySearchModel {
   final String? manufacturer;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   ProductSearchModel({
     this.id,
@@ -21,20 +23,9 @@ class ProductSearchModel extends EntitySearchModel {
     this.manufacturer,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  ProductSearchModel.ignoreDeleted({
-    this.id,
-    this.type,
-    this.name,
-    this.manufacturer,
-    this.clientReferenceId,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -48,6 +39,8 @@ class ProductModel extends EntityModel {
   final String? manufacturer;
   final String clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final ProductAdditionalFields? additionalFields;
 
@@ -59,9 +52,9 @@ class ProductModel extends EntityModel {
     this.manufacturer,
     required this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   ProductCompanion get companion {
@@ -71,13 +64,13 @@ class ProductModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       type: Value(type),
       name: Value(name),
       manufacturer: Value(manufacturer),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

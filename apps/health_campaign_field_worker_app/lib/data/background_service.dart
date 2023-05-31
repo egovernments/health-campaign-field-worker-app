@@ -1,4 +1,3 @@
-import 'package:workmanager/workmanager.dart';
 
 class BackgroundService {
   BackgroundService._();

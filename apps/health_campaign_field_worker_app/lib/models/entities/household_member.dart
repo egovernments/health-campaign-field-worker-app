@@ -15,6 +15,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final bool? isHeadOfHousehold;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   HouseholdMemberSearchModel({
     this.id,
@@ -25,22 +27,9 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  HouseholdMemberSearchModel.ignoreDeleted({
-    this.id,
-    this.householdId,
-    this.householdClientReferenceId,
-    this.individualId,
-    this.individualClientReferenceId,
-    this.isHeadOfHousehold,
-    this.clientReferenceId,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -56,6 +45,8 @@ class HouseholdMemberModel extends EntityModel {
   final bool isHeadOfHousehold;
   final String clientReferenceId;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final HouseholdMemberAdditionalFields? additionalFields;
 
@@ -69,9 +60,9 @@ class HouseholdMemberModel extends EntityModel {
     required this.isHeadOfHousehold,
     required this.clientReferenceId,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   HouseholdMemberCompanion get companion {
@@ -81,7 +72,6 @@ class HouseholdMemberModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       householdId: Value(householdId),
       householdClientReferenceId: Value(householdClientReferenceId),
@@ -90,6 +80,7 @@ class HouseholdMemberModel extends EntityModel {
       isHeadOfHousehold: Value(isHeadOfHousehold),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

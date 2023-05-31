@@ -12,6 +12,8 @@ class NameSearchModel extends EntitySearchModel {
   final String? familyName;
   final String? otherNames;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   
   NameSearchModel({
     this.id,
@@ -19,19 +21,9 @@ class NameSearchModel extends EntitySearchModel {
     this.familyName,
     this.otherNames,
     this.tenantId,
+    this.isDeleted,
     super.boundaryCode,
-    super.isDeleted,
   }):  super();
-
-  @MappableConstructor()
-  NameSearchModel.ignoreDeleted({
-    this.id,
-    this.givenName,
-    this.familyName,
-    this.otherNames,
-    this.tenantId,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -45,6 +37,8 @@ class NameModel extends EntityModel {
   final String? familyName;
   final String? otherNames;
   final String? tenantId;
+  @override
+  final bool? isDeleted;
   final int? rowVersion;
   final NameAdditionalFields? additionalFields;
 
@@ -56,9 +50,9 @@ class NameModel extends EntityModel {
     this.familyName,
     this.otherNames,
     this.tenantId,
+    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    super.isDeleted = false,
   }): super();
 
   NameCompanion get companion {
@@ -68,13 +62,13 @@ class NameModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),
       tenantId: Value(tenantId),
+      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
