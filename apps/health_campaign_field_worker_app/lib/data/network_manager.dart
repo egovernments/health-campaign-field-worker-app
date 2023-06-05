@@ -61,7 +61,7 @@ class NetworkManager {
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
-      syncError = SyncUpError(e);
+      syncError ??= SyncUpError(e);
     }
 
     if (syncError != null) throw syncError;
