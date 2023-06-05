@@ -59,6 +59,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
         current = data
             .where((element) =>
                 element.dateOfRegistrationTime.isAfter(gte) &&
+                (element.isDeleted == false || element.isDeleted == null) &&
                 element.dateOfRegistrationTime.isBefore(lte))
             .length;
       }),
