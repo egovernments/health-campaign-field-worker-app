@@ -42,8 +42,7 @@ class NetworkManager {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
-    SyncDownError? syncDownError;
-    SyncUpError? syncUpError;
+    SyncError? syncError;
 
     try {
       await syncDown(
@@ -52,7 +51,7 @@ class NetworkManager {
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
-      syncDownError = SyncDownError(e);
+      syncError = SyncDownError(e);
     }
 
     try {
@@ -62,12 +61,10 @@ class NetworkManager {
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
-      syncUpError = SyncUpError(e);
+      syncError = SyncUpError(e);
     }
 
-    if (syncDownError != null || syncUpError != null) {
-      throw syncDownError ?? syncUpError!;
-    }
+    if (syncError != null) throw syncError;
   }
 
   FutureOr<void> syncDown({
