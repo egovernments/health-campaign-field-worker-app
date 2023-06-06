@@ -73,7 +73,7 @@ Future<void> initializeService() async {
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'my_foreground', // id
     'Background Sync', // title
-    description: 'Backkground sync triggered.', // description
+    description: 'Background sync triggered.', // description
     importance: Importance.high, // importance must be at low or higher level
   );
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -93,11 +93,11 @@ Future<void> initializeService() async {
     androidConfiguration: AndroidConfiguration(
       // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
-
+      autoStartOnBoot: true,
       // auto start service
       autoStart: false,
       isForegroundMode: true,
-
+      notificationChannelId: 'my_foreground',
       foregroundServiceNotificationId: 112233,
     ),
     iosConfiguration: IosConfiguration(
@@ -111,7 +111,7 @@ Future<void> initializeService() async {
     ),
   );
 
-  service.startService();
+  // service.startService();
 }
 
 // to ensure this is executed
@@ -135,12 +135,9 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  // bring to foreground
-  Timer.periodic(const Duration(seconds: 1 * 20), (timer) async {
+  Timer.periodic(const Duration(seconds: 5 * 60), (timer) async {
     final userRequestModel = await LocalSecureStore.instance.userRequestModel;
-
     await envConfig.initialize();
-
     _dio = DioClient().dio;
     if (i == 0) {
       _isar = await Isar.open([

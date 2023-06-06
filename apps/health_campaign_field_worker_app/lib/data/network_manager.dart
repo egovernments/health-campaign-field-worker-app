@@ -59,11 +59,7 @@ class NetworkManager {
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
-
-    if (pendingSyncEntries.isEmpty) {
-      performBackgroundService(context, true, true);
-    }
-
+    pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
@@ -171,7 +167,6 @@ class NetworkManager {
 
         if (operationGroupedEntity.key == DataOperation.create) {
           await Future.delayed(const Duration(seconds: 1));
-
           switch (typeGroupedEntity.key) {
             case DataModelType.complaints:
               for (final entity in entities) {
@@ -238,8 +233,10 @@ class NetworkManager {
               }
               break;
             default:
-              final List<EntityModel> items =
-                  filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+              final List<EntityModel> items = await filterEntitybyBandwidth(
+                bandwidthModel.batchSize,
+                entities,
+              );
               if (entities.isNotEmpty) {
                 if (items.isNotEmpty) {
                   await remote.bulkCreate(items.toList());
@@ -248,7 +245,7 @@ class NetworkManager {
           }
         } else if (operationGroupedEntity.key == DataOperation.update) {
           final List<EntityModel> items =
-              filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+              await filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
           if (entities.isNotEmpty) {
             if (items.isNotEmpty) {
               await remote.bulkUpdate(entities);
@@ -256,7 +253,7 @@ class NetworkManager {
           }
         } else if (operationGroupedEntity.key == DataOperation.delete) {
           final List<EntityModel> items =
-              filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
+              await filterEntitybyBandwidth(bandwidthModel.batchSize, entities);
           if (entities.isNotEmpty) {
             if (items.isNotEmpty) {
               await remote.bulkDelete(entities);
@@ -301,7 +298,7 @@ class NetworkManager {
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
-
+    pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
@@ -704,10 +701,10 @@ class NetworkManager {
     }
   }
 
-  List<EntityModel> filterEntitybyBandwidth(
+  FutureOr<List<EntityModel>> filterEntitybyBandwidth(
     int batchSize,
     List<EntityModel> entities,
-  ) {
+  ) async {
     final List<EntityModel> items = [];
     final int size = batchSize < entities.length ? batchSize : entities.length;
 

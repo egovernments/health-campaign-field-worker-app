@@ -80,13 +80,12 @@ class CustomValidator {
   }
 }
 
-performBackgroundService(context, stopService, inBackground) async {
+performBackgroundService(context, stopService, isBackground) async {
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
-
   if (stopService) {
     service.invoke("stopService");
-    if (!inBackground) {
+    if (isBackground == false) {
       DigitToast.show(
         context,
         options: DigitToastOptions(

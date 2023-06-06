@@ -14,8 +14,6 @@ class BandwidthCheckRepository {
     final headers = <String, String>{};
     try {
       final startTime = DateTime.now();
-
-      print(startTime);
       final response = await _client.post(
         bandwidthPath,
         data: {
@@ -77,16 +75,12 @@ class BandwidthCheckRepository {
         },
         options: Options(headers: headers),
       );
-      print((DateTime.now().difference(startTime).inMilliseconds) / 1000);
-
       final timeconsumed =
           ((DateTime.now().difference(startTime).inMilliseconds)) / 1000;
       final speed = (((800 / timeconsumed) / 1000));
-      print('${speed}Mbps');
 
       return speed;
     } catch (e) {
-      print(e);
       return 0;
     }
   }
