@@ -22,6 +22,7 @@ const complaints = Complaints();
 const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
+const syncDialog = SyncDialog();
 
 class Common {
   const Common();
@@ -809,4 +810,22 @@ class InventoryReportDetails {
   String get noRecordsMessage {
     return 'INVENTORY_REPORT_DETAILS_NO_RECORDS_MESSAGE';
   }
+}
+
+class SyncDialog {
+  const SyncDialog();
+
+  String get syncFailedTitle => 'SYNC_DIALOG_SYNC_FAILED_TITLE';
+
+  String get downSyncFailedTitle => 'SYNC_DIALOG_DOWN_SYNC_FAILED_TITLE';
+
+  String get upSyncFailedTitle => 'SYNC_DIALOG_UP_SYNC_FAILED_TITLE';
+
+  String get syncInProgressTitle => 'SYNC_DIALOG_SYNC_IN_PROGRESS_TITLE';
+
+  String get dataSyncedTitle => 'SYNC_DIALOG_DATA_SYNCED_TITLE';
+
+  String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
+
+  String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
 }

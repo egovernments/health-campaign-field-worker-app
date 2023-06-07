@@ -8,6 +8,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:health_campaign_field_worker_app/utils/checkbandwidth.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import 'app.dart';
@@ -56,7 +57,7 @@ void main() async {
     OpLogSchema,
   ]);
 
-  await initializeService();
+  await initializeService(_dio, _isar);
   runApp(
     MainApplication(
       appRouter: AppRouter(),
@@ -67,176 +68,119 @@ void main() async {
   );
 }
 
-Future<void> initializeService() async {
-  final service = FlutterBackgroundService();
 
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'my_foreground', // id
-    'Background Sync', // title
-    description: 'Background sync triggered.', // description
-    importance: Importance.high, // importance must be at low or higher level
-  );
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+// @pragma('vm:entry-point')
+// void onStart(ServiceInstance service) async {
+//   // Only available for flutter 3.0.0 and later
+//   DartPluginRegistrant.ensureInitialized();
 
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestPermission();
+//   service.on('stopService').listen((event) {
+//     print("on stop request invoked");
+//     service.stopSelf();
+//   });
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+//   Timer.periodic(const Duration(seconds: 5 * 60), (timer) async {
+//     final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+//     await envConfig.initialize();
+//     _dio = DioClient().dio;
+//     if (i == 0) {
+//       _isar = await Isar.open([
+//         ServiceRegistrySchema,
+//         LocalizationWrapperSchema,
+//         AppConfigurationSchema,
+//         OpLogSchema,
+//       ]);
+//       i++;
+//     }
+//     final serviceRegistryList = await _isar.serviceRegistrys.where().findAll();
+//     if (serviceRegistryList.isNotEmpty) {
+//       final bandwidthPath = serviceRegistryList
+//           .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
+//           .actions
+//           .first
+//           .path;
 
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
-      autoStartOnBoot: true,
-      // auto start service
-      autoStart: false,
-      isForegroundMode: true,
-      notificationChannelId: 'my_foreground',
-      foregroundServiceNotificationId: 112233,
-    ),
-    iosConfiguration: IosConfiguration(
-      // auto start service
-      autoStart: false,
-      onForeground: onStart,
-      // this will be executed when app is in foreground in separated isolate
+//       final appConfiguration = await _isar.appConfigurations.where().findAll();
 
-      // you have to enable background fetch capability on xcode project
-      onBackground: onIosBackground,
-    ),
-  );
+//       final actionMap = (serviceRegistryList
+//           .map((e) => e.actions.map((e) {
+//                 ApiOperation? operation;
+//                 DataModelType? type;
 
-  // service.startService();
-}
+//                 operation = ApiOperation.values.firstWhereOrNull((element) {
+//                   return e.action.camelCase == element.name;
+//                 });
 
-// to ensure this is executed
-// run app from xcode, then from xcode menu, select Simulate Background Fetch
+//                 type = DataModelType.values.firstWhereOrNull((element) {
+//                   return e.entityName.camelCase == element.name;
+//                 });
 
-@pragma('vm:entry-point')
-Future<bool> onIosBackground(ServiceInstance service) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
+//                 if (operation == null || type == null) return null;
 
-  return true;
-}
+//                 return ActionPathModel(
+//                   operation: operation,
+//                   type: type,
+//                   path: e.path,
+//                 );
+//               }))
+//           .expand((element) => element)
+//           .whereNotNull()
+//           .fold(
+//         <DataModelType, Map<ApiOperation, String>>{},
+//         (Map<DataModelType, Map<ApiOperation, String>> o, element) {
+//           if (o.containsKey(element.type)) {
+//             o[element.type]?.addEntries(
+//               [MapEntry(element.operation, element.path)],
+//             );
+//           } else {
+//             o[element.type] = Map.fromEntries([
+//               MapEntry(element.operation, element.path),
+//             ]);
+//           }
 
-@pragma('vm:entry-point')
-void onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
+//           return o;
+//         },
+//       ));
 
-  service.on('stopService').listen((event) {
-    print("on stop request invoked");
-    service.stopSelf();
-  });
+//       if (userRequestModel?.uuid != null) {
+//         final double speed =
+//             await BandwidthCheckRepository(_dio, bandwidthPath: bandwidthPath)
+//                 .pingBandwidthCheck(bandWidthCheckModel: null);
+//         int batchSize = 1;
+//         final batchResult = appConfiguration.first.bandwidthBatchSize
+//             ?.where((element) =>
+//                 element.minRange >= speed && element.maxRange <= speed)
+//             .toList();
+//         if (batchResult != null) {
+//           if (batchResult.isNotEmpty) {
+//             batchSize = int.parse(batchResult.first.batchSize.toString());
+//           } else if (speed >=
+//               appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
+//             batchSize =
+//                 appConfiguration.first.bandwidthBatchSize!.last.batchSize;
+//           } else if (speed <=
+//               appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
+//             batchSize =
+//                 appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+//           }
+//         }
 
-  Timer.periodic(const Duration(seconds: 5 * 60), (timer) async {
-    final userRequestModel = await LocalSecureStore.instance.userRequestModel;
-    await envConfig.initialize();
-    _dio = DioClient().dio;
-    if (i == 0) {
-      _isar = await Isar.open([
-        ServiceRegistrySchema,
-        LocalizationWrapperSchema,
-        AppConfigurationSchema,
-        OpLogSchema,
-      ]);
-      i++;
-    }
-    final serviceRegistryList = await _isar.serviceRegistrys.where().findAll();
-    if (serviceRegistryList.isNotEmpty) {
-      final bandwidthPath = serviceRegistryList
-          .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
-          .actions
-          .first
-          .path;
-
-      final appConfiguration = await _isar.appConfigurations.where().findAll();
-
-      final actionMap = (serviceRegistryList
-          .map((e) => e.actions.map((e) {
-                ApiOperation? operation;
-                DataModelType? type;
-
-                operation = ApiOperation.values.firstWhereOrNull((element) {
-                  return e.action.camelCase == element.name;
-                });
-
-                type = DataModelType.values.firstWhereOrNull((element) {
-                  return e.entityName.camelCase == element.name;
-                });
-
-                if (operation == null || type == null) return null;
-
-                return ActionPathModel(
-                  operation: operation,
-                  type: type,
-                  path: e.path,
-                );
-              }))
-          .expand((element) => element)
-          .whereNotNull()
-          .fold(
-        <DataModelType, Map<ApiOperation, String>>{},
-        (Map<DataModelType, Map<ApiOperation, String>> o, element) {
-          if (o.containsKey(element.type)) {
-            o[element.type]?.addEntries(
-              [MapEntry(element.operation, element.path)],
-            );
-          } else {
-            o[element.type] = Map.fromEntries([
-              MapEntry(element.operation, element.path),
-            ]);
-          }
-
-          return o;
-        },
-      ));
-
-      if (userRequestModel?.uuid != null) {
-        final double speed =
-            await BandwidthCheckRepository(_dio, bandwidthPath: bandwidthPath)
-                .pingBandwidthCheck(bandWidthCheckModel: null);
-        int batchSize = 1;
-        final batchResult = appConfiguration.first.bandwidthBatchSize
-            ?.where((element) =>
-                element.minRange >= speed && element.maxRange <= speed)
-            .toList();
-        if (batchResult != null) {
-          if (batchResult.isNotEmpty) {
-            batchSize = int.parse(batchResult.first.batchSize.toString());
-          } else if (speed >=
-              appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
-            batchSize =
-                appConfiguration.first.bandwidthBatchSize!.last.batchSize;
-          } else if (speed <=
-              appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
-            batchSize =
-                appConfiguration.first.bandwidthBatchSize!.first.batchSize;
-          }
-        }
-
-        final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-          'userId': userRequestModel!.uuid,
-          'batchSize': batchSize,
-        });
-        const NetworkManager(
-          configuration: NetworkManagerConfiguration(
-            persistenceConfig: PersistenceConfiguration.offlineFirst,
-          ),
-        ).performSync(
-          localRepositories:
-              Constants.getLocalRepositories(_sql, _isar).toList(),
-          remoteRepositories: Constants.getRemoteRepositories(_dio, actionMap),
-          bandwidthModel: bandwidthModel,
-          service: service,
-        );
-      }
-    }
-  });
-}
+//         final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+//           'userId': userRequestModel!.uuid,
+//           'batchSize': batchSize,
+//         });
+//         const NetworkManager(
+//           configuration: NetworkManagerConfiguration(
+//             persistenceConfig: PersistenceConfiguration.offlineFirst,
+//           ),
+//         ).performSync(
+//           localRepositories:
+//               Constants.getLocalRepositories(_sql, _isar).toList(),
+//           remoteRepositories: Constants.getRemoteRepositories(_dio, actionMap),
+//           bandwidthModel: bandwidthModel,
+//           service: service,
+//         );
+//       }
+//     }
+//   });
+// }

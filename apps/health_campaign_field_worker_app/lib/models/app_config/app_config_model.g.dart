@@ -102,6 +102,13 @@ _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
               as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      bandWidthBatchSize: (json['BANDWIDTH_BATCH_SIZE'] as List<dynamic>)
+          .map((e) => BandWidthBatchSize.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      backgroundServiceConfig: json['BACKGROUND_SERVICE_CONFIG'] == null
+          ? null
+          : BackgroundServiceConfig.fromJson(
+              json['BACKGROUND_SERVICE_CONFIG'] as Map<String, dynamic>),
       householdMemberDeletionReasonOptions: (json[
               'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'] as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
@@ -140,6 +147,8 @@ Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
       'TENANT_ID': instance.tenantId,
       'HOUSEHOLD_DELETION_REASON_OPTIONS':
           instance.householdDeletionReasonOptions,
+      'BANDWIDTH_BATCH_SIZE': instance.bandWidthBatchSize,
+      'BACKGROUND_SERVICE_CONFIG': instance.backgroundServiceConfig,
       'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS':
           instance.householdMemberDeletionReasonOptions,
       'GENDER_OPTIONS_POPULATOR': instance.genderOptions,
@@ -161,6 +170,22 @@ Map<String, dynamic> _$$_IdTypeOptionsToJson(_$_IdTypeOptions instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+    };
+
+_$_BandWidthBatchSize _$$_BandWidthBatchSizeFromJson(
+        Map<String, dynamic> json) =>
+    _$_BandWidthBatchSize(
+      minRange: (json['MIN_RANGE'] as num).toDouble(),
+      maxRange: (json['MAX_RANGE'] as num).toDouble(),
+      batchSize: json['BATCH_SIZE'] as int,
+    );
+
+Map<String, dynamic> _$$_BandWidthBatchSizeToJson(
+        _$_BandWidthBatchSize instance) =>
+    <String, dynamic>{
+      'MIN_RANGE': instance.minRange,
+      'MAX_RANGE': instance.maxRange,
+      'BATCH_SIZE': instance.batchSize,
     };
 
 _$_DeliveryCommentOptions _$$_DeliveryCommentOptionsFromJson(
@@ -201,6 +226,22 @@ Map<String, dynamic> _$$_GenderOptionsToJson(_$_GenderOptions instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+    };
+
+_$_BackgroundServiceConfig _$$_BackgroundServiceConfigFromJson(
+        Map<String, dynamic> json) =>
+    _$_BackgroundServiceConfig(
+      batteryPercentCutOff: json['BATTERY_PERCENT_CUT_OFF'] as int,
+      serviceInterval: json['SERVICE_INTERVAL'] as int,
+      apiConcurrency: json['API_CONCURRENCY'] as int,
+    );
+
+Map<String, dynamic> _$$_BackgroundServiceConfigToJson(
+        _$_BackgroundServiceConfig instance) =>
+    <String, dynamic>{
+      'BATTERY_PERCENT_CUT_OFF': instance.batteryPercentCutOff,
+      'SERVICE_INTERVAL': instance.serviceInterval,
+      'API_CONCURRENCY': instance.apiConcurrency,
     };
 
 _$_BackendInterface _$$_BackendInterfaceFromJson(Map<String, dynamic> json) =>

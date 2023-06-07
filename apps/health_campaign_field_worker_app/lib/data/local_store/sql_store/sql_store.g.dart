@@ -955,8 +955,7 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -1679,8 +1678,7 @@ class $NameTable extends Name with TableInfo<$NameTable, NameData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -2975,8 +2973,7 @@ class $DocumentTable extends Document
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -3578,8 +3575,7 @@ class $FacilityTable extends Facility
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -4136,8 +4132,7 @@ class $HouseholdTable extends Household
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -4845,8 +4840,7 @@ class $HouseholdMemberTable extends HouseholdMember
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -5465,8 +5459,7 @@ class $IdentifierTable extends Identifier
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -6315,8 +6308,7 @@ class $IndividualTable extends Individual
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -6993,8 +6985,7 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -7589,8 +7580,7 @@ class $ProductVariantTable extends ProductVariant
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -8468,8 +8458,7 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -9203,8 +9192,7 @@ class $ProjectBeneficiaryTable extends ProjectBeneficiary
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -9781,8 +9769,7 @@ class $ProjectFacilityTable extends ProjectFacility
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -10342,8 +10329,7 @@ class $ProjectProductVariantTable extends ProjectProductVariant
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -10893,8 +10879,7 @@ class $ProjectResourceTable extends ProjectResource
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -11574,8 +11559,7 @@ class $ProjectStaffTable extends ProjectStaff
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -12319,8 +12303,7 @@ class $ProjectTypeTable extends ProjectType
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -13209,8 +13192,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -14074,8 +14056,7 @@ class $StockReconciliationTable extends StockReconciliation
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -14754,8 +14735,7 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -15613,8 +15593,7 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -16391,8 +16370,7 @@ class $TaskResourceTable extends TaskResource
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -17102,8 +17080,7 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -17780,8 +17757,7 @@ class $ServiceAttributesTable extends ServiceAttributes
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -18358,8 +18334,7 @@ class $ServiceDefinitionTable extends ServiceDefinition
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -19104,8 +19079,7 @@ class $AttributesTable extends Attributes
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
@@ -19648,8 +19622,7 @@ class $LocalityTable extends Locality
       'is_deleted', aliasedName, true,
       type: const BoolType(),
       requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
-      defaultValue: const Constant(false));
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))');
   final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
   @override
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
