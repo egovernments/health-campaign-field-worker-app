@@ -50,8 +50,8 @@ class DigitWalkthroughState extends State<DigitWalkthrough> {
     Offset position =
         ((widget.overlayWidget).currentContext?.findRenderObject() as RenderBox)
             .localToGlobal(Offset.zero);
-    this.childHeight = (widget.overlayWidget).currentContext!.size!.height / 2;
-    this.childWidth = (widget.overlayWidget).currentContext!.size!.width;
+    childHeight = (widget.overlayWidget).currentContext!.size!.height / 2;
+    childWidth = (widget.overlayWidget).currentContext!.size!.width;
 
     this.position = position;
   }

@@ -10,7 +10,6 @@ import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../app_exception.dart';
 
 part 'context_utility.dart';
