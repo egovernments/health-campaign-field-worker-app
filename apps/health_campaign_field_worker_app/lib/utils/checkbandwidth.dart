@@ -117,7 +117,7 @@ void onStart(ServiceInstance service) async {
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
   if (interval != null) {
     // TODO: interval will be reomved
-    Timer.periodic(Duration(milliseconds: interval * 100), (timer) async {
+    Timer.periodic(const Duration(seconds: 2 * 60), (timer) async {
       if (frequencyCount != null) {
         final serviceRegistryList =
             await _isar.serviceRegistrys.where().findAll();
@@ -140,7 +140,7 @@ void onStart(ServiceInstance service) async {
               getBatchSizeToBandwidth(speedArray.first, appConfiguration);
           final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
             'userId': userRequestModel!.uuid,
-            'batchSize': configuredBatchSize,
+            'batchSize': 1,
           });
           const NetworkManager(
             configuration: NetworkManagerConfiguration(

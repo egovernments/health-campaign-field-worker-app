@@ -202,6 +202,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       orElse: () => const Offstage(),
                       pendingSync: (count) {
                         if (count == 0) {
+                          performBackgroundService(context, true, false);
+
                           return const Offstage();
                         } else {
                           performBackgroundService(context, false, false);

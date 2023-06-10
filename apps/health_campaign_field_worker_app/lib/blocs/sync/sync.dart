@@ -40,26 +40,46 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     emit(const SyncState.loading());
     try {
       length ??= (await isar.opLogs
-              .filter()
-              .createdByEqualTo(event.createdBy)
-              .syncedUpEqualTo(false)
-              .findAll())
-          .where((element) {
-        switch (element.entityType) {
-          case DataModelType.household:
-          case DataModelType.individual:
-          case DataModelType.householdMember:
-          case DataModelType.projectBeneficiary:
-          case DataModelType.task:
-          case DataModelType.stock:
-          case DataModelType.stockReconciliation:
-          case DataModelType.service:
-          case DataModelType.complaints:
-            return true;
-          default:
-            return false;
-        }
-      }).length;
+                  .filter()
+                  .createdByEqualTo(event.createdBy)
+                  .syncedUpEqualTo(false)
+                  .findAll())
+              .where((element) {
+            switch (element.entityType) {
+              case DataModelType.household:
+              case DataModelType.individual:
+              case DataModelType.householdMember:
+              case DataModelType.projectBeneficiary:
+              case DataModelType.task:
+              case DataModelType.stock:
+              case DataModelType.stockReconciliation:
+              case DataModelType.service:
+              case DataModelType.complaints:
+                return true;
+              default:
+                return false;
+            }
+          }).length +
+          (await isar.opLogs
+                  .filter()
+                  .createdByEqualTo(event.createdBy)
+                  .syncedDownEqualTo(false)
+                  .findAll())
+              .where((element) {
+            switch (element.entityType) {
+              case DataModelType.household:
+              case DataModelType.individual:
+              case DataModelType.projectBeneficiary:
+              case DataModelType.task:
+              case DataModelType.stock:
+              case DataModelType.stockReconciliation:
+              case DataModelType.service:
+              case DataModelType.complaints:
+                return true;
+              default:
+                return false;
+            }
+          }).length;
     } catch (_) {
       rethrow;
     } finally {
