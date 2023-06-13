@@ -101,7 +101,7 @@ performBackgroundService(context, stopService, isBackground) async {
 
   if (stopService) {
     if (isRunning) {
-      service.invoke("stopService");
+      // service.invoke("stopService");
       if (isBackground == false) {
         DigitToast.show(
           context,
@@ -113,7 +113,7 @@ performBackgroundService(context, stopService, isBackground) async {
         );
       }
       try {
-        await Constants().isar.close(deleteFromDisk: false);
+        // await Constants().isar.close(deleteFromDisk: false);
         // final serviceRegistryList =
         //     await Constants().isar.serviceRegistrys.where().findAll();
         // print(serviceRegistryList.length);
@@ -135,17 +135,17 @@ performBackgroundService(context, stopService, isBackground) async {
         ),
       );
     } else if (isRunning && !isOnline) {
-      service.invoke("stopService");
-      DigitToast.show(
-        context,
-        options: DigitToastOptions(
-          'Background Service Stopped',
-          true,
-          DigitTheme.instance.mobileTheme,
-        ),
-      );
+      // service.invoke("stopService");
+      // DigitToast.show(
+      //   context,
+      //   options: DigitToastOptions(
+      //     'Background Service Stopped',
+      //     true,
+      //     DigitTheme.instance.mobileTheme,
+      //   ),
+      // );
       try {
-        Constants().isar.close(deleteFromDisk: false);
+        // Constants().isar.close(deleteFromDisk: false);
       } catch (e) {
         print(e);
       }

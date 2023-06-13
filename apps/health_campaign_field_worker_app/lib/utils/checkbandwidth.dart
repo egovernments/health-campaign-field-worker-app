@@ -28,8 +28,10 @@ late Dio _dio;
 Future<void> initializeService(
   dio,
 ) async {
-  await Constants().initilize();
-  print("----initializeService----");
+  if (Isar.getInstance('HCM') == null) {
+    await Constants().initilize();
+  }
+
   final service = FlutterBackgroundService();
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -91,8 +93,9 @@ void onStart(ServiceInstance service) async {
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
-
-  await Constants().initilize();
+  if (Isar.getInstance('HCM') == null) {
+    await Constants().initilize();
+  }
   await envConfig.initialize();
 
   _dio = DioClient().dio;

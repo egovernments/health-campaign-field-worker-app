@@ -129,6 +129,7 @@ class Constants {
         OpLogSchema,
       ],
       directory: dir.path,
+      name: 'HCM',
     );
   }
 
