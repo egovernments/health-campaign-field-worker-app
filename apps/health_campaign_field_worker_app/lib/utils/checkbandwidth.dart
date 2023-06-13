@@ -28,12 +28,12 @@ late Isar _isar;
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
 int i = 0;
+int batchSize = 1;
 
-Future<void> initializeService(_dio, _isar) async {
-  print("----Main Method called---");
+Future<void> initializeService(dio, isar) async {
   final service = FlutterBackgroundService();
-  _dio = _dio;
-  _isar = _isar;
+  _dio = dio;
+  _isar = isar;
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'my_foreground', // id
@@ -58,7 +58,7 @@ Future<void> initializeService(_dio, _isar) async {
     androidConfiguration: AndroidConfiguration(
       // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
-      autoStartOnBoot: true,
+      autoStartOnBoot: false,
       // auto start service
       autoStart: false,
       isForegroundMode: true,
@@ -91,13 +91,19 @@ void onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
 
   service.on('stopService').listen((event) {
-    print("on stop request invoked");
     service.stopSelf();
   });
 
   await envConfig.initialize();
-  _dio = DioClient().dio;
-  if (i == 0) {
+
+  final isBgRunning =
+      await LocalSecureStore.instance.isBackgroundSerivceRunning;
+  print("----BG-----");
+  print(isBgRunning);
+  print(i);
+  if (isBgRunning || i < 2) {
+    print("true");
+    _dio = DioClient().dio;
     _isar = await Isar.open([
       ServiceRegistrySchema,
       LocalizationWrapperSchema,
@@ -105,9 +111,13 @@ void onStart(ServiceInstance service) async {
       OpLogSchema,
     ]);
     i++;
+  } else {
+    print(_isar);
+    print("fasle");
   }
-//  THis delay will be removed once we invoke the service post login.
-  // Future.delayed(const Duration(seconds: 30), () async {
+  // service.stopSelf();
+  print("---ISAR---");
+  print("---CASE---");
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
 
   final appConfiguration = await _isar.appConfigurations.where().findAll();
@@ -116,8 +126,7 @@ void onStart(ServiceInstance service) async {
   final frequencyCount =
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
   if (interval != null) {
-    // TODO: interval will be reomved
-    Timer.periodic(const Duration(seconds: 2 * 60), (timer) async {
+    Timer.periodic(const Duration(seconds: 60 * 1), (timer) async {
       if (frequencyCount != null) {
         final serviceRegistryList =
             await _isar.serviceRegistrys.where().findAll();
@@ -140,7 +149,7 @@ void onStart(ServiceInstance service) async {
               getBatchSizeToBandwidth(speedArray.first, appConfiguration);
           final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
             'userId': userRequestModel!.uuid,
-            'batchSize': 1,
+            'batchSize': configuredBatchSize,
           });
           const NetworkManager(
             configuration: NetworkManagerConfiguration(
@@ -161,7 +170,6 @@ void onStart(ServiceInstance service) async {
     });
   }
 }
-// }
 
 getActionMap(List<ServiceRegistry> serviceRegistryList) {
   return serviceRegistryList
@@ -209,7 +217,8 @@ int getBatchSizeToBandwidth(
   double speed,
   List<AppConfiguration> appConfiguration,
 ) {
-  late int batchSize;
+  print(batchSize);
+  print("Default");
   final batchResult = appConfiguration.first.bandwidthBatchSize
       ?.where(
         (element) => element.minRange >= speed && element.maxRange <= speed,
@@ -226,6 +235,7 @@ int getBatchSizeToBandwidth(
       batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
     }
   }
+  print(batchSize);
 
   return batchSize;
 }

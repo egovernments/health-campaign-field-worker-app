@@ -17,10 +17,12 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
+import '../utils/debound.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/action_card/action_card.dart';
@@ -201,26 +203,29 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return state.maybeWhen(
                       orElse: () => const Offstage(),
                       pendingSync: (count) {
-                        if (count == 0) {
-                          performBackgroundService(context, true, false);
+                        final debouncer = Debouncer(milliseconds: 500);
 
-                          return const Offstage();
-                        } else {
-                          performBackgroundService(context, false, false);
+                        debouncer.run(() async {
+                          if (count == 0) {
+                            performBackgroundService(context, true, false);
+                          } else {
+                            performBackgroundService(context, false, false);
+                          }
+                        });
 
-                          return DigitInfoCard(
-                            icon: Icons.info,
-                            backgroundColor:
-                                theme.colorScheme.tertiaryContainer,
-                            iconColor: theme.colorScheme.surfaceTint,
-                            description: localizations
-                                .translate(i18.home.dataSyncInfoContent)
-                                .replaceAll('{}', count.toString()),
-                            title: localizations.translate(
-                              i18.home.dataSyncInfoLabel,
-                            ),
-                          );
-                        }
+                        return count == 0
+                            ? const Offstage()
+                            : DigitInfoCard(
+                                icon: Icons.info,
+                                backgroundColor:
+                                    theme.colorScheme.tertiaryContainer,
+                                iconColor: theme.colorScheme.surfaceTint,
+                                description: localizations
+                                    .translate(i18.home.dataSyncInfoContent)
+                                    .replaceAll('{}', count.toString()),
+                                title: localizations
+                                    .translate(i18.home.dataSyncInfoLabel),
+                              );
                       },
                     );
                   },

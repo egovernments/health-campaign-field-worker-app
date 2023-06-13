@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/debound.dart';
 import '../utils/utils.dart';
 import 'data_repository.dart';
+import 'local_store/secure_store/secure_store.dart';
 import 'repositories/oplog/oplog.dart';
 import 'repositories/remote/pgr_service.dart';
 
@@ -81,19 +83,36 @@ class NetworkManager {
 
     if (syncError != null) throw syncError;
 
-    if (pendingSyncUpEntries.isNotEmpty ||
-        pendingSyncDownEntries
-            .where(
-              (element) => element.type != DataModelType.householdMember,
-            )
-            .toList()
-            .isNotEmpty) {
-      performSync(
-        bandwidthModel: bandwidthModel,
-        localRepositories: localRepositories,
-        remoteRepositories: remoteRepositories,
-      );
-    }
+    print("---- Sync  Working ---");
+    final debouncer = Debouncer(milliseconds: 500);
+    debouncer.run(() async {
+      if (pendingSyncUpEntries.isNotEmpty ||
+          pendingSyncDownEntries
+              .where(
+                (element) => element.type != DataModelType.householdMember,
+              )
+              .toList()
+              .isNotEmpty) {
+        performSync(
+          bandwidthModel: bandwidthModel,
+          localRepositories: localRepositories,
+          remoteRepositories: remoteRepositories,
+        );
+      } else if (pendingSyncUpEntries.isEmpty &&
+          pendingSyncDownEntries
+              .where(
+                (element) => element.type != DataModelType.householdMember,
+              )
+              .toList()
+              .isEmpty) {
+        final localSecureStore = LocalSecureStore.instance,
+            isBgRunning = await localSecureStore.isBackgroundSerivceRunning;
+        // if (isBgRunning) {
+        print("Sync  closed");
+        service?.stopSelf();
+        // }
+      }
+    });
   }
 
   FutureOr<void> syncDown({
@@ -713,9 +732,21 @@ class NetworkManager {
               }
           }
         } else if (operationGroupedEntity.key == DataOperation.update) {
-          await remote.bulkUpdate(entities);
+          final List<EntityModel> items = await filterEntitybyBandwidth(
+            bandwidthModel.batchSize,
+            entities,
+          );
+          if (entities.isNotEmpty) {
+            if (items.isNotEmpty) {
+              await remote.bulkUpdate(items);
+            }
+          }
         } else if (operationGroupedEntity.key == DataOperation.delete) {
-          await remote.bulkDelete(entities);
+          final List<EntityModel> items = await filterEntitybyBandwidth(
+            bandwidthModel.batchSize,
+            entities,
+          );
+          await remote.bulkDelete(items);
         }
         if (operationGroupedEntity.key == DataOperation.singleCreate) {
           for (var element in entities) {
@@ -723,7 +754,11 @@ class NetworkManager {
           }
         }
 
-        for (final syncedEntity in operationGroupedEntity.value) {
+        final items = await filterOpLogbyBandwidth(
+          bandwidthModel.batchSize,
+          operationGroupedEntity.value,
+        );
+        for (final syncedEntity in items) {
           if (syncedEntity.type == DataModelType.complaints) continue;
           local.markSyncedUp(entry: syncedEntity);
         }
@@ -781,6 +816,20 @@ FutureOr<List<EntityModel>> filterEntitybyBandwidth(
   List<EntityModel> entities,
 ) async {
   final List<EntityModel> items = [];
+  final int size = batchSize < entities.length ? batchSize : entities.length;
+
+  for (var i = 0; i < size; i++) {
+    items.add(entities[i]);
+  }
+
+  return items;
+}
+
+Future<List<OpLogEntry<EntityModel>>> filterOpLogbyBandwidth(
+  int batchSize,
+  List<OpLogEntry<EntityModel>> entities,
+) async {
+  final List<OpLogEntry<EntityModel>> items = [];
   final int size = batchSize < entities.length ? batchSize : entities.length;
 
   for (var i = 0; i < size; i++) {

@@ -47,8 +47,7 @@ void main() async {
   }
 
   await envConfig.initialize();
-  DigitUi.instance.initThemeComponents();
-
+  WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
   _isar = await Isar.open([
     ServiceRegistrySchema,
@@ -57,7 +56,11 @@ void main() async {
     OpLogSchema,
   ]);
 
-  await initializeService(_dio, _isar);
+  DigitUi.instance.initThemeComponents();
+
+  if (_isar.isOpen) {
+    await initializeService(_dio, _isar);
+  }
   runApp(
     MainApplication(
       appRouter: AppRouter(),
@@ -68,119 +71,22 @@ void main() async {
   );
 }
 
+class AppLifecycleObserver extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
 
-// @pragma('vm:entry-point')
-// void onStart(ServiceInstance service) async {
-//   // Only available for flutter 3.0.0 and later
-//   DartPluginRegistrant.ensureInitialized();
-
-//   service.on('stopService').listen((event) {
-//     print("on stop request invoked");
-//     service.stopSelf();
-//   });
-
-//   Timer.periodic(const Duration(seconds: 5 * 60), (timer) async {
-//     final userRequestModel = await LocalSecureStore.instance.userRequestModel;
-//     await envConfig.initialize();
-//     _dio = DioClient().dio;
-//     if (i == 0) {
-//       _isar = await Isar.open([
-//         ServiceRegistrySchema,
-//         LocalizationWrapperSchema,
-//         AppConfigurationSchema,
-//         OpLogSchema,
-//       ]);
-//       i++;
-//     }
-//     final serviceRegistryList = await _isar.serviceRegistrys.where().findAll();
-//     if (serviceRegistryList.isNotEmpty) {
-//       final bandwidthPath = serviceRegistryList
-//           .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
-//           .actions
-//           .first
-//           .path;
-
-//       final appConfiguration = await _isar.appConfigurations.where().findAll();
-
-//       final actionMap = (serviceRegistryList
-//           .map((e) => e.actions.map((e) {
-//                 ApiOperation? operation;
-//                 DataModelType? type;
-
-//                 operation = ApiOperation.values.firstWhereOrNull((element) {
-//                   return e.action.camelCase == element.name;
-//                 });
-
-//                 type = DataModelType.values.firstWhereOrNull((element) {
-//                   return e.entityName.camelCase == element.name;
-//                 });
-
-//                 if (operation == null || type == null) return null;
-
-//                 return ActionPathModel(
-//                   operation: operation,
-//                   type: type,
-//                   path: e.path,
-//                 );
-//               }))
-//           .expand((element) => element)
-//           .whereNotNull()
-//           .fold(
-//         <DataModelType, Map<ApiOperation, String>>{},
-//         (Map<DataModelType, Map<ApiOperation, String>> o, element) {
-//           if (o.containsKey(element.type)) {
-//             o[element.type]?.addEntries(
-//               [MapEntry(element.operation, element.path)],
-//             );
-//           } else {
-//             o[element.type] = Map.fromEntries([
-//               MapEntry(element.operation, element.path),
-//             ]);
-//           }
-
-//           return o;
-//         },
-//       ));
-
-//       if (userRequestModel?.uuid != null) {
-//         final double speed =
-//             await BandwidthCheckRepository(_dio, bandwidthPath: bandwidthPath)
-//                 .pingBandwidthCheck(bandWidthCheckModel: null);
-//         int batchSize = 1;
-//         final batchResult = appConfiguration.first.bandwidthBatchSize
-//             ?.where((element) =>
-//                 element.minRange >= speed && element.maxRange <= speed)
-//             .toList();
-//         if (batchResult != null) {
-//           if (batchResult.isNotEmpty) {
-//             batchSize = int.parse(batchResult.first.batchSize.toString());
-//           } else if (speed >=
-//               appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
-//             batchSize =
-//                 appConfiguration.first.bandwidthBatchSize!.last.batchSize;
-//           } else if (speed <=
-//               appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
-//             batchSize =
-//                 appConfiguration.first.bandwidthBatchSize!.first.batchSize;
-//           }
-//         }
-
-//         final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-//           'userId': userRequestModel!.uuid,
-//           'batchSize': batchSize,
-//         });
-//         const NetworkManager(
-//           configuration: NetworkManagerConfiguration(
-//             persistenceConfig: PersistenceConfiguration.offlineFirst,
-//           ),
-//         ).performSync(
-//           localRepositories:
-//               Constants.getLocalRepositories(_sql, _isar).toList(),
-//           remoteRepositories: Constants.getRemoteRepositories(_dio, actionMap),
-//           bandwidthModel: bandwidthModel,
-//           service: service,
-//         );
-//       }
-//     }
-//   });
-// }
+    if (state == AppLifecycleState.paused) {
+      setBgrunning(true);
+      // FlutterBackgroundService().invoke('stopService');
+      // Stop the background service when the app is terminated
+    } else if (state == AppLifecycleState.resumed) {
+      // Stop the background service when the app is terminated
+      setBgrunning(false);
+      final isRunning = await FlutterBackgroundService().isRunning();
+      final localSecureStore = LocalSecureStore.instance,
+          isBgRunning = await localSecureStore.isBackgroundSerivceRunning;
+      if (!isRunning && isBgRunning) {}
+    }
+  }
+}
