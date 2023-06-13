@@ -75,9 +75,12 @@ class BandwidthCheckRepository {
         },
         options: Options(headers: headers),
       );
+      print(startTime);
       final timeconsumed =
           ((DateTime.now().difference(startTime).inMilliseconds)) / 1000;
       final speed = (((800 / timeconsumed) / 1000));
+      print(speed);
+      print(timeconsumed);
 
       return speed;
     } catch (e) {

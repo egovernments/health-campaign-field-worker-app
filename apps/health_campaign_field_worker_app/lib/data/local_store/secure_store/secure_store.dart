@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:isar/isar.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
+import '../no_sql/schema/app_configuration.dart';
+import '../no_sql/schema/localization.dart';
+import '../no_sql/schema/service_registry.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';

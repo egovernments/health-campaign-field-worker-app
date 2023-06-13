@@ -3,6 +3,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
@@ -139,7 +140,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                     ),
                   ),
               ]),
-              footer: const PoweredByDigit(),
+              footer: StreamBuilder<Map<String, dynamic>?>(
+                stream: FlutterBackgroundService().on('update'),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    print(snapshot.data?['isar']);
+
+                    return PoweredByDigit();
+                  }
+
+                  return PoweredByDigit();
+                },
+              ),
               children: [
                 const SizedBox(height: kPadding * 2),
                 BlocConsumer<SyncBloc, SyncState>(
@@ -203,7 +215,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     return state.maybeWhen(
                       orElse: () => const Offstage(),
                       pendingSync: (count) {
-                        final debouncer = Debouncer(milliseconds: 500);
+                        final debouncer = Debouncer(seconds: 5);
 
                         debouncer.run(() async {
                           if (count == 0) {

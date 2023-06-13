@@ -10,8 +10,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/local_store/no_sql/schema/localization.dart';
-import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
@@ -24,16 +22,15 @@ import '../widgets/network_manager_provider_wrapper.dart';
 import 'constants.dart';
 import 'environment_config.dart';
 
-late Isar _isar;
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
-int i = 0;
-int batchSize = 1;
 
-Future<void> initializeService(dio, isar) async {
+Future<void> initializeService(
+  dio,
+) async {
+  await Constants().initilize();
+  print("----initializeService----");
   final service = FlutterBackgroundService();
-  _dio = dio;
-  _isar = isar;
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'my_foreground', // id
@@ -87,6 +84,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
+  print("Function here");
   // Only available for flutter 3.0.0 and later
   DartPluginRegistrant.ensureInitialized();
 
@@ -94,42 +92,37 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
+  await Constants().initilize();
   await envConfig.initialize();
 
+  _dio = DioClient().dio;
   final isBgRunning =
       await LocalSecureStore.instance.isBackgroundSerivceRunning;
   print("----BG-----");
   print(isBgRunning);
-  print(i);
-  if (isBgRunning || i < 2) {
-    print("true");
-    _dio = DioClient().dio;
-    _isar = await Isar.open([
-      ServiceRegistrySchema,
-      LocalizationWrapperSchema,
-      AppConfigurationSchema,
-      OpLogSchema,
-    ]);
-    i++;
-  } else {
-    print(_isar);
-    print("fasle");
-  }
+
   // service.stopSelf();
   print("---ISAR---");
   print("---CASE---");
-  final userRequestModel = await LocalSecureStore.instance.userRequestModel;
 
-  final appConfiguration = await _isar.appConfigurations.where().findAll();
+  final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+  print("here");
+
+  print(Constants().isar.isOpen);
+  print("here");
+  final appConfiguration =
+      await Constants().isar.appConfigurations.where().findAll();
   final interval =
       appConfiguration.first.backgroundServiceConfig?.serviceInterval;
   final frequencyCount =
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
+  print(interval);
+  print(frequencyCount);
   if (interval != null) {
     Timer.periodic(const Duration(seconds: 60 * 1), (timer) async {
       if (frequencyCount != null) {
         final serviceRegistryList =
-            await _isar.serviceRegistrys.where().findAll();
+            await Constants().isar.serviceRegistrys.where().findAll();
         if (serviceRegistryList.isNotEmpty) {
           final bandwidthPath = serviceRegistryList
               .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
@@ -144,7 +137,11 @@ void onStart(ServiceInstance service) async {
               bandwidthPath: bandwidthPath,
             ).pingBandwidthCheck(bandWidthCheckModel: null);
             speedArray.add(speed);
+            print(speed);
           }
+          print(speedArray.first);
+          print("---Speed---");
+
           int configuredBatchSize =
               getBatchSizeToBandwidth(speedArray.first, appConfiguration);
           final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
@@ -157,7 +154,7 @@ void onStart(ServiceInstance service) async {
             ),
           ).performSync(
             localRepositories:
-                Constants.getLocalRepositories(_sql, _isar).toList(),
+                Constants.getLocalRepositories(_sql, Constants().isar).toList(),
             remoteRepositories: Constants.getRemoteRepositories(
               _dio,
               getActionMap(serviceRegistryList),
@@ -217,11 +214,12 @@ int getBatchSizeToBandwidth(
   double speed,
   List<AppConfiguration> appConfiguration,
 ) {
+  int batchSize = 1;
   print(batchSize);
   print("Default");
   final batchResult = appConfiguration.first.bandwidthBatchSize
       ?.where(
-        (element) => element.minRange >= speed && element.maxRange <= speed,
+        (element) => speed >= element.minRange && speed <= element.maxRange,
       )
       .toList();
   if (batchResult != null) {

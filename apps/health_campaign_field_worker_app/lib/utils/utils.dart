@@ -5,10 +5,13 @@ import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
+import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import 'constants.dart';
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -109,6 +112,15 @@ performBackgroundService(context, stopService, isBackground) async {
           ),
         );
       }
+      try {
+        await Constants().isar.close(deleteFromDisk: false);
+        // final serviceRegistryList =
+        //     await Constants().isar.serviceRegistrys.where().findAll();
+        // print(serviceRegistryList.length);
+        // Constants().initilize();
+      } catch (e) {
+        print(e);
+      }
     }
   } else {
     if (!isRunning && isOnline) {
@@ -132,6 +144,11 @@ performBackgroundService(context, stopService, isBackground) async {
           DigitTheme.instance.mobileTheme,
         ),
       );
+      try {
+        Constants().isar.close(deleteFromDisk: false);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -30,7 +31,6 @@ import 'utils/environment_config.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
-late Isar _isar;
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
 int i = 0;
@@ -49,22 +49,17 @@ void main() async {
   await envConfig.initialize();
   WidgetsBinding.instance.addObserver(AppLifecycleObserver());
   _dio = DioClient().dio;
-  _isar = await Isar.open([
-    ServiceRegistrySchema,
-    LocalizationWrapperSchema,
-    AppConfigurationSchema,
-    OpLogSchema,
-  ]);
 
   DigitUi.instance.initThemeComponents();
 
-  if (_isar.isOpen) {
-    await initializeService(_dio, _isar);
-  }
+  print("--OPEN---");
+
+  await initializeService(_dio);
+
   runApp(
     MainApplication(
       appRouter: AppRouter(),
-      isar: _isar,
+      isar: Constants().isar,
       client: _dio,
       sql: _sql,
     ),

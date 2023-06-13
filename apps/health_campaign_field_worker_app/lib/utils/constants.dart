@@ -2,9 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
+import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
@@ -45,6 +50,20 @@ import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
 
 class Constants {
+  late Isar _isar;
+  static final Constants _instance = Constants._();
+  Constants._();
+  factory Constants() {
+    return _instance;
+  }
+  Future initilize() async {
+    await _initializeIsar();
+  }
+
+  Isar get isar {
+    return _isar;
+  }
+
   static const String localizationApiPath = 'localization/messages/v1/_search';
   static const String projectSearchApiPath = '/project/v1/_search';
 
@@ -97,6 +116,20 @@ class Constants {
         PgrServiceOpLogManager(isar),
       ),
     ];
+  }
+
+  Future<void> _initializeIsar() async {
+    final dir = await getApplicationDocumentsDirectory();
+    print(dir.path);
+    _isar = await Isar.open(
+      [
+        ServiceRegistrySchema,
+        LocalizationWrapperSchema,
+        AppConfigurationSchema,
+        OpLogSchema,
+      ],
+      directory: dir.path,
+    );
   }
 
   static List<RemoteRepository> getRemoteRepositories(

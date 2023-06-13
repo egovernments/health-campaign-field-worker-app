@@ -84,7 +84,7 @@ class NetworkManager {
     if (syncError != null) throw syncError;
 
     print("---- Sync  Working ---");
-    final debouncer = Debouncer(milliseconds: 500);
+    final debouncer = Debouncer(seconds: 5);
     debouncer.run(() async {
       if (pendingSyncUpEntries.isNotEmpty ||
           pendingSyncDownEntries
