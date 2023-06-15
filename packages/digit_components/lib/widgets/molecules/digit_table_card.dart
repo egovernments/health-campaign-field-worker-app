@@ -42,7 +42,7 @@ class DigitTableCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width / fraction,
                             child: Text(
                               e,
-                              style: theme.textTheme.headline5,
+                              style: theme.textTheme.headlineSmall,
                               textAlign: TextAlign.start,
                             ),
                           ),

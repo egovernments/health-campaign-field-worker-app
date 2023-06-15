@@ -27,7 +27,7 @@ class _DigitWalkthroughState extends State<DigitWalkthrough> {
   late double childHeight;
   late Offset position;
 
-  _DigitWalkthroughState({this.position = Offset.zero, this.childHeight = 0.0});
+  _DigitWalkthroughState();
   OverlayWidgetState? get overlayWidgetController {
     return widget.overlayWidget.currentState;
   }
@@ -49,8 +49,7 @@ class _DigitWalkthroughState extends State<DigitWalkthrough> {
             .currentContext
             ?.findRenderObject() as RenderBox)
         .localToGlobal(Offset.zero);
-    this.childHeight =
-        (widget.child.key as GlobalKey).currentContext!.size!.height;
+    childHeight = (widget.child.key as GlobalKey).currentContext!.size!.height;
     this.position = position;
   }
 

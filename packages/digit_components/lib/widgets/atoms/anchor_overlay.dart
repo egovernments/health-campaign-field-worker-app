@@ -24,8 +24,6 @@ class AnchoredOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return OverlayBuilder(
       type: OverlayType.fullscreen,
       opaque: false,
@@ -84,7 +82,7 @@ class AnchoredOverlay extends StatelessWidget {
                                         ),
                                         onPressed: onTap,
                                         child: const Text(
-                                          true ? 'Next' : 'End',
+                                          'Next',
                                           style: TextStyle(fontSize: 10),
                                         ),
                                       ))

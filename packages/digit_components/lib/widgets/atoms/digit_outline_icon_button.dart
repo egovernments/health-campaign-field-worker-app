@@ -17,15 +17,13 @@ class DigitOutlineIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return OutlinedButton(
       onPressed: onPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(child: Icon(icon)),
-          SizedBox(width: kPadding),
+          const SizedBox(width: kPadding),
           Text(label),
         ],
       ),
