@@ -1,13 +1,13 @@
-# DIGIT Components
+# **DIGIT Components**
 
-## DigitActionDialog : 
+**DigitActionDialog** : 
 	A customizable dialog with multiple action buttons / widgets.
 	
 	Usage: 
 	onPressed : () => DigitActionDialog.show(
- context,
- widget: your_widget()
-)
+	 context,
+	 widget: your_widget()
+	)
 
 **DigitCheckBox** : 
 	A single checkbox component.
