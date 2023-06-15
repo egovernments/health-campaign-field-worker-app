@@ -1,6 +1,6 @@
-DIGIT Components
+# DIGIT Components
 
-DigitActionDialog : 
+## DigitActionDialog : 
 	A customizable dialog with multiple action buttons / widgets.
 	
 	Usage: 
