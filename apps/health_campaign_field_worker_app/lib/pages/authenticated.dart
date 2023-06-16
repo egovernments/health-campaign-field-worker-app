@@ -94,7 +94,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                     final bloc = SyncBloc(
                       isar: isar,
                       networkManager: context.read(),
-                    )..add(SyncRefreshEvent(userId));
+                    )..add(SyncRefreshEvent(
+                        userId,
+                      ));
 
                     isar.opLogs
                         .filter()

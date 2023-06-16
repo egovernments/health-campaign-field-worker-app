@@ -9,15 +9,20 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ProjectProductVariantSearchModel extends EntitySearchModel {
   final String? productVariantId;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   
   ProjectProductVariantSearchModel({
     this.productVariantId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProjectProductVariantSearchModel.ignoreDeleted({
+    this.productVariantId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -29,8 +34,6 @@ class ProjectProductVariantModel extends EntityModel {
   final String? type;
   final bool? isBaseUnitVariant;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   final int? rowVersion;
   final ProjectProductVariantAdditionalFields? additionalFields;
 
@@ -40,9 +43,9 @@ class ProjectProductVariantModel extends EntityModel {
     this.type,
     this.isBaseUnitVariant,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProjectProductVariantCompanion get companion {
@@ -52,11 +55,11 @@ class ProjectProductVariantModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       productVariantId: Value(productVariantId),
       type: Value(type),
       isBaseUnitVariant: Value(isBaseUnitVariant),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

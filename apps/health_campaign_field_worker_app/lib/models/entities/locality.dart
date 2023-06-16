@@ -10,16 +10,22 @@ class LocalitySearchModel extends EntitySearchModel {
   final String? code;
   final String? name;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   
   LocalitySearchModel({
     this.code,
     this.name,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  LocalitySearchModel.ignoreDeleted({
+    this.code,
+    this.name,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -30,8 +36,6 @@ class LocalityModel extends EntityModel {
   final String code;
   final String? name;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   final int? rowVersion;
   final LocalityAdditionalFields? additionalFields;
 
@@ -40,9 +44,9 @@ class LocalityModel extends EntityModel {
     required this.code,
     this.name,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   LocalityCompanion get companion {
@@ -52,10 +56,10 @@ class LocalityModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       code: Value(code),
       name: Value(name),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

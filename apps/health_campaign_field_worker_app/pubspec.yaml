@@ -53,6 +53,7 @@ dependencies:
   flutter_background_service: ^2.4.6
   flutter_local_notifications: ^14.1.0
   device_info_plus: ^9.0.1
+  battery_plus: ^4.0.1
   workmanager: ^0.5.1
 
 

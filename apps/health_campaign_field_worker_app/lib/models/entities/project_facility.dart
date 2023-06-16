@@ -11,17 +11,24 @@ class ProjectFacilitySearchModel extends EntitySearchModel {
   final List<String>? facilityId;
   final List<String>? projectId;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   
   ProjectFacilitySearchModel({
     this.id,
     this.facilityId,
     this.projectId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProjectFacilitySearchModel.ignoreDeleted({
+    this.id,
+    this.facilityId,
+    this.projectId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -33,8 +40,6 @@ class ProjectFacilityModel extends EntityModel {
   final String facilityId;
   final String projectId;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   final int? rowVersion;
   final ProjectFacilityAdditionalFields? additionalFields;
 
@@ -44,9 +49,9 @@ class ProjectFacilityModel extends EntityModel {
     required this.facilityId,
     required this.projectId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProjectFacilityCompanion get companion {
@@ -56,11 +61,11 @@ class ProjectFacilityModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

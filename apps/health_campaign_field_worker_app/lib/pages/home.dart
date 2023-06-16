@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart' hide Column;
@@ -43,6 +46,32 @@ class HomePage extends LocalizedStatefulWidget {
 }
 
 class _HomePageState extends LocalizedState<HomePage> {
+  late StreamSubscription<ConnectivityResult> subscription;
+  @override
+  initState() {
+    super.initState();
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      performBackgroundService(
+        isBackground: false,
+        stopService: false,
+        context: null,
+      );
+      print("----Results----");
+
+      // Got a new connectivity status!
+    });
+  }
+
+  //  Be sure to cancel subscription after you are done
+  @override
+  dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -219,9 +248,17 @@ class _HomePageState extends LocalizedState<HomePage> {
 
                         debouncer.run(() async {
                           if (count == 0) {
-                            performBackgroundService(context, true, false);
+                            performBackgroundService(
+                              isBackground: false,
+                              stopService: true,
+                              context: context,
+                            );
                           } else {
-                            performBackgroundService(context, false, false);
+                            performBackgroundService(
+                              isBackground: false,
+                              stopService: false,
+                              context: context,
+                            );
                           }
                         });
 

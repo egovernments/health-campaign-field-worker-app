@@ -16,8 +16,6 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? department;
   final String? referenceId;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -31,10 +29,10 @@ class ProjectSearchModel extends EntitySearchModel {
     this.department,
     this.referenceId,
     this.tenantId,
-    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
+    super.isDeleted,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -42,6 +40,28 @@ class ProjectSearchModel extends EntitySearchModel {
       ? null
       : DateTime.fromMillisecondsSinceEpoch(endDate),
    super();
+
+  @MappableConstructor()
+  ProjectSearchModel.ignoreDeleted({
+    this.id,
+    this.projectTypeId,
+    this.projectNumber,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
+    this.parent,
+    this.department,
+    this.referenceId,
+    this.tenantId,
+    int? startDate,
+    int? endDate,
+    super.boundaryCode,
+  }): startDateTime = startDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super(isDeleted: false);
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -67,8 +87,6 @@ class ProjectModel extends EntityModel {
   final String? referenceId;
   final String? projectHierarchy;
   final String? tenantId;
-  @override
-  final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
@@ -91,7 +109,6 @@ class ProjectModel extends EntityModel {
     this.referenceId,
     this.projectHierarchy,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.address,
     this.targets,
@@ -99,6 +116,7 @@ class ProjectModel extends EntityModel {
     int? startDate,
     int? endDate,
     super.auditDetails,
+    super.isDeleted = false,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -120,6 +138,7 @@ class ProjectModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       projectTypeId: Value(projectTypeId),
       projectNumber: Value(projectNumber),
@@ -132,7 +151,6 @@ class ProjectModel extends EntityModel {
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

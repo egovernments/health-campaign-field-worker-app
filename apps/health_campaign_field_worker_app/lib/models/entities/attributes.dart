@@ -16,8 +16,6 @@ class AttributesSearchModel extends EntitySearchModel {
   final bool? required;
   final String? regex;
   final int? order;
-  @override
-  final bool? isDeleted;
   
   AttributesSearchModel({
     this.id,
@@ -29,9 +27,23 @@ class AttributesSearchModel extends EntitySearchModel {
     this.required,
     this.regex,
     this.order,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  AttributesSearchModel.ignoreDeleted({
+    this.id,
+    this.dataType,
+    this.referenceId,
+    this.tenantId,
+    this.code,
+    this.isActive,
+    this.required,
+    this.regex,
+    this.order,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -49,8 +61,6 @@ class AttributesModel extends EntityModel {
   final bool? required;
   final String? regex;
   final int? order;
-  @override
-  final bool? isDeleted;
   final int? rowVersion;
   final AttributesAdditionalFields? additionalFields;
 
@@ -66,9 +76,9 @@ class AttributesModel extends EntityModel {
     this.required,
     this.regex,
     this.order,
-    this.isDeleted,
     this.rowVersion,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   AttributesCompanion get companion {
@@ -78,6 +88,7 @@ class AttributesModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
@@ -88,7 +99,6 @@ class AttributesModel extends EntityModel {
       required: Value(required),
       regex: Value(regex),
       order: Value(order),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

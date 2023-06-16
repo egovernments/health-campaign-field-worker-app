@@ -27,7 +27,7 @@ class Address extends Table {
   TextColumn get localityBoundaryCode => text().nullable()();
   TextColumn get localityBoundaryName => text().nullable()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable()();
+  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get type => intEnum<AddressType>().nullable()();
   
