@@ -42,6 +42,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
           const SizedBox(height: 8),
           ReactiveDropdownField(
             menuMaxHeight: menuMaxHeight,
+            icon: const Icon(Icons.arrow_drop_down),
             onChanged: (control) {
               final value = control.value;
               if (value == null) return;
