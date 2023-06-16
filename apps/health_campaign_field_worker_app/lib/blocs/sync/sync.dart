@@ -103,6 +103,14 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         bandwidthModel: bandwidthModel,
       );
       emit(const SyncCompletedState());
+    } on SyncError catch (error) {
+      if (error is SyncDownError) {
+        emit(const DownSyncFailedState());
+      } else {
+        emit(const UpSyncFailedState());
+      }
+
+      rethrow;
     } catch (error) {
       emit(const SyncFailedState());
       rethrow;
@@ -136,4 +144,8 @@ class SyncState with _$SyncState {
   const factory SyncState.completedSync() = SyncCompletedState;
 
   const factory SyncState.failedSync() = SyncFailedState;
+
+  const factory SyncState.failedDownSync() = DownSyncFailedState;
+
+  const factory SyncState.failedUpSync() = UpSyncFailedState;
 }
