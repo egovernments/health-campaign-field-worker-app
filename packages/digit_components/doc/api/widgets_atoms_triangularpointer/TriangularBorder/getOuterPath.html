@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getOuterPath method from the TriangularBorder class, for the Dart programming language.">
+  <title>getOuterPath method - TriangularBorder class - triangularpointer library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">digit_components</a></li>
+    <li><a href="../../widgets_atoms_triangularpointer/widgets_atoms_triangularpointer-library.html">triangularpointer</a></li>
+    <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html">TriangularBorder</a></li>
+    <li class="self-crumb">getOuterPath method</li>
+  </ol>
+  <div class="self-name">getOuterPath</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">getOuterPath</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-ui/Path-class.html">Path</a></span>
+<span class="name ">getOuterPath</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="getOuterPath-param-rect"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Rect-class.html">Rect</a></span> <span class="parameter-name">rect</span>, </span></li>
+<li><span class="parameter" id="getOuterPath-param-textDirection">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a>?</span> <span class="parameter-name">textDirection</span>}</span></li>
+</ol>)
+
+      <div class="features"><span class="feature">override</span></div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Create a <a href="https://api.flutter.dev/flutter/dart-ui/Path-class.html">Path</a> that describes the outer edge of the border.</p>
+<p>This path must not cross the path given by <a href="../../widgets_atoms_triangularpointer/TriangularBorder/getInnerPath.html">getInnerPath</a> for the same
+<a href="https://api.flutter.dev/flutter/dart-ui/Rect-class.html">Rect</a>.</p>
+<p>To obtain a <a href="https://api.flutter.dev/flutter/dart-ui/Path-class.html">Path</a> that describes the area of the border itself, set the
+<a href="https://api.flutter.dev/flutter/dart-ui/Path/fillType.html">Path.fillType</a> of the returned object to <a href="https://api.flutter.dev/flutter/dart-ui/PathFillType.html">PathFillType.evenOdd</a>, and add
+to this object the path returned from <a href="../../widgets_atoms_triangularpointer/TriangularBorder/getInnerPath.html">getInnerPath</a> (using
+<a href="https://api.flutter.dev/flutter/dart-ui/Path/addPath.html">Path.addPath</a>).</p>
+<p>The <code>textDirection</code> argument must be provided non-null if the border
+has a text direction dependency (for example if it is expressed in terms
+of "start" and "end" instead of "left" and "right"). It may be null if
+the border will not need the text direction to paint itself.</p>
+<p>See also:</p>
+<ul>
+<li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/getInnerPath.html">getInnerPath</a>, which creates the path for the inner edge.</li>
+<li><a href="https://api.flutter.dev/flutter/dart-ui/Path/contains.html">Path.contains</a>, which can tell if an <a href="https://api.flutter.dev/flutter/dart-ui/Offset-class.html">Offset</a> is within a <a href="https://api.flutter.dev/flutter/dart-ui/Path-class.html">Path</a>.</li>
+</ul>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+  var path = Path();
+  path.moveTo(rect.width &#47; 2, 0);
+  path.lineTo(0, rect.height);
+  path.lineTo(rect.width, rect.height);
+  path.close();
+
+  return path;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">digit_components</a></li>
+  <li><a href="../../widgets_atoms_triangularpointer/widgets_atoms_triangularpointer-library.html">triangularpointer</a></li>
+  <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html">TriangularBorder</a></li>
+  <li class="self-crumb">getOuterPath method</li>
+</ol>
+
+
+    <h5>TriangularBorder class</h5>
+    <ol>
+
+        <li class="section-title"><a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html#constructors">Constructors</a></li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/TriangularBorder.html">TriangularBorder</a></li>
+
+
+        <li class="section-title">
+          <a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/dimensions.html">dimensions</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/preferPaintInterior.html">preferPaintInterior</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+        <li class="section-title"><a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html#instance-methods">Methods</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/add.html">add</a></li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/getInnerPath.html">getInnerPath</a></li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/getOuterPath.html">getOuterPath</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/lerpFrom.html">lerpFrom</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/lerpTo.html">lerpTo</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/paint.html">paint</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/paintInterior.html">paintInterior</a></li>
+          <li><a href="../../widgets_atoms_triangularpointer/TriangularBorder/scale.html">scale</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/toString.html">toString</a></li>
+
+        <li class="section-title inherited"><a href="../../widgets_atoms_triangularpointer/TriangularBorder-class.html#operators">Operators</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/painting/ShapeBorder/operator_plus.html">operator +</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    digit_components
+      0.0.1+4
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
