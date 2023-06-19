@@ -69,6 +69,7 @@ class NetworkManager {
       );
     } catch (e) {
       syncError = SyncDownError(e);
+      service?.stopSelf();
     }
 
     try {
@@ -79,6 +80,7 @@ class NetworkManager {
       );
     } catch (e) {
       syncError ??= SyncUpError(e);
+      service?.stopSelf();
     }
 
     if (syncError != null) throw syncError;
@@ -104,12 +106,7 @@ class NetworkManager {
               )
               .toList()
               .isEmpty) {
-        final localSecureStore = LocalSecureStore.instance,
-            isBgRunning = await localSecureStore.isBackgroundSerivceRunning;
-        // if (isBgRunning) {
-        print("Sync  closed");
         service?.stopSelf();
-        // }
       }
     });
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/auth/auth.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;

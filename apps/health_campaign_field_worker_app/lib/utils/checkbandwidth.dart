@@ -19,7 +19,6 @@ import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
-import 'constants.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 import 'package:battery_plus/battery_plus.dart';
@@ -93,8 +92,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
-  print("Function here");
-
   // Only available for flutter 3.0.0 and later
   DartPluginRegistrant.ensureInitialized();
 
@@ -107,19 +104,8 @@ void onStart(ServiceInstance service) async {
   await envConfig.initialize();
 
   _dio = DioClient().dio;
-  final isBgRunning =
-      await LocalSecureStore.instance.isBackgroundSerivceRunning;
-  print("----BG-----");
-  print(isBgRunning);
-
-  // service.stopSelf();
-  print("---ISAR---");
-  print("---CASE---");
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
-  print("here");
-
-  print(Constants().isar.isOpen);
 
   final appConfiguration =
       await Constants().isar.appConfigurations.where().findAll();
@@ -154,18 +140,23 @@ void onStart(ServiceInstance service) async {
 
               List speedArray = [];
               for (var i = 0; i < frequencyCount; i++) {
-                final double speed = await BandwidthCheckRepository(
-                  _dio,
-                  bandwidthPath: bandwidthPath,
-                ).pingBandwidthCheck(bandWidthCheckModel: null);
-                speedArray.add(speed);
-                print(speed);
+                try {
+                  final double speed = await BandwidthCheckRepository(
+                    _dio,
+                    bandwidthPath: bandwidthPath,
+                  ).pingBandwidthCheck(bandWidthCheckModel: null);
+                  speedArray.add(speed);
+                } catch (e) {
+                  service.stopSelf();
+                  break;
+                }
               }
-              print(speedArray.first);
-              print("---Speed---");
+              double sum = speedArray.fold(0, (p, c) => p + c);
 
-              int configuredBatchSize =
-                  getBatchSizeToBandwidth(speedArray.first, appConfiguration);
+              int configuredBatchSize = getBatchSizeToBandwidth(
+                sum / speedArray.length,
+                appConfiguration,
+              );
               final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
                 'userId': userRequestModel!.uuid,
                 'batchSize': configuredBatchSize,
@@ -255,8 +246,7 @@ int getBatchSizeToBandwidth(
   List<AppConfiguration> appConfiguration,
 ) {
   int batchSize = 1;
-  print(batchSize);
-  print("Default");
+
   final batchResult = appConfiguration.first.bandwidthBatchSize
       ?.where(
         (element) => speed >= element.minRange && speed <= element.maxRange,
@@ -273,7 +263,6 @@ int getBatchSizeToBandwidth(
       batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
     }
   }
-  print(batchSize);
 
   return batchSize;
 }
