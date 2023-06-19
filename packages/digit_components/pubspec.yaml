@@ -1,6 +1,6 @@
 name: digit_components
-description: Digit UI Design specification
-version: 0.0.1
+description: Digit UI Design specification Flutter widgets. Users can import this package by adding digit_components <latest> in respective pubspec.yaml dependencies. All components are generic and styled based on DIGIT standards.
+version: 0.0.1+3
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_components
 
 environment:
@@ -11,9 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
-  intl: ^0.18.0
+  intl: ^0.17.0
   freezed_annotation: ^2.2.0
-  google_fonts: ^3.0.1
   horizontal_data_table: ^4.1.3
   location: ^4.4.0
   location_platform_interface: ^2.3.0

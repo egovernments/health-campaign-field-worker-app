@@ -16,25 +16,24 @@
 	DigitCheckbox(
  		label: “your_label”,
  		value: boolean_value,
-),
+	),
 
 **DigitDateFormPicker** : 
 	A Reactive Date Picker widget with custom label header. The formControlName is required to bind this ReactiveDatePicker to a FormControl.
 	
 	Usage: 
 	DigitDateFormPicker(
-     label: t.translate(i18.common.dateOfBirth),
+     label: 'Date of Birth',
      padding: const EdgeInsets.only(top: 32.0),
      isRequired: true,
-     cancelText: t.translate(i18.common.cancel),
+     cancelText: 'Cancel',
      fieldHintText: 'dd/mm/yyyy',
-     confirmText: t.translate(i18.common.oK),
+     confirmText: 'OK',
      icon: Icons.info_outline_rounded,
-     toolTipMsg: t.translate(i18.wageSeeker.ageValidation),
+     toolTipMsg: 'Age should not be less than 18 years',
      formControlName: ’dob_key’,
      autoValidation: AutovalidateMode.always,
-     requiredMessage:
-         t.translate(i18.wageSeeker.dobRequired),
+     requiredMessage: 'Date of birth is required',
      validationMessages: {
        'required': (_) => ‘Date of birth is required’,
        'max': (_) => ‘Age cannot be greater than 18 years’
