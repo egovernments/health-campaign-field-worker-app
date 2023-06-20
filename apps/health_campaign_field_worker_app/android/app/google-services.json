@@ -29,6 +29,13 @@
             {
               "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.salama"
+              }
             }
           ]
         }
