@@ -47,6 +47,7 @@ import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
+import '../pages/target/beneficary_target.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -139,6 +140,7 @@ part 'app_router.gr.dart';
           ],
         ),
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+        AutoRoute(page: BeneficaryTargetPage, path: 'beneficary-target'),
         AutoRoute(page: StockReconciliationPage, path: 'stock-reconciliation'),
         AutoRoute<FacilityModel>(
           page: FacilitySelectionPage,

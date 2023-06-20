@@ -148,6 +148,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BeneficaryTargetRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficaryTargetRouteArgs>(
+          orElse: () => const BeneficaryTargetRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: BeneficaryTargetPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     StockReconciliationRoute.name: (routeData) {
       final args = routeData.argsAs<StockReconciliationRouteArgs>(
           orElse: () => const StockReconciliationRouteArgs());
@@ -624,6 +635,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               ManageStocksRoute.name,
               path: 'manage-stocks',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              BeneficaryTargetRoute.name,
+              path: 'beneficary-target',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1136,6 +1152,40 @@ class ManageStocksRouteArgs {
   @override
   String toString() {
     return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [BeneficaryTargetPage]
+class BeneficaryTargetRoute extends PageRouteInfo<BeneficaryTargetRouteArgs> {
+  BeneficaryTargetRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          BeneficaryTargetRoute.name,
+          path: 'beneficary-target',
+          args: BeneficaryTargetRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'BeneficaryTargetRoute';
+}
+
+class BeneficaryTargetRouteArgs {
+  const BeneficaryTargetRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficaryTargetRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
