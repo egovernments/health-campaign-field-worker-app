@@ -24,6 +24,9 @@ void main() async {
 
   firebase_services.initialize(
     options: DefaultFirebaseOptions.currentPlatform,
+    onErrorMessage: (value) {
+      AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+    },
   );
 
   Bloc.observer = AppBlocObserver();

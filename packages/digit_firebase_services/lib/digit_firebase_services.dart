@@ -6,14 +6,19 @@ import 'package:flutter/foundation.dart';
 
 export './crash_button.dart';
 
-Future initialize({required FirebaseOptions options}) async {
+Future initialize({
+  required FirebaseOptions options,
+  ValueChanged<String>? onErrorMessage,
+}) async {
   await Firebase.initializeApp(options: options);
 
   FlutterError.onError = (errorDetails) {
+    onErrorMessage?.call(errorDetails.toString());
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
+    onErrorMessage?.call(error.toString());
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
