@@ -59,7 +59,7 @@ scripts:
       concurrency: 1
     packageFilters:
       dependsOn:
-          - build_runner
+        - build_runner
 
   analyze:
     description: Run `dart analyze` in all packages.

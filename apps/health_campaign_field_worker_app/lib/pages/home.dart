@@ -10,7 +10,7 @@ import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart'
-    as appConfig;
+    as app_config;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
@@ -147,8 +147,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                       syncInProgress: () => DigitSyncDialog.show(
                         context,
                         type: DigitSyncDialogType.inProgress,
-                        // TODO: Localization pending
-                        label: 'Sync in Progress',
+                        label: localizations.translate(
+                          i18.syncDialog.syncInProgressTitle,
+                        ),
                         barrierDismissible: false,
                       ),
                       completedSync: () {
@@ -157,11 +158,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                         DigitSyncDialog.show(
                           context,
                           type: DigitSyncDialogType.complete,
-                          // TODO: Localization Pending
-                          label: 'Data Synced',
+                          label: localizations.translate(
+                            i18.syncDialog.dataSyncedTitle,
+                          ),
                           primaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: 'Close',
+                            label: localizations.translate(
+                              i18.syncDialog.closeButtonLabel,
+                            ),
                             action: (ctx) {
                               Navigator.pop(ctx);
                             },
@@ -169,25 +172,26 @@ class _HomePageState extends LocalizedState<HomePage> {
                         );
                       },
                       failedSync: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        DigitSyncDialog.show(
+                        _showSyncFailedDialog(
                           context,
-                          type: DigitSyncDialogType.failed,
-                          // TODO: Localization Pending
-                          label: 'Sync Failed !',
-                          primaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: 'Retry',
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                              _attemptSyncUp(context);
-                            },
+                          message: localizations.translate(
+                            i18.syncDialog.syncFailedTitle,
                           ),
-                          secondaryAction: DigitDialogActions(
-                            // TODO: Localization Pending
-                            label: 'Close',
-                            action: (ctx) => Navigator.pop(ctx),
+                        );
+                      },
+                      failedDownSync: () {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.downSyncFailedTitle,
+                          ),
+                        );
+                      },
+                      failedUpSync: () {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.upSyncFailedTitle,
                           ),
                         );
                       },
@@ -217,6 +221,34 @@ class _HomePageState extends LocalizedState<HomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showSyncFailedDialog(
+    BuildContext context, {
+    required String message,
+  }) {
+    Navigator.of(context, rootNavigator: true).pop();
+
+    DigitSyncDialog.show(
+      context,
+      type: DigitSyncDialogType.failed,
+      label: message,
+      primaryAction: DigitDialogActions(
+        label: localizations.translate(
+          i18.syncDialog.retryButtonLabel,
+        ),
+        action: (ctx) {
+          Navigator.pop(ctx);
+          _attemptSyncUp(context);
+        },
+      ),
+      secondaryAction: DigitDialogActions(
+        label: localizations.translate(
+          i18.syncDialog.closeButtonLabel,
+        ),
+        action: (ctx) => Navigator.pop(ctx),
       ),
     );
   }
@@ -361,7 +393,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
           break;
         case UserRoleCodeEnum.supervisor:
-          // TODO: Handle this case.
           HomeItemCard(
             icon: Icons.menu_book,
             label: i18.home.myCheckList,
@@ -396,7 +427,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 }
 
                 final supportList = state.appConfiguration.callSupportOptions ??
-                    <appConfig.CallSupportList>[];
+                    <app_config.CallSupportList>[];
 
                 return ActionCard(
                   items: supportList
