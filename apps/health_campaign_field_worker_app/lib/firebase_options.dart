@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBqXacQMh5FORwQPleRc0NRvKNjj-DYPZA',
-    appId: '1:258565233294:android:a5618e0437fd9204d787df',
-    messagingSenderId: '258565233294',
-    projectId: 'hcm-moz-impel',
-    storageBucket: 'hcm-moz-impel.appspot.com',
+    apiKey: 'AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y',
+    appId: '1:397617237644:android:65f82dc21b1ad4d0f6b5a9',
+    messagingSenderId: '397617237644',
+    projectId: 'digit-health-75ed0',
+    storageBucket: 'digit-health-75ed0.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB49uX9hTQSpN6dokBhl3FE8yXtLwizpXs',
-    appId: '1:258565233294:ios:3580799ca8fe5b32d787df',
-    messagingSenderId: '258565233294',
-    projectId: 'hcm-moz-impel',
-    storageBucket: 'hcm-moz-impel.appspot.com',
+    apiKey: 'AIzaSyAcvb5-mL5VJA5hbm2Detexa01ZDt48z-U',
+    appId: '1:397617237644:ios:6711bca5cf278891f6b5a9',
+    messagingSenderId: '397617237644',
+    projectId: 'digit-health-75ed0',
+    storageBucket: 'digit-health-75ed0.appspot.com',
+    iosClientId: '397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com',
     iosBundleId: 'org.egov.salama',
   );
 }

@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "258565233294",
-    "project_id": "hcm-moz-impel",
-    "storage_bucket": "hcm-moz-impel.appspot.com"
+    "project_number": "397617237644",
+    "project_id": "digit-health-75ed0",
+    "storage_bucket": "digit-health-75ed0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:258565233294:android:a5618e0437fd9204d787df",
+        "mobilesdk_app_id": "1:397617237644:android:65f82dc21b1ad4d0f6b5a9",
         "android_client_info": {
           "package_name": "org.egov.salama"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBqXacQMh5FORwQPleRc0NRvKNjj-DYPZA"
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
