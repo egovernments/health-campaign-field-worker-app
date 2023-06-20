@@ -1,6 +1,5 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_firebase_services/crash_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -175,7 +174,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           ),
                         ),
                       ),
-                      const CrashButton(),
                     ],
                   ),
                 );

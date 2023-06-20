@@ -22,13 +22,6 @@ import 'utils/environment_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  firebase_services.initialize(
-    options: DefaultFirebaseOptions.currentPlatform,
-    onErrorMessage: (value) {
-      AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-    },
-  );
-
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
 
@@ -47,6 +40,19 @@ void main() async {
     AppConfigurationSchema,
     OpLogSchema,
   ]);
+
+  final appConfigs = await isar.appConfigurations.where().findAll();
+  final config = appConfigs.firstOrNull;
+
+  final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? false;
+  if (enableCrashlytics) {
+    firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+      onErrorMessage: (value) {
+        AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+      },
+    );
+  }
 
   final sql = LocalSqlDataStore();
 

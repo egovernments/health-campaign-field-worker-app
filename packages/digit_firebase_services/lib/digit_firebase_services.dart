@@ -13,7 +13,10 @@ Future initialize({
   await Firebase.initializeApp(options: options);
 
   FlutterError.onError = (errorDetails) {
-    onErrorMessage?.call(errorDetails.toString());
+    onErrorMessage?.call(
+      'Diagnostic node: '
+      '${errorDetails.summary.name.toString()}',
+    );
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 

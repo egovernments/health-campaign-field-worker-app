@@ -54,6 +54,9 @@ class AppConfiguration {
 
   @Name("TENANT_ID")
   late String? tenantId;
+
+  @Name('FIREBASE_CONFIG')
+  FirebaseConfig? firebaseConfig;
 }
 
 @embedded
@@ -132,4 +135,10 @@ class HouseholdMemberDeletionReasonOptions {
 class CallSupportList {
   late String name;
   late String code;
+}
+
+@embedded
+class FirebaseConfig {
+  bool? enableCrashlytics;
+  bool? enableAnalytics;
 }
