@@ -18,12 +18,15 @@ class OpLogEntry<T extends EntityModel> {
   final DateTime? syncedDownOn;
   final String? serverGeneratedId;
   final String? clientReferenceId;
+  final int? retryCount;
+
   final List<AdditionalId> additionalIds;
 
   const OpLogEntry(
     this.entity,
     this.operation, {
     this.id,
+    this.retryCount,
     required this.createdAt,
     required this.createdBy,
     required this.type,
@@ -50,6 +53,7 @@ class OpLogEntry<T extends EntityModel> {
       syncedDownOn: e.syncedDownOn,
       syncedUp: e.syncedUp,
       syncedUpOn: e.syncedUpOn,
+      retryCount: e.retryCount,
       additionalIds: e.additionalIds
           .map((e) => AdditionalId(idType: e.idType, id: e.id))
           .toList(),
@@ -68,6 +72,7 @@ class OpLogEntry<T extends EntityModel> {
       ..createdBy = createdBy
       ..createdAt = createdAt
       ..syncedUp = syncedUp
+      ..retryCount = retryCount
       ..additionalIds = additionalIds
           .map((e) => o.AdditionalId()
             ..id = e.id

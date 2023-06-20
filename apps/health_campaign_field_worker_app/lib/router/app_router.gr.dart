@@ -81,6 +81,12 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    BeneficariesTargetRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const BeneficariesTargetPage(),
+      );
+    },
     BeneficiaryWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryWrapperRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -527,6 +533,11 @@ class _$AppRouter extends RootStackRouter {
               ],
             ),
             RouteConfig(
+              BeneficariesTargetRoute.name,
+              path: 'beneficiaries-target',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               BeneficiaryWrapperRoute.name,
               path: 'beneficiary',
               parent: AuthenticatedRouteWrapper.name,
@@ -919,6 +930,18 @@ class BeneficiaryRegistrationWrapperRouteArgs {
   String toString() {
     return 'BeneficiaryRegistrationWrapperRouteArgs{key: $key, initialState: $initialState}';
   }
+}
+
+/// generated route for
+/// [BeneficariesTargetPage]
+class BeneficariesTargetRoute extends PageRouteInfo<void> {
+  const BeneficariesTargetRoute()
+      : super(
+          BeneficariesTargetRoute.name,
+          path: 'beneficiaries-target',
+        );
+
+  static const String name = 'BeneficariesTargetRoute';
 }
 
 /// generated route for

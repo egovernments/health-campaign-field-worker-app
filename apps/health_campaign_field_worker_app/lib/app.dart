@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

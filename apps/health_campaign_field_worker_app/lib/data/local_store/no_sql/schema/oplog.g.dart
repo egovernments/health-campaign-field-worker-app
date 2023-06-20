@@ -55,28 +55,33 @@ const OpLogSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _OpLogoperationEnumValueMap,
     ),
-    r'serverGeneratedId': PropertySchema(
+    r'retryCount': PropertySchema(
       id: 7,
+      name: r'retryCount',
+      type: IsarType.long,
+    ),
+    r'serverGeneratedId': PropertySchema(
+      id: 8,
       name: r'serverGeneratedId',
       type: IsarType.string,
     ),
     r'syncedDown': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'syncedDown',
       type: IsarType.bool,
     ),
     r'syncedDownOn': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'syncedDownOn',
       type: IsarType.dateTime,
     ),
     r'syncedUp': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'syncedUp',
       type: IsarType.bool,
     ),
     r'syncedUpOn': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'syncedUpOn',
       type: IsarType.dateTime,
     )
@@ -146,11 +151,12 @@ void _opLogSerialize(
   writer.writeString(offsets[4], object.entityString);
   writer.writeString(offsets[5], object.entityType.name);
   writer.writeString(offsets[6], object.operation.name);
-  writer.writeString(offsets[7], object.serverGeneratedId);
-  writer.writeBool(offsets[8], object.syncedDown);
-  writer.writeDateTime(offsets[9], object.syncedDownOn);
-  writer.writeBool(offsets[10], object.syncedUp);
-  writer.writeDateTime(offsets[11], object.syncedUpOn);
+  writer.writeLong(offsets[7], object.retryCount);
+  writer.writeString(offsets[8], object.serverGeneratedId);
+  writer.writeBool(offsets[9], object.syncedDown);
+  writer.writeDateTime(offsets[10], object.syncedDownOn);
+  writer.writeBool(offsets[11], object.syncedUp);
+  writer.writeDateTime(offsets[12], object.syncedUpOn);
 }
 
 OpLog _opLogDeserialize(
@@ -178,11 +184,12 @@ OpLog _opLogDeserialize(
   object.operation =
       _OpLogoperationValueEnumMap[reader.readStringOrNull(offsets[6])] ??
           DataOperation.create;
-  object.serverGeneratedId = reader.readStringOrNull(offsets[7]);
-  object.syncedDown = reader.readBool(offsets[8]);
-  object.syncedDownOn = reader.readDateTimeOrNull(offsets[9]);
-  object.syncedUp = reader.readBool(offsets[10]);
-  object.syncedUpOn = reader.readDateTimeOrNull(offsets[11]);
+  object.retryCount = reader.readLongOrNull(offsets[7]);
+  object.serverGeneratedId = reader.readStringOrNull(offsets[8]);
+  object.syncedDown = reader.readBool(offsets[9]);
+  object.syncedDownOn = reader.readDateTimeOrNull(offsets[10]);
+  object.syncedUp = reader.readBool(offsets[11]);
+  object.syncedUpOn = reader.readDateTimeOrNull(offsets[12]);
   return object;
 }
 
@@ -216,14 +223,16 @@ P _opLogDeserializeProp<P>(
       return (_OpLogoperationValueEnumMap[reader.readStringOrNull(offset)] ??
           DataOperation.create) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 8:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 10:
       return (reader.readBool(offset)) as P;
+    case 10:
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 11:
+      return (reader.readBool(offset)) as P;
+    case 12:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1244,6 +1253,75 @@ extension OpLogQueryFilter on QueryBuilder<OpLog, OpLog, QFilterCondition> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'retryCount',
+      ));
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'retryCount',
+      ));
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'retryCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'retryCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'retryCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> retryCountBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'retryCount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterFilterCondition> serverGeneratedIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1636,6 +1714,18 @@ extension OpLogQuerySortBy on QueryBuilder<OpLog, OpLog, QSortBy> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByRetryCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'retryCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByRetryCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'retryCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByServerGeneratedId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'serverGeneratedId', Sort.asc);
@@ -1782,6 +1872,18 @@ extension OpLogQuerySortThenBy on QueryBuilder<OpLog, OpLog, QSortThenBy> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByRetryCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'retryCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByRetryCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'retryCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByServerGeneratedId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'serverGeneratedId', Sort.asc);
@@ -1886,6 +1988,12 @@ extension OpLogQueryWhereDistinct on QueryBuilder<OpLog, OpLog, QDistinct> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QDistinct> distinctByRetryCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'retryCount');
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QDistinct> distinctByServerGeneratedId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1966,6 +2074,12 @@ extension OpLogQueryProperty on QueryBuilder<OpLog, OpLog, QQueryProperty> {
   QueryBuilder<OpLog, DataOperation, QQueryOperations> operationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'operation');
+    });
+  }
+
+  QueryBuilder<OpLog, int?, QQueryOperations> retryCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'retryCount');
     });
   }
 

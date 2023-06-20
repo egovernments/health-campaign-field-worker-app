@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
@@ -11,9 +14,11 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../main.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/hashing/hashing.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -40,6 +45,40 @@ class _IndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  late CameraController controller;
+  String imagpath1 = '';
+  String imagPath2 = '';
+  String percentage = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = CameraController(cameras[0], ResolutionPreset.max);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    }).catchError((Object e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            // Handle access errors here.
+            break;
+          default:
+            // Handle other errors here.
+            break;
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -376,6 +415,58 @@ class _IndividualDetailsPageState
                         ],
                       ),
                       const SizedBox(height: 16),
+                      TextButton(
+                          onPressed: () async {
+                            final image = await controller.takePicture();
+                            File imageFile = File(image.path);
+                            print(imageFile.path);
+                            print(await generatePerceptualHash(image.path));
+                            setState(() {
+                              imagpath1 = imageFile.path;
+                            });
+                          },
+                          child: Text('Capture - 1')),
+                      (!controller.value.isInitialized)
+                          ? Container()
+                          : CameraPreview(controller),
+                      Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: [
+                            Image.file(File(imagpath1)),
+                            Image.file(
+                              File(imagPath2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        percentage,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            final image = await controller.takePicture();
+                            File imageFile = File(image.path);
+                            print(imageFile.path);
+                            print(await generatePerceptualHash(image.path));
+                            setState(() {
+                              imagPath2 = imageFile.path;
+                            });
+                            final perc = (await compareHashes(
+                              await generatePerceptualHash(imagpath1),
+                              await generatePerceptualHash(imagPath2),
+                            ));
+                            setState(() {
+                              percentage = perc.toString();
+                            });
+                            print("Compare");
+                          },
+                          child: Text('Capture - 2')),
+                      (!controller.value.isInitialized)
+                          ? Container()
+                          : CameraPreview(controller),
                     ],
                   ),
                 ),

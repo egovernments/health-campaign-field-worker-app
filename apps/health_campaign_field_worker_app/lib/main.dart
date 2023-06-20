@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +17,10 @@ import 'data/remote_client.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 
+late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  cameras = await availableCameras();
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
 

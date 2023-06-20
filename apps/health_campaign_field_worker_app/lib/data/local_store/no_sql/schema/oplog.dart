@@ -24,6 +24,8 @@ class OpLog {
 
   String? serverGeneratedId;
 
+  int? retryCount;
+
   String? clientReferenceId;
 
   DateTime? syncedUpOn;

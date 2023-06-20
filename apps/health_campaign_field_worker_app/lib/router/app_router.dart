@@ -46,6 +46,7 @@ import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
+import '../pages/reports/targets/beneficaries_target.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
@@ -89,6 +90,7 @@ part 'app_router.gr.dart';
             ),
           ],
         ),
+        AutoRoute(page: BeneficariesTargetPage, path: 'beneficiaries-target'),
         AutoRoute(
           page: BeneficiaryWrapperPage,
           path: 'beneficiary',
