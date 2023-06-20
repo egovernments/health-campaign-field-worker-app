@@ -1,3 +1,20 @@
 library digit_firebase_services;
 
-class DigitFirebaseServices {}
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+
+export './crash_button.dart';
+
+Future initialize({required FirebaseOptions options}) async {
+  await Firebase.initializeApp(options: options);
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+}

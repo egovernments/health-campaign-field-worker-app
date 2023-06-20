@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "258565233294",
+    "project_id": "hcm-moz-impel",
+    "storage_bucket": "hcm-moz-impel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258565233294:android:a5618e0437fd9204d787df",
+        "android_client_info": {
+          "package_name": "org.egov.salama"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqXacQMh5FORwQPleRc0NRvKNjj-DYPZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
