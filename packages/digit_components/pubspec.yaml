@@ -29,6 +29,7 @@ dependencies:
   flutter_typeahead: ^4.3.7
   overlay_builder: ^1.1.0
   easy_stepper: ^0.5.2+1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
