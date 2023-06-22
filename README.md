@@ -485,13 +485,15 @@ class FirebaseConfig {
 #### main.dart
 
 ```dart
-if (enableCrashlytics) {
-firebase_services.initialize(
-options: DefaultFirebaseOptions.currentPlatform,
-onErrorMessage: (value) {
-AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
-},
-);
+void main() {
+  if (enableCrashlytics) {
+    firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+      onErrorMessage: (value) {
+        AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+      },
+    );
+  }
 }
 ```
 
@@ -505,6 +507,7 @@ at `packages/digit_showcase` to handle customizations.
 #### Add i18n strings
 
 Add constants to `lib/utils/i18_key_constants.dart`
+
 ```dart
 
 const checklistDataShowcase = ChecklistDataShowcase();
@@ -533,13 +536,14 @@ part of 'showcase_constants.dart';
 
 class _ChecklistDataShowcaseData {
   static final _ChecklistDataShowcaseData _instance =
-      _ChecklistDataShowcaseData._();
+  _ChecklistDataShowcaseData._();
 
   _ChecklistDataShowcaseData._();
 
   factory _ChecklistDataShowcaseData() => _instance;
 
-  List<ShowcaseItemBuilder> get showcaseData => [
+  List<ShowcaseItemBuilder> get showcaseData =>
+      [
         date,
         administrativeUnit,
       ];
@@ -621,9 +625,9 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
 
   Iterable<GlobalKey>? _showcasePathsForRoute(String routeName) {
     return switch (routeName) {
-      // Add this config
+    // Add this config
       ChecklistBoundaryViewRoute.name =>
-        checklistDataShowcaseData.showcaseData.map((e) => e.showcaseKey),
+          checklistDataShowcaseData.showcaseData.map((e) => e.showcaseKey),
       _ => null,
     };
   }
@@ -633,8 +637,7 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
 #### Wrap target widget with showcase wrapper which acts as a HoC
 
 ```dart
-class _ChecklistBoundaryViewPageState
-    extends LocalizedState<ChecklistBoundaryViewPage> {
+class _ChecklistBoundaryViewPageState extends LocalizedState<ChecklistBoundaryViewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
