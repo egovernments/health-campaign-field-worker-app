@@ -17,3 +17,7 @@
 ## 0.0.1+4
 
 * dart doc added and auto generated files added
+
+## 0.0.1+5
+
+* Example file with Reactive Forms
