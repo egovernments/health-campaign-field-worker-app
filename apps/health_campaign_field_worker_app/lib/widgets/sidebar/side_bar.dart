@@ -60,6 +60,16 @@ class SideBar extends StatelessWidget {
               context.router.replace(HomeRoute());
             },
           ),
+          DigitIconTile(
+            title: AppLocalizations.of(context).translate(
+              i18.common.coreCommonProfile,
+            ),
+            icon: Icons.person,
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.replace(ProfileRoute());
+            },
+          ),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
             builder: (context, state) {
               if (state is! AppInitialized) return const Offstage();

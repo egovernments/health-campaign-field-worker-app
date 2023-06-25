@@ -55,6 +55,7 @@ _$_UserRequestModel _$$_UserRequestModelFromJson(Map<String, dynamic> json) =>
       active: json['active'] as bool?,
       tenantId: json['tenantId'] as String?,
       permanentCity: json['permanentCity'] as String?,
+      gender: json['gender'] as String?,
       roles: (json['roles'] as List<dynamic>?)
               ?.map((e) => UserRoleModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -72,6 +73,7 @@ Map<String, dynamic> _$$_UserRequestModelToJson(_$_UserRequestModel instance) =>
       'active': instance.active,
       'tenantId': instance.tenantId,
       'permanentCity': instance.permanentCity,
+      'gender': instance.gender,
       'roles': instance.roles,
     };
 

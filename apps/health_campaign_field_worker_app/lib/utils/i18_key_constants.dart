@@ -47,6 +47,8 @@ class Common {
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
+  String get coreCommonProfile => 'CORE_COMMON_PROFILE';
+
   String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
 
   String get coreCommonBack => 'CORE_COMMON_BACK';

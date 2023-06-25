@@ -537,6 +537,7 @@ mixin _$UserRequestModel {
   bool? get active => throw _privateConstructorUsedError;
   String? get tenantId => throw _privateConstructorUsedError;
   String? get permanentCity => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
   List<UserRoleModel> get roles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -561,6 +562,7 @@ abstract class $UserRequestModelCopyWith<$Res> {
       bool? active,
       String? tenantId,
       String? permanentCity,
+      String? gender,
       List<UserRoleModel> roles});
 }
 
@@ -586,6 +588,7 @@ class _$UserRequestModelCopyWithImpl<$Res, $Val extends UserRequestModel>
     Object? active = freezed,
     Object? tenantId = freezed,
     Object? permanentCity = freezed,
+    Object? gender = freezed,
     Object? roles = null,
   }) {
     return _then(_value.copyWith(
@@ -625,6 +628,10 @@ class _$UserRequestModelCopyWithImpl<$Res, $Val extends UserRequestModel>
           ? _value.permanentCity
           : permanentCity // ignore: cast_nullable_to_non_nullable
               as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
       roles: null == roles
           ? _value.roles
           : roles // ignore: cast_nullable_to_non_nullable
@@ -651,6 +658,7 @@ abstract class _$$_UserRequestModelCopyWith<$Res>
       bool? active,
       String? tenantId,
       String? permanentCity,
+      String? gender,
       List<UserRoleModel> roles});
 }
 
@@ -674,6 +682,7 @@ class __$$_UserRequestModelCopyWithImpl<$Res>
     Object? active = freezed,
     Object? tenantId = freezed,
     Object? permanentCity = freezed,
+    Object? gender = freezed,
     Object? roles = null,
   }) {
     return _then(_$_UserRequestModel(
@@ -713,6 +722,10 @@ class __$$_UserRequestModelCopyWithImpl<$Res>
           ? _value.permanentCity
           : permanentCity // ignore: cast_nullable_to_non_nullable
               as String?,
+      gender: freezed == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String?,
       roles: null == roles
           ? _value._roles
           : roles // ignore: cast_nullable_to_non_nullable
@@ -734,6 +747,7 @@ class _$_UserRequestModel implements _UserRequestModel {
       this.active,
       this.tenantId,
       this.permanentCity,
+      this.gender,
       final List<UserRoleModel> roles = const []})
       : _roles = roles;
 
@@ -758,6 +772,8 @@ class _$_UserRequestModel implements _UserRequestModel {
   final String? tenantId;
   @override
   final String? permanentCity;
+  @override
+  final String? gender;
   final List<UserRoleModel> _roles;
   @override
   @JsonKey()
@@ -768,7 +784,7 @@ class _$_UserRequestModel implements _UserRequestModel {
 
   @override
   String toString() {
-    return 'UserRequestModel(uuid: $uuid, userName: $userName, name: $name, mobileNumber: $mobileNumber, emailId: $emailId, locale: $locale, active: $active, tenantId: $tenantId, permanentCity: $permanentCity, roles: $roles)';
+    return 'UserRequestModel(uuid: $uuid, userName: $userName, name: $name, mobileNumber: $mobileNumber, emailId: $emailId, locale: $locale, active: $active, tenantId: $tenantId, permanentCity: $permanentCity, gender: $gender, roles: $roles)';
   }
 
   @override
@@ -789,6 +805,7 @@ class _$_UserRequestModel implements _UserRequestModel {
                 other.tenantId == tenantId) &&
             (identical(other.permanentCity, permanentCity) ||
                 other.permanentCity == permanentCity) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
             const DeepCollectionEquality().equals(other._roles, _roles));
   }
 
@@ -805,6 +822,7 @@ class _$_UserRequestModel implements _UserRequestModel {
       active,
       tenantId,
       permanentCity,
+      gender,
       const DeepCollectionEquality().hash(_roles));
 
   @JsonKey(ignore: true)
@@ -832,6 +850,7 @@ abstract class _UserRequestModel implements UserRequestModel {
       final bool? active,
       final String? tenantId,
       final String? permanentCity,
+      final String? gender,
       final List<UserRoleModel> roles}) = _$_UserRequestModel;
 
   factory _UserRequestModel.fromJson(Map<String, dynamic> json) =
@@ -855,6 +874,8 @@ abstract class _UserRequestModel implements UserRequestModel {
   String? get tenantId;
   @override
   String? get permanentCity;
+  @override
+  String? get gender;
   @override
   List<UserRoleModel> get roles;
   @override
