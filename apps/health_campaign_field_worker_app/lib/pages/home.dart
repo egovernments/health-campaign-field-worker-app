@@ -364,6 +364,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 searchBloc.add(const SearchHouseholdsClearEvent());
               },
             ),
+            HomeItemCard(
+              icon: Icons.all_inbox,
+              label: i18.home.viewReportsLabel,
+              onPressed: () async {
+                await context.router.push(
+                  BeneficaryTargetRoute(),
+                );
+              },
+            ),
           ]);
           break;
         case UserRoleCodeEnum.systemAdministrator:

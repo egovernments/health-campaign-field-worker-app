@@ -47,7 +47,7 @@ import '../pages/login.dart';
 import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
-import '../pages/target/beneficary_target.dart';
+import '../pages/reports/beneficary_target.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';

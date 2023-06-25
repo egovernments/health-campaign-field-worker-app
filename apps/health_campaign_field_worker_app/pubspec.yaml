@@ -17,9 +17,11 @@ dependencies:
   drift: ^1.7.1
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
-  path: ^1.8.2
+
   forms_engine: ^0.0.1
   digit_components: ^0.0.1
+  charts_flutter: 
+     path: ../../packages/charts/charts_flutter
   auto_route: ^5.0.2
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
