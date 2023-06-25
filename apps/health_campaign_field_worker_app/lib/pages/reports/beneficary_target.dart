@@ -1,3 +1,5 @@
+import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,8 +7,9 @@ import '../../data/data_repository.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../utils/utils.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-
+import '../../utils/i18_key_constants.dart' as i18;
 import 'package:collection/collection.dart';
 
 class BeneficaryTargetPage extends LocalizedStatefulWidget {
@@ -16,10 +19,11 @@ class BeneficaryTargetPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<BeneficaryTargetPage> createState() => _BeneficaryTargetPageState();
+  LocalizedState<BeneficaryTargetPage> createState() =>
+      _BeneficaryTargetPageState();
 }
 
-class _BeneficaryTargetPageState extends State<BeneficaryTargetPage> {
+class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
   Map<String?, List<ProjectBeneficiaryModel>> projectBeneficiaries = {};
   @override
   void didChangeDependencies() {
@@ -61,27 +65,134 @@ class _BeneficaryTargetPageState extends State<BeneficaryTargetPage> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedProject = context.selectedProject;
+    final beneficiaryType = context.beneficiaryType;
+    final theme = Theme.of(context);
+    final targetModel = selectedProject.targets?.firstWhereOrNull(
+      (element) => element.beneficiaryType == beneficiaryType,
+    );
+
+    final target = targetModel?.targetNo ?? 0.0;
+
+    final rowData = projectBeneficiaries.entries
+        .map((e) => TableDataRow(
+              [
+                TableData(
+                  e.key!,
+                  cellKey: 'date',
+                ),
+                TableData(
+                  e.value.length.toString(),
+                  cellKey: 'achivedTarget',
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                TableData(
+                  (target - e.value.length).toString(),
+                  cellKey: 'target',
+                  style: TextStyle(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
+            ))
+        .toList();
+
     return Scaffold(
-      body: Column(children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 2,
-          child: charts.BarChart(
-            defaultRenderer: charts.BarRendererConfig(
-              maxBarWidthPx: 40,
-            ),
-            _createSampleData(projectBeneficiaries.entries),
-            animate: false,
+      body: ScrollableContent(
+        header: const Column(children: [
+          BackNavigationHelpHeaderWidget(),
+        ]),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  localizations.translate(
+                    i18.reports.reportsTitle,
+                  ),
+                  style: theme.textTheme.displayMedium,
+                ),
+              ),
+            ],
           ),
-        ),
-      ]),
+          DigitCard(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      localizations.translate(
+                        i18.reports.reportsProjectvsRegistredTitle,
+                      ),
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          Text(
+                            ' ${localizations.translate(i18.reports.reportsTargetLabel)} : ',
+                          ),
+                          Text(
+                            target.toString(),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: charts.BarChart(
+                    defaultRenderer: charts.BarRendererConfig(
+                      maxBarWidthPx: 20,
+                    ),
+                    _createSampleData(projectBeneficiaries.entries, target),
+                    animate: false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          DigitTable(
+            headerList: [
+              TableHeader(
+                'Date',
+                cellKey: 'date',
+              ),
+              TableHeader(
+                'Completed',
+                cellKey: 'achivedTarget',
+              ),
+              TableHeader(
+                'InComplete',
+                cellKey: 'target',
+              ),
+            ],
+            tableData: rowData,
+            leftColumnWidth: 130,
+            rightColumnWidth: projectBeneficiaries.entries.length * 24 * 6,
+            height: MediaQuery.of(context).size.height / 2,
+          ),
+        ],
+      ),
     );
   }
 
   static List<charts.Series<OrdinalTargetsList, String>> _createSampleData(
     Iterable<MapEntry<String?, List<ProjectBeneficiaryModel>>> entries,
+    target,
   ) {
-    final data =
-        entries.map((e) => OrdinalTargetsList(e.key!, e.value.length)).toList();
+    final data = entries
+        .map((e) => OrdinalTargetsList(e.key!, e.value.length, target))
+        .toList();
 
     return [
       charts.Series<OrdinalTargetsList, String>(
@@ -98,6 +209,7 @@ class _BeneficaryTargetPageState extends State<BeneficaryTargetPage> {
 class OrdinalTargetsList {
   final String date;
   final int achivedTarget;
+  final double target;
 
-  OrdinalTargetsList(this.date, this.achivedTarget);
+  OrdinalTargetsList(this.date, this.achivedTarget, this.target);
 }

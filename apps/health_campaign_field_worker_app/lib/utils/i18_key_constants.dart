@@ -23,6 +23,7 @@ const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
+const reports = Reports();
 
 class Common {
   const Common();
@@ -828,4 +829,14 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+}
+
+class Reports {
+  const Reports();
+  String get reportsTitle => 'REPORTS_TITLE';
+
+  String get reportsProjectvsRegistredTitle =>
+      'REPORTS_PROJECT_REGISTRED_TITLE';
+
+  String get reportsTargetLabel => 'REPORTS_TARGET_LABEL';
 }
