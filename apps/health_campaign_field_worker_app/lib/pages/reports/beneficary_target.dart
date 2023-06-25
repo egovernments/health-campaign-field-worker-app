@@ -178,7 +178,7 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
             ],
             tableData: rowData,
             leftColumnWidth: 130,
-            rightColumnWidth: projectBeneficiaries.entries.length * 24 * 6,
+            rightColumnWidth: projectBeneficiaries.entries.length * 50 * 6,
             height: MediaQuery.of(context).size.height / 2,
           ),
         ],
