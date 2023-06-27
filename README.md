@@ -699,3 +699,55 @@ class _ChecklistBoundaryViewPageState extends LocalizedState<ChecklistBoundaryVi
   }
 }
 ```
+
+## Data Sync
+
+Currently, the app is configured to run only on `PersistenceConfiguration.offlineFirst` mode. With the offline first
+approach the local data store is considered as the **Source of truth**. Data persisted in the local data store is synced
+to the remote data store.
+
+![Sync Sequence Diagram](puml/sync.png)
+
+### Data Creation
+
+The following steps describe the data creation process:
+
+1. The user initiates the data creation by performing a Submit action.
+2. The UI receives the action and requests the repository from the Network Manager.
+3. The Network Manager returns the Local repository.
+4. The UI creates the data and stores it in the Local repository.
+5. The Local repository creates an entry in the OpLog.
+6. Success is returned to the UI.
+7. The Local repository persists the data in the SQLite database.
+8. Success is returned to the UI.
+
+### Manual Sync
+
+The following steps describe the manual synchronization process:
+
+1. The user initiates the manual sync by selecting the Sync now option.
+2. The UI sends a SyncSyncUpEvent to the Sync Bloc.
+3. The Sync Bloc performs the sync operation.
+4. The Network Manager retrieves the items to be synced down from the Local repository.
+5. The Local repository queries the OpLog for pending down sync operations and returns a list of OpLog entries.
+6. The network manager groups the OpLog entries by type.
+7. For each entry group:
+    - The network manager sends a Bulk Search request to the Remote repository using the Client Reference IDs.
+    - The Remote repository returns the remote entities with Server Generated IDs.
+    - The network manager updates the server-generated ID in the OpLog and returns success.
+    - The network manager updates the server-generated ID in the SQLite database and returns success.
+8. Success is returned to complete the sync down process.
+
+9. The network manager retrieves the items to be synced up from the Local repository.
+10. The Local repository queries the OpLog for pending up sync operations and returns a list of OpLog entries.
+11. The network manager groups the OpLog entries by type and data operation.
+12. For each entry group:
+    - If it is a CREATE operation:
+        - The network manager sends a Bulk create request to the Remote repository and returns success.
+    - If it is an UPDATE operation:
+        - The network manager sends a Bulk update request to the Remote repository and returns success.
+    - If it is a DELETE operation:
+        - The network manager sends a Bulk delete request to the Remote repository and returns success.
+    - If it is a SINGLE_CREATE operation:
+        - The network manager sends a Single create request to the Remote repository and returns success.
+13. Success is returned to complete the sync up process.
