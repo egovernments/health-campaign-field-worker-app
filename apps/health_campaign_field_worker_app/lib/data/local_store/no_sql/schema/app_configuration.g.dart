@@ -47,63 +47,69 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'DeliveryCommentOptions',
     ),
-    r'GENDER_OPTIONS_POPULATOR': PropertySchema(
+    r'FIREBASE_CONFIG': PropertySchema(
       id: 5,
+      name: r'FIREBASE_CONFIG',
+      type: IsarType.object,
+      target: r'FirebaseConfig',
+    ),
+    r'GENDER_OPTIONS_POPULATOR': PropertySchema(
+      id: 6,
       name: r'GENDER_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'GenderOptions',
     ),
     r'HOUSEHOLD_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'HOUSEHOLD_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
@@ -130,7 +136,8 @@ const AppConfigurationSchema = CollectionSchema(
     r'DeliveryCommentOptions': DeliveryCommentOptionsSchema,
     r'TransportTypes': TransportTypesSchema,
     r'ComplaintTypes': ComplaintTypesSchema,
-    r'CallSupportList': CallSupportListSchema
+    r'CallSupportList': CallSupportListSchema,
+    r'FirebaseConfig': FirebaseConfigSchema
   },
   getId: _appConfigurationGetId,
   getLinks: _appConfigurationGetLinks,
@@ -206,6 +213,14 @@ int _appConfigurationEstimateSize(
               value, offsets, allOffsets);
         }
       }
+    }
+  }
+  {
+    final value = object.firebaseConfig;
+    if (value != null) {
+      bytesCount += 3 +
+          FirebaseConfigSchema.estimateSize(
+              value, allOffsets[FirebaseConfig]!, allOffsets);
     }
   }
   {
@@ -361,43 +376,49 @@ void _appConfigurationSerialize(
     DeliveryCommentOptionsSchema.serialize,
     object.deliveryCommentOptions,
   );
-  writer.writeObjectList<GenderOptions>(
+  writer.writeObject<FirebaseConfig>(
     offsets[5],
+    allOffsets,
+    FirebaseConfigSchema.serialize,
+    object.firebaseConfig,
+  );
+  writer.writeObjectList<GenderOptions>(
+    offsets[6],
     allOffsets,
     GenderOptionsSchema.serialize,
     object.genderOptions,
   );
   writer.writeObjectList<HouseholdDeletionReasonOptions>(
-    offsets[6],
+    offsets[7],
     allOffsets,
     HouseholdDeletionReasonOptionsSchema.serialize,
     object.householdDeletionReasonOptions,
   );
   writer.writeObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[7],
+    offsets[8],
     allOffsets,
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[10], object.networkDetection);
-  writer.writeString(offsets[11], object.persistenceMode);
-  writer.writeString(offsets[12], object.syncMethod);
-  writer.writeString(offsets[13], object.syncTrigger);
-  writer.writeString(offsets[14], object.tenantId);
+  writer.writeString(offsets[11], object.networkDetection);
+  writer.writeString(offsets[12], object.persistenceMode);
+  writer.writeString(offsets[13], object.syncMethod);
+  writer.writeString(offsets[14], object.syncTrigger);
+  writer.writeString(offsets[15], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[15],
+    offsets[16],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
@@ -440,45 +461,50 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     DeliveryCommentOptions(),
   );
-  object.genderOptions = reader.readObjectList<GenderOptions>(
+  object.firebaseConfig = reader.readObjectOrNull<FirebaseConfig>(
     offsets[5],
+    FirebaseConfigSchema.deserialize,
+    allOffsets,
+  );
+  object.genderOptions = reader.readObjectList<GenderOptions>(
+    offsets[6],
     GenderOptionsSchema.deserialize,
     allOffsets,
     GenderOptions(),
   );
   object.householdDeletionReasonOptions =
       reader.readObjectList<HouseholdDeletionReasonOptions>(
-    offsets[6],
+    offsets[7],
     HouseholdDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdDeletionReasonOptions(),
   );
   object.householdMemberDeletionReasonOptions =
       reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[7],
+    offsets[8],
     HouseholdMemberDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[8],
+    offsets[9],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[9],
+    offsets[10],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[10]);
-  object.persistenceMode = reader.readStringOrNull(offsets[11]);
-  object.syncMethod = reader.readStringOrNull(offsets[12]);
-  object.syncTrigger = reader.readStringOrNull(offsets[13]);
-  object.tenantId = reader.readStringOrNull(offsets[14]);
+  object.networkDetection = reader.readStringOrNull(offsets[11]);
+  object.persistenceMode = reader.readStringOrNull(offsets[12]);
+  object.syncMethod = reader.readStringOrNull(offsets[13]);
+  object.syncTrigger = reader.readStringOrNull(offsets[14]);
+  object.tenantId = reader.readStringOrNull(offsets[15]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[15],
+    offsets[16],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
@@ -529,42 +555,46 @@ P _appConfigurationDeserializeProp<P>(
         DeliveryCommentOptions(),
       )) as P;
     case 5:
+      return (reader.readObjectOrNull<FirebaseConfig>(
+        offset,
+        FirebaseConfigSchema.deserialize,
+        allOffsets,
+      )) as P;
+    case 6:
       return (reader.readObjectList<GenderOptions>(
         offset,
         GenderOptionsSchema.deserialize,
         allOffsets,
         GenderOptions(),
       )) as P;
-    case 6:
+    case 7:
       return (reader.readObjectList<HouseholdDeletionReasonOptions>(
         offset,
         HouseholdDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdDeletionReasonOptions(),
       )) as P;
-    case 7:
+    case 8:
       return (reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
         offset,
         HouseholdMemberDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
-    case 8:
+    case 9:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 9:
+    case 10:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 10:
-      return (reader.readStringOrNull(offset)) as P;
     case 11:
       return (reader.readStringOrNull(offset)) as P;
     case 12:
@@ -574,6 +604,8 @@ P _appConfigurationDeserializeProp<P>(
     case 14:
       return (reader.readStringOrNull(offset)) as P;
     case 15:
+      return (reader.readStringOrNull(offset)) as P;
+    case 16:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
@@ -1122,6 +1154,24 @@ extension AppConfigurationQueryFilter
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      firebaseConfigIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'FIREBASE_CONFIG',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      firebaseConfigIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'FIREBASE_CONFIG',
+      ));
     });
   }
 
@@ -2632,6 +2682,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      firebaseConfig(FilterQuery<FirebaseConfig> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'FIREBASE_CONFIG');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       genderOptionsElement(FilterQuery<GenderOptions> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'GENDER_OPTIONS_POPULATOR');
@@ -2918,6 +2975,13 @@ extension AppConfigurationQueryProperty
       QQueryOperations> deliveryCommentOptionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'DELIVERY_COMMENT_OPTIONS_POPULATOR');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, FirebaseConfig?, QQueryOperations>
+      firebaseConfigProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'FIREBASE_CONFIG');
     });
   }
 
@@ -7214,3 +7278,136 @@ extension CallSupportListQueryFilter
 
 extension CallSupportListQueryObject
     on QueryBuilder<CallSupportList, CallSupportList, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+
+const FirebaseConfigSchema = Schema(
+  name: r'FirebaseConfig',
+  id: -2852964328238474241,
+  properties: {
+    r'enableAnalytics': PropertySchema(
+      id: 0,
+      name: r'enableAnalytics',
+      type: IsarType.bool,
+    ),
+    r'enableCrashlytics': PropertySchema(
+      id: 1,
+      name: r'enableCrashlytics',
+      type: IsarType.bool,
+    )
+  },
+  estimateSize: _firebaseConfigEstimateSize,
+  serialize: _firebaseConfigSerialize,
+  deserialize: _firebaseConfigDeserialize,
+  deserializeProp: _firebaseConfigDeserializeProp,
+);
+
+int _firebaseConfigEstimateSize(
+  FirebaseConfig object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  return bytesCount;
+}
+
+void _firebaseConfigSerialize(
+  FirebaseConfig object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeBool(offsets[0], object.enableAnalytics);
+  writer.writeBool(offsets[1], object.enableCrashlytics);
+}
+
+FirebaseConfig _firebaseConfigDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = FirebaseConfig();
+  object.enableAnalytics = reader.readBoolOrNull(offsets[0]);
+  object.enableCrashlytics = reader.readBoolOrNull(offsets[1]);
+  return object;
+}
+
+P _firebaseConfigDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 1:
+      return (reader.readBoolOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension FirebaseConfigQueryFilter
+    on QueryBuilder<FirebaseConfig, FirebaseConfig, QFilterCondition> {
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableAnalyticsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'enableAnalytics',
+      ));
+    });
+  }
+
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableAnalyticsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'enableAnalytics',
+      ));
+    });
+  }
+
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableAnalyticsEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'enableAnalytics',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableCrashlyticsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'enableCrashlytics',
+      ));
+    });
+  }
+
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableCrashlyticsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'enableCrashlytics',
+      ));
+    });
+  }
+
+  QueryBuilder<FirebaseConfig, FirebaseConfig, QAfterFilterCondition>
+      enableCrashlyticsEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'enableCrashlytics',
+        value: value,
+      ));
+    });
+  }
+}
+
+extension FirebaseConfigQueryObject
+    on QueryBuilder<FirebaseConfig, FirebaseConfig, QFilterCondition> {}

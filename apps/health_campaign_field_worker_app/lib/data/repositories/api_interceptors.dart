@@ -20,8 +20,6 @@ class AuthTokenInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    AppLogger.instance.info(options.path, title: 'onRequest');
-
     final authToken = await localSecureStore.accessToken;
     if (options.data is Map) {
       options.data = {
