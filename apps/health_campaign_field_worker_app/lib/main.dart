@@ -1,4 +1,6 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -13,6 +15,7 @@ import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
+import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 
@@ -37,6 +40,19 @@ void main() async {
     AppConfigurationSchema,
     OpLogSchema,
   ]);
+
+  final appConfigs = await isar.appConfigurations.where().findAll();
+  final config = appConfigs.firstOrNull;
+
+  final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? false;
+  if (enableCrashlytics) {
+    firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+      onErrorMessage: (value) {
+        AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+      },
+    );
+  }
 
   final sql = LocalSqlDataStore();
 
