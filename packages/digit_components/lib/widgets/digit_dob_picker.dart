@@ -83,7 +83,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, String> {
   @override
   String? modelToViewValue(DateTime? modelValue) {
     if (modelValue == null) return null;
-    return (DateTime.now().difference(modelValue).inDays / 365)
+    return (DateTime.now().difference(modelValue).inDays / 366)
         .round()
         .toStringAsFixed(0);
   }
@@ -94,7 +94,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, String> {
     final value = int.tryParse(viewValue);
     if (value == null) return null;
     return DateTime(
-      DateTime.now().subtract(Duration(days: value * 365)).year,
+      DateTime.now().subtract(Duration(days: value * 366)).year,
       1,
       1,
     );

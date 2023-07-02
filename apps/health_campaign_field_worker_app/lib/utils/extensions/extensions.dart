@@ -16,7 +16,7 @@ part 'context_utility.dart';
 
 extension DateAgeExtension on DateTime {
   int get age {
-    return (DateTime.now().difference(this).inDays / 365).round();
+    return (DateTime.now().difference(this).inDays / 366).round();
   }
 }
 
