@@ -1,0 +1,136 @@
+{
+    "name": "user",
+    "createRepository": true,
+    "isSearchResponsePlural": false,
+    "attributes": [
+        {
+            "name": "userName",
+            "type": "String",
+            "includeForQuery": true
+        },
+        {
+            "name": "salutation",
+            "type": "String"
+        },
+        {
+            "name": "name",
+            "type": "String"
+        },
+        {
+            "name": "gender",
+            "type": "String"
+        },
+        {
+            "name": "mobileNumber",
+            "type": "String"
+        },
+        {
+            "name": "emailId",
+            "type": "String"
+        },
+        {
+            "name": "altContactNumber",
+            "type": "String"
+        },
+        {
+            "name": "pan",
+            "type": "String"
+        },
+        {
+            "name": "aadhaarNumber",
+            "type": "String"
+        },
+        {
+            "name": "permanentAddress",
+            "type": "String"
+        },
+        {
+            "name": "permanentCity",
+            "type": "String"
+        },
+        {
+            "name": "permanentPinCode",
+            "type": "String"
+        },
+        {
+            "name": "correspondenceAddress",
+            "type": "String"
+        },
+        {
+            "name": "correspondenceCity",
+            "type": "String"
+        },
+        {
+            "name": "correspondencePinCode",
+            "type": "String"
+        },
+        {
+            "name": "alternatemobilenumber",
+            "type": "String"
+        },
+        {
+            "name": "active",
+            "type": "bool"
+        },
+        {
+            "name": "locale",
+            "type": "String"
+        },
+        {
+            "name": "type",
+            "type": "String"
+        },
+        {
+            "name": "accountLocked",
+            "type": "bool"
+        },
+        {
+            "name": "accountLockedDate",
+            "type": "int"
+        },
+        {
+            "name": "fatherOrHusbandName",
+            "type": "String"
+        },
+        {
+            "name": "relationship",
+            "type": "String"
+        },
+        {
+            "name": "signature",
+            "type": "String"
+        },
+        {
+            "name": "bloodGroup",
+            "type": "String"
+        },
+        {
+            "name": "photo",
+            "type": "String"
+        },
+        {
+            "name": "identificationMark",
+            "type": "String"
+        },
+        {
+            "name": "createdBy",
+            "type": "int"
+        },
+        {
+            "name": "lastModifiedBy",
+            "type": "int"
+        },
+        {
+            "name": "tenantId",
+            "type": "String"
+        },
+        {
+            "name": "uuid",
+            "type": "String"
+        },
+        {
+            "name": "createdDate",
+            "type": "int"
+        }
+    ]
+}
