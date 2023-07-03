@@ -126,7 +126,8 @@
         },
         {
             "name": "uuid",
-            "type": "String"
+            "type": "String",
+            "includeForQuery": true
         },
         {
             "name": "createdDate",

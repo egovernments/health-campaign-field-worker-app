@@ -8,10 +8,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class UserSearchModel extends EntitySearchModel {
   final String? userName;
+  final String? uuid;
   final List<String>? clientReferenceId;
   
   UserSearchModel({
     this.userName,
+    this.uuid,
     this.clientReferenceId,
     super.boundaryCode,
     super.isDeleted,
@@ -20,6 +22,7 @@ class UserSearchModel extends EntitySearchModel {
   @MappableConstructor()
   UserSearchModel.ignoreDeleted({
     this.userName,
+    this.uuid,
     this.clientReferenceId,
     super.boundaryCode,
   }):  super(isDeleted: false);

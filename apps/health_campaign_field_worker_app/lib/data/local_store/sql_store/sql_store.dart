@@ -42,6 +42,7 @@ import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
+import 'tables/user.dart';
 
 part 'sql_store.g.dart';
 
@@ -76,6 +77,7 @@ part 'sql_store.g.dart';
   Locality,
   PgrService,
   PgrComplainant,
+  User,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

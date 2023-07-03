@@ -21327,6 +21327,1731 @@ class $PgrComplainantTable extends PgrComplainant
   }
 }
 
+class UserData extends DataClass implements Insertable<UserData> {
+  final String? userName;
+  final String? salutation;
+  final String? name;
+  final String? gender;
+  final String? mobileNumber;
+  final String? emailId;
+  final String? altContactNumber;
+  final String? pan;
+  final String? aadhaarNumber;
+  final String? permanentAddress;
+  final String? permanentCity;
+  final String? permanentPinCode;
+  final String? correspondenceAddress;
+  final String? correspondenceCity;
+  final String? correspondencePinCode;
+  final String? alternatemobilenumber;
+  final bool? active;
+  final String? locale;
+  final String? type;
+  final bool? accountLocked;
+  final int? accountLockedDate;
+  final String? fatherOrHusbandName;
+  final String? relationship;
+  final String? signature;
+  final String? bloodGroup;
+  final String? photo;
+  final String? identificationMark;
+  final int? createdBy;
+  final int? lastModifiedBy;
+  final String? tenantId;
+  final String? uuid;
+  final int? createdDate;
+  final String? auditCreatedBy;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  UserData(
+      {this.userName,
+      this.salutation,
+      this.name,
+      this.gender,
+      this.mobileNumber,
+      this.emailId,
+      this.altContactNumber,
+      this.pan,
+      this.aadhaarNumber,
+      this.permanentAddress,
+      this.permanentCity,
+      this.permanentPinCode,
+      this.correspondenceAddress,
+      this.correspondenceCity,
+      this.correspondencePinCode,
+      this.alternatemobilenumber,
+      this.active,
+      this.locale,
+      this.type,
+      this.accountLocked,
+      this.accountLockedDate,
+      this.fatherOrHusbandName,
+      this.relationship,
+      this.signature,
+      this.bloodGroup,
+      this.photo,
+      this.identificationMark,
+      this.createdBy,
+      this.lastModifiedBy,
+      this.tenantId,
+      this.uuid,
+      this.createdDate,
+      this.auditCreatedBy,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  factory UserData.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return UserData(
+      userName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_name']),
+      salutation: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}salutation']),
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      gender: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}gender']),
+      mobileNumber: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}mobile_number']),
+      emailId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}email_id']),
+      altContactNumber: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}alt_contact_number']),
+      pan: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}pan']),
+      aadhaarNumber: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}aadhaar_number']),
+      permanentAddress: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}permanent_address']),
+      permanentCity: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}permanent_city']),
+      permanentPinCode: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}permanent_pin_code']),
+      correspondenceAddress: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}correspondence_address']),
+      correspondenceCity: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}correspondence_city']),
+      correspondencePinCode: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}correspondence_pin_code']),
+      alternatemobilenumber: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}alternatemobilenumber']),
+      active: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}active']),
+      locale: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}locale']),
+      type: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type']),
+      accountLocked: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_locked']),
+      accountLockedDate: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}account_locked_date']),
+      fatherOrHusbandName: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}father_or_husband_name']),
+      relationship: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}relationship']),
+      signature: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+      bloodGroup: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}blood_group']),
+      photo: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}photo']),
+      identificationMark: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}identification_mark']),
+      createdBy: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_by']),
+      lastModifiedBy: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified_by']),
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
+      uuid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      createdDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_date']),
+      auditCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
+      auditCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_reference_id'])!,
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
+      rowVersion: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || userName != null) {
+      map['user_name'] = Variable<String?>(userName);
+    }
+    if (!nullToAbsent || salutation != null) {
+      map['salutation'] = Variable<String?>(salutation);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String?>(name);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String?>(gender);
+    }
+    if (!nullToAbsent || mobileNumber != null) {
+      map['mobile_number'] = Variable<String?>(mobileNumber);
+    }
+    if (!nullToAbsent || emailId != null) {
+      map['email_id'] = Variable<String?>(emailId);
+    }
+    if (!nullToAbsent || altContactNumber != null) {
+      map['alt_contact_number'] = Variable<String?>(altContactNumber);
+    }
+    if (!nullToAbsent || pan != null) {
+      map['pan'] = Variable<String?>(pan);
+    }
+    if (!nullToAbsent || aadhaarNumber != null) {
+      map['aadhaar_number'] = Variable<String?>(aadhaarNumber);
+    }
+    if (!nullToAbsent || permanentAddress != null) {
+      map['permanent_address'] = Variable<String?>(permanentAddress);
+    }
+    if (!nullToAbsent || permanentCity != null) {
+      map['permanent_city'] = Variable<String?>(permanentCity);
+    }
+    if (!nullToAbsent || permanentPinCode != null) {
+      map['permanent_pin_code'] = Variable<String?>(permanentPinCode);
+    }
+    if (!nullToAbsent || correspondenceAddress != null) {
+      map['correspondence_address'] = Variable<String?>(correspondenceAddress);
+    }
+    if (!nullToAbsent || correspondenceCity != null) {
+      map['correspondence_city'] = Variable<String?>(correspondenceCity);
+    }
+    if (!nullToAbsent || correspondencePinCode != null) {
+      map['correspondence_pin_code'] = Variable<String?>(correspondencePinCode);
+    }
+    if (!nullToAbsent || alternatemobilenumber != null) {
+      map['alternatemobilenumber'] = Variable<String?>(alternatemobilenumber);
+    }
+    if (!nullToAbsent || active != null) {
+      map['active'] = Variable<bool?>(active);
+    }
+    if (!nullToAbsent || locale != null) {
+      map['locale'] = Variable<String?>(locale);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String?>(type);
+    }
+    if (!nullToAbsent || accountLocked != null) {
+      map['account_locked'] = Variable<bool?>(accountLocked);
+    }
+    if (!nullToAbsent || accountLockedDate != null) {
+      map['account_locked_date'] = Variable<int?>(accountLockedDate);
+    }
+    if (!nullToAbsent || fatherOrHusbandName != null) {
+      map['father_or_husband_name'] = Variable<String?>(fatherOrHusbandName);
+    }
+    if (!nullToAbsent || relationship != null) {
+      map['relationship'] = Variable<String?>(relationship);
+    }
+    if (!nullToAbsent || signature != null) {
+      map['signature'] = Variable<String?>(signature);
+    }
+    if (!nullToAbsent || bloodGroup != null) {
+      map['blood_group'] = Variable<String?>(bloodGroup);
+    }
+    if (!nullToAbsent || photo != null) {
+      map['photo'] = Variable<String?>(photo);
+    }
+    if (!nullToAbsent || identificationMark != null) {
+      map['identification_mark'] = Variable<String?>(identificationMark);
+    }
+    if (!nullToAbsent || createdBy != null) {
+      map['created_by'] = Variable<int?>(createdBy);
+    }
+    if (!nullToAbsent || lastModifiedBy != null) {
+      map['last_modified_by'] = Variable<int?>(lastModifiedBy);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String?>(tenantId);
+    }
+    if (!nullToAbsent || uuid != null) {
+      map['uuid'] = Variable<String?>(uuid);
+    }
+    if (!nullToAbsent || createdDate != null) {
+      map['created_date'] = Variable<int?>(createdDate);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool?>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    return map;
+  }
+
+  UserCompanion toCompanion(bool nullToAbsent) {
+    return UserCompanion(
+      userName: userName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userName),
+      salutation: salutation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(salutation),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      gender:
+          gender == null && nullToAbsent ? const Value.absent() : Value(gender),
+      mobileNumber: mobileNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mobileNumber),
+      emailId: emailId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailId),
+      altContactNumber: altContactNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altContactNumber),
+      pan: pan == null && nullToAbsent ? const Value.absent() : Value(pan),
+      aadhaarNumber: aadhaarNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(aadhaarNumber),
+      permanentAddress: permanentAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(permanentAddress),
+      permanentCity: permanentCity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(permanentCity),
+      permanentPinCode: permanentPinCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(permanentPinCode),
+      correspondenceAddress: correspondenceAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(correspondenceAddress),
+      correspondenceCity: correspondenceCity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(correspondenceCity),
+      correspondencePinCode: correspondencePinCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(correspondencePinCode),
+      alternatemobilenumber: alternatemobilenumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternatemobilenumber),
+      active:
+          active == null && nullToAbsent ? const Value.absent() : Value(active),
+      locale:
+          locale == null && nullToAbsent ? const Value.absent() : Value(locale),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      accountLocked: accountLocked == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountLocked),
+      accountLockedDate: accountLockedDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountLockedDate),
+      fatherOrHusbandName: fatherOrHusbandName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fatherOrHusbandName),
+      relationship: relationship == null && nullToAbsent
+          ? const Value.absent()
+          : Value(relationship),
+      signature: signature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(signature),
+      bloodGroup: bloodGroup == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bloodGroup),
+      photo:
+          photo == null && nullToAbsent ? const Value.absent() : Value(photo),
+      identificationMark: identificationMark == null && nullToAbsent
+          ? const Value.absent()
+          : Value(identificationMark),
+      createdBy: createdBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdBy),
+      lastModifiedBy: lastModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModifiedBy),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      createdDate: createdDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdDate),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory UserData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserData(
+      userName: serializer.fromJson<String?>(json['userName']),
+      salutation: serializer.fromJson<String?>(json['salutation']),
+      name: serializer.fromJson<String?>(json['name']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      mobileNumber: serializer.fromJson<String?>(json['mobileNumber']),
+      emailId: serializer.fromJson<String?>(json['emailId']),
+      altContactNumber: serializer.fromJson<String?>(json['altContactNumber']),
+      pan: serializer.fromJson<String?>(json['pan']),
+      aadhaarNumber: serializer.fromJson<String?>(json['aadhaarNumber']),
+      permanentAddress: serializer.fromJson<String?>(json['permanentAddress']),
+      permanentCity: serializer.fromJson<String?>(json['permanentCity']),
+      permanentPinCode: serializer.fromJson<String?>(json['permanentPinCode']),
+      correspondenceAddress:
+          serializer.fromJson<String?>(json['correspondenceAddress']),
+      correspondenceCity:
+          serializer.fromJson<String?>(json['correspondenceCity']),
+      correspondencePinCode:
+          serializer.fromJson<String?>(json['correspondencePinCode']),
+      alternatemobilenumber:
+          serializer.fromJson<String?>(json['alternatemobilenumber']),
+      active: serializer.fromJson<bool?>(json['active']),
+      locale: serializer.fromJson<String?>(json['locale']),
+      type: serializer.fromJson<String?>(json['type']),
+      accountLocked: serializer.fromJson<bool?>(json['accountLocked']),
+      accountLockedDate: serializer.fromJson<int?>(json['accountLockedDate']),
+      fatherOrHusbandName:
+          serializer.fromJson<String?>(json['fatherOrHusbandName']),
+      relationship: serializer.fromJson<String?>(json['relationship']),
+      signature: serializer.fromJson<String?>(json['signature']),
+      bloodGroup: serializer.fromJson<String?>(json['bloodGroup']),
+      photo: serializer.fromJson<String?>(json['photo']),
+      identificationMark:
+          serializer.fromJson<String?>(json['identificationMark']),
+      createdBy: serializer.fromJson<int?>(json['createdBy']),
+      lastModifiedBy: serializer.fromJson<int?>(json['lastModifiedBy']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      uuid: serializer.fromJson<String?>(json['uuid']),
+      createdDate: serializer.fromJson<int?>(json['createdDate']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userName': serializer.toJson<String?>(userName),
+      'salutation': serializer.toJson<String?>(salutation),
+      'name': serializer.toJson<String?>(name),
+      'gender': serializer.toJson<String?>(gender),
+      'mobileNumber': serializer.toJson<String?>(mobileNumber),
+      'emailId': serializer.toJson<String?>(emailId),
+      'altContactNumber': serializer.toJson<String?>(altContactNumber),
+      'pan': serializer.toJson<String?>(pan),
+      'aadhaarNumber': serializer.toJson<String?>(aadhaarNumber),
+      'permanentAddress': serializer.toJson<String?>(permanentAddress),
+      'permanentCity': serializer.toJson<String?>(permanentCity),
+      'permanentPinCode': serializer.toJson<String?>(permanentPinCode),
+      'correspondenceAddress':
+          serializer.toJson<String?>(correspondenceAddress),
+      'correspondenceCity': serializer.toJson<String?>(correspondenceCity),
+      'correspondencePinCode':
+          serializer.toJson<String?>(correspondencePinCode),
+      'alternatemobilenumber':
+          serializer.toJson<String?>(alternatemobilenumber),
+      'active': serializer.toJson<bool?>(active),
+      'locale': serializer.toJson<String?>(locale),
+      'type': serializer.toJson<String?>(type),
+      'accountLocked': serializer.toJson<bool?>(accountLocked),
+      'accountLockedDate': serializer.toJson<int?>(accountLockedDate),
+      'fatherOrHusbandName': serializer.toJson<String?>(fatherOrHusbandName),
+      'relationship': serializer.toJson<String?>(relationship),
+      'signature': serializer.toJson<String?>(signature),
+      'bloodGroup': serializer.toJson<String?>(bloodGroup),
+      'photo': serializer.toJson<String?>(photo),
+      'identificationMark': serializer.toJson<String?>(identificationMark),
+      'createdBy': serializer.toJson<int?>(createdBy),
+      'lastModifiedBy': serializer.toJson<int?>(lastModifiedBy),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'uuid': serializer.toJson<String?>(uuid),
+      'createdDate': serializer.toJson<int?>(createdDate),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  UserData copyWith(
+          {String? userName,
+          String? salutation,
+          String? name,
+          String? gender,
+          String? mobileNumber,
+          String? emailId,
+          String? altContactNumber,
+          String? pan,
+          String? aadhaarNumber,
+          String? permanentAddress,
+          String? permanentCity,
+          String? permanentPinCode,
+          String? correspondenceAddress,
+          String? correspondenceCity,
+          String? correspondencePinCode,
+          String? alternatemobilenumber,
+          bool? active,
+          String? locale,
+          String? type,
+          bool? accountLocked,
+          int? accountLockedDate,
+          String? fatherOrHusbandName,
+          String? relationship,
+          String? signature,
+          String? bloodGroup,
+          String? photo,
+          String? identificationMark,
+          int? createdBy,
+          int? lastModifiedBy,
+          String? tenantId,
+          String? uuid,
+          int? createdDate,
+          String? auditCreatedBy,
+          int? auditCreatedTime,
+          String? auditModifiedBy,
+          int? auditModifiedTime,
+          String? clientReferenceId,
+          bool? isDeleted,
+          int? rowVersion,
+          String? additionalFields}) =>
+      UserData(
+        userName: userName ?? this.userName,
+        salutation: salutation ?? this.salutation,
+        name: name ?? this.name,
+        gender: gender ?? this.gender,
+        mobileNumber: mobileNumber ?? this.mobileNumber,
+        emailId: emailId ?? this.emailId,
+        altContactNumber: altContactNumber ?? this.altContactNumber,
+        pan: pan ?? this.pan,
+        aadhaarNumber: aadhaarNumber ?? this.aadhaarNumber,
+        permanentAddress: permanentAddress ?? this.permanentAddress,
+        permanentCity: permanentCity ?? this.permanentCity,
+        permanentPinCode: permanentPinCode ?? this.permanentPinCode,
+        correspondenceAddress:
+            correspondenceAddress ?? this.correspondenceAddress,
+        correspondenceCity: correspondenceCity ?? this.correspondenceCity,
+        correspondencePinCode:
+            correspondencePinCode ?? this.correspondencePinCode,
+        alternatemobilenumber:
+            alternatemobilenumber ?? this.alternatemobilenumber,
+        active: active ?? this.active,
+        locale: locale ?? this.locale,
+        type: type ?? this.type,
+        accountLocked: accountLocked ?? this.accountLocked,
+        accountLockedDate: accountLockedDate ?? this.accountLockedDate,
+        fatherOrHusbandName: fatherOrHusbandName ?? this.fatherOrHusbandName,
+        relationship: relationship ?? this.relationship,
+        signature: signature ?? this.signature,
+        bloodGroup: bloodGroup ?? this.bloodGroup,
+        photo: photo ?? this.photo,
+        identificationMark: identificationMark ?? this.identificationMark,
+        createdBy: createdBy ?? this.createdBy,
+        lastModifiedBy: lastModifiedBy ?? this.lastModifiedBy,
+        tenantId: tenantId ?? this.tenantId,
+        uuid: uuid ?? this.uuid,
+        createdDate: createdDate ?? this.createdDate,
+        auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+        auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        isDeleted: isDeleted ?? this.isDeleted,
+        rowVersion: rowVersion ?? this.rowVersion,
+        additionalFields: additionalFields ?? this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserData(')
+          ..write('userName: $userName, ')
+          ..write('salutation: $salutation, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('mobileNumber: $mobileNumber, ')
+          ..write('emailId: $emailId, ')
+          ..write('altContactNumber: $altContactNumber, ')
+          ..write('pan: $pan, ')
+          ..write('aadhaarNumber: $aadhaarNumber, ')
+          ..write('permanentAddress: $permanentAddress, ')
+          ..write('permanentCity: $permanentCity, ')
+          ..write('permanentPinCode: $permanentPinCode, ')
+          ..write('correspondenceAddress: $correspondenceAddress, ')
+          ..write('correspondenceCity: $correspondenceCity, ')
+          ..write('correspondencePinCode: $correspondencePinCode, ')
+          ..write('alternatemobilenumber: $alternatemobilenumber, ')
+          ..write('active: $active, ')
+          ..write('locale: $locale, ')
+          ..write('type: $type, ')
+          ..write('accountLocked: $accountLocked, ')
+          ..write('accountLockedDate: $accountLockedDate, ')
+          ..write('fatherOrHusbandName: $fatherOrHusbandName, ')
+          ..write('relationship: $relationship, ')
+          ..write('signature: $signature, ')
+          ..write('bloodGroup: $bloodGroup, ')
+          ..write('photo: $photo, ')
+          ..write('identificationMark: $identificationMark, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('lastModifiedBy: $lastModifiedBy, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('uuid: $uuid, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        userName,
+        salutation,
+        name,
+        gender,
+        mobileNumber,
+        emailId,
+        altContactNumber,
+        pan,
+        aadhaarNumber,
+        permanentAddress,
+        permanentCity,
+        permanentPinCode,
+        correspondenceAddress,
+        correspondenceCity,
+        correspondencePinCode,
+        alternatemobilenumber,
+        active,
+        locale,
+        type,
+        accountLocked,
+        accountLockedDate,
+        fatherOrHusbandName,
+        relationship,
+        signature,
+        bloodGroup,
+        photo,
+        identificationMark,
+        createdBy,
+        lastModifiedBy,
+        tenantId,
+        uuid,
+        createdDate,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserData &&
+          other.userName == this.userName &&
+          other.salutation == this.salutation &&
+          other.name == this.name &&
+          other.gender == this.gender &&
+          other.mobileNumber == this.mobileNumber &&
+          other.emailId == this.emailId &&
+          other.altContactNumber == this.altContactNumber &&
+          other.pan == this.pan &&
+          other.aadhaarNumber == this.aadhaarNumber &&
+          other.permanentAddress == this.permanentAddress &&
+          other.permanentCity == this.permanentCity &&
+          other.permanentPinCode == this.permanentPinCode &&
+          other.correspondenceAddress == this.correspondenceAddress &&
+          other.correspondenceCity == this.correspondenceCity &&
+          other.correspondencePinCode == this.correspondencePinCode &&
+          other.alternatemobilenumber == this.alternatemobilenumber &&
+          other.active == this.active &&
+          other.locale == this.locale &&
+          other.type == this.type &&
+          other.accountLocked == this.accountLocked &&
+          other.accountLockedDate == this.accountLockedDate &&
+          other.fatherOrHusbandName == this.fatherOrHusbandName &&
+          other.relationship == this.relationship &&
+          other.signature == this.signature &&
+          other.bloodGroup == this.bloodGroup &&
+          other.photo == this.photo &&
+          other.identificationMark == this.identificationMark &&
+          other.createdBy == this.createdBy &&
+          other.lastModifiedBy == this.lastModifiedBy &&
+          other.tenantId == this.tenantId &&
+          other.uuid == this.uuid &&
+          other.createdDate == this.createdDate &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class UserCompanion extends UpdateCompanion<UserData> {
+  final Value<String?> userName;
+  final Value<String?> salutation;
+  final Value<String?> name;
+  final Value<String?> gender;
+  final Value<String?> mobileNumber;
+  final Value<String?> emailId;
+  final Value<String?> altContactNumber;
+  final Value<String?> pan;
+  final Value<String?> aadhaarNumber;
+  final Value<String?> permanentAddress;
+  final Value<String?> permanentCity;
+  final Value<String?> permanentPinCode;
+  final Value<String?> correspondenceAddress;
+  final Value<String?> correspondenceCity;
+  final Value<String?> correspondencePinCode;
+  final Value<String?> alternatemobilenumber;
+  final Value<bool?> active;
+  final Value<String?> locale;
+  final Value<String?> type;
+  final Value<bool?> accountLocked;
+  final Value<int?> accountLockedDate;
+  final Value<String?> fatherOrHusbandName;
+  final Value<String?> relationship;
+  final Value<String?> signature;
+  final Value<String?> bloodGroup;
+  final Value<String?> photo;
+  final Value<String?> identificationMark;
+  final Value<int?> createdBy;
+  final Value<int?> lastModifiedBy;
+  final Value<String?> tenantId;
+  final Value<String?> uuid;
+  final Value<int?> createdDate;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  const UserCompanion({
+    this.userName = const Value.absent(),
+    this.salutation = const Value.absent(),
+    this.name = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.mobileNumber = const Value.absent(),
+    this.emailId = const Value.absent(),
+    this.altContactNumber = const Value.absent(),
+    this.pan = const Value.absent(),
+    this.aadhaarNumber = const Value.absent(),
+    this.permanentAddress = const Value.absent(),
+    this.permanentCity = const Value.absent(),
+    this.permanentPinCode = const Value.absent(),
+    this.correspondenceAddress = const Value.absent(),
+    this.correspondenceCity = const Value.absent(),
+    this.correspondencePinCode = const Value.absent(),
+    this.alternatemobilenumber = const Value.absent(),
+    this.active = const Value.absent(),
+    this.locale = const Value.absent(),
+    this.type = const Value.absent(),
+    this.accountLocked = const Value.absent(),
+    this.accountLockedDate = const Value.absent(),
+    this.fatherOrHusbandName = const Value.absent(),
+    this.relationship = const Value.absent(),
+    this.signature = const Value.absent(),
+    this.bloodGroup = const Value.absent(),
+    this.photo = const Value.absent(),
+    this.identificationMark = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.lastModifiedBy = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  });
+  UserCompanion.insert({
+    this.userName = const Value.absent(),
+    this.salutation = const Value.absent(),
+    this.name = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.mobileNumber = const Value.absent(),
+    this.emailId = const Value.absent(),
+    this.altContactNumber = const Value.absent(),
+    this.pan = const Value.absent(),
+    this.aadhaarNumber = const Value.absent(),
+    this.permanentAddress = const Value.absent(),
+    this.permanentCity = const Value.absent(),
+    this.permanentPinCode = const Value.absent(),
+    this.correspondenceAddress = const Value.absent(),
+    this.correspondenceCity = const Value.absent(),
+    this.correspondencePinCode = const Value.absent(),
+    this.alternatemobilenumber = const Value.absent(),
+    this.active = const Value.absent(),
+    this.locale = const Value.absent(),
+    this.type = const Value.absent(),
+    this.accountLocked = const Value.absent(),
+    this.accountLockedDate = const Value.absent(),
+    this.fatherOrHusbandName = const Value.absent(),
+    this.relationship = const Value.absent(),
+    this.signature = const Value.absent(),
+    this.bloodGroup = const Value.absent(),
+    this.photo = const Value.absent(),
+    this.identificationMark = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.lastModifiedBy = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<UserData> custom({
+    Expression<String?>? userName,
+    Expression<String?>? salutation,
+    Expression<String?>? name,
+    Expression<String?>? gender,
+    Expression<String?>? mobileNumber,
+    Expression<String?>? emailId,
+    Expression<String?>? altContactNumber,
+    Expression<String?>? pan,
+    Expression<String?>? aadhaarNumber,
+    Expression<String?>? permanentAddress,
+    Expression<String?>? permanentCity,
+    Expression<String?>? permanentPinCode,
+    Expression<String?>? correspondenceAddress,
+    Expression<String?>? correspondenceCity,
+    Expression<String?>? correspondencePinCode,
+    Expression<String?>? alternatemobilenumber,
+    Expression<bool?>? active,
+    Expression<String?>? locale,
+    Expression<String?>? type,
+    Expression<bool?>? accountLocked,
+    Expression<int?>? accountLockedDate,
+    Expression<String?>? fatherOrHusbandName,
+    Expression<String?>? relationship,
+    Expression<String?>? signature,
+    Expression<String?>? bloodGroup,
+    Expression<String?>? photo,
+    Expression<String?>? identificationMark,
+    Expression<int?>? createdBy,
+    Expression<int?>? lastModifiedBy,
+    Expression<String?>? tenantId,
+    Expression<String?>? uuid,
+    Expression<int?>? createdDate,
+    Expression<String?>? auditCreatedBy,
+    Expression<int?>? auditCreatedTime,
+    Expression<String?>? auditModifiedBy,
+    Expression<int?>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<bool?>? isDeleted,
+    Expression<int?>? rowVersion,
+    Expression<String?>? additionalFields,
+  }) {
+    return RawValuesInsertable({
+      if (userName != null) 'user_name': userName,
+      if (salutation != null) 'salutation': salutation,
+      if (name != null) 'name': name,
+      if (gender != null) 'gender': gender,
+      if (mobileNumber != null) 'mobile_number': mobileNumber,
+      if (emailId != null) 'email_id': emailId,
+      if (altContactNumber != null) 'alt_contact_number': altContactNumber,
+      if (pan != null) 'pan': pan,
+      if (aadhaarNumber != null) 'aadhaar_number': aadhaarNumber,
+      if (permanentAddress != null) 'permanent_address': permanentAddress,
+      if (permanentCity != null) 'permanent_city': permanentCity,
+      if (permanentPinCode != null) 'permanent_pin_code': permanentPinCode,
+      if (correspondenceAddress != null)
+        'correspondence_address': correspondenceAddress,
+      if (correspondenceCity != null) 'correspondence_city': correspondenceCity,
+      if (correspondencePinCode != null)
+        'correspondence_pin_code': correspondencePinCode,
+      if (alternatemobilenumber != null)
+        'alternatemobilenumber': alternatemobilenumber,
+      if (active != null) 'active': active,
+      if (locale != null) 'locale': locale,
+      if (type != null) 'type': type,
+      if (accountLocked != null) 'account_locked': accountLocked,
+      if (accountLockedDate != null) 'account_locked_date': accountLockedDate,
+      if (fatherOrHusbandName != null)
+        'father_or_husband_name': fatherOrHusbandName,
+      if (relationship != null) 'relationship': relationship,
+      if (signature != null) 'signature': signature,
+      if (bloodGroup != null) 'blood_group': bloodGroup,
+      if (photo != null) 'photo': photo,
+      if (identificationMark != null) 'identification_mark': identificationMark,
+      if (createdBy != null) 'created_by': createdBy,
+      if (lastModifiedBy != null) 'last_modified_by': lastModifiedBy,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (uuid != null) 'uuid': uuid,
+      if (createdDate != null) 'created_date': createdDate,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+    });
+  }
+
+  UserCompanion copyWith(
+      {Value<String?>? userName,
+      Value<String?>? salutation,
+      Value<String?>? name,
+      Value<String?>? gender,
+      Value<String?>? mobileNumber,
+      Value<String?>? emailId,
+      Value<String?>? altContactNumber,
+      Value<String?>? pan,
+      Value<String?>? aadhaarNumber,
+      Value<String?>? permanentAddress,
+      Value<String?>? permanentCity,
+      Value<String?>? permanentPinCode,
+      Value<String?>? correspondenceAddress,
+      Value<String?>? correspondenceCity,
+      Value<String?>? correspondencePinCode,
+      Value<String?>? alternatemobilenumber,
+      Value<bool?>? active,
+      Value<String?>? locale,
+      Value<String?>? type,
+      Value<bool?>? accountLocked,
+      Value<int?>? accountLockedDate,
+      Value<String?>? fatherOrHusbandName,
+      Value<String?>? relationship,
+      Value<String?>? signature,
+      Value<String?>? bloodGroup,
+      Value<String?>? photo,
+      Value<String?>? identificationMark,
+      Value<int?>? createdBy,
+      Value<int?>? lastModifiedBy,
+      Value<String?>? tenantId,
+      Value<String?>? uuid,
+      Value<int?>? createdDate,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields}) {
+    return UserCompanion(
+      userName: userName ?? this.userName,
+      salutation: salutation ?? this.salutation,
+      name: name ?? this.name,
+      gender: gender ?? this.gender,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+      emailId: emailId ?? this.emailId,
+      altContactNumber: altContactNumber ?? this.altContactNumber,
+      pan: pan ?? this.pan,
+      aadhaarNumber: aadhaarNumber ?? this.aadhaarNumber,
+      permanentAddress: permanentAddress ?? this.permanentAddress,
+      permanentCity: permanentCity ?? this.permanentCity,
+      permanentPinCode: permanentPinCode ?? this.permanentPinCode,
+      correspondenceAddress:
+          correspondenceAddress ?? this.correspondenceAddress,
+      correspondenceCity: correspondenceCity ?? this.correspondenceCity,
+      correspondencePinCode:
+          correspondencePinCode ?? this.correspondencePinCode,
+      alternatemobilenumber:
+          alternatemobilenumber ?? this.alternatemobilenumber,
+      active: active ?? this.active,
+      locale: locale ?? this.locale,
+      type: type ?? this.type,
+      accountLocked: accountLocked ?? this.accountLocked,
+      accountLockedDate: accountLockedDate ?? this.accountLockedDate,
+      fatherOrHusbandName: fatherOrHusbandName ?? this.fatherOrHusbandName,
+      relationship: relationship ?? this.relationship,
+      signature: signature ?? this.signature,
+      bloodGroup: bloodGroup ?? this.bloodGroup,
+      photo: photo ?? this.photo,
+      identificationMark: identificationMark ?? this.identificationMark,
+      createdBy: createdBy ?? this.createdBy,
+      lastModifiedBy: lastModifiedBy ?? this.lastModifiedBy,
+      tenantId: tenantId ?? this.tenantId,
+      uuid: uuid ?? this.uuid,
+      createdDate: createdDate ?? this.createdDate,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userName.present) {
+      map['user_name'] = Variable<String?>(userName.value);
+    }
+    if (salutation.present) {
+      map['salutation'] = Variable<String?>(salutation.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String?>(name.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String?>(gender.value);
+    }
+    if (mobileNumber.present) {
+      map['mobile_number'] = Variable<String?>(mobileNumber.value);
+    }
+    if (emailId.present) {
+      map['email_id'] = Variable<String?>(emailId.value);
+    }
+    if (altContactNumber.present) {
+      map['alt_contact_number'] = Variable<String?>(altContactNumber.value);
+    }
+    if (pan.present) {
+      map['pan'] = Variable<String?>(pan.value);
+    }
+    if (aadhaarNumber.present) {
+      map['aadhaar_number'] = Variable<String?>(aadhaarNumber.value);
+    }
+    if (permanentAddress.present) {
+      map['permanent_address'] = Variable<String?>(permanentAddress.value);
+    }
+    if (permanentCity.present) {
+      map['permanent_city'] = Variable<String?>(permanentCity.value);
+    }
+    if (permanentPinCode.present) {
+      map['permanent_pin_code'] = Variable<String?>(permanentPinCode.value);
+    }
+    if (correspondenceAddress.present) {
+      map['correspondence_address'] =
+          Variable<String?>(correspondenceAddress.value);
+    }
+    if (correspondenceCity.present) {
+      map['correspondence_city'] = Variable<String?>(correspondenceCity.value);
+    }
+    if (correspondencePinCode.present) {
+      map['correspondence_pin_code'] =
+          Variable<String?>(correspondencePinCode.value);
+    }
+    if (alternatemobilenumber.present) {
+      map['alternatemobilenumber'] =
+          Variable<String?>(alternatemobilenumber.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool?>(active.value);
+    }
+    if (locale.present) {
+      map['locale'] = Variable<String?>(locale.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String?>(type.value);
+    }
+    if (accountLocked.present) {
+      map['account_locked'] = Variable<bool?>(accountLocked.value);
+    }
+    if (accountLockedDate.present) {
+      map['account_locked_date'] = Variable<int?>(accountLockedDate.value);
+    }
+    if (fatherOrHusbandName.present) {
+      map['father_or_husband_name'] =
+          Variable<String?>(fatherOrHusbandName.value);
+    }
+    if (relationship.present) {
+      map['relationship'] = Variable<String?>(relationship.value);
+    }
+    if (signature.present) {
+      map['signature'] = Variable<String?>(signature.value);
+    }
+    if (bloodGroup.present) {
+      map['blood_group'] = Variable<String?>(bloodGroup.value);
+    }
+    if (photo.present) {
+      map['photo'] = Variable<String?>(photo.value);
+    }
+    if (identificationMark.present) {
+      map['identification_mark'] = Variable<String?>(identificationMark.value);
+    }
+    if (createdBy.present) {
+      map['created_by'] = Variable<int?>(createdBy.value);
+    }
+    if (lastModifiedBy.present) {
+      map['last_modified_by'] = Variable<int?>(lastModifiedBy.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String?>(tenantId.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String?>(uuid.value);
+    }
+    if (createdDate.present) {
+      map['created_date'] = Variable<int?>(createdDate.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool?>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int?>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserCompanion(')
+          ..write('userName: $userName, ')
+          ..write('salutation: $salutation, ')
+          ..write('name: $name, ')
+          ..write('gender: $gender, ')
+          ..write('mobileNumber: $mobileNumber, ')
+          ..write('emailId: $emailId, ')
+          ..write('altContactNumber: $altContactNumber, ')
+          ..write('pan: $pan, ')
+          ..write('aadhaarNumber: $aadhaarNumber, ')
+          ..write('permanentAddress: $permanentAddress, ')
+          ..write('permanentCity: $permanentCity, ')
+          ..write('permanentPinCode: $permanentPinCode, ')
+          ..write('correspondenceAddress: $correspondenceAddress, ')
+          ..write('correspondenceCity: $correspondenceCity, ')
+          ..write('correspondencePinCode: $correspondencePinCode, ')
+          ..write('alternatemobilenumber: $alternatemobilenumber, ')
+          ..write('active: $active, ')
+          ..write('locale: $locale, ')
+          ..write('type: $type, ')
+          ..write('accountLocked: $accountLocked, ')
+          ..write('accountLockedDate: $accountLockedDate, ')
+          ..write('fatherOrHusbandName: $fatherOrHusbandName, ')
+          ..write('relationship: $relationship, ')
+          ..write('signature: $signature, ')
+          ..write('bloodGroup: $bloodGroup, ')
+          ..write('photo: $photo, ')
+          ..write('identificationMark: $identificationMark, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('lastModifiedBy: $lastModifiedBy, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('uuid: $uuid, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UserTable extends User with TableInfo<$UserTable, UserData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _userNameMeta = const VerificationMeta('userName');
+  @override
+  late final GeneratedColumn<String?> userName = GeneratedColumn<String?>(
+      'user_name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _salutationMeta = const VerificationMeta('salutation');
+  @override
+  late final GeneratedColumn<String?> salutation = GeneratedColumn<String?>(
+      'salutation', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String?> gender = GeneratedColumn<String?>(
+      'gender', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _mobileNumberMeta =
+      const VerificationMeta('mobileNumber');
+  @override
+  late final GeneratedColumn<String?> mobileNumber = GeneratedColumn<String?>(
+      'mobile_number', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _emailIdMeta = const VerificationMeta('emailId');
+  @override
+  late final GeneratedColumn<String?> emailId = GeneratedColumn<String?>(
+      'email_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _altContactNumberMeta =
+      const VerificationMeta('altContactNumber');
+  @override
+  late final GeneratedColumn<String?> altContactNumber =
+      GeneratedColumn<String?>('alt_contact_number', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _panMeta = const VerificationMeta('pan');
+  @override
+  late final GeneratedColumn<String?> pan = GeneratedColumn<String?>(
+      'pan', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _aadhaarNumberMeta =
+      const VerificationMeta('aadhaarNumber');
+  @override
+  late final GeneratedColumn<String?> aadhaarNumber = GeneratedColumn<String?>(
+      'aadhaar_number', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _permanentAddressMeta =
+      const VerificationMeta('permanentAddress');
+  @override
+  late final GeneratedColumn<String?> permanentAddress =
+      GeneratedColumn<String?>('permanent_address', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _permanentCityMeta =
+      const VerificationMeta('permanentCity');
+  @override
+  late final GeneratedColumn<String?> permanentCity = GeneratedColumn<String?>(
+      'permanent_city', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _permanentPinCodeMeta =
+      const VerificationMeta('permanentPinCode');
+  @override
+  late final GeneratedColumn<String?> permanentPinCode =
+      GeneratedColumn<String?>('permanent_pin_code', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _correspondenceAddressMeta =
+      const VerificationMeta('correspondenceAddress');
+  @override
+  late final GeneratedColumn<String?> correspondenceAddress =
+      GeneratedColumn<String?>('correspondence_address', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _correspondenceCityMeta =
+      const VerificationMeta('correspondenceCity');
+  @override
+  late final GeneratedColumn<String?> correspondenceCity =
+      GeneratedColumn<String?>('correspondence_city', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _correspondencePinCodeMeta =
+      const VerificationMeta('correspondencePinCode');
+  @override
+  late final GeneratedColumn<String?> correspondencePinCode =
+      GeneratedColumn<String?>('correspondence_pin_code', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _alternatemobilenumberMeta =
+      const VerificationMeta('alternatemobilenumber');
+  @override
+  late final GeneratedColumn<String?> alternatemobilenumber =
+      GeneratedColumn<String?>('alternatemobilenumber', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool?> active = GeneratedColumn<bool?>(
+      'active', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (active IN (0, 1))');
+  final VerificationMeta _localeMeta = const VerificationMeta('locale');
+  @override
+  late final GeneratedColumn<String?> locale = GeneratedColumn<String?>(
+      'locale', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String?> type = GeneratedColumn<String?>(
+      'type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _accountLockedMeta =
+      const VerificationMeta('accountLocked');
+  @override
+  late final GeneratedColumn<bool?> accountLocked = GeneratedColumn<bool?>(
+      'account_locked', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (account_locked IN (0, 1))');
+  final VerificationMeta _accountLockedDateMeta =
+      const VerificationMeta('accountLockedDate');
+  @override
+  late final GeneratedColumn<int?> accountLockedDate = GeneratedColumn<int?>(
+      'account_locked_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fatherOrHusbandNameMeta =
+      const VerificationMeta('fatherOrHusbandName');
+  @override
+  late final GeneratedColumn<String?> fatherOrHusbandName =
+      GeneratedColumn<String?>('father_or_husband_name', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _relationshipMeta =
+      const VerificationMeta('relationship');
+  @override
+  late final GeneratedColumn<String?> relationship = GeneratedColumn<String?>(
+      'relationship', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _signatureMeta = const VerificationMeta('signature');
+  @override
+  late final GeneratedColumn<String?> signature = GeneratedColumn<String?>(
+      'signature', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _bloodGroupMeta = const VerificationMeta('bloodGroup');
+  @override
+  late final GeneratedColumn<String?> bloodGroup = GeneratedColumn<String?>(
+      'blood_group', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _photoMeta = const VerificationMeta('photo');
+  @override
+  late final GeneratedColumn<String?> photo = GeneratedColumn<String?>(
+      'photo', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _identificationMarkMeta =
+      const VerificationMeta('identificationMark');
+  @override
+  late final GeneratedColumn<String?> identificationMark =
+      GeneratedColumn<String?>('identification_mark', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _createdByMeta = const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<int?> createdBy = GeneratedColumn<int?>(
+      'created_by', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _lastModifiedByMeta =
+      const VerificationMeta('lastModifiedBy');
+  @override
+  late final GeneratedColumn<int?> lastModifiedBy = GeneratedColumn<int?>(
+      'last_modified_by', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _createdDateMeta =
+      const VerificationMeta('createdDate');
+  @override
+  late final GeneratedColumn<int?> createdDate = GeneratedColumn<int?>(
+      'created_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String?> auditCreatedBy = GeneratedColumn<String?>(
+      'audit_created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
+      'audit_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String?> auditModifiedBy =
+      GeneratedColumn<String?>('audit_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
+      'audit_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String?> clientReferenceId =
+      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
+      'row_version', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        userName,
+        salutation,
+        name,
+        gender,
+        mobileNumber,
+        emailId,
+        altContactNumber,
+        pan,
+        aadhaarNumber,
+        permanentAddress,
+        permanentCity,
+        permanentPinCode,
+        correspondenceAddress,
+        correspondenceCity,
+        correspondencePinCode,
+        alternatemobilenumber,
+        active,
+        locale,
+        type,
+        accountLocked,
+        accountLockedDate,
+        fatherOrHusbandName,
+        relationship,
+        signature,
+        bloodGroup,
+        photo,
+        identificationMark,
+        createdBy,
+        lastModifiedBy,
+        tenantId,
+        uuid,
+        createdDate,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? 'user';
+  @override
+  String get actualTableName => 'user';
+  @override
+  VerificationContext validateIntegrity(Insertable<UserData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_name')) {
+      context.handle(_userNameMeta,
+          userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta));
+    }
+    if (data.containsKey('salutation')) {
+      context.handle(
+          _salutationMeta,
+          salutation.isAcceptableOrUnknown(
+              data['salutation']!, _salutationMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('gender')) {
+      context.handle(_genderMeta,
+          gender.isAcceptableOrUnknown(data['gender']!, _genderMeta));
+    }
+    if (data.containsKey('mobile_number')) {
+      context.handle(
+          _mobileNumberMeta,
+          mobileNumber.isAcceptableOrUnknown(
+              data['mobile_number']!, _mobileNumberMeta));
+    }
+    if (data.containsKey('email_id')) {
+      context.handle(_emailIdMeta,
+          emailId.isAcceptableOrUnknown(data['email_id']!, _emailIdMeta));
+    }
+    if (data.containsKey('alt_contact_number')) {
+      context.handle(
+          _altContactNumberMeta,
+          altContactNumber.isAcceptableOrUnknown(
+              data['alt_contact_number']!, _altContactNumberMeta));
+    }
+    if (data.containsKey('pan')) {
+      context.handle(
+          _panMeta, pan.isAcceptableOrUnknown(data['pan']!, _panMeta));
+    }
+    if (data.containsKey('aadhaar_number')) {
+      context.handle(
+          _aadhaarNumberMeta,
+          aadhaarNumber.isAcceptableOrUnknown(
+              data['aadhaar_number']!, _aadhaarNumberMeta));
+    }
+    if (data.containsKey('permanent_address')) {
+      context.handle(
+          _permanentAddressMeta,
+          permanentAddress.isAcceptableOrUnknown(
+              data['permanent_address']!, _permanentAddressMeta));
+    }
+    if (data.containsKey('permanent_city')) {
+      context.handle(
+          _permanentCityMeta,
+          permanentCity.isAcceptableOrUnknown(
+              data['permanent_city']!, _permanentCityMeta));
+    }
+    if (data.containsKey('permanent_pin_code')) {
+      context.handle(
+          _permanentPinCodeMeta,
+          permanentPinCode.isAcceptableOrUnknown(
+              data['permanent_pin_code']!, _permanentPinCodeMeta));
+    }
+    if (data.containsKey('correspondence_address')) {
+      context.handle(
+          _correspondenceAddressMeta,
+          correspondenceAddress.isAcceptableOrUnknown(
+              data['correspondence_address']!, _correspondenceAddressMeta));
+    }
+    if (data.containsKey('correspondence_city')) {
+      context.handle(
+          _correspondenceCityMeta,
+          correspondenceCity.isAcceptableOrUnknown(
+              data['correspondence_city']!, _correspondenceCityMeta));
+    }
+    if (data.containsKey('correspondence_pin_code')) {
+      context.handle(
+          _correspondencePinCodeMeta,
+          correspondencePinCode.isAcceptableOrUnknown(
+              data['correspondence_pin_code']!, _correspondencePinCodeMeta));
+    }
+    if (data.containsKey('alternatemobilenumber')) {
+      context.handle(
+          _alternatemobilenumberMeta,
+          alternatemobilenumber.isAcceptableOrUnknown(
+              data['alternatemobilenumber']!, _alternatemobilenumberMeta));
+    }
+    if (data.containsKey('active')) {
+      context.handle(_activeMeta,
+          active.isAcceptableOrUnknown(data['active']!, _activeMeta));
+    }
+    if (data.containsKey('locale')) {
+      context.handle(_localeMeta,
+          locale.isAcceptableOrUnknown(data['locale']!, _localeMeta));
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    }
+    if (data.containsKey('account_locked')) {
+      context.handle(
+          _accountLockedMeta,
+          accountLocked.isAcceptableOrUnknown(
+              data['account_locked']!, _accountLockedMeta));
+    }
+    if (data.containsKey('account_locked_date')) {
+      context.handle(
+          _accountLockedDateMeta,
+          accountLockedDate.isAcceptableOrUnknown(
+              data['account_locked_date']!, _accountLockedDateMeta));
+    }
+    if (data.containsKey('father_or_husband_name')) {
+      context.handle(
+          _fatherOrHusbandNameMeta,
+          fatherOrHusbandName.isAcceptableOrUnknown(
+              data['father_or_husband_name']!, _fatherOrHusbandNameMeta));
+    }
+    if (data.containsKey('relationship')) {
+      context.handle(
+          _relationshipMeta,
+          relationship.isAcceptableOrUnknown(
+              data['relationship']!, _relationshipMeta));
+    }
+    if (data.containsKey('signature')) {
+      context.handle(_signatureMeta,
+          signature.isAcceptableOrUnknown(data['signature']!, _signatureMeta));
+    }
+    if (data.containsKey('blood_group')) {
+      context.handle(
+          _bloodGroupMeta,
+          bloodGroup.isAcceptableOrUnknown(
+              data['blood_group']!, _bloodGroupMeta));
+    }
+    if (data.containsKey('photo')) {
+      context.handle(
+          _photoMeta, photo.isAcceptableOrUnknown(data['photo']!, _photoMeta));
+    }
+    if (data.containsKey('identification_mark')) {
+      context.handle(
+          _identificationMarkMeta,
+          identificationMark.isAcceptableOrUnknown(
+              data['identification_mark']!, _identificationMarkMeta));
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    }
+    if (data.containsKey('last_modified_by')) {
+      context.handle(
+          _lastModifiedByMeta,
+          lastModifiedBy.isAcceptableOrUnknown(
+              data['last_modified_by']!, _lastModifiedByMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    }
+    if (data.containsKey('created_date')) {
+      context.handle(
+          _createdDateMeta,
+          createdDate.isAcceptableOrUnknown(
+              data['created_date']!, _createdDateMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  UserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return UserData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $UserTable createAlias(String alias) {
+    return $UserTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
@@ -21368,6 +23093,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $LocalityTable locality = $LocalityTable(this);
   late final $PgrServiceTable pgrService = $PgrServiceTable(this);
   late final $PgrComplainantTable pgrComplainant = $PgrComplainantTable(this);
+  late final $UserTable user = $UserTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -21401,6 +23127,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         attributes,
         locality,
         pgrService,
-        pgrComplainant
+        pgrComplainant,
+        user
       ];
 }
