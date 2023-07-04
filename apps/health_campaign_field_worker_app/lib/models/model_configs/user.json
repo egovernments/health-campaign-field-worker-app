@@ -1,7 +1,10 @@
 {
     "name": "user",
     "createRepository": true,
-    "isSearchResponsePlural": false,
+    "isSearchResponsePlural": true,
+    "ignoreFields": [
+        "clientReferenceId"
+      ],
     "attributes": [
         {
             "name": "userName",
@@ -118,7 +121,7 @@
         },
         {
             "name": "lastModifiedBy",
-            "type": "int"
+            "type": "String"
         },
         {
             "name": "tenantId",
@@ -127,11 +130,13 @@
         {
             "name": "uuid",
             "type": "String",
-            "includeForQuery": true
+            "includeForQuery": true,
+            "isList": true,
+            "isPk": true
         },
         {
             "name": "createdDate",
-            "type": "int"
+            "type": "String"
         }
     ]
 }

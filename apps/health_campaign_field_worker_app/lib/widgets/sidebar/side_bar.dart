@@ -8,8 +8,10 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
+import '../../blocs/user/user.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class SideBar extends StatelessWidget {
@@ -60,16 +62,21 @@ class SideBar extends StatelessWidget {
               context.router.replace(HomeRoute());
             },
           ),
-          DigitIconTile(
-            title: AppLocalizations.of(context).translate(
-              i18.common.coreCommonProfile,
-            ),
-            icon: Icons.person,
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.replace(ProfileRoute());
-            },
-          ),
+          BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
+            return DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonProfile,
+              ),
+              icon: Icons.person,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                ctx.read<UserBloc>().add(UserSearchUserEvent(
+                      uuid: context.loggedInUserUuid,
+                    ));
+                context.router.replace(ProfileRoute());
+              },
+            );
+          }),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
             builder: (context, state) {
               if (state is! AppInitialized) return const Offstage();

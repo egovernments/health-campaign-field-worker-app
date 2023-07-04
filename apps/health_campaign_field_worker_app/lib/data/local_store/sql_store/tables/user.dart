@@ -32,20 +32,19 @@ class User extends Table {
   TextColumn get photo => text().nullable()();
   TextColumn get identificationMark => text().nullable()();
   IntColumn get createdBy => integer().nullable()();
-  IntColumn get lastModifiedBy => integer().nullable()();
+  TextColumn get lastModifiedBy => text().nullable()();
   TextColumn get tenantId => text().nullable()();
   TextColumn get uuid => text().nullable()();
-  IntColumn get createdDate => integer().nullable()();
+  TextColumn get createdDate => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
   
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => { uuid, auditCreatedBy,  };
 }

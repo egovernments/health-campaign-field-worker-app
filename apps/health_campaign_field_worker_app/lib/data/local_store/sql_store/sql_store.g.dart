@@ -21356,15 +21356,14 @@ class UserData extends DataClass implements Insertable<UserData> {
   final String? photo;
   final String? identificationMark;
   final int? createdBy;
-  final int? lastModifiedBy;
+  final String? lastModifiedBy;
   final String? tenantId;
   final String? uuid;
-  final int? createdDate;
+  final String? createdDate;
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
-  final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
@@ -21405,7 +21404,6 @@ class UserData extends DataClass implements Insertable<UserData> {
       this.auditCreatedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
-      required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion,
       this.additionalFields});
@@ -21468,13 +21466,13 @@ class UserData extends DataClass implements Insertable<UserData> {
           data['${effectivePrefix}identification_mark']),
       createdBy: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_by']),
-      lastModifiedBy: const IntType()
+      lastModifiedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modified_by']),
       tenantId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
       uuid: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
-      createdDate: const IntType()
+      createdDate: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_date']),
       auditCreatedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
@@ -21484,8 +21482,6 @@ class UserData extends DataClass implements Insertable<UserData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
       auditModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}audit_modified_time']),
-      clientReferenceId: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}client_reference_id'])!,
       isDeleted: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
       rowVersion: const IntType()
@@ -21582,7 +21578,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       map['created_by'] = Variable<int?>(createdBy);
     }
     if (!nullToAbsent || lastModifiedBy != null) {
-      map['last_modified_by'] = Variable<int?>(lastModifiedBy);
+      map['last_modified_by'] = Variable<String?>(lastModifiedBy);
     }
     if (!nullToAbsent || tenantId != null) {
       map['tenant_id'] = Variable<String?>(tenantId);
@@ -21591,7 +21587,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       map['uuid'] = Variable<String?>(uuid);
     }
     if (!nullToAbsent || createdDate != null) {
-      map['created_date'] = Variable<int?>(createdDate);
+      map['created_date'] = Variable<String?>(createdDate);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy);
@@ -21605,7 +21601,6 @@ class UserData extends DataClass implements Insertable<UserData> {
     if (!nullToAbsent || auditModifiedTime != null) {
       map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
     }
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool?>(isDeleted);
     }
@@ -21716,7 +21711,6 @@ class UserData extends DataClass implements Insertable<UserData> {
       auditModifiedTime: auditModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditModifiedTime),
-      clientReferenceId: Value(clientReferenceId),
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
@@ -21767,15 +21761,14 @@ class UserData extends DataClass implements Insertable<UserData> {
       identificationMark:
           serializer.fromJson<String?>(json['identificationMark']),
       createdBy: serializer.fromJson<int?>(json['createdBy']),
-      lastModifiedBy: serializer.fromJson<int?>(json['lastModifiedBy']),
+      lastModifiedBy: serializer.fromJson<String?>(json['lastModifiedBy']),
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       uuid: serializer.fromJson<String?>(json['uuid']),
-      createdDate: serializer.fromJson<int?>(json['createdDate']),
+      createdDate: serializer.fromJson<String?>(json['createdDate']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
-      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
@@ -21816,15 +21809,14 @@ class UserData extends DataClass implements Insertable<UserData> {
       'photo': serializer.toJson<String?>(photo),
       'identificationMark': serializer.toJson<String?>(identificationMark),
       'createdBy': serializer.toJson<int?>(createdBy),
-      'lastModifiedBy': serializer.toJson<int?>(lastModifiedBy),
+      'lastModifiedBy': serializer.toJson<String?>(lastModifiedBy),
       'tenantId': serializer.toJson<String?>(tenantId),
       'uuid': serializer.toJson<String?>(uuid),
-      'createdDate': serializer.toJson<int?>(createdDate),
+      'createdDate': serializer.toJson<String?>(createdDate),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
-      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
@@ -21860,15 +21852,14 @@ class UserData extends DataClass implements Insertable<UserData> {
           String? photo,
           String? identificationMark,
           int? createdBy,
-          int? lastModifiedBy,
+          String? lastModifiedBy,
           String? tenantId,
           String? uuid,
-          int? createdDate,
+          String? createdDate,
           String? auditCreatedBy,
           int? auditCreatedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
-          String? clientReferenceId,
           bool? isDeleted,
           int? rowVersion,
           String? additionalFields}) =>
@@ -21912,7 +21903,6 @@ class UserData extends DataClass implements Insertable<UserData> {
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
-        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
         isDeleted: isDeleted ?? this.isDeleted,
         rowVersion: rowVersion ?? this.rowVersion,
         additionalFields: additionalFields ?? this.additionalFields,
@@ -21956,7 +21946,6 @@ class UserData extends DataClass implements Insertable<UserData> {
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields')
@@ -22002,7 +21991,6 @@ class UserData extends DataClass implements Insertable<UserData> {
         auditCreatedTime,
         auditModifiedBy,
         auditModifiedTime,
-        clientReferenceId,
         isDeleted,
         rowVersion,
         additionalFields
@@ -22047,7 +22035,6 @@ class UserData extends DataClass implements Insertable<UserData> {
           other.auditCreatedTime == this.auditCreatedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
-          other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
           other.additionalFields == this.additionalFields);
@@ -22082,15 +22069,14 @@ class UserCompanion extends UpdateCompanion<UserData> {
   final Value<String?> photo;
   final Value<String?> identificationMark;
   final Value<int?> createdBy;
-  final Value<int?> lastModifiedBy;
+  final Value<String?> lastModifiedBy;
   final Value<String?> tenantId;
   final Value<String?> uuid;
-  final Value<int?> createdDate;
+  final Value<String?> createdDate;
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
-  final Value<String> clientReferenceId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
@@ -22131,7 +22117,6 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.auditCreatedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    this.clientReferenceId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -22173,11 +22158,10 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.auditCreatedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    required String clientReferenceId,
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  });
   static Insertable<UserData> custom({
     Expression<String?>? userName,
     Expression<String?>? salutation,
@@ -22207,15 +22191,14 @@ class UserCompanion extends UpdateCompanion<UserData> {
     Expression<String?>? photo,
     Expression<String?>? identificationMark,
     Expression<int?>? createdBy,
-    Expression<int?>? lastModifiedBy,
+    Expression<String?>? lastModifiedBy,
     Expression<String?>? tenantId,
     Expression<String?>? uuid,
-    Expression<int?>? createdDate,
+    Expression<String?>? createdDate,
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
-    Expression<String>? clientReferenceId,
     Expression<bool?>? isDeleted,
     Expression<int?>? rowVersion,
     Expression<String?>? additionalFields,
@@ -22261,7 +22244,6 @@ class UserCompanion extends UpdateCompanion<UserData> {
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
-      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -22297,15 +22279,14 @@ class UserCompanion extends UpdateCompanion<UserData> {
       Value<String?>? photo,
       Value<String?>? identificationMark,
       Value<int?>? createdBy,
-      Value<int?>? lastModifiedBy,
+      Value<String?>? lastModifiedBy,
       Value<String?>? tenantId,
       Value<String?>? uuid,
-      Value<int?>? createdDate,
+      Value<String?>? createdDate,
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
-      Value<String>? clientReferenceId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields}) {
@@ -22349,7 +22330,6 @@ class UserCompanion extends UpdateCompanion<UserData> {
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
-      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
@@ -22448,7 +22428,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       map['created_by'] = Variable<int?>(createdBy.value);
     }
     if (lastModifiedBy.present) {
-      map['last_modified_by'] = Variable<int?>(lastModifiedBy.value);
+      map['last_modified_by'] = Variable<String?>(lastModifiedBy.value);
     }
     if (tenantId.present) {
       map['tenant_id'] = Variable<String?>(tenantId.value);
@@ -22457,7 +22437,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       map['uuid'] = Variable<String?>(uuid.value);
     }
     if (createdDate.present) {
-      map['created_date'] = Variable<int?>(createdDate.value);
+      map['created_date'] = Variable<String?>(createdDate.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
@@ -22470,9 +22450,6 @@ class UserCompanion extends UpdateCompanion<UserData> {
     }
     if (auditModifiedTime.present) {
       map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
-    }
-    if (clientReferenceId.present) {
-      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
     }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool?>(isDeleted.value);
@@ -22525,7 +22502,6 @@ class UserCompanion extends UpdateCompanion<UserData> {
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields')
@@ -22701,9 +22677,9 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   final VerificationMeta _lastModifiedByMeta =
       const VerificationMeta('lastModifiedBy');
   @override
-  late final GeneratedColumn<int?> lastModifiedBy = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> lastModifiedBy = GeneratedColumn<String?>(
       'last_modified_by', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
   @override
   late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
@@ -22717,9 +22693,9 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   final VerificationMeta _createdDateMeta =
       const VerificationMeta('createdDate');
   @override
-  late final GeneratedColumn<int?> createdDate = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> createdDate = GeneratedColumn<String?>(
       'created_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
   @override
@@ -22744,12 +22720,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
       'audit_modified_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _clientReferenceIdMeta =
-      const VerificationMeta('clientReferenceId');
-  @override
-  late final GeneratedColumn<String?> clientReferenceId =
-      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
   @override
   late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
@@ -22807,7 +22777,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
         auditCreatedTime,
         auditModifiedBy,
         auditModifiedTime,
-        clientReferenceId,
         isDeleted,
         rowVersion,
         additionalFields
@@ -23011,14 +22980,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           auditModifiedTime.isAcceptableOrUnknown(
               data['audit_modified_time']!, _auditModifiedTimeMeta));
     }
-    if (data.containsKey('client_reference_id')) {
-      context.handle(
-          _clientReferenceIdMeta,
-          clientReferenceId.isAcceptableOrUnknown(
-              data['client_reference_id']!, _clientReferenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_clientReferenceIdMeta);
-    }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
@@ -23039,7 +23000,7 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  Set<GeneratedColumn> get $primaryKey => {uuid, auditCreatedBy};
   @override
   UserData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return UserData.fromData(data,

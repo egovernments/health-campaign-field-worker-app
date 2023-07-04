@@ -12,12 +12,14 @@ import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
+import 'models/entities/user.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -65,6 +67,15 @@ class MainApplication extends StatelessWidget {
                     ..add(const LoadLocationEvent());
                 },
                 lazy: false,
+              ),
+              BlocProvider(
+                create: (context) {
+                  return UserBloc(
+                    const UserEmptyState(),
+                    userRemoteRepository: context
+                        .read<RemoteRepository<UserModel, UserSearchModel>>(),
+                  );
+                },
               ),
               BlocProvider(
                 create: (ctx) => AuthBloc(authRepository: ctx.read())

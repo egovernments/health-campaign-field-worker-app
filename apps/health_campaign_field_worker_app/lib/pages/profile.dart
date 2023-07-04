@@ -6,8 +6,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/user/user.dart';
 import '../models/app_config/app_config_model.dart';
 import '../models/auth/auth_model.dart';
+import '../models/data_model.mapper.g.dart';
+import '../models/entities/user.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -28,7 +31,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
   static const _name = 'name';
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<AuthBloc>();
+    final bloc = context.read<UserBloc>();
 
     return ReactiveFormBuilder(
       form: () => buildForm(bloc.state),
@@ -39,13 +42,33 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               height: 85,
               child: DigitCard(
                 margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                child: DigitElevatedButton(
-                  onPressed: () {},
-                  child: Center(
-                    child: Text(
-                      localizations.translate(i18.common.coreCommonSave),
-                    ),
-                  ),
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (ctx, state) {
+                    return DigitElevatedButton(
+                      onPressed: () {
+                        UserModel? user = state.mapOrNull(
+                          user: (value) => value.userModel,
+                        );
+                        if (user != null) {
+                          final updatedUser = user.copyWith(
+                            gender:
+                                formGroup.control(_genderKey).value as String,
+                            mobileNumber:
+                                formGroup.control(_mobileNumberKey).value,
+                            name: formGroup.control(_name).value as String,
+                          );
+                          ctx
+                              .read<UserBloc>()
+                              .add(UserEvent.updateUser(user: updatedUser));
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSave),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -109,10 +132,12 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
     );
   }
 
-  FormGroup buildForm(AuthState state) {
-    final user = state.mapOrNull<UserRequestModel>(
-      authenticated: (value) => value.userModel,
+  FormGroup buildForm(UserState state) {
+    final user = state.mapOrNull(
+      user: (value) => value.userModel,
     );
+    print(user);
+    print("--Here--");
 
     return fb.group(<String, Object>{
       _name: FormControl<String>(value: user?.name, validators: []),

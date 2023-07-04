@@ -8,29 +8,25 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class UserSearchModel extends EntitySearchModel {
   final String? userName;
-  final String? uuid;
-  final List<String>? clientReferenceId;
-  
+  final List<String>? uuid;
+
   UserSearchModel({
     this.userName,
     this.uuid,
-    this.clientReferenceId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   UserSearchModel.ignoreDeleted({
     this.userName,
     this.uuid,
-    this.clientReferenceId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class UserModel extends EntityModel {
-
   static const schemaName = 'User';
 
   final String? userName;
@@ -61,11 +57,10 @@ class UserModel extends EntityModel {
   final String? photo;
   final String? identificationMark;
   final int? createdBy;
-  final int? lastModifiedBy;
+  final String? lastModifiedBy;
   final String? tenantId;
   final String? uuid;
-  final int? createdDate;
-  final String clientReferenceId;
+  final String? createdDate;
   final int? rowVersion;
   final UserAdditionalFields? additionalFields;
 
@@ -103,11 +98,10 @@ class UserModel extends EntityModel {
     this.tenantId,
     this.uuid,
     this.createdDate,
-    required this.clientReferenceId,
     this.rowVersion,
     super.auditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   UserCompanion get companion {
     return UserCompanion(
@@ -147,11 +141,10 @@ class UserModel extends EntityModel {
       createdBy: Value(createdBy),
       lastModifiedBy: Value(lastModifiedBy),
       tenantId: Value(tenantId),
-      uuid: Value(uuid),
+      uuid: Value(uuid?.toString()),
       createdDate: Value(createdDate),
-      clientReferenceId: Value(clientReferenceId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
