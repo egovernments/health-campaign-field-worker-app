@@ -14,8 +14,14 @@ class DigitActionDialog extends StatelessWidget {
           builder: (context) => DigitActionDialog(widget: widget));
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-        insetPadding: EdgeInsets.zero,
-        content: widget,
+  Widget build(BuildContext context) => Center(
+        child: Wrap(
+          children: [
+            AlertDialog(
+              insetPadding: EdgeInsets.zero,
+              content: widget,
+            ),
+          ],
+        ),
       );
 }
