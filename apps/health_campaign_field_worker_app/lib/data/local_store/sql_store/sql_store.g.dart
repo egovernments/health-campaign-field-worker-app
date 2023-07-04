@@ -21328,6 +21328,7 @@ class $PgrComplainantTable extends PgrComplainant
 }
 
 class UserData extends DataClass implements Insertable<UserData> {
+  final String? id;
   final String? userName;
   final String? salutation;
   final String? name;
@@ -21368,7 +21369,8 @@ class UserData extends DataClass implements Insertable<UserData> {
   final int? rowVersion;
   final String? additionalFields;
   UserData(
-      {this.userName,
+      {this.id,
+      this.userName,
       this.salutation,
       this.name,
       this.gender,
@@ -21410,6 +21412,8 @@ class UserData extends DataClass implements Insertable<UserData> {
   factory UserData.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return UserData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
       userName: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}user_name']),
       salutation: const StringType()
@@ -21493,6 +21497,9 @@ class UserData extends DataClass implements Insertable<UserData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
     if (!nullToAbsent || userName != null) {
       map['user_name'] = Variable<String?>(userName);
     }
@@ -21615,6 +21622,7 @@ class UserData extends DataClass implements Insertable<UserData> {
 
   UserCompanion toCompanion(bool nullToAbsent) {
     return UserCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       userName: userName == null && nullToAbsent
           ? const Value.absent()
           : Value(userName),
@@ -21727,6 +21735,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserData(
+      id: serializer.fromJson<String?>(json['id']),
       userName: serializer.fromJson<String?>(json['userName']),
       salutation: serializer.fromJson<String?>(json['salutation']),
       name: serializer.fromJson<String?>(json['name']),
@@ -21778,6 +21787,7 @@ class UserData extends DataClass implements Insertable<UserData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
       'userName': serializer.toJson<String?>(userName),
       'salutation': serializer.toJson<String?>(salutation),
       'name': serializer.toJson<String?>(name),
@@ -21824,7 +21834,8 @@ class UserData extends DataClass implements Insertable<UserData> {
   }
 
   UserData copyWith(
-          {String? userName,
+          {String? id,
+          String? userName,
           String? salutation,
           String? name,
           String? gender,
@@ -21864,6 +21875,7 @@ class UserData extends DataClass implements Insertable<UserData> {
           int? rowVersion,
           String? additionalFields}) =>
       UserData(
+        id: id ?? this.id,
         userName: userName ?? this.userName,
         salutation: salutation ?? this.salutation,
         name: name ?? this.name,
@@ -21910,6 +21922,7 @@ class UserData extends DataClass implements Insertable<UserData> {
   @override
   String toString() {
     return (StringBuffer('UserData(')
+          ..write('id: $id, ')
           ..write('userName: $userName, ')
           ..write('salutation: $salutation, ')
           ..write('name: $name, ')
@@ -21955,6 +21968,7 @@ class UserData extends DataClass implements Insertable<UserData> {
 
   @override
   int get hashCode => Object.hashAll([
+        id,
         userName,
         salutation,
         name,
@@ -21999,6 +22013,7 @@ class UserData extends DataClass implements Insertable<UserData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UserData &&
+          other.id == this.id &&
           other.userName == this.userName &&
           other.salutation == this.salutation &&
           other.name == this.name &&
@@ -22041,6 +22056,7 @@ class UserData extends DataClass implements Insertable<UserData> {
 }
 
 class UserCompanion extends UpdateCompanion<UserData> {
+  final Value<String?> id;
   final Value<String?> userName;
   final Value<String?> salutation;
   final Value<String?> name;
@@ -22081,6 +22097,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
   const UserCompanion({
+    this.id = const Value.absent(),
     this.userName = const Value.absent(),
     this.salutation = const Value.absent(),
     this.name = const Value.absent(),
@@ -22122,6 +22139,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.additionalFields = const Value.absent(),
   });
   UserCompanion.insert({
+    this.id = const Value.absent(),
     this.userName = const Value.absent(),
     this.salutation = const Value.absent(),
     this.name = const Value.absent(),
@@ -22163,6 +22181,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.additionalFields = const Value.absent(),
   });
   static Insertable<UserData> custom({
+    Expression<String?>? id,
     Expression<String?>? userName,
     Expression<String?>? salutation,
     Expression<String?>? name,
@@ -22204,6 +22223,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     Expression<String?>? additionalFields,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (userName != null) 'user_name': userName,
       if (salutation != null) 'salutation': salutation,
       if (name != null) 'name': name,
@@ -22251,7 +22271,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
   }
 
   UserCompanion copyWith(
-      {Value<String?>? userName,
+      {Value<String?>? id,
+      Value<String?>? userName,
       Value<String?>? salutation,
       Value<String?>? name,
       Value<String?>? gender,
@@ -22291,6 +22312,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       Value<int?>? rowVersion,
       Value<String?>? additionalFields}) {
     return UserCompanion(
+      id: id ?? this.id,
       userName: userName ?? this.userName,
       salutation: salutation ?? this.salutation,
       name: name ?? this.name,
@@ -22339,6 +22361,9 @@ class UserCompanion extends UpdateCompanion<UserData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
     if (userName.present) {
       map['user_name'] = Variable<String?>(userName.value);
     }
@@ -22466,6 +22491,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
   @override
   String toString() {
     return (StringBuffer('UserCompanion(')
+          ..write('id: $id, ')
           ..write('userName: $userName, ')
           ..write('salutation: $salutation, ')
           ..write('name: $name, ')
@@ -22515,6 +22541,11 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $UserTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _userNameMeta = const VerificationMeta('userName');
   @override
   late final GeneratedColumn<String?> userName = GeneratedColumn<String?>(
@@ -22741,6 +22772,7 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
+        id,
         userName,
         salutation,
         name,
@@ -22790,6 +22822,9 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('user_name')) {
       context.handle(_userNameMeta,
           userName.isAcceptableOrUnknown(data['user_name']!, _userNameMeta));

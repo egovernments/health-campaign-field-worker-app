@@ -348,18 +348,21 @@ mixin _$UserState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
+    required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
+    TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
+    TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
     required TResult orElse(),
   }) =>
@@ -367,18 +370,21 @@ mixin _$UserState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UserEmptyState value) empty,
+    required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UserEmptyState value)? empty,
+    TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UserEmptyState value)? empty,
+    TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
     required TResult orElse(),
   }) =>
@@ -441,6 +447,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
+    required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
   }) {
     return empty();
@@ -450,6 +457,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
+    TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
   }) {
     return empty?.call();
@@ -459,6 +467,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
+    TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
     required TResult orElse(),
   }) {
@@ -472,6 +481,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UserEmptyState value) empty,
+    required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
   }) {
     return empty(this);
@@ -481,6 +491,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UserEmptyState value)? empty,
+    TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
   }) {
     return empty?.call(this);
@@ -490,6 +501,7 @@ class _$UserEmptyState implements UserEmptyState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UserEmptyState value)? empty,
+    TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
     required TResult orElse(),
   }) {
@@ -502,6 +514,114 @@ class _$UserEmptyState implements UserEmptyState {
 
 abstract class UserEmptyState implements UserState {
   const factory UserEmptyState() = _$UserEmptyState;
+}
+
+/// @nodoc
+abstract class _$$UserLoadingStateCopyWith<$Res> {
+  factory _$$UserLoadingStateCopyWith(
+          _$UserLoadingState value, $Res Function(_$UserLoadingState) then) =
+      __$$UserLoadingStateCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$UserLoadingStateCopyWithImpl<$Res>
+    extends _$UserStateCopyWithImpl<$Res, _$UserLoadingState>
+    implements _$$UserLoadingStateCopyWith<$Res> {
+  __$$UserLoadingStateCopyWithImpl(
+      _$UserLoadingState _value, $Res Function(_$UserLoadingState) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$UserLoadingState implements UserLoadingState {
+  const _$UserLoadingState();
+
+  @override
+  String toString() {
+    return 'UserState.loading()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$UserLoadingState);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() empty,
+    required TResult Function() loading,
+    required TResult Function(UserModel? userModel) user,
+  }) {
+    return loading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? empty,
+    TResult? Function()? loading,
+    TResult? Function(UserModel? userModel)? user,
+  }) {
+    return loading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? empty,
+    TResult Function()? loading,
+    TResult Function(UserModel? userModel)? user,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserEmptyState value) empty,
+    required TResult Function(UserLoadingState value) loading,
+    required TResult Function(UserUserState value) user,
+  }) {
+    return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserEmptyState value)? empty,
+    TResult? Function(UserLoadingState value)? loading,
+    TResult? Function(UserUserState value)? user,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserEmptyState value)? empty,
+    TResult Function(UserLoadingState value)? loading,
+    TResult Function(UserUserState value)? user,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UserLoadingState implements UserState {
+  const factory UserLoadingState() = _$UserLoadingState;
 }
 
 /// @nodoc
@@ -570,6 +690,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
+    required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
   }) {
     return user(userModel);
@@ -579,6 +700,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
+    TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
   }) {
     return user?.call(userModel);
@@ -588,6 +710,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
+    TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
     required TResult orElse(),
   }) {
@@ -601,6 +724,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(UserEmptyState value) empty,
+    required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
   }) {
     return user(this);
@@ -610,6 +734,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(UserEmptyState value)? empty,
+    TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
   }) {
     return user?.call(this);
@@ -619,6 +744,7 @@ class _$UserUserState implements UserUserState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UserEmptyState value)? empty,
+    TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
     required TResult orElse(),
   }) {

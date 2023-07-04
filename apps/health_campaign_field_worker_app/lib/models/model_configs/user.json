@@ -6,7 +6,12 @@
         "clientReferenceId"
       ],
     "attributes": [
-        {
+         {
+           "name": "id",
+           "type": "String",
+           "includeForQuery": true
+        },       
+         {
             "name": "userName",
             "type": "String",
             "includeForQuery": true

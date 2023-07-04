@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 
 class User extends Table {
+  TextColumn get id => text().nullable()();
   TextColumn get userName => text().nullable()();
   TextColumn get salutation => text().nullable()();
   TextColumn get name => text().nullable()();

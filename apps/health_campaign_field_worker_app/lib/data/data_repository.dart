@@ -232,10 +232,12 @@ abstract class RemoteRepository<D extends EntityModel,
       future: () async {
         return await dio.post(
           updatePath,
-          data: {
-            entityName: [entity.toMap()],
-            "apiOperation": "UPDATE",
-          },
+          data: entityName == 'User'
+              ? {entityName: entity.toMap()}
+              : {
+                  entityName: [entity.toMap()],
+                  "apiOperation": "UPDATE",
+                },
         );
       },
     );

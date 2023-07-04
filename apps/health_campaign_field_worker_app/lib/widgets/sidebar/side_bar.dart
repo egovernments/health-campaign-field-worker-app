@@ -11,7 +11,6 @@ import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
-import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class SideBar extends StatelessWidget {
@@ -70,10 +69,8 @@ class SideBar extends StatelessWidget {
               icon: Icons.person,
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                ctx.read<UserBloc>().add(UserSearchUserEvent(
-                      uuid: context.loggedInUserUuid,
-                    ));
-                context.router.replace(ProfileRoute());
+
+                context.router.push(ProfileRoute());
               },
             );
           }),

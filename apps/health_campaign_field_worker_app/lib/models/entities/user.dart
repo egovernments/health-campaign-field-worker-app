@@ -7,10 +7,12 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class UserSearchModel extends EntitySearchModel {
+  final String? id;
   final String? userName;
   final List<String>? uuid;
 
   UserSearchModel({
+    this.id,
     this.userName,
     this.uuid,
     super.boundaryCode,
@@ -19,6 +21,7 @@ class UserSearchModel extends EntitySearchModel {
 
   @MappableConstructor()
   UserSearchModel.ignoreDeleted({
+    this.id,
     this.userName,
     this.uuid,
     super.boundaryCode,
@@ -29,6 +32,7 @@ class UserSearchModel extends EntitySearchModel {
 class UserModel extends EntityModel {
   static const schemaName = 'User';
 
+  final String? id;
   final String? userName;
   final String? salutation;
   final String? name;
@@ -66,6 +70,7 @@ class UserModel extends EntityModel {
 
   UserModel({
     this.additionalFields,
+    this.id,
     this.userName,
     this.salutation,
     this.name,
@@ -111,6 +116,7 @@ class UserModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
+      id: Value(id),
       userName: Value(userName),
       salutation: Value(salutation),
       name: Value(name),
