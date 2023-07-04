@@ -6,14 +6,15 @@ class DigitOutlineIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final Color? iconColor;
+  final ButtonStyle? buttonStyle;
 
-  const DigitOutlineIconButton({
-    super.key,
-    this.iconColor,
-    required this.label,
-    required this.icon,
-    required this.onPressed,
-  });
+  const DigitOutlineIconButton(
+      {super.key,
+      this.iconColor,
+      required this.label,
+      required this.icon,
+      required this.onPressed,
+      this.buttonStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +22,12 @@ class DigitOutlineIconButton extends StatelessWidget {
 
     return OutlinedButton(
       onPressed: onPressed,
+      style: buttonStyle,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(child: Icon(icon)),
-          SizedBox(width: kPadding),
+          const SizedBox(width: kPadding),
           Text(label),
         ],
       ),
