@@ -43,7 +43,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<UserBloc>();
-
+    final theme = Theme.of(context);
     FormGroup buildForm(UserState state) {
       final user = state.mapOrNull(
         user: (value) => value.userModel,
@@ -51,11 +51,16 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
 
       return fb.group(<String, Object>{
         _name: FormControl<String>(value: user?.name, validators: []),
-        _mobileNumberKey:
-            FormControl<String>(value: user?.mobileNumber, validators: [
-          CustomValidator.validMobileNumber,
-        ]),
-        _emailId: FormControl<String>(value: user?.emailId, validators: []),
+        _mobileNumberKey: FormControl<String>(
+          value: user?.mobileNumber,
+          validators: [
+            CustomValidator.validMobileNumber,
+          ],
+        ),
+        _emailId: FormControl<String>(
+          value: user?.emailId,
+          validators: [Validators.email],
+        ),
         _genderKey: FormControl<String>(
           value: context.read<AppInitializationBloc>().state.maybeWhen(
                 orElse: () => null,
@@ -105,6 +110,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                           builder: (ctx, state) {
                             return DigitElevatedButton(
                               onPressed: () {
+                                formGroup.markAllAsTouched();
+                                if (!formGroup.valid) return;
                                 UserModel? user = state.mapOrNull(
                                   user: (value) => value.userModel,
                                 );
@@ -122,7 +129,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   );
 
                                   ctx.read<UserBloc>().add(
-                                      UserEvent.updateUser(user: updatedUser));
+                                        UserEvent.updateUser(user: updatedUser),
+                                      );
                                 }
                               },
                               child: Center(
@@ -146,7 +154,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                             DigitTextFormField(
                               formControlName: 'name',
                               label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
+                                i18.common.coreCommonName,
                               ),
                               maxLength: 200,
                               isRequired: true,
@@ -160,8 +168,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                               keyboardType: TextInputType.number,
                               formControlName: _mobileNumberKey,
                               label: localizations.translate(
-                                i18.individualDetails.mobileNumberLabelText,
+                                i18.common.coreCommonMobileNumber,
                               ),
+                              minLength: 10,
                               maxLength: 10,
                               validationMessages: {
                                 'mobileNumber': (object) =>
@@ -176,15 +185,27 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                 orElse: () => const Offstage(),
                                 initialized: (appConfiguration, _) {
                                   return Column(
-                                    children: appConfiguration.genderOptions!
-                                        .map((e) =>
-                                            ReactiveRadioListTile<String>(
-                                              value: e.code,
-                                              title: Text(localizations
-                                                  .translate(e.code)),
-                                              formControlName: _genderKey,
-                                            ))
-                                        .toList(),
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            localizations.translate(
+                                              i18.common.coreCommonGender,
+                                            ),
+                                            style: theme.textTheme.labelMedium,
+                                          ),
+                                        ],
+                                      ),
+                                      ...appConfiguration.genderOptions!
+                                          .map((e) =>
+                                              ReactiveRadioListTile<String>(
+                                                value: e.code,
+                                                title: Text(localizations
+                                                    .translate(e.code)),
+                                                formControlName: _genderKey,
+                                              ))
+                                          .toList(),
+                                    ],
                                   );
                                 },
                               ),
@@ -192,10 +213,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                             DigitTextFormField(
                               formControlName: _emailId,
                               label: localizations.translate(
-                                i18.individualDetails.nameLabelText,
+                                i18.common.coreCommonEmailId,
                               ),
                               maxLength: 200,
-                              isRequired: true,
                               validationMessages: {
                                 'required': (object) => localizations.translate(
                                       '${i18.individualDetails.nameLabelText}_IS_REQUIRED',

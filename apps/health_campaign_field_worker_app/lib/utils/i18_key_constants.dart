@@ -31,6 +31,10 @@ class Common {
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
+  String get coreCommonName => 'CORE_COMMON_NAME';
+
+  String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
+
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
@@ -66,6 +70,10 @@ class Common {
   String get coreCommonDataSyncFailed => 'CORE_COMMON_DATA_SYNC_FAILED';
 
   String get coreCommonDataSyncRetry => 'CORE_COMMON_DATA_SYNC_RETRY';
+
+  String get connectionLabel => 'CORE_COMMON_CONNECTION_LABEL';
+
+  String get connectionContent => 'CORE_COMMON_CONNECTION_CONTENT';
 }
 
 class Login {
