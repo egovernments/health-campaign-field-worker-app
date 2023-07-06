@@ -43,9 +43,7 @@
        'max': (_) => ‘Age cannot be greater than 18 years’
      },)
 
-<img width="166" alt="Date Picker" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d4bfdf64-e942-4259-8131-868fa0cecc28">
-![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0a71ce09-203f-4331-ae64-d7fde551d310)
-
+<img width="166" alt="Date Picker" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d4bfdf64-e942-4259-8131-868fa0cecc28"> ![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/93f326aa-df4e-40a6-af5b-34155760c01b)
 
 
  **DigitDivider** : 
@@ -75,8 +73,7 @@
      valueMapper: (value) {
        return value.name ?? value.code ?? 'No Value';
      },)
-<img width="168" alt="Dropdown Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e0cb30b7-bb90-4e66-b4aa-64a74d3d447b">
-<img width="196" alt="Digit Dropdown" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/5e6c5aa0-a73e-45b7-93fc-cb32f0351763">
+<img width="168" alt="Dropdown Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e0cb30b7-bb90-4e66-b4aa-64a74d3d447b"> <img width="196" alt="Digit Dropdown" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/5e6c5aa0-a73e-45b7-93fc-cb32f0351763">
 
 **DigitIconButton** : 
 	A custom icon widget with customizable icon, icon Text, icon color, icon Text Color
@@ -165,7 +162,6 @@
     )
     
 <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/cedaa0b7-1a0f-4f97-8b5f-d0103e397adb">
-![Digit TextFormField](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/33a9cf45-6b95-425a-b85b-76c23ef9c1dc)
 
 
 **DigitToast** : 
@@ -451,10 +447,7 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
 	PoweredByDigit(
      isWhiteLogo: true,
     )
-<img width="131" alt="Powered By Digit Colored" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/25c50539-af39-4dde-8734-e44337a6dea4">
-
-<img width="158" alt="Powered By Digit White" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/a3536c8e-2373-4695-93fa-da56dfab9070">
-
+<img width="131" alt="Powered By Digit Colored" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/25c50539-af39-4dde-8734-e44337a6dea4"> <img width="158" alt="Powered By Digit White" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/a3536c8e-2373-4695-93fa-da56dfab9070">
 
 
 **ScrollableContent** : 
