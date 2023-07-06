@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/app_localization.dart';
 import '../blocs/user/user.dart';
 import '../models/data_model.mapper.g.dart';
 import '../models/entities/user.dart';
@@ -126,31 +128,68 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                         child: BlocBuilder<UserBloc, UserState>(
                           builder: (ctx, state) {
                             return DigitElevatedButton(
-                              onPressed: () {
-                                formGroup.markAllAsTouched();
-                                if (!formGroup.valid) return;
-                                UserModel? user = state.mapOrNull(
-                                  user: (value) => value.userModel,
-                                );
-                                if (user != null) {
-                                  final updatedUser = user.copyWith(
-                                    gender: formGroup.control(_genderKey).value
-                                        as String,
-                                    mobileNumber: formGroup
-                                        .control(_mobileNumberKey)
-                                        .value,
-                                    name: formGroup.control(_name).value
-                                        as String,
-                                    emailId: formGroup.control(_emailId).value
-                                        as String,
-                                  );
+                              onPressed: () async {
+                                final connectivityResult =
+                                    await (Connectivity().checkConnectivity());
+                                final isOnline = connectivityResult ==
+                                        ConnectivityResult.wifi ||
+                                    connectivityResult ==
+                                        ConnectivityResult.mobile;
 
-                                  ctx.read<UserBloc>().add(
-                                        UserEvent.updateUser(
-                                          user: updatedUser,
-                                          oldUser: user,
+                                if (!isOnline) {
+                                  if (context.mounted) {
+                                    DigitDialog.show(
+                                      context,
+                                      options: DigitDialogOptions(
+                                        titleText: AppLocalizations.of(context)
+                                            .translate(
+                                          i18.common.connectionLabel,
                                         ),
-                                      );
+                                        contentText:
+                                            AppLocalizations.of(context)
+                                                .translate(
+                                          i18.common.connectionContent,
+                                        ),
+                                        primaryAction: DigitDialogActions(
+                                          label: AppLocalizations.of(context)
+                                              .translate(
+                                            i18.common.coreCommonOk,
+                                          ),
+                                          action: (ctx) => Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  formGroup.markAllAsTouched();
+                                  if (!formGroup.valid) return;
+                                  UserModel? user = state.mapOrNull(
+                                    user: (value) => value.userModel,
+                                  );
+                                  if (user != null) {
+                                    final updatedUser = user.copyWith(
+                                      gender: formGroup
+                                          .control(_genderKey)
+                                          .value as String,
+                                      mobileNumber: formGroup
+                                          .control(_mobileNumberKey)
+                                          .value,
+                                      name: formGroup.control(_name).value
+                                          as String,
+                                      emailId: formGroup.control(_emailId).value
+                                          as String,
+                                    );
+
+                                    ctx.read<UserBloc>().add(
+                                          UserEvent.updateUser(
+                                            user: updatedUser,
+                                            oldUser: user,
+                                          ),
+                                        );
+                                  }
                                 }
                               },
                               child: Center(
