@@ -33,7 +33,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserState.user(userModel: results.first));
       }
     } catch (error) {
-      print(error);
       emit(const UserErrorState());
       rethrow;
     }
