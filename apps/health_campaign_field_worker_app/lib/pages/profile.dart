@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -86,10 +87,26 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               Loaders.showLoadingDialog(context);
             },
             user: (value) {
+              if (isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
+              setState(() {
+                isLoading = false;
+              });
+            },
+            error: (error) {
               Navigator.of(context, rootNavigator: true).pop();
               setState(() {
                 isLoading = false;
               });
+              DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                  error ?? localizations.translate(error!),
+                  true,
+                  theme,
+                ),
+              );
             },
           );
           // do stuff here based on BlocA's state
@@ -129,7 +146,10 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   );
 
                                   ctx.read<UserBloc>().add(
-                                        UserEvent.updateUser(user: updatedUser),
+                                        UserEvent.updateUser(
+                                          user: updatedUser,
+                                          oldUser: user,
+                                        ),
                                       );
                                 }
                               },

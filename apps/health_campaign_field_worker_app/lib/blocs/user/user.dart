@@ -26,10 +26,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserEmitter emit,
   ) async {
     emit(const UserState.loading());
-    final results =
-        await userRemoteRepository.search(UserSearchModel(uuid: [event.uuid]));
-    if (results.isNotEmpty) {
-      emit(UserState.user(userModel: results.first));
+    try {
+      final results = await userRemoteRepository
+          .search(UserSearchModel(uuid: [event.uuid]));
+      if (results.isNotEmpty) {
+        emit(UserState.user(userModel: results.first));
+      }
+    } catch (error) {
+      print(error);
+      emit(const UserErrorState());
+      rethrow;
     }
   }
 
@@ -38,15 +44,24 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     UserEmitter emit,
   ) async {
     emit(const UserState.loading());
-    final Response response = await userRemoteRepository.update(event.user);
-    final responseMap = response.data;
-    final Iterable entityResponse = await responseMap["user"];
-    Iterable<Map<String, dynamic>> entityList =
-        entityResponse.whereType<Map<String, dynamic>>();
+    try {
+      final Response response = await userRemoteRepository.update(event.user);
+      final responseMap = response.data;
+      final Iterable entityResponse = await responseMap["user"];
+      Iterable<Map<String, dynamic>> entityList =
+          entityResponse.whereType<Map<String, dynamic>>();
 
-    final results =
-        entityList.map((e) => Mapper.fromMap<UserModel>(e)).toList();
-    emit(UserState.user(userModel: results.first));
+      final results =
+          entityList.map((e) => Mapper.fromMap<UserModel>(e)).toList();
+      emit(UserState.user(userModel: results.first));
+    } on DioError catch (error) {
+      // [TODO]- Need to create a model mapper for error;
+      final String errorCode = error.response?.data['Errors'][0]['code'];
+      emit(UserErrorState(errorCode));
+      emit(UserState.user(userModel: event.oldUser));
+
+      rethrow;
+    }
   }
 }
 
@@ -54,8 +69,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 class UserEvent with _$UserEvent {
   const factory UserEvent.searchUser({required String uuid}) =
       UserSearchUserEvent;
-  const factory UserEvent.updateUser({required UserModel user}) =
-      UserUpdateUserEvent;
+  const factory UserEvent.updateUser({
+    required UserModel user,
+    required UserModel oldUser,
+  }) = UserUpdateUserEvent;
 }
 
 @freezed
@@ -63,4 +80,5 @@ class UserState with _$UserState {
   const factory UserState.empty() = UserEmptyState;
   const factory UserState.loading() = UserLoadingState;
   const factory UserState.user({UserModel? userModel}) = UserUserState;
+  const factory UserState.error([String? error]) = UserErrorState;
 }

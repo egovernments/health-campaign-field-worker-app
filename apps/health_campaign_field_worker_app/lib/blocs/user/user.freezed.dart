@@ -19,19 +19,19 @@ mixin _$UserEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String uuid) searchUser,
-    required TResult Function(UserModel user) updateUser,
+    required TResult Function(UserModel user, UserModel oldUser) updateUser,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String uuid)? searchUser,
-    TResult? Function(UserModel user)? updateUser,
+    TResult? Function(UserModel user, UserModel oldUser)? updateUser,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String uuid)? searchUser,
-    TResult Function(UserModel user)? updateUser,
+    TResult Function(UserModel user, UserModel oldUser)? updateUser,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -139,7 +139,7 @@ class _$UserSearchUserEvent implements UserSearchUserEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String uuid) searchUser,
-    required TResult Function(UserModel user) updateUser,
+    required TResult Function(UserModel user, UserModel oldUser) updateUser,
   }) {
     return searchUser(uuid);
   }
@@ -148,7 +148,7 @@ class _$UserSearchUserEvent implements UserSearchUserEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String uuid)? searchUser,
-    TResult? Function(UserModel user)? updateUser,
+    TResult? Function(UserModel user, UserModel oldUser)? updateUser,
   }) {
     return searchUser?.call(uuid);
   }
@@ -157,7 +157,7 @@ class _$UserSearchUserEvent implements UserSearchUserEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String uuid)? searchUser,
-    TResult Function(UserModel user)? updateUser,
+    TResult Function(UserModel user, UserModel oldUser)? updateUser,
     required TResult orElse(),
   }) {
     if (searchUser != null) {
@@ -214,7 +214,7 @@ abstract class _$$UserUpdateUserEventCopyWith<$Res> {
           $Res Function(_$UserUpdateUserEvent) then) =
       __$$UserUpdateUserEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({UserModel user});
+  $Res call({UserModel user, UserModel oldUser});
 }
 
 /// @nodoc
@@ -229,11 +229,16 @@ class __$$UserUpdateUserEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? user = null,
+    Object? oldUser = null,
   }) {
     return _then(_$UserUpdateUserEvent(
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
+              as UserModel,
+      oldUser: null == oldUser
+          ? _value.oldUser
+          : oldUser // ignore: cast_nullable_to_non_nullable
               as UserModel,
     ));
   }
@@ -242,14 +247,16 @@ class __$$UserUpdateUserEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UserUpdateUserEvent implements UserUpdateUserEvent {
-  const _$UserUpdateUserEvent({required this.user});
+  const _$UserUpdateUserEvent({required this.user, required this.oldUser});
 
   @override
   final UserModel user;
+  @override
+  final UserModel oldUser;
 
   @override
   String toString() {
-    return 'UserEvent.updateUser(user: $user)';
+    return 'UserEvent.updateUser(user: $user, oldUser: $oldUser)';
   }
 
   @override
@@ -257,11 +264,12 @@ class _$UserUpdateUserEvent implements UserUpdateUserEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserUpdateUserEvent &&
-            (identical(other.user, user) || other.user == user));
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.oldUser, oldUser) || other.oldUser == oldUser));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user);
+  int get hashCode => Object.hash(runtimeType, user, oldUser);
 
   @JsonKey(ignore: true)
   @override
@@ -274,29 +282,29 @@ class _$UserUpdateUserEvent implements UserUpdateUserEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String uuid) searchUser,
-    required TResult Function(UserModel user) updateUser,
+    required TResult Function(UserModel user, UserModel oldUser) updateUser,
   }) {
-    return updateUser(user);
+    return updateUser(user, oldUser);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String uuid)? searchUser,
-    TResult? Function(UserModel user)? updateUser,
+    TResult? Function(UserModel user, UserModel oldUser)? updateUser,
   }) {
-    return updateUser?.call(user);
+    return updateUser?.call(user, oldUser);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String uuid)? searchUser,
-    TResult Function(UserModel user)? updateUser,
+    TResult Function(UserModel user, UserModel oldUser)? updateUser,
     required TResult orElse(),
   }) {
     if (updateUser != null) {
-      return updateUser(user);
+      return updateUser(user, oldUser);
     }
     return orElse();
   }
@@ -334,10 +342,12 @@ class _$UserUpdateUserEvent implements UserUpdateUserEvent {
 }
 
 abstract class UserUpdateUserEvent implements UserEvent {
-  const factory UserUpdateUserEvent({required final UserModel user}) =
-      _$UserUpdateUserEvent;
+  const factory UserUpdateUserEvent(
+      {required final UserModel user,
+      required final UserModel oldUser}) = _$UserUpdateUserEvent;
 
   UserModel get user;
+  UserModel get oldUser;
   @JsonKey(ignore: true)
   _$$UserUpdateUserEventCopyWith<_$UserUpdateUserEvent> get copyWith =>
       throw _privateConstructorUsedError;
@@ -350,6 +360,7 @@ mixin _$UserState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
+    required TResult Function(String? error) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -357,6 +368,7 @@ mixin _$UserState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
+    TResult? Function(String? error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -364,6 +376,7 @@ mixin _$UserState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
+    TResult Function(String? error)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -372,6 +385,7 @@ mixin _$UserState {
     required TResult Function(UserEmptyState value) empty,
     required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
+    required TResult Function(UserErrorState value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -379,6 +393,7 @@ mixin _$UserState {
     TResult? Function(UserEmptyState value)? empty,
     TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
+    TResult? Function(UserErrorState value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -386,6 +401,7 @@ mixin _$UserState {
     TResult Function(UserEmptyState value)? empty,
     TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
+    TResult Function(UserErrorState value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -449,6 +465,7 @@ class _$UserEmptyState implements UserEmptyState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
+    required TResult Function(String? error) error,
   }) {
     return empty();
   }
@@ -459,6 +476,7 @@ class _$UserEmptyState implements UserEmptyState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
+    TResult? Function(String? error)? error,
   }) {
     return empty?.call();
   }
@@ -469,6 +487,7 @@ class _$UserEmptyState implements UserEmptyState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
+    TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -483,6 +502,7 @@ class _$UserEmptyState implements UserEmptyState {
     required TResult Function(UserEmptyState value) empty,
     required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
+    required TResult Function(UserErrorState value) error,
   }) {
     return empty(this);
   }
@@ -493,6 +513,7 @@ class _$UserEmptyState implements UserEmptyState {
     TResult? Function(UserEmptyState value)? empty,
     TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
+    TResult? Function(UserErrorState value)? error,
   }) {
     return empty?.call(this);
   }
@@ -503,6 +524,7 @@ class _$UserEmptyState implements UserEmptyState {
     TResult Function(UserEmptyState value)? empty,
     TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
+    TResult Function(UserErrorState value)? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -557,6 +579,7 @@ class _$UserLoadingState implements UserLoadingState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
+    required TResult Function(String? error) error,
   }) {
     return loading();
   }
@@ -567,6 +590,7 @@ class _$UserLoadingState implements UserLoadingState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
+    TResult? Function(String? error)? error,
   }) {
     return loading?.call();
   }
@@ -577,6 +601,7 @@ class _$UserLoadingState implements UserLoadingState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
+    TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -591,6 +616,7 @@ class _$UserLoadingState implements UserLoadingState {
     required TResult Function(UserEmptyState value) empty,
     required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
+    required TResult Function(UserErrorState value) error,
   }) {
     return loading(this);
   }
@@ -601,6 +627,7 @@ class _$UserLoadingState implements UserLoadingState {
     TResult? Function(UserEmptyState value)? empty,
     TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
+    TResult? Function(UserErrorState value)? error,
   }) {
     return loading?.call(this);
   }
@@ -611,6 +638,7 @@ class _$UserLoadingState implements UserLoadingState {
     TResult Function(UserEmptyState value)? empty,
     TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
+    TResult Function(UserErrorState value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -692,6 +720,7 @@ class _$UserUserState implements UserUserState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(UserModel? userModel) user,
+    required TResult Function(String? error) error,
   }) {
     return user(userModel);
   }
@@ -702,6 +731,7 @@ class _$UserUserState implements UserUserState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(UserModel? userModel)? user,
+    TResult? Function(String? error)? error,
   }) {
     return user?.call(userModel);
   }
@@ -712,6 +742,7 @@ class _$UserUserState implements UserUserState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(UserModel? userModel)? user,
+    TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (user != null) {
@@ -726,6 +757,7 @@ class _$UserUserState implements UserUserState {
     required TResult Function(UserEmptyState value) empty,
     required TResult Function(UserLoadingState value) loading,
     required TResult Function(UserUserState value) user,
+    required TResult Function(UserErrorState value) error,
   }) {
     return user(this);
   }
@@ -736,6 +768,7 @@ class _$UserUserState implements UserUserState {
     TResult? Function(UserEmptyState value)? empty,
     TResult? Function(UserLoadingState value)? loading,
     TResult? Function(UserUserState value)? user,
+    TResult? Function(UserErrorState value)? error,
   }) {
     return user?.call(this);
   }
@@ -746,6 +779,7 @@ class _$UserUserState implements UserUserState {
     TResult Function(UserEmptyState value)? empty,
     TResult Function(UserLoadingState value)? loading,
     TResult Function(UserUserState value)? user,
+    TResult Function(UserErrorState value)? error,
     required TResult orElse(),
   }) {
     if (user != null) {
@@ -761,5 +795,150 @@ abstract class UserUserState implements UserState {
   UserModel? get userModel;
   @JsonKey(ignore: true)
   _$$UserUserStateCopyWith<_$UserUserState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UserErrorStateCopyWith<$Res> {
+  factory _$$UserErrorStateCopyWith(
+          _$UserErrorState value, $Res Function(_$UserErrorState) then) =
+      __$$UserErrorStateCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String? error});
+}
+
+/// @nodoc
+class __$$UserErrorStateCopyWithImpl<$Res>
+    extends _$UserStateCopyWithImpl<$Res, _$UserErrorState>
+    implements _$$UserErrorStateCopyWith<$Res> {
+  __$$UserErrorStateCopyWithImpl(
+      _$UserErrorState _value, $Res Function(_$UserErrorState) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? error = freezed,
+  }) {
+    return _then(_$UserErrorState(
+      freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UserErrorState implements UserErrorState {
+  const _$UserErrorState([this.error]);
+
+  @override
+  final String? error;
+
+  @override
+  String toString() {
+    return 'UserState.error(error: $error)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserErrorState &&
+            (identical(other.error, error) || other.error == error));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, error);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserErrorStateCopyWith<_$UserErrorState> get copyWith =>
+      __$$UserErrorStateCopyWithImpl<_$UserErrorState>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() empty,
+    required TResult Function() loading,
+    required TResult Function(UserModel? userModel) user,
+    required TResult Function(String? error) error,
+  }) {
+    return error(this.error);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? empty,
+    TResult? Function()? loading,
+    TResult? Function(UserModel? userModel)? user,
+    TResult? Function(String? error)? error,
+  }) {
+    return error?.call(this.error);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? empty,
+    TResult Function()? loading,
+    TResult Function(UserModel? userModel)? user,
+    TResult Function(String? error)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this.error);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserEmptyState value) empty,
+    required TResult Function(UserLoadingState value) loading,
+    required TResult Function(UserUserState value) user,
+    required TResult Function(UserErrorState value) error,
+  }) {
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserEmptyState value)? empty,
+    TResult? Function(UserLoadingState value)? loading,
+    TResult? Function(UserUserState value)? user,
+    TResult? Function(UserErrorState value)? error,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserEmptyState value)? empty,
+    TResult Function(UserLoadingState value)? loading,
+    TResult Function(UserUserState value)? user,
+    TResult Function(UserErrorState value)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UserErrorState implements UserState {
+  const factory UserErrorState([final String? error]) = _$UserErrorState;
+
+  String? get error;
+  @JsonKey(ignore: true)
+  _$$UserErrorStateCopyWith<_$UserErrorState> get copyWith =>
       throw _privateConstructorUsedError;
 }
