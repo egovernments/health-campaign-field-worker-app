@@ -8,6 +8,8 @@
 	 context,
 	 widget: your_widget()
 	)
+ <img width="164" alt="Digit Action Dialog" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/daa1607a-b91c-442c-8a65-da39479f2d34">
+
 
 **DigitCheckBox** : 
 	A single checkbox component.
