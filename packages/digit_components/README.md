@@ -422,8 +422,8 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
        text: context.boundary.code,
      ),
     ),
-    <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/3abd2bb7-c918-4661-b41a-55276d326a72">
 
+<img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/065a2fec-a60f-4046-a5d8-dd6ccf7ca1cc">
 
 **LabeledField** : 
 	A labeled widget which has a child widget. If any field need to have a label on its top, then that widget can be wrapped with this LabeledField.
