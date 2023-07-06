@@ -19,6 +19,7 @@
  		label: “your_label”,
  		value: boolean_value,
 	),
+![CheckBox](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e1c9a6d1-cb0c-4b95-9dea-dddd6ff98f17)
 
 **DigitDateFormPicker** : 
 	A Reactive Date Picker widget with custom label header. The formControlName is required to bind this ReactiveDatePicker to a FormControl.
@@ -40,11 +41,15 @@
        'required': (_) => ‘Date of birth is required’,
        'max': (_) => ‘Age cannot be greater than 18 years’
      },)
+     ![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/f57b3624-e047-4ca3-b383-fb166ea9330b)  <img width="166" alt="Date Picker" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dff63b96-0d92-4ae7-b4e5-547d14954d3b">
+
+
  **DigitDivider** : 
 	A simple divider widget
 	
 	Usage: 
 	DigitDivider()
+![Divider](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/27656b6c-177e-48eb-8a23-fd0081ea3a59)
 
 **DigitDropdown** : 
 	A custom dropdown component with label header.
@@ -65,6 +70,8 @@
      valueMapper: (value) {
        return value.name ?? value.code ?? 'No Value';
      },)
+<img width="168" alt="Dropdown Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e0cb30b7-bb90-4e66-b4aa-64a74d3d447b">
+<img width="196" alt="Digit Dropdown" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/5e6c5aa0-a73e-45b7-93fc-cb32f0351763">
 
 **DigitIconButton** : 
 	A custom icon widget with customizable icon, icon Text, icon color, icon Text Color
@@ -76,6 +83,7 @@
      iconTextColor: Colors.white,
      iconColor: Colors.orange,
     )
+![DigitIcon Button](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/03cb82f3-500e-41c9-bdb4-f0bfb9b8b7ae)
 
 **DigitIntegerFormPicker** : 
 	An Integer Picker with option to select any number by increasing or decreasing the using + and - end buttons 
@@ -90,6 +98,8 @@
      label: ‘Number of members’,
      incrementer: true,
     ),
+    ![Digit Integer Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dc948cb6-3c2d-4660-8e33-c8d05b6d442f)
+
 **DigitOutlineIconButton** : 
 	An outlined button with a leading icon based on DIGIT figma.
 	
@@ -99,6 +109,8 @@
      label:’Decline’,
      onPressed: () => call_your_on_pressed_function(),
     )
+    <img width="122" alt="DigitOutlineIcon Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0c51c733-5f6a-4b0f-9e41-870d6c896c4c">
+
 
 **DigitReactiveDropdown** : 
 	A reactive dropdown form component. The formControlName is required to bind this ReactiveDropdownField to a FormControl
@@ -119,6 +131,7 @@
            ),
      },
     )
+![DigitReactive Type ahead](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ff5ea5c4-2c9b-4340-a03e-456b4b762894)
 
 **DigitTextFormField** : 
 	A reactive form reactive dropdown component. The formControlName is required to bind this ReactiveTextField  to a FormControl
@@ -143,6 +156,9 @@
            ),
      },
     )
+    <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/915b27d1-6403-4986-bc65-b81d0202d2c9">
+![Digit TextFormField](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0f624e87-a5c5-4513-9b3e-3e36de6f3432)
+
 **DigitToast** : 
 	To show a toast message based on completion of user actions
 	
@@ -155,6 +171,8 @@
        theme,
      ),
     );
+    ![Digit Toast](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ece6d835-98f5-4d54-80c5-7a540bbf80ce)
+
 
 **DigitCard** : 
 	A Card component with onPressed functions
@@ -164,6 +182,7 @@
  	child: Text(‘Card Details’),
     onPressed: null)
 
+![Digit Card](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/92a201dc-47a0-42e4-a085-e5faec0d6de5)
 
 
 **DigitCheckBoxTile** : 
@@ -178,6 +197,8 @@
      value: (control.value ?? false) as bool,
      onChanged: (value) => control.value = value,
     )
+    ![CheckBox List Tile](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/46ca9583-c81b-4c0c-977a-587787a46e6d)
+
 
 **DigitDialog** : 
 	A customizable dialog with options to add a custom title for the dialog , subtitle for the dialog and action buttons. It can be used on any on Pressed buttons to show this dialog
@@ -204,6 +225,7 @@
                  //your_secondary_action(),
            )));
 
+<img width="162" alt="Digit Dialog" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/b41dd881-3dff-4248-8ca1-685fb69bbe44">
 
 
 **DigitDobPicker** : 
@@ -222,6 +244,8 @@
        i18.individualDetails.separatorLabelText,
      ),
     ),
+    ![DOB Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/4285923c-3896-45f4-99b6-48dbb2e45255)
+
 
 **DigitElevatedButton** : 
 	It is an elevated button with label widget options and onPressed functions based on DIGIT Figma
@@ -238,6 +262,9 @@
                .apply(color: Colors.white)),
      ),);
 
+     <img width="164" alt="Digit Elevated Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dda59e4d-bb06-4352-bd31-76a75a3e58f1">
+
+
 **DigitIconTile** : 
 	A custom list tile widget with options to add leading icon and onPressed function. Mostly it is used in Sidebar tiles.
 	
@@ -247,6 +274,9 @@
        selected: context.router.currentPath.contains('orgProfile'),
        icon: Icons.perm_contact_cal_sharp,
        onPressed: () => your_on_pressed_function())
+
+       <img width="163" alt="DigitIconTile" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/a559d8a7-34f1-4df6-b89f-05666400c432">
+
 
 **DigitInfoCard** : 
 	A custom information card based on DIGIT Figma. Here we have options to add the desired icon, background color, icon color, description and heading title of the information card.
@@ -264,6 +294,8 @@
        ),
      ),
 
+![Digit Info Card](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/104d3f92-73c3-4800-b6ac-b1cd22af1ad4)
+
 **DigitOutlineButton** : 
 	An outlined button based on DIGIT figma.
 	
@@ -274,6 +306,7 @@
        ),
        onPressed: () => your_on_pressed_function(),
      )
+<img width="81" alt="DigitOutline button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/2d85702b-619d-49db-9ae7-5d04154c5d59">
 
 **DigitReactiveTypeAhead** : 
 A TypeAhead (autocomplete) widget , where you can show suggestions to users as they type
@@ -300,6 +333,7 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
        );
      },
     )
+![DigitReactive Type ahead](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ed1426eb-d0ce-4b72-9391-5c51a8ca566c)
 
 **DigitSearchBar** : 
 	A search bar based on DIGIT figma. It has on change functionality to perform actions on text change. A hint text can also be added on the search bar 
@@ -313,6 +347,8 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      textCapitalization: TextCapitalization.words,
      onChanged: (value) => your_on_change_function()
     ),
+
+![Digit Search Bar](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/6f5bb44f-49f4-4710-9349-a794294d46f5)
 
 **DigitSearchDropdown** : 
 	A searchable drop down that wraps DigitReactiveTypeAhead and has a custom label widget.
@@ -341,6 +377,9 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      },
     )
 
+    ![Digit Search Dropdown](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ef8742e5-88fb-4647-9a4e-7458346844e3)
+
+
 **DigitSyncDialogContent** : 
 	A sync dialog with options to add a custom label for the dialog , and type of the dialog. There are 3 types of sync dialog :
     **In Progress**
@@ -359,6 +398,8 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
        },
      ),
     );
+    ![Digit SyncDialog](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/003aded5-e727-448d-a043-f01556c6ec84)
+
 
 **DigitTextField** : 
 	A text field component similar to DigitTextFormField. It can be used without wrapping under reactive form
@@ -373,6 +414,8 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
        text: context.boundary.code,
      ),
     ),
+    <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/3abd2bb7-c918-4661-b41a-55276d326a72">
+
 
 **LabeledField** : 
 	A labeled widget which has a child widget. If any field need to have a label on its top, then that widget can be wrapped with this LabeledField.
@@ -386,6 +429,11 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      toolTipMsg: toolTipMsg,
      child: ReactiveDatePicker())
 
+<img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/367e5118-0a81-4729-9c8f-62a2ff592170">
+![Digit Integer Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d7aa0b99-07bf-4712-bb8d-042da71340d2)
+![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ebd1f5ad-8dda-44d0-96a2-1eed11d2458a)
+
+
 **PoweredByDigit** : 
 	Generic Digit Footer. 
 	
@@ -393,6 +441,9 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
 	PoweredByDigit(
      isWhiteLogo: true,
     )
+    <img width="131" alt="Powered By Digit Colored" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/f2e3c5ae-1ca5-47de-b671-210dd1f83ff8">
+    <img width="158" alt="Powered By Digit White" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ddc1d71a-82d7-41f8-8d73-c142a5c1a838">
+
 
 **ScrollableContent** : 
 	A Scrollable wrapper widget. All children widgets can be wrapped inside a single scroll card.
@@ -405,4 +456,5 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      ]),
      footer: PoweredByDigit()
     )
+<img width="180" alt="Scrollable Content" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/6936c29d-6b0a-4665-b6c9-8bb3dcb7a853">
 
