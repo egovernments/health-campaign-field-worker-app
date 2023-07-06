@@ -19,6 +19,7 @@
  		label: “your_label”,
  		value: boolean_value,
 	),
+ 
 ![CheckBox](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e1c9a6d1-cb0c-4b95-9dea-dddd6ff98f17)
 
 **DigitDateFormPicker** : 
@@ -41,7 +42,10 @@
        'required': (_) => ‘Date of birth is required’,
        'max': (_) => ‘Age cannot be greater than 18 years’
      },)
-     ![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/f57b3624-e047-4ca3-b383-fb166ea9330b)  <img width="166" alt="Date Picker" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dff63b96-0d92-4ae7-b4e5-547d14954d3b">
+
+<img width="166" alt="Date Picker" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d4bfdf64-e942-4259-8131-868fa0cecc28">
+![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0a71ce09-203f-4331-ae64-d7fde551d310)
+
 
 
  **DigitDivider** : 
@@ -49,7 +53,8 @@
 	
 	Usage: 
 	DigitDivider()
-![Divider](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/27656b6c-177e-48eb-8a23-fd0081ea3a59)
+ 
+![Divider](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e953c1bc-8513-4370-a0f1-aaa8e914a7c0)
 
 **DigitDropdown** : 
 	A custom dropdown component with label header.
@@ -98,7 +103,8 @@
      label: ‘Number of members’,
      incrementer: true,
     ),
-    ![Digit Integer Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dc948cb6-3c2d-4660-8e33-c8d05b6d442f)
+
+![Digit Integer Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/78a2e080-799c-4146-8e10-0eaea6f732f9)
 
 **DigitOutlineIconButton** : 
 	An outlined button with a leading icon based on DIGIT figma.
@@ -109,7 +115,8 @@
      label:’Decline’,
      onPressed: () => call_your_on_pressed_function(),
     )
-    <img width="122" alt="DigitOutlineIcon Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0c51c733-5f6a-4b0f-9e41-870d6c896c4c">
+
+<img width="122" alt="DigitOutlineIcon Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/1d14ddbe-83e9-4c78-8312-df404ab6220d">
 
 
 **DigitReactiveDropdown** : 
@@ -156,8 +163,10 @@
            ),
      },
     )
-    <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/915b27d1-6403-4986-bc65-b81d0202d2c9">
-![Digit TextFormField](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/0f624e87-a5c5-4513-9b3e-3e36de6f3432)
+    
+<img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/cedaa0b7-1a0f-4f97-8b5f-d0103e397adb">
+![Digit TextFormField](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/33a9cf45-6b95-425a-b85b-76c23ef9c1dc)
+
 
 **DigitToast** : 
 	To show a toast message based on completion of user actions
@@ -171,7 +180,8 @@
        theme,
      ),
     );
-    ![Digit Toast](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ece6d835-98f5-4d54-80c5-7a540bbf80ce)
+
+![Digit Toast](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/4c29786d-51e9-4583-9ea5-73e4a6b829df)
 
 
 **DigitCard** : 
@@ -197,7 +207,8 @@
      value: (control.value ?? false) as bool,
      onChanged: (value) => control.value = value,
     )
-    ![CheckBox List Tile](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/46ca9583-c81b-4c0c-977a-587787a46e6d)
+
+![CheckBox List Tile](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/e6132fb8-00fb-49e9-91c6-20d2555211c8)
 
 
 **DigitDialog** : 
@@ -244,7 +255,7 @@
        i18.individualDetails.separatorLabelText,
      ),
     ),
-    ![DOB Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/4285923c-3896-45f4-99b6-48dbb2e45255)
+![DOB Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d1955dac-fba1-443f-bdb9-19c79f81f3e8)
 
 
 **DigitElevatedButton** : 
@@ -262,7 +273,7 @@
                .apply(color: Colors.white)),
      ),);
 
-     <img width="164" alt="Digit Elevated Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/dda59e4d-bb06-4352-bd31-76a75a3e58f1">
+<img width="164" alt="Digit Elevated Button" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/420ad68d-b613-4847-bef3-af577777dd7a">
 
 
 **DigitIconTile** : 
@@ -275,7 +286,7 @@
        icon: Icons.perm_contact_cal_sharp,
        onPressed: () => your_on_pressed_function())
 
-       <img width="163" alt="DigitIconTile" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/a559d8a7-34f1-4df6-b89f-05666400c432">
+<img width="163" alt="DigitIconTile" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/4f3633fd-e601-476c-bf18-3cb76c998ccb">
 
 
 **DigitInfoCard** : 
@@ -377,7 +388,7 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      },
     )
 
-    ![Digit Search Dropdown](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ef8742e5-88fb-4647-9a4e-7458346844e3)
+![Digit Search Dropdown](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ec616ced-5b7b-4f9c-86f7-e054c358bc80)
 
 
 **DigitSyncDialogContent** : 
@@ -398,7 +409,8 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
        },
      ),
     );
-    ![Digit SyncDialog](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/003aded5-e727-448d-a043-f01556c6ec84)
+
+![Digit SyncDialog](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/7e6a400b-1417-4310-85fb-2c4a38af505f)
 
 
 **DigitTextField** : 
@@ -430,8 +442,6 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
      child: ReactiveDatePicker())
 
 <img width="148" alt="Digit Text Form Field" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/367e5118-0a81-4729-9c8f-62a2ff592170">
-![Digit Integer Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/d7aa0b99-07bf-4712-bb8d-042da71340d2)
-![Date Form Picker](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ebd1f5ad-8dda-44d0-96a2-1eed11d2458a)
 
 
 **PoweredByDigit** : 
@@ -441,8 +451,10 @@ A TypeAhead (autocomplete) widget , where you can show suggestions to users as t
 	PoweredByDigit(
      isWhiteLogo: true,
     )
-    <img width="131" alt="Powered By Digit Colored" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/f2e3c5ae-1ca5-47de-b671-210dd1f83ff8">
-    <img width="158" alt="Powered By Digit White" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/ddc1d71a-82d7-41f8-8d73-c142a5c1a838">
+<img width="131" alt="Powered By Digit Colored" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/25c50539-af39-4dde-8734-e44337a6dea4">
+
+<img width="158" alt="Powered By Digit White" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/a3536c8e-2373-4695-93fa-da56dfab9070">
+
 
 
 **ScrollableContent** : 
