@@ -21,3 +21,11 @@
 ## 0.0.1+5
 
 * Example file with Reactive Forms
+
+## 0.0.1+6
+
+* Updated Components behaviour in ReadMe File 
+
+## 0.0.1+7
+
+* Updated Images in ReadMe File 
