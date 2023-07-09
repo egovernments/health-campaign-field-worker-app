@@ -55,7 +55,7 @@ dependencies:
   device_info_plus: ^9.0.1
   battery_plus: ^4.0.1
   workmanager: ^0.5.1
-
+  digit_firebase_services: ^0.0.1
 
 dev_dependencies:
   flutter_test:

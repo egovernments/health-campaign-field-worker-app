@@ -4,6 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -26,6 +28,7 @@ import 'data/remote_client.dart';
 import 'data/repositories/remote/bandwidth_check.dart';
 import 'models/bandwidth/bandwidth_model.dart';
 import 'models/data_model.dart';
+import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
@@ -56,6 +59,27 @@ void main() async {
   if (Isar.getInstance('HCM') == null) {
     await Constants().initilize();
   }
+  final isar = await Isar.open([
+    ServiceRegistrySchema,
+    LocalizationWrapperSchema,
+    AppConfigurationSchema,
+    OpLogSchema,
+  ]);
+
+  final appConfigs = await isar.appConfigurations.where().findAll();
+  final config = appConfigs.firstOrNull;
+
+  final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? false;
+  if (enableCrashlytics) {
+    firebase_services.initialize(
+      options: DefaultFirebaseOptions.currentPlatform,
+      onErrorMessage: (value) {
+        AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+      },
+    );
+  }
+
+  final sql = LocalSqlDataStore();
 
   runApp(
     MainApplication(
