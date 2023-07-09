@@ -53,7 +53,6 @@ void main() async {
   DigitUi.instance.initThemeComponents();
 
   await initializeService(_dio);
-  print("--OPEN---");
   if (Isar.getInstance('HCM') == null) {
     await Constants().initilize();
   }

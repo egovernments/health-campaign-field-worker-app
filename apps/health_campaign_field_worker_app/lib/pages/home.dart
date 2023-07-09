@@ -59,7 +59,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         stopService: false,
         context: null,
       );
-      print("----Results----");
 
       // Got a new connectivity status!
     });
@@ -169,18 +168,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     ),
                   ),
               ]),
-              footer: StreamBuilder<Map<String, dynamic>?>(
-                stream: FlutterBackgroundService().on('update'),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    print(snapshot.data?['isar']);
-
-                    return PoweredByDigit();
-                  }
-
-                  return PoweredByDigit();
-                },
-              ),
+              footer: const PoweredByDigit(),
               children: [
                 const SizedBox(height: kPadding * 2),
                 BlocConsumer<SyncBloc, SyncState>(
