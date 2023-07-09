@@ -98,7 +98,6 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
 
     if (state == AppLifecycleState.paused) {
       setBgrunning(true);
-      // FlutterBackgroundService().invoke('stopService');
       // Stop the background service when the app is terminated
     } else if (state == AppLifecycleState.resumed) {
       // Stop the background service when the app is terminated
