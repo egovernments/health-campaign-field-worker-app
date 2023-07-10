@@ -1,0 +1,10 @@
+.dart_tool/
+pubspec.lock
+
+.bundle
+_site
+
+build/
+**/ios/.generated/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Runner/GeneratedPluginRegistrant.*
