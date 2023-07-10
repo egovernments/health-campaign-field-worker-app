@@ -89,7 +89,7 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
                   ),
                 ),
                 TableData(
-                  (target - e.value.length).toString(),
+                  (target - e.value.length).toInt().toString(),
                   cellKey: 'target',
                   style: TextStyle(
                     color: theme.colorScheme.error,
@@ -140,7 +140,7 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
                             ' ${localizations.translate(i18.reports.reportsTargetLabel)} : ',
                           ),
                           Text(
-                            target.toString(),
+                            target.toInt().toString(),
                             style: theme.textTheme.bodySmall,
                           ),
                         ],
@@ -164,15 +164,15 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
           DigitTable(
             headerList: [
               TableHeader(
-                'Date',
+                localizations.translate(i18.reports.date),
                 cellKey: 'date',
               ),
               TableHeader(
-                'Completed',
+                localizations.translate(i18.reports.completed),
                 cellKey: 'achivedTarget',
               ),
               TableHeader(
-                'InComplete',
+                localizations.translate(i18.reports.inComplete),
                 cellKey: 'target',
               ),
             ],
@@ -196,7 +196,7 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
 
     return [
       charts.Series<OrdinalTargetsList, String>(
-        id: 'Sales',
+        id: 'Reports',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (OrdinalTargetsList data, _) => data.date,
         measureFn: (OrdinalTargetsList data, _) => data.achivedTarget,

@@ -839,4 +839,10 @@ class Reports {
       'REPORTS_PROJECT_REGISTRED_TITLE';
 
   String get reportsTargetLabel => 'REPORTS_TARGET_LABEL';
+
+  String get date => 'DATE';
+
+  String get completed => 'COMPLETED';
+
+  String get inComplete => 'IN_COMPLETED';
 }
