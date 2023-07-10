@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:digit_components/digit_components.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -72,7 +74,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: result.userRequestModel,
         ),
       );
-    } catch (error) {
+    } on DioError catch (error) {
+      emit(const AuthErrorState());
+      emit(const AuthUnauthenticatedState());
+
+      AppLogger.instance.error(
+        title: 'Login error',
+        message: error.response?.data.toString(),
+      );
+    } catch (_) {
       emit(const AuthErrorState());
       emit(const AuthUnauthenticatedState());
       rethrow;
