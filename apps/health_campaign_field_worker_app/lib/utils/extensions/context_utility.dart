@@ -59,20 +59,7 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
-  String get loggedInUserUuid {
-    final authBloc = _get<AuthBloc>();
-    final userRequestObject = authBloc.state.whenOrNull(
-      authenticated: (accessToken, refreshToken, userModel) {
-        return userModel;
-      },
-    );
-
-    if (userRequestObject == null) {
-      throw AppException('User not authenticated');
-    }
-
-    return userRequestObject.uuid;
-  }
+  String get loggedInUserUuid => loggedInUser.uuid;
 
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
@@ -90,18 +77,22 @@ extension ContextUtilityExtensions on BuildContext {
   }
 
   bool get showProgressBar {
-    bool showProgressBar = false;
+    UserRequestModel loggedInUser;
+
+    try {
+      loggedInUser = this.loggedInUser;
+    } catch (_) {
+      return false;
+    }
 
     for (final role in loggedInUser.roles) {
       switch (role.code) {
         case UserRoleCodeEnum.distributor:
         case UserRoleCodeEnum.registrar:
-          showProgressBar = true;
+          return true;
         default:
-          showProgressBar = false;
+          break;
       }
-
-      if (showProgressBar) return true;
     }
 
     return false;
