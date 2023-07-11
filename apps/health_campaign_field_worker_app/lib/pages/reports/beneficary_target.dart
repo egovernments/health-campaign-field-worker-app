@@ -55,8 +55,8 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
                 element.dateOfRegistrationTime.isBefore(lte))
             .toList()
             .groupListsBy(
-              (element) =>
-                  (element.dateOfRegistrationTime.getFormattedDate('dd MMM')),
+              (element) => (element.dateOfRegistrationTime
+                  .getFormattedDate('dd MMM YYYY')),
             );
       }),
     );
@@ -89,7 +89,9 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
                   ),
                 ),
                 TableData(
-                  (target - e.value.length).toInt().toString(),
+                  (target - e.value.length).toInt().isNegative
+                      ? 0.toString()
+                      : (target - e.value.length).toInt().toString(),
                   cellKey: 'target',
                   style: TextStyle(
                     color: theme.colorScheme.error,
