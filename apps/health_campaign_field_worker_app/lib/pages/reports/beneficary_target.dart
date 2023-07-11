@@ -55,8 +55,8 @@ class _BeneficaryTargetPageState extends LocalizedState<BeneficaryTargetPage> {
                 element.dateOfRegistrationTime.isBefore(lte))
             .toList()
             .groupListsBy(
-              (element) => (element.dateOfRegistrationTime
-                  .getFormattedDate('dd MMM YYYY')),
+              (element) =>
+                  (element.dateOfRegistrationTime.getFormattedDate('dd MMM y')),
             );
       }),
     );
