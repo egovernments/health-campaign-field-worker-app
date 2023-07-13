@@ -26,6 +26,6 @@
 
 * Updated Components behaviour in ReadMe File 
 
-## 0.0.1+7
+## 0.0.1+8
 
 * Updated Images in ReadMe File 
