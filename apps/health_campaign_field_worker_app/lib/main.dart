@@ -11,6 +11,7 @@ import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/no_sql/schema/oplog.dart';
+import 'data/local_store/no_sql/schema/row_versions.dart';
 import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
@@ -39,6 +40,7 @@ void main() async {
     LocalizationWrapperSchema,
     AppConfigurationSchema,
     OpLogSchema,
+    RowVersionListSchema,
   ]);
 
   final appConfigs = await isar.appConfigurations.where().findAll();

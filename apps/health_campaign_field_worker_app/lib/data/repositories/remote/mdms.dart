@@ -9,6 +9,7 @@ import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
+import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
 
 class MdmsRepository {
@@ -37,11 +38,9 @@ class MdmsRepository {
   ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
     final data = result.serviceRegistry?.serviceRegistryList;
-
     if (data != null && data.isNotEmpty) {
       await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
     }
-
     for (final element in data ?? <ServiceRegistryModel>[]) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
@@ -113,6 +112,18 @@ class MdmsRepository {
     Isar isar,
   ) async {
     final appConfiguration = AppConfiguration();
+
+    final data = result.rowVersions?.rowVersionslist;
+
+    final List<RowVersionList> rowVersionList = [];
+
+    for (final element in data ?? <app_configuration.RowVersions>[]) {
+      final rowVersion = RowVersionList();
+      rowVersion.module = element.module;
+      rowVersion.version = element.version;
+      rowVersionList.add(rowVersion);
+    }
+
     result.appConfig?.appConfiglist?.forEach((element) {
       appConfiguration
         ..networkDetection = element.networkDetection
@@ -242,6 +253,7 @@ class MdmsRepository {
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);
+      await isar.rowVersionLists.putAll(rowVersionList);
     });
   }
 }
