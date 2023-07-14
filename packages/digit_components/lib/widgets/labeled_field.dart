@@ -5,17 +5,26 @@ class LabeledField extends StatelessWidget {
   final String label;
   final IconData? icon;
   final String? tooltipMessage;
+  final TextStyle? labelStyle;
+  final EdgeInsets? padding;
+  final bool preferToolTipBelow;
+  final TooltipTriggerMode tooltipTriggerMode;
 
-  const LabeledField(
-      {super.key,
-      required this.child,
-      required this.label,
-      this.icon,
-      this.tooltipMessage});
+  const LabeledField({
+    super.key,
+    required this.child,
+    required this.label,
+    this.icon,
+    this.tooltipMessage,
+    this.labelStyle,
+    this.padding,
+    this.preferToolTipBelow = false,
+    this.tooltipTriggerMode = TooltipTriggerMode.tap,
+  });
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 16),
+        padding: padding ?? const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -25,14 +34,14 @@ class LabeledField extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    style: Theme.of(context).textTheme.labelSmall,
+                    style: labelStyle ?? Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
                 icon != null
                     ? Tooltip(
                         message: tooltipMessage ?? '',
-                        preferBelow: false,
-                        triggerMode: TooltipTriggerMode.tap,
+                        preferBelow: preferToolTipBelow,
+                        triggerMode: tooltipTriggerMode,
                         child: Icon(icon ?? Icons.info_outline))
                     : const SizedBox.shrink()
               ],
