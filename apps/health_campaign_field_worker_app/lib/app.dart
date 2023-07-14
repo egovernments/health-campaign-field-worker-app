@@ -137,6 +137,7 @@ class MainApplication extends StatelessWidget {
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            mdmsRepository: MdmsRepository(client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
