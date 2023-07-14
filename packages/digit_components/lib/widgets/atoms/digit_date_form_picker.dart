@@ -16,12 +16,17 @@ class DigitDateFormPicker extends StatelessWidget {
   final String? requiredMessage;
   final String? Function(DateTime?)? validator;
   final AutovalidateMode? autoValidation;
+  final Map<String, String Function(Object control)>? validationMessages;
   final EdgeInsets? margin;
   final DateTime? start;
   final DateTime? end;
   final String? hint;
   final IconData? icon;
   final String? tooltipMessage;
+  final EdgeInsets? padding;
+  final String? cancelText;
+  final String? confirmText;
+  final String? fieldHintText;
 
   const DigitDateFormPicker({
     super.key,
@@ -35,25 +40,35 @@ class DigitDateFormPicker extends StatelessWidget {
     this.isEnabled = true,
     this.requiredMessage,
     this.validator,
+    this.validationMessages,
     this.autoValidation,
     this.margin,
     this.end,
     this.start,
     this.hint,
-    this.icon,
     this.tooltipMessage,
+    this.icon,
+    this.padding,
+    this.cancelText = 'Cancel',
+    this.confirmText = 'OK',
+    this.fieldHintText,
   });
 
   @override
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
+      padding: padding,
+      labelStyle: Theme.of(context).textTheme.bodyLarge,
       icon: icon,
       tooltipMessage: tooltipMessage,
       child: ReactiveDatePicker(
         formControlName: formControlName,
         firstDate: start ?? DateTime(1900),
         lastDate: end ?? DateTime.now(),
+        cancelText: cancelText,
+        confirmText: confirmText,
+        fieldHintText: fieldHintText,
         builder: (context, picker, child) {
           return ReactiveTextField(
             style: TextStyle(
@@ -62,6 +77,7 @@ class DigitDateFormPicker extends StatelessWidget {
                   : DigitTheme.instance.colorScheme.shadow,
             ),
             formControlName: formControlName,
+            validationMessages: validationMessages,
             readOnly: true,
             valueAccessor: DateTimeValueAccessor(
               dateTimeFormat: DateFormat('dd MMM yyyy'),
@@ -71,7 +87,7 @@ class DigitDateFormPicker extends StatelessWidget {
               suffixIcon: const Icon(Icons.date_range),
               label: hint == null ? null : Text(hint!),
             ),
-            enableInteractiveSelection: isEnabled!,
+            enableInteractiveSelection: isEnabled ?? true,
             onTap: isEnabled == true
                 ? (control) {
                     picker.showPicker();

@@ -79,12 +79,19 @@ class AppInitializationBloc
                   MdmsMasterDetailModel('appConfig'),
                 ],
               ),
+              const MdmsModuleDetailModel(
+                moduleName: 'module-version',
+                masterDetails: [
+                  MdmsMasterDetailModel('ROW_VERSIONS'),
+                ],
+              ),
             ],
           ),
         ).toJson(),
       );
 
-      final pgrServiceDefinitions = await mdmsRepository.searchPGRServiceDefinitions(
+      final pgrServiceDefinitions =
+          await mdmsRepository.searchPGRServiceDefinitions(
         envConfig.variables.mdmsApiPath,
         MdmsRequestModel(
           mdmsCriteria: MdmsCriteriaModel(
@@ -101,7 +108,11 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar);
+      await mdmsRepository.writeToAppConfigDB(
+        configResult,
+        pgrServiceDefinitions,
+        isar,
+      );
 
       add(
         AppInitializationSetupEvent(

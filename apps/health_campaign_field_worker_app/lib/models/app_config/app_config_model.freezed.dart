@@ -656,6 +656,8 @@ mixin _$AppConfigPrimaryWrapperModel {
   @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
   AppConfigSecondaryWrapperModel? get appConfig =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'module-version')
+  RowVersionWrapperModel? get rowVersions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -673,9 +675,12 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-          AppConfigSecondaryWrapperModel? appConfig});
+          AppConfigSecondaryWrapperModel? appConfig,
+      @JsonKey(name: 'module-version')
+          RowVersionWrapperModel? rowVersions});
 
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
+  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
 }
 
 /// @nodoc
@@ -693,12 +698,17 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? appConfig = freezed,
+    Object? rowVersions = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: freezed == appConfig
           ? _value.appConfig
           : appConfig // ignore: cast_nullable_to_non_nullable
               as AppConfigSecondaryWrapperModel?,
+      rowVersions: freezed == rowVersions
+          ? _value.rowVersions
+          : rowVersions // ignore: cast_nullable_to_non_nullable
+              as RowVersionWrapperModel?,
     ) as $Val);
   }
 
@@ -714,6 +724,18 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(appConfig: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions {
+    if (_value.rowVersions == null) {
+      return null;
+    }
+
+    return $RowVersionWrapperModelCopyWith<$Res>(_value.rowVersions!, (value) {
+      return _then(_value.copyWith(rowVersions: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -727,10 +749,14 @@ abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-          AppConfigSecondaryWrapperModel? appConfig});
+          AppConfigSecondaryWrapperModel? appConfig,
+      @JsonKey(name: 'module-version')
+          RowVersionWrapperModel? rowVersions});
 
   @override
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
+  @override
+  $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
 }
 
 /// @nodoc
@@ -747,12 +773,17 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? appConfig = freezed,
+    Object? rowVersions = freezed,
   }) {
     return _then(_$_AppConfigPrimaryWrapperModel(
       appConfig: freezed == appConfig
           ? _value.appConfig
           : appConfig // ignore: cast_nullable_to_non_nullable
               as AppConfigSecondaryWrapperModel?,
+      rowVersions: freezed == rowVersions
+          ? _value.rowVersions
+          : rowVersions // ignore: cast_nullable_to_non_nullable
+              as RowVersionWrapperModel?,
     ));
   }
 }
@@ -761,7 +792,8 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   const _$_AppConfigPrimaryWrapperModel(
-      {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig});
+      {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
+      @JsonKey(name: 'module-version') this.rowVersions});
 
   factory _$_AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =>
       _$$_AppConfigPrimaryWrapperModelFromJson(json);
@@ -769,10 +801,13 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   @override
   @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
   final AppConfigSecondaryWrapperModel? appConfig;
+  @override
+  @JsonKey(name: 'module-version')
+  final RowVersionWrapperModel? rowVersions;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig)';
+    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions)';
   }
 
   @override
@@ -781,12 +816,14 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
         (other.runtimeType == runtimeType &&
             other is _$_AppConfigPrimaryWrapperModel &&
             (identical(other.appConfig, appConfig) ||
-                other.appConfig == appConfig));
+                other.appConfig == appConfig) &&
+            (identical(other.rowVersions, rowVersions) ||
+                other.rowVersions == rowVersions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, appConfig);
+  int get hashCode => Object.hash(runtimeType, appConfig, rowVersions);
 
   @JsonKey(ignore: true)
   @override
@@ -807,7 +844,9 @@ abstract class _AppConfigPrimaryWrapperModel
     implements AppConfigPrimaryWrapperModel {
   const factory _AppConfigPrimaryWrapperModel(
           {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-              final AppConfigSecondaryWrapperModel? appConfig}) =
+              final AppConfigSecondaryWrapperModel? appConfig,
+          @JsonKey(name: 'module-version')
+              final RowVersionWrapperModel? rowVersions}) =
       _$_AppConfigPrimaryWrapperModel;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -816,6 +855,9 @@ abstract class _AppConfigPrimaryWrapperModel
   @override
   @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
   AppConfigSecondaryWrapperModel? get appConfig;
+  @override
+  @JsonKey(name: 'module-version')
+  RowVersionWrapperModel? get rowVersions;
   @override
   @JsonKey(ignore: true)
   _$$_AppConfigPrimaryWrapperModelCopyWith<_$_AppConfigPrimaryWrapperModel>
@@ -982,6 +1024,164 @@ abstract class _AppConfigSecondaryWrapperModel
   @JsonKey(ignore: true)
   _$$_AppConfigSecondaryWrapperModelCopyWith<_$_AppConfigSecondaryWrapperModel>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+RowVersionWrapperModel _$RowVersionWrapperModelFromJson(
+    Map<String, dynamic> json) {
+  return _RowVersionWrapperModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RowVersionWrapperModel {
+  @JsonKey(name: 'ROW_VERSIONS')
+  List<RowVersions>? get rowVersionslist => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RowVersionWrapperModelCopyWith<RowVersionWrapperModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RowVersionWrapperModelCopyWith<$Res> {
+  factory $RowVersionWrapperModelCopyWith(RowVersionWrapperModel value,
+          $Res Function(RowVersionWrapperModel) then) =
+      _$RowVersionWrapperModelCopyWithImpl<$Res, RowVersionWrapperModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist});
+}
+
+/// @nodoc
+class _$RowVersionWrapperModelCopyWithImpl<$Res,
+        $Val extends RowVersionWrapperModel>
+    implements $RowVersionWrapperModelCopyWith<$Res> {
+  _$RowVersionWrapperModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rowVersionslist = freezed,
+  }) {
+    return _then(_value.copyWith(
+      rowVersionslist: freezed == rowVersionslist
+          ? _value.rowVersionslist
+          : rowVersionslist // ignore: cast_nullable_to_non_nullable
+              as List<RowVersions>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_RowVersionWrapperModelCopyWith<$Res>
+    implements $RowVersionWrapperModelCopyWith<$Res> {
+  factory _$$_RowVersionWrapperModelCopyWith(_$_RowVersionWrapperModel value,
+          $Res Function(_$_RowVersionWrapperModel) then) =
+      __$$_RowVersionWrapperModelCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist});
+}
+
+/// @nodoc
+class __$$_RowVersionWrapperModelCopyWithImpl<$Res>
+    extends _$RowVersionWrapperModelCopyWithImpl<$Res,
+        _$_RowVersionWrapperModel>
+    implements _$$_RowVersionWrapperModelCopyWith<$Res> {
+  __$$_RowVersionWrapperModelCopyWithImpl(_$_RowVersionWrapperModel _value,
+      $Res Function(_$_RowVersionWrapperModel) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? rowVersionslist = freezed,
+  }) {
+    return _then(_$_RowVersionWrapperModel(
+      rowVersionslist: freezed == rowVersionslist
+          ? _value._rowVersionslist
+          : rowVersionslist // ignore: cast_nullable_to_non_nullable
+              as List<RowVersions>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
+  const _$_RowVersionWrapperModel(
+      {@JsonKey(name: 'ROW_VERSIONS') final List<RowVersions>? rowVersionslist})
+      : _rowVersionslist = rowVersionslist;
+
+  factory _$_RowVersionWrapperModel.fromJson(Map<String, dynamic> json) =>
+      _$$_RowVersionWrapperModelFromJson(json);
+
+  final List<RowVersions>? _rowVersionslist;
+  @override
+  @JsonKey(name: 'ROW_VERSIONS')
+  List<RowVersions>? get rowVersionslist {
+    final value = _rowVersionslist;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'RowVersionWrapperModel(rowVersionslist: $rowVersionslist)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_RowVersionWrapperModel &&
+            const DeepCollectionEquality()
+                .equals(other._rowVersionslist, _rowVersionslist));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_rowVersionslist));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_RowVersionWrapperModelCopyWith<_$_RowVersionWrapperModel> get copyWith =>
+      __$$_RowVersionWrapperModelCopyWithImpl<_$_RowVersionWrapperModel>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_RowVersionWrapperModelToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RowVersionWrapperModel implements RowVersionWrapperModel {
+  const factory _RowVersionWrapperModel(
+          {@JsonKey(name: 'ROW_VERSIONS')
+              final List<RowVersions>? rowVersionslist}) =
+      _$_RowVersionWrapperModel;
+
+  factory _RowVersionWrapperModel.fromJson(Map<String, dynamic> json) =
+      _$_RowVersionWrapperModel.fromJson;
+
+  @override
+  @JsonKey(name: 'ROW_VERSIONS')
+  List<RowVersions>? get rowVersionslist;
+  @override
+  @JsonKey(ignore: true)
+  _$$_RowVersionWrapperModelCopyWith<_$_RowVersionWrapperModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 AppConfig _$AppConfigFromJson(Map<String, dynamic> json) {
@@ -3483,5 +3683,159 @@ abstract class _TransportTypes implements TransportTypes {
   @override
   @JsonKey(ignore: true)
   _$$_TransportTypesCopyWith<_$_TransportTypes> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RowVersions _$RowVersionsFromJson(Map<String, dynamic> json) {
+  return _RowVersions.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RowVersions {
+  String get module => throw _privateConstructorUsedError;
+  String get version => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RowVersionsCopyWith<RowVersions> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RowVersionsCopyWith<$Res> {
+  factory $RowVersionsCopyWith(
+          RowVersions value, $Res Function(RowVersions) then) =
+      _$RowVersionsCopyWithImpl<$Res, RowVersions>;
+  @useResult
+  $Res call({String module, String version});
+}
+
+/// @nodoc
+class _$RowVersionsCopyWithImpl<$Res, $Val extends RowVersions>
+    implements $RowVersionsCopyWith<$Res> {
+  _$RowVersionsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? module = null,
+    Object? version = null,
+  }) {
+    return _then(_value.copyWith(
+      module: null == module
+          ? _value.module
+          : module // ignore: cast_nullable_to_non_nullable
+              as String,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_RowVersionsCopyWith<$Res>
+    implements $RowVersionsCopyWith<$Res> {
+  factory _$$_RowVersionsCopyWith(
+          _$_RowVersions value, $Res Function(_$_RowVersions) then) =
+      __$$_RowVersionsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String module, String version});
+}
+
+/// @nodoc
+class __$$_RowVersionsCopyWithImpl<$Res>
+    extends _$RowVersionsCopyWithImpl<$Res, _$_RowVersions>
+    implements _$$_RowVersionsCopyWith<$Res> {
+  __$$_RowVersionsCopyWithImpl(
+      _$_RowVersions _value, $Res Function(_$_RowVersions) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? module = null,
+    Object? version = null,
+  }) {
+    return _then(_$_RowVersions(
+      module: null == module
+          ? _value.module
+          : module // ignore: cast_nullable_to_non_nullable
+              as String,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_RowVersions implements _RowVersions {
+  _$_RowVersions({required this.module, required this.version});
+
+  factory _$_RowVersions.fromJson(Map<String, dynamic> json) =>
+      _$$_RowVersionsFromJson(json);
+
+  @override
+  final String module;
+  @override
+  final String version;
+
+  @override
+  String toString() {
+    return 'RowVersions(module: $module, version: $version)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_RowVersions &&
+            (identical(other.module, module) || other.module == module) &&
+            (identical(other.version, version) || other.version == version));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, module, version);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_RowVersionsCopyWith<_$_RowVersions> get copyWith =>
+      __$$_RowVersionsCopyWithImpl<_$_RowVersions>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_RowVersionsToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RowVersions implements RowVersions {
+  factory _RowVersions(
+      {required final String module,
+      required final String version}) = _$_RowVersions;
+
+  factory _RowVersions.fromJson(Map<String, dynamic> json) =
+      _$_RowVersions.fromJson;
+
+  @override
+  String get module;
+  @override
+  String get version;
+  @override
+  @JsonKey(ignore: true)
+  _$$_RowVersionsCopyWith<_$_RowVersions> get copyWith =>
       throw _privateConstructorUsedError;
 }

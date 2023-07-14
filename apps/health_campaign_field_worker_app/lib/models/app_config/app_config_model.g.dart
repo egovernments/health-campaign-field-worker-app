@@ -67,12 +67,17 @@ _$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
           ? null
           : AppConfigSecondaryWrapperModel.fromJson(
               json['HCM-FIELD-APP-CONFIG'] as Map<String, dynamic>),
+      rowVersions: json['module-version'] == null
+          ? null
+          : RowVersionWrapperModel.fromJson(
+              json['module-version'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
         _$_AppConfigPrimaryWrapperModel instance) =>
     <String, dynamic>{
       'HCM-FIELD-APP-CONFIG': instance.appConfig,
+      'module-version': instance.rowVersions,
     };
 
 _$_AppConfigSecondaryWrapperModel _$$_AppConfigSecondaryWrapperModelFromJson(
@@ -87,6 +92,20 @@ Map<String, dynamic> _$$_AppConfigSecondaryWrapperModelToJson(
         _$_AppConfigSecondaryWrapperModel instance) =>
     <String, dynamic>{
       'appConfig': instance.appConfiglist,
+    };
+
+_$_RowVersionWrapperModel _$$_RowVersionWrapperModelFromJson(
+        Map<String, dynamic> json) =>
+    _$_RowVersionWrapperModel(
+      rowVersionslist: (json['ROW_VERSIONS'] as List<dynamic>?)
+          ?.map((e) => RowVersions.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$_RowVersionWrapperModelToJson(
+        _$_RowVersionWrapperModel instance) =>
+    <String, dynamic>{
+      'ROW_VERSIONS': instance.rowVersionslist,
     };
 
 _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
@@ -297,4 +316,16 @@ Map<String, dynamic> _$$_TransportTypesToJson(_$_TransportTypes instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+    };
+
+_$_RowVersions _$$_RowVersionsFromJson(Map<String, dynamic> json) =>
+    _$_RowVersions(
+      module: json['module'] as String,
+      version: json['version'] as String,
+    );
+
+Map<String, dynamic> _$$_RowVersionsToJson(_$_RowVersions instance) =>
+    <String, dynamic>{
+      'module': instance.module,
+      'version': instance.version,
     };
