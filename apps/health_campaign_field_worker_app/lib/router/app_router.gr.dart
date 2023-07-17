@@ -59,6 +59,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>(
+          orElse: () => const ProfileRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ProfilePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     SearchBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
           orElse: () => const SearchBeneficiaryRouteArgs());
@@ -504,6 +515,11 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
+              ProfileRoute.name,
+              path: 'profile',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               SearchBeneficiaryRoute.name,
               path: 'search-beneficiary',
               parent: AuthenticatedRouteWrapper.name,
@@ -863,6 +879,40 @@ class HomeRouteArgs {
   @override
   String toString() {
     return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          ProfileRoute.name,
+          path: 'profile',
+          args: ProfileRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'ProfileRoute';
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

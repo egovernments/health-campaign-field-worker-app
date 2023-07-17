@@ -15,6 +15,7 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/user.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
