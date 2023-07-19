@@ -210,6 +210,9 @@ class IndividualDetails {
 
   String get mobileNumberInvalidFormatValidationMessage =>
       'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
+
+  String get yearsHintText => 'YEARS_HINT_TEXT';
+  String get monthsHintText => 'MONTHS_HINT_TEXT';
 }
 
 class HouseholdLocation {
@@ -321,6 +324,9 @@ class MemberCard {
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 
   String get heightLabel => 'HEIGHT_LABEL';
+
+  String get deliverDetailsMonthsText =>
+      'MEMBER_CARD_DELIVER_DETAILS_MONTHS_TEXT';
 }
 
 class DeliverIntervention {
