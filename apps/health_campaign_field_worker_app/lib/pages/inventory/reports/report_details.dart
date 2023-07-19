@@ -2,15 +2,23 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../blocs/facility/facility.dart';
 import '../../../blocs/inventory_report/inventory_report.dart';
+import '../../../blocs/product_variant/product_variant.dart';
+import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
+import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
+import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
+import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/reports/readonly_pluto_grid.dart';
+import '../facility_selection.dart';
 
 class InventoryReportDetailsPage extends LocalizedStatefulWidget
     with AutoRouteWrapper {
@@ -26,19 +34,17 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget
   State<InventoryReportDetailsPage> createState() =>
       _InventoryReportDetailsPageState();
 
+/* created a wrapper  Router which handles the BlocProvider 
+and attached the event to load the data*/
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final event = reportType == InventoryReportType.reconciliation
-            ? const InventoryReportLoadStockReconciliationDataEvent()
-            : InventoryReportLoadStockDataEvent(reportType: reportType);
-
         return InventoryReportBloc(
           stockReconciliationRepository: context.repository<
               StockReconciliationModel, StockReconciliationSearchModel>(),
           stockRepository: context.repository<StockModel, StockSearchModel>(),
-        )..add(event);
+        );
       },
       child: this,
     );
@@ -47,6 +53,34 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget
 
 class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
+  static const _productVariantKey = 'productVariant';
+  static const _facilityKey = 'facilityKey';
+
+  void handleSelection(FormGroup form) {
+    final event = widget.reportType == InventoryReportType.reconciliation
+        ? const InventoryReportLoadStockReconciliationDataEvent()
+        : InventoryReportLoadStockDataEvent(
+            reportType: widget.reportType,
+            facilityId: (form.control(_facilityKey).value as FacilityModel).id,
+            productVariantId:
+                (form.control(_productVariantKey).value as ProductVariantModel)
+                    .id,
+          );
+
+    context.read<InventoryReportBloc>().add(event);
+  }
+
+  FormGroup _form() {
+    return fb.group({
+      _facilityKey: FormControl<FacilityModel>(
+        validators: [Validators.required],
+      ),
+      _productVariantKey: FormControl<ProductVariantModel>(
+        validators: [Validators.required],
+      ),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,226 +89,442 @@ class _InventoryReportDetailsPageState
           final noRecordsMessage = localizations.translate(
             i18.inventoryReportDetails.noRecordsMessage,
           );
+          final noFilterMessage = localizations.translate(
+            i18.inventoryReportDetails.noFilterMessage,
+          );
 
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BackNavigationHelpHeaderWidget(),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: inventoryReportState.when(
-                    loading: () => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    stock: (data) {
-                      if (data.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(kPadding * 2),
-                          child: _NoReportContent(
-                            title: title,
-                            message: noRecordsMessage,
-                          ),
-                        );
-                      }
-
-                      const dateKey = 'date';
-                      const quantityKey = 'quantity';
-                      const transactingPartyKey = 'transactingParty';
-
-                      return _ReportDetailsContent(
-                        title: title,
-                        data: DigitGridData(
-                          columns: [
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.dateLabel,
-                              ),
-                              key: dateKey,
-                              width: 100,
-                            ),
-                            DigitGridColumn(
-                              label: quantityLabel,
-                              key: quantityKey,
-                              width: 150,
-                            ),
-                            DigitGridColumn(
-                              label: transactingPartyLabel,
-                              key: transactingPartyKey,
-                              width: 200,
-                            ),
-                          ],
-                          rows: [
-                            for (final entry in data.entries) ...[
-                              for (final model in entry.value)
-                                DigitGridRow(
-                                  [
-                                    DigitGridCell(
-                                      key: dateKey,
-                                      value: entry.key,
-                                    ),
-                                    DigitGridCell(
-                                      key: quantityKey,
-                                      value: model.quantity ?? '',
-                                    ),
-                                    DigitGridCell(
-                                      key: transactingPartyKey,
-                                      value: model.transactingPartyId ??
-                                          model.transactingPartyType ??
-                                          '',
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                    stockReconciliation: (data) {
-                      if (data.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.all(kPadding * 2),
-                          child: _NoReportContent(
-                            title: title,
-                            message: noRecordsMessage,
-                          ),
-                        );
-                      }
-
-                      const dateKey = 'date';
-                      const receivedKey = 'received';
-                      const dispatchedKey = 'dispatched';
-                      const returnedKey = 'returned';
-                      const damagedKey = 'damaged';
-                      const lossKey = 'loss';
-                      const stockInHandKey = 'stockInHand';
-                      const manualCountKey = 'manualCount';
-
-                      return _ReportDetailsContent(
-                        title: title,
-                        data: DigitGridData(
-                          columns: [
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.dateLabel,
-                              ),
-                              key: dateKey,
-                              width: 100,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.receivedCountLabel,
-                              ),
-                              key: receivedKey,
-                              width: 110,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.dispatchedCountLabel,
-                              ),
-                              key: dispatchedKey,
-                              width: 100,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.returnedCountLabel,
-                              ),
-                              key: returnedKey,
-                              width: 120,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.damagedCountLabel,
-                              ),
-                              key: damagedKey,
-                              width: 120,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.lostCountLabel,
-                              ),
-                              key: lossKey,
-                              width: 120,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.stockInHandLabel,
-                              ),
-                              key: stockInHandKey,
-                              width: 150,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                i18.inventoryReportDetails.manualCountLabel,
-                              ),
-                              key: manualCountKey,
-                              width: 150,
-                            ),
-                          ],
-                          rows: [
-                            for (final entry in data.entries) ...[
-                              for (final model in entry.value)
-                                DigitGridRow(
-                                  [
-                                    DigitGridCell(
-                                      key: dateKey,
-                                      value: entry.key,
-                                    ),
-                                    DigitGridCell(
-                                      key: receivedKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'received',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: dispatchedKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'issued',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: returnedKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'returned',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: lossKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'lost',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: damagedKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'damaged',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: stockInHandKey,
-                                      value: _getCountFromAdditionalDetails(
-                                        model,
-                                        'inHand',
-                                      ),
-                                    ),
-                                    DigitGridCell(
-                                      key: manualCountKey,
-                                      value: (model.physicalCount ?? '0')
-                                          .toString(),
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
+              ),
+              ReactiveFormBuilder(
+                form: _form,
+                builder: (ctx, form, child) {
+                  return SizedBox(
+                    height: 620,
+                    child: FacilityBlocWrapper(
+                      child: ProductVariantBlocWrapper(
+                        child: BlocProvider(
+                          create: (context) => StockReconciliationBloc(
+                            stockRepository: context
+                                .repository<StockModel, StockSearchModel>(),
+                            stockReconciliationRepository: context.repository<
+                                StockReconciliationModel,
+                                StockReconciliationSearchModel>(),
+                            StockReconciliationState(
+                              projectId: context.projectId,
+                              dateOfReconciliation: DateTime.now(),
+                            ),
+                          ),
+                          child: BlocConsumer<StockReconciliationBloc,
+                              StockReconciliationState>(
+                            listener: (context, stockState) {
+                              if (!stockState.persisted) return;
+
+                              context.router.replace(AcknowledgementRoute());
+                            },
+                            builder: (context, stockState) {
+                              return Column(
+                                children: [
+                                  DigitCard(
+                                    child: Column(
+                                      children: [
+                                        BlocConsumer<FacilityBloc,
+                                            FacilityState>(
+                                          listener: (context, state) =>
+                                              state.whenOrNull(
+                                            empty: () =>
+                                                NoFacilitiesAssignedDialog.show(
+                                              context,
+                                            ),
+                                          ),
+                                          builder: (context, state) {
+                                            final facilities = state.whenOrNull(
+                                                  fetched: (facilities, _) =>
+                                                      facilities,
+                                                ) ??
+                                                [];
+
+                                            return DigitTextFormField(
+                                              valueAccessor:
+                                                  FacilityValueAccessor(
+                                                facilities,
+                                              ),
+                                              label: localizations.translate(
+                                                i18.stockReconciliationDetails
+                                                    .facilityLabel,
+                                              ),
+                                              suffix: const Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Icon(Icons.search),
+                                              ),
+                                              formControlName: _facilityKey,
+                                              readOnly: true,
+                                              isRequired: true,
+                                              onTap: () async {
+                                                final stockReconciliationBloc =
+                                                    context.read<
+                                                        StockReconciliationBloc>();
+
+                                                final facility = await context
+                                                    .router
+                                                    .push<FacilityModel>(
+                                                  FacilitySelectionRoute(
+                                                    facilities: facilities,
+                                                  ),
+                                                );
+
+                                                if (facility == null) return;
+                                                form
+                                                    .control(_facilityKey)
+                                                    .value = facility;
+                                                stockReconciliationBloc.add(
+                                                  StockReconciliationSelectFacilityEvent(
+                                                    facility,
+                                                  ),
+                                                );
+                                                handleSelection(form);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                        BlocBuilder<ProductVariantBloc,
+                                            ProductVariantState>(
+                                          builder: (context, state) {
+                                            return state.maybeWhen(
+                                              orElse: () => const Offstage(),
+                                              fetched: (productVariants) {
+                                                return DigitReactiveDropdown<
+                                                    ProductVariantModel>(
+                                                  formControlName:
+                                                      _productVariantKey,
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.stockReconciliationDetails
+                                                        .productLabel,
+                                                  ),
+                                                  isRequired: true,
+                                                  onChanged: (value) {
+                                                    handleSelection(form);
+                                                  },
+                                                  valueMapper: (value) {
+                                                    return localizations
+                                                        .translate(
+                                                      value.sku ?? value.id,
+                                                    );
+                                                  },
+                                                  menuItems: productVariants,
+                                                  validationMessages: {
+                                                    'required': (object) =>
+                                                        localizations.translate(
+                                                          i18.stockReconciliationDetails
+                                                              .fieldRequired,
+                                                        ),
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: inventoryReportState.when(
+                                        empty: () => _NoReportContent(
+                                          title: title,
+                                          message: noFilterMessage,
+                                        ),
+                                        loading: () => const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                        stock: (data) {
+                                          if (data.isEmpty) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(
+                                                kPadding * 2,
+                                              ),
+                                              child: _NoReportContent(
+                                                title: title,
+                                                message: noRecordsMessage,
+                                              ),
+                                            );
+                                          }
+
+                                          const dateKey = 'date';
+                                          const waybillKey = 'waybillNumber';
+                                          const quantityKey = 'quantity';
+                                          const transactingPartyKey =
+                                              'transactingParty';
+
+                                          return _ReportDetailsContent(
+                                            title: title,
+                                            data: DigitGridData(
+                                              columns: [
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .dateLabel,
+                                                  ),
+                                                  key: dateKey,
+                                                  width: 100,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .waybillLabel,
+                                                  ),
+                                                  key: waybillKey,
+                                                  width: 150,
+                                                ),
+                                                DigitGridColumn(
+                                                  label: quantityLabel,
+                                                  key: quantityKey,
+                                                  width: 150,
+                                                ),
+                                                DigitGridColumn(
+                                                  label: transactingPartyLabel,
+                                                  key: transactingPartyKey,
+                                                  width: 200,
+                                                ),
+                                              ],
+                                              rows: [
+                                                for (final entry
+                                                    in data.entries) ...[
+                                                  for (final model
+                                                      in entry.value)
+                                                    DigitGridRow(
+                                                      [
+                                                        DigitGridCell(
+                                                          key: dateKey,
+                                                          value: entry.key,
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: waybillKey,
+                                                          value: model
+                                                                  .waybillNumber ??
+                                                              model
+                                                                  .waybillNumber ??
+                                                              '',
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: quantityKey,
+                                                          value:
+                                                              model.quantity ??
+                                                                  '',
+                                                        ),
+                                                        DigitGridCell(
+                                                          key:
+                                                              transactingPartyKey,
+                                                          value: model
+                                                                  .transactingPartyId ??
+                                                              model
+                                                                  .transactingPartyType ??
+                                                              '',
+                                                        ),
+                                                      ],
+                                                    ),
+                                                ],
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        stockReconciliation: (data) {
+                                          if (data.isEmpty) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(
+                                                kPadding * 2,
+                                              ),
+                                              child: _NoReportContent(
+                                                title: title,
+                                                message: noRecordsMessage,
+                                              ),
+                                            );
+                                          }
+
+                                          const dateKey = 'date';
+                                          const receivedKey = 'received';
+                                          const dispatchedKey = 'dispatched';
+                                          const returnedKey = 'returned';
+                                          const damagedKey = 'damaged';
+                                          const lossKey = 'loss';
+                                          const stockInHandKey = 'stockInHand';
+                                          const manualCountKey = 'manualCount';
+
+                                          return _ReportDetailsContent(
+                                            title: title,
+                                            data: DigitGridData(
+                                              columns: [
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .dateLabel,
+                                                  ),
+                                                  key: dateKey,
+                                                  width: 100,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .receivedCountLabel,
+                                                  ),
+                                                  key: receivedKey,
+                                                  width: 110,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .dispatchedCountLabel,
+                                                  ),
+                                                  key: dispatchedKey,
+                                                  width: 100,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .returnedCountLabel,
+                                                  ),
+                                                  key: returnedKey,
+                                                  width: 120,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .damagedCountLabel,
+                                                  ),
+                                                  key: damagedKey,
+                                                  width: 120,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .lostCountLabel,
+                                                  ),
+                                                  key: lossKey,
+                                                  width: 120,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .stockInHandLabel,
+                                                  ),
+                                                  key: stockInHandKey,
+                                                  width: 150,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.inventoryReportDetails
+                                                        .manualCountLabel,
+                                                  ),
+                                                  key: manualCountKey,
+                                                  width: 150,
+                                                ),
+                                              ],
+                                              rows: [
+                                                for (final entry
+                                                    in data.entries) ...[
+                                                  for (final model
+                                                      in entry.value)
+                                                    DigitGridRow(
+                                                      [
+                                                        DigitGridCell(
+                                                          key: dateKey,
+                                                          value: entry.key,
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: receivedKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'received',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: dispatchedKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'issued',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: returnedKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'returned',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: lossKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'lost',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: damagedKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'damaged',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: stockInHandKey,
+                                                          value:
+                                                              _getCountFromAdditionalDetails(
+                                                            model,
+                                                            'inHand',
+                                                          ),
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: manualCountKey,
+                                                          value:
+                                                              (model.physicalCount ??
+                                                                      '0')
+                                                                  .toString(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                ],
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
               DigitCard(
                 margin: EdgeInsets.zero,
@@ -406,11 +656,6 @@ class _ReportDetailsContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            maxLines: 1,
-            style: Theme.of(context).textTheme.displayMedium,
-          ),
           const SizedBox(height: kPadding * 2),
           Flexible(
             child: ReadonlyDigitGrid(
@@ -440,12 +685,6 @@ class _NoReportContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          maxLines: 1,
-          textAlign: TextAlign.start,
-          style: theme.textTheme.displayMedium,
-        ),
         const SizedBox(
           height: kPadding * 2,
           width: double.maxFinite,

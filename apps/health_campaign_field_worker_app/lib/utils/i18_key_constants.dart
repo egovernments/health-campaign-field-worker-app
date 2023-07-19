@@ -749,6 +749,10 @@ class InventoryReportDetails {
     return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
   }
 
+  String get waybillLabel {
+    return 'INVENTORY_REPORT_DETAILS_WAYBILL_LABEL';
+  }
+
   String get receiptQuantityLabel {
     return 'INVENTORY_REPORT_DETAILS_RECEIPT_QUANTITY_LABEL';
   }
@@ -819,6 +823,10 @@ class InventoryReportDetails {
 
   String get noRecordsMessage {
     return 'INVENTORY_REPORT_DETAILS_NO_RECORDS_MESSAGE';
+  }
+
+  String get noFilterMessage {
+    return 'INVENTORY_REPORT_DETAILS_NO_FILTER_MESSAGE';
   }
 }
 
