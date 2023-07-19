@@ -20,7 +20,7 @@ class InventoryReportBloc
   InventoryReportBloc({
     required this.stockRepository,
     required this.stockReconciliationRepository,
-  }) : super(const InventoryReportLoadingState()) {
+  }) : super(const InventoryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadStockReconciliationDataEvent);
   }
@@ -30,6 +30,8 @@ class InventoryReportBloc
     InventoryReportEmitter emit,
   ) async {
     final reportType = event.reportType;
+    final facilityId = event.facilityId;
+    final productVariantId = event.productVariantId;
 
     if (reportType == InventoryReportType.reconciliation) {
       throw AppException(
@@ -69,6 +71,8 @@ class InventoryReportBloc
         transactionType: transactionType,
         transactionReason: transactionReason,
         tenantId: envConfig.variables.tenantId,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
       ),
     ))
         .where((element) => element.auditDetails != null);
@@ -111,6 +115,8 @@ class InventoryReportBloc
 class InventoryReportEvent with _$InventoryReportEvent {
   const factory InventoryReportEvent.loadStockData({
     required InventoryReportType reportType,
+    required String facilityId,
+    required String productVariantId,
   }) = InventoryReportLoadStockDataEvent;
 
   const factory InventoryReportEvent.loadStockReconciliationData() =
@@ -120,6 +126,7 @@ class InventoryReportEvent with _$InventoryReportEvent {
 @freezed
 class InventoryReportState with _$InventoryReportState {
   const factory InventoryReportState.loading() = InventoryReportLoadingState;
+  const factory InventoryReportState.empty() = InventoryReportEmptyState;
 
   const factory InventoryReportState.stock({
     @Default({}) Map<String, List<StockModel>> stockData,
