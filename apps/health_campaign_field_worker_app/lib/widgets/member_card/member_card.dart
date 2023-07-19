@@ -14,7 +14,8 @@ import '../action_card/action_card.dart';
 class MemberCard extends StatelessWidget {
   final String name;
   final String gender;
-  final int age;
+  final int years;
+  final int months;
   final bool isHead;
   final IndividualModel individual;
   final bool isDelivered;
@@ -28,8 +29,9 @@ class MemberCard extends StatelessWidget {
     required this.individual,
     required this.name,
     required this.gender,
-    required this.age,
+    required this.years,
     this.isHead = false,
+    this.months = 0,
     required this.localizations,
     required this.isDelivered,
     required this.setAsHeadAction,
@@ -83,7 +85,7 @@ class MemberCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          " | $age ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
+                          " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
                           style: theme.textTheme.bodyMedium,
                         ),
                       ),

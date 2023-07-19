@@ -73,9 +73,12 @@ class DigitTextFormField extends StatelessWidget {
                     focusColor: DigitTheme.instance.colors.cloudGray,
                     suffixIcon: suffix == null
                         ? null
-                        : InkWell(
-                            onTap: onTap,
-                            child: suffix,
+                        : Padding(
+                            padding: const EdgeInsets.all(kPadding),
+                            child: InkWell(
+                              onTap: onTap,
+                              child: suffix,
+                            ),
                           ),
                   )
                 : InputDecoration(
@@ -83,13 +86,16 @@ class DigitTextFormField extends StatelessWidget {
                     contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
                     suffixIconConstraints: const BoxConstraints(
                       maxHeight: 40,
-                      maxWidth: 40,
+                      maxWidth: 60,
                     ),
                     suffixIcon: suffix == null
                         ? null
-                        : InkWell(
-                            onTap: onTap,
-                            child: suffix,
+                        : Padding(
+                            padding: const EdgeInsets.all(kPadding),
+                            child: InkWell(
+                              onTap: onTap,
+                              child: suffix,
+                            ),
                           ),
                   )),
       );
