@@ -5,16 +5,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/entities/user.dart';
 
+// part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 part 'auth.freezed.dart';
 
 typedef AuthEmitter = Emitter<AuthState>;
 
+//Auth Bloc will be used to handle user authentication services
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LocalSecureStore localSecureStore;
   final AuthRepository authRepository;
@@ -29,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onAutoLogin);
   }
 
+  //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
   FutureOr<void> _onAutoLogin(
     AuthAutoLoginEvent event,
     AuthEmitter emit,
@@ -55,6 +56,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  //_onLogin event handles login of the user
+  // Here we set the authToken and loggedIn user details in local storage and allow the user to perform actions
   FutureOr<void> _onLogin(AuthLoginEvent event, AuthEmitter emit) async {
     emit(const AuthLoadingState());
 
@@ -91,6 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  //_onLogout event logs out the user and deletes the saved user details from local storage
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     try {
       emit(const AuthLoadingState());

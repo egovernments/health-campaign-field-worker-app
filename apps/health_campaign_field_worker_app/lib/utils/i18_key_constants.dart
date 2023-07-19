@@ -74,6 +74,10 @@ class Common {
   String get connectionLabel => 'CORE_COMMON_CONNECTION_LABEL';
 
   String get connectionContent => 'CORE_COMMON_CONNECTION_CONTENT';
+
+  String get coreCommonSkip => 'CORE_COMMON_SKIP';
+
+  String get coreCommonNext => 'CORE_COMMON_NEXT';
 }
 
 class Login {
