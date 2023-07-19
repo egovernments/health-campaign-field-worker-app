@@ -12,7 +12,6 @@ class DateConversions {
       if (kDebugMode) {
         print(e);
       }
-      //return error
     }
   }
 
@@ -31,14 +30,13 @@ class DateConversions {
       }
 
       return null;
-      //return e on console
     }
   }
 
-  static String getDateFromTimestamp(int timestamp) {
+  static String getDateFromTimestamp(int timestamp, {String? dateFormat}) {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
 
-    return DateFormat("dd/MM/yyyy").format(date);
+    return DateFormat(dateFormat ?? "dd/MM/yyyy").format(date);
   }
 
   static int dateToTimeStamp(String dateTime) {
@@ -72,6 +70,7 @@ class DateConversions {
   }
 
   static String getMonth(DateTime date) {
+    //Returns Month Abbreviation For eg. March will be returned as Mar
     try {
       return DateFormat.MMM().format(date);
     } catch (e) {
@@ -80,6 +79,7 @@ class DateConversions {
   }
 
   static String getDay(int timeInMillis) {
+    //Returns Day Abbreviation For eg. Sunday will be returned as Sun
     try {
       DateTime date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
 
