@@ -87,8 +87,7 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      final pgrServiceDefinitions =
-          await mdmsRepository.searchPGRServiceDefinitions(
+      final pgrServiceDefinitions = await mdmsRepository.searchPGRServiceDefinitions(
         envConfig.variables.mdmsApiPath,
         MdmsRequestModel(
           mdmsCriteria: MdmsCriteriaModel(
@@ -105,11 +104,7 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      await mdmsRepository.writeToAppConfigDB(
-        configResult,
-        pgrServiceDefinitions,
-        isar,
-      );
+      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar,);
 
       add(
         AppInitializationSetupEvent(
