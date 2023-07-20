@@ -219,6 +219,10 @@ class IndividualDetails {
 
   String get yearsHintText => 'YEARS_HINT_TEXT';
   String get monthsHintText => 'MONTHS_HINT_TEXT';
+
+  String get yearsErrorText => 'ERR_YEARS';
+
+  String get monthsErrorText => 'ERR_MONTHS';
 }
 
 class HouseholdLocation {

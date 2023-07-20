@@ -68,7 +68,7 @@ class MemberCard extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width / 2.5,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 8.0, top: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: Text(
                     name,
                     style: theme.textTheme.headlineMedium,
@@ -118,7 +118,7 @@ class MemberCard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2.5,
+            width: MediaQuery.of(context).size.width / 2.25,
             child: Row(
               children: [
                 Container(

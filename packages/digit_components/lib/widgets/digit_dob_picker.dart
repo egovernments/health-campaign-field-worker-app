@@ -13,7 +13,8 @@ class DigitDobPicker extends StatelessWidget {
   final String yearsHintLabel;
   final String monthsHintLabel;
   final String separatorLabel;
-  final String errorMessage;
+  final String yearsErrorMessage;
+  final String monthsErrorMessage;
 
   const DigitDobPicker({
     super.key,
@@ -25,7 +26,8 @@ class DigitDobPicker extends StatelessWidget {
     required this.yearsHintLabel,
     required this.monthsHintLabel,
     required this.separatorLabel,
-    required this.errorMessage,
+    required this.yearsErrorMessage,
+    required this.monthsErrorMessage,
   });
 
   @override
@@ -81,7 +83,7 @@ class DigitDobPicker extends StatelessWidget {
                             .toStringAsFixed(0);
                         return int.parse(value) <= 150
                             ? null
-                            : {errorMessage: true};
+                            : {yearsErrorMessage: true};
                       }
 
                       formControl.setValidators([requiredTrue]);
@@ -111,7 +113,7 @@ class DigitDobPicker extends StatelessWidget {
                             DateTime.now().difference(formControl.value).inDays;
                         int years = days ~/ 365;
                         int months = (days - (years * 365)) ~/ 30;
-                        return months <= 11 ? null : {errorMessage: true};
+                        return months <= 11 ? null : {monthsErrorMessage: true};
                       }
 
                       formControl.setValidators([requiredTrue]);
