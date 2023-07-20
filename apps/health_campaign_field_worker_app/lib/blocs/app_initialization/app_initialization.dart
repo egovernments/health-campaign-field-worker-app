@@ -87,8 +87,7 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      final pgrServiceDefinitions =
-          await mdmsRepository.searchPGRServiceDefinitions(
+      final pgrServiceDefinitions = await mdmsRepository.searchPGRServiceDefinitions(
         envConfig.variables.mdmsApiPath,
         MdmsRequestModel(
           mdmsCriteria: MdmsCriteriaModel(
