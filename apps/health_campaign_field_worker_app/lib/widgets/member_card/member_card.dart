@@ -118,7 +118,7 @@ class MemberCard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2.25,
+            width: MediaQuery.of(context).size.width / 1.8,
             child: Row(
               children: [
                 Container(

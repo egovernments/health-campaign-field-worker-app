@@ -81,7 +81,7 @@ class DigitDobPicker extends StatelessWidget {
                                 365)
                             .round()
                             .toStringAsFixed(0);
-                        return int.parse(value) <= 150
+                        return int.parse(value) <= 150 && int.parse(value) >= 0
                             ? null
                             : {yearsErrorMessage: true};
                       }
@@ -113,7 +113,9 @@ class DigitDobPicker extends StatelessWidget {
                             DateTime.now().difference(formControl.value).inDays;
                         int years = days ~/ 365;
                         int months = (days - (years * 365)) ~/ 30;
-                        return months <= 11 ? null : {monthsErrorMessage: true};
+                        return months <= 11 && months >= 0
+                            ? null
+                            : {monthsErrorMessage: true};
                       }
 
                       formControl.setValidators([requiredTrue]);
