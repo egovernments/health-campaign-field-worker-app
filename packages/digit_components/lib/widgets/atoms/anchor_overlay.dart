@@ -19,19 +19,20 @@ class AnchoredOverlay extends StatelessWidget {
   final String nextLabel;
 
   // Constructor for the AnchoredOverlay widget with required parameters
-  const AnchoredOverlay(
-      {super.key,
-      required this.showOverlay,
-      required this.child,
-      required this.description,
-      required this.paramKey,
-      required this.onTap,
-      required this.onSkip,
-      required this.position,
-      required this.childHeight,
-      required this.childWidth,
-      required this.skipLabel,
-      required this.nextLabel});
+  const AnchoredOverlay({
+    super.key,
+    required this.showOverlay,
+    required this.child,
+    required this.description,
+    required this.paramKey,
+    required this.onTap,
+    required this.onSkip,
+    required this.position,
+    required this.childHeight,
+    required this.childWidth,
+    required this.skipLabel,
+    required this.nextLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
