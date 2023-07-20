@@ -105,11 +105,7 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      await mdmsRepository.writeToAppConfigDB(
-        configResult,
-        pgrServiceDefinitions,
-        isar,
-      );
+      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar,);
 
       add(
         AppInitializationSetupEvent(
