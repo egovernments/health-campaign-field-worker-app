@@ -189,6 +189,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         _userId: FormControl<String>(
           value: 'distsupNihAP3',
           validators: [Validators.required],
+          value: 'wmgrNihAP1',
         ),
         _password: FormControl<String>(
           validators: [Validators.required],

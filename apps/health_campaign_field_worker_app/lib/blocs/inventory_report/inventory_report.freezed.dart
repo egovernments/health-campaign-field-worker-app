@@ -18,19 +18,25 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$InventoryReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(InventoryReportType reportType) loadStockData,
+    required TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)
+        loadStockData,
     required TResult Function() loadStockReconciliationData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryReportType reportType)? loadStockData,
+    TResult? Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult? Function()? loadStockReconciliationData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryReportType reportType)? loadStockData,
+    TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult Function()? loadStockReconciliationData,
     required TResult orElse(),
   }) =>
@@ -87,7 +93,10 @@ abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
           $Res Function(_$InventoryReportLoadStockDataEvent) then) =
       __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({InventoryReportType reportType});
+  $Res call(
+      {InventoryReportType reportType,
+      String facilityId,
+      String productVariantId});
 }
 
 /// @nodoc
@@ -104,12 +113,22 @@ class __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? reportType = null,
+    Object? facilityId = null,
+    Object? productVariantId = null,
   }) {
     return _then(_$InventoryReportLoadStockDataEvent(
       reportType: null == reportType
           ? _value.reportType
           : reportType // ignore: cast_nullable_to_non_nullable
               as InventoryReportType,
+      facilityId: null == facilityId
+          ? _value.facilityId
+          : facilityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      productVariantId: null == productVariantId
+          ? _value.productVariantId
+          : productVariantId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -118,14 +137,21 @@ class __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>
 
 class _$InventoryReportLoadStockDataEvent
     implements InventoryReportLoadStockDataEvent {
-  const _$InventoryReportLoadStockDataEvent({required this.reportType});
+  const _$InventoryReportLoadStockDataEvent(
+      {required this.reportType,
+      required this.facilityId,
+      required this.productVariantId});
 
   @override
   final InventoryReportType reportType;
+  @override
+  final String facilityId;
+  @override
+  final String productVariantId;
 
   @override
   String toString() {
-    return 'InventoryReportEvent.loadStockData(reportType: $reportType)';
+    return 'InventoryReportEvent.loadStockData(reportType: $reportType, facilityId: $facilityId, productVariantId: $productVariantId)';
   }
 
   @override
@@ -134,11 +160,16 @@ class _$InventoryReportLoadStockDataEvent
         (other.runtimeType == runtimeType &&
             other is _$InventoryReportLoadStockDataEvent &&
             (identical(other.reportType, reportType) ||
-                other.reportType == reportType));
+                other.reportType == reportType) &&
+            (identical(other.facilityId, facilityId) ||
+                other.facilityId == facilityId) &&
+            (identical(other.productVariantId, productVariantId) ||
+                other.productVariantId == productVariantId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, reportType);
+  int get hashCode =>
+      Object.hash(runtimeType, reportType, facilityId, productVariantId);
 
   @JsonKey(ignore: true)
   @override
@@ -151,30 +182,36 @@ class _$InventoryReportLoadStockDataEvent
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(InventoryReportType reportType) loadStockData,
+    required TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)
+        loadStockData,
     required TResult Function() loadStockReconciliationData,
   }) {
-    return loadStockData(reportType);
+    return loadStockData(reportType, facilityId, productVariantId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryReportType reportType)? loadStockData,
+    TResult? Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult? Function()? loadStockReconciliationData,
   }) {
-    return loadStockData?.call(reportType);
+    return loadStockData?.call(reportType, facilityId, productVariantId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryReportType reportType)? loadStockData,
+    TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult Function()? loadStockReconciliationData,
     required TResult orElse(),
   }) {
     if (loadStockData != null) {
-      return loadStockData(reportType);
+      return loadStockData(reportType, facilityId, productVariantId);
     }
     return orElse();
   }
@@ -219,10 +256,14 @@ class _$InventoryReportLoadStockDataEvent
 abstract class InventoryReportLoadStockDataEvent
     implements InventoryReportEvent {
   const factory InventoryReportLoadStockDataEvent(
-          {required final InventoryReportType reportType}) =
+          {required final InventoryReportType reportType,
+          required final String facilityId,
+          required final String productVariantId}) =
       _$InventoryReportLoadStockDataEvent;
 
   InventoryReportType get reportType;
+  String get facilityId;
+  String get productVariantId;
   @JsonKey(ignore: true)
   _$$InventoryReportLoadStockDataEventCopyWith<
           _$InventoryReportLoadStockDataEvent>
@@ -275,7 +316,9 @@ class _$InventoryReportLoadStockReconciliationDataEvent
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(InventoryReportType reportType) loadStockData,
+    required TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)
+        loadStockData,
     required TResult Function() loadStockReconciliationData,
   }) {
     return loadStockReconciliationData();
@@ -284,7 +327,9 @@ class _$InventoryReportLoadStockReconciliationDataEvent
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryReportType reportType)? loadStockData,
+    TResult? Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult? Function()? loadStockReconciliationData,
   }) {
     return loadStockReconciliationData?.call();
@@ -293,7 +338,9 @@ class _$InventoryReportLoadStockReconciliationDataEvent
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryReportType reportType)? loadStockData,
+    TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
     TResult Function()? loadStockReconciliationData,
     required TResult orElse(),
   }) {
@@ -351,6 +398,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
@@ -359,6 +407,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -367,6 +416,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -376,6 +426,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InventoryReportLoadingState value) loading,
+    required TResult Function(InventoryReportEmptyState value) empty,
     required TResult Function(InventoryReportStockState value) stock,
     required TResult Function(InventoryReportStockReconciliationState value)
         stockReconciliation,
@@ -384,6 +435,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InventoryReportLoadingState value)? loading,
+    TResult? Function(InventoryReportEmptyState value)? empty,
     TResult? Function(InventoryReportStockState value)? stock,
     TResult? Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -392,6 +444,7 @@ mixin _$InventoryReportState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InventoryReportLoadingState value)? loading,
+    TResult Function(InventoryReportEmptyState value)? empty,
     TResult Function(InventoryReportStockState value)? stock,
     TResult Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -462,6 +515,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
@@ -473,6 +527,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -484,6 +539,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -499,6 +555,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InventoryReportLoadingState value) loading,
+    required TResult Function(InventoryReportEmptyState value) empty,
     required TResult Function(InventoryReportStockState value) stock,
     required TResult Function(InventoryReportStockReconciliationState value)
         stockReconciliation,
@@ -510,6 +567,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InventoryReportLoadingState value)? loading,
+    TResult? Function(InventoryReportEmptyState value)? empty,
     TResult? Function(InventoryReportStockState value)? stock,
     TResult? Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -521,6 +579,7 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InventoryReportLoadingState value)? loading,
+    TResult Function(InventoryReportEmptyState value)? empty,
     TResult Function(InventoryReportStockState value)? stock,
     TResult Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -535,6 +594,129 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
 
 abstract class InventoryReportLoadingState implements InventoryReportState {
   const factory InventoryReportLoadingState() = _$InventoryReportLoadingState;
+}
+
+/// @nodoc
+abstract class _$$InventoryReportEmptyStateCopyWith<$Res> {
+  factory _$$InventoryReportEmptyStateCopyWith(
+          _$InventoryReportEmptyState value,
+          $Res Function(_$InventoryReportEmptyState) then) =
+      __$$InventoryReportEmptyStateCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$InventoryReportEmptyStateCopyWithImpl<$Res>
+    extends _$InventoryReportStateCopyWithImpl<$Res,
+        _$InventoryReportEmptyState>
+    implements _$$InventoryReportEmptyStateCopyWith<$Res> {
+  __$$InventoryReportEmptyStateCopyWithImpl(_$InventoryReportEmptyState _value,
+      $Res Function(_$InventoryReportEmptyState) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$InventoryReportEmptyState implements InventoryReportEmptyState {
+  const _$InventoryReportEmptyState();
+
+  @override
+  String toString() {
+    return 'InventoryReportState.empty()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InventoryReportEmptyState);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function() empty,
+    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<StockReconciliationModel>> data)
+        stockReconciliation,
+  }) {
+    return empty();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function()? empty,
+    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<StockReconciliationModel>> data)?
+        stockReconciliation,
+  }) {
+    return empty?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function()? empty,
+    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<StockReconciliationModel>> data)?
+        stockReconciliation,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(InventoryReportLoadingState value) loading,
+    required TResult Function(InventoryReportEmptyState value) empty,
+    required TResult Function(InventoryReportStockState value) stock,
+    required TResult Function(InventoryReportStockReconciliationState value)
+        stockReconciliation,
+  }) {
+    return empty(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InventoryReportLoadingState value)? loading,
+    TResult? Function(InventoryReportEmptyState value)? empty,
+    TResult? Function(InventoryReportStockState value)? stock,
+    TResult? Function(InventoryReportStockReconciliationState value)?
+        stockReconciliation,
+  }) {
+    return empty?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(InventoryReportLoadingState value)? loading,
+    TResult Function(InventoryReportEmptyState value)? empty,
+    TResult Function(InventoryReportStockState value)? stock,
+    TResult Function(InventoryReportStockReconciliationState value)?
+        stockReconciliation,
+    required TResult orElse(),
+  }) {
+    if (empty != null) {
+      return empty(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class InventoryReportEmptyState implements InventoryReportState {
+  const factory InventoryReportEmptyState() = _$InventoryReportEmptyState;
 }
 
 /// @nodoc
@@ -614,6 +796,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
@@ -625,6 +808,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -636,6 +820,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -651,6 +836,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InventoryReportLoadingState value) loading,
+    required TResult Function(InventoryReportEmptyState value) empty,
     required TResult Function(InventoryReportStockState value) stock,
     required TResult Function(InventoryReportStockReconciliationState value)
         stockReconciliation,
@@ -662,6 +848,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InventoryReportLoadingState value)? loading,
+    TResult? Function(InventoryReportEmptyState value)? empty,
     TResult? Function(InventoryReportStockState value)? stock,
     TResult? Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -673,6 +860,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InventoryReportLoadingState value)? loading,
+    TResult Function(InventoryReportEmptyState value)? empty,
     TResult Function(InventoryReportStockState value)? stock,
     TResult Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -775,6 +963,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
+    required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
@@ -786,6 +975,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
+    TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -797,6 +987,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
+    TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
@@ -812,6 +1003,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InventoryReportLoadingState value) loading,
+    required TResult Function(InventoryReportEmptyState value) empty,
     required TResult Function(InventoryReportStockState value) stock,
     required TResult Function(InventoryReportStockReconciliationState value)
         stockReconciliation,
@@ -823,6 +1015,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InventoryReportLoadingState value)? loading,
+    TResult? Function(InventoryReportEmptyState value)? empty,
     TResult? Function(InventoryReportStockState value)? stock,
     TResult? Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,
@@ -834,6 +1027,7 @@ class _$InventoryReportStockReconciliationState
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InventoryReportLoadingState value)? loading,
+    TResult Function(InventoryReportEmptyState value)? empty,
     TResult Function(InventoryReportStockState value)? stock,
     TResult Function(InventoryReportStockReconciliationState value)?
         stockReconciliation,

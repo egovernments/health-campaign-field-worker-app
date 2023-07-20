@@ -31,6 +31,10 @@ class Common {
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
+  String get coreCommonName => 'CORE_COMMON_NAME';
+
+  String get coreCommonEmailId => 'CORE_COMMON_EMAIL_ID';
+
   String get coreCommonGender => 'CORE_COMMON_GENDER';
 
   String get coreCommonMobileNumber => 'CORE_COMMON_MOBILE_NUMBER';
@@ -46,6 +50,8 @@ class Common {
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
+
+  String get coreCommonProfile => 'CORE_COMMON_PROFILE';
 
   String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
 
@@ -64,6 +70,10 @@ class Common {
   String get coreCommonDataSyncFailed => 'CORE_COMMON_DATA_SYNC_FAILED';
 
   String get coreCommonDataSyncRetry => 'CORE_COMMON_DATA_SYNC_RETRY';
+
+  String get connectionLabel => 'CORE_COMMON_CONNECTION_LABEL';
+
+  String get connectionContent => 'CORE_COMMON_CONNECTION_CONTENT';
 }
 
 class Login {
@@ -200,6 +210,9 @@ class IndividualDetails {
 
   String get mobileNumberInvalidFormatValidationMessage =>
       'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
+
+  String get yearsHintText => 'YEARS_HINT_TEXT';
+  String get monthsHintText => 'MONTHS_HINT_TEXT';
 }
 
 class HouseholdLocation {
@@ -311,6 +324,9 @@ class MemberCard {
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
 
   String get heightLabel => 'HEIGHT_LABEL';
+
+  String get deliverDetailsMonthsText =>
+      'MEMBER_CARD_DELIVER_DETAILS_MONTHS_TEXT';
 }
 
 class DeliverIntervention {
@@ -739,6 +755,10 @@ class InventoryReportDetails {
     return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
   }
 
+  String get waybillLabel {
+    return 'INVENTORY_REPORT_DETAILS_WAYBILL_LABEL';
+  }
+
   String get receiptQuantityLabel {
     return 'INVENTORY_REPORT_DETAILS_RECEIPT_QUANTITY_LABEL';
   }
@@ -809,6 +829,10 @@ class InventoryReportDetails {
 
   String get noRecordsMessage {
     return 'INVENTORY_REPORT_DETAILS_NO_RECORDS_MESSAGE';
+  }
+
+  String get noFilterMessage {
+    return 'INVENTORY_REPORT_DETAILS_NO_FILTER_MESSAGE';
   }
 }
 

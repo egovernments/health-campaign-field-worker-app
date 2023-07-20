@@ -327,6 +327,12 @@ class _IndividualDetailsPageState
                             ageFieldLabel: localizations.translate(
                               i18.individualDetails.ageLabelText,
                             ),
+                            yearsHintLabel: localizations.translate(
+                              i18.individualDetails.yearsHintText,
+                            ),
+                            monthsHintLabel: localizations.translate(
+                              i18.individualDetails.monthsHintText,
+                            ),
                             separatorLabel: localizations.translate(
                               i18.individualDetails.separatorLabelText,
                             ),
