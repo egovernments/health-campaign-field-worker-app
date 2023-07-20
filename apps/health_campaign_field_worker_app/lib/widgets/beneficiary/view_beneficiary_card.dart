@@ -125,7 +125,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                         ) ??
                         DateTime.now(),
                     false,
-                  )}, ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DateConversions.getYearsAndMonthsFromDateTime(
+                  )} ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DateConversions.getYearsAndMonthsFromDateTime(
                     DateConversions.getFormattedDateToDateTime(
                           e.dateOfBirth!,
                         ) ??
