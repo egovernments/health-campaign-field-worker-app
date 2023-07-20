@@ -16,6 +16,7 @@ import '../../blocs/product_variant/product_variant.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/date_conversions.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -358,10 +359,26 @@ class _DeliverInterventionPageState
                                         return '';
                                       }
 
-                                      final date =
-                                          DateFormat('dd/MM/yyyy').parse(dob);
+                                      final int years = DateConversions
+                                          .getYearsAndMonthsFromDateTime(
+                                        DateConversions
+                                                .getFormattedDateToDateTime(
+                                              dob,
+                                            ) ??
+                                            DateTime.now(),
+                                        false,
+                                      );
+                                      final int months = DateConversions
+                                          .getYearsAndMonthsFromDateTime(
+                                        DateConversions
+                                                .getFormattedDateToDateTime(
+                                              dob,
+                                            ) ??
+                                            DateTime.now(),
+                                        true,
+                                      );
 
-                                      return date.age.toString();
+                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonGender,

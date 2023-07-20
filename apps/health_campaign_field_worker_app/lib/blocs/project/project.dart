@@ -12,6 +12,7 @@ import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/user.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 

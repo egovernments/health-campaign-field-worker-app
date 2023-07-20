@@ -2,12 +2,13 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
+import '../../blocs/user/user.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -60,6 +61,49 @@ class SideBar extends StatelessWidget {
               context.router.replace(HomeRoute());
             },
           ),
+          BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
+            return DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonProfile,
+              ),
+              icon: Icons.person,
+              onPressed: () async {
+                final connectivityResult =
+                    await (Connectivity().checkConnectivity());
+                final isOnline =
+                    connectivityResult == ConnectivityResult.wifi ||
+                        connectivityResult == ConnectivityResult.mobile;
+
+                if (isOnline) {
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(ProfileRoute());
+                  }
+                } else {
+                  if (context.mounted) {
+                    DigitDialog.show(
+                      context,
+                      options: DigitDialogOptions(
+                        titleText: AppLocalizations.of(context).translate(
+                          i18.common.connectionLabel,
+                        ),
+                        contentText: AppLocalizations.of(context).translate(
+                          i18.common.connectionContent,
+                        ),
+                        primaryAction: DigitDialogActions(
+                          label: AppLocalizations.of(context).translate(
+                            i18.common.coreCommonOk,
+                          ),
+                          action: (ctx) =>
+                              Navigator.of(context, rootNavigator: true).pop(),
+                        ),
+                      ),
+                    );
+                  }
+                }
+              },
+            );
+          }),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
             builder: (context, state) {
               if (state is! AppInitialized) return const Offstage();

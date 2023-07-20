@@ -79,13 +79,16 @@ abstract class RemoteRepository<D extends EntityModel,
               'tenantId': envConfig.variables.tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
-            data: {
-              isPlural
-                  ? entityNamePlural
-                  : entityName == 'ServiceDefinition'
-                      ? 'ServiceDefinitionCriteria'
-                      : entityName: isPlural ? [query.toMap()] : query.toMap(),
-            },
+            data: entityName == 'User'
+                ? query.toMap()
+                : {
+                    isPlural
+                            ? entityNamePlural
+                            : entityName == 'ServiceDefinition'
+                                ? 'ServiceDefinitionCriteria'
+                                : entityName:
+                        isPlural ? [query.toMap()] : query.toMap(),
+                  },
           );
         },
       );
@@ -119,6 +122,7 @@ abstract class RemoteRepository<D extends EntityModel,
         (isSearchResponsePlural || entityName == 'ServiceDefinition')
             ? entityNamePlural
             : entityName];
+
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -228,10 +232,12 @@ abstract class RemoteRepository<D extends EntityModel,
       future: () async {
         return await dio.post(
           updatePath,
-          data: {
-            entityName: [entity.toMap()],
-            "apiOperation": "UPDATE",
-          },
+          data: entityName == 'User'
+              ? {entityName: entity.toMap()}
+              : {
+                  entityName: [entity.toMap()],
+                  "apiOperation": "UPDATE",
+                },
         );
       },
     );

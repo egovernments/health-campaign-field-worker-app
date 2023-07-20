@@ -44,6 +44,7 @@ class UserRequestModel with _$UserRequestModel {
     bool? active,
     String? tenantId,
     String? permanentCity,
+    String? gender,
     @Default([]) List<UserRoleModel> roles,
   }) = _UserRequestModel;
 

@@ -48,7 +48,7 @@ import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-
+import '../pages/profile.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -73,6 +73,8 @@ part 'app_router.gr.dart';
       path: '/',
       children: [
         AutoRoute(page: HomePage, path: 'home'),
+        AutoRoute(page: ProfilePage, path: 'profile'),
+
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
 
         /// Beneficiary Registration

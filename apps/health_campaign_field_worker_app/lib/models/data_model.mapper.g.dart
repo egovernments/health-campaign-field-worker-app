@@ -37,6 +37,7 @@ import 'entities/task.dart';
 import 'entities/task_resource.dart';
 import 'entities/transaction_reason.dart';
 import 'entities/transaction_type.dart';
+import 'entities/user.dart';
 import 'oplog/oplog_entry.dart';
 import 'pgr_complaints/pgr_address.dart';
 import 'pgr_complaints/pgr_complaints.dart';
@@ -136,6 +137,9 @@ var _mappers = <BaseMapper>{
   TaskResourceSearchModelMapper._(),
   TaskResourceModelMapper._(),
   TaskResourceAdditionalFieldsMapper._(),
+  UserSearchModelMapper._(),
+  UserModelMapper._(),
+  UserAdditionalFieldsMapper._(),
   OpLogEntryMapper._(),
   AdditionalIdMapper._(),
   PgrAddressModelMapper._(),
@@ -207,6 +211,7 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is TargetModel) { return TargetModelMapper._().encode(v); }
     else if (v is TaskModel) { return TaskModelMapper._().encode(v); }
     else if (v is TaskResourceModel) { return TaskResourceModelMapper._().encode(v); }
+    else if (v is UserModel) { return UserModelMapper._().encode(v); }
     else if (v is PgrAddressModel) { return PgrAddressModelMapper._().encode(v); }
     else if (v is PgrComplaintModel) { return PgrComplaintModelMapper._().encode(v); }
     else if (v is PgrComplainantModel) { return PgrComplainantModelMapper._().encode(v); }
@@ -297,6 +302,7 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is TargetSearchModel) { return TargetSearchModelMapper._().encode(v); }
     else if (v is TaskSearchModel) { return TaskSearchModelMapper._().encode(v); }
     else if (v is TaskResourceSearchModel) { return TaskResourceSearchModelMapper._().encode(v); }
+    else if (v is UserSearchModel) { return UserSearchModelMapper._().encode(v); }
     else if (v is PgrServiceSearchModel) { return PgrServiceSearchModelMapper._().encode(v); }
     else { return toMap(v); }
   }
@@ -350,6 +356,7 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is TargetAdditionalFields) { return TargetAdditionalFieldsMapper._().encode(v); }
     else if (v is TaskAdditionalFields) { return TaskAdditionalFieldsMapper._().encode(v); }
     else if (v is TaskResourceAdditionalFields) { return TaskResourceAdditionalFieldsMapper._().encode(v); }
+    else if (v is UserAdditionalFields) { return UserAdditionalFieldsMapper._().encode(v); }
     else { return toMap(v); }
   }
   Map<String, dynamic> toMap(AdditionalFields a) => {'schema': Mapper.i.$enc(a.schema, 'schema'), 'version': Mapper.i.$enc(a.version, 'version'), 'fields': Mapper.i.$enc(a.fields, 'fields')};
@@ -3624,6 +3631,120 @@ class _TaskResourceAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<TaskRes
 
   @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(TaskResourceAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
+}
+
+class UserSearchModelMapper extends BaseMapper<UserSearchModel> {
+  UserSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  UserSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  UserSearchModel fromMap(Map<String, dynamic> map) => UserSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), userName: Mapper.i.$getOpt(map, 'userName'), uuid: Mapper.i.$getOpt(map, 'uuid'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+
+  @override Function get encoder => (UserSearchModel v) => encode(v);
+  dynamic encode(UserSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(UserSearchModel u) => {if (Mapper.i.$enc(u.id, 'id') != null) 'id': Mapper.i.$enc(u.id, 'id'), if (Mapper.i.$enc(u.userName, 'userName') != null) 'userName': Mapper.i.$enc(u.userName, 'userName'), if (Mapper.i.$enc(u.uuid, 'uuid') != null) 'uuid': Mapper.i.$enc(u.uuid, 'uuid'), if (Mapper.i.$enc(u.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(u.boundaryCode, 'boundaryCode')};
+
+  @override String stringify(UserSearchModel self) => 'UserSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, userName: ${Mapper.asString(self.userName)}, uuid: ${Mapper.asString(self.uuid)})';
+  @override int hash(UserSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.userName) ^ Mapper.hash(self.uuid);
+  @override bool equals(UserSearchModel self, UserSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.userName, other.userName) && Mapper.isEqual(self.uuid, other.uuid);
+
+  @override Function get typeFactory => (f) => f<UserSearchModel>();
+}
+
+extension UserSearchModelMapperExtension  on UserSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  UserSearchModelCopyWith<UserSearchModel> get copyWith => UserSearchModelCopyWith(this, $identity);
+}
+
+abstract class UserSearchModelCopyWith<$R> {
+  factory UserSearchModelCopyWith(UserSearchModel value, Then<UserSearchModel, $R> then) = _UserSearchModelCopyWithImpl<$R>;
+  $R call({String? id, String? userName, List<String>? uuid, String? boundaryCode});
+  $R apply(UserSearchModel Function(UserSearchModel) transform);
+}
+
+class _UserSearchModelCopyWithImpl<$R> extends BaseCopyWith<UserSearchModel, $R> implements UserSearchModelCopyWith<$R> {
+  _UserSearchModelCopyWithImpl(UserSearchModel value, Then<UserSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? userName = $none, Object? uuid = $none, Object? boundaryCode = $none}) => $then(UserSearchModel.ignoreDeleted(id: or(id, $value.id), userName: or(userName, $value.userName), uuid: or(uuid, $value.uuid), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+}
+
+class UserModelMapper extends BaseMapper<UserModel> {
+  UserModelMapper._();
+
+  @override Function get decoder => decode;
+  UserModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  UserModel fromMap(Map<String, dynamic> map) => UserModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), userName: Mapper.i.$getOpt(map, 'userName'), salutation: Mapper.i.$getOpt(map, 'salutation'), name: Mapper.i.$getOpt(map, 'name'), gender: Mapper.i.$getOpt(map, 'gender'), mobileNumber: Mapper.i.$getOpt(map, 'mobileNumber'), emailId: Mapper.i.$getOpt(map, 'emailId'), altContactNumber: Mapper.i.$getOpt(map, 'altContactNumber'), pan: Mapper.i.$getOpt(map, 'pan'), aadhaarNumber: Mapper.i.$getOpt(map, 'aadhaarNumber'), permanentAddress: Mapper.i.$getOpt(map, 'permanentAddress'), permanentCity: Mapper.i.$getOpt(map, 'permanentCity'), permanentPinCode: Mapper.i.$getOpt(map, 'permanentPinCode'), correspondenceAddress: Mapper.i.$getOpt(map, 'correspondenceAddress'), correspondenceCity: Mapper.i.$getOpt(map, 'correspondenceCity'), correspondencePinCode: Mapper.i.$getOpt(map, 'correspondencePinCode'), alternatemobilenumber: Mapper.i.$getOpt(map, 'alternatemobilenumber'), active: Mapper.i.$getOpt(map, 'active'), locale: Mapper.i.$getOpt(map, 'locale'), type: Mapper.i.$getOpt(map, 'type'), accountLocked: Mapper.i.$getOpt(map, 'accountLocked'), accountLockedDate: Mapper.i.$getOpt(map, 'accountLockedDate'), fatherOrHusbandName: Mapper.i.$getOpt(map, 'fatherOrHusbandName'), relationship: Mapper.i.$getOpt(map, 'relationship'), signature: Mapper.i.$getOpt(map, 'signature'), bloodGroup: Mapper.i.$getOpt(map, 'bloodGroup'), photo: Mapper.i.$getOpt(map, 'photo'), identificationMark: Mapper.i.$getOpt(map, 'identificationMark'), createdBy: Mapper.i.$getOpt(map, 'createdBy'), lastModifiedBy: Mapper.i.$getOpt(map, 'lastModifiedBy'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), uuid: Mapper.i.$getOpt(map, 'uuid'), createdDate: Mapper.i.$getOpt(map, 'createdDate'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (UserModel v) => encode(v);
+  dynamic encode(UserModel v) => toMap(v);
+  Map<String, dynamic> toMap(UserModel u) => {if (Mapper.i.$enc(u.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(u.additionalFields, 'additionalFields'), if (Mapper.i.$enc(u.id, 'id') != null) 'id': Mapper.i.$enc(u.id, 'id'), if (Mapper.i.$enc(u.userName, 'userName') != null) 'userName': Mapper.i.$enc(u.userName, 'userName'), if (Mapper.i.$enc(u.salutation, 'salutation') != null) 'salutation': Mapper.i.$enc(u.salutation, 'salutation'), if (Mapper.i.$enc(u.name, 'name') != null) 'name': Mapper.i.$enc(u.name, 'name'), if (Mapper.i.$enc(u.gender, 'gender') != null) 'gender': Mapper.i.$enc(u.gender, 'gender'), if (Mapper.i.$enc(u.mobileNumber, 'mobileNumber') != null) 'mobileNumber': Mapper.i.$enc(u.mobileNumber, 'mobileNumber'), if (Mapper.i.$enc(u.emailId, 'emailId') != null) 'emailId': Mapper.i.$enc(u.emailId, 'emailId'), if (Mapper.i.$enc(u.altContactNumber, 'altContactNumber') != null) 'altContactNumber': Mapper.i.$enc(u.altContactNumber, 'altContactNumber'), if (Mapper.i.$enc(u.pan, 'pan') != null) 'pan': Mapper.i.$enc(u.pan, 'pan'), if (Mapper.i.$enc(u.aadhaarNumber, 'aadhaarNumber') != null) 'aadhaarNumber': Mapper.i.$enc(u.aadhaarNumber, 'aadhaarNumber'), if (Mapper.i.$enc(u.permanentAddress, 'permanentAddress') != null) 'permanentAddress': Mapper.i.$enc(u.permanentAddress, 'permanentAddress'), if (Mapper.i.$enc(u.permanentCity, 'permanentCity') != null) 'permanentCity': Mapper.i.$enc(u.permanentCity, 'permanentCity'), if (Mapper.i.$enc(u.permanentPinCode, 'permanentPinCode') != null) 'permanentPinCode': Mapper.i.$enc(u.permanentPinCode, 'permanentPinCode'), if (Mapper.i.$enc(u.correspondenceAddress, 'correspondenceAddress') != null) 'correspondenceAddress': Mapper.i.$enc(u.correspondenceAddress, 'correspondenceAddress'), if (Mapper.i.$enc(u.correspondenceCity, 'correspondenceCity') != null) 'correspondenceCity': Mapper.i.$enc(u.correspondenceCity, 'correspondenceCity'), if (Mapper.i.$enc(u.correspondencePinCode, 'correspondencePinCode') != null) 'correspondencePinCode': Mapper.i.$enc(u.correspondencePinCode, 'correspondencePinCode'), if (Mapper.i.$enc(u.alternatemobilenumber, 'alternatemobilenumber') != null) 'alternatemobilenumber': Mapper.i.$enc(u.alternatemobilenumber, 'alternatemobilenumber'), if (Mapper.i.$enc(u.active, 'active') != null) 'active': Mapper.i.$enc(u.active, 'active'), if (Mapper.i.$enc(u.locale, 'locale') != null) 'locale': Mapper.i.$enc(u.locale, 'locale'), if (Mapper.i.$enc(u.type, 'type') != null) 'type': Mapper.i.$enc(u.type, 'type'), if (Mapper.i.$enc(u.accountLocked, 'accountLocked') != null) 'accountLocked': Mapper.i.$enc(u.accountLocked, 'accountLocked'), if (Mapper.i.$enc(u.accountLockedDate, 'accountLockedDate') != null) 'accountLockedDate': Mapper.i.$enc(u.accountLockedDate, 'accountLockedDate'), if (Mapper.i.$enc(u.fatherOrHusbandName, 'fatherOrHusbandName') != null) 'fatherOrHusbandName': Mapper.i.$enc(u.fatherOrHusbandName, 'fatherOrHusbandName'), if (Mapper.i.$enc(u.relationship, 'relationship') != null) 'relationship': Mapper.i.$enc(u.relationship, 'relationship'), if (Mapper.i.$enc(u.signature, 'signature') != null) 'signature': Mapper.i.$enc(u.signature, 'signature'), if (Mapper.i.$enc(u.bloodGroup, 'bloodGroup') != null) 'bloodGroup': Mapper.i.$enc(u.bloodGroup, 'bloodGroup'), if (Mapper.i.$enc(u.photo, 'photo') != null) 'photo': Mapper.i.$enc(u.photo, 'photo'), if (Mapper.i.$enc(u.identificationMark, 'identificationMark') != null) 'identificationMark': Mapper.i.$enc(u.identificationMark, 'identificationMark'), if (Mapper.i.$enc(u.createdBy, 'createdBy') != null) 'createdBy': Mapper.i.$enc(u.createdBy, 'createdBy'), if (Mapper.i.$enc(u.lastModifiedBy, 'lastModifiedBy') != null) 'lastModifiedBy': Mapper.i.$enc(u.lastModifiedBy, 'lastModifiedBy'), if (Mapper.i.$enc(u.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(u.tenantId, 'tenantId'), if (Mapper.i.$enc(u.uuid, 'uuid') != null) 'uuid': Mapper.i.$enc(u.uuid, 'uuid'), if (Mapper.i.$enc(u.createdDate, 'createdDate') != null) 'createdDate': Mapper.i.$enc(u.createdDate, 'createdDate'), if (Mapper.i.$enc(u.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(u.rowVersion, 'rowVersion'), if (Mapper.i.$enc(u.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(u.auditDetails, 'auditDetails'), if (Mapper.i.$enc(u.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(u.isDeleted, 'isDeleted')};
+
+  @override String stringify(UserModel self) => 'UserModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, id: ${Mapper.asString(self.id)}, userName: ${Mapper.asString(self.userName)}, salutation: ${Mapper.asString(self.salutation)}, name: ${Mapper.asString(self.name)}, gender: ${Mapper.asString(self.gender)}, mobileNumber: ${Mapper.asString(self.mobileNumber)}, emailId: ${Mapper.asString(self.emailId)}, altContactNumber: ${Mapper.asString(self.altContactNumber)}, pan: ${Mapper.asString(self.pan)}, aadhaarNumber: ${Mapper.asString(self.aadhaarNumber)}, permanentAddress: ${Mapper.asString(self.permanentAddress)}, permanentCity: ${Mapper.asString(self.permanentCity)}, permanentPinCode: ${Mapper.asString(self.permanentPinCode)}, correspondenceAddress: ${Mapper.asString(self.correspondenceAddress)}, correspondenceCity: ${Mapper.asString(self.correspondenceCity)}, correspondencePinCode: ${Mapper.asString(self.correspondencePinCode)}, alternatemobilenumber: ${Mapper.asString(self.alternatemobilenumber)}, active: ${Mapper.asString(self.active)}, locale: ${Mapper.asString(self.locale)}, type: ${Mapper.asString(self.type)}, accountLocked: ${Mapper.asString(self.accountLocked)}, accountLockedDate: ${Mapper.asString(self.accountLockedDate)}, fatherOrHusbandName: ${Mapper.asString(self.fatherOrHusbandName)}, relationship: ${Mapper.asString(self.relationship)}, signature: ${Mapper.asString(self.signature)}, bloodGroup: ${Mapper.asString(self.bloodGroup)}, photo: ${Mapper.asString(self.photo)}, identificationMark: ${Mapper.asString(self.identificationMark)}, createdBy: ${Mapper.asString(self.createdBy)}, lastModifiedBy: ${Mapper.asString(self.lastModifiedBy)}, tenantId: ${Mapper.asString(self.tenantId)}, uuid: ${Mapper.asString(self.uuid)}, createdDate: ${Mapper.asString(self.createdDate)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(UserModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.userName) ^ Mapper.hash(self.salutation) ^ Mapper.hash(self.name) ^ Mapper.hash(self.gender) ^ Mapper.hash(self.mobileNumber) ^ Mapper.hash(self.emailId) ^ Mapper.hash(self.altContactNumber) ^ Mapper.hash(self.pan) ^ Mapper.hash(self.aadhaarNumber) ^ Mapper.hash(self.permanentAddress) ^ Mapper.hash(self.permanentCity) ^ Mapper.hash(self.permanentPinCode) ^ Mapper.hash(self.correspondenceAddress) ^ Mapper.hash(self.correspondenceCity) ^ Mapper.hash(self.correspondencePinCode) ^ Mapper.hash(self.alternatemobilenumber) ^ Mapper.hash(self.active) ^ Mapper.hash(self.locale) ^ Mapper.hash(self.type) ^ Mapper.hash(self.accountLocked) ^ Mapper.hash(self.accountLockedDate) ^ Mapper.hash(self.fatherOrHusbandName) ^ Mapper.hash(self.relationship) ^ Mapper.hash(self.signature) ^ Mapper.hash(self.bloodGroup) ^ Mapper.hash(self.photo) ^ Mapper.hash(self.identificationMark) ^ Mapper.hash(self.createdBy) ^ Mapper.hash(self.lastModifiedBy) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.uuid) ^ Mapper.hash(self.createdDate) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(UserModel self, UserModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.userName, other.userName) && Mapper.isEqual(self.salutation, other.salutation) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.gender, other.gender) && Mapper.isEqual(self.mobileNumber, other.mobileNumber) && Mapper.isEqual(self.emailId, other.emailId) && Mapper.isEqual(self.altContactNumber, other.altContactNumber) && Mapper.isEqual(self.pan, other.pan) && Mapper.isEqual(self.aadhaarNumber, other.aadhaarNumber) && Mapper.isEqual(self.permanentAddress, other.permanentAddress) && Mapper.isEqual(self.permanentCity, other.permanentCity) && Mapper.isEqual(self.permanentPinCode, other.permanentPinCode) && Mapper.isEqual(self.correspondenceAddress, other.correspondenceAddress) && Mapper.isEqual(self.correspondenceCity, other.correspondenceCity) && Mapper.isEqual(self.correspondencePinCode, other.correspondencePinCode) && Mapper.isEqual(self.alternatemobilenumber, other.alternatemobilenumber) && Mapper.isEqual(self.active, other.active) && Mapper.isEqual(self.locale, other.locale) && Mapper.isEqual(self.type, other.type) && Mapper.isEqual(self.accountLocked, other.accountLocked) && Mapper.isEqual(self.accountLockedDate, other.accountLockedDate) && Mapper.isEqual(self.fatherOrHusbandName, other.fatherOrHusbandName) && Mapper.isEqual(self.relationship, other.relationship) && Mapper.isEqual(self.signature, other.signature) && Mapper.isEqual(self.bloodGroup, other.bloodGroup) && Mapper.isEqual(self.photo, other.photo) && Mapper.isEqual(self.identificationMark, other.identificationMark) && Mapper.isEqual(self.createdBy, other.createdBy) && Mapper.isEqual(self.lastModifiedBy, other.lastModifiedBy) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.uuid, other.uuid) && Mapper.isEqual(self.createdDate, other.createdDate) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<UserModel>();
+}
+
+extension UserModelMapperExtension  on UserModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  UserModelCopyWith<UserModel> get copyWith => UserModelCopyWith(this, $identity);
+}
+
+abstract class UserModelCopyWith<$R> {
+  factory UserModelCopyWith(UserModel value, Then<UserModel, $R> then) = _UserModelCopyWithImpl<$R>;
+  UserAdditionalFieldsCopyWith<$R>? get additionalFields;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  $R call({UserAdditionalFields? additionalFields, String? id, String? userName, String? salutation, String? name, String? gender, String? mobileNumber, String? emailId, String? altContactNumber, String? pan, String? aadhaarNumber, String? permanentAddress, String? permanentCity, String? permanentPinCode, String? correspondenceAddress, String? correspondenceCity, String? correspondencePinCode, String? alternatemobilenumber, bool? active, String? locale, String? type, bool? accountLocked, int? accountLockedDate, String? fatherOrHusbandName, String? relationship, String? signature, String? bloodGroup, String? photo, String? identificationMark, int? createdBy, String? lastModifiedBy, String? tenantId, String? uuid, String? createdDate, int? rowVersion, AuditDetails? auditDetails, bool? isDeleted});
+  $R apply(UserModel Function(UserModel) transform);
+}
+
+class _UserModelCopyWithImpl<$R> extends BaseCopyWith<UserModel, $R> implements UserModelCopyWith<$R> {
+  _UserModelCopyWithImpl(UserModel value, Then<UserModel, $R> then) : super(value, then);
+
+  @override UserAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? UserAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? userName = $none, Object? salutation = $none, Object? name = $none, Object? gender = $none, Object? mobileNumber = $none, Object? emailId = $none, Object? altContactNumber = $none, Object? pan = $none, Object? aadhaarNumber = $none, Object? permanentAddress = $none, Object? permanentCity = $none, Object? permanentPinCode = $none, Object? correspondenceAddress = $none, Object? correspondenceCity = $none, Object? correspondencePinCode = $none, Object? alternatemobilenumber = $none, Object? active = $none, Object? locale = $none, Object? type = $none, Object? accountLocked = $none, Object? accountLockedDate = $none, Object? fatherOrHusbandName = $none, Object? relationship = $none, Object? signature = $none, Object? bloodGroup = $none, Object? photo = $none, Object? identificationMark = $none, Object? createdBy = $none, Object? lastModifiedBy = $none, Object? tenantId = $none, Object? uuid = $none, Object? createdDate = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? isDeleted = $none}) => $then(UserModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), userName: or(userName, $value.userName), salutation: or(salutation, $value.salutation), name: or(name, $value.name), gender: or(gender, $value.gender), mobileNumber: or(mobileNumber, $value.mobileNumber), emailId: or(emailId, $value.emailId), altContactNumber: or(altContactNumber, $value.altContactNumber), pan: or(pan, $value.pan), aadhaarNumber: or(aadhaarNumber, $value.aadhaarNumber), permanentAddress: or(permanentAddress, $value.permanentAddress), permanentCity: or(permanentCity, $value.permanentCity), permanentPinCode: or(permanentPinCode, $value.permanentPinCode), correspondenceAddress: or(correspondenceAddress, $value.correspondenceAddress), correspondenceCity: or(correspondenceCity, $value.correspondenceCity), correspondencePinCode: or(correspondencePinCode, $value.correspondencePinCode), alternatemobilenumber: or(alternatemobilenumber, $value.alternatemobilenumber), active: or(active, $value.active), locale: or(locale, $value.locale), type: or(type, $value.type), accountLocked: or(accountLocked, $value.accountLocked), accountLockedDate: or(accountLockedDate, $value.accountLockedDate), fatherOrHusbandName: or(fatherOrHusbandName, $value.fatherOrHusbandName), relationship: or(relationship, $value.relationship), signature: or(signature, $value.signature), bloodGroup: or(bloodGroup, $value.bloodGroup), photo: or(photo, $value.photo), identificationMark: or(identificationMark, $value.identificationMark), createdBy: or(createdBy, $value.createdBy), lastModifiedBy: or(lastModifiedBy, $value.lastModifiedBy), tenantId: or(tenantId, $value.tenantId), uuid: or(uuid, $value.uuid), createdDate: or(createdDate, $value.createdDate), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class UserAdditionalFieldsMapper extends BaseMapper<UserAdditionalFields> {
+  UserAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  UserAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  UserAdditionalFields fromMap(Map<String, dynamic> map) => UserAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'User', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
+
+  @override Function get encoder => (UserAdditionalFields v) => encode(v);
+  dynamic encode(UserAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(UserAdditionalFields u) => {'schema': Mapper.i.$enc(u.schema, 'schema'), 'version': Mapper.i.$enc(u.version, 'version'), 'fields': Mapper.i.$enc(u.fields, 'fields')};
+
+  @override String stringify(UserAdditionalFields self) => 'UserAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
+  @override int hash(UserAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
+  @override bool equals(UserAdditionalFields self, UserAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
+
+  @override Function get typeFactory => (f) => f<UserAdditionalFields>();
+}
+
+extension UserAdditionalFieldsMapperExtension  on UserAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  UserAdditionalFieldsCopyWith<UserAdditionalFields> get copyWith => UserAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class UserAdditionalFieldsCopyWith<$R> {
+  factory UserAdditionalFieldsCopyWith(UserAdditionalFields value, Then<UserAdditionalFields, $R> then) = _UserAdditionalFieldsCopyWithImpl<$R>;
+  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  $R apply(UserAdditionalFields Function(UserAdditionalFields) transform);
+}
+
+class _UserAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<UserAdditionalFields, $R> implements UserAdditionalFieldsCopyWith<$R> {
+  _UserAdditionalFieldsCopyWithImpl(UserAdditionalFields value, Then<UserAdditionalFields, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
+  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(UserAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
 class OpLogEntryMapper extends BaseMapper<OpLogEntry> {

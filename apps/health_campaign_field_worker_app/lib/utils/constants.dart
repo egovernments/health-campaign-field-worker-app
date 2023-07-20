@@ -238,6 +238,8 @@ class EntityPlurals {
         return 'Stock';
       case 'StockReconciliation':
         return 'StockReconciliation';
+      case 'User':
+        return 'user';
       default:
         return '${entity}s';
     }
