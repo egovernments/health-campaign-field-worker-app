@@ -1,7 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -9,6 +8,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../router/app_router.dart';
+import '../../utils/date_conversions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
@@ -400,12 +400,28 @@ class _HouseholdOverviewPageState
                                             );
                                           },
                                           name: e.name?.givenName ?? ' - ',
-                                          age: (e.dateOfBirth == null
-                                                  ? null
-                                                  : DateFormat('dd/MM/yyyy')
-                                                      .parse(e.dateOfBirth!)
-                                                      .age) ??
-                                              0,
+                                          years: (e.dateOfBirth == null
+                                              ? null
+                                              : DateConversions
+                                                  .getYearsAndMonthsFromDateTime(
+                                                  DateConversions
+                                                          .getFormattedDateToDateTime(
+                                                        e.dateOfBirth!,
+                                                      ) ??
+                                                      DateTime.now(),
+                                                  false,
+                                                )),
+                                          months: (e.dateOfBirth == null
+                                              ? null
+                                              : DateConversions
+                                                  .getYearsAndMonthsFromDateTime(
+                                                  DateConversions
+                                                          .getFormattedDateToDateTime(
+                                                        e.dateOfBirth!,
+                                                      ) ??
+                                                      DateTime.now(),
+                                                  true,
+                                                )),
                                           gender: e.gender?.name ?? ' - ',
                                           isDelivered: taskdata == null
                                               ? false
