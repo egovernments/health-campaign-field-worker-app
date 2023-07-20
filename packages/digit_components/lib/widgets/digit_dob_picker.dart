@@ -13,7 +13,8 @@ class DigitDobPicker extends StatelessWidget {
   final String yearsHintLabel;
   final String monthsHintLabel;
   final String separatorLabel;
-  final String errorMessage;
+  final String yearsErrorMessage;
+  final String monthsErrorMessage;
 
   const DigitDobPicker({
     super.key,
@@ -25,7 +26,8 @@ class DigitDobPicker extends StatelessWidget {
     required this.yearsHintLabel,
     required this.monthsHintLabel,
     required this.separatorLabel,
-    required this.errorMessage,
+    required this.yearsErrorMessage,
+    required this.monthsErrorMessage,
   });
 
   @override
@@ -79,9 +81,9 @@ class DigitDobPicker extends StatelessWidget {
                                 365)
                             .round()
                             .toStringAsFixed(0);
-                        return int.parse(value) <= 150
+                        return int.parse(value) <= 150 && int.parse(value) >= 0
                             ? null
-                            : {errorMessage: true};
+                            : {yearsErrorMessage: true};
                       }
 
                       formControl.setValidators([requiredTrue]);
@@ -111,7 +113,9 @@ class DigitDobPicker extends StatelessWidget {
                             DateTime.now().difference(formControl.value).inDays;
                         int years = days ~/ 365;
                         int months = (days - (years * 365)) ~/ 30;
-                        return months <= 11 ? null : {errorMessage: true};
+                        return months <= 11 && months >= 0
+                            ? null
+                            : {monthsErrorMessage: true};
                       }
 
                       formControl.setValidators([requiredTrue]);
@@ -143,7 +147,6 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
     final years = viewValue.years;
     final months = viewValue.months;
     final days = years * 365 + months * 30;
-    if (years == 0) return null;
 
     final calculatedDate = DateTime.now().subtract(Duration(days: days));
 
@@ -172,7 +175,6 @@ class DobValueAccessorYearsString
   @override
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
-    if (years == 0) return null;
 
     final dobAge =
         DigitDOBAge(years: years ?? 0, months: int.parse(existingMonth));
@@ -197,7 +199,6 @@ class DobValueAccessorMonthString
   @override
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
-    if (years == 0) return null;
     final dobAge =
         DigitDOBAge(months: years ?? 0, years: int.parse(existingYear));
     return accessor.viewToModelValue(dobAge);
@@ -212,29 +213,4 @@ class DigitDOBAge {
     this.years = 0,
     this.months = 0,
   });
-}
-
-class DobValueMonthsAccessor extends ControlValueAccessor<DateTime, String> {
-  @override
-  String? modelToViewValue(DateTime? modelValue) {
-    if (modelValue == null) return null;
-    int days = DateTime.now().difference(modelValue).inDays;
-    int years = days ~/ 365;
-    int months = (days - (years * 365)) ~/ 30;
-    return months.toStringAsFixed(0);
-  }
-
-  @override
-  DateTime? viewToModelValue(String? viewValue) {
-    if (viewValue == null) return null;
-    final months = int.tryParse(viewValue);
-    if (months == null) return null;
-    final now = DateTime.now();
-    final calculatedDate = now.subtract(Duration(days: months * 30));
-    return DateTime(
-      calculatedDate.year,
-      calculatedDate.month,
-      calculatedDate.day,
-    );
-  }
 }

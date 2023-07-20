@@ -74,6 +74,10 @@ class Common {
   String get connectionLabel => 'CORE_COMMON_CONNECTION_LABEL';
 
   String get connectionContent => 'CORE_COMMON_CONNECTION_CONTENT';
+
+  String get coreCommonSkip => 'CORE_COMMON_SKIP';
+
+  String get coreCommonNext => 'CORE_COMMON_NEXT';
 }
 
 class Login {
@@ -175,6 +179,8 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+  String get yearsAbbr => 'YEARS_ABBR';
+  String get monthsAbbr => 'MONTHS_ABBR';
 }
 
 class IndividualDetails {
@@ -213,6 +219,10 @@ class IndividualDetails {
 
   String get yearsHintText => 'YEARS_HINT_TEXT';
   String get monthsHintText => 'MONTHS_HINT_TEXT';
+
+  String get yearsErrorText => 'ERR_YEARS';
+
+  String get monthsErrorText => 'ERR_MONTHS';
 }
 
 class HouseholdLocation {

@@ -13,6 +13,7 @@ part 'beneficiary_registration.freezed.dart';
 
 typedef BeneficiaryRegistrationEmitter = Emitter<BeneficiaryRegistrationState>;
 
+//This bloc is used for registration of Beneficiaries to the project
 class BeneficiaryRegistrationBloc
     extends Bloc<BeneficiaryRegistrationEvent, BeneficiaryRegistrationState> {
   final IndividualDataRepository individualRepository;
@@ -45,6 +46,7 @@ class BeneficiaryRegistrationBloc
     on(_handleAddMember);
   }
 
+  //_handleSaveAddress event can be used for saving address details to the form
   FutureOr<void> _handleSaveAddress(
     BeneficiaryRegistrationSaveAddressEvent event,
     BeneficiaryRegistrationEmitter emit,

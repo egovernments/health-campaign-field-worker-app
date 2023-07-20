@@ -57,162 +57,160 @@ class MemberCard extends StatelessWidget {
       ),
       margin: DigitTheme.instance.containerMargin,
       padding: const EdgeInsets.all(8),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2.5,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: Text(
                     name,
                     style: theme.textTheme.headlineMedium,
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: DigitTheme.instance.containerMargin,
-                        child: Text(
-                          localizations.translate(gender),
-                          style: theme.textTheme.bodyMedium,
-                        ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3.5,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: DigitIconButton(
+                    onPressed: () => DigitActionDialog.show(
+                      context,
+                      widget: ActionCard(
+                        items: [
+                          ActionCardModel(
+                            icon: Icons.person,
+                            label: localizations.translate(
+                              i18.memberCard.assignAsHouseholdhead,
+                            ),
+                            action: isHead ? null : setAsHeadAction,
+                          ),
+                          ActionCardModel(
+                            icon: Icons.edit,
+                            label: localizations.translate(
+                              i18.memberCard.editIndividualDetails,
+                            ),
+                            action: editMemberAction,
+                          ),
+                          ActionCardModel(
+                            icon: Icons.delete,
+                            label: localizations.translate(
+                              i18.memberCard.deleteIndividualActionText,
+                            ),
+                            action: isHead ? null : deleteMemberAction,
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Text(
-                          " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
+                    ),
+                    iconText: localizations.translate(
+                      i18.memberCard.editDetails,
+                    ),
+                    icon: Icons.edit,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: Row(
+              children: [
+                Container(
+                  margin: DigitTheme.instance.containerMargin,
+                  child: Text(
+                    localizations.translate(gender),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 3.5,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
+          ),
+          Offstage(
+            offstage: beneficiaryType != BeneficiaryType.individual,
+            child: !isDelivered
+                ? Align(
+                    alignment: Alignment.centerLeft,
                     child: DigitIconButton(
-                      onPressed: () => DigitActionDialog.show(
-                        context,
-                        widget: ActionCard(
-                          items: [
-                            ActionCardModel(
-                              icon: Icons.person,
-                              label: localizations.translate(
-                                i18.memberCard.assignAsHouseholdhead,
-                              ),
-                              action: isHead ? null : setAsHeadAction,
-                            ),
-                            ActionCardModel(
-                              icon: Icons.edit,
-                              label: localizations.translate(
-                                i18.memberCard.editIndividualDetails,
-                              ),
-                              action: editMemberAction,
-                            ),
-                            ActionCardModel(
-                              icon: Icons.delete,
-                              label: localizations.translate(
-                                i18.memberCard.deleteIndividualActionText,
-                              ),
-                              action: isHead ? null : deleteMemberAction,
-                            ),
-                          ],
-                        ),
-                      ),
+                      icon: Icons.info_rounded,
                       iconText: localizations.translate(
-                        i18.memberCard.editDetails,
+                        i18.householdOverView
+                            .householdOverViewNotDeliveredIconLabel,
                       ),
-                      icon: Icons.edit,
+                      iconTextColor: theme.colorScheme.error,
+                      iconColor: theme.colorScheme.error,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-          ],
-        ),
-        Offstage(
-          offstage: beneficiaryType != BeneficiaryType.individual,
-          child: !isDelivered
-              ? Align(
-                  alignment: Alignment.centerLeft,
-                  child: DigitIconButton(
-                    icon: Icons.info_rounded,
-                    iconText: localizations.translate(
-                      i18.householdOverView
-                          .householdOverViewNotDeliveredIconLabel,
-                    ),
-                    iconTextColor: theme.colorScheme.error,
-                    iconColor: theme.colorScheme.error,
-                  ),
-                )
-              : Align(
-                  alignment: Alignment.centerLeft,
-                  child: DigitIconButton(
-                    icon: Icons.check_circle,
-                    iconText: localizations.translate(
-                      i18.householdOverView.householdOverViewDeliveredIconLabel,
-                    ),
-                    iconTextColor:
-                        DigitTheme.instance.colorScheme.onSurfaceVariant,
-                    iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-        ),
-        Offstage(
-          offstage: beneficiaryType != BeneficiaryType.individual,
-          child: !isDelivered
-              ? DigitElevatedButton(
-                  onPressed: () async {
-                    context.read<HouseholdOverviewBloc>().add(
-                          HouseholdOverviewEvent.selectedIndividual(
-                            individualModel: individual,
-                          ),
-                        );
-                    await context.router.push(DeliverInterventionRoute());
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations.translate(
-                        i18.householdOverView.householdOverViewActionText,
+                  )
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: DigitIconButton(
+                      icon: Icons.check_circle,
+                      iconText: localizations.translate(
+                        i18.householdOverView
+                            .householdOverViewDeliveredIconLabel,
                       ),
+                      iconTextColor:
+                          DigitTheme.instance.colorScheme.onSurfaceVariant,
+                      iconColor:
+                          DigitTheme.instance.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                )
-              : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-                  builder: (ctx, state) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: DigitOutLineButton(
-                        label: localizations.translate(
-                          i18.memberCard.deliverDetailsUpdateLabel,
+          ),
+          Offstage(
+            offstage: beneficiaryType != BeneficiaryType.individual,
+            child: !isDelivered
+                ? DigitElevatedButton(
+                    onPressed: () async {
+                      context.read<HouseholdOverviewBloc>().add(
+                            HouseholdOverviewEvent.selectedIndividual(
+                              individualModel: individual,
+                            ),
+                          );
+                      await context.router.push(DeliverInterventionRoute());
+                    },
+                    child: Center(
+                      child: Text(
+                        localizations.translate(
+                          i18.householdOverView.householdOverViewActionText,
                         ),
-                        onPressed: () async {
-                          context.read<HouseholdOverviewBloc>().add(
-                                HouseholdOverviewEvent.selectedIndividual(
-                                  individualModel: individual,
-                                ),
-                              );
-                          await context.router.push(DeliverInterventionRoute());
-                        },
                       ),
-                    );
-                  },
-                ),
-        ),
-      ]),
+                    ),
+                  )
+                : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                    builder: (ctx, state) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: DigitOutLineButton(
+                          label: localizations.translate(
+                            i18.memberCard.deliverDetailsUpdateLabel,
+                          ),
+                          onPressed: () async {
+                            context.read<HouseholdOverviewBloc>().add(
+                                  HouseholdOverviewEvent.selectedIndividual(
+                                    individualModel: individual,
+                                  ),
+                                );
+                            await context.router
+                                .push(DeliverInterventionRoute());
+                          },
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

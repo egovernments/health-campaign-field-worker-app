@@ -2,10 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/beneficiary_type.dart';
+import '../../utils/date_conversions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
@@ -119,14 +119,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           TableData(
             e.dateOfBirth == null
                 ? ''
-                : (DateTime.now()
-                            .difference(DateTime.parse(DateFormat(
-                              'dd/MM/yyyy',
-                            ).parse(e.dateOfBirth!).toString()))
-                            .inDays /
-                        365)
-                    .round()
-                    .toStringAsFixed(0),
+                : '${DateConversions.getYearsAndMonthsFromDateTime(
+                    DateConversions.getFormattedDateToDateTime(
+                          e.dateOfBirth!,
+                        ) ??
+                        DateTime.now(),
+                    false,
+                  )} ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DateConversions.getYearsAndMonthsFromDateTime(
+                    DateConversions.getFormattedDateToDateTime(
+                          e.dateOfBirth!,
+                        ) ??
+                        DateTime.now(),
+                    true,
+                  )} ${localizations.translate(i18.searchBeneficiary.monthsAbbr)}',
             cellKey: 'age',
           ),
           TableData(

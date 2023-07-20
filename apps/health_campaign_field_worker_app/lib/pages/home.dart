@@ -91,6 +91,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         ),
                         overlayWidget: overlayWidgetStateList[index + 1],
                         titleAlignment: TextAlign.center,
+                        skipLabel:
+                            localizations.translate(i18.common.coreCommonSkip),
+                        nextLabel:
+                            localizations.translate(i18.common.coreCommonNext),
                         child: _getItems(context).elementAt(index),
                       );
                     },
@@ -127,6 +131,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         localizations.translate(i18.home.progressIndicatorHelp),
                     overlayWidget: overlayWidgetStateList[0],
                     titleAlignment: TextAlign.center,
+                    skipLabel:
+                        localizations.translate(i18.common.coreCommonSkip),
+                    nextLabel:
+                        localizations.translate(i18.common.coreCommonNext),
                     child: BeneficiaryProgressBar(
                       label: localizations.translate(
                         i18.home.progressIndicatorTitle,

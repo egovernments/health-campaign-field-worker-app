@@ -14,6 +14,8 @@ import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 
+/* part 'file_name.freezed.dart'
+need to be added to auto generate the files for freezed model */
 part 'app_initialization.freezed.dart';
 
 typedef AppInitializationEmitter = Emitter<AppInitializationState>;
@@ -30,6 +32,7 @@ class AppInitializationBloc
     on(_onAppInitializeSetup);
   }
 
+  //App Initialization event to setup the app config and init data
   FutureOr<void> _onAppInitializeSetup(
     AppInitializationSetupEvent event,
     AppInitializationEmitter emit,
@@ -101,7 +104,7 @@ class AppInitializationBloc
         ).toJson(),
       );
 
-      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar);
+      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar,);
 
       add(
         AppInitializationSetupEvent(
