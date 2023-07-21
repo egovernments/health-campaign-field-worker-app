@@ -28,6 +28,7 @@ dependencies:
   reactive_flutter_typeahead: ^0.8.1
   flutter_typeahead: ^4.3.7
   overlay_builder: ^1.1.0
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
