@@ -4,13 +4,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
-
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
-import '../utils/debound.dart';
-import '../utils/utils.dart';
 import 'data_repository.dart';
-import 'local_store/secure_store/secure_store.dart';
 import 'repositories/oplog/oplog.dart';
 import 'repositories/remote/pgr_service.dart';
 
@@ -35,6 +31,9 @@ class NetworkManager {
         return context.read<RemoteRepository<D, R>>();
     }
   }
+
+/* This function will read the params and get the records which are not synced
+ and pushes to the sync-up and sync-down methods */
 
   Future<void> performSync({
     required List<LocalRepository> localRepositories,
@@ -61,6 +60,8 @@ class NetworkManager {
 
     SyncError? syncError;
 
+// Perform the sync Down Operation
+
     try {
       await syncDown(
         bandwidthModel: bandwidthModel,
@@ -71,6 +72,8 @@ class NetworkManager {
       syncError = SyncDownError(e);
       service?.stopSelf();
     }
+
+// Perform the sync up Operation
 
     try {
       await syncUp(
@@ -85,30 +88,30 @@ class NetworkManager {
 
     if (syncError != null) throw syncError;
 
-    final debouncer = Debouncer(seconds: 5);
-    debouncer.run(() async {
-      if (pendingSyncUpEntries.isNotEmpty ||
-          pendingSyncDownEntries
-              .where(
-                (element) => element.type != DataModelType.householdMember,
-              )
-              .toList()
-              .isNotEmpty) {
-        performSync(
-          bandwidthModel: bandwidthModel,
-          localRepositories: localRepositories,
-          remoteRepositories: remoteRepositories,
-        );
-      } else if (pendingSyncUpEntries.isEmpty &&
-          pendingSyncDownEntries
-              .where(
-                (element) => element.type != DataModelType.householdMember,
-              )
-              .toList()
-              .isEmpty) {
-        service?.stopSelf();
-      }
-    });
+/* This Condition will check if there are any pending entries to Sync
+ then the performSync Method will be called recursively */
+
+    if (pendingSyncUpEntries.isNotEmpty ||
+        pendingSyncDownEntries
+            .where(
+              (element) => element.type != DataModelType.householdMember,
+            )
+            .toList()
+            .isNotEmpty) {
+      performSync(
+        bandwidthModel: bandwidthModel,
+        localRepositories: localRepositories,
+        remoteRepositories: remoteRepositories,
+      );
+    } else if (pendingSyncUpEntries.isEmpty &&
+        pendingSyncDownEntries
+            .where(
+              (element) => element.type != DataModelType.householdMember,
+            )
+            .toList()
+            .isEmpty) {
+      service?.stopSelf();
+    }
   }
 
   FutureOr<void> syncDown({
@@ -121,6 +124,7 @@ class NetworkManager {
       throw Exception('Sync down is not valid for online only configuration');
     }
 
+// Get the pending sync down entries
     final futures = await Future.wait(
       localRepositories
           .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
@@ -549,6 +553,12 @@ class NetworkManager {
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
+
+// Note :  Sort the entries by DataModelType enum
+    final entries = groupedEntries.entries.toList();
+    entries.sort((a, b) => DataModelType.values
+        .indexOf(a.key)
+        .compareTo(DataModelType.values.indexOf(b.key)));
 
     for (final typeGroupedEntity in groupedEntries.entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
