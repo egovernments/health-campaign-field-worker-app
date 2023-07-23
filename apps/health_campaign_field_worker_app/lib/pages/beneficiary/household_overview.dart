@@ -44,9 +44,7 @@ class _HouseholdOverviewPageState
                     }
 
                     return ScrollableContent(
-                      header: const Column(children: [
-                        BackNavigationHelpHeaderWidget(),
-                      ]),
+                      header: const BackNavigationHelpHeaderWidget(),
                       children: [
                         DigitCard(
                           child: Column(
