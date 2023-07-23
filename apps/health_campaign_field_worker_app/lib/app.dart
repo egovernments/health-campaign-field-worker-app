@@ -1,5 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,7 +132,9 @@ class MainApplicationState extends State<MainApplication>
                               ? (context) => LocalizationBloc(
                                     const LocalizationState(),
                                     LocalizationRepository(
-                                        widget.client, widget.isar),
+                                      widget.client,
+                                      widget.isar,
+                                    ),
                                     widget.isar,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
@@ -153,7 +154,9 @@ class MainApplicationState extends State<MainApplication>
                               : (context) => LocalizationBloc(
                                     const LocalizationState(),
                                     LocalizationRepository(
-                                        widget.client, widget.isar),
+                                      widget.client,
+                                      widget.isar,
+                                    ),
                                     widget.isar,
                                   ),
                         ),
@@ -248,7 +251,9 @@ class MainApplicationState extends State<MainApplication>
                                 : [defaultLocale],
                             localizationsDelegates: [
                               AppLocalizations.getDelegate(
-                                  appConfig, widget.isar),
+                                appConfig,
+                                widget.isar,
+                              ),
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
