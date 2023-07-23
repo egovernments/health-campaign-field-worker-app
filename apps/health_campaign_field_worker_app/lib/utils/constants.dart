@@ -56,7 +56,7 @@ class Constants {
   factory Constants() {
     return _instance;
   }
-  Future initilize() async {
+  Future initialize() async {
     await _initializeIsar();
   }
 

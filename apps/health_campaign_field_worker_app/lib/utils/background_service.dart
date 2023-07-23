@@ -30,7 +30,7 @@ Future<void> initializeService(
   dio,
 ) async {
   if (Isar.getInstance('HCM') == null) {
-    await Constants().initilize();
+    await Constants().initialize();
   }
 
   final service = FlutterBackgroundService();
@@ -99,7 +99,7 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
   if (Isar.getInstance('HCM') == null) {
-    await Constants().initilize();
+    await Constants().initialize();
   }
   await envConfig.initialize();
 

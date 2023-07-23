@@ -19,7 +19,6 @@ import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
-import 'models/entities/user.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';

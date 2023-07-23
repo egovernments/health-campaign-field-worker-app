@@ -18,13 +18,12 @@ class NotificationService {
 
     const InitializationSettings initializationSettings =
         InitializationSettings(
-            android: initializationSettingsAndroid, iOS: null, macOS: null);
+      android: initializationSettingsAndroid,
+      iOS: null,
+      macOS: null,
+    );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
     );
-  }
-
-  Future selectNotification(String payload) async {
-    //Handle notification tapped logic here
   }
 }

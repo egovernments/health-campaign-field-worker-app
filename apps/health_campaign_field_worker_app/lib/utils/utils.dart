@@ -86,7 +86,7 @@ class CustomValidator {
   }
 }
 
-setBgrunning(bool isBgRunning) async {
+setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
 }
