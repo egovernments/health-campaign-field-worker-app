@@ -780,7 +780,7 @@ class NetworkManager {
           }
         }
 
-        final items = await filterOpLogbyBandwidth(
+        final items = await filterOpLogByBandwidth(
           bandwidthModel.batchSize,
           operationGroupedEntity.value,
         );
@@ -851,7 +851,7 @@ FutureOr<List<EntityModel>> filterEntitybyBandwidth(
   return items;
 }
 
-Future<List<OpLogEntry<EntityModel>>> filterOpLogbyBandwidth(
+Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
   int batchSize,
   List<OpLogEntry<EntityModel>> entities,
 ) async {
