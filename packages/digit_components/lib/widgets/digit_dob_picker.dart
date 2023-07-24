@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitDobPicker extends StatelessWidget {
+  // Properties to hold the form control name, labels, and error messages for the components
   final String datePickerFormControl;
-
   final bool isVerified;
   final ControlValueAccessor? valueAccessor;
   final String datePickerLabel;
@@ -47,11 +47,13 @@ class DigitDobPicker extends StatelessWidget {
         ),
         child: Column(
           children: [
+            // Date picker component to select the date of birth
             DigitDateFormPicker(
               label: datePickerLabel,
               formControlName: datePickerFormControl,
             ),
             const SizedBox(height: 16),
+            // Text widget to display a separator label between the date picker and age fields
             Text(
               separatorLabel,
               style: theme.textTheme.bodyLarge,
@@ -59,6 +61,7 @@ class DigitDobPicker extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // Text form field for entering the age in years
                   child: DigitTextFormField(
                     maxLength: 3,
                     valueAccessor:
@@ -73,7 +76,7 @@ class DigitDobPicker extends StatelessWidget {
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {
-                      /// Validates that control's value must be `true`
+                      // Function to validate the entered age in years
                       Map<String, dynamic>? requiredTrue(
                           AbstractControl<dynamic> control) {
                         DigitDOBAge age =
@@ -91,6 +94,7 @@ class DigitDobPicker extends StatelessWidget {
                   width: 8,
                 ),
                 Expanded(
+                  // Text form field for entering the age in months
                   child: DigitTextFormField(
                     maxLength: 2,
                     valueAccessor:
@@ -104,6 +108,7 @@ class DigitDobPicker extends StatelessWidget {
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {
+                      // Function to validate the entered age in months
                       Map<String, dynamic>? requiredTrue(
                           AbstractControl<dynamic> control) {
                         DigitDOBAge age =
@@ -126,6 +131,7 @@ class DigitDobPicker extends StatelessWidget {
   }
 }
 
+// A custom ControlValueAccessor to convert the model value (DateTime) to the view value (DigitDOBAge) and vice versa.
 class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   @override
   DigitDOBAge? modelToViewValue(DateTime? modelValue) {
@@ -150,6 +156,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   }
 }
 
+// A custom ControlValueAccessor to handle the view value as a string for years.
 class DobValueAccessorYearsString
     extends ControlValueAccessor<DateTime, String> {
   final DobValueAccessor accessor;
@@ -173,6 +180,7 @@ class DobValueAccessorYearsString
   }
 }
 
+// A custom ControlValueAccessor to handle the view value as a string for months.
 class DobValueAccessorMonthString
     extends ControlValueAccessor<DateTime, String> {
   final DobValueAccessor accessor;
