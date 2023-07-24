@@ -84,6 +84,19 @@ class _InventoryReportDetailsPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: DigitCard(
+        padding: const EdgeInsets.all(8.0),
+        child: DigitElevatedButton(
+          onPressed: () => context.router.popUntilRoot(),
+          child: Text(
+            localizations.translate(
+              i18.inventoryReportDetails.backToHomeButtonLabel,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+          ),
+        ),
+      ),
       body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
         builder: (context, inventoryReportState) {
           final noRecordsMessage = localizations.translate(
@@ -93,7 +106,7 @@ class _InventoryReportDetailsPageState
             i18.inventoryReportDetails.noFilterMessage,
           );
 
-          return Column(
+          return ScrollableContent(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BackNavigationHelpHeaderWidget(),
@@ -109,7 +122,7 @@ class _InventoryReportDetailsPageState
                 form: _form,
                 builder: (ctx, form, child) {
                   return SizedBox(
-                    height: 620,
+                    height: MediaQuery.of(context).size.height * 0.65,
                     child: FacilityBlocWrapper(
                       child: ProductVariantBlocWrapper(
                         child: BlocProvider(
@@ -525,19 +538,6 @@ class _InventoryReportDetailsPageState
                     ),
                   );
                 },
-              ),
-              DigitCard(
-                margin: EdgeInsets.zero,
-                child: DigitElevatedButton(
-                  onPressed: () => context.router.popUntilRoot(),
-                  child: Text(
-                    localizations.translate(
-                      i18.inventoryReportDetails.backToHomeButtonLabel,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                  ),
-                ),
               ),
             ],
           );

@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import './triangularpointer.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/material.dart';
 import 'package:overlay_builder/overlay_builder.dart';
 
+import './triangularpointer.dart';
+
+/*An Overlay widget */
 class AnchoredOverlay extends StatelessWidget {
   final bool showOverlay;
   final Widget child;
@@ -13,7 +15,10 @@ class AnchoredOverlay extends StatelessWidget {
   final Offset position;
   final double childHeight;
   final double childWidth;
+  final String skipLabel;
+  final String nextLabel;
 
+  // Constructor for the AnchoredOverlay widget with required parameters
   const AnchoredOverlay({
     super.key,
     required this.showOverlay,
@@ -25,21 +30,26 @@ class AnchoredOverlay extends StatelessWidget {
     required this.position,
     required this.childHeight,
     required this.childWidth,
+    required this.skipLabel,
+    required this.nextLabel,
   });
 
   @override
   Widget build(BuildContext context) {
-    late double postion = 0.0;
+    // A variable to store the horizontal position of the overlay
+    late double widgetPosition = 0.0;
 
+    // Calculate the position of the overlay based on the child width and screen width
     if (MediaQuery.of(context).size.width / 2 < childWidth) {
-      postion = position.dx;
+      widgetPosition = position.dx;
     } else {
       if (position.dx > MediaQuery.of(context).size.width / 2) {
-        postion = childWidth;
+        widgetPosition = childWidth;
       } else {
-        postion = position.dx;
+        widgetPosition = position.dx;
       }
     }
+    // Returns the AnchoredOverlay wrapped in an OverlayBuilder
     return OverlayBuilder(
       type: OverlayType.fullscreen,
       key: paramKey,
@@ -51,7 +61,7 @@ class AnchoredOverlay extends StatelessWidget {
         ),
         Positioned(
             top: position.dy + childHeight + 12,
-            left: postion,
+            left: widgetPosition,
             child: Card(
                 elevation: 10,
                 margin: DigitTheme.instance.containerMargin,
@@ -78,9 +88,9 @@ class AnchoredOverlay extends StatelessWidget {
                                     height: 30, //height of button
                                     child: TextButton(
                                       onPressed: onSkip,
-                                      child: const Text(
-                                        'Skip',
-                                        style: TextStyle(fontSize: 10),
+                                      child: Text(
+                                        skipLabel,
+                                        style: const TextStyle(fontSize: 10),
                                       ),
                                     )),
                                 SizedBox(
@@ -95,9 +105,9 @@ class AnchoredOverlay extends StatelessWidget {
                                         //content padding inside button
                                       ),
                                       onPressed: onTap,
-                                      child: const Text(
-                                        'Next',
-                                        style: TextStyle(fontSize: 10),
+                                      child: Text(
+                                        nextLabel,
+                                        style: const TextStyle(fontSize: 10),
                                       ),
                                     ))
                               ])

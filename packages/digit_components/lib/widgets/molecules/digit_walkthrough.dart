@@ -5,10 +5,13 @@ import 'package:overlay_builder/overlay_builder.dart';
 class DigitWalkthrough extends StatefulWidget {
   final Widget child;
   final String? title;
+  final String skipLabel;
+  final String nextLabel;
   final GlobalKey<OverlayWidgetState> overlayWidget;
   final TextAlign titleAlignment;
   final String description;
   final VoidCallback onTap;
+
   final VoidCallback onSkip;
   final double widgetHeight;
 
@@ -22,6 +25,8 @@ class DigitWalkthrough extends StatefulWidget {
     required this.onTap,
     required this.onSkip,
     required this.widgetHeight,
+    required this.skipLabel,
+    required this.nextLabel,
   });
 
   @override
@@ -75,6 +80,8 @@ class DigitWalkthroughState extends State<DigitWalkthrough> {
               position: position,
               childHeight: childHeight,
               childWidth: childWidth,
+              skipLabel: widget.skipLabel,
+              nextLabel: widget.nextLabel,
               child: IgnorePointer(
                 ignoring: showROverlay,
                 child: widget.child,
