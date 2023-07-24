@@ -130,11 +130,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   @override
   DigitDOBAge? modelToViewValue(DateTime? modelValue) {
     if (modelValue == null) return null;
-    int days = DateTime.now().difference(modelValue).inDays;
-    int years = days ~/ 365;
-    int months = (days - (years * 365)) ~/ 30;
     return DigitDateUtils.calculateAge(modelValue);
-    // return DigitDOBAge(years: years, months: months);
   }
 
   @override
@@ -173,7 +169,6 @@ class DobValueAccessorYearsString
     final years = int.tryParse(viewValue ?? '');
 
     final dobAge = DigitDOBAge(years ?? 0, int.parse(existingMonth));
-    // DigitDOBAge(years: years ?? 0, months: int.parse(existingMonth));
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -196,7 +191,6 @@ class DobValueAccessorMonthString
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
     final dobAge = DigitDOBAge(int.parse(existingYear), years ?? 0);
-    // DigitDOBAge(months: years ?? 0, years: int.parse(existingYear));
     return accessor.viewToModelValue(dobAge);
   }
 }
