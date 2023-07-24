@@ -395,6 +395,8 @@ class ProjectSelection {
   String get noProjectsAssigned => 'NO_PROJECTS_ASSIGNED';
 
   String get contactSysAdmin => 'CONTACT_SYS_ADMIN';
+
+  String get onProjectMapped => 'NO_PROJECT_MAPPED';
 }
 
 class WarehouseDetails {

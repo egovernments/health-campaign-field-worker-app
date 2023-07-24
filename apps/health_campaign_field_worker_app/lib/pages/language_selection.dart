@@ -48,6 +48,7 @@ class LanguageSelectionPage extends StatelessWidget {
                               );
                             }).toList(),
                             onLanguageChange: (value) async {
+                              Constants().initialize();
                               int index = languages.indexWhere(
                                 (ele) =>
                                     ele.value.toString() ==

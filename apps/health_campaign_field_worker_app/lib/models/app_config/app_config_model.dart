@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_annotation_target
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_config_model.freezed.dart';
@@ -73,14 +71,24 @@ class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
 @freezed
 class AppConfig with _$AppConfig {
   factory AppConfig({
-    @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
-    @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
-    @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
-    @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
-    @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
-    @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'NETWORK_DETECTION')
+        required String networkDetection,
+    @JsonKey(name: 'PERSISTENCE_MODE')
+        required String persistenceMode,
+    @JsonKey(name: 'SYNC_METHOD')
+        required String syncMethod,
+    @JsonKey(name: 'SYNC_TRIGGER')
+        required String syncTrigger,
+    @JsonKey(name: 'LANGUAGES')
+        required List<Languages> languages,
+    @JsonKey(name: 'TENANT_ID')
+        final String? tenantId,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
         required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+        required List<BandWidthBatchSize> bandWidthBatchSize,
+    @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+        BackgroundServiceConfig? backgroundServiceConfig,
     @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
         required List<DeletionReasonOptions>
             householdMemberDeletionReasonOptions,
@@ -116,6 +124,17 @@ class IdTypeOptions with _$IdTypeOptions {
 }
 
 @freezed
+class BandWidthBatchSize with _$BandWidthBatchSize {
+  factory BandWidthBatchSize({
+    @JsonKey(name: 'MIN_RANGE') required double minRange,
+    @JsonKey(name: 'MAX_RANGE') required double maxRange,
+    @JsonKey(name: 'BATCH_SIZE') required int batchSize,
+  }) = _BandWidthBatchSize;
+  factory BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
+      _$BandWidthBatchSizeFromJson(json);
+}
+
+@freezed
 class DeliveryCommentOptions with _$DeliveryCommentOptions {
   factory DeliveryCommentOptions({
     required String name,
@@ -146,6 +165,18 @@ class GenderOptions with _$GenderOptions {
 
   factory GenderOptions.fromJson(Map<String, dynamic> json) =>
       _$GenderOptionsFromJson(json);
+}
+
+@freezed
+class BackgroundServiceConfig with _$BackgroundServiceConfig {
+  factory BackgroundServiceConfig({
+    @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') required int batteryPercentCutOff,
+    @JsonKey(name: 'SERVICE_INTERVAL') required int serviceInterval,
+    @JsonKey(name: 'API_CONCURRENCY') required int apiConcurrency,
+  }) = _BackgroundServiceConfig;
+
+  factory BackgroundServiceConfig.fromJson(Map<String, dynamic> json) =>
+      _$BackgroundServiceConfigFromJson(json);
 }
 
 @freezed

@@ -1,11 +1,12 @@
 import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
-
+import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/debound.dart';
 import 'data_repository.dart';
 import 'repositories/oplog/oplog.dart';
 import 'repositories/remote/pgr_service.dart';
@@ -32,43 +33,96 @@ class NetworkManager {
     }
   }
 
+/* This function will read the params and get the records which are not synced
+ and pushes to the sync-up and sync-down methods */
+
   Future<void> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
-    required String userId,
+    required BandwidthModel bandwidthModel,
+    ServiceInstance? service,
   }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
     }
 
+    final futuresSyncDown = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
+    );
+    final pendingSyncDownEntries = futuresSyncDown.expand((e) => e).toList();
+
+    final futuresSyncUp = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
+    );
+    final pendingSyncUpEntries = futuresSyncUp.expand((e) => e).toList();
+
     SyncError? syncError;
+
+// Perform the sync Down Operation
 
     try {
       await syncDown(
-        userId: userId,
+        bandwidthModel: bandwidthModel,
         localRepositories: localRepositories.toSet().toList(),
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
       syncError = SyncDownError(e);
+      service?.stopSelf();
     }
+
+// Perform the sync up Operation
 
     try {
       await syncUp(
-        userId: userId,
+        bandwidthModel: bandwidthModel,
         localRepositories: localRepositories.toSet().toList(),
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
       syncError ??= SyncUpError(e);
+      service?.stopSelf();
     }
 
     if (syncError != null) throw syncError;
+
+/* This Condition will check if there are any pending entries to Sync
+ then the performSync Method will be called recursively */
+    final debouncer = Debouncer(seconds: 5);
+    debouncer.run(() async {
+      if (pendingSyncUpEntries.isNotEmpty ||
+          pendingSyncDownEntries
+              .where(
+                (element) =>
+                    element.type != DataModelType.householdMember &&
+                    element.type != DataModelType.service,
+              )
+              .toList()
+              .isNotEmpty) {
+        performSync(
+          bandwidthModel: bandwidthModel,
+          localRepositories: localRepositories,
+          remoteRepositories: remoteRepositories,
+        );
+      } else if (pendingSyncUpEntries.isEmpty &&
+          pendingSyncDownEntries
+              .where(
+                (element) =>
+                    element.type != DataModelType.householdMember &&
+                    element.type != DataModelType.service,
+              )
+              .toList()
+              .isEmpty) {
+        service?.stopSelf();
+      }
+    });
   }
 
   FutureOr<void> syncDown({
-    required String userId,
+    required BandwidthModel bandwidthModel,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
@@ -77,15 +131,25 @@ class NetworkManager {
       throw Exception('Sync down is not valid for online only configuration');
     }
 
+// Get the pending sync down entries
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSyncedDown(userId)),
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
+    pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final groupedEntries = pendingSyncEntries.groupListsBy(
-      (element) => element.type,
-    );
+    final groupedEntries = pendingSyncEntries
+        .where(
+          (element) =>
+              element.type != DataModelType.householdMember &&
+              element.type != DataModelType.service,
+        )
+        .toList()
+        .groupListsBy(
+          (element) => element.type,
+        );
 
     for (final typeGroupedEntity in groupedEntries.entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
@@ -105,10 +169,12 @@ class NetworkManager {
       for (final operationGroupedEntity in groupedOperations.entries) {
         final entities = operationGroupedEntity.value.map((e) {
           final serverGeneratedId = e.serverGeneratedId;
+          final rowVersion = e.rowVersion;
           if (serverGeneratedId != null) {
             return local.opLogManager.applyServerGeneratedIdToEntity(
               e.entity,
               serverGeneratedId,
+              rowVersion,
             );
           }
 
@@ -137,7 +203,7 @@ class NetworkManager {
                       );
 
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 final addressAdditionalId = responseEntity?.address?.id == null
                     ? null
@@ -146,7 +212,7 @@ class NetworkManager {
                         id: responseEntity!.address!.id!,
                       );
 
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
@@ -154,8 +220,12 @@ class NetworkManager {
                       if (addressAdditionalId != null) addressAdditionalId,
                     ],
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
               }
             }
 
@@ -181,7 +251,7 @@ class NetworkManager {
                   );
 
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 final identifierAdditionalIds = responseEntity?.identifiers
                     ?.map((e) {
@@ -211,7 +281,7 @@ class NetworkManager {
                     .whereNotNull()
                     .toList();
 
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
@@ -221,8 +291,12 @@ class NetworkManager {
                       if (addressAdditionalIds != null) ...addressAdditionalIds,
                     ],
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
               }
             }
 
@@ -247,15 +321,19 @@ class NetworkManager {
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
               }
             }
 
@@ -314,7 +392,7 @@ class NetworkManager {
                       );
 
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
@@ -333,6 +411,7 @@ class NetworkManager {
                         .whereNotNull()
                         .toList(),
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
               }
@@ -360,13 +439,14 @@ class NetworkManager {
                       );
 
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
               }
@@ -394,13 +474,14 @@ class NetworkManager {
                   );
 
               final serverGeneratedId = responseEntity?.id;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
               }
@@ -460,13 +541,14 @@ class NetworkManager {
                   );
 
               final serverGeneratedId = responseEntity?.serviceRequestId;
-
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
+                    rowVersion: rowVersion,
                   ),
                 );
               }
@@ -486,19 +568,26 @@ class NetworkManager {
   }
 
   FutureOr<void> syncUp({
-    required String userId,
+    required BandwidthModel bandwidthModel,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
     final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
     );
 
     final pendingSyncEntries = futures.expand((e) => e).toList();
-
+    pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
+
+// Note : Sort the entries by DataModelType enum
+    final entries = groupedEntries.entries.toList();
+    entries.sort((a, b) => DataModelType.values
+        .indexOf(a.key)
+        .compareTo(DataModelType.values.indexOf(b.key)));
 
     for (final typeGroupedEntity in groupedEntries.entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
@@ -521,11 +610,13 @@ class NetworkManager {
               final oplogEntryEntity = e.entity;
 
               final serverGeneratedId = e.serverGeneratedId;
+              final rowVersion = e.rowVersion;
               if (serverGeneratedId != null) {
                 var updatedEntity =
                     local.opLogManager.applyServerGeneratedIdToEntity(
                   oplogEntryEntity,
                   serverGeneratedId,
+                  rowVersion,
                 );
 
                 if (updatedEntity is HouseholdModel) {
@@ -667,12 +758,32 @@ class NetworkManager {
               }
               break;
             default:
-              await remote.bulkCreate(entities);
+              final List<EntityModel> items = await filterEntitybyBandwidth(
+                bandwidthModel.batchSize,
+                entities,
+              );
+              if (entities.isNotEmpty) {
+                if (items.isNotEmpty) {
+                  await remote.bulkCreate(items);
+                }
+              }
           }
         } else if (operationGroupedEntity.key == DataOperation.update) {
-          await remote.bulkUpdate(entities);
+          final List<EntityModel> items = await filterEntitybyBandwidth(
+            bandwidthModel.batchSize,
+            entities,
+          );
+          if (entities.isNotEmpty) {
+            if (items.isNotEmpty) {
+              await remote.bulkUpdate(items);
+            }
+          }
         } else if (operationGroupedEntity.key == DataOperation.delete) {
-          await remote.bulkDelete(entities);
+          final List<EntityModel> items = await filterEntitybyBandwidth(
+            bandwidthModel.batchSize,
+            entities,
+          );
+          await remote.bulkDelete(items);
         }
         if (operationGroupedEntity.key == DataOperation.singleCreate) {
           for (var element in entities) {
@@ -680,9 +791,13 @@ class NetworkManager {
           }
         }
 
-        for (final syncedEntity in operationGroupedEntity.value) {
+        final items = await filterOpLogByBandwidth(
+          bandwidthModel.batchSize,
+          operationGroupedEntity.value,
+        );
+        for (final syncedEntity in items) {
           if (syncedEntity.type == DataModelType.complaints) continue;
-          local.markSyncedUp(entry: syncedEntity);
+          await local.markSyncedUp(entry: syncedEntity);
         }
       }
     }
@@ -731,6 +846,34 @@ class NetworkManager {
 
     return repository;
   }
+}
+
+FutureOr<List<EntityModel>> filterEntitybyBandwidth(
+  int batchSize,
+  List<EntityModel> entities,
+) async {
+  final List<EntityModel> items = [];
+  final int size = batchSize < entities.length ? batchSize : entities.length;
+
+  for (var i = 0; i < size; i++) {
+    items.add(entities[i]);
+  }
+
+  return items;
+}
+
+Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
+  int batchSize,
+  List<OpLogEntry<EntityModel>> entities,
+) async {
+  final List<OpLogEntry<EntityModel>> items = [];
+  final int size = batchSize < entities.length ? batchSize : entities.length;
+
+  for (var i = 0; i < size; i++) {
+    items.add(entities[i]);
+  }
+
+  return items;
 }
 
 class NetworkManagerConfiguration {

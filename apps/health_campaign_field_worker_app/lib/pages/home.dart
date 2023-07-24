@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
@@ -17,10 +21,12 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
+import '../utils/debound.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/action_card/action_card.dart';
@@ -40,6 +46,31 @@ class HomePage extends LocalizedStatefulWidget {
 }
 
 class _HomePageState extends LocalizedState<HomePage> {
+  late StreamSubscription<ConnectivityResult> subscription;
+  @override
+  initState() {
+    super.initState();
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      performBackgroundService(
+        isBackground: false,
+        stopService: false,
+        context: null,
+      );
+
+      // Got a new connectivity status!
+    });
+  }
+
+  //  Be sure to cancel subscription after you are done
+  @override
+  dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -208,20 +239,39 @@ class _HomePageState extends LocalizedState<HomePage> {
                   builder: (context, state) {
                     return state.maybeWhen(
                       orElse: () => const Offstage(),
-                      pendingSync: (count) => count == 0
-                          ? const Offstage()
-                          : DigitInfoCard(
-                              icon: Icons.info,
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              iconColor: theme.colorScheme.surfaceTint,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            ),
+                      pendingSync: (count) {
+                        final debouncer = Debouncer(seconds: 5);
+
+                        debouncer.run(() async {
+                          if (count == 0) {
+                            performBackgroundService(
+                              isBackground: false,
+                              stopService: true,
+                              context: context,
+                            );
+                          } else {
+                            performBackgroundService(
+                              isBackground: false,
+                              stopService: false,
+                              context: context,
+                            );
+                          }
+                        });
+
+                        return count == 0
+                            ? const Offstage()
+                            : DigitInfoCard(
+                                icon: Icons.info,
+                                backgroundColor:
+                                    theme.colorScheme.tertiaryContainer,
+                                iconColor: theme.colorScheme.surfaceTint,
+                                description: localizations
+                                    .translate(i18.home.dataSyncInfoContent)
+                                    .replaceAll('{}', count.toString()),
+                                title: localizations
+                                    .translate(i18.home.dataSyncInfoLabel),
+                              );
+                      },
                     );
                   },
                 ),
