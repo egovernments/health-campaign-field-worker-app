@@ -6,6 +6,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/debound.dart';
 import 'data_repository.dart';
 import 'repositories/oplog/oplog.dart';
 import 'repositories/remote/pgr_service.dart';
@@ -90,28 +91,34 @@ class NetworkManager {
 
 /* This Condition will check if there are any pending entries to Sync
  then the performSync Method will be called recursively */
-
-    if (pendingSyncUpEntries.isNotEmpty ||
-        pendingSyncDownEntries
-            .where(
-              (element) => element.type != DataModelType.householdMember,
-            )
-            .toList()
-            .isNotEmpty) {
-      performSync(
-        bandwidthModel: bandwidthModel,
-        localRepositories: localRepositories,
-        remoteRepositories: remoteRepositories,
-      );
-    } else if (pendingSyncUpEntries.isEmpty &&
-        pendingSyncDownEntries
-            .where(
-              (element) => element.type != DataModelType.householdMember,
-            )
-            .toList()
-            .isEmpty) {
-      service?.stopSelf();
-    }
+    final debouncer = Debouncer(seconds: 5);
+    debouncer.run(() async {
+      if (pendingSyncUpEntries.isNotEmpty ||
+          pendingSyncDownEntries
+              .where(
+                (element) =>
+                    element.type != DataModelType.householdMember &&
+                    element.type != DataModelType.service,
+              )
+              .toList()
+              .isNotEmpty) {
+        performSync(
+          bandwidthModel: bandwidthModel,
+          localRepositories: localRepositories,
+          remoteRepositories: remoteRepositories,
+        );
+      } else if (pendingSyncUpEntries.isEmpty &&
+          pendingSyncDownEntries
+              .where(
+                (element) =>
+                    element.type != DataModelType.householdMember &&
+                    element.type != DataModelType.service,
+              )
+              .toList()
+              .isEmpty) {
+        service?.stopSelf();
+      }
+    });
   }
 
   FutureOr<void> syncDown({
@@ -134,7 +141,11 @@ class NetworkManager {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) => element.type != DataModelType.householdMember)
+        .where(
+          (element) =>
+              element.type != DataModelType.householdMember &&
+              element.type != DataModelType.service,
+        )
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -786,7 +797,7 @@ class NetworkManager {
         );
         for (final syncedEntity in items) {
           if (syncedEntity.type == DataModelType.complaints) continue;
-          local.markSyncedUp(entry: syncedEntity);
+          await local.markSyncedUp(entry: syncedEntity);
         }
       }
     }
