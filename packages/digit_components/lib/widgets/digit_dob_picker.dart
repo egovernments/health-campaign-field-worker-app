@@ -1,11 +1,12 @@
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_picker.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitDobPicker extends StatelessWidget {
+  // Properties to hold the form control name, labels, and error messages for the components
   final String datePickerFormControl;
-
   final bool isVerified;
   final ControlValueAccessor? valueAccessor;
   final String datePickerLabel;
@@ -46,11 +47,13 @@ class DigitDobPicker extends StatelessWidget {
         ),
         child: Column(
           children: [
+            // Date picker component to select the date of birth
             DigitDateFormPicker(
               label: datePickerLabel,
               formControlName: datePickerFormControl,
             ),
             const SizedBox(height: 16),
+            // Text widget to display a separator label between the date picker and age fields
             Text(
               separatorLabel,
               style: theme.textTheme.bodyLarge,
@@ -58,6 +61,7 @@ class DigitDobPicker extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // Text form field for entering the age in years
                   child: DigitTextFormField(
                     maxLength: 3,
                     valueAccessor:
@@ -72,16 +76,12 @@ class DigitDobPicker extends StatelessWidget {
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {
-                      /// Validates that control's value must be `true`
+                      // Function to validate the entered age in years
                       Map<String, dynamic>? requiredTrue(
                           AbstractControl<dynamic> control) {
-                        String value = (DateTime.now()
-                                    .difference(formControl.value)
-                                    .inDays /
-                                365)
-                            .round()
-                            .toStringAsFixed(0);
-                        return int.parse(value) <= 150 && int.parse(value) >= 0
+                        DigitDOBAge age =
+                            DigitDateUtils.calculateAge(formControl.value);
+                        return age.years <= 150 && age.years >= 0
                             ? null
                             : {yearsErrorMessage: true};
                       }
@@ -94,6 +94,7 @@ class DigitDobPicker extends StatelessWidget {
                   width: 8,
                 ),
                 Expanded(
+                  // Text form field for entering the age in months
                   child: DigitTextFormField(
                     maxLength: 2,
                     valueAccessor:
@@ -107,13 +108,12 @@ class DigitDobPicker extends StatelessWidget {
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {
+                      // Function to validate the entered age in months
                       Map<String, dynamic>? requiredTrue(
                           AbstractControl<dynamic> control) {
-                        int days =
-                            DateTime.now().difference(formControl.value).inDays;
-                        int years = days ~/ 365;
-                        int months = (days - (years * 365)) ~/ 30;
-                        return months <= 11 && months >= 0
+                        DigitDOBAge age =
+                            DigitDateUtils.calculateAge(formControl.value);
+                        return age.months <= 11 && age.months >= 0
                             ? null
                             : {monthsErrorMessage: true};
                       }
@@ -131,14 +131,12 @@ class DigitDobPicker extends StatelessWidget {
   }
 }
 
+// A custom ControlValueAccessor to convert the model value (DateTime) to the view value (DigitDOBAge) and vice versa.
 class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   @override
   DigitDOBAge? modelToViewValue(DateTime? modelValue) {
     if (modelValue == null) return null;
-    int days = DateTime.now().difference(modelValue).inDays;
-    int years = days ~/ 365;
-    int months = (days - (years * 365)) ~/ 30;
-    return DigitDOBAge(years: years, months: months);
+    return DigitDateUtils.calculateAge(modelValue);
   }
 
   @override
@@ -158,6 +156,7 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   }
 }
 
+// A custom ControlValueAccessor to handle the view value as a string for years.
 class DobValueAccessorYearsString
     extends ControlValueAccessor<DateTime, String> {
   final DobValueAccessor accessor;
@@ -176,12 +175,12 @@ class DobValueAccessorYearsString
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
 
-    final dobAge =
-        DigitDOBAge(years: years ?? 0, months: int.parse(existingMonth));
+    final dobAge = DigitDOBAge(years ?? 0, int.parse(existingMonth));
     return accessor.viewToModelValue(dobAge);
   }
 }
 
+// A custom ControlValueAccessor to handle the view value as a string for months.
 class DobValueAccessorMonthString
     extends ControlValueAccessor<DateTime, String> {
   final DobValueAccessor accessor;
@@ -199,18 +198,7 @@ class DobValueAccessorMonthString
   @override
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
-    final dobAge =
-        DigitDOBAge(months: years ?? 0, years: int.parse(existingYear));
+    final dobAge = DigitDOBAge(int.parse(existingYear), years ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
-}
-
-class DigitDOBAge {
-  final int years;
-  final int months;
-
-  const DigitDOBAge({
-    this.years = 0,
-    this.months = 0,
-  });
 }
