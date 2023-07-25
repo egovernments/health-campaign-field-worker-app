@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'dart:math';
 import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -25,7 +24,6 @@ class HouseholdLocalRepository
         ),
       ],
     );
-
     final results = await (selectQuery
           ..where(
             buildAnd(

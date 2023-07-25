@@ -10,14 +10,14 @@ class UserSearchModel extends EntitySearchModel {
   final String? id;
   final String? userName;
   final List<String>? uuid;
-
+  
   UserSearchModel({
     this.id,
     this.userName,
     this.uuid,
     super.boundaryCode,
     super.isDeleted,
-  }) : super();
+  }):  super();
 
   @MappableConstructor()
   UserSearchModel.ignoreDeleted({
@@ -25,11 +25,12 @@ class UserSearchModel extends EntitySearchModel {
     this.userName,
     this.uuid,
     super.boundaryCode,
-  }) : super(isDeleted: false);
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class UserModel extends EntityModel {
+
   static const schemaName = 'User';
 
   final String? id;
@@ -63,7 +64,7 @@ class UserModel extends EntityModel {
   final int? createdBy;
   final String? lastModifiedBy;
   final String? tenantId;
-  final String? uuid;
+  final List<String>? uuid;
   final String? createdDate;
   final int? rowVersion;
   final UserAdditionalFields? additionalFields;
@@ -106,7 +107,7 @@ class UserModel extends EntityModel {
     this.rowVersion,
     super.auditDetails,
     super.isDeleted = false,
-  }) : super();
+  }): super();
 
   UserCompanion get companion {
     return UserCompanion(
@@ -150,7 +151,7 @@ class UserModel extends EntityModel {
       uuid: Value(uuid?.toString()),
       createdDate: Value(createdDate),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }
 

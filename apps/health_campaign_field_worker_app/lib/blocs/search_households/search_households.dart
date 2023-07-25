@@ -252,7 +252,9 @@ class SearchHouseholdsBloc
       if (householdId == null) continue;
 
       final households = await household.search(
-        HouseholdSearchModel(clientReferenceId: [householdId]),
+        HouseholdSearchModel(
+          clientReferenceId: [householdId],
+        ),
       );
 
       if (households.isEmpty) continue;

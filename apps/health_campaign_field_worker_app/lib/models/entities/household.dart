@@ -9,12 +9,18 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
   final int? memberCount;
+  final double? latitude;
+  final double? longitude;
+  final double? maxRadius;
   final List<String>? clientReferenceId;
   final String? tenantId;
   
   HouseholdSearchModel({
     this.id,
     this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -25,6 +31,9 @@ class HouseholdSearchModel extends EntitySearchModel {
   HouseholdSearchModel.ignoreDeleted({
     this.id,
     this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -38,6 +47,9 @@ class HouseholdModel extends EntityModel {
 
   final String? id;
   final int? memberCount;
+  final double? latitude;
+  final double? longitude;
+  final double? maxRadius;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -48,6 +60,9 @@ class HouseholdModel extends EntityModel {
     this.additionalFields,
     this.id,
     this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -66,6 +81,9 @@ class HouseholdModel extends EntityModel {
       isDeleted: Value(isDeleted),
       id: Value(id),
       memberCount: Value(memberCount),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      maxRadius: Value(maxRadius),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

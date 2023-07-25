@@ -6,6 +6,9 @@ import 'package:drift/drift.dart';
 class Household extends Table {
   TextColumn get id => text().nullable()();
   IntColumn get memberCount => integer().nullable()();
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
+  RealColumn get maxRadius => real().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();

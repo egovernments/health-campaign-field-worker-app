@@ -16,12 +16,15 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$InventoryReportEvent {
+  String get facilityId => throw _privateConstructorUsedError;
+  String get productVariantId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)
         loadStockData,
-    required TResult Function() loadStockReconciliationData,
+    required TResult Function(String facilityId, String productVariantId)
+        loadStockReconciliationData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,7 +32,8 @@ mixin _$InventoryReportEvent {
     TResult? Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult? Function()? loadStockReconciliationData,
+    TResult? Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -37,7 +41,8 @@ mixin _$InventoryReportEvent {
     TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult Function()? loadStockReconciliationData,
+    TResult Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -65,6 +70,10 @@ mixin _$InventoryReportEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $InventoryReportEventCopyWith<InventoryReportEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -72,6 +81,8 @@ abstract class $InventoryReportEventCopyWith<$Res> {
   factory $InventoryReportEventCopyWith(InventoryReportEvent value,
           $Res Function(InventoryReportEvent) then) =
       _$InventoryReportEventCopyWithImpl<$Res, InventoryReportEvent>;
+  @useResult
+  $Res call({String facilityId, String productVariantId});
 }
 
 /// @nodoc
@@ -84,14 +95,34 @@ class _$InventoryReportEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? facilityId = null,
+    Object? productVariantId = null,
+  }) {
+    return _then(_value.copyWith(
+      facilityId: null == facilityId
+          ? _value.facilityId
+          : facilityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      productVariantId: null == productVariantId
+          ? _value.productVariantId
+          : productVariantId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
+abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res>
+    implements $InventoryReportEventCopyWith<$Res> {
   factory _$$InventoryReportLoadStockDataEventCopyWith(
           _$InventoryReportLoadStockDataEvent value,
           $Res Function(_$InventoryReportLoadStockDataEvent) then) =
       __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {InventoryReportType reportType,
@@ -185,7 +216,8 @@ class _$InventoryReportLoadStockDataEvent
     required TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)
         loadStockData,
-    required TResult Function() loadStockReconciliationData,
+    required TResult Function(String facilityId, String productVariantId)
+        loadStockReconciliationData,
   }) {
     return loadStockData(reportType, facilityId, productVariantId);
   }
@@ -196,7 +228,8 @@ class _$InventoryReportLoadStockDataEvent
     TResult? Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult? Function()? loadStockReconciliationData,
+    TResult? Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
   }) {
     return loadStockData?.call(reportType, facilityId, productVariantId);
   }
@@ -207,7 +240,8 @@ class _$InventoryReportLoadStockDataEvent
     TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult Function()? loadStockReconciliationData,
+    TResult Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
     required TResult orElse(),
   }) {
     if (loadStockData != null) {
@@ -262,8 +296,11 @@ abstract class InventoryReportLoadStockDataEvent
       _$InventoryReportLoadStockDataEvent;
 
   InventoryReportType get reportType;
+  @override
   String get facilityId;
+  @override
   String get productVariantId;
+  @override
   @JsonKey(ignore: true)
   _$$InventoryReportLoadStockDataEventCopyWith<
           _$InventoryReportLoadStockDataEvent>
@@ -271,13 +308,16 @@ abstract class InventoryReportLoadStockDataEvent
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
-    $Res> {
+abstract class _$$InventoryReportLoadStockReconciliationDataEventCopyWith<$Res>
+    implements $InventoryReportEventCopyWith<$Res> {
   factory _$$InventoryReportLoadStockReconciliationDataEventCopyWith(
           _$InventoryReportLoadStockReconciliationDataEvent value,
           $Res Function(_$InventoryReportLoadStockReconciliationDataEvent)
               then) =
       __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String facilityId, String productVariantId});
 }
 
 /// @nodoc
@@ -290,28 +330,66 @@ class __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>
       _$InventoryReportLoadStockReconciliationDataEvent _value,
       $Res Function(_$InventoryReportLoadStockReconciliationDataEvent) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? facilityId = null,
+    Object? productVariantId = null,
+  }) {
+    return _then(_$InventoryReportLoadStockReconciliationDataEvent(
+      facilityId: null == facilityId
+          ? _value.facilityId
+          : facilityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      productVariantId: null == productVariantId
+          ? _value.productVariantId
+          : productVariantId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$InventoryReportLoadStockReconciliationDataEvent
     implements InventoryReportLoadStockReconciliationDataEvent {
-  const _$InventoryReportLoadStockReconciliationDataEvent();
+  const _$InventoryReportLoadStockReconciliationDataEvent(
+      {required this.facilityId, required this.productVariantId});
+
+  @override
+  final String facilityId;
+  @override
+  final String productVariantId;
 
   @override
   String toString() {
-    return 'InventoryReportEvent.loadStockReconciliationData()';
+    return 'InventoryReportEvent.loadStockReconciliationData(facilityId: $facilityId, productVariantId: $productVariantId)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportLoadStockReconciliationDataEvent);
+            other is _$InventoryReportLoadStockReconciliationDataEvent &&
+            (identical(other.facilityId, facilityId) ||
+                other.facilityId == facilityId) &&
+            (identical(other.productVariantId, productVariantId) ||
+                other.productVariantId == productVariantId));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, facilityId, productVariantId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
+          _$InventoryReportLoadStockReconciliationDataEvent>
+      get copyWith =>
+          __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<
+                  _$InventoryReportLoadStockReconciliationDataEvent>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -319,9 +397,10 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     required TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)
         loadStockData,
-    required TResult Function() loadStockReconciliationData,
+    required TResult Function(String facilityId, String productVariantId)
+        loadStockReconciliationData,
   }) {
-    return loadStockReconciliationData();
+    return loadStockReconciliationData(facilityId, productVariantId);
   }
 
   @override
@@ -330,9 +409,10 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     TResult? Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult? Function()? loadStockReconciliationData,
+    TResult? Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
   }) {
-    return loadStockReconciliationData?.call();
+    return loadStockReconciliationData?.call(facilityId, productVariantId);
   }
 
   @override
@@ -341,11 +421,12 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     TResult Function(InventoryReportType reportType, String facilityId,
             String productVariantId)?
         loadStockData,
-    TResult Function()? loadStockReconciliationData,
+    TResult Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
     required TResult orElse(),
   }) {
     if (loadStockReconciliationData != null) {
-      return loadStockReconciliationData();
+      return loadStockReconciliationData(facilityId, productVariantId);
     }
     return orElse();
   }
@@ -389,8 +470,20 @@ class _$InventoryReportLoadStockReconciliationDataEvent
 
 abstract class InventoryReportLoadStockReconciliationDataEvent
     implements InventoryReportEvent {
-  const factory InventoryReportLoadStockReconciliationDataEvent() =
+  const factory InventoryReportLoadStockReconciliationDataEvent(
+          {required final String facilityId,
+          required final String productVariantId}) =
       _$InventoryReportLoadStockReconciliationDataEvent;
+
+  @override
+  String get facilityId;
+  @override
+  String get productVariantId;
+  @override
+  @JsonKey(ignore: true)
+  _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
+          _$InventoryReportLoadStockReconciliationDataEvent>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
