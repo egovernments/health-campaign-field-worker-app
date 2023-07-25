@@ -250,10 +250,12 @@ class SearchHouseholdsBloc
           .toList();
 
       if (householdId == null) continue;
-
       final households = await household.search(
         HouseholdSearchModel(
           clientReferenceId: [householdId],
+          latitude: event.latitude,
+          longitude: event.longitude,
+          maxRadius: 100,
         ),
       );
 
@@ -336,12 +338,16 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 
   const factory SearchHouseholdsEvent.searchByHousehold({
     required String projectId,
+    double? latitude,
+    double? longitude,
     required HouseholdModel householdModel,
   }) = SearchHouseholdsByHouseholdsEvent;
 
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
+    double? latitude,
+    double? longitude,
   }) = SearchHouseholdsSearchByHouseholdHeadEvent;
 
   const factory SearchHouseholdsEvent.clear() = SearchHouseholdsClearEvent;

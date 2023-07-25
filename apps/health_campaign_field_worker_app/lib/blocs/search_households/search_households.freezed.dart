@@ -19,9 +19,11 @@ mixin _$SearchHouseholdsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function(String projectId, HouseholdModel householdModel)
+    required TResult Function(String projectId, double? latitude,
+            double? longitude, HouseholdModel householdModel)
         searchByHousehold,
-    required TResult Function(String searchText, String projectId)
+    required TResult Function(String searchText, String projectId,
+            double? latitude, double? longitude)
         searchByHouseholdHead,
     required TResult Function() clear,
   }) =>
@@ -29,9 +31,11 @@ mixin _$SearchHouseholdsEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function(String projectId, HouseholdModel householdModel)?
+    TResult? Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult? Function(String searchText, String projectId)?
+    TResult? Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult? Function()? clear,
   }) =>
@@ -39,9 +43,11 @@ mixin _$SearchHouseholdsEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function(String projectId, HouseholdModel householdModel)?
+    TResult Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult Function(String searchText, String projectId)?
+    TResult Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult Function()? clear,
     required TResult orElse(),
@@ -144,9 +150,11 @@ class _$SearchHouseholdsInitializedEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function(String projectId, HouseholdModel householdModel)
+    required TResult Function(String projectId, double? latitude,
+            double? longitude, HouseholdModel householdModel)
         searchByHousehold,
-    required TResult Function(String searchText, String projectId)
+    required TResult Function(String searchText, String projectId,
+            double? latitude, double? longitude)
         searchByHouseholdHead,
     required TResult Function() clear,
   }) {
@@ -157,9 +165,11 @@ class _$SearchHouseholdsInitializedEvent
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function(String projectId, HouseholdModel householdModel)?
+    TResult? Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult? Function(String searchText, String projectId)?
+    TResult? Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult? Function()? clear,
   }) {
@@ -170,9 +180,11 @@ class _$SearchHouseholdsInitializedEvent
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function(String projectId, HouseholdModel householdModel)?
+    TResult Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult Function(String searchText, String projectId)?
+    TResult Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult Function()? clear,
     required TResult orElse(),
@@ -241,7 +253,11 @@ abstract class _$$SearchHouseholdsByHouseholdsEventCopyWith<$Res> {
           $Res Function(_$SearchHouseholdsByHouseholdsEvent) then) =
       __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String projectId, HouseholdModel householdModel});
+  $Res call(
+      {String projectId,
+      double? latitude,
+      double? longitude,
+      HouseholdModel householdModel});
 }
 
 /// @nodoc
@@ -258,6 +274,8 @@ class __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? projectId = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? householdModel = null,
   }) {
     return _then(_$SearchHouseholdsByHouseholdsEvent(
@@ -265,6 +283,14 @@ class __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
               as String,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
       householdModel: null == householdModel
           ? _value.householdModel
           : householdModel // ignore: cast_nullable_to_non_nullable
@@ -278,16 +304,23 @@ class __$$SearchHouseholdsByHouseholdsEventCopyWithImpl<$Res>
 class _$SearchHouseholdsByHouseholdsEvent
     implements SearchHouseholdsByHouseholdsEvent {
   const _$SearchHouseholdsByHouseholdsEvent(
-      {required this.projectId, required this.householdModel});
+      {required this.projectId,
+      this.latitude,
+      this.longitude,
+      required this.householdModel});
 
   @override
   final String projectId;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
   @override
   final HouseholdModel householdModel;
 
   @override
   String toString() {
-    return 'SearchHouseholdsEvent.searchByHousehold(projectId: $projectId, householdModel: $householdModel)';
+    return 'SearchHouseholdsEvent.searchByHousehold(projectId: $projectId, latitude: $latitude, longitude: $longitude, householdModel: $householdModel)';
   }
 
   @override
@@ -297,12 +330,17 @@ class _$SearchHouseholdsByHouseholdsEvent
             other is _$SearchHouseholdsByHouseholdsEvent &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, projectId, householdModel);
+  int get hashCode =>
+      Object.hash(runtimeType, projectId, latitude, longitude, householdModel);
 
   @JsonKey(ignore: true)
   @override
@@ -316,41 +354,48 @@ class _$SearchHouseholdsByHouseholdsEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function(String projectId, HouseholdModel householdModel)
+    required TResult Function(String projectId, double? latitude,
+            double? longitude, HouseholdModel householdModel)
         searchByHousehold,
-    required TResult Function(String searchText, String projectId)
+    required TResult Function(String searchText, String projectId,
+            double? latitude, double? longitude)
         searchByHouseholdHead,
     required TResult Function() clear,
   }) {
-    return searchByHousehold(projectId, householdModel);
+    return searchByHousehold(projectId, latitude, longitude, householdModel);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function(String projectId, HouseholdModel householdModel)?
+    TResult? Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult? Function(String searchText, String projectId)?
+    TResult? Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult? Function()? clear,
   }) {
-    return searchByHousehold?.call(projectId, householdModel);
+    return searchByHousehold?.call(
+        projectId, latitude, longitude, householdModel);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function(String projectId, HouseholdModel householdModel)?
+    TResult Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult Function(String searchText, String projectId)?
+    TResult Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
-      return searchByHousehold(projectId, householdModel);
+      return searchByHousehold(projectId, latitude, longitude, householdModel);
     }
     return orElse();
   }
@@ -404,10 +449,14 @@ abstract class SearchHouseholdsByHouseholdsEvent
     implements SearchHouseholdsEvent {
   const factory SearchHouseholdsByHouseholdsEvent(
           {required final String projectId,
+          final double? latitude,
+          final double? longitude,
           required final HouseholdModel householdModel}) =
       _$SearchHouseholdsByHouseholdsEvent;
 
   String get projectId;
+  double? get latitude;
+  double? get longitude;
   HouseholdModel get householdModel;
   @JsonKey(ignore: true)
   _$$SearchHouseholdsByHouseholdsEventCopyWith<
@@ -422,7 +471,11 @@ abstract class _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<$Res> {
           $Res Function(_$SearchHouseholdsSearchByHouseholdHeadEvent) then) =
       __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String searchText, String projectId});
+  $Res call(
+      {String searchText,
+      String projectId,
+      double? latitude,
+      double? longitude});
 }
 
 /// @nodoc
@@ -440,6 +493,8 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
   $Res call({
     Object? searchText = null,
     Object? projectId = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
   }) {
     return _then(_$SearchHouseholdsSearchByHouseholdHeadEvent(
       searchText: null == searchText
@@ -450,6 +505,14 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
               as String,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -459,16 +522,23 @@ class __$$SearchHouseholdsSearchByHouseholdHeadEventCopyWithImpl<$Res>
 class _$SearchHouseholdsSearchByHouseholdHeadEvent
     implements SearchHouseholdsSearchByHouseholdHeadEvent {
   const _$SearchHouseholdsSearchByHouseholdHeadEvent(
-      {required this.searchText, required this.projectId});
+      {required this.searchText,
+      required this.projectId,
+      this.latitude,
+      this.longitude});
 
   @override
   final String searchText;
   @override
   final String projectId;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
 
   @override
   String toString() {
-    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId)';
+    return 'SearchHouseholdsEvent.searchByHouseholdHead(searchText: $searchText, projectId: $projectId, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -479,11 +549,16 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
             (identical(other.searchText, searchText) ||
                 other.searchText == searchText) &&
             (identical(other.projectId, projectId) ||
-                other.projectId == projectId));
+                other.projectId == projectId) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, searchText, projectId);
+  int get hashCode =>
+      Object.hash(runtimeType, searchText, projectId, latitude, longitude);
 
   @JsonKey(ignore: true)
   @override
@@ -498,41 +573,48 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function(String projectId, HouseholdModel householdModel)
+    required TResult Function(String projectId, double? latitude,
+            double? longitude, HouseholdModel householdModel)
         searchByHousehold,
-    required TResult Function(String searchText, String projectId)
+    required TResult Function(String searchText, String projectId,
+            double? latitude, double? longitude)
         searchByHouseholdHead,
     required TResult Function() clear,
   }) {
-    return searchByHouseholdHead(searchText, projectId);
+    return searchByHouseholdHead(searchText, projectId, latitude, longitude);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function(String projectId, HouseholdModel householdModel)?
+    TResult? Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult? Function(String searchText, String projectId)?
+    TResult? Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult? Function()? clear,
   }) {
-    return searchByHouseholdHead?.call(searchText, projectId);
+    return searchByHouseholdHead?.call(
+        searchText, projectId, latitude, longitude);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function(String projectId, HouseholdModel householdModel)?
+    TResult Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult Function(String searchText, String projectId)?
+    TResult Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
-      return searchByHouseholdHead(searchText, projectId);
+      return searchByHouseholdHead(searchText, projectId, latitude, longitude);
     }
     return orElse();
   }
@@ -585,11 +667,15 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
 abstract class SearchHouseholdsSearchByHouseholdHeadEvent
     implements SearchHouseholdsEvent {
   const factory SearchHouseholdsSearchByHouseholdHeadEvent(
-          {required final String searchText, required final String projectId}) =
-      _$SearchHouseholdsSearchByHouseholdHeadEvent;
+      {required final String searchText,
+      required final String projectId,
+      final double? latitude,
+      final double? longitude}) = _$SearchHouseholdsSearchByHouseholdHeadEvent;
 
   String get searchText;
   String get projectId;
+  double? get latitude;
+  double? get longitude;
   @JsonKey(ignore: true)
   _$$SearchHouseholdsSearchByHouseholdHeadEventCopyWith<
           _$SearchHouseholdsSearchByHouseholdHeadEvent>
@@ -639,9 +725,11 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function(String projectId, HouseholdModel householdModel)
+    required TResult Function(String projectId, double? latitude,
+            double? longitude, HouseholdModel householdModel)
         searchByHousehold,
-    required TResult Function(String searchText, String projectId)
+    required TResult Function(String searchText, String projectId,
+            double? latitude, double? longitude)
         searchByHouseholdHead,
     required TResult Function() clear,
   }) {
@@ -652,9 +740,11 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function(String projectId, HouseholdModel householdModel)?
+    TResult? Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult? Function(String searchText, String projectId)?
+    TResult? Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult? Function()? clear,
   }) {
@@ -665,9 +755,11 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function(String projectId, HouseholdModel householdModel)?
+    TResult Function(String projectId, double? latitude, double? longitude,
+            HouseholdModel householdModel)?
         searchByHousehold,
-    TResult Function(String searchText, String projectId)?
+    TResult Function(String searchText, String projectId, double? latitude,
+            double? longitude)?
         searchByHouseholdHead,
     TResult Function()? clear,
     required TResult orElse(),
