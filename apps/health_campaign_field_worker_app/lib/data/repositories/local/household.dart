@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'dart:math';
 import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -25,6 +24,27 @@ class HouseholdLocalRepository
         ),
       ],
     );
+    // if (query.latitude != null &&
+    //     query.longitude != null &&
+    //     query.maxRadius != null) {
+    //   final latitude = query.latitude!;
+    //   final longitude = query.longitude!;
+    //   final radiusInMeters = query.maxRadius!;
+    //   final latitudeDifference = radiusInMeters / 111320;
+    //   final longitudeDifference = radiusInMeters /
+    //       (111320 * cos(latitude * pi / 180)); // Convert to meters
+
+    //   selectQuery.where(
+    //     sql.address.latitude
+    //             .isBiggerOrEqualValue(latitude - latitudeDifference) &
+    //         sql.address.latitude
+    //             .isSmallerOrEqualValue(latitude + latitudeDifference) &
+    //         sql.address.longitude
+    //             .isBiggerOrEqualValue(longitude - longitudeDifference) &
+    //         sql.address.longitude
+    //             .isSmallerOrEqualValue(longitude + longitudeDifference),
+    //   );
+    // }
 
     final results = await (selectQuery
           ..where(
