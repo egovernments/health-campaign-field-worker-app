@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:location/location.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_households.dart';
@@ -78,25 +79,44 @@ class _SearchBeneficiaryPageState
                           ],
                         ),
                       ),
-                      DigitSearchBar(
-                        controller: searchController,
-                        hintText: localizations.translate(
-                          i18.searchBeneficiary.beneficiarySearchHintText,
-                        ),
-                        textCapitalization: TextCapitalization.words,
-                        onChanged: (value) {
-                          final bloc = context.read<SearchHouseholdsBloc>();
-                          if (value.trim().length < 2) {
-                            bloc.add(const SearchHouseholdsClearEvent());
+                      BlocBuilder<LocationBloc, LocationState>(
+                        builder: (context, locationState) {
+                          return Column(
+                            children: [
+                              Text(
+                                locationState.latitude.toString(),
+                              ),
+                              Text(
+                                locationState.longitude.toString(),
+                              ),
+                              DigitSearchBar(
+                                controller: searchController,
+                                hintText: localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiarySearchHintText,
+                                ),
+                                textCapitalization: TextCapitalization.words,
+                                onChanged: (value) {
+                                  final bloc =
+                                      context.read<SearchHouseholdsBloc>();
+                                  if (value.trim().length < 2) {
+                                    bloc.add(
+                                        const SearchHouseholdsClearEvent());
 
-                            return;
-                          }
+                                    return;
+                                  }
 
-                          bloc.add(
-                            SearchHouseholdsSearchByHouseholdHeadEvent(
-                              searchText: value.trim(),
-                              projectId: context.projectId,
-                            ),
+                                  bloc.add(
+                                    SearchHouseholdsSearchByHouseholdHeadEvent(
+                                      searchText: value.trim(),
+                                      projectId: context.projectId,
+                                      latitude: locationState.latitude,
+                                      longitude: locationState.longitude,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           );
                         },
                       ),

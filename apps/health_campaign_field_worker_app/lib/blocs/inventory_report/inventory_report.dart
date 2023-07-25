@@ -96,6 +96,8 @@ class InventoryReportBloc
     final data = await stockReconciliationRepository.search(
       StockReconciliationSearchModel(
         tenantId: envConfig.variables.tenantId,
+        facilityId: event.facilityId,
+        productVariantId: event.productVariantId,
       ),
     );
 
@@ -119,8 +121,10 @@ class InventoryReportEvent with _$InventoryReportEvent {
     required String productVariantId,
   }) = InventoryReportLoadStockDataEvent;
 
-  const factory InventoryReportEvent.loadStockReconciliationData() =
-      InventoryReportLoadStockReconciliationDataEvent;
+  const factory InventoryReportEvent.loadStockReconciliationData({
+    required String facilityId,
+    required String productVariantId,
+  }) = InventoryReportLoadStockReconciliationDataEvent;
 }
 
 @freezed

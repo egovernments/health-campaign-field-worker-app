@@ -16,6 +16,9 @@ class HouseholdLocalRepository
     HouseholdSearchModel query, [
     String? userId,
   ]) async {
+    print(query.latitude);
+    print(query.longitude);
+    print("-----Search Queries----");
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(

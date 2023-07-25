@@ -31,6 +31,11 @@ class StockReconciliationLocalRepository extends LocalRepository<
           ..where(
             buildAnd(
               [
+                if (query.facilityId != null)
+                  sql.stockReconciliation.facilityId.equals(query.facilityId),
+                if (query.productVariantId != null)
+                  sql.stockReconciliation.productVariantId
+                      .equals(query.productVariantId),
                 if (query.clientReferenceId != null)
                   sql.stockReconciliation.id.equals(
                     query.id,

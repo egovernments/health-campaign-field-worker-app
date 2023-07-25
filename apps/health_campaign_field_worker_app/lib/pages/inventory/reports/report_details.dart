@@ -58,13 +58,26 @@ class _InventoryReportDetailsPageState
 
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
-        ? const InventoryReportLoadStockReconciliationDataEvent()
+        ? InventoryReportLoadStockReconciliationDataEvent(
+            facilityId: form.control(_facilityKey).value != null
+                ? (form.control(_facilityKey).value as FacilityModel).id
+                : '',
+            productVariantId: form.control(_productVariantKey).value != null
+                ? (form.control(_productVariantKey).value
+                        as ProductVariantModel)
+                    .id
+                : '',
+          )
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
-            facilityId: (form.control(_facilityKey).value as FacilityModel).id,
-            productVariantId:
-                (form.control(_productVariantKey).value as ProductVariantModel)
-                    .id,
+            facilityId: form.control(_facilityKey).value != null
+                ? (form.control(_facilityKey).value as FacilityModel).id
+                : '',
+            productVariantId: form.control(_productVariantKey).value != null
+                ? (form.control(_productVariantKey).value
+                        as ProductVariantModel)
+                    .id
+                : '',
           );
 
     context.read<InventoryReportBloc>().add(event);
