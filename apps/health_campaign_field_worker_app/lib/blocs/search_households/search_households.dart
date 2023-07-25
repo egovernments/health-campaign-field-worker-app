@@ -254,10 +254,6 @@ class SearchHouseholdsBloc
       final households = await household.search(
         HouseholdSearchModel(
           clientReferenceId: [householdId],
-          // [TODO]: Need to take this data from location service on search screen.
-          latitude: 90,
-          longitude: 180,
-          maxRadius: 100,
         ),
       );
 
