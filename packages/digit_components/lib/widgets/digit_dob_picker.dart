@@ -81,9 +81,13 @@ class DigitDobPicker extends StatelessWidget {
                           AbstractControl<dynamic> control) {
                         DigitDOBAge age =
                             DigitDateUtils.calculateAge(formControl.value);
-                        return age.years <= 150 && age.years >= 0
-                            ? null
-                            : {yearsErrorMessage: true};
+                        DateTime formValue = formControl.value;
+                        return formValue.isAfter(DateTime.now()) ||
+                                age.years < 0 ||
+                                age.years > 150 ||
+                                (age.years >= 150 && age.months > 0)
+                            ? {yearsErrorMessage: true}
+                            : null;
                       }
 
                       formControl.setValidators([requiredTrue]);
@@ -113,9 +117,13 @@ class DigitDobPicker extends StatelessWidget {
                           AbstractControl<dynamic> control) {
                         DigitDOBAge age =
                             DigitDateUtils.calculateAge(formControl.value);
-                        return age.months <= 11 && age.months >= 0
-                            ? null
-                            : {monthsErrorMessage: true};
+                        DateTime formValue = formControl.value;
+                        return formValue.isAfter(DateTime.now()) ||
+                                age.months < 0 ||
+                                age.months > 11 ||
+                                (age.years >= 150 && age.months > 0)
+                            ? {monthsErrorMessage: true}
+                            : null;
                       }
 
                       formControl.setValidators([requiredTrue]);
@@ -142,17 +150,24 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   @override
   DateTime? viewToModelValue(DigitDOBAge? viewValue) {
     if (viewValue == null) return null;
-    final years = viewValue.years;
+    final years = DigitDateUtils.yearsToDays(viewValue.years);
     final months = viewValue.months;
-    final days = years * 365 + months * 30;
+    final days = DigitDateUtils.yearsMonthsDaysToDays(
+        viewValue.years, viewValue.months, viewValue.days);
 
-    final calculatedDate = DateTime.now().subtract(Duration(days: days));
+    final calculatedDate = DateTime.now().subtract(Duration(days: days + 1));
 
-    return DateTime(
-      calculatedDate.year,
-      calculatedDate.month,
-      calculatedDate.day,
-    );
+    return months > 11
+        ? DateTime(
+            DateTime.now().year,
+            DateTime.now().month + 1,
+            DateTime.now().day + 1,
+          )
+        : DateTime(
+            calculatedDate.year,
+            calculatedDate.month,
+            calculatedDate.day,
+          );
   }
 }
 
@@ -163,19 +178,26 @@ class DobValueAccessorYearsString
 
   DobValueAccessorYearsString(this.accessor);
   String existingMonth = '0';
+  String existingDays = '0';
 
   @override
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
     existingMonth = dobAge != null ? dobAge.months.toString() : '0';
-    return dobAge != null ? dobAge.years.toString() : existingMonth;
+    existingDays = dobAge != null ? dobAge.days.toString() : '0';
+    return dobAge != null && dobAge.years >= 0
+        ? dobAge.years.toString()
+        : existingMonth;
   }
 
   @override
   DateTime? viewToModelValue(String? viewValue) {
     final years = int.tryParse(viewValue ?? '');
 
-    final dobAge = DigitDOBAge(years ?? 0, int.parse(existingMonth));
+    final dobAge = DigitDOBAge(
+        years: years ?? 0,
+        months: int.parse(existingMonth),
+        days: int.parse(existingDays));
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -187,18 +209,25 @@ class DobValueAccessorMonthString
 
   DobValueAccessorMonthString(this.accessor);
   String existingYear = '0';
+  String existingDays = '0';
 
   @override
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
-    existingYear = dobAge != null ? dobAge.years.toString() : '0';
-    return dobAge != null ? dobAge.months.toString() : dobAge?.years.toString();
+    existingYear =
+        dobAge != null && dobAge.years >= 0 ? dobAge.years.toString() : '0';
+    existingDays = dobAge != null ? dobAge.days.toString() : '0';
+    int months = dobAge != null ? dobAge.months : 0;
+    return dobAge != null ? months.toString() : existingYear;
   }
 
   @override
   DateTime? viewToModelValue(String? viewValue) {
-    final years = int.tryParse(viewValue ?? '');
-    final dobAge = DigitDOBAge(int.parse(existingYear), years ?? 0);
+    final months = int.tryParse(viewValue ?? '0');
+    final dobAge = DigitDOBAge(
+        years: int.parse(existingYear),
+        months: months ?? 0,
+        days: int.parse(existingDays));
     return accessor.viewToModelValue(dobAge);
   }
 }

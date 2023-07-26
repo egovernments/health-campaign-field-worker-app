@@ -5,19 +5,30 @@ class DigitDateUtils {
   // Function to calculate age in years and months based on the selected date.
   static DigitDOBAge calculateAge(DateTime selectedDate) {
     DateTime currentDate = DateTime.now();
+
+    // Calculate the difference in years, months, and days
     int ageInYears = currentDate.year - selectedDate.year;
     int ageInMonths = currentDate.month - selectedDate.month;
+    int ageInDays = currentDate.day - selectedDate.day;
 
-    if (currentDate.day < selectedDate.day) {
+    // If the current day is earlier than the selected day in the same month,
+    // reduce the month count and adjust the days accordingly.
+    if (ageInDays < 0) {
       ageInMonths--;
+      ageInDays += DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
     }
 
+    // If the current month is earlier than the selected month, reduce the year count
+    // and adjust the month and day counts accordingly.
     if (ageInMonths < 0) {
       ageInYears--;
       ageInMonths += 12;
     }
 
-    return DigitDOBAge(ageInYears, ageInMonths);
+    return DigitDOBAge(
+        years: ageInYears >= 0 ? ageInYears : 0,
+        months: ageInMonths,
+        days: ageInDays);
   }
 
   // Function to get a formatted date string based on the provided date string and date format.
@@ -31,6 +42,39 @@ class DigitDateUtils {
         print(e);
       }
     }
+  }
+
+  static bool isLeapYear(int year) {
+    // A year is a leap year if it's divisible by 4 but not divisible by 100,
+    // or if it's divisible by 400.
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+  }
+
+  static int yearsToDays(int years) {
+    int days = 0;
+    for (int year = 0; year < years; year++) {
+      days += isLeapYear(year) ? 366 : 365;
+    }
+    return days;
+  }
+
+  static int yearsMonthsDaysToDays(int years, int months, int days) {
+    int totalDays = 0;
+
+    // Convert years to days
+    for (int year = 0; year < years; year++) {
+      totalDays += isLeapYear(year) ? 366 : 365;
+    }
+
+    // Convert months to days
+    for (int month = 0; month < months; month++) {
+      totalDays += DateTime(DateTime.now().year, month + 2, 0).day;
+    }
+
+    // Add the given days to the total
+    totalDays += days;
+
+    return totalDays;
   }
 
   // Function to parse the provided date string and return a DateTime object.
@@ -115,6 +159,7 @@ class DigitDateUtils {
 class DigitDOBAge {
   final int years;
   final int months;
+  final int days;
 
-  DigitDOBAge(this.years, this.months);
+  DigitDOBAge({this.years = 0, this.months = 0, this.days = 0});
 }
