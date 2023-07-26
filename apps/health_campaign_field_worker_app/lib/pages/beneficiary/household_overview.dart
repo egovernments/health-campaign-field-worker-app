@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +9,6 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../router/app_router.dart';
-import '../../utils/date_conversions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
@@ -399,27 +399,25 @@ class _HouseholdOverviewPageState
                                           },
                                           name: e.name?.givenName ?? ' - ',
                                           years: (e.dateOfBirth == null
-                                              ? null
-                                              : DateConversions
-                                                  .getYearsAndMonthsFromDateTime(
-                                                  DateConversions
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                  false,
-                                                )),
+                                                  ? null
+                                                  : DigitDateUtils.calculateAge(
+                                                      DigitDateUtils
+                                                              .getFormattedDateToDateTime(
+                                                            e.dateOfBirth!,
+                                                          ) ??
+                                                          DateTime.now(),
+                                                    ).years) ??
+                                              0,
                                           months: (e.dateOfBirth == null
-                                              ? null
-                                              : DateConversions
-                                                  .getYearsAndMonthsFromDateTime(
-                                                  DateConversions
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                  true,
-                                                )),
+                                                  ? null
+                                                  : DigitDateUtils.calculateAge(
+                                                      DigitDateUtils
+                                                              .getFormattedDateToDateTime(
+                                                            e.dateOfBirth!,
+                                                          ) ??
+                                                          DateTime.now(),
+                                                    ).months) ??
+                                              0,
                                           gender: e.gender?.name ?? ' - ',
                                           isDelivered: taskdata == null
                                               ? false
