@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitTextFormField extends StatelessWidget {
@@ -22,6 +23,7 @@ class DigitTextFormField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
   final Map<String, String Function(Object control)>? validationMessages;
+  final List<TextInputFormatter>? inputFormatters;
 
   const DigitTextFormField({
     super.key,
@@ -44,6 +46,7 @@ class DigitTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.onChanged,
     this.minLength,
+    this.inputFormatters,
   });
 
   @override
@@ -60,6 +63,7 @@ class DigitTextFormField extends StatelessWidget {
             minLines: minLines,
             maxLines: maxLines,
             obscureText: obscureText,
+            inputFormatters: inputFormatters,
             focusNode: focusNode,
             keyboardType: keyboardType,
             valueAccessor: valueAccessor,
