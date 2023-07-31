@@ -157,9 +157,9 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
 
     final calculatedDate = DateTime.now().subtract(Duration(days: days + 1));
 
-    return months > 11
+    return viewValue.years < 0 || months < 0 || months > 11
         ? DateTime(
-            DateTime.now().year,
+        viewValue.years < 0 ? DateTime.now().year + 1 : DateTime.now().year,
             DateTime.now().month + 1,
             DateTime.now().day + 1,
           )
