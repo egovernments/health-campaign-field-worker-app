@@ -22,6 +22,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
     on(_handleCreateStockEntry);
+    on(_handleSaveTransactionDetails);
   }
 
   FutureOr<void> _handleSaveWarehouseDetails(
@@ -36,6 +37,26 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
         emit(
           value.copyWith(
             dateOfRecord: event.dateOfRecord,
+            facilityModel: event.facilityModel,
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _handleSaveTransactionDetails(
+    RecordStockSaveTransactionDetailsEvent event,
+    RecordStockEmitter emit,
+  ) async {
+    state.maybeMap(
+      orElse: () {
+        throw const InvalidRecordStockStateException();
+      },
+      create: (value) {
+        emit(
+          value.copyWith(
+            dateOfRecord: event.dateOfRecord,
+            teamCode: event.teamCode,
             facilityModel: event.facilityModel,
           ),
         );
@@ -69,6 +90,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
         final dateOfRecord = value.dateOfRecord;
         final facilityModel = value.facilityModel;
         final stockModel = value.stockModel;
+        final teamCode = value.teamCode;
 
         if (dateOfRecord == null) {
           throw const InvalidRecordStockStateException(
@@ -126,6 +148,12 @@ class RecordStockEvent with _$RecordStockEvent {
 
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
+
+  const factory RecordStockEvent.saveTransactionDetails({
+    required DateTime dateOfRecord,
+    required String teamCode,
+    FacilityModel? facilityModel,
+  }) = RecordStockSaveTransactionDetailsEvent;
 }
 
 @freezed
@@ -136,6 +164,7 @@ class RecordStockState with _$RecordStockState {
     required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
+    String? teamCode,
     StockModel? stockModel,
   }) = RecordStockCreateState;
 
@@ -144,6 +173,7 @@ class RecordStockState with _$RecordStockState {
     required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
+    String? teamCode,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
 }
@@ -160,4 +190,5 @@ enum StockRecordEntryType {
   returned,
   loss,
   damaged,
+  consumed,
 }

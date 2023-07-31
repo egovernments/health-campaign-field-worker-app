@@ -38,6 +38,13 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
         ),
       ),
       FacilityModel(
+        id: 'Supervisor',
+        additionalFields: FacilityAdditionalFields(
+          version: 1,
+          fields: [const AdditionalField('type', 'Supervisor')],
+        ),
+      ),
+      FacilityModel(
         id: 'Delivery Team',
         additionalFields: FacilityAdditionalFields(
           version: 1,

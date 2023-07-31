@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/record_stock/record_stock.dart';
+import '../../models/auth/auth_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -21,6 +23,18 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.warehouseManager,
+        )
+        .toList()
+        .isNotEmpty;
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.distributor,
+        )
+        .toList()
+        .isNotEmpty;
 
     return Scaffold(
       body: ScrollableContent(
@@ -58,15 +72,19 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
+                  title: localizations.translate(isDistributor
+                      ? i18.manageStock.recordStockConsumedLabel
+                      : i18.manageStock.recordStockIssuedLabel),
+                  description: localizations.translate(isDistributor
+                      ? i18.manageStock.recordStockConsumedDescription
+                      : i18.manageStock.recordStockIssuedDescription),
                   prefixIcon: Icons.file_upload_outlined,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
                     RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                      type: isDistributor
+                          ? StockRecordEntryType.consumed
+                          : StockRecordEntryType.dispatch,
                     ),
                   ),
                 ),

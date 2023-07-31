@@ -8,6 +8,7 @@ import '../../../blocs/facility/facility.dart';
 import '../../../blocs/inventory_report/inventory_report.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
+import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -83,10 +84,10 @@ class _InventoryReportDetailsPageState
     context.read<InventoryReportBloc>().add(event);
   }
 
-  FormGroup _form() {
+  FormGroup _form(bool isDistributor) {
     return fb.group({
       _facilityKey: FormControl<FacilityModel>(
-        validators: [Validators.required],
+        validators: isDistributor ? [] : [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
@@ -96,6 +97,19 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.warehouseManager,
+        )
+        .toList()
+        .isNotEmpty;
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.distributor,
+        )
+        .toList()
+        .isNotEmpty;
+
     return Scaffold(
       bottomNavigationBar: DigitCard(
         padding: const EdgeInsets.all(8.0),
@@ -132,7 +146,7 @@ class _InventoryReportDetailsPageState
                 ),
               ),
               ReactiveFormBuilder(
-                form: _form,
+                form: () => _form(isDistributor),
                 builder: (ctx, form, child) {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height * 0.65,
@@ -163,65 +177,74 @@ class _InventoryReportDetailsPageState
                                   DigitCard(
                                     child: Column(
                                       children: [
-                                        BlocConsumer<FacilityBloc,
-                                            FacilityState>(
-                                          listener: (context, state) =>
-                                              state.whenOrNull(
-                                            empty: () =>
-                                                NoFacilitiesAssignedDialog.show(
-                                              context,
+                                        if (!isDistributor)
+                                          BlocConsumer<FacilityBloc,
+                                              FacilityState>(
+                                            listener: (context, state) =>
+                                                state.whenOrNull(
+                                              empty: () =>
+                                                  NoFacilitiesAssignedDialog
+                                                      .show(
+                                                context,
+                                              ),
                                             ),
+                                            builder: (context, state) {
+                                              final facilities =
+                                                  state.whenOrNull(
+                                                        fetched:
+                                                            (facilities, _) =>
+                                                                facilities,
+                                                      ) ??
+                                                      [];
+
+                                              return DigitTextFormField(
+                                                valueAccessor:
+                                                    FacilityValueAccessor(
+                                                  facilities,
+                                                ),
+                                                label: localizations.translate(
+                                                  i18.stockReconciliationDetails
+                                                      .facilityLabel,
+                                                ),
+                                                suffix: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.search),
+                                                ),
+                                                formControlName: _facilityKey,
+                                                readOnly: true,
+                                                isRequired: true,
+                                                onTap: () async {
+                                                  final stockReconciliationBloc =
+                                                      context.read<
+                                                          StockReconciliationBloc>();
+
+                                                  final facility = await context
+                                                      .router
+                                                      .push<FacilityModel>(
+                                                    FacilitySelectionRoute(
+                                                      facilities: facilities,
+                                                    ),
+                                                  );
+
+                                                  if (facility == null &&
+                                                      isWareHouseMgr) return;
+                                                  form
+                                                      .control(_facilityKey)
+                                                      .value = facility;
+                                                  stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                      facility ??
+                                                          FacilityModel(
+                                                            id: context
+                                                                .loggedInUserUuid,
+                                                          ),
+                                                    ),
+                                                  );
+                                                  handleSelection(form);
+                                                },
+                                              );
+                                            },
                                           ),
-                                          builder: (context, state) {
-                                            final facilities = state.whenOrNull(
-                                                  fetched: (facilities, _) =>
-                                                      facilities,
-                                                ) ??
-                                                [];
-
-                                            return DigitTextFormField(
-                                              valueAccessor:
-                                                  FacilityValueAccessor(
-                                                facilities,
-                                              ),
-                                              label: localizations.translate(
-                                                i18.stockReconciliationDetails
-                                                    .facilityLabel,
-                                              ),
-                                              suffix: const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(Icons.search),
-                                              ),
-                                              formControlName: _facilityKey,
-                                              readOnly: true,
-                                              isRequired: true,
-                                              onTap: () async {
-                                                final stockReconciliationBloc =
-                                                    context.read<
-                                                        StockReconciliationBloc>();
-
-                                                final facility = await context
-                                                    .router
-                                                    .push<FacilityModel>(
-                                                  FacilitySelectionRoute(
-                                                    facilities: facilities,
-                                                  ),
-                                                );
-
-                                                if (facility == null) return;
-                                                form
-                                                    .control(_facilityKey)
-                                                    .value = facility;
-                                                stockReconciliationBloc.add(
-                                                  StockReconciliationSelectFacilityEvent(
-                                                    facility,
-                                                  ),
-                                                );
-                                                handleSelection(form);
-                                              },
-                                            );
-                                          },
-                                        ),
                                         BlocBuilder<ProductVariantBloc,
                                             ProductVariantState>(
                                           builder: (context, state) {

@@ -2,7 +2,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../../blocs/inventory_report/inventory_report.dart';
+import '../../../models/auth/auth_model.dart';
 import '../../../router/app_router.dart';
+import '../../../utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
@@ -23,6 +25,18 @@ class _InventoryReportSelectionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.warehouseManager,
+        )
+        .toList()
+        .isNotEmpty;
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.distributor,
+        )
+        .toList()
+        .isNotEmpty;
 
     return Scaffold(
       body: ScrollableContent(
@@ -63,7 +77,11 @@ class _InventoryReportSelectionPageState
                 ),
                 DigitListView(
                   title: localizations.translate(
-                    i18.inventoryReportSelection.inventoryReportIssuedLabel,
+                    isDistributor
+                        ? i18.inventoryReportSelection
+                            .inventoryReportConsumedLabel
+                        : i18.inventoryReportSelection
+                            .inventoryReportIssuedLabel,
                   ),
                   description: localizations.translate(i18
                       .inventoryReportSelection

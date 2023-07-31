@@ -425,6 +425,10 @@ class StockDetails {
 
   String get damagedPageTitle => 'DAMAGED_STOCK_DETAILS';
 
+  String get consumedPageTitle => 'CONSUMED_STOCK_DETAILS';
+
+  String get transactionDetails => 'STOCK_TRANSACTION_DETAILS';
+
   /// Select Product label
   String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
 
@@ -454,8 +458,16 @@ class StockDetails {
 
   String get quantityDamagedLabel => 'STOCK_DETAILS_QUANTITY_DAMAGED';
 
+  String get quantityConsumedLabel => 'STOCK_DETAILS_QUANTITY_CONSUMED';
+
   /// Waybill number label
   String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
+
+  ///Supervisor Name Label
+  String get supervisorNameLabel => 'STOCK_DETAILS_SUPERVISOR_NAME';
+
+  String get supervisorNameIsRequired =>
+      'STOCK_DETAILS_SUPERVISOR_NAME_IS_REQUIRED';
 
   /// Number of product indicated on waybill title
   String get quantityOfProductIndicatedOnWaybillLabel {
@@ -486,6 +498,8 @@ class StockReconciliationDetails {
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
 
   String get stockLabel => 'STOCK_LABEL';
+
+  String get teamCodeLabel => 'STOCK_TEAM_CODE_LABEL';
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
 
@@ -546,6 +560,12 @@ class ManageStock {
 
   String get recordStockIssuedDescription =>
       'MANAGE_STOCK_RECORDSTOCK_ISSUED_DESCRIPTION';
+
+  String get recordStockConsumedLabel =>
+      'MANAGE_STOCK_RECORD_STOCK_CONSUMED_LABEL';
+
+  String get recordStockConsumedDescription =>
+      'MANAGE_STOCK_RECORD_STOCK_CONSUMED_DESCRIPTION';
 
   String get recordStockReturnedLabel =>
       'MANAGE_STOCK_RECORDSTOCK_RETURNED_LABEL';
@@ -693,6 +713,10 @@ class InventoryReportSelection {
 
   String get inventoryReportIssuedLabel {
     return 'INVENTORY_REPORT_SELECTION_ISSUED_LABEL';
+  }
+
+  String get inventoryReportConsumedLabel {
+    return 'INVENTORY_REPORT_SELECTION_CONSUMED_LABEL';
   }
 
   String get inventoryReportIssuedDescription {

@@ -76,6 +76,21 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject;
   }
 
+  List<UserRoleModel> get loggedInUserRoles {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel) {
+        return userModel.roles;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject;
+  }
+
   bool get showProgressBar {
     UserRequestModel loggedInUser;
 

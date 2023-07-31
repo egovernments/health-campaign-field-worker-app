@@ -422,6 +422,29 @@ class _HomePageState extends LocalizedState<HomePage> {
                 searchBloc.add(const SearchHouseholdsClearEvent());
               },
             ),
+            HomeItemCard(
+              icon: Icons.store_mall_directory,
+              label: i18.home.manageStockLabel,
+              onPressed: () {
+                context.router.push(ManageStocksRoute());
+              },
+            ),
+            HomeItemCard(
+              icon: Icons.menu_book,
+              label: i18.home.stockReconciliationLabel,
+              onPressed: () {
+                context.router.push(StockReconciliationRoute());
+              },
+            ),
+            HomeItemCard(
+              icon: Icons.announcement,
+              label: i18.home.viewReportsLabel,
+              onPressed: () {
+                context.router.push(
+                  InventoryReportSelectionRoute(),
+                );
+              },
+            ),
           ]);
           break;
         case UserRoleCodeEnum.systemAdministrator:
