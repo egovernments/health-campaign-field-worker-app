@@ -15,6 +15,9 @@ class AppConfiguration {
   @Name("SYNC_METHOD")
   late String? syncMethod;
 
+  @Name("PROXIMITY_SEARCH_RANGE")
+  late double? maxRadius;
+
   @Name("SYNC_TRIGGER")
   late String? syncTrigger;
 

@@ -12,6 +12,7 @@ class HouseholdSearchModel extends EntitySearchModel {
   final double? latitude;
   final double? longitude;
   final double? maxRadius;
+  final bool? isProximityEnabled;
   final List<String>? clientReferenceId;
   final String? tenantId;
   
@@ -21,6 +22,7 @@ class HouseholdSearchModel extends EntitySearchModel {
     this.latitude,
     this.longitude,
     this.maxRadius,
+    this.isProximityEnabled,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -34,6 +36,7 @@ class HouseholdSearchModel extends EntitySearchModel {
     this.latitude,
     this.longitude,
     this.maxRadius,
+    this.isProximityEnabled,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -49,7 +52,6 @@ class HouseholdModel extends EntityModel {
   final int? memberCount;
   final double? latitude;
   final double? longitude;
-  final double? maxRadius;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -62,7 +64,6 @@ class HouseholdModel extends EntityModel {
     this.memberCount,
     this.latitude,
     this.longitude,
-    this.maxRadius,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -83,7 +84,6 @@ class HouseholdModel extends EntityModel {
       memberCount: Value(memberCount),
       latitude: Value(latitude),
       longitude: Value(longitude),
-      maxRadius: Value(maxRadius),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

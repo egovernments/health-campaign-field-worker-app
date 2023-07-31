@@ -179,8 +179,12 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+
   String get yearsAbbr => 'YEARS_ABBR';
+
   String get monthsAbbr => 'MONTHS_ABBR';
+
+  String get proximityLabel => 'PROXIMITY_LABEL';
 }
 
 class IndividualDetails {

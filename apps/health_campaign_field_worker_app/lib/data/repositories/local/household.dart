@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:math' as math;
 import 'package:drift/drift.dart';
 
@@ -16,9 +15,6 @@ class HouseholdLocalRepository
     HouseholdSearchModel query, [
     String? userId,
   ]) async {
-    print(query.latitude);
-    print(query.longitude);
-    print("-----Search Queries----");
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
@@ -50,7 +46,8 @@ class HouseholdLocalRepository
               ),
             if (query.latitude != null &&
                 query.longitude != null &&
-                query.maxRadius != null)
+                query.maxRadius != null &&
+                query.isProximityEnabled == true)
               CustomExpression<bool>('''
         (6371393 * acos(
             cos(${query.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))

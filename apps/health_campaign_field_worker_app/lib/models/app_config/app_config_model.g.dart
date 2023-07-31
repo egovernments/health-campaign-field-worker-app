@@ -98,6 +98,7 @@ _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
           .map((e) => Languages.fromJson(e as Map<String, dynamic>))
           .toList(),
       tenantId: json['TENANT_ID'] as String?,
+      maxRadius: (json['PROXIMITY_SEARCH_RANGE'] as num?)?.toDouble(),
       householdDeletionReasonOptions: (json['HOUSEHOLD_DELETION_REASON_OPTIONS']
               as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
@@ -145,6 +146,7 @@ Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
       'SYNC_TRIGGER': instance.syncTrigger,
       'LANGUAGES': instance.languages,
       'TENANT_ID': instance.tenantId,
+      'PROXIMITY_SEARCH_RANGE': instance.maxRadius,
       'HOUSEHOLD_DELETION_REASON_OPTIONS':
           instance.householdDeletionReasonOptions,
       'BANDWIDTH_BATCH_SIZE': instance.bandWidthBatchSize,

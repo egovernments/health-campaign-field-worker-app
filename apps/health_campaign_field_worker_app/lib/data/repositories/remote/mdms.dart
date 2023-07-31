@@ -126,6 +126,7 @@ class MdmsRepository {
         ..syncMethod = element.syncMethod
         ..syncTrigger = element.syncTrigger
         ..tenantId = element.tenantId
+        ..maxRadius = element.maxRadius
         ..backgroundServiceConfig = backgroundServiceConfig;
 
       final List<Languages> languageList = element.languages.map((element) {

@@ -63,6 +63,7 @@ class _IndividualDetailsPageState
                         SearchHouseholdsByHouseholdsEvent(
                           householdModel: value.householdModel,
                           projectId: context.projectId,
+                          isProximityEnabled: false,
                         ),
                       );
                   router.push(AcknowledgementRoute());

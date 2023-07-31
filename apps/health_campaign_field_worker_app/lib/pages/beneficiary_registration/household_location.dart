@@ -74,97 +74,105 @@ class _HouseholdLocationPageState
                   height: 85,
                   child: DigitCard(
                     margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                    child: DigitElevatedButton(
-                      onPressed: () {
-                        form.markAllAsTouched();
-                        if (!form.valid) return;
+                    child: BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return DigitElevatedButton(
+                          onPressed: () {
+                            form.markAllAsTouched();
+                            if (!form.valid) return;
 
-                        final addressLine1 =
-                            form.control(_addressLine1Key).value as String?;
-                        final addressLine2 =
-                            form.control(_addressLine2Key).value as String?;
-                        final landmark =
-                            form.control(_landmarkKey).value as String?;
-                        final postalCode =
-                            form.control(_postalCodeKey).value as String?;
+                            final addressLine1 =
+                                form.control(_addressLine1Key).value as String?;
+                            final addressLine2 =
+                                form.control(_addressLine2Key).value as String?;
+                            final landmark =
+                                form.control(_landmarkKey).value as String?;
+                            final postalCode =
+                                form.control(_postalCodeKey).value as String?;
 
-                        registrationState.maybeWhen(
-                          orElse: () {
-                            return;
+                            registrationState.maybeWhen(
+                              orElse: () {
+                                return;
+                              },
+                              create: (
+                                address,
+                                householdModel,
+                                individualModel,
+                                registrationDate,
+                                searchQuery,
+                                loading,
+                                isHeadOfHousehold,
+                              ) {
+                                var addressModel = AddressModel(
+                                  addressLine1: addressLine1,
+                                  addressLine2: addressLine2,
+                                  landmark: landmark,
+                                  pincode: postalCode,
+                                  type: AddressType.correspondence,
+                                  latitude: form.control(_latKey).value ??
+                                      locationState.latitude,
+                                  longitude: form.control(_lngKey).value ??
+                                      locationState.longitude,
+                                  locationAccuracy:
+                                      form.control(_accuracyKey).value ??
+                                          locationState.accuracy,
+                                  locality: LocalityModel(
+                                    code: context.boundary.code!,
+                                    name: context.boundary.name,
+                                  ),
+                                  tenantId: envConfig.variables.tenantId,
+                                  rowVersion: 1,
+                                  auditDetails: AuditDetails(
+                                    createdBy: context.loggedInUserUuid,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
+                                  ),
+                                );
+
+                                bloc.add(
+                                  BeneficiaryRegistrationSaveAddressEvent(
+                                    addressModel,
+                                  ),
+                                );
+                                router.push(HouseHoldDetailsRoute());
+                              },
+                              editHousehold: (
+                                address,
+                                householdModel,
+                                individuals,
+                                registrationDate,
+                                loading,
+                              ) {
+                                var addressModel = address.copyWith(
+                                  addressLine1: addressLine1,
+                                  addressLine2: addressLine2,
+                                  landmark: landmark,
+                                  locality: address.locality,
+                                  pincode: postalCode,
+                                  type: AddressType.correspondence,
+                                  latitude: form.control(_latKey).value,
+                                  longitude: form.control(_lngKey).value,
+                                  locationAccuracy:
+                                      form.control(_accuracyKey).value,
+                                );
+
+                                bloc.add(
+                                  BeneficiaryRegistrationSaveAddressEvent(
+                                    addressModel,
+                                  ),
+                                );
+                                router.push(HouseHoldDetailsRoute());
+                              },
+                            );
                           },
-                          create: (
-                            address,
-                            householdModel,
-                            individualModel,
-                            registrationDate,
-                            searchQuery,
-                            loading,
-                            isHeadOfHousehold,
-                          ) {
-                            var addressModel = AddressModel(
-                              addressLine1: addressLine1,
-                              addressLine2: addressLine2,
-                              landmark: landmark,
-                              pincode: postalCode,
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value,
-                              longitude: form.control(_lngKey).value,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value,
-                              locality: LocalityModel(
-                                code: context.boundary.code!,
-                                name: context.boundary.name,
-                              ),
-                              tenantId: envConfig.variables.tenantId,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: context.loggedInUserUuid,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                            );
-
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(HouseHoldDetailsRoute());
-                          },
-                          editHousehold: (
-                            address,
-                            householdModel,
-                            individuals,
-                            registrationDate,
-                            loading,
-                          ) {
-                            var addressModel = address.copyWith(
-                              addressLine1: addressLine1,
-                              addressLine2: addressLine2,
-                              landmark: landmark,
-                              locality: address.locality,
-                              pincode: postalCode,
-                              type: AddressType.correspondence,
-                              latitude: form.control(_latKey).value,
-                              longitude: form.control(_lngKey).value,
-                              locationAccuracy:
-                                  form.control(_accuracyKey).value,
-                            );
-
-                            bloc.add(
-                              BeneficiaryRegistrationSaveAddressEvent(
-                                addressModel,
-                              ),
-                            );
-                            router.push(HouseHoldDetailsRoute());
-                          },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.householdLocation.actionLabel),
+                            ),
+                          ),
                         );
                       },
-                      child: Center(
-                        child: Text(
-                          localizations
-                              .translate(i18.householdLocation.actionLabel),
-                        ),
-                      ),
                     ),
                   ),
                 ),
