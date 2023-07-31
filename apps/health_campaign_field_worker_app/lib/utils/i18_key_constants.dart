@@ -223,6 +223,8 @@ class IndividualDetails {
   String get yearsErrorText => 'ERR_YEARS';
 
   String get monthsErrorText => 'ERR_MONTHS';
+
+  String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 }
 
 class HouseholdLocation {

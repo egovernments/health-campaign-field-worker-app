@@ -336,11 +336,8 @@ class _IndividualDetailsPageState
                             separatorLabel: localizations.translate(
                               i18.individualDetails.separatorLabelText,
                             ),
-                            yearsErrorMessage: localizations.translate(
-                              i18.individualDetails.yearsErrorText,
-                            ),
-                            monthsErrorMessage: localizations.translate(
-                              i18.individualDetails.monthsErrorText,
+                            yearsAndMonthsErrMsg: localizations.translate(
+                              i18.individualDetails.yearsAndMonthsErrorText,
                             ),
                           ),
                           BlocBuilder<AppInitializationBloc,
