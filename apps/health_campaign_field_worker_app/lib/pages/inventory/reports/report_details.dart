@@ -55,7 +55,7 @@ class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
-  bool _isLoading = false;
+
 
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
