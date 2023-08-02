@@ -349,16 +349,15 @@ class _IndividualDetailsPageState
                                     appConfiguration.genderOptions ??
                                         <GenderOptions>[];
 
-                                return DigitReactiveDropdown<String>(
+                                return DigitDropdown<String>(
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
-                                  valueMapper: (value) =>
-                                      localizations.translate(value),
+                                  valueMapper: (value) => value,
                                   initialValue: genderOptions.firstOrNull?.name,
                                   menuItems: genderOptions.map(
                                     (e) {
-                                      return e.code;
+                                      return localizations.translate(e.name);
                                     },
                                   ).toList(),
                                   formControlName: _genderKey,
@@ -501,10 +500,9 @@ class _IndividualDetailsPageState
                 final options =
                     appConfiguration.genderOptions ?? <GenderOptions>[];
 
-                return options
-                    .map((e) => localizations.translate(e.name))
-                    .firstWhereOrNull(
-                      (element) => element == individual?.gender?.name,
+                return options.map((e) => e.code).firstWhereOrNull(
+                      (element) =>
+                          element.toLowerCase() == individual?.gender?.name,
                     );
               },
             ),
