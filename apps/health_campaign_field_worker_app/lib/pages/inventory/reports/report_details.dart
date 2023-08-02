@@ -56,6 +56,7 @@ class _InventoryReportDetailsPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
 
+
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
@@ -80,7 +81,13 @@ class _InventoryReportDetailsPageState
                 : '',
           );
 
-    context.read<InventoryReportBloc>().add(event);
+    context.read<InventoryReportBloc>().add(
+          const InventoryReportLoadingEvent(),
+        );
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      context.read<InventoryReportBloc>().add(event);
+    });
   }
 
   FormGroup _form() {
@@ -217,6 +224,7 @@ class _InventoryReportDetailsPageState
                                                     facility,
                                                   ),
                                                 );
+
                                                 handleSelection(form);
                                               },
                                             );
@@ -271,9 +279,11 @@ class _InventoryReportDetailsPageState
                                           title: title,
                                           message: noFilterMessage,
                                         ),
-                                        loading: () => const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
+                                        loading: () {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
                                         stock: (data) {
                                           if (data.isEmpty) {
                                             return Padding(
