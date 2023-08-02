@@ -60,13 +60,3 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     );
   }
 }
-
-class MenuItemModel {
-  final String name;
-  final String code;
-
-  const MenuItemModel({
-    required this.name,
-    required this.code,
-  });
-}
