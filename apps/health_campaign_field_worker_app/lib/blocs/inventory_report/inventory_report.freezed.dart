@@ -16,8 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$InventoryReportEvent {
-  String get facilityId => throw _privateConstructorUsedError;
-  String get productVariantId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(InventoryReportType reportType, String facilityId,
@@ -25,6 +23,7 @@ mixin _$InventoryReportEvent {
         loadStockData,
     required TResult Function(String facilityId, String productVariantId)
         loadStockReconciliationData,
+    required TResult Function() loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -34,6 +33,7 @@ mixin _$InventoryReportEvent {
         loadStockData,
     TResult? Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult? Function()? loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,6 +43,7 @@ mixin _$InventoryReportEvent {
         loadStockData,
     TResult Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult Function()? loading,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -53,6 +54,7 @@ mixin _$InventoryReportEvent {
     required TResult Function(
             InventoryReportLoadStockReconciliationDataEvent value)
         loadStockReconciliationData,
+    required TResult Function(InventoryReportLoadingEvent value) loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,6 +62,7 @@ mixin _$InventoryReportEvent {
     TResult? Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult? Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult? Function(InventoryReportLoadingEvent value)? loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -67,12 +70,9 @@ mixin _$InventoryReportEvent {
     TResult Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult Function(InventoryReportLoadingEvent value)? loading,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $InventoryReportEventCopyWith<InventoryReportEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -81,8 +81,6 @@ abstract class $InventoryReportEventCopyWith<$Res> {
   factory $InventoryReportEventCopyWith(InventoryReportEvent value,
           $Res Function(InventoryReportEvent) then) =
       _$InventoryReportEventCopyWithImpl<$Res, InventoryReportEvent>;
-  @useResult
-  $Res call({String facilityId, String productVariantId});
 }
 
 /// @nodoc
@@ -95,34 +93,14 @@ class _$InventoryReportEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? facilityId = null,
-    Object? productVariantId = null,
-  }) {
-    return _then(_value.copyWith(
-      facilityId: null == facilityId
-          ? _value.facilityId
-          : facilityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      productVariantId: null == productVariantId
-          ? _value.productVariantId
-          : productVariantId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res>
-    implements $InventoryReportEventCopyWith<$Res> {
+abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
   factory _$$InventoryReportLoadStockDataEventCopyWith(
           _$InventoryReportLoadStockDataEvent value,
           $Res Function(_$InventoryReportLoadStockDataEvent) then) =
       __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call(
       {InventoryReportType reportType,
@@ -218,6 +196,7 @@ class _$InventoryReportLoadStockDataEvent
         loadStockData,
     required TResult Function(String facilityId, String productVariantId)
         loadStockReconciliationData,
+    required TResult Function() loading,
   }) {
     return loadStockData(reportType, facilityId, productVariantId);
   }
@@ -230,6 +209,7 @@ class _$InventoryReportLoadStockDataEvent
         loadStockData,
     TResult? Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult? Function()? loading,
   }) {
     return loadStockData?.call(reportType, facilityId, productVariantId);
   }
@@ -242,6 +222,7 @@ class _$InventoryReportLoadStockDataEvent
         loadStockData,
     TResult Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (loadStockData != null) {
@@ -258,6 +239,7 @@ class _$InventoryReportLoadStockDataEvent
     required TResult Function(
             InventoryReportLoadStockReconciliationDataEvent value)
         loadStockReconciliationData,
+    required TResult Function(InventoryReportLoadingEvent value) loading,
   }) {
     return loadStockData(this);
   }
@@ -268,6 +250,7 @@ class _$InventoryReportLoadStockDataEvent
     TResult? Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult? Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult? Function(InventoryReportLoadingEvent value)? loading,
   }) {
     return loadStockData?.call(this);
   }
@@ -278,6 +261,7 @@ class _$InventoryReportLoadStockDataEvent
     TResult Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult Function(InventoryReportLoadingEvent value)? loading,
     required TResult orElse(),
   }) {
     if (loadStockData != null) {
@@ -296,11 +280,8 @@ abstract class InventoryReportLoadStockDataEvent
       _$InventoryReportLoadStockDataEvent;
 
   InventoryReportType get reportType;
-  @override
   String get facilityId;
-  @override
   String get productVariantId;
-  @override
   @JsonKey(ignore: true)
   _$$InventoryReportLoadStockDataEventCopyWith<
           _$InventoryReportLoadStockDataEvent>
@@ -308,14 +289,13 @@ abstract class InventoryReportLoadStockDataEvent
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockReconciliationDataEventCopyWith<$Res>
-    implements $InventoryReportEventCopyWith<$Res> {
+abstract class _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
+    $Res> {
   factory _$$InventoryReportLoadStockReconciliationDataEventCopyWith(
           _$InventoryReportLoadStockReconciliationDataEvent value,
           $Res Function(_$InventoryReportLoadStockReconciliationDataEvent)
               then) =
       __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String facilityId, String productVariantId});
 }
@@ -399,6 +379,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
         loadStockData,
     required TResult Function(String facilityId, String productVariantId)
         loadStockReconciliationData,
+    required TResult Function() loading,
   }) {
     return loadStockReconciliationData(facilityId, productVariantId);
   }
@@ -411,6 +392,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
         loadStockData,
     TResult? Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult? Function()? loading,
   }) {
     return loadStockReconciliationData?.call(facilityId, productVariantId);
   }
@@ -423,6 +405,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
         loadStockData,
     TResult Function(String facilityId, String productVariantId)?
         loadStockReconciliationData,
+    TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (loadStockReconciliationData != null) {
@@ -439,6 +422,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     required TResult Function(
             InventoryReportLoadStockReconciliationDataEvent value)
         loadStockReconciliationData,
+    required TResult Function(InventoryReportLoadingEvent value) loading,
   }) {
     return loadStockReconciliationData(this);
   }
@@ -449,6 +433,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     TResult? Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult? Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult? Function(InventoryReportLoadingEvent value)? loading,
   }) {
     return loadStockReconciliationData?.call(this);
   }
@@ -459,6 +444,7 @@ class _$InventoryReportLoadStockReconciliationDataEvent
     TResult Function(InventoryReportLoadStockDataEvent value)? loadStockData,
     TResult Function(InventoryReportLoadStockReconciliationDataEvent value)?
         loadStockReconciliationData,
+    TResult Function(InventoryReportLoadingEvent value)? loading,
     required TResult orElse(),
   }) {
     if (loadStockReconciliationData != null) {
@@ -475,15 +461,138 @@ abstract class InventoryReportLoadStockReconciliationDataEvent
           required final String productVariantId}) =
       _$InventoryReportLoadStockReconciliationDataEvent;
 
-  @override
   String get facilityId;
-  @override
   String get productVariantId;
-  @override
   @JsonKey(ignore: true)
   _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
           _$InventoryReportLoadStockReconciliationDataEvent>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$InventoryReportLoadingEventCopyWith<$Res> {
+  factory _$$InventoryReportLoadingEventCopyWith(
+          _$InventoryReportLoadingEvent value,
+          $Res Function(_$InventoryReportLoadingEvent) then) =
+      __$$InventoryReportLoadingEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$InventoryReportLoadingEventCopyWithImpl<$Res>
+    extends _$InventoryReportEventCopyWithImpl<$Res,
+        _$InventoryReportLoadingEvent>
+    implements _$$InventoryReportLoadingEventCopyWith<$Res> {
+  __$$InventoryReportLoadingEventCopyWithImpl(
+      _$InventoryReportLoadingEvent _value,
+      $Res Function(_$InventoryReportLoadingEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$InventoryReportLoadingEvent implements InventoryReportLoadingEvent {
+  const _$InventoryReportLoadingEvent();
+
+  @override
+  String toString() {
+    return 'InventoryReportEvent.loading()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InventoryReportLoadingEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)
+        loadStockData,
+    required TResult Function(String facilityId, String productVariantId)
+        loadStockReconciliationData,
+    required TResult Function() loading,
+  }) {
+    return loading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
+    TResult? Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
+    TResult? Function()? loading,
+  }) {
+    return loading?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(InventoryReportType reportType, String facilityId,
+            String productVariantId)?
+        loadStockData,
+    TResult Function(String facilityId, String productVariantId)?
+        loadStockReconciliationData,
+    TResult Function()? loading,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(InventoryReportLoadStockDataEvent value)
+        loadStockData,
+    required TResult Function(
+            InventoryReportLoadStockReconciliationDataEvent value)
+        loadStockReconciliationData,
+    required TResult Function(InventoryReportLoadingEvent value) loading,
+  }) {
+    return loading(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InventoryReportLoadStockDataEvent value)? loadStockData,
+    TResult? Function(InventoryReportLoadStockReconciliationDataEvent value)?
+        loadStockReconciliationData,
+    TResult? Function(InventoryReportLoadingEvent value)? loading,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(InventoryReportLoadStockDataEvent value)? loadStockData,
+    TResult Function(InventoryReportLoadStockReconciliationDataEvent value)?
+        loadStockReconciliationData,
+    TResult Function(InventoryReportLoadingEvent value)? loading,
+    required TResult orElse(),
+  }) {
+    if (loading != null) {
+      return loading(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class InventoryReportLoadingEvent implements InventoryReportEvent {
+  const factory InventoryReportLoadingEvent() = _$InventoryReportLoadingEvent;
 }
 
 /// @nodoc
