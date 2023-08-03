@@ -383,8 +383,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           .toList()
           .firstOrNull
           ?.version;
+      final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
-      if (rowversionList.firstOrNull?.version != serverVersion) {
+      if (rowversionList.firstOrNull?.version != serverVersion ||
+          boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
@@ -393,7 +395,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
-
+        await localSecureStore.setBoundaryRefetch(false);
         final List<RowVersionList> rowVersionList = [];
 
         final data = (configResult).rowVersions?.rowVersionslist;
