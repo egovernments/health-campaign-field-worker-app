@@ -69,6 +69,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
 
       await localSecureStore.setAuthCredentials(result);
+      await localSecureStore.setBoundaryRefetch(true);
 
       emit(
         AuthAuthenticatedState(
