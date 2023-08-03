@@ -9,6 +9,7 @@ import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/boundary.dart';
@@ -126,6 +127,7 @@ class Constants {
         LocalizationWrapperSchema,
         AppConfigurationSchema,
         OpLogSchema,
+        RowVersionListSchema,
       ],
       directory: dir.path,
       name: 'HCM',
