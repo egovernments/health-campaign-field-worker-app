@@ -49,15 +49,8 @@ void main() async {
   if (Isar.getInstance('HCM') == null) {
     await Constants().initialize();
   }
-  final isar = await Isar.open([
-    ServiceRegistrySchema,
-    LocalizationWrapperSchema,
-    AppConfigurationSchema,
-    OpLogSchema,
-    RowVersionListSchema,
-  ]);
 
-  final appConfigs = await isar.appConfigurations.where().findAll();
+  final appConfigs = await Constants().isar.appConfigurations.where().findAll();
   final config = appConfigs.firstOrNull;
 
   final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? false;
