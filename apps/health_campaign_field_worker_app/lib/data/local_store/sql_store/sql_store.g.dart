@@ -1162,6 +1162,940 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
       const EnumIndexConverter<AddressType>(AddressType.values);
 }
 
+class AdverseEventData extends DataClass
+    implements Insertable<AdverseEventData> {
+  final String? id;
+  final String? projectId;
+  final String? projectBeneficiaryId;
+  final String? projectBeneficiaryClientReferenceId;
+  final String? createdBy;
+  final String? status;
+  final String? auditCreatedBy;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final int? plannedStartDate;
+  final int? plannedEndDate;
+  final int? actualStartDate;
+  final int? actualEndDate;
+  final int? createdDate;
+  final String? additionalFields;
+  AdverseEventData(
+      {this.id,
+      this.projectId,
+      this.projectBeneficiaryId,
+      this.projectBeneficiaryClientReferenceId,
+      this.createdBy,
+      this.status,
+      this.auditCreatedBy,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.plannedStartDate,
+      this.plannedEndDate,
+      this.actualStartDate,
+      this.actualEndDate,
+      this.createdDate,
+      this.additionalFields});
+  factory AdverseEventData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return AdverseEventData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      projectId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
+      projectBeneficiaryId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}project_beneficiary_id']),
+      projectBeneficiaryClientReferenceId: const StringType()
+          .mapFromDatabaseResponse(data[
+              '${effectivePrefix}project_beneficiary_client_reference_id']),
+      createdBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_by']),
+      status: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status']),
+      auditCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
+      auditCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_reference_id'])!,
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
+      rowVersion: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      plannedStartDate: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}planned_start_date']),
+      plannedEndDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}planned_end_date']),
+      actualStartDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}actual_start_date']),
+      actualEndDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}actual_end_date']),
+      createdDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_date']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String?>(projectId);
+    }
+    if (!nullToAbsent || projectBeneficiaryId != null) {
+      map['project_beneficiary_id'] = Variable<String?>(projectBeneficiaryId);
+    }
+    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String?>(projectBeneficiaryClientReferenceId);
+    }
+    if (!nullToAbsent || createdBy != null) {
+      map['created_by'] = Variable<String?>(createdBy);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String?>(status);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String?>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool?>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || plannedStartDate != null) {
+      map['planned_start_date'] = Variable<int?>(plannedStartDate);
+    }
+    if (!nullToAbsent || plannedEndDate != null) {
+      map['planned_end_date'] = Variable<int?>(plannedEndDate);
+    }
+    if (!nullToAbsent || actualStartDate != null) {
+      map['actual_start_date'] = Variable<int?>(actualStartDate);
+    }
+    if (!nullToAbsent || actualEndDate != null) {
+      map['actual_end_date'] = Variable<int?>(actualEndDate);
+    }
+    if (!nullToAbsent || createdDate != null) {
+      map['created_date'] = Variable<int?>(createdDate);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    return map;
+  }
+
+  AdverseEventCompanion toCompanion(bool nullToAbsent) {
+    return AdverseEventCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      projectBeneficiaryId: projectBeneficiaryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectBeneficiaryId),
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectBeneficiaryClientReferenceId),
+      createdBy: createdBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdBy),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      plannedStartDate: plannedStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedStartDate),
+      plannedEndDate: plannedEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedEndDate),
+      actualStartDate: actualStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualStartDate),
+      actualEndDate: actualEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualEndDate),
+      createdDate: createdDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdDate),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory AdverseEventData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AdverseEventData(
+      id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      projectBeneficiaryId:
+          serializer.fromJson<String?>(json['projectBeneficiaryId']),
+      projectBeneficiaryClientReferenceId: serializer
+          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
+      createdBy: serializer.fromJson<String?>(json['createdBy']),
+      status: serializer.fromJson<String?>(json['status']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      plannedStartDate: serializer.fromJson<int?>(json['plannedStartDate']),
+      plannedEndDate: serializer.fromJson<int?>(json['plannedEndDate']),
+      actualStartDate: serializer.fromJson<int?>(json['actualStartDate']),
+      actualEndDate: serializer.fromJson<int?>(json['actualEndDate']),
+      createdDate: serializer.fromJson<int?>(json['createdDate']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
+      'projectBeneficiaryId': serializer.toJson<String?>(projectBeneficiaryId),
+      'projectBeneficiaryClientReferenceId':
+          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
+      'createdBy': serializer.toJson<String?>(createdBy),
+      'status': serializer.toJson<String?>(status),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'plannedStartDate': serializer.toJson<int?>(plannedStartDate),
+      'plannedEndDate': serializer.toJson<int?>(plannedEndDate),
+      'actualStartDate': serializer.toJson<int?>(actualStartDate),
+      'actualEndDate': serializer.toJson<int?>(actualEndDate),
+      'createdDate': serializer.toJson<int?>(createdDate),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  AdverseEventData copyWith(
+          {String? id,
+          String? projectId,
+          String? projectBeneficiaryId,
+          String? projectBeneficiaryClientReferenceId,
+          String? createdBy,
+          String? status,
+          String? auditCreatedBy,
+          int? auditCreatedTime,
+          String? auditModifiedBy,
+          int? auditModifiedTime,
+          String? clientReferenceId,
+          String? tenantId,
+          bool? isDeleted,
+          int? rowVersion,
+          int? plannedStartDate,
+          int? plannedEndDate,
+          int? actualStartDate,
+          int? actualEndDate,
+          int? createdDate,
+          String? additionalFields}) =>
+      AdverseEventData(
+        id: id ?? this.id,
+        projectId: projectId ?? this.projectId,
+        projectBeneficiaryId: projectBeneficiaryId ?? this.projectBeneficiaryId,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaryClientReferenceId ??
+                this.projectBeneficiaryClientReferenceId,
+        createdBy: createdBy ?? this.createdBy,
+        status: status ?? this.status,
+        auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+        auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId ?? this.tenantId,
+        isDeleted: isDeleted ?? this.isDeleted,
+        rowVersion: rowVersion ?? this.rowVersion,
+        plannedStartDate: plannedStartDate ?? this.plannedStartDate,
+        plannedEndDate: plannedEndDate ?? this.plannedEndDate,
+        actualStartDate: actualStartDate ?? this.actualStartDate,
+        actualEndDate: actualEndDate ?? this.actualEndDate,
+        createdDate: createdDate ?? this.createdDate,
+        additionalFields: additionalFields ?? this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AdverseEventData(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('plannedStartDate: $plannedStartDate, ')
+          ..write('plannedEndDate: $plannedEndDate, ')
+          ..write('actualStartDate: $actualStartDate, ')
+          ..write('actualEndDate: $actualEndDate, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      projectId,
+      projectBeneficiaryId,
+      projectBeneficiaryClientReferenceId,
+      createdBy,
+      status,
+      auditCreatedBy,
+      auditCreatedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      plannedStartDate,
+      plannedEndDate,
+      actualStartDate,
+      actualEndDate,
+      createdDate,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AdverseEventData &&
+          other.id == this.id &&
+          other.projectId == this.projectId &&
+          other.projectBeneficiaryId == this.projectBeneficiaryId &&
+          other.projectBeneficiaryClientReferenceId ==
+              this.projectBeneficiaryClientReferenceId &&
+          other.createdBy == this.createdBy &&
+          other.status == this.status &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.plannedStartDate == this.plannedStartDate &&
+          other.plannedEndDate == this.plannedEndDate &&
+          other.actualStartDate == this.actualStartDate &&
+          other.actualEndDate == this.actualEndDate &&
+          other.createdDate == this.createdDate &&
+          other.additionalFields == this.additionalFields);
+}
+
+class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
+  final Value<String?> id;
+  final Value<String?> projectId;
+  final Value<String?> projectBeneficiaryId;
+  final Value<String?> projectBeneficiaryClientReferenceId;
+  final Value<String?> createdBy;
+  final Value<String?> status;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<int?> plannedStartDate;
+  final Value<int?> plannedEndDate;
+  final Value<int?> actualStartDate;
+  final Value<int?> actualEndDate;
+  final Value<int?> createdDate;
+  final Value<String?> additionalFields;
+  const AdverseEventCompanion({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.plannedStartDate = const Value.absent(),
+    this.plannedEndDate = const Value.absent(),
+    this.actualStartDate = const Value.absent(),
+    this.actualEndDate = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  });
+  AdverseEventCompanion.insert({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.plannedStartDate = const Value.absent(),
+    this.plannedEndDate = const Value.absent(),
+    this.actualStartDate = const Value.absent(),
+    this.actualEndDate = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<AdverseEventData> custom({
+    Expression<String?>? id,
+    Expression<String?>? projectId,
+    Expression<String?>? projectBeneficiaryId,
+    Expression<String?>? projectBeneficiaryClientReferenceId,
+    Expression<String?>? createdBy,
+    Expression<String?>? status,
+    Expression<String?>? auditCreatedBy,
+    Expression<int?>? auditCreatedTime,
+    Expression<String?>? auditModifiedBy,
+    Expression<int?>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String?>? tenantId,
+    Expression<bool?>? isDeleted,
+    Expression<int?>? rowVersion,
+    Expression<int?>? plannedStartDate,
+    Expression<int?>? plannedEndDate,
+    Expression<int?>? actualStartDate,
+    Expression<int?>? actualEndDate,
+    Expression<int?>? createdDate,
+    Expression<String?>? additionalFields,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
+      if (projectBeneficiaryId != null)
+        'project_beneficiary_id': projectBeneficiaryId,
+      if (projectBeneficiaryClientReferenceId != null)
+        'project_beneficiary_client_reference_id':
+            projectBeneficiaryClientReferenceId,
+      if (createdBy != null) 'created_by': createdBy,
+      if (status != null) 'status': status,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (plannedStartDate != null) 'planned_start_date': plannedStartDate,
+      if (plannedEndDate != null) 'planned_end_date': plannedEndDate,
+      if (actualStartDate != null) 'actual_start_date': actualStartDate,
+      if (actualEndDate != null) 'actual_end_date': actualEndDate,
+      if (createdDate != null) 'created_date': createdDate,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+    });
+  }
+
+  AdverseEventCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? projectId,
+      Value<String?>? projectBeneficiaryId,
+      Value<String?>? projectBeneficiaryClientReferenceId,
+      Value<String?>? createdBy,
+      Value<String?>? status,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<int?>? plannedStartDate,
+      Value<int?>? plannedEndDate,
+      Value<int?>? actualStartDate,
+      Value<int?>? actualEndDate,
+      Value<int?>? createdDate,
+      Value<String?>? additionalFields}) {
+    return AdverseEventCompanion(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      projectBeneficiaryId: projectBeneficiaryId ?? this.projectBeneficiaryId,
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId ??
+              this.projectBeneficiaryClientReferenceId,
+      createdBy: createdBy ?? this.createdBy,
+      status: status ?? this.status,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      plannedStartDate: plannedStartDate ?? this.plannedStartDate,
+      plannedEndDate: plannedEndDate ?? this.plannedEndDate,
+      actualStartDate: actualStartDate ?? this.actualStartDate,
+      actualEndDate: actualEndDate ?? this.actualEndDate,
+      createdDate: createdDate ?? this.createdDate,
+      additionalFields: additionalFields ?? this.additionalFields,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String?>(projectId.value);
+    }
+    if (projectBeneficiaryId.present) {
+      map['project_beneficiary_id'] =
+          Variable<String?>(projectBeneficiaryId.value);
+    }
+    if (projectBeneficiaryClientReferenceId.present) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String?>(projectBeneficiaryClientReferenceId.value);
+    }
+    if (createdBy.present) {
+      map['created_by'] = Variable<String?>(createdBy.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String?>(status.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String?>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool?>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int?>(rowVersion.value);
+    }
+    if (plannedStartDate.present) {
+      map['planned_start_date'] = Variable<int?>(plannedStartDate.value);
+    }
+    if (plannedEndDate.present) {
+      map['planned_end_date'] = Variable<int?>(plannedEndDate.value);
+    }
+    if (actualStartDate.present) {
+      map['actual_start_date'] = Variable<int?>(actualStartDate.value);
+    }
+    if (actualEndDate.present) {
+      map['actual_end_date'] = Variable<int?>(actualEndDate.value);
+    }
+    if (createdDate.present) {
+      map['created_date'] = Variable<int?>(createdDate.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AdverseEventCompanion(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('plannedStartDate: $plannedStartDate, ')
+          ..write('plannedEndDate: $plannedEndDate, ')
+          ..write('actualStartDate: $actualStartDate, ')
+          ..write('actualEndDate: $actualEndDate, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AdverseEventTable extends AdverseEvent
+    with TableInfo<$AdverseEventTable, AdverseEventData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AdverseEventTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectIdMeta = const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
+      'project_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectBeneficiaryIdMeta =
+      const VerificationMeta('projectBeneficiaryId');
+  @override
+  late final GeneratedColumn<String?> projectBeneficiaryId =
+      GeneratedColumn<String?>('project_beneficiary_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
+      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  @override
+  late final GeneratedColumn<String?> projectBeneficiaryClientReferenceId =
+      GeneratedColumn<String?>(
+          'project_beneficiary_client_reference_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _createdByMeta = const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<String?> createdBy = GeneratedColumn<String?>(
+      'created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
+      'status', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String?> auditCreatedBy = GeneratedColumn<String?>(
+      'audit_created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
+      'audit_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String?> auditModifiedBy =
+      GeneratedColumn<String?>('audit_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
+      'audit_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String?> clientReferenceId =
+      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
+      'row_version', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _plannedStartDateMeta =
+      const VerificationMeta('plannedStartDate');
+  @override
+  late final GeneratedColumn<int?> plannedStartDate = GeneratedColumn<int?>(
+      'planned_start_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _plannedEndDateMeta =
+      const VerificationMeta('plannedEndDate');
+  @override
+  late final GeneratedColumn<int?> plannedEndDate = GeneratedColumn<int?>(
+      'planned_end_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _actualStartDateMeta =
+      const VerificationMeta('actualStartDate');
+  @override
+  late final GeneratedColumn<int?> actualStartDate = GeneratedColumn<int?>(
+      'actual_start_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _actualEndDateMeta =
+      const VerificationMeta('actualEndDate');
+  @override
+  late final GeneratedColumn<int?> actualEndDate = GeneratedColumn<int?>(
+      'actual_end_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _createdDateMeta =
+      const VerificationMeta('createdDate');
+  @override
+  late final GeneratedColumn<int?> createdDate = GeneratedColumn<int?>(
+      'created_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        projectId,
+        projectBeneficiaryId,
+        projectBeneficiaryClientReferenceId,
+        createdBy,
+        status,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        plannedStartDate,
+        plannedEndDate,
+        actualStartDate,
+        actualEndDate,
+        createdDate,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? 'adverse_event';
+  @override
+  String get actualTableName => 'adverse_event';
+  @override
+  VerificationContext validateIntegrity(Insertable<AdverseEventData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_id')) {
+      context.handle(
+          _projectBeneficiaryIdMeta,
+          projectBeneficiaryId.isAcceptableOrUnknown(
+              data['project_beneficiary_id']!, _projectBeneficiaryIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_client_reference_id')) {
+      context.handle(
+          _projectBeneficiaryClientReferenceIdMeta,
+          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
+              data['project_beneficiary_client_reference_id']!,
+              _projectBeneficiaryClientReferenceIdMeta));
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('planned_start_date')) {
+      context.handle(
+          _plannedStartDateMeta,
+          plannedStartDate.isAcceptableOrUnknown(
+              data['planned_start_date']!, _plannedStartDateMeta));
+    }
+    if (data.containsKey('planned_end_date')) {
+      context.handle(
+          _plannedEndDateMeta,
+          plannedEndDate.isAcceptableOrUnknown(
+              data['planned_end_date']!, _plannedEndDateMeta));
+    }
+    if (data.containsKey('actual_start_date')) {
+      context.handle(
+          _actualStartDateMeta,
+          actualStartDate.isAcceptableOrUnknown(
+              data['actual_start_date']!, _actualStartDateMeta));
+    }
+    if (data.containsKey('actual_end_date')) {
+      context.handle(
+          _actualEndDateMeta,
+          actualEndDate.isAcceptableOrUnknown(
+              data['actual_end_date']!, _actualEndDateMeta));
+    }
+    if (data.containsKey('created_date')) {
+      context.handle(
+          _createdDateMeta,
+          createdDate.isAcceptableOrUnknown(
+              data['created_date']!, _createdDateMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  AdverseEventData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return AdverseEventData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $AdverseEventTable createAlias(String alias) {
+    return $AdverseEventTable(attachedDatabase, alias);
+  }
+}
+
 class NameData extends DataClass implements Insertable<NameData> {
   final String? id;
   final String? individualClientReferenceId;
@@ -23166,6 +24100,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
   late final $AddressTable address = $AddressTable(this);
+  late final $AdverseEventTable adverseEvent = $AdverseEventTable(this);
   late final $NameTable name = $NameTable(this);
   late final $BoundaryTable boundary = $BoundaryTable(this);
   late final $DocumentTable document = $DocumentTable(this);
@@ -23209,6 +24144,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         address,
+        adverseEvent,
         name,
         boundary,
         document,

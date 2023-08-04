@@ -12,6 +12,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
+const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -375,6 +376,14 @@ class DeliverIntervention {
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+}
+
+class AdverseEvents {
+  const AdverseEvents();
+
+  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
 }
 
 class ProjectSelection {

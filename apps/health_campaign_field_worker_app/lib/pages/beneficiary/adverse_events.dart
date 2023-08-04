@@ -1,19 +1,13 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recase/recase.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../blocs/product_variant/product_variant.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -24,22 +18,20 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
-class DeliverInterventionPage extends LocalizedStatefulWidget {
+class AdverseEventsPage extends LocalizedStatefulWidget {
   final bool isEditing;
 
-  const DeliverInterventionPage({
+  const AdverseEventsPage({
     super.key,
     super.appLocalizations,
     this.isEditing = false,
   });
 
   @override
-  State<DeliverInterventionPage> createState() =>
-      _DeliverInterventionPageState();
+  State<AdverseEventsPage> createState() => _AdverseEventsPageState();
 }
 
-class _DeliverInterventionPageState
-    extends LocalizedState<DeliverInterventionPage> {
+class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
@@ -270,7 +262,7 @@ class _DeliverInterventionPageState
                               child: Center(
                                 child: Text(
                                   localizations.translate(
-                                    i18.common.coreCommonSubmit,
+                                    i18.common.coreCommonNext,
                                   ),
                                 ),
                               ),
@@ -288,212 +280,45 @@ class _DeliverInterventionPageState
                                     Expanded(
                                       child: Text(
                                         localizations.translate(
-                                          i18.deliverIntervention
-                                              .deliverInterventionLabel,
+                                          i18.adverseEvents.adverseEventsLabel,
                                         ),
                                         style: theme.textTheme.displayMedium,
                                       ),
                                     ),
                                   ],
                                 ),
-                                DigitTableCard(
-                                  element: {
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .dateOfRegistrationLabel): () {
-                                      final date = projectBeneficiary
-                                          .first.dateOfRegistration;
+                                const DigitDivider(),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.adverseEvents.selectSymptomsLabel,
+                                      ),
+                                      style: theme.textTheme.headlineSmall,
+                                    ),
+                                  ),
+                                ),
+                                BlocBuilder<AppInitializationBloc,
+                                    AppInitializationState>(
+                                  builder: (context, state) => state.maybeWhen(
+                                    orElse: () => const Offstage(),
+                                    initialized: (appConfiguration, _) {
+                                      final symptomTypesOptions =
+                                          appConfiguration.symptomsTypes ??
+                                              <SymptomsTypes>[];
 
-                                      final registrationDate =
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                        date,
+                                      return Column(
+                                        children: symptomTypesOptions
+                                            .map((e) => DigitCheckboxTile(
+                                                  label: localizations
+                                                      .translate(e.code),
+                                                ))
+                                            .toList(),
                                       );
-
-                                      return DateFormat('dd MMMM yyyy')
-                                          .format(registrationDate);
-                                    }(),
-                                  },
-                                ),
-                                DigitTableCard(
-                                  color: Theme.of(context).colorScheme.surface,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    style: BorderStyle.solid,
-                                    width: 1.0,
+                                    },
                                   ),
-                                  padding: const EdgeInsets.only(
-                                    left: 8,
-                                    right: 8,
-                                    bottom: 16,
-                                  ),
-                                  element: {
-                                    localizations.translate(i18
-                                            .householdOverView
-                                            .householdOverViewHouseholdHeadLabel):
-                                        householdMemberWrapper.headOfHousehold
-                                                .name?.givenName ??
-                                            '',
-                                    localizations.translate(
-                                      i18.deliverIntervention.idTypeText,
-                                    ): () {
-                                      final identifiers = householdMemberWrapper
-                                          .headOfHousehold.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '';
-                                      }
-
-                                      return identifiers.first.identifierType ??
-                                          '';
-                                    }(),
-                                    localizations.translate(
-                                      i18.deliverIntervention.idNumberText,
-                                    ): () {
-                                      final identifiers = householdMemberWrapper
-                                          .headOfHousehold.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '';
-                                      }
-
-                                      return identifiers.first.identifierId ??
-                                          '';
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonAge,
-                                    ): () {
-                                      final dob = householdMemberWrapper
-                                          .headOfHousehold.dateOfBirth;
-                                      if (dob == null || dob.isEmpty) {
-                                        return '';
-                                      }
-
-                                      final int years =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).years;
-                                      final int months =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).months;
-
-                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonGender,
-                                    ): householdMemberWrapper.headOfHousehold
-                                            .gender?.name.sentenceCase ??
-                                        '',
-                                    localizations.translate(
-                                      i18.common.coreCommonMobileNumber,
-                                    ): householdMemberWrapper
-                                            .headOfHousehold.mobileNumber ??
-                                        '',
-                                  },
-                                ),
-                                DigitTableCard(
-                                  element: {
-                                    state.selectedIndividual != null
-                                            ? localizations.translate(
-                                                i18.deliverIntervention
-                                                    .heightLabelText,
-                                              )
-                                            : '':
-                                        state.selectedIndividual != null
-                                            ? state
-                                                .selectedIndividual
-                                                ?.additionalFields
-                                                ?.fields
-                                                .first
-                                                .value
-                                            : '',
-                                  },
-                                ),
-                                DigitTableCard(
-                                  element: {
-                                    localizations.translate(
-                                      i18.deliverIntervention.memberCountText,
-                                    ): householdMemberWrapper
-                                            .household.memberCount ??
-                                        householdMemberWrapper.members.length,
-                                  },
-                                ),
-                                const DigitDivider(),
-                                DigitTableCard(
-                                  element: {
-                                    localizations.translate(
-                                      '${i18.deliverIntervention.noOfResourcesForDelivery}_${context.beneficiaryType}',
-                                    ): () {
-                                      final count = householdMemberWrapper
-                                              .household.memberCount ??
-                                          householdMemberWrapper.members.length;
-
-                                      return min(count / 1.8, 3).round();
-                                    }(),
-                                  },
-                                ),
-                                const DigitDivider(),
-                                BlocBuilder<ProductVariantBloc,
-                                    ProductVariantState>(
-                                  builder: (context, productState) {
-                                    return productState.maybeWhen(
-                                      orElse: () => const Offstage(),
-                                      fetched: (productVariants) {
-                                        final productVariantId = taskData
-                                            ?.firstOrNull
-                                            ?.resources
-                                            ?.firstOrNull
-                                            ?.productVariantId;
-
-                                        final variant = productState.whenOrNull(
-                                          fetched: (productVariants) {
-                                            return productVariants
-                                                .firstWhereOrNull(
-                                              (element) =>
-                                                  element.id ==
-                                                  productVariantId,
-                                            );
-                                          },
-                                        );
-
-                                        form
-                                            .control(_resourceDeliveredKey)
-                                            .value = variant;
-
-                                        return DigitReactiveDropdown<
-                                            ProductVariantModel>(
-                                          label: localizations.translate(
-                                            i18.deliverIntervention
-                                                .resourceDeliveredLabel,
-                                          ),
-                                          isRequired: true,
-                                          valueMapper: (value) {
-                                            return localizations.translate(
-                                              value.sku ?? value.id,
-                                            );
-                                          },
-                                          menuItems: productVariants,
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .resourceDeliveredError,
-                                                ),
-                                          },
-                                          formControlName:
-                                              _resourceDeliveredKey,
-                                        );
-                                      },
-                                    );
-                                  },
                                 ),
                                 DigitIntegerFormPicker(
                                   form: form,
@@ -504,34 +329,6 @@ class _DeliverInterventionPageState
                                         .quantityDistributedLabel,
                                   ),
                                   incrementer: true,
-                                ),
-                                BlocBuilder<AppInitializationBloc,
-                                    AppInitializationState>(
-                                  builder: (context, state) {
-                                    if (state is! AppInitialized) {
-                                      return const Offstage();
-                                    }
-
-                                    final deliveryCommentOptions = state
-                                            .appConfiguration
-                                            .deliveryCommentOptions ??
-                                        <DeliveryCommentOptions>[];
-
-                                    return DigitReactiveDropdown<String>(
-                                      label: localizations.translate(
-                                        i18.deliverIntervention
-                                            .deliveryCommentLabel,
-                                      ),
-                                      valueMapper: (value) => value,
-                                      initialValue: deliveryCommentOptions
-                                          .firstOrNull?.name,
-                                      menuItems:
-                                          deliveryCommentOptions.map((e) {
-                                        return localizations.translate(e.name);
-                                      }).toList(),
-                                      formControlName: _deliveryCommentKey,
-                                    );
-                                  },
                                 ),
                               ],
                             ),

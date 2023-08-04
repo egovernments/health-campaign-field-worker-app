@@ -267,6 +267,15 @@ class MdmsRepository {
       appConfiguration.complaintTypes = complaintTypesList;
       appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     });
+    appConfiguration.symptomsTypes =
+        result.symptomsTypes?.symptomsTypeList?.map((e) {
+      final symptomTypes = SymptomsTypes()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return symptomTypes;
+    }).toList();
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);

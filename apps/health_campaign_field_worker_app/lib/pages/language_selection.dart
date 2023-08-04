@@ -28,6 +28,8 @@ class LanguageSelectionPage extends StatelessWidget {
                 if (state is! AppInitialized) return const Offstage();
                 final appConfig = state.appConfiguration;
                 final languages = state.appConfiguration.languages;
+                print('Symptom Types:: ');
+                print(state.appConfiguration.symptomsTypes);
                 final localizationModulesList =
                     state.appConfiguration.backendInterface?.interfaces;
                 if (languages == null) {
