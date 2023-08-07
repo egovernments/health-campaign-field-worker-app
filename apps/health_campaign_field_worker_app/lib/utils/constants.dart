@@ -203,6 +203,17 @@ class Constants {
 
     return actionResult ?? '';
   }
+
+  static List<KeyValue> yesNo = [
+    KeyValue('HCM_COMMON_YES', true),
+    KeyValue('HCM_COMMON_NO', false),
+  ];
+}
+
+class KeyValue {
+  String label;
+  dynamic key;
+  KeyValue(this.label, this.key);
 }
 
 /// By using this key, we can push pages without context

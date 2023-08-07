@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -35,6 +36,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
+  static const _reAdministerKey = 'reAdminister';
 
   @override
   Widget build(BuildContext context) {
@@ -330,6 +332,14 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                   ),
                                   incrementer: true,
                                 ),
+                                DigitRadioButtonList<KeyValue>(
+                                  labelText: localizations.translate(i18
+                                      .adverseEvents.didYouReAdministerLabel),
+                                  formControlName: _reAdministerKey,
+                                  valueMapper: (value) => localizations
+                                      .translate(value.label.toUpperCase()),
+                                  options: Constants.yesNo,
+                                ),
                               ],
                             ),
                           ),
@@ -373,6 +383,9 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
         validators: [Validators.required],
       ),
       _deliveryCommentKey: FormControl<String>(
+        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
+      ),
+      _reAdministerKey: FormControl<String>(
         value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
       ),
     });

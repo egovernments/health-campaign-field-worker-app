@@ -264,7 +264,7 @@ class _DeliverInterventionPageState
                                     ..pop()
                                     ..pop();
 
-                                  router.push(AcknowledgementRoute());
+                                  router.push(AdverseEventsRoute());
                                 }
                               },
                               child: Center(

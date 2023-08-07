@@ -384,6 +384,8 @@ class AdverseEvents {
   String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
 
   String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 }
 
 class ProjectSelection {
