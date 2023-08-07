@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -10,6 +11,9 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   final ValueChanged<T>? onChanged;
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
+  final EdgeInsets? padding;
+  final double menuMaxHeight;
+  final bool isExpanded;
 
   const DigitReactiveDropdown({
     super.key,
@@ -21,12 +25,15 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     this.initialValue,
     this.onChanged,
     this.validationMessages,
+    this.padding,
+    this.menuMaxHeight = 500,
+    this.isExpanded = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: padding ?? const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -36,11 +43,15 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ReactiveDropdownField(
+            menuMaxHeight: menuMaxHeight,
+            icon: const Icon(Icons.arrow_drop_down),
+            isExpanded: isExpanded,
             onChanged: (control) {
               final value = control.value;
               if (value == null) return;
               onChanged?.call(value);
             },
+            style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
             validationMessages: validationMessages,
             formControlName: formControlName,
             decoration: const InputDecoration(
@@ -49,10 +60,10 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
             items: menuItems
                 .map(
                   (e) => DropdownMenuItem<T>(
-                    value: e,
-                    child: Text(valueMapper(e)),
-                  ),
-                )
+                value: e,
+                child: Text(valueMapper(e)),
+              ),
+            )
                 .toList(),
           ),
         ],
@@ -60,3 +71,4 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     );
   }
 }
+

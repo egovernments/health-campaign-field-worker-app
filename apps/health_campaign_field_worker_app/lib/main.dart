@@ -6,6 +6,7 @@ import 'package:digit_firebase_services/digit_firebase_services.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'utils/background_service.dart';
 import 'package:isar/isar.dart';
 import 'app.dart';
@@ -14,6 +15,7 @@ import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/no_sql/schema/oplog.dart';
+import 'data/local_store/no_sql/schema/row_versions.dart';
 import 'data/local_store/no_sql/schema/service_registry.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
@@ -28,7 +30,7 @@ late Dio _dio;
 int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  final info = await PackageInfo.fromPlatform();
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
 
@@ -46,16 +48,10 @@ void main() async {
 
   await initializeService(_dio);
   if (Isar.getInstance('HCM') == null) {
-    await Constants().initialize();
+    await Constants().initialize(info.version);
   }
-  final isar = await Isar.open([
-    ServiceRegistrySchema,
-    LocalizationWrapperSchema,
-    AppConfigurationSchema,
-    OpLogSchema,
-  ]);
 
-  final appConfigs = await isar.appConfigurations.where().findAll();
+  final appConfigs = await Constants().isar.appConfigurations.where().findAll();
   final config = appConfigs.firstOrNull;
 
   final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? false;

@@ -161,6 +161,7 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
