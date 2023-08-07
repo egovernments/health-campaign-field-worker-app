@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -30,7 +31,8 @@ Future<void> initializeService(
   dio,
 ) async {
   if (Isar.getInstance('HCM') == null) {
-    await Constants().initialize();
+    final info = await PackageInfo.fromPlatform();
+    await Constants().initialize(info.version);
   }
 
   final service = FlutterBackgroundService();
@@ -99,7 +101,8 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
   if (Isar.getInstance('HCM') == null) {
-    await Constants().initialize();
+    final info = await PackageInfo.fromPlatform();
+    await Constants().initialize(info.version);
   }
   await envConfig.initialize();
 

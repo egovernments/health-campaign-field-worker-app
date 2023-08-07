@@ -7,7 +7,10 @@ import 'widget_app.dart';
 void main() {
   group('Powered by Digit widget', () {
     testWidgets('Widget is created without errors', (widgetTester) async {
-      await widgetTester.pumpWidget(const WidgetApp(child: PoweredByDigit()));
+      await widgetTester.pumpWidget(const WidgetApp(
+          child: PoweredByDigit(
+        version: '12.3',
+      )));
 
       expect(
         find.widgetWithImage(
