@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
@@ -48,7 +49,8 @@ class LanguageSelectionPage extends StatelessWidget {
                               );
                             }).toList(),
                             onLanguageChange: (value) async {
-                              Constants().initialize();
+                              final info = await PackageInfo.fromPlatform();
+                              Constants().initialize(info.version);
                               int index = languages.indexWhere(
                                 (ele) =>
                                     ele.value.toString() ==
@@ -85,7 +87,9 @@ class LanguageSelectionPage extends StatelessWidget {
                 );
               },
             ),
-            const PoweredByDigit(isWhiteLogo: true),
+            PoweredByDigit(
+              version: Constants().version,
+            ),
           ],
         ),
       ),
