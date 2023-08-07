@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/address.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
@@ -26,6 +27,7 @@ class SearchHouseholdsBloc
   final String userUid;
   final IndividualDataRepository individual;
   final HouseholdDataRepository household;
+  final AddressLocalRepository addressRepository;
   final HouseholdMemberDataRepository householdMember;
   final ProjectBeneficiaryDataRepository projectBeneficiary;
   final TaskDataRepository taskDataRepository;
@@ -39,6 +41,7 @@ class SearchHouseholdsBloc
     required this.projectBeneficiary,
     required this.taskDataRepository,
     required this.beneficiaryType,
+    required this.addressRepository,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -46,6 +49,7 @@ class SearchHouseholdsBloc
         const Duration(milliseconds: 100),
       ),
     );
+    on(_handleSearchByProximitity);
     on(_handleClear);
     on(_handleSearchByHousehold);
     on(_handleInitialize);
@@ -193,6 +197,85 @@ class SearchHouseholdsBloc
     }
   }
 
+  FutureOr<void> _handleSearchByProximitity(
+    SearchHouseholdsByProximityEvent event,
+    SearchHouseholdsEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    final results =
+        await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
+      latitude: event.latitude,
+      longitude: event.longititude,
+      maxRadius: event.maxRadius,
+    ));
+    final containers = <HouseholdMemberWrapper>[];
+    for (final element in results) {
+      final members = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: element.clientReferenceId,
+        ),
+      );
+      final head = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: element.clientReferenceId,
+          isHeadOfHousehold: true,
+        ),
+      );
+
+      final individualIds = members
+          .map((element) => element.individualClientReferenceId)
+          .whereNotNull()
+          .toList();
+
+      final allHouseholdMembers = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: individualIds,
+        ),
+      );
+
+      final headOfHousehold = allHouseholdMembers.firstWhere((element) =>
+          element.clientReferenceId == head.first.individualClientReferenceId);
+
+      final projectBeneficiaries = beneficiaryType != BeneficiaryType.individual
+          ? await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: [element.clientReferenceId],
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            )
+          : await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: individualIds,
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            );
+
+      final tasks = await taskDataRepository.search(TaskSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
+
+      containers.add(
+        HouseholdMemberWrapper(
+          household: element,
+          headOfHousehold: headOfHousehold,
+          members: allHouseholdMembers,
+          projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isEmpty ? null : tasks,
+        ),
+      );
+    }
+    emit(state.copyWith(
+      householdMembers: containers,
+      loading: false,
+      searchQuery: null,
+    ));
+
+    return;
+  }
+
   FutureOr<void> _handleSearchByHouseholdHead(
     SearchHouseholdsSearchByHouseholdHeadEvent event,
     SearchHouseholdsEmitter emit,
@@ -250,10 +333,12 @@ class SearchHouseholdsBloc
           .toList();
 
       if (householdId == null) continue;
-
       final households = await household.search(
         HouseholdSearchModel(
           clientReferenceId: [householdId],
+          latitude: event.latitude,
+          longitude: event.longitude,
+          maxRadius: event.maxRadius,
         ),
       );
 
@@ -336,13 +421,28 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
 
   const factory SearchHouseholdsEvent.searchByHousehold({
     required String projectId,
+    double? latitude,
+    double? longitude,
+    double? maxRadius,
+    required final bool isProximityEnabled,
     required HouseholdModel householdModel,
   }) = SearchHouseholdsByHouseholdsEvent;
 
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
+    required final bool isProximityEnabled,
+    double? latitude,
+    double? longitude,
+    double? maxRadius,
   }) = SearchHouseholdsSearchByHouseholdHeadEvent;
+
+  const factory SearchHouseholdsEvent.searchByProximity({
+    required double latitude,
+    required double longititude,
+    required String projectId,
+    required double maxRadius,
+  }) = SearchHouseholdsByProximityEvent;
 
   const factory SearchHouseholdsEvent.clear() = SearchHouseholdsClearEvent;
 }
@@ -374,6 +474,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required IndividualModel headOfHousehold,
     required List<IndividualModel> members,
     required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    double? distance,
     List<TaskModel>? tasks,
   }) = _HouseholdMemberWrapper;
 }

@@ -1,7 +1,7 @@
 library app_utils;
 
 import 'dart:async';
-
+import 'dart:math';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -131,6 +131,36 @@ performBackgroundService({
       }
     }
   }
+}
+
+class Coordinate {
+  final double latitude;
+  final double longitude;
+
+  Coordinate(this.latitude, this.longitude);
+}
+
+double calculateDistance(Coordinate start, Coordinate end) {
+  const double earthRadius = 6371.0; // Earth's radius in kilometers
+
+  double toRadians(double degrees) {
+    return degrees * pi / 180.0;
+  }
+
+  double lat1Rad = toRadians(start.latitude);
+  double lon1Rad = toRadians(start.longitude);
+  double lat2Rad = toRadians(end.latitude);
+  double lon2Rad = toRadians(end.longitude);
+
+  double dLat = lat2Rad - lat1Rad;
+  double dLon = lon2Rad - lon1Rad;
+
+  double a = pow(sin(dLat / 2), 2) +
+      cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  double distance = earthRadius * c;
+
+  return distance;
 }
 
 Timer makePeriodicTimer(

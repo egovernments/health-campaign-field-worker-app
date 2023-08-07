@@ -4,6 +4,8 @@ import '../models/entities/user.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
+typedef AddressDataRepository
+    = DataRepository<AddressModel, AddressSearchModel>;
 typedef HouseholdDataRepository
     = DataRepository<HouseholdModel, HouseholdSearchModel>;
 typedef HouseholdMemberDataRepository

@@ -105,23 +105,28 @@ const AppConfigurationSchema = CollectionSchema(
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
-    r'SYNC_METHOD': PropertySchema(
+    r'PROXIMITY_SEARCH_RANGE': PropertySchema(
       id: 15,
+      name: r'PROXIMITY_SEARCH_RANGE',
+      type: IsarType.double,
+    ),
+    r'SYNC_METHOD': PropertySchema(
+      id: 16,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
@@ -462,11 +467,12 @@ void _appConfigurationSerialize(
   );
   writer.writeString(offsets[13], object.networkDetection);
   writer.writeString(offsets[14], object.persistenceMode);
-  writer.writeString(offsets[15], object.syncMethod);
-  writer.writeString(offsets[16], object.syncTrigger);
-  writer.writeString(offsets[17], object.tenantId);
+  writer.writeDouble(offsets[15], object.maxRadius);
+  writer.writeString(offsets[16], object.syncMethod);
+  writer.writeString(offsets[17], object.syncTrigger);
+  writer.writeString(offsets[18], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[18],
+    offsets[19],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
@@ -560,11 +566,12 @@ AppConfiguration _appConfigurationDeserialize(
   );
   object.networkDetection = reader.readStringOrNull(offsets[13]);
   object.persistenceMode = reader.readStringOrNull(offsets[14]);
-  object.syncMethod = reader.readStringOrNull(offsets[15]);
-  object.syncTrigger = reader.readStringOrNull(offsets[16]);
-  object.tenantId = reader.readStringOrNull(offsets[17]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[15]);
+  object.syncMethod = reader.readStringOrNull(offsets[16]);
+  object.syncTrigger = reader.readStringOrNull(offsets[17]);
+  object.tenantId = reader.readStringOrNull(offsets[18]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[18],
+    offsets[19],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
@@ -673,12 +680,14 @@ P _appConfigurationDeserializeProp<P>(
     case 14:
       return (reader.readStringOrNull(offset)) as P;
     case 15:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 16:
       return (reader.readStringOrNull(offset)) as P;
     case 17:
       return (reader.readStringOrNull(offset)) as P;
     case 18:
+      return (reader.readStringOrNull(offset)) as P;
+    case 19:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
@@ -2217,6 +2226,90 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'PROXIMITY_SEARCH_RANGE',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'PROXIMITY_SEARCH_RANGE',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'PROXIMITY_SEARCH_RANGE',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'PROXIMITY_SEARCH_RANGE',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'PROXIMITY_SEARCH_RANGE',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      maxRadiusBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'PROXIMITY_SEARCH_RANGE',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       syncMethodIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2979,6 +3072,20 @@ extension AppConfigurationQuerySortBy
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByMaxRadius() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'PROXIMITY_SEARCH_RANGE', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      sortByMaxRadiusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'PROXIMITY_SEARCH_RANGE', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
       sortBySyncMethod() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'SYNC_METHOD', Sort.asc);
@@ -3048,6 +3155,20 @@ extension AppConfigurationQuerySortThenBy
       thenByPersistenceModeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'PERSISTENCE_MODE', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByMaxRadius() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'PROXIMITY_SEARCH_RANGE', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterSortBy>
+      thenByMaxRadiusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'PROXIMITY_SEARCH_RANGE', Sort.desc);
     });
   }
 
@@ -3122,6 +3243,13 @@ extension AppConfigurationQueryWhereDistinct
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'PERSISTENCE_MODE',
           caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QDistinct>
+      distinctByMaxRadius() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'PROXIMITY_SEARCH_RANGE');
     });
   }
 
@@ -3257,6 +3385,13 @@ extension AppConfigurationQueryProperty
       persistenceModeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'PERSISTENCE_MODE');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, double?, QQueryOperations>
+      maxRadiusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'PROXIMITY_SEARCH_RANGE');
     });
   }
 

@@ -1002,6 +1002,8 @@ mixin _$AppConfig {
   List<Languages> get languages => throw _privateConstructorUsedError;
   @JsonKey(name: 'TENANT_ID')
   String? get tenantId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+  double? get maxRadius => throw _privateConstructorUsedError;
   @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
   List<DeletionReasonOptions> get householdDeletionReasonOptions =>
       throw _privateConstructorUsedError;
@@ -1055,6 +1057,8 @@ abstract class $AppConfigCopyWith<$Res> {
           List<Languages> languages,
       @JsonKey(name: 'TENANT_ID')
           String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+          double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
           List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
@@ -1101,6 +1105,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? syncTrigger = null,
     Object? languages = null,
     Object? tenantId = freezed,
+    Object? maxRadius = freezed,
     Object? householdDeletionReasonOptions = null,
     Object? bandWidthBatchSize = null,
     Object? backgroundServiceConfig = freezed,
@@ -1138,6 +1143,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String?,
+      maxRadius: freezed == maxRadius
+          ? _value.maxRadius
+          : maxRadius // ignore: cast_nullable_to_non_nullable
+              as double?,
       householdDeletionReasonOptions: null == householdDeletionReasonOptions
           ? _value.householdDeletionReasonOptions
           : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
@@ -1228,6 +1237,8 @@ abstract class _$$_AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Res> {
           List<Languages> languages,
       @JsonKey(name: 'TENANT_ID')
           String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+          double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
           List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
@@ -1274,6 +1285,7 @@ class __$$_AppConfigCopyWithImpl<$Res>
     Object? syncTrigger = null,
     Object? languages = null,
     Object? tenantId = freezed,
+    Object? maxRadius = freezed,
     Object? householdDeletionReasonOptions = null,
     Object? bandWidthBatchSize = null,
     Object? backgroundServiceConfig = freezed,
@@ -1311,6 +1323,10 @@ class __$$_AppConfigCopyWithImpl<$Res>
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String?,
+      maxRadius: freezed == maxRadius
+          ? _value.maxRadius
+          : maxRadius // ignore: cast_nullable_to_non_nullable
+              as double?,
       householdDeletionReasonOptions: null == householdDeletionReasonOptions
           ? _value._householdDeletionReasonOptions
           : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
@@ -1376,6 +1392,8 @@ class _$_AppConfig implements _AppConfig {
           required final List<Languages> languages,
       @JsonKey(name: 'TENANT_ID')
           this.tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+          this.maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
           required final List<DeletionReasonOptions>
               householdDeletionReasonOptions,
@@ -1438,6 +1456,9 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'TENANT_ID')
   final String? tenantId;
+  @override
+  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+  final double? maxRadius;
   final List<DeletionReasonOptions> _householdDeletionReasonOptions;
   @override
   @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
@@ -1520,7 +1541,7 @@ class _$_AppConfig implements _AppConfig {
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
   }
 
   @override
@@ -1540,6 +1561,8 @@ class _$_AppConfig implements _AppConfig {
                 .equals(other._languages, _languages) &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
+            (identical(other.maxRadius, maxRadius) ||
+                other.maxRadius == maxRadius) &&
             const DeepCollectionEquality().equals(
                 other._householdDeletionReasonOptions,
                 _householdDeletionReasonOptions) &&
@@ -1577,6 +1600,7 @@ class _$_AppConfig implements _AppConfig {
       syncTrigger,
       const DeepCollectionEquality().hash(_languages),
       tenantId,
+      maxRadius,
       const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
       const DeepCollectionEquality().hash(_bandWidthBatchSize),
       backgroundServiceConfig,
@@ -1618,6 +1642,8 @@ abstract class _AppConfig implements AppConfig {
           required final List<Languages> languages,
       @JsonKey(name: 'TENANT_ID')
           final String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+          final double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
           required final List<DeletionReasonOptions>
               householdDeletionReasonOptions,
@@ -1664,6 +1690,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'TENANT_ID')
   String? get tenantId;
+  @override
+  @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+  double? get maxRadius;
   @override
   @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
   List<DeletionReasonOptions> get householdDeletionReasonOptions;
