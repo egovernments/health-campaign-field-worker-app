@@ -88,6 +88,7 @@ class LanguageSelectionPage extends StatelessWidget {
               },
             ),
             PoweredByDigit(
+              isWhiteLogo: true,
               version: Constants().version,
             ),
           ],
