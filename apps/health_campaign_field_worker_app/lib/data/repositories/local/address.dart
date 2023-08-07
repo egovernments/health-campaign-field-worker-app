@@ -42,6 +42,11 @@ class AddressLocalRepository {
             + sin(${query.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
         )) <= ${query.maxRadius!}
     '''),
+        if (query.latitude != null &&
+            query.longitude != null &&
+            query.maxRadius != null)
+          sql.address.longitude.isNotNull(),
+        sql.address.latitude.isNotNull(),
       ])));
     final results = await selectQuery.get();
 
