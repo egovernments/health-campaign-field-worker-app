@@ -19,7 +19,6 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final userObject = await localSecureStore.userRequestModel;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return Column(
@@ -191,7 +190,9 @@ class SideBar extends StatelessWidget {
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
           ),
-          const PoweredByDigit(),
+          PoweredByDigit(
+            version: Constants().version,
+          ),
         ],
       );
     });

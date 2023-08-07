@@ -16,6 +16,7 @@ class LocalSecureStore {
   static const selectedProjectKey = 'selectedProject';
   static const hasAppRunBeforeKey = 'hasAppRunBefore';
   static const backgroundServiceKey = 'backgroundServiceKey';
+  static const boundaryRefetchInKey = 'boundaryRefetchInKey';
 
   final storage = const FlutterSecureStorage();
 
@@ -69,6 +70,18 @@ class LocalSecureStore {
     }
   }
 
+  Future<bool> get boundaryRefetched async {
+    final isboundaryRefetchRequired =
+        await storage.read(key: boundaryRefetchInKey);
+
+    switch (isboundaryRefetchRequired) {
+      case 'true':
+        return false;
+      default:
+        return true;
+    }
+  }
+
   Future<void> setSelectedProject(ProjectModel projectModel) async {
     await storage.write(
       key: selectedProjectKey,
@@ -82,6 +95,13 @@ class LocalSecureStore {
     await storage.write(
       key: userObjectKey,
       value: json.encode(model.userRequestModel),
+    );
+  }
+
+  Future<void> setBoundaryRefetch(bool isboundaryRefetch) async {
+    await storage.write(
+      key: boundaryRefetchInKey,
+      value: isboundaryRefetch.toString(),
     );
   }
 
