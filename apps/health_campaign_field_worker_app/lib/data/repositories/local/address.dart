@@ -102,6 +102,5 @@ class AddressLocalRepository {
         })
         .where((element) => element.isDeleted != true)
         .toList();
-    return [];
   }
 }
