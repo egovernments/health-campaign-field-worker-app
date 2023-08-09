@@ -179,12 +179,10 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
         ? DateTime(
             viewValue.years < 0 ? DateTime.now().year + 1 : DateTime.now().year,
             DateTime.now().month + 1,
-            DateTime.now().day + 1,
           )
         : DateTime(
             calculatedDate.year,
             calculatedDate.month,
-            calculatedDate.day,
           );
   }
 }
