@@ -129,6 +129,7 @@ class _SearchBeneficiaryPageState
                                       Switch(
                                         value: isProximityEnabled,
                                         onChanged: (value) {
+                                          searchController.clear();
                                           setState(() {
                                             isProximityEnabled = value;
                                           });
