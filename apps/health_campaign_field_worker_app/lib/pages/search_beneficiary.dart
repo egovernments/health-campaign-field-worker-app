@@ -124,41 +124,51 @@ class _SearchBeneficiaryPageState
                                       );
                                     },
                                   ),
-                                  Row(
-                                    children: [
-                                      Switch(
-                                        value: isProximityEnabled,
-                                        onChanged: (value) {
-                                          searchController.clear();
-                                          setState(() {
-                                            isProximityEnabled = value;
-                                          });
+                                  locationState.latitude != null
+                                      ? Row(
+                                          children: [
+                                            Switch(
+                                              value: isProximityEnabled,
+                                              onChanged: (value) {
+                                                searchController.clear();
+                                                setState(() {
+                                                  isProximityEnabled = value;
+                                                });
 
-                                          if (locationState.hasPermissions &&
-                                              value &&
-                                              locationState.latitude != null &&
-                                              locationState.longitude != null &&
-                                              appConfig.maxRadius != null) {
-                                            final bloc = context
-                                                .read<SearchHouseholdsBloc>();
-                                            bloc.add(SearchHouseholdsEvent
-                                                .searchByProximity(
-                                              latitude: locationState.latitude!,
-                                              longititude:
-                                                  locationState.longitude!,
-                                              projectId: context.projectId,
-                                              maxRadius: appConfig.maxRadius!,
-                                            ));
-                                          }
-                                        },
-                                      ),
-                                      Text(
-                                        localizations.translate(
-                                          i18.searchBeneficiary.proximityLabel,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                                if (locationState
+                                                        .hasPermissions &&
+                                                    value &&
+                                                    locationState.latitude !=
+                                                        null &&
+                                                    locationState.longitude !=
+                                                        null &&
+                                                    appConfig.maxRadius !=
+                                                        null) {
+                                                  final bloc = context.read<
+                                                      SearchHouseholdsBloc>();
+                                                  bloc.add(SearchHouseholdsEvent
+                                                      .searchByProximity(
+                                                    latitude:
+                                                        locationState.latitude!,
+                                                    longititude: locationState
+                                                        .longitude!,
+                                                    projectId:
+                                                        context.projectId,
+                                                    maxRadius:
+                                                        appConfig.maxRadius!,
+                                                  ));
+                                                }
+                                              },
+                                            ),
+                                            Text(
+                                              localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .proximityLabel,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : const Offstage(),
                                 ],
                               );
                             },

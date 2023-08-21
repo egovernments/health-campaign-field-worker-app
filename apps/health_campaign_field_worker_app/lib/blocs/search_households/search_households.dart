@@ -201,6 +201,7 @@ class SearchHouseholdsBloc
     SearchHouseholdsByProximityEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
+    print("_handleSearchByProximitity");
     emit(state.copyWith(loading: true));
     final results =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
