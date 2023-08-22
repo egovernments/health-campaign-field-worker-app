@@ -17,8 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          flutter-version: "3.10.5"
       - uses: dart-lang/setup-dart@v1
-      - run: dart pub upgrade
 
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
