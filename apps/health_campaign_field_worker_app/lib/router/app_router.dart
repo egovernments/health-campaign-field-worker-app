@@ -49,6 +49,10 @@ import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 import '../pages/profile.dart';
+import '../pages/beneficiary/refer_beneficiary.dart';
+import '../pages/beneficiary/refer_beneficiary_reason.dart';
+import '../pages/beneficiary/refer_beneficiary_successful.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -103,6 +107,18 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: DeliverInterventionPage,
               path: 'deliver-intervention',
+            ),
+            AutoRoute(
+              page: ReferBeneficiaryPage,
+              path: 'refer-beneficiary',
+            ),
+            AutoRoute(
+              page: ReferBeneficiaryReasonPage,
+              path: 'refer-beneficiary-reason',
+            ),
+            AutoRoute(
+              page: ReferBeneficiarySuccessfulPage,
+              path: 'refer-beneficiary-successful',
             ),
             AutoRoute(
               page: ReasonForDeletionPage,

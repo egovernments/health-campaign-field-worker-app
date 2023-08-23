@@ -481,11 +481,11 @@ class _HouseholdOverviewPageState
           bottomNavigationBar: Offstage(
             offstage: beneficiaryType == BeneficiaryType.individual,
             child: SizedBox(
-              height: 85,
+              height: MediaQuery.of(context).size.height * 0.2,
               child: BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                  margin: const EdgeInsets.only(left: 0, right: 0, top: 15),
                   child: state.tasks?.first.status == 'delivered'
                       ? DigitOutLineButton(
                           label: localizations.translate(
@@ -496,30 +496,55 @@ class _HouseholdOverviewPageState
                                 .push(DeliverInterventionRoute());
                           },
                         )
-                      : DigitElevatedButton(
-                          onPressed: () async {
-                            final bloc = ctx.read<HouseholdOverviewBloc>();
+                      : Column(
+                          children: [
+                            DigitElevatedButton(
+                              onPressed: () async {
+                                final bloc = ctx.read<HouseholdOverviewBloc>();
 
-                            final projectId = context.projectId;
+                                final projectId = context.projectId;
 
-                            await context.router
-                                .push(DeliverInterventionRoute());
+                                await context.router
+                                    .push(DeliverInterventionRoute());
 
-                            bloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: projectId,
-                                projectBeneficiaryType: beneficiaryType,
-                              ),
-                            );
-                          },
-                          child: Center(
-                            child: Text(
-                              localizations.translate(
-                                i18.householdOverView
-                                    .householdOverViewActionText,
+                                bloc.add(
+                                  HouseholdOverviewReloadEvent(
+                                    projectId: projectId,
+                                    projectBeneficiaryType: beneficiaryType,
+                                  ),
+                                );
+                              },
+                              child: Center(
+                                child: Text(
+                                  localizations.translate(
+                                    i18.householdOverView
+                                        .householdOverViewActionText,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            Center(
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 50,
+                                  minHeight: 50,
+                                ),
+                                child: DigitOutLineButton(
+                                  label: localizations.translate(
+                                    i18.householdOverView
+                                        .referBeneficiaryActionText,
+                                  ),
+                                  onPressed: () async {
+                                    await context.router
+                                        .push(ReferBeneficiaryRoute());
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                 ),
               ),

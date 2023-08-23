@@ -23,6 +23,9 @@ const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
+const referBeneficiary = ReferBeneficiary();
+const reasonReferral = ReasonReferral();
+const deliverySuccess = DeliverySuccess();
 
 class Common {
   const Common();
@@ -183,6 +186,23 @@ class SearchBeneficiary {
   String get monthsAbbr => 'MONTHS_ABBR';
 }
 
+class ReferBeneficiary {
+  const ReferBeneficiary();
+
+  String get referBeneficiaryLabel => 'REFER_BENEFICIARY_LABEL';
+  String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+}
+
+class ReasonReferral {
+  const ReasonReferral();
+
+  String get reasonReferralLabel => 'REASON_REFERRAL_LABEL';
+  String get reasonReferralComments => 'REASON_REFERRAL_COMMENTS';
+}
+
 class IndividualDetails {
   const IndividualDetails();
 
@@ -261,6 +281,17 @@ class AcknowledgementSuccess {
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
 }
 
+class DeliverySuccess {
+  const DeliverySuccess();
+  String get deliverySuccessTypeHeadingText =>
+      'DELIVERY_SUCCESS_TYPE_HEADING_TEXT';
+  String get deliveryDescriptionText => 'DELIVERY_SUCCESS_DESCRIPTION_TEXT';
+  String get deliveryReasonForNotDelivering =>
+      'DELIVERY_REASON_FOR_NOT_DELIVERING';
+  String get deliveryReasonOptionsYes => 'DELIVERY_REASON_OPTIONS_YES';
+  String get deliveryReasonOptionsNo => 'DELIVERY_REASON_OPTIONS_NO';
+}
+
 class HouseholdDetails {
   const HouseholdDetails();
 
@@ -311,6 +342,7 @@ class HouseholdOverView {
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
 
+  String get referBeneficiaryActionText => 'REFER_BENEFICIARY_ACTION_TEXT';
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }

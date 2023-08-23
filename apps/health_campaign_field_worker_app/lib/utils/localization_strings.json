@@ -1018,5 +1018,77 @@
     "locale": "pt_MZ",
     "message": "Certifique -se de revisar todos os detalhes antes de clicar no botão Enviar. Clique no botão Cancelar para voltar para a página anterior.",
     "module": "hcm-delivery"
+  },
+  {
+    "code": "REASON_REFERRAL_LABEL",
+    "message": "What is the reason for referral?",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "REASON_REFERRAL_COMMENTS",
+    "message": "Referral Comments",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "REFER_BENEFICIARY_LABEL",
+    "message": "Referral Details",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL",
+    "message": "Date of Referral",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "ADMINISTRATION_UNIT_FORM_LABEL",
+    "message": "Administrative unit",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "REFERRED_BY_FORM_LABEL",
+    "message": "Referred by",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "REFERRED_TO_FORM_LABEL",
+    "message": "Referred to",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "DELIVERY_SUCCESS_TYPE_HEADING_TEXT",
+    "message": "Was the delivery successful?",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "DELIVERY_SUCCESS_DESCRIPTION_TEXT",
+    "message": "Choose the locality of the property from the list given below",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "DELIVERY_REASON_OPTIONS_YES",
+    "message": "Yes",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "DELIVERY_REASON_OPTIONS_NO",
+    "message": "No",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
+  },
+  {
+    "code": "DELIVERY_REASON_FOR_NOT_DELIVERING",
+    "message": "Reason for not delivering",
+    "module": "hcm-beneficiary",
+    "locale": "en_MZ"
   }
 ]

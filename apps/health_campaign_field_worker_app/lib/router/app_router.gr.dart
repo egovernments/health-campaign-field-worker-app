@@ -295,6 +295,41 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ReferBeneficiaryRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferBeneficiaryRouteArgs>(
+          orElse: () => const ReferBeneficiaryRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferBeneficiaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    ReferBeneficiaryReasonRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferBeneficiaryReasonRouteArgs>(
+          orElse: () => const ReferBeneficiaryReasonRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferBeneficiaryReasonPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    ReferBeneficiarySuccessfulRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferBeneficiarySuccessfulRouteArgs>(
+          orElse: () => const ReferBeneficiarySuccessfulRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferBeneficiarySuccessfulPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ReasonForDeletionRoute.name: (routeData) {
       final args = routeData.argsAs<ReasonForDeletionRouteArgs>(
           orElse: () => const ReasonForDeletionRouteArgs());
@@ -562,6 +597,21 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   DeliverInterventionRoute.name,
                   path: 'deliver-intervention',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferBeneficiaryRoute.name,
+                  path: 'refer-beneficiary',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferBeneficiaryReasonRoute.name,
+                  path: 'refer-beneficiary-reason',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferBeneficiarySuccessfulRoute.name,
+                  path: 'refer-beneficiary-successful',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1607,6 +1657,120 @@ class DeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'DeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ReferBeneficiaryPage]
+class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
+  ReferBeneficiaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+  }) : super(
+          ReferBeneficiaryRoute.name,
+          path: 'refer-beneficiary',
+          args: ReferBeneficiaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'ReferBeneficiaryRoute';
+}
+
+class ReferBeneficiaryRouteArgs {
+  const ReferBeneficiaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ReferBeneficiaryReasonPage]
+class ReferBeneficiaryReasonRoute
+    extends PageRouteInfo<ReferBeneficiaryReasonRouteArgs> {
+  ReferBeneficiaryReasonRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+  }) : super(
+          ReferBeneficiaryReasonRoute.name,
+          path: 'refer-beneficiary-reason',
+          args: ReferBeneficiaryReasonRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'ReferBeneficiaryReasonRoute';
+}
+
+class ReferBeneficiaryReasonRouteArgs {
+  const ReferBeneficiaryReasonRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'ReferBeneficiaryReasonRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ReferBeneficiarySuccessfulPage]
+class ReferBeneficiarySuccessfulRoute
+    extends PageRouteInfo<ReferBeneficiarySuccessfulRouteArgs> {
+  ReferBeneficiarySuccessfulRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          ReferBeneficiarySuccessfulRoute.name,
+          path: 'refer-beneficiary-successful',
+          args: ReferBeneficiarySuccessfulRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'ReferBeneficiarySuccessfulRoute';
+}
+
+class ReferBeneficiarySuccessfulRouteArgs {
+  const ReferBeneficiarySuccessfulRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ReferBeneficiarySuccessfulRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
