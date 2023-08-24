@@ -29,8 +29,6 @@ class _ReferBeneficiarySuccessfulState
       i18.deliverySuccess.deliveryReasonOptionsYes,
       i18.deliverySuccess.deliveryReasonOptionsNo,
     ];
-    final form = buildForm();
-    print("Value of _successTypeKey: ${form.control(_successTypeKey).value}");
 
     return Scaffold(
       body: ReactiveFormBuilder(

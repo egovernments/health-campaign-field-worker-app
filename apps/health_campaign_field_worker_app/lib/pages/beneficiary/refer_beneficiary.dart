@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/localization/app_localization.dart';
 import '../../models/entities/facility.dart';
+import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -91,6 +92,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         i18.referBeneficiary.administrationUnitFormLabel,
                       ),
                       isRequired: true,
+                      readOnly: true,
                     ),
                     DigitTextFormField(
                       formControlName: _referredByKey,
@@ -109,7 +111,22 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         padding: EdgeInsets.all(8.0),
                         child: Icon(Icons.search),
                       ),
-                      onTap: () async {},
+                      onTap: () async {
+                        final parent = context.router.parent() as StackRouter;
+                        final facility = await parent.push<FacilityModel>(
+                          FacilitySelectionRoute(
+                            facilities: [
+                              FacilityModel(id: 'Facility 1'),
+                              FacilityModel(id: 'Facility 2'),
+                              FacilityModel(id: 'Facility 3'),
+                              FacilityModel(id: 'Facility 4'),
+                              FacilityModel(id: 'Facility 5'),
+                            ],
+                          ),
+                        );
+                        if (facility == null) return;
+                        form.control(_referredToKey).value = facility;
+                      },
                     ),
                   ]),
                 ],
@@ -123,8 +140,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
 
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _dateOfReferralKey: FormControl<DateTime>(value: null),
-      _administrativeUnitKey: FormControl<String>(value: null),
+      _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
+      _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
       _referredByKey: FormControl<String>(value: null),
       _referredToKey: FormControl<FacilityModel>(validators: []),
     });

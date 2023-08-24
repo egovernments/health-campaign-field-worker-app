@@ -25,6 +25,7 @@ class ReferBeneficiaryReasonPage extends LocalizedStatefulWidget {
 class _ReferBeneficiaryReasonState
     extends LocalizedState<ReferBeneficiaryReasonPage> {
   static const _referralCommentsKey = 'referralComments';
+  static const _referralCheckBoxKey = 'referralCheckBox';
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +78,13 @@ class _ReferBeneficiaryReasonState
                       label: localizations.translate(
                         i18.referBeneficiary.administrationUnitFormLabel,
                       ),
-                      value: true,
+                      value: false,
+                      onChanged: (changedValue) => {
+                        setState(() {
+                          form.control(_referralCheckBoxKey).value =
+                              changedValue;
+                        }),
+                      },
                     ),
                     DigitTextFormField(
                       label: localizations.translate(
@@ -98,6 +105,7 @@ class _ReferBeneficiaryReasonState
   FormGroup buildForm() {
     return fb.group(<String, Object>{
       _referralCommentsKey: FormControl<String>(value: null),
+      _referralCheckBoxKey: FormControl<String>(value: null),
     });
   }
 }
