@@ -481,11 +481,15 @@ class _HouseholdOverviewPageState
           bottomNavigationBar: Offstage(
             offstage: beneficiaryType == BeneficiaryType.individual,
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: MediaQuery.of(context).size.height * 0.2 - 27,
               child: BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 15),
+                  margin: const EdgeInsets.only(
+                    left: 0,
+                    right: 0,
+                    top: 10,
+                  ),
                   child: state.tasks?.first.status == 'delivered'
                       ? DigitOutLineButton(
                           label: localizations.translate(
@@ -528,10 +532,7 @@ class _HouseholdOverviewPageState
                             ),
                             Center(
                               child: Container(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 50,
-                                  minHeight: 50,
-                                ),
+                                constraints: const BoxConstraints(),
                                 child: DigitOutLineButton(
                                   label: localizations.translate(
                                     i18.householdOverView
