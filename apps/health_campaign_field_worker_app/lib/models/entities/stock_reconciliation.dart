@@ -79,7 +79,7 @@ class StockReconciliationModel extends EntityModel {
     required this.clientReferenceId,
     this.rowVersion,
     required int dateOfReconciliation,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): dateOfReconciliationTime = DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),
       super();
@@ -92,6 +92,8 @@ class StockReconciliationModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),

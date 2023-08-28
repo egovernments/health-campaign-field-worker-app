@@ -10,6 +10,8 @@ class Facility extends Table {
   IntColumn get storageCapacity => integer().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
+  IntColumn get clientCreatedTime => integer().nullable()();
+  IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get tenantId => text().nullable()();

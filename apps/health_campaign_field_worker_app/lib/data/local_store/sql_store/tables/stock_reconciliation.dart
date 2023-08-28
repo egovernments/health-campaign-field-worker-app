@@ -15,6 +15,8 @@ class StockReconciliation extends Table {
   TextColumn get commentsOnReconciliation => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
+  IntColumn get clientCreatedTime => integer().nullable()();
+  IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();

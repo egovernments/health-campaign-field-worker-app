@@ -28,6 +28,22 @@ void run(HookContext context) {
         nullable: true,
       ),
       AttributeModel(
+        name: 'clientCreatedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'clientModifiedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
         name: 'auditModifiedBy',
         type: 'String',
         includeForQuery: false,

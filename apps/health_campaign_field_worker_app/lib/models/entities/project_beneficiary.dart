@@ -80,7 +80,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.tenantId,
     this.rowVersion,
     required int dateOfRegistration,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): dateOfRegistrationTime = DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),
       super();
@@ -93,6 +93,8 @@ class ProjectBeneficiaryModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),

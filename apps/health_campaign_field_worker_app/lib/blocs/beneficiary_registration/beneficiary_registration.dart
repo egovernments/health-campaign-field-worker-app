@@ -157,17 +157,19 @@ class BeneficiaryRegistrationBloc
               address: address.copyWith(
                 relatedClientReferenceId: household.clientReferenceId,
                 auditDetails: individual.auditDetails,
+                clientAuditDetails: individual.clientAuditDetails,
                 locality: locality,
               ),
             ),
           );
-
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
           await individualRepository.create(
             individual.copyWith(
               address: [
                 address.copyWith(
                   relatedClientReferenceId: individual.clientReferenceId,
                   auditDetails: individual.auditDetails,
+                  clientAuditDetails: individual.clientAuditDetails,
                   locality: locality,
                 ),
               ],
@@ -185,6 +187,10 @@ class BeneficiaryRegistrationBloc
                   beneficiaryType == BeneficiaryType.individual
                       ? individual.clientReferenceId
                       : household.clientReferenceId,
+              clientAuditDetails: ClientAuditDetails(
+                createdAt,
+                initialModifiedAt,
+              ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -200,6 +206,10 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
+              clientAuditDetails: ClientAuditDetails(
+                createdAt,
+                initialModifiedAt,
+              ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -324,6 +334,7 @@ class BeneficiaryRegistrationBloc
           );
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
 
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
@@ -338,6 +349,10 @@ class BeneficiaryRegistrationBloc
                 auditDetails: AuditDetails(
                   createdBy: event.userUuid,
                   createdTime: createdAt,
+                ),
+                clientAuditDetails: ClientAuditDetails(
+                  createdAt,
+                  initialModifiedAt,
                 ),
               ),
             );
@@ -357,6 +372,7 @@ class BeneficiaryRegistrationBloc
                 createdBy: event.userUuid,
                 createdTime: createdAt,
               ),
+              clientAuditDetails: ClientAuditDetails(createdAt, createdAt),
             ),
           );
         } catch (error) {

@@ -52,7 +52,7 @@ class {{name.pascalCase()}}Model extends EntityModel {
     {{#attributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}},
     {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
     {{/includeForEntity}}{{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
-    {{/dateTimeAttributes}}super.auditDetails,
+    {{/dateTimeAttributes}}super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
@@ -69,6 +69,8 @@ class {{name.pascalCase()}}Model extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
