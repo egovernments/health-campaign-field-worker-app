@@ -375,6 +375,14 @@ class DeliverIntervention {
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+  String get resourceAddBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
+  String get resourceDeleteBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_RESOURCE';
+  String get resourceDeleteBeneficiaryDialogTitle =>
+      'DELIVER_INTERVENTION_RESOURCE_DIALOG_TITLE';
+  String get resourceDeleteBeneficiaryPrimaryActionLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
 }
 
 class ProjectSelection {

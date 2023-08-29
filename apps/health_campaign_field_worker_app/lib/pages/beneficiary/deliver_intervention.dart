@@ -20,6 +20,7 @@ import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../../widgets/beneficiary/resource_beneficiary_card.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -43,6 +44,7 @@ class _DeliverInterventionPageState
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
+  List<Widget> resourceCards = [];
 
   @override
   Widget build(BuildContext context) {
@@ -80,189 +82,200 @@ class _DeliverInterventionPageState
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
-                        footer: DigitCard(
-                          child: DigitElevatedButton(
-                            onPressed: () async {
-                              form.markAllAsTouched();
-                              if (!form.valid) return;
-                              final router = context.router;
+                        footer: SizedBox(
+                          height: 100,
+                          child: DigitCard(
+                            child: DigitElevatedButton(
+                              onPressed: () async {
+                                form.markAllAsTouched();
+                                if (!form.valid) return;
+                                final router = context.router;
 
-                              final shouldSubmit = await DigitDialog.show<bool>(
-                                context,
-                                options: DigitDialogOptions(
-                                  titleText: localizations.translate(
-                                    i18.deliverIntervention.dialogTitle,
-                                  ),
-                                  contentText: localizations.translate(
-                                    i18.deliverIntervention.dialogContent,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
+                                final shouldSubmit =
+                                    await DigitDialog.show<bool>(
+                                  context,
+                                  options: DigitDialogOptions(
+                                    titleText: localizations.translate(
+                                      i18.deliverIntervention.dialogTitle,
                                     ),
-                                    action: (ctx) {
-                                      final clientReferenceId = taskData != null
-                                          ? taskData.isEmpty
-                                              ? IdGen.i.identifier
-                                              : taskData.first.clientReferenceId
-                                          : IdGen.i.identifier;
-                                      context
-                                          .read<DeliverInterventionBloc>()
-                                          .add(
-                                            DeliverInterventionSubmitEvent(
-                                              TaskModel(
-                                                id: taskData != null
-                                                    ? taskData.isEmpty
-                                                        ? null
-                                                        : taskData.first.id
-                                                    : null,
-                                                clientReferenceId:
-                                                    clientReferenceId,
-                                                projectBeneficiaryClientReferenceId:
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId,
-                                                tenantId: envConfig
-                                                    .variables.tenantId,
-                                                rowVersion: taskData != null
-                                                    ? taskData.isEmpty
-                                                        ? 1
-                                                        : taskData
-                                                            .first.rowVersion
-                                                    : 1,
-                                                projectId: context.projectId,
-                                                status: Status.delivered.name,
-                                                createdDate: context
-                                                    .millisecondsSinceEpoch(),
-                                                resources: [
-                                                  TaskResourceModel(
-                                                    id: taskData != null
-                                                        ? taskData.isNotEmpty
-                                                            ? taskData
-                                                                .first
-                                                                .resources
-                                                                ?.first
-                                                                .id
-                                                            : null
-                                                        : null,
-                                                    taskId: taskData != null
-                                                        ? taskData.isNotEmpty
-                                                            ? taskData.first.id
-                                                            : null
-                                                        : null,
-                                                    clientReferenceId:
-                                                        clientReferenceId,
-                                                    rowVersion: taskData != null
-                                                        ? taskData.isEmpty
-                                                            ? 1
-                                                            : taskData
-                                                                .first
-                                                                .resources
-                                                                ?.first
-                                                                .rowVersion
-                                                        : 1,
-                                                    isDelivered: true,
-                                                    tenantId: envConfig
-                                                        .variables.tenantId,
-                                                    quantity: form
-                                                        .control(
-                                                          _quantityDistributedKey,
-                                                        )
-                                                        .value
-                                                        .toString(),
-                                                    productVariantId: (form
-                                                                .control(
-                                                                  _resourceDeliveredKey,
-                                                                )
-                                                                .value
-                                                            as ProductVariantModel)
-                                                        .id,
-                                                    deliveryComment: form
-                                                        .control(
-                                                          _deliveryCommentKey,
-                                                        )
-                                                        .value,
-                                                    auditDetails: AuditDetails(
-                                                      createdBy: context
-                                                          .loggedInUserUuid,
-                                                      createdTime: taskData !=
-                                                              null
+                                    contentText: localizations.translate(
+                                      i18.deliverIntervention.dialogContent,
+                                    ),
+                                    primaryAction: DigitDialogActions(
+                                      label: localizations.translate(
+                                        i18.common.coreCommonSubmit,
+                                      ),
+                                      action: (ctx) {
+                                        final clientReferenceId =
+                                            taskData != null
+                                                ? taskData.isEmpty
+                                                    ? IdGen.i.identifier
+                                                    : taskData
+                                                        .first.clientReferenceId
+                                                : IdGen.i.identifier;
+                                        context
+                                            .read<DeliverInterventionBloc>()
+                                            .add(
+                                              DeliverInterventionSubmitEvent(
+                                                TaskModel(
+                                                  id: taskData != null
+                                                      ? taskData.isEmpty
+                                                          ? null
+                                                          : taskData.first.id
+                                                      : null,
+                                                  clientReferenceId:
+                                                      clientReferenceId,
+                                                  projectBeneficiaryClientReferenceId:
+                                                      projectBeneficiary.first
+                                                          .clientReferenceId,
+                                                  tenantId: envConfig
+                                                      .variables.tenantId,
+                                                  rowVersion: taskData != null
+                                                      ? taskData.isEmpty
+                                                          ? 1
+                                                          : taskData
+                                                              .first.rowVersion
+                                                      : 1,
+                                                  projectId: context.projectId,
+                                                  status: Status.delivered.name,
+                                                  createdDate: context
+                                                      .millisecondsSinceEpoch(),
+                                                  resources: [
+                                                    TaskResourceModel(
+                                                      id: taskData != null
                                                           ? taskData.isNotEmpty
                                                               ? taskData
-                                                                      .first
-                                                                      .resources
-                                                                      ?.first
-                                                                      .auditDetails
-                                                                      ?.createdTime ??
-                                                                  context
-                                                                      .millisecondsSinceEpoch()
-                                                              : context
-                                                                  .millisecondsSinceEpoch()
-                                                          : context
-                                                              .millisecondsSinceEpoch(),
-                                                      lastModifiedBy: context
-                                                          .loggedInUserUuid,
-                                                      lastModifiedTime: context
-                                                          .millisecondsSinceEpoch(),
+                                                                  .first
+                                                                  .resources
+                                                                  ?.first
+                                                                  .id
+                                                              : null
+                                                          : null,
+                                                      taskId: taskData != null
+                                                          ? taskData.isNotEmpty
+                                                              ? taskData
+                                                                  .first.id
+                                                              : null
+                                                          : null,
+                                                      clientReferenceId:
+                                                          clientReferenceId,
+                                                      rowVersion: taskData !=
+                                                              null
+                                                          ? taskData.isEmpty
+                                                              ? 1
+                                                              : taskData
+                                                                  .first
+                                                                  .resources
+                                                                  ?.first
+                                                                  .rowVersion
+                                                          : 1,
+                                                      isDelivered: true,
+                                                      tenantId: envConfig
+                                                          .variables.tenantId,
+                                                      quantity: form
+                                                          .control(
+                                                            _quantityDistributedKey,
+                                                          )
+                                                          .value
+                                                          .toString(),
+                                                      productVariantId: (form
+                                                                  .control(
+                                                                    _resourceDeliveredKey,
+                                                                  )
+                                                                  .value
+                                                              as ProductVariantModel)
+                                                          .id,
+                                                      deliveryComment: form
+                                                          .control(
+                                                            _deliveryCommentKey,
+                                                          )
+                                                          .value,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: taskData !=
+                                                                null
+                                                            ? taskData
+                                                                    .isNotEmpty
+                                                                ? taskData
+                                                                        .first
+                                                                        .resources
+                                                                        ?.first
+                                                                        .auditDetails
+                                                                        ?.createdTime ??
+                                                                    context
+                                                                        .millisecondsSinceEpoch()
+                                                                : context
+                                                                    .millisecondsSinceEpoch()
+                                                            : context
+                                                                .millisecondsSinceEpoch(),
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
                                                     ),
+                                                  ],
+                                                  address:
+                                                      householdMemberWrapper
+                                                          .household.address
+                                                          ?.copyWith(
+                                                    relatedClientReferenceId:
+                                                        clientReferenceId,
+                                                    id: null,
                                                   ),
-                                                ],
-                                                address: householdMemberWrapper
-                                                    .household.address
-                                                    ?.copyWith(
-                                                  relatedClientReferenceId:
-                                                      clientReferenceId,
-                                                  id: null,
+                                                  auditDetails: AuditDetails(
+                                                    createdBy: context
+                                                        .loggedInUserUuid,
+                                                    createdTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                    lastModifiedBy: context
+                                                        .loggedInUserUuid,
+                                                    lastModifiedTime: context
+                                                        .millisecondsSinceEpoch(),
+                                                  ),
                                                 ),
-                                                auditDetails: AuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                  lastModifiedBy:
-                                                      context.loggedInUserUuid,
-                                                  lastModifiedTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
+                                                taskData == null
+                                                    ? false
+                                                    : taskData.isEmpty
+                                                        ? false
+                                                        : true,
+                                                context.boundary,
                                               ),
-                                              taskData == null
-                                                  ? false
-                                                  : taskData.isEmpty
-                                                      ? false
-                                                      : true,
-                                              context.boundary,
-                                            ),
-                                          );
-                                      Navigator.of(
+                                            );
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop(true);
+                                      },
+                                    ),
+                                    secondaryAction: DigitDialogActions(
+                                      label: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      action: (context) => Navigator.of(
                                         context,
                                         rootNavigator: true,
-                                      ).pop(true);
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonCancel,
+                                      ).pop(false),
                                     ),
-                                    action: (context) => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false),
                                   ),
-                                ),
-                              );
+                                );
 
-                              if (shouldSubmit ?? false) {
-                                final parent = router.parent() as StackRouter;
-                                parent
-                                  ..pop()
-                                  ..pop();
+                                if (shouldSubmit ?? false) {
+                                  final parent = router.parent() as StackRouter;
+                                  parent
+                                    ..pop()
+                                    ..pop();
 
-                                router.push(AcknowledgementRoute());
-                              }
-                            },
-                            child: Center(
-                              child: Text(
-                                localizations.translate(
-                                  i18.common.coreCommonSubmit,
+                                  router.push(AcknowledgementRoute());
+                                }
+                              },
+                              child: Center(
+                                child: Text(
+                                  localizations.translate(
+                                    i18.common.coreCommonSubmit,
+                                  ),
                                 ),
                               ),
                             ),
@@ -431,98 +444,29 @@ class _DeliverInterventionPageState
                                     }(),
                                   },
                                 ),
-                                const DigitDivider(),
-                                BlocBuilder<ProductVariantBloc,
-                                    ProductVariantState>(
-                                  builder: (context, productState) {
-                                    return productState.maybeWhen(
-                                      orElse: () => const Offstage(),
-                                      fetched: (productVariants) {
-                                        final productVariantId = taskData
-                                            ?.firstOrNull
-                                            ?.resources
-                                            ?.firstOrNull
-                                            ?.productVariantId;
-
-                                        final variant = productState.whenOrNull(
-                                          fetched: (productVariants) {
-                                            return productVariants
-                                                .firstWhereOrNull(
-                                              (element) =>
-                                                  element.id ==
-                                                  productVariantId,
-                                            );
-                                          },
-                                        );
-
-                                        form
-                                            .control(_resourceDeliveredKey)
-                                            .value = variant;
-
-                                        return DigitReactiveDropdown<
-                                            ProductVariantModel>(
-                                          label: localizations.translate(
-                                            i18.deliverIntervention
-                                                .resourceDeliveredLabel,
-                                          ),
-                                          isRequired: true,
-                                          valueMapper: (value) {
-                                            return localizations.translate(
-                                              value.sku ?? value.id,
-                                            );
-                                          },
-                                          menuItems: productVariants,
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .resourceDeliveredError,
-                                                ),
-                                          },
-                                          formControlName:
-                                              _resourceDeliveredKey,
-                                        );
-                                      },
-                                    );
-                                  },
+                                Column(
+                                  children: resourceCards
+                                      .map((card) => ResourceBeneficiaryCard(
+                                            onDelete: () {
+                                              setState(() {
+                                                resourceCards.remove(card);
+                                              });
+                                            },
+                                          ))
+                                      .toList(),
                                 ),
-                                DigitIntegerFormPicker(
-                                  form: form,
-                                  minimum: 0,
-                                  formControlName: _quantityDistributedKey,
-                                  label: localizations.translate(
+                                DigitIconButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      resourceCards
+                                          .add(const ResourceBeneficiaryCard());
+                                    });
+                                  },
+                                  icon: Icons.add,
+                                  iconText: localizations.translate(
                                     i18.deliverIntervention
-                                        .quantityDistributedLabel,
+                                        .resourceAddBeneficiary,
                                   ),
-                                  incrementer: true,
-                                ),
-                                BlocBuilder<AppInitializationBloc,
-                                    AppInitializationState>(
-                                  builder: (context, state) {
-                                    if (state is! AppInitialized) {
-                                      return const Offstage();
-                                    }
-
-                                    final deliveryCommentOptions = state
-                                            .appConfiguration
-                                            .deliveryCommentOptions ??
-                                        <DeliveryCommentOptions>[];
-
-                                    return DigitReactiveDropdown<String>(
-                                      label: localizations.translate(
-                                        i18.deliverIntervention
-                                            .deliveryCommentLabel,
-                                      ),
-                                      valueMapper: (value) => value,
-                                      initialValue: deliveryCommentOptions
-                                          .firstOrNull?.name,
-                                      menuItems:
-                                          deliveryCommentOptions.map((e) {
-                                        return localizations.translate(e.name);
-                                      }).toList(),
-                                      formControlName: _deliveryCommentKey,
-                                    );
-                                  },
                                 ),
                               ],
                             ),
