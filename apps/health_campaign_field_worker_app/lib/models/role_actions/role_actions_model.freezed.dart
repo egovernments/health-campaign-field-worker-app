@@ -21,10 +21,8 @@ RoleActionsWrapperModel _$RoleActionsWrapperModelFromJson(
 
 /// @nodoc
 mixin _$RoleActionsWrapperModel {
-  String get tenantId => throw _privateConstructorUsedError;
-  String get moduleName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'roleactions')
-  List<RoleActionsModel> get roleActions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'actions')
+  List<RoleActionsModel> get actions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,10 +36,7 @@ abstract class $RoleActionsWrapperModelCopyWith<$Res> {
           $Res Function(RoleActionsWrapperModel) then) =
       _$RoleActionsWrapperModelCopyWithImpl<$Res, RoleActionsWrapperModel>;
   @useResult
-  $Res call(
-      {String tenantId,
-      String moduleName,
-      @JsonKey(name: 'roleactions') List<RoleActionsModel> roleActions});
+  $Res call({@JsonKey(name: 'actions') List<RoleActionsModel> actions});
 }
 
 /// @nodoc
@@ -58,22 +53,12 @@ class _$RoleActionsWrapperModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tenantId = null,
-    Object? moduleName = null,
-    Object? roleActions = null,
+    Object? actions = null,
   }) {
     return _then(_value.copyWith(
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      roleActions: null == roleActions
-          ? _value.roleActions
-          : roleActions // ignore: cast_nullable_to_non_nullable
+      actions: null == actions
+          ? _value.actions
+          : actions // ignore: cast_nullable_to_non_nullable
               as List<RoleActionsModel>,
     ) as $Val);
   }
@@ -87,10 +72,7 @@ abstract class _$$_RoleActionsWrapperModelCopyWith<$Res>
       __$$_RoleActionsWrapperModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String tenantId,
-      String moduleName,
-      @JsonKey(name: 'roleactions') List<RoleActionsModel> roleActions});
+  $Res call({@JsonKey(name: 'actions') List<RoleActionsModel> actions});
 }
 
 /// @nodoc
@@ -105,22 +87,12 @@ class __$$_RoleActionsWrapperModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tenantId = null,
-    Object? moduleName = null,
-    Object? roleActions = null,
+    Object? actions = null,
   }) {
     return _then(_$_RoleActionsWrapperModel(
-      tenantId: null == tenantId
-          ? _value.tenantId
-          : tenantId // ignore: cast_nullable_to_non_nullable
-              as String,
-      moduleName: null == moduleName
-          ? _value.moduleName
-          : moduleName // ignore: cast_nullable_to_non_nullable
-              as String,
-      roleActions: null == roleActions
-          ? _value._roleActions
-          : roleActions // ignore: cast_nullable_to_non_nullable
+      actions: null == actions
+          ? _value._actions
+          : actions // ignore: cast_nullable_to_non_nullable
               as List<RoleActionsModel>,
     ));
   }
@@ -131,30 +103,24 @@ class __$$_RoleActionsWrapperModelCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
   const _$_RoleActionsWrapperModel(
-      {required this.tenantId,
-      required this.moduleName,
-      @JsonKey(name: 'roleactions')
-          final List<RoleActionsModel> roleActions = const []})
-      : _roleActions = roleActions;
+      {@JsonKey(name: 'actions')
+          final List<RoleActionsModel> actions = const []})
+      : _actions = actions;
 
   factory _$_RoleActionsWrapperModel.fromJson(Map<String, dynamic> json) =>
       _$$_RoleActionsWrapperModelFromJson(json);
 
+  final List<RoleActionsModel> _actions;
   @override
-  final String tenantId;
-  @override
-  final String moduleName;
-  final List<RoleActionsModel> _roleActions;
-  @override
-  @JsonKey(name: 'roleactions')
-  List<RoleActionsModel> get roleActions {
+  @JsonKey(name: 'actions')
+  List<RoleActionsModel> get actions {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_roleActions);
+    return EqualUnmodifiableListView(_actions);
   }
 
   @override
   String toString() {
-    return 'RoleActionsWrapperModel(tenantId: $tenantId, moduleName: $moduleName, roleActions: $roleActions)';
+    return 'RoleActionsWrapperModel(actions: $actions)';
   }
 
   @override
@@ -162,18 +128,13 @@ class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RoleActionsWrapperModel &&
-            (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId) &&
-            (identical(other.moduleName, moduleName) ||
-                other.moduleName == moduleName) &&
-            const DeepCollectionEquality()
-                .equals(other._roleActions, _roleActions));
+            const DeepCollectionEquality().equals(other._actions, _actions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, tenantId, moduleName,
-      const DeepCollectionEquality().hash(_roleActions));
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_actions));
 
   @JsonKey(ignore: true)
   @override
@@ -193,22 +154,15 @@ class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
 
 abstract class _RoleActionsWrapperModel implements RoleActionsWrapperModel {
   const factory _RoleActionsWrapperModel(
-          {required final String tenantId,
-          required final String moduleName,
-          @JsonKey(name: 'roleactions')
-              final List<RoleActionsModel> roleActions}) =
+          {@JsonKey(name: 'actions') final List<RoleActionsModel> actions}) =
       _$_RoleActionsWrapperModel;
 
   factory _RoleActionsWrapperModel.fromJson(Map<String, dynamic> json) =
       _$_RoleActionsWrapperModel.fromJson;
 
   @override
-  String get tenantId;
-  @override
-  String get moduleName;
-  @override
-  @JsonKey(name: 'roleactions')
-  List<RoleActionsModel> get roleActions;
+  @JsonKey(name: 'actions')
+  List<RoleActionsModel> get actions;
   @override
   @JsonKey(ignore: true)
   _$$_RoleActionsWrapperModelCopyWith<_$_RoleActionsWrapperModel>
@@ -221,13 +175,42 @@ RoleActionsModel _$RoleActionsModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RoleActionsModel {
-  @JsonKey(name: 'rolecode')
-  RoleCode get roleCode => throw _privateConstructorUsedError;
-  @JsonKey(name: 'actioncode')
-  String get actionCode => throw _privateConstructorUsedError;
-  @JsonKey(name: 'actionid')
-  int get actionId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id')
+  int get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
+  String? get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'url')
+  String? get url => throw _privateConstructorUsedError;
+  @JsonKey(name: 'displayName')
+  String? get displayName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'orderNumber')
+  num? get orderNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: 'queryParams')
+  String? get queryParams => throw _privateConstructorUsedError;
+  @JsonKey(name: 'parentModule')
+  String? get parentModule => throw _privateConstructorUsedError;
+  @JsonKey(name: 'enabled')
+  bool get enabled => throw _privateConstructorUsedError;
+  @JsonKey(name: 'serviceCode')
+  String? get serviceCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'tenantId')
   String get tenantId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'createdDate')
+  String? get createdDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'createdBy')
+  String? get createdBy => throw _privateConstructorUsedError;
+  @JsonKey(name: 'lastModifiedDate')
+  String? get lastModifiedDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'lastModifiedBy')
+  String? get lastModifiedBy => throw _privateConstructorUsedError;
+  @JsonKey(name: 'path')
+  String? get path => throw _privateConstructorUsedError;
+  @JsonKey(name: 'navigationURL')
+  String? get navigationURL => throw _privateConstructorUsedError;
+  @JsonKey(name: 'leftIcon')
+  String? get leftIcon => throw _privateConstructorUsedError;
+  @JsonKey(name: 'rightIcon')
+  String? get rightIcon => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -242,10 +225,24 @@ abstract class $RoleActionsModelCopyWith<$Res> {
       _$RoleActionsModelCopyWithImpl<$Res, RoleActionsModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'rolecode') RoleCode roleCode,
-      @JsonKey(name: 'actioncode') String actionCode,
-      @JsonKey(name: 'actionid') int actionId,
-      String tenantId});
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'url') String? url,
+      @JsonKey(name: 'displayName') String? displayName,
+      @JsonKey(name: 'orderNumber') num? orderNumber,
+      @JsonKey(name: 'queryParams') String? queryParams,
+      @JsonKey(name: 'parentModule') String? parentModule,
+      @JsonKey(name: 'enabled') bool enabled,
+      @JsonKey(name: 'serviceCode') String? serviceCode,
+      @JsonKey(name: 'tenantId') String tenantId,
+      @JsonKey(name: 'createdDate') String? createdDate,
+      @JsonKey(name: 'createdBy') String? createdBy,
+      @JsonKey(name: 'lastModifiedDate') String? lastModifiedDate,
+      @JsonKey(name: 'lastModifiedBy') String? lastModifiedBy,
+      @JsonKey(name: 'path') String? path,
+      @JsonKey(name: 'navigationURL') String? navigationURL,
+      @JsonKey(name: 'leftIcon') String? leftIcon,
+      @JsonKey(name: 'rightIcon') String? rightIcon});
 }
 
 /// @nodoc
@@ -261,28 +258,98 @@ class _$RoleActionsModelCopyWithImpl<$Res, $Val extends RoleActionsModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? roleCode = null,
-    Object? actionCode = null,
-    Object? actionId = null,
+    Object? id = null,
+    Object? name = freezed,
+    Object? url = freezed,
+    Object? displayName = freezed,
+    Object? orderNumber = freezed,
+    Object? queryParams = freezed,
+    Object? parentModule = freezed,
+    Object? enabled = null,
+    Object? serviceCode = freezed,
     Object? tenantId = null,
+    Object? createdDate = freezed,
+    Object? createdBy = freezed,
+    Object? lastModifiedDate = freezed,
+    Object? lastModifiedBy = freezed,
+    Object? path = freezed,
+    Object? navigationURL = freezed,
+    Object? leftIcon = freezed,
+    Object? rightIcon = freezed,
   }) {
     return _then(_value.copyWith(
-      roleCode: null == roleCode
-          ? _value.roleCode
-          : roleCode // ignore: cast_nullable_to_non_nullable
-              as RoleCode,
-      actionCode: null == actionCode
-          ? _value.actionCode
-          : actionCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      actionId: null == actionId
-          ? _value.actionId
-          : actionId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      url: freezed == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String?,
+      displayName: freezed == displayName
+          ? _value.displayName
+          : displayName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      orderNumber: freezed == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as num?,
+      queryParams: freezed == queryParams
+          ? _value.queryParams
+          : queryParams // ignore: cast_nullable_to_non_nullable
+              as String?,
+      parentModule: freezed == parentModule
+          ? _value.parentModule
+          : parentModule // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      serviceCode: freezed == serviceCode
+          ? _value.serviceCode
+          : serviceCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
+      createdDate: freezed == createdDate
+          ? _value.createdDate
+          : createdDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdBy: freezed == createdBy
+          ? _value.createdBy
+          : createdBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedDate: freezed == lastModifiedDate
+          ? _value.lastModifiedDate
+          : lastModifiedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedBy: freezed == lastModifiedBy
+          ? _value.lastModifiedBy
+          : lastModifiedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      path: freezed == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String?,
+      navigationURL: freezed == navigationURL
+          ? _value.navigationURL
+          : navigationURL // ignore: cast_nullable_to_non_nullable
+              as String?,
+      leftIcon: freezed == leftIcon
+          ? _value.leftIcon
+          : leftIcon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rightIcon: freezed == rightIcon
+          ? _value.rightIcon
+          : rightIcon // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -296,10 +363,24 @@ abstract class _$$_RoleActionsModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'rolecode') RoleCode roleCode,
-      @JsonKey(name: 'actioncode') String actionCode,
-      @JsonKey(name: 'actionid') int actionId,
-      String tenantId});
+      {@JsonKey(name: 'id') int id,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'url') String? url,
+      @JsonKey(name: 'displayName') String? displayName,
+      @JsonKey(name: 'orderNumber') num? orderNumber,
+      @JsonKey(name: 'queryParams') String? queryParams,
+      @JsonKey(name: 'parentModule') String? parentModule,
+      @JsonKey(name: 'enabled') bool enabled,
+      @JsonKey(name: 'serviceCode') String? serviceCode,
+      @JsonKey(name: 'tenantId') String tenantId,
+      @JsonKey(name: 'createdDate') String? createdDate,
+      @JsonKey(name: 'createdBy') String? createdBy,
+      @JsonKey(name: 'lastModifiedDate') String? lastModifiedDate,
+      @JsonKey(name: 'lastModifiedBy') String? lastModifiedBy,
+      @JsonKey(name: 'path') String? path,
+      @JsonKey(name: 'navigationURL') String? navigationURL,
+      @JsonKey(name: 'leftIcon') String? leftIcon,
+      @JsonKey(name: 'rightIcon') String? rightIcon});
 }
 
 /// @nodoc
@@ -313,28 +394,98 @@ class __$$_RoleActionsModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? roleCode = null,
-    Object? actionCode = null,
-    Object? actionId = null,
+    Object? id = null,
+    Object? name = freezed,
+    Object? url = freezed,
+    Object? displayName = freezed,
+    Object? orderNumber = freezed,
+    Object? queryParams = freezed,
+    Object? parentModule = freezed,
+    Object? enabled = null,
+    Object? serviceCode = freezed,
     Object? tenantId = null,
+    Object? createdDate = freezed,
+    Object? createdBy = freezed,
+    Object? lastModifiedDate = freezed,
+    Object? lastModifiedBy = freezed,
+    Object? path = freezed,
+    Object? navigationURL = freezed,
+    Object? leftIcon = freezed,
+    Object? rightIcon = freezed,
   }) {
     return _then(_$_RoleActionsModel(
-      roleCode: null == roleCode
-          ? _value.roleCode
-          : roleCode // ignore: cast_nullable_to_non_nullable
-              as RoleCode,
-      actionCode: null == actionCode
-          ? _value.actionCode
-          : actionCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      actionId: null == actionId
-          ? _value.actionId
-          : actionId // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      url: freezed == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String?,
+      displayName: freezed == displayName
+          ? _value.displayName
+          : displayName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      orderNumber: freezed == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as num?,
+      queryParams: freezed == queryParams
+          ? _value.queryParams
+          : queryParams // ignore: cast_nullable_to_non_nullable
+              as String?,
+      parentModule: freezed == parentModule
+          ? _value.parentModule
+          : parentModule // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enabled: null == enabled
+          ? _value.enabled
+          : enabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      serviceCode: freezed == serviceCode
+          ? _value.serviceCode
+          : serviceCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
               as String,
+      createdDate: freezed == createdDate
+          ? _value.createdDate
+          : createdDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdBy: freezed == createdBy
+          ? _value.createdBy
+          : createdBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedDate: freezed == lastModifiedDate
+          ? _value.lastModifiedDate
+          : lastModifiedDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedBy: freezed == lastModifiedBy
+          ? _value.lastModifiedBy
+          : lastModifiedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      path: freezed == path
+          ? _value.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String?,
+      navigationURL: freezed == navigationURL
+          ? _value.navigationURL
+          : navigationURL // ignore: cast_nullable_to_non_nullable
+              as String?,
+      leftIcon: freezed == leftIcon
+          ? _value.leftIcon
+          : leftIcon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rightIcon: freezed == rightIcon
+          ? _value.rightIcon
+          : rightIcon // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -344,29 +495,86 @@ class __$$_RoleActionsModelCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_RoleActionsModel implements _RoleActionsModel {
   const _$_RoleActionsModel(
-      {@JsonKey(name: 'rolecode') required this.roleCode,
-      @JsonKey(name: 'actioncode') required this.actionCode,
-      @JsonKey(name: 'actionid') required this.actionId,
-      required this.tenantId});
+      {@JsonKey(name: 'id') required this.id,
+      @JsonKey(name: 'name') this.name,
+      @JsonKey(name: 'url') this.url,
+      @JsonKey(name: 'displayName') this.displayName,
+      @JsonKey(name: 'orderNumber') this.orderNumber,
+      @JsonKey(name: 'queryParams') this.queryParams,
+      @JsonKey(name: 'parentModule') this.parentModule,
+      @JsonKey(name: 'enabled') required this.enabled,
+      @JsonKey(name: 'serviceCode') this.serviceCode,
+      @JsonKey(name: 'tenantId') required this.tenantId,
+      @JsonKey(name: 'createdDate') this.createdDate,
+      @JsonKey(name: 'createdBy') this.createdBy,
+      @JsonKey(name: 'lastModifiedDate') this.lastModifiedDate,
+      @JsonKey(name: 'lastModifiedBy') this.lastModifiedBy,
+      @JsonKey(name: 'path') this.path,
+      @JsonKey(name: 'navigationURL') this.navigationURL,
+      @JsonKey(name: 'leftIcon') this.leftIcon,
+      @JsonKey(name: 'rightIcon') this.rightIcon});
 
   factory _$_RoleActionsModel.fromJson(Map<String, dynamic> json) =>
       _$$_RoleActionsModelFromJson(json);
 
   @override
-  @JsonKey(name: 'rolecode')
-  final RoleCode roleCode;
+  @JsonKey(name: 'id')
+  final int id;
   @override
-  @JsonKey(name: 'actioncode')
-  final String actionCode;
+  @JsonKey(name: 'name')
+  final String? name;
   @override
-  @JsonKey(name: 'actionid')
-  final int actionId;
+  @JsonKey(name: 'url')
+  final String? url;
   @override
+  @JsonKey(name: 'displayName')
+  final String? displayName;
+  @override
+  @JsonKey(name: 'orderNumber')
+  final num? orderNumber;
+  @override
+  @JsonKey(name: 'queryParams')
+  final String? queryParams;
+  @override
+  @JsonKey(name: 'parentModule')
+  final String? parentModule;
+  @override
+  @JsonKey(name: 'enabled')
+  final bool enabled;
+  @override
+  @JsonKey(name: 'serviceCode')
+  final String? serviceCode;
+  @override
+  @JsonKey(name: 'tenantId')
   final String tenantId;
+  @override
+  @JsonKey(name: 'createdDate')
+  final String? createdDate;
+  @override
+  @JsonKey(name: 'createdBy')
+  final String? createdBy;
+  @override
+  @JsonKey(name: 'lastModifiedDate')
+  final String? lastModifiedDate;
+  @override
+  @JsonKey(name: 'lastModifiedBy')
+  final String? lastModifiedBy;
+  @override
+  @JsonKey(name: 'path')
+  final String? path;
+  @override
+  @JsonKey(name: 'navigationURL')
+  final String? navigationURL;
+  @override
+  @JsonKey(name: 'leftIcon')
+  final String? leftIcon;
+  @override
+  @JsonKey(name: 'rightIcon')
+  final String? rightIcon;
 
   @override
   String toString() {
-    return 'RoleActionsModel(roleCode: $roleCode, actionCode: $actionCode, actionId: $actionId, tenantId: $tenantId)';
+    return 'RoleActionsModel(id: $id, name: $name, url: $url, displayName: $displayName, orderNumber: $orderNumber, queryParams: $queryParams, parentModule: $parentModule, enabled: $enabled, serviceCode: $serviceCode, tenantId: $tenantId, createdDate: $createdDate, createdBy: $createdBy, lastModifiedDate: $lastModifiedDate, lastModifiedBy: $lastModifiedBy, path: $path, navigationURL: $navigationURL, leftIcon: $leftIcon, rightIcon: $rightIcon)';
   }
 
   @override
@@ -374,20 +582,61 @@ class _$_RoleActionsModel implements _RoleActionsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RoleActionsModel &&
-            (identical(other.roleCode, roleCode) ||
-                other.roleCode == roleCode) &&
-            (identical(other.actionCode, actionCode) ||
-                other.actionCode == actionCode) &&
-            (identical(other.actionId, actionId) ||
-                other.actionId == actionId) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.displayName, displayName) ||
+                other.displayName == displayName) &&
+            (identical(other.orderNumber, orderNumber) ||
+                other.orderNumber == orderNumber) &&
+            (identical(other.queryParams, queryParams) ||
+                other.queryParams == queryParams) &&
+            (identical(other.parentModule, parentModule) ||
+                other.parentModule == parentModule) &&
+            (identical(other.enabled, enabled) || other.enabled == enabled) &&
+            (identical(other.serviceCode, serviceCode) ||
+                other.serviceCode == serviceCode) &&
             (identical(other.tenantId, tenantId) ||
-                other.tenantId == tenantId));
+                other.tenantId == tenantId) &&
+            (identical(other.createdDate, createdDate) ||
+                other.createdDate == createdDate) &&
+            (identical(other.createdBy, createdBy) ||
+                other.createdBy == createdBy) &&
+            (identical(other.lastModifiedDate, lastModifiedDate) ||
+                other.lastModifiedDate == lastModifiedDate) &&
+            (identical(other.lastModifiedBy, lastModifiedBy) ||
+                other.lastModifiedBy == lastModifiedBy) &&
+            (identical(other.path, path) || other.path == path) &&
+            (identical(other.navigationURL, navigationURL) ||
+                other.navigationURL == navigationURL) &&
+            (identical(other.leftIcon, leftIcon) ||
+                other.leftIcon == leftIcon) &&
+            (identical(other.rightIcon, rightIcon) ||
+                other.rightIcon == rightIcon));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, roleCode, actionCode, actionId, tenantId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      url,
+      displayName,
+      orderNumber,
+      queryParams,
+      parentModule,
+      enabled,
+      serviceCode,
+      tenantId,
+      createdDate,
+      createdBy,
+      lastModifiedDate,
+      lastModifiedBy,
+      path,
+      navigationURL,
+      leftIcon,
+      rightIcon);
 
   @JsonKey(ignore: true)
   @override
@@ -405,25 +654,83 @@ class _$_RoleActionsModel implements _RoleActionsModel {
 
 abstract class _RoleActionsModel implements RoleActionsModel {
   const factory _RoleActionsModel(
-      {@JsonKey(name: 'rolecode') required final RoleCode roleCode,
-      @JsonKey(name: 'actioncode') required final String actionCode,
-      @JsonKey(name: 'actionid') required final int actionId,
-      required final String tenantId}) = _$_RoleActionsModel;
+          {@JsonKey(name: 'id') required final int id,
+          @JsonKey(name: 'name') final String? name,
+          @JsonKey(name: 'url') final String? url,
+          @JsonKey(name: 'displayName') final String? displayName,
+          @JsonKey(name: 'orderNumber') final num? orderNumber,
+          @JsonKey(name: 'queryParams') final String? queryParams,
+          @JsonKey(name: 'parentModule') final String? parentModule,
+          @JsonKey(name: 'enabled') required final bool enabled,
+          @JsonKey(name: 'serviceCode') final String? serviceCode,
+          @JsonKey(name: 'tenantId') required final String tenantId,
+          @JsonKey(name: 'createdDate') final String? createdDate,
+          @JsonKey(name: 'createdBy') final String? createdBy,
+          @JsonKey(name: 'lastModifiedDate') final String? lastModifiedDate,
+          @JsonKey(name: 'lastModifiedBy') final String? lastModifiedBy,
+          @JsonKey(name: 'path') final String? path,
+          @JsonKey(name: 'navigationURL') final String? navigationURL,
+          @JsonKey(name: 'leftIcon') final String? leftIcon,
+          @JsonKey(name: 'rightIcon') final String? rightIcon}) =
+      _$_RoleActionsModel;
 
   factory _RoleActionsModel.fromJson(Map<String, dynamic> json) =
       _$_RoleActionsModel.fromJson;
 
   @override
-  @JsonKey(name: 'rolecode')
-  RoleCode get roleCode;
+  @JsonKey(name: 'id')
+  int get id;
   @override
-  @JsonKey(name: 'actioncode')
-  String get actionCode;
+  @JsonKey(name: 'name')
+  String? get name;
   @override
-  @JsonKey(name: 'actionid')
-  int get actionId;
+  @JsonKey(name: 'url')
+  String? get url;
   @override
+  @JsonKey(name: 'displayName')
+  String? get displayName;
+  @override
+  @JsonKey(name: 'orderNumber')
+  num? get orderNumber;
+  @override
+  @JsonKey(name: 'queryParams')
+  String? get queryParams;
+  @override
+  @JsonKey(name: 'parentModule')
+  String? get parentModule;
+  @override
+  @JsonKey(name: 'enabled')
+  bool get enabled;
+  @override
+  @JsonKey(name: 'serviceCode')
+  String? get serviceCode;
+  @override
+  @JsonKey(name: 'tenantId')
   String get tenantId;
+  @override
+  @JsonKey(name: 'createdDate')
+  String? get createdDate;
+  @override
+  @JsonKey(name: 'createdBy')
+  String? get createdBy;
+  @override
+  @JsonKey(name: 'lastModifiedDate')
+  String? get lastModifiedDate;
+  @override
+  @JsonKey(name: 'lastModifiedBy')
+  String? get lastModifiedBy;
+  @override
+  @JsonKey(name: 'path')
+  String? get path;
+  @override
+  @JsonKey(name: 'navigationURL')
+  String? get navigationURL;
+  @override
+  @JsonKey(name: 'leftIcon')
+  String? get leftIcon;
+  @override
+  @JsonKey(name: 'rightIcon')
+  String? get rightIcon;
   @override
   @JsonKey(ignore: true)
   _$$_RoleActionsModelCopyWith<_$_RoleActionsModel> get copyWith =>

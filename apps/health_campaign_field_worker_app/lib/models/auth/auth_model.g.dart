@@ -80,25 +80,13 @@ Map<String, dynamic> _$$_UserRequestModelToJson(_$_UserRequestModel instance) =>
 _$_UserRoleModel _$$_UserRoleModelFromJson(Map<String, dynamic> json) =>
     _$_UserRoleModel(
       name: json['name'] as String,
-      code: $enumDecode(_$UserRoleCodeEnumEnumMap, json['code']),
+      code: json['code'] as String,
       tenantId: json['tenantId'] as String?,
     );
 
 Map<String, dynamic> _$$_UserRoleModelToJson(_$_UserRoleModel instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'code': _$UserRoleCodeEnumEnumMap[instance.code]!,
+      'code': instance.code,
       'tenantId': instance.tenantId,
     };
-
-const _$UserRoleCodeEnumEnumMap = {
-  UserRoleCodeEnum.registrar: 'REGISTRAR',
-  UserRoleCodeEnum.warehouseManager: 'WAREHOUSE_MANAGER',
-  UserRoleCodeEnum.systemAdministrator: 'SYSTEM_ADMINISTRATOR',
-  UserRoleCodeEnum.supervisor: 'SUPERVISOR',
-  UserRoleCodeEnum.distributor: 'DISTRIBUTOR',
-  UserRoleCodeEnum.nationalSupervisor: 'NATIONAL_SUPERVISOR',
-  UserRoleCodeEnum.provincialSupervisor: 'PROVINCIAL_SUPERVISOR',
-  UserRoleCodeEnum.districtSupervisor: 'DISTRICT_SUPERVISOR',
-  UserRoleCodeEnum.fieldSupervisor: 'FIELD_SUPERVISOR',
-};

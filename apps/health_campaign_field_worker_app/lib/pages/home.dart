@@ -320,232 +320,245 @@ class _HomePageState extends LocalizedState<HomePage> {
       return [];
     }
 
-    final roles = state.userModel.roles.map((e) {
-      return e.code;
-    });
-
-    final homeItems = <HomeItemCard>[];
-
-    for (final roleModel in roles) {
-      switch (roleModel) {
-        case UserRoleCodeEnum.registrar:
-          homeItems.add(
-            HomeItemCard(
-              icon: Icons.all_inbox,
-              label: i18.home.beneficiaryLabel,
-              onPressed: () async {
-                final searchBloc = context.read<SearchHouseholdsBloc>();
-                await context.router.push(
-                  SearchBeneficiaryRoute(),
-                );
-                searchBloc.add(const SearchHouseholdsClearEvent());
-              },
-            ),
+    final homeItems = <HomeItemCard>[
+      HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.myCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
+      HomeItemCard(
+        icon: Icons.all_inbox,
+        label: i18.home.beneficiaryLabel,
+        onPressed: () async {
+          final searchBloc = context.read<SearchHouseholdsBloc>();
+          await context.router.push(
+            SearchBeneficiaryRoute(),
           );
-          break;
-        case UserRoleCodeEnum.warehouseManager:
-          homeItems.addAll(
-            [
-              HomeItemCard(
-                icon: Icons.store_mall_directory,
-                label: i18.home.manageStockLabel,
-                onPressed: () {
-                  context.router.push(ManageStocksRoute());
-                },
-              ),
-              HomeItemCard(
-                icon: Icons.menu_book,
-                label: i18.home.stockReconciliationLabel,
-                onPressed: () {
-                  context.router.push(StockReconciliationRoute());
-                },
-              ),
-              HomeItemCard(
-                icon: Icons.announcement,
-                label: i18.home.viewReportsLabel,
-                onPressed: () {
-                  context.router.push(
-                    InventoryReportSelectionRoute(),
-                  );
-                },
-              ),
-            ],
-          );
-          break;
+          searchBloc.add(const SearchHouseholdsClearEvent());
+        },
+      ),
+      HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.fileComplaint,
+        onPressed: () =>
+            context.router.push(const ComplaintsInboxWrapperRoute()),
+      ),
+      HomeItemCard(
+        icon: Icons.sync_alt,
+        label: i18.home.syncDataLabel,
+        onPressed: () => _attemptSyncUp(context),
+      ),
+      HomeItemCard(
+        icon: Icons.call,
+        label: i18.home.callbackLabel,
+        onPressed: () => DigitActionDialog.show(
+          context,
+          widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
+            builder: (context, state) {
+              if (state is! AppInitialized) {
+                return const Offstage();
+              }
 
-        case UserRoleCodeEnum.districtSupervisor:
-          homeItems.addAll([
-            HomeItemCard(
-              icon: Icons.menu_book,
-              label: i18.home.myCheckList,
-              onPressed: () => context.router.push(ChecklistWrapperRoute()),
-            ),
-          ]);
-          break;
+              final supportList = state.appConfiguration.callSupportOptions ??
+                  <app_config.CallSupportList>[];
 
-        case UserRoleCodeEnum.nationalSupervisor:
-          homeItems.addAll([
-            HomeItemCard(
-              icon: Icons.menu_book,
-              label: i18.home.myCheckList,
-              onPressed: () => context.router.push(ChecklistWrapperRoute()),
-            ),
-          ]);
-          break;
-
-        case UserRoleCodeEnum.fieldSupervisor:
-          homeItems.addAll([
-            HomeItemCard(
-              icon: Icons.menu_book,
-              label: i18.home.myCheckList,
-              onPressed: () => context.router.push(ChecklistWrapperRoute()),
-            ),
-          ]);
-          break;
-        case UserRoleCodeEnum.provincialSupervisor:
-          homeItems.addAll([
-            HomeItemCard(
-              icon: Icons.menu_book,
-              label: i18.home.myCheckList,
-              onPressed: () => context.router.push(ChecklistWrapperRoute()),
-            ),
-          ]);
-          break;
-
-        case UserRoleCodeEnum.distributor:
-          homeItems.addAll([
-            HomeItemCard(
-              icon: Icons.all_inbox,
-              label: i18.home.beneficiaryLabel,
-              onPressed: () async {
-                final searchBloc = context.read<SearchHouseholdsBloc>();
-                await context.router.push(
-                  SearchBeneficiaryRoute(),
-                );
-                searchBloc.add(const SearchHouseholdsClearEvent());
-              },
-            ),
-          ]);
-          break;
-        case UserRoleCodeEnum.systemAdministrator:
-          homeItems.addAll(
-            [
-              HomeItemCard(
-                icon: Icons.store_mall_directory,
-                label: i18.home.manageStockLabel,
-              ),
-              HomeItemCard(
-                icon: Icons.menu_book,
-                label: i18.home.stockReconciliationLabel,
-                onPressed: () => context.router.push(ReasonForDeletionRoute()),
-              ),
-              HomeItemCard(
-                icon: Icons.all_inbox,
-                label: i18.home.beneficiaryLabel,
-                onPressed: () async {
-                  final searchBloc = context.read<SearchHouseholdsBloc>();
-                  await context.router.push(
-                    SearchBeneficiaryRoute(),
-                  );
-                  searchBloc.add(const SearchHouseholdsClearEvent());
-                },
-              ),
-            ],
-          );
-          break;
-        case UserRoleCodeEnum.supervisor:
-          HomeItemCard(
-            icon: Icons.menu_book,
-            label: i18.home.myCheckList,
-            onPressed: () => context.router.push(ChecklistWrapperRoute()),
-          );
-          break;
-      }
-    }
-
-    homeItems.addAll(
-      [
-        HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-        HomeItemCard(
-          icon: Icons.sync_alt,
-          label: i18.home.syncDataLabel,
-          onPressed: () => _attemptSyncUp(context),
-        ),
-        HomeItemCard(
-          icon: Icons.call,
-          label: i18.home.callbackLabel,
-          onPressed: () => DigitActionDialog.show(
-            context,
-            widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
-              builder: (context, state) {
-                if (state is! AppInitialized) {
-                  return const Offstage();
-                }
-
-                final supportList = state.appConfiguration.callSupportOptions ??
-                    <app_config.CallSupportList>[];
-
-                return ActionCard(
-                  items: supportList
-                      .map(
-                        (e) => ActionCardModel(
-                          action: () async {
-                            if (!await launchUrl(
-                              Uri(
-                                scheme: 'tel',
-                                path: e.code,
-                              ),
-                              mode: LaunchMode.externalApplication,
-                            )) {
-                              throw Exception('Could not launch $url');
-                            }
-                          },
-                          icon: Icons.call,
-                          label: e.name,
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
+              return ActionCard(
+                items: supportList
+                    .map(
+                      (e) => ActionCardModel(
+                        action: () async {
+                          if (!await launchUrl(
+                            Uri(
+                              scheme: 'tel',
+                              path: e.code,
+                            ),
+                            mode: LaunchMode.externalApplication,
+                          )) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
+                        icon: Icons.call,
+                        label: e.name,
+                      ),
+                    )
+                    .toList(),
+              );
+            },
           ),
         ),
-        HomeItemCard(
-          icon: Icons.table_chart,
-          label: 'DB',
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
+      ),
+      HomeItemCard(
+        icon: Icons.table_chart,
+        label: 'DB',
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DriftDbViewer(
+                context.read<LocalSqlDataStore>(),
               ),
-            );
-          },
-        ),
-        HomeItemCard(
-          icon: Icons.delete_forever,
-          label: 'Delete all',
-          onPressed: () async {
-            final sql = context.read<LocalSqlDataStore>();
-            final isar = context.read<Isar>();
+            ),
+          );
+        },
+      ),
+      HomeItemCard(
+        icon: Icons.delete_forever,
+        label: 'Delete all',
+        onPressed: () async {
+          final sql = context.read<LocalSqlDataStore>();
+          final isar = context.read<Isar>();
 
-            for (var element in sql.allTables) {
-              sql.delete(element).where((_) => const Constant(true));
-            }
+          for (var element in sql.allTables) {
+            sql.delete(element).where((_) => const Constant(true));
+          }
 
-            await isar.writeTxn(() async => await isar.opLogs.clear());
-          },
-        ),
-      ],
-    );
+          await isar.writeTxn(() async => await isar.opLogs.clear());
+        },
+      ),
+    ];
 
-    return homeItems;
+    // for (final roleModel in roles) {
+    //   switch (roleModel) {
+    //     case UserRoleCodeEnum.registrar:
+    //       homeItems.add(
+    //         HomeItemCard(
+    //           icon: Icons.all_inbox,
+    //           label: i18.home.beneficiaryLabel,
+    //           onPressed: () async {
+    //             final searchBloc = context.read<SearchHouseholdsBloc>();
+    //             await context.router.push(
+    //               SearchBeneficiaryRoute(),
+    //             );
+    //             searchBloc.add(const SearchHouseholdsClearEvent());
+    //           },
+    //         ),
+    //       );
+    //       break;
+    //     case UserRoleCodeEnum.warehouseManager:
+    //       homeItems.addAll(
+    //         [
+    //           HomeItemCard(
+    //             icon: Icons.store_mall_directory,
+    //             label: i18.home.manageStockLabel,
+    //             onPressed: () {
+    //               context.router.push(ManageStocksRoute());
+    //             },
+    //           ),
+    //           HomeItemCard(
+    //             icon: Icons.menu_book,
+    //             label: i18.home.stockReconciliationLabel,
+    //             onPressed: () {
+    //               context.router.push(StockReconciliationRoute());
+    //             },
+    //           ),
+    //           HomeItemCard(
+    //             icon: Icons.announcement,
+    //             label: i18.home.viewReportsLabel,
+    //             onPressed: () {
+    //               context.router.push(
+    //                 InventoryReportSelectionRoute(),
+    //               );
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //       break;
+
+    //     case UserRoleCodeEnum.districtSupervisor:
+    //       homeItems.addAll([
+    //         HomeItemCard(
+    //           icon: Icons.menu_book,
+    //           label: i18.home.myCheckList,
+    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
+    //         ),
+    //       ]);
+    //       break;
+
+    //     case UserRoleCodeEnum.nationalSupervisor:
+    //       homeItems.addAll([
+    //         HomeItemCard(
+    //           icon: Icons.menu_book,
+    //           label: i18.home.myCheckList,
+    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
+    //         ),
+    //       ]);
+    //       break;
+
+    //     case UserRoleCodeEnum.fieldSupervisor:
+    //       homeItems.addAll([
+    //         HomeItemCard(
+    //           icon: Icons.menu_book,
+    //           label: i18.home.myCheckList,
+    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
+    //         ),
+    //       ]);
+    //       break;
+    //     case UserRoleCodeEnum.provincialSupervisor:
+    //       homeItems.addAll([
+    //         HomeItemCard(
+    //           icon: Icons.menu_book,
+    //           label: i18.home.myCheckList,
+    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
+    //         ),
+    //       ]);
+    //       break;
+
+    //     case UserRoleCodeEnum.distributor:
+    //       homeItems.addAll([
+    //         HomeItemCard(
+    //           icon: Icons.all_inbox,
+    //           label: i18.home.beneficiaryLabel,
+    //           onPressed: () async {
+    //             final searchBloc = context.read<SearchHouseholdsBloc>();
+    //             await context.router.push(
+    //               SearchBeneficiaryRoute(),
+    //             );
+    //             searchBloc.add(const SearchHouseholdsClearEvent());
+    //           },
+    //         ),
+    //       ]);
+    //       break;
+    //     case UserRoleCodeEnum.systemAdministrator:
+    //       homeItems.addAll(
+    //         [
+    //           HomeItemCard(
+    //             icon: Icons.store_mall_directory,
+    //             label: i18.home.manageStockLabel,
+    //           ),
+    //           HomeItemCard(
+    //             icon: Icons.menu_book,
+    //             label: i18.home.stockReconciliationLabel,
+    //             onPressed: () => context.router.push(ReasonForDeletionRoute()),
+    //           ),
+    //           HomeItemCard(
+    //             icon: Icons.all_inbox,
+    //             label: i18.home.beneficiaryLabel,
+    //             onPressed: () async {
+    //               final searchBloc = context.read<SearchHouseholdsBloc>();
+    //               await context.router.push(
+    //                 SearchBeneficiaryRoute(),
+    //               );
+    //               searchBloc.add(const SearchHouseholdsClearEvent());
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //       break;
+    //     case UserRoleCodeEnum.supervisor:
+    //       HomeItemCard(
+    //         icon: Icons.menu_book,
+    //         label: i18.home.myCheckList,
+    //         onPressed: () => context.router.push(ChecklistWrapperRoute()),
+    //       );
+    //       break;
+    //   }
+    // }
+
+    return homeItems
+        .where((element) => state.actionsWrapper.actions
+            .map((e) => e.displayName)
+            .toList()
+            .contains(element.label))
+        .toList();
   }
 
   void _attemptSyncUp(BuildContext context) {

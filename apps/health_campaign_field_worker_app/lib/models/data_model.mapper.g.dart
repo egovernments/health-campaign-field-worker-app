@@ -415,7 +415,7 @@ class ClientAuditDetailsMapper extends BaseMapper<ClientAuditDetails> {
 
   @override Function get decoder => decode;
   ClientAuditDetails decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(Mapper.i.$get(map, 'createdTime'), Mapper.i.$get(map, 'lastModifiedTime'));
+  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(Mapper.i.$get(map, 'createdTime'), Mapper.i.$getOpt(map, 'lastModifiedTime'));
 
   @override Function get encoder => (ClientAuditDetails v) => encode(v);
   dynamic encode(ClientAuditDetails v) => toMap(v);
@@ -443,7 +443,7 @@ abstract class ClientAuditDetailsCopyWith<$R> {
 class _ClientAuditDetailsCopyWithImpl<$R> extends BaseCopyWith<ClientAuditDetails, $R> implements ClientAuditDetailsCopyWith<$R> {
   _ClientAuditDetailsCopyWithImpl(ClientAuditDetails value, Then<ClientAuditDetails, $R> then) : super(value, then);
 
-  @override $R call({int? createdTime, int? lastModifiedTime}) => $then(ClientAuditDetails(createdTime ?? $value.createdTime, lastModifiedTime ?? $value.lastModifiedTime));
+  @override $R call({int? createdTime, Object? lastModifiedTime = $none}) => $then(ClientAuditDetails(createdTime ?? $value.createdTime, or(lastModifiedTime, $value.lastModifiedTime)));
 }
 
 class AuditDetailsMapper extends BaseMapper<AuditDetails> {

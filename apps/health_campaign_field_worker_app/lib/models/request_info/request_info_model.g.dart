@@ -25,7 +25,7 @@ _$_RequestInfoModel _$$_RequestInfoModelFromJson(Map<String, dynamic> json) =>
     _$_RequestInfoModel(
       apiId: json['apiId'] as String?,
       ver: json['ver'] as String?,
-      ts: json['ts'] as String?,
+      ts: json['ts'] as num?,
       action: json['action'] as String?,
       did: json['did'] as String?,
       key: json['key'] as String?,
