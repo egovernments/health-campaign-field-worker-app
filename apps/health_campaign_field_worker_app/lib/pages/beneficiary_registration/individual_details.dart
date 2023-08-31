@@ -412,6 +412,10 @@ class _IndividualDetailsPageState
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
     );
 
     var name = individual.name;
@@ -420,6 +424,10 @@ class _IndividualDetailsPageState
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),
@@ -434,6 +442,10 @@ class _IndividualDetailsPageState
       tenantId: envConfig.variables.tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
+      clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),

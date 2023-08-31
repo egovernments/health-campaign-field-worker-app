@@ -117,6 +117,10 @@ class _HouseholdLocationPageState
                               ),
                               tenantId: envConfig.variables.tenantId,
                               rowVersion: 1,
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: context.loggedInUserUuid,
+                                createdTime: context.millisecondsSinceEpoch(),
+                              ),
                               auditDetails: AuditDetails(
                                 createdBy: context.loggedInUserUuid,
                                 createdTime: context.millisecondsSinceEpoch(),

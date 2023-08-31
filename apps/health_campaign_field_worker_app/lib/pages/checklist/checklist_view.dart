@@ -380,6 +380,11 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                           createdTime:
                                               context.millisecondsSinceEpoch(),
                                         ),
+                                        clientAuditDetails: ClientAuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
                                         attributeCode: '${attribute[i].code}',
                                         dataType: attribute[i].dataType,
                                         clientReferenceId: IdGen.i.identifier,
@@ -410,6 +415,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               attributes: attributes,
                                               rowVersion: 1,
                                               accountId: IdGen.i.identifier,
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: DateTime.now()
+                                                    .millisecondsSinceEpoch,
+                                              ),
                                               auditDetails: AuditDetails(
                                                 createdBy:
                                                     context.loggedInUserUuid,

@@ -184,6 +184,13 @@ class _StockReconciliationPageState
                                                 createdTime: context
                                                     .millisecondsSinceEpoch(),
                                               ),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                             );
 
                                             final submit =

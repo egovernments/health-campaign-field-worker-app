@@ -79,6 +79,10 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             tenantId: envConfig.variables.tenantId,
                             clientReferenceId: IdGen.i.identifier,
                             rowVersion: 1,
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy: context.loggedInUserUuid,
+                              createdTime: context.millisecondsSinceEpoch(),
+                            ),
                             auditDetails: AuditDetails(
                               createdBy: context.loggedInUserUuid,
                               createdTime: context.millisecondsSinceEpoch(),

@@ -113,12 +113,13 @@ class ClientAuditDetails {
   final String createdBy;
   final String lastModifiedBy;
 
-  ClientAuditDetails(
-    this.createdTime,
-    this.lastModifiedTime,
-    this.createdBy,
-    this.lastModifiedBy,
-  );
+  ClientAuditDetails({
+    required this.createdBy,
+    required this.createdTime,
+    String? lastModifiedBy,
+    int? lastModifiedTime,
+  })  : lastModifiedBy = lastModifiedBy ?? createdBy,
+        lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
 @MappableClass()

@@ -157,9 +157,21 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       lastModifiedBy: task.auditModifiedBy,
                       lastModifiedTime: task.auditModifiedTime,
                     ),
+                    clientAuditDetails: ClientAuditDetails(
+                      createdBy: task.auditCreatedBy!,
+                      createdTime: task.auditCreatedTime!,
+                      lastModifiedBy: task.auditModifiedBy,
+                      lastModifiedTime: task.auditModifiedTime,
+                    ),
                   ),
             status: task.status,
             auditDetails: AuditDetails(
+              createdBy: task.auditCreatedBy!,
+              createdTime: task.auditCreatedTime!,
+              lastModifiedBy: task.auditModifiedBy,
+              lastModifiedTime: task.auditModifiedTime,
+            ),
+            clientAuditDetails: ClientAuditDetails(
               createdBy: task.auditCreatedBy!,
               createdTime: task.auditCreatedTime!,
               lastModifiedBy: task.auditModifiedBy,
