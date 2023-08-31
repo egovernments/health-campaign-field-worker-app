@@ -280,17 +280,9 @@ class MdmsRepository {
     Map<String, dynamic> body,
   ) async {
     try {
-      print("api called here");
       final Response response = await _client.post(apiEndPoint, data: body);
-      print(response);
 
       return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
-
-      // Iterable<Map<String, dynamic>> entityResponse = response.data['actions'];
-
-      // final results = entityResponse
-      //     .map((e) => Mapper.fromMap<RoleActionsModel>(e))
-      //     .toList();
     } catch (_) {
       rethrow;
     }

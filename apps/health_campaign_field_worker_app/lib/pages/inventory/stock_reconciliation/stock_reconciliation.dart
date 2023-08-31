@@ -190,6 +190,10 @@ class _StockReconciliationPageState
                                                     context.loggedInUserUuid,
                                                 createdTime: context
                                                     .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
                                               ),
                                             );
 

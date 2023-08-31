@@ -188,10 +188,10 @@ class BeneficiaryRegistrationBloc
                       ? individual.clientReferenceId
                       : household.clientReferenceId,
               clientAuditDetails: ClientAuditDetails(
-                createdAt,
-                initialModifiedAt,
-                event.userUuid,
-                event.userUuid,
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
               ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
@@ -209,10 +209,10 @@ class BeneficiaryRegistrationBloc
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
               clientAuditDetails: ClientAuditDetails(
-                createdAt,
-                initialModifiedAt,
-                event.userUuid,
-                event.userUuid,
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
               ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
@@ -355,10 +355,10 @@ class BeneficiaryRegistrationBloc
                   createdTime: createdAt,
                 ),
                 clientAuditDetails: ClientAuditDetails(
-                  createdAt,
-                  initialModifiedAt,
-                  event.userUuid,
-                  event.userUuid,
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
                 ),
               ),
             );
@@ -379,10 +379,10 @@ class BeneficiaryRegistrationBloc
                 createdTime: createdAt,
               ),
               clientAuditDetails: ClientAuditDetails(
-                createdAt,
-                createdAt,
-                event.userUuid,
-                event.userUuid,
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
               ),
             ),
           );
