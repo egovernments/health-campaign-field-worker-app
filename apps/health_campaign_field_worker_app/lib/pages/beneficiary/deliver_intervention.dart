@@ -477,15 +477,20 @@ class _DeliverInterventionPageState
                                 ),
                                 Column(
                                   children: [
-                                    ...resourceCards.map(
-                                      (card) => ResourceBeneficiaryCard(
-                                        onDelete: () {
-                                          setState(() {
-                                            resourceCards.remove(card);
-                                          });
-                                        },
+                                    if (resourceCards.isNotEmpty) ...[
+                                      const ResourceBeneficiaryCard(
+                                        cardIndex: 0,
                                       ),
-                                    ),
+                                    ],
+                                    ...resourceCards.skip(1).map(
+                                          (card) => ResourceBeneficiaryCard(
+                                            onDelete: () {
+                                              setState(() {
+                                                resourceCards.remove(card);
+                                              });
+                                            },
+                                          ),
+                                        ),
                                     DigitIconButton(
                                       onPressed: () async {
                                         setState(() {

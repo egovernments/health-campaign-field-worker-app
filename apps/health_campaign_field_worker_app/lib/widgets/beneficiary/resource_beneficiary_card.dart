@@ -13,11 +13,13 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final VoidCallback? onDelete;
+  final int? cardIndex;
 
   const ResourceBeneficiaryCard({
     Key? key,
     super.appLocalizations,
     this.onDelete,
+    this.cardIndex,
   }) : super(key: key);
 
   @override
@@ -116,47 +118,49 @@ class _ResourceBeneficiaryCardState
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: DigitIconButton(
-                onPressed: () async {
-                  final submit = await DigitDialog.show<bool>(
-                    context,
-                    options: DigitDialogOptions(
-                      titleText: localizations.translate(
-                        i18.deliverIntervention
-                            .resourceDeleteBeneficiaryDialogTitle,
-                      ),
-                      primaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.deliverIntervention
-                              .resourceDeleteBeneficiaryPrimaryActionLabel,
-                        ),
-                        action: (context) {
-                          Navigator.of(
-                            context,
-                            rootNavigator: true,
-                          ).pop(true);
-                        },
-                      ),
-                      secondaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.common.coreCommonCancel,
-                        ),
-                        action: (context) => Navigator.of(
+              child: widget.cardIndex == 0
+                  ? const Offstage()
+                  : DigitIconButton(
+                      onPressed: () async {
+                        final submit = await DigitDialog.show<bool>(
                           context,
-                          rootNavigator: true,
-                        ).pop(false),
+                          options: DigitDialogOptions(
+                            titleText: localizations.translate(
+                              i18.deliverIntervention
+                                  .resourceDeleteBeneficiaryDialogTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.deliverIntervention
+                                    .resourceDeleteBeneficiaryPrimaryActionLabel,
+                              ),
+                              action: (context) {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                            ),
+                            secondaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.common.coreCommonCancel,
+                              ),
+                              action: (context) => Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(false),
+                            ),
+                          ),
+                        );
+                        if (submit == true) {
+                          widget.onDelete?.call();
+                        }
+                      },
+                      iconText: localizations.translate(
+                        i18.deliverIntervention.resourceDeleteBeneficiary,
                       ),
+                      icon: Icons.delete,
                     ),
-                  );
-                  if (submit == true) {
-                    widget.onDelete?.call();
-                  }
-                },
-                iconText: localizations.translate(
-                  i18.deliverIntervention.resourceDeleteBeneficiary,
-                ),
-                icon: Icons.delete,
-              ),
             ),
           ),
         ],
