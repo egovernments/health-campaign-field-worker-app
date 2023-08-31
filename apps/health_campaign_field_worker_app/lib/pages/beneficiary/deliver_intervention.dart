@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -44,7 +45,26 @@ class _DeliverInterventionPageState
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
-  List<Widget> resourceCards = [];
+  List<Widget> resourceCards = [const ResourceBeneficiaryCard()];
+  int currentStep = 0;
+  final List<StepsModel> steps = [
+    const StepsModel(
+      title: "Dose 1",
+      number: "1",
+    ),
+    const StepsModel(
+      title: "Dose 2",
+      number: "2",
+    ),
+    const StepsModel(
+      title: "Dose 3",
+      number: "3",
+    ),
+    const StepsModel(
+      title: "Dose 4",
+      number: "4",
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +109,7 @@ class _DeliverInterventionPageState
                               onPressed: () async {
                                 form.markAllAsTouched();
                                 if (!form.valid) return;
+
                                 final router = context.router;
 
                                 final shouldSubmit =
@@ -273,9 +294,12 @@ class _DeliverInterventionPageState
                               },
                               child: Center(
                                 child: Text(
-                                  localizations.translate(
-                                    i18.common.coreCommonSubmit,
-                                  ),
+                                  currentStep < steps.length - 1
+                                      ? localizations
+                                          .translate(i18.common.coreCommonNext)
+                                      : localizations.translate(
+                                          i18.common.coreCommonSubmit,
+                                        ),
                                 ),
                               ),
                             ),
@@ -444,29 +468,40 @@ class _DeliverInterventionPageState
                                     }(),
                                   },
                                 ),
-                                Column(
-                                  children: resourceCards
-                                      .map((card) => ResourceBeneficiaryCard(
-                                            onDelete: () {
-                                              setState(() {
-                                                resourceCards.remove(card);
-                                              });
-                                            },
-                                          ))
-                                      .toList(),
+                                DigitStepper(
+                                  activeStep: currentStep,
+                                  steps: steps,
+                                  maxStepReached: 3,
+                                  lineLength:
+                                      MediaQuery.of(context).size.width / 5,
                                 ),
-                                DigitIconButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      resourceCards
-                                          .add(const ResourceBeneficiaryCard());
-                                    });
-                                  },
-                                  icon: Icons.add,
-                                  iconText: localizations.translate(
-                                    i18.deliverIntervention
-                                        .resourceAddBeneficiary,
-                                  ),
+                                Column(
+                                  children: [
+                                    ...resourceCards.map(
+                                      (card) => ResourceBeneficiaryCard(
+                                        onDelete: () {
+                                          setState(() {
+                                            resourceCards.remove(card);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    DigitIconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          resourceCards.insert(
+                                            0,
+                                            const ResourceBeneficiaryCard(),
+                                          );
+                                        });
+                                      },
+                                      icon: Icons.add,
+                                      iconText: localizations.translate(
+                                        i18.deliverIntervention
+                                            .resourceAddBeneficiary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
