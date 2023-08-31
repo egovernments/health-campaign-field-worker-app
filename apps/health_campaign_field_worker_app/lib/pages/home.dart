@@ -344,6 +344,15 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.router.push(const ComplaintsInboxWrapperRoute()),
       ),
       HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.stockReconciliationLabel,
+        onPressed: () => context.router.push(ReasonForDeletionRoute()),
+      ),
+      HomeItemCard(
+        icon: Icons.store_mall_directory,
+        label: i18.home.manageStockLabel,
+      ),
+      HomeItemCard(
         icon: Icons.sync_alt,
         label: i18.home.syncDataLabel,
         onPressed: () => _attemptSyncUp(context),
@@ -415,143 +424,6 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       ),
     ];
-
-    // for (final roleModel in roles) {
-    //   switch (roleModel) {
-    //     case UserRoleCodeEnum.registrar:
-    //       homeItems.add(
-    //         HomeItemCard(
-    //           icon: Icons.all_inbox,
-    //           label: i18.home.beneficiaryLabel,
-    //           onPressed: () async {
-    //             final searchBloc = context.read<SearchHouseholdsBloc>();
-    //             await context.router.push(
-    //               SearchBeneficiaryRoute(),
-    //             );
-    //             searchBloc.add(const SearchHouseholdsClearEvent());
-    //           },
-    //         ),
-    //       );
-    //       break;
-    //     case UserRoleCodeEnum.warehouseManager:
-    //       homeItems.addAll(
-    //         [
-    //           HomeItemCard(
-    //             icon: Icons.store_mall_directory,
-    //             label: i18.home.manageStockLabel,
-    //             onPressed: () {
-    //               context.router.push(ManageStocksRoute());
-    //             },
-    //           ),
-    //           HomeItemCard(
-    //             icon: Icons.menu_book,
-    //             label: i18.home.stockReconciliationLabel,
-    //             onPressed: () {
-    //               context.router.push(StockReconciliationRoute());
-    //             },
-    //           ),
-    //           HomeItemCard(
-    //             icon: Icons.announcement,
-    //             label: i18.home.viewReportsLabel,
-    //             onPressed: () {
-    //               context.router.push(
-    //                 InventoryReportSelectionRoute(),
-    //               );
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //       break;
-
-    //     case UserRoleCodeEnum.districtSupervisor:
-    //       homeItems.addAll([
-    //         HomeItemCard(
-    //           icon: Icons.menu_book,
-    //           label: i18.home.myCheckList,
-    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
-    //         ),
-    //       ]);
-    //       break;
-
-    //     case UserRoleCodeEnum.nationalSupervisor:
-    //       homeItems.addAll([
-    //         HomeItemCard(
-    //           icon: Icons.menu_book,
-    //           label: i18.home.myCheckList,
-    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
-    //         ),
-    //       ]);
-    //       break;
-
-    //     case UserRoleCodeEnum.fieldSupervisor:
-    //       homeItems.addAll([
-    //         HomeItemCard(
-    //           icon: Icons.menu_book,
-    //           label: i18.home.myCheckList,
-    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
-    //         ),
-    //       ]);
-    //       break;
-    //     case UserRoleCodeEnum.provincialSupervisor:
-    //       homeItems.addAll([
-    //         HomeItemCard(
-    //           icon: Icons.menu_book,
-    //           label: i18.home.myCheckList,
-    //           onPressed: () => context.router.push(ChecklistWrapperRoute()),
-    //         ),
-    //       ]);
-    //       break;
-
-    //     case UserRoleCodeEnum.distributor:
-    //       homeItems.addAll([
-    //         HomeItemCard(
-    //           icon: Icons.all_inbox,
-    //           label: i18.home.beneficiaryLabel,
-    //           onPressed: () async {
-    //             final searchBloc = context.read<SearchHouseholdsBloc>();
-    //             await context.router.push(
-    //               SearchBeneficiaryRoute(),
-    //             );
-    //             searchBloc.add(const SearchHouseholdsClearEvent());
-    //           },
-    //         ),
-    //       ]);
-    //       break;
-    //     case UserRoleCodeEnum.systemAdministrator:
-    //       homeItems.addAll(
-    //         [
-    //           HomeItemCard(
-    //             icon: Icons.store_mall_directory,
-    //             label: i18.home.manageStockLabel,
-    //           ),
-    //           HomeItemCard(
-    //             icon: Icons.menu_book,
-    //             label: i18.home.stockReconciliationLabel,
-    //             onPressed: () => context.router.push(ReasonForDeletionRoute()),
-    //           ),
-    //           HomeItemCard(
-    //             icon: Icons.all_inbox,
-    //             label: i18.home.beneficiaryLabel,
-    //             onPressed: () async {
-    //               final searchBloc = context.read<SearchHouseholdsBloc>();
-    //               await context.router.push(
-    //                 SearchBeneficiaryRoute(),
-    //               );
-    //               searchBloc.add(const SearchHouseholdsClearEvent());
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //       break;
-    //     case UserRoleCodeEnum.supervisor:
-    //       HomeItemCard(
-    //         icon: Icons.menu_book,
-    //         label: i18.home.myCheckList,
-    //         onPressed: () => context.router.push(ChecklistWrapperRoute()),
-    //       );
-    //       break;
-    //   }
-    // }
 
     return homeItems
         .where((element) => state.actionsWrapper.actions
