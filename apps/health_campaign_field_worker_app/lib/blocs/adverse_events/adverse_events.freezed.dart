@@ -18,26 +18,24 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AdverseEventsEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+    required TResult Function(AdverseEventModel adverseEvent, bool isEditing)
         handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(AdverseEventSearchModel adverseEventSearch)
+        handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult? Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -86,7 +84,7 @@ abstract class _$$AdverseEventsSubmitEventCopyWith<$Res> {
           $Res Function(_$AdverseEventsSubmitEvent) then) =
       __$$AdverseEventsSubmitEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({TaskModel task, bool isEditing, BoundaryModel boundaryModel});
+  $Res call({AdverseEventModel adverseEvent, bool isEditing});
 }
 
 /// @nodoc
@@ -100,23 +98,18 @@ class __$$AdverseEventsSubmitEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? task = null,
+    Object? adverseEvent = null,
     Object? isEditing = null,
-    Object? boundaryModel = null,
   }) {
     return _then(_$AdverseEventsSubmitEvent(
-      null == task
-          ? _value.task
-          : task // ignore: cast_nullable_to_non_nullable
-              as TaskModel,
+      null == adverseEvent
+          ? _value.adverseEvent
+          : adverseEvent // ignore: cast_nullable_to_non_nullable
+              as AdverseEventModel,
       null == isEditing
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      null == boundaryModel
-          ? _value.boundaryModel
-          : boundaryModel // ignore: cast_nullable_to_non_nullable
-              as BoundaryModel,
     ));
   }
 }
@@ -124,19 +117,16 @@ class __$$AdverseEventsSubmitEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AdverseEventsSubmitEvent implements AdverseEventsSubmitEvent {
-  const _$AdverseEventsSubmitEvent(
-      this.task, this.isEditing, this.boundaryModel);
+  const _$AdverseEventsSubmitEvent(this.adverseEvent, this.isEditing);
 
   @override
-  final TaskModel task;
+  final AdverseEventModel adverseEvent;
   @override
   final bool isEditing;
-  @override
-  final BoundaryModel boundaryModel;
 
   @override
   String toString() {
-    return 'AdverseEventsEvent.handleSubmit(task: $task, isEditing: $isEditing, boundaryModel: $boundaryModel)';
+    return 'AdverseEventsEvent.handleSubmit(adverseEvent: $adverseEvent, isEditing: $isEditing)';
   }
 
   @override
@@ -144,15 +134,14 @@ class _$AdverseEventsSubmitEvent implements AdverseEventsSubmitEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AdverseEventsSubmitEvent &&
-            (identical(other.task, task) || other.task == task) &&
+            (identical(other.adverseEvent, adverseEvent) ||
+                other.adverseEvent == adverseEvent) &&
             (identical(other.isEditing, isEditing) ||
-                other.isEditing == isEditing) &&
-            (identical(other.boundaryModel, boundaryModel) ||
-                other.boundaryModel == boundaryModel));
+                other.isEditing == isEditing));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, task, isEditing, boundaryModel);
+  int get hashCode => Object.hash(runtimeType, adverseEvent, isEditing);
 
   @JsonKey(ignore: true)
   @override
@@ -165,36 +154,34 @@ class _$AdverseEventsSubmitEvent implements AdverseEventsSubmitEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+    required TResult Function(AdverseEventModel adverseEvent, bool isEditing)
         handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(AdverseEventSearchModel adverseEventSearch)
+        handleSearch,
   }) {
-    return handleSubmit(task, isEditing, boundaryModel);
+    return handleSubmit(adverseEvent, isEditing);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult? Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
   }) {
-    return handleSubmit?.call(task, isEditing, boundaryModel);
+    return handleSubmit?.call(adverseEvent, isEditing);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
-      return handleSubmit(task, isEditing, boundaryModel);
+      return handleSubmit(adverseEvent, isEditing);
     }
     return orElse();
   }
@@ -233,13 +220,11 @@ class _$AdverseEventsSubmitEvent implements AdverseEventsSubmitEvent {
 
 abstract class AdverseEventsSubmitEvent implements AdverseEventsEvent {
   const factory AdverseEventsSubmitEvent(
-      final TaskModel task,
-      final bool isEditing,
-      final BoundaryModel boundaryModel) = _$AdverseEventsSubmitEvent;
+          final AdverseEventModel adverseEvent, final bool isEditing) =
+      _$AdverseEventsSubmitEvent;
 
-  TaskModel get task;
+  AdverseEventModel get adverseEvent;
   bool get isEditing;
-  BoundaryModel get boundaryModel;
   @JsonKey(ignore: true)
   _$$AdverseEventsSubmitEventCopyWith<_$AdverseEventsSubmitEvent>
       get copyWith => throw _privateConstructorUsedError;
@@ -251,7 +236,7 @@ abstract class _$$AdverseEventsSearchEventCopyWith<$Res> {
           $Res Function(_$AdverseEventsSearchEvent) then) =
       __$$AdverseEventsSearchEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({TaskSearchModel taskSearch});
+  $Res call({AdverseEventSearchModel adverseEventSearch});
 }
 
 /// @nodoc
@@ -265,13 +250,13 @@ class __$$AdverseEventsSearchEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? taskSearch = null,
+    Object? adverseEventSearch = null,
   }) {
     return _then(_$AdverseEventsSearchEvent(
-      null == taskSearch
-          ? _value.taskSearch
-          : taskSearch // ignore: cast_nullable_to_non_nullable
-              as TaskSearchModel,
+      null == adverseEventSearch
+          ? _value.adverseEventSearch
+          : adverseEventSearch // ignore: cast_nullable_to_non_nullable
+              as AdverseEventSearchModel,
     ));
   }
 }
@@ -279,14 +264,14 @@ class __$$AdverseEventsSearchEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AdverseEventsSearchEvent implements AdverseEventsSearchEvent {
-  const _$AdverseEventsSearchEvent(this.taskSearch);
+  const _$AdverseEventsSearchEvent(this.adverseEventSearch);
 
   @override
-  final TaskSearchModel taskSearch;
+  final AdverseEventSearchModel adverseEventSearch;
 
   @override
   String toString() {
-    return 'AdverseEventsEvent.handleSearch(taskSearch: $taskSearch)';
+    return 'AdverseEventsEvent.handleSearch(adverseEventSearch: $adverseEventSearch)';
   }
 
   @override
@@ -294,12 +279,12 @@ class _$AdverseEventsSearchEvent implements AdverseEventsSearchEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AdverseEventsSearchEvent &&
-            (identical(other.taskSearch, taskSearch) ||
-                other.taskSearch == taskSearch));
+            (identical(other.adverseEventSearch, adverseEventSearch) ||
+                other.adverseEventSearch == adverseEventSearch));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, taskSearch);
+  int get hashCode => Object.hash(runtimeType, adverseEventSearch);
 
   @JsonKey(ignore: true)
   @override
@@ -312,36 +297,34 @@ class _$AdverseEventsSearchEvent implements AdverseEventsSearchEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+    required TResult Function(AdverseEventModel adverseEvent, bool isEditing)
         handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(AdverseEventSearchModel adverseEventSearch)
+        handleSearch,
   }) {
-    return handleSearch(taskSearch);
+    return handleSearch(adverseEventSearch);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult? Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
   }) {
-    return handleSearch?.call(taskSearch);
+    return handleSearch?.call(adverseEventSearch);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+    TResult Function(AdverseEventModel adverseEvent, bool isEditing)?
         handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(AdverseEventSearchModel adverseEventSearch)? handleSearch,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
-      return handleSearch(taskSearch);
+      return handleSearch(adverseEventSearch);
     }
     return orElse();
   }
@@ -379,10 +362,11 @@ class _$AdverseEventsSearchEvent implements AdverseEventsSearchEvent {
 }
 
 abstract class AdverseEventsSearchEvent implements AdverseEventsEvent {
-  const factory AdverseEventsSearchEvent(final TaskSearchModel taskSearch) =
+  const factory AdverseEventsSearchEvent(
+          final AdverseEventSearchModel adverseEventSearch) =
       _$AdverseEventsSearchEvent;
 
-  TaskSearchModel get taskSearch;
+  AdverseEventSearchModel get adverseEventSearch;
   @JsonKey(ignore: true)
   _$$AdverseEventsSearchEventCopyWith<_$AdverseEventsSearchEvent>
       get copyWith => throw _privateConstructorUsedError;
@@ -392,7 +376,8 @@ abstract class AdverseEventsSearchEvent implements AdverseEventsEvent {
 mixin _$AdverseEventsState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
-  List<TaskModel>? get tasks => throw _privateConstructorUsedError;
+  List<AdverseEventModel>? get adverseEvents =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AdverseEventsStateCopyWith<AdverseEventsState> get copyWith =>
@@ -405,7 +390,8 @@ abstract class $AdverseEventsStateCopyWith<$Res> {
           AdverseEventsState value, $Res Function(AdverseEventsState) then) =
       _$AdverseEventsStateCopyWithImpl<$Res, AdverseEventsState>;
   @useResult
-  $Res call({bool loading, bool isEditing, List<TaskModel>? tasks});
+  $Res call(
+      {bool loading, bool isEditing, List<AdverseEventModel>? adverseEvents});
 }
 
 /// @nodoc
@@ -423,7 +409,7 @@ class _$AdverseEventsStateCopyWithImpl<$Res, $Val extends AdverseEventsState>
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
-    Object? tasks = freezed,
+    Object? adverseEvents = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -434,10 +420,10 @@ class _$AdverseEventsStateCopyWithImpl<$Res, $Val extends AdverseEventsState>
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      tasks: freezed == tasks
-          ? _value.tasks
-          : tasks // ignore: cast_nullable_to_non_nullable
-              as List<TaskModel>?,
+      adverseEvents: freezed == adverseEvents
+          ? _value.adverseEvents
+          : adverseEvents // ignore: cast_nullable_to_non_nullable
+              as List<AdverseEventModel>?,
     ) as $Val);
   }
 }
@@ -450,7 +436,8 @@ abstract class _$$_AdverseEventsStateCopyWith<$Res>
       __$$_AdverseEventsStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool loading, bool isEditing, List<TaskModel>? tasks});
+  $Res call(
+      {bool loading, bool isEditing, List<AdverseEventModel>? adverseEvents});
 }
 
 /// @nodoc
@@ -466,7 +453,7 @@ class __$$_AdverseEventsStateCopyWithImpl<$Res>
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
-    Object? tasks = freezed,
+    Object? adverseEvents = freezed,
   }) {
     return _then(_$_AdverseEventsState(
       loading: null == loading
@@ -477,10 +464,10 @@ class __$$_AdverseEventsStateCopyWithImpl<$Res>
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      tasks: freezed == tasks
-          ? _value._tasks
-          : tasks // ignore: cast_nullable_to_non_nullable
-              as List<TaskModel>?,
+      adverseEvents: freezed == adverseEvents
+          ? _value._adverseEvents
+          : adverseEvents // ignore: cast_nullable_to_non_nullable
+              as List<AdverseEventModel>?,
     ));
   }
 }
@@ -491,8 +478,8 @@ class _$_AdverseEventsState implements _AdverseEventsState {
   const _$_AdverseEventsState(
       {this.loading = false,
       this.isEditing = false,
-      final List<TaskModel>? tasks})
-      : _tasks = tasks;
+      final List<AdverseEventModel>? adverseEvents})
+      : _adverseEvents = adverseEvents;
 
   @override
   @JsonKey()
@@ -500,10 +487,10 @@ class _$_AdverseEventsState implements _AdverseEventsState {
   @override
   @JsonKey()
   final bool isEditing;
-  final List<TaskModel>? _tasks;
+  final List<AdverseEventModel>? _adverseEvents;
   @override
-  List<TaskModel>? get tasks {
-    final value = _tasks;
+  List<AdverseEventModel>? get adverseEvents {
+    final value = _adverseEvents;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
@@ -511,7 +498,7 @@ class _$_AdverseEventsState implements _AdverseEventsState {
 
   @override
   String toString() {
-    return 'AdverseEventsState(loading: $loading, isEditing: $isEditing, tasks: $tasks)';
+    return 'AdverseEventsState(loading: $loading, isEditing: $isEditing, adverseEvents: $adverseEvents)';
   }
 
   @override
@@ -522,12 +509,13 @@ class _$_AdverseEventsState implements _AdverseEventsState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
-            const DeepCollectionEquality().equals(other._tasks, _tasks));
+            const DeepCollectionEquality()
+                .equals(other._adverseEvents, _adverseEvents));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, loading, isEditing,
-      const DeepCollectionEquality().hash(_tasks));
+      const DeepCollectionEquality().hash(_adverseEvents));
 
   @JsonKey(ignore: true)
   @override
@@ -541,14 +529,14 @@ abstract class _AdverseEventsState implements AdverseEventsState {
   const factory _AdverseEventsState(
       {final bool loading,
       final bool isEditing,
-      final List<TaskModel>? tasks}) = _$_AdverseEventsState;
+      final List<AdverseEventModel>? adverseEvents}) = _$_AdverseEventsState;
 
   @override
   bool get loading;
   @override
   bool get isEditing;
   @override
-  List<TaskModel>? get tasks;
+  List<AdverseEventModel>? get adverseEvents;
   @override
   @JsonKey(ignore: true)
   _$$_AdverseEventsStateCopyWith<_$_AdverseEventsState> get copyWith =>

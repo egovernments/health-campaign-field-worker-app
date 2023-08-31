@@ -1,10 +1,12 @@
 import 'dart:async';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
@@ -14,9 +16,9 @@ import '../data/local_store/no_sql/schema/oplog.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
-import '../utils/i18_key_constants.dart' as i18;
 
 class AuthenticatedPageWrapper extends StatelessWidget {
   AuthenticatedPageWrapper({Key? key}) : super(key: key);
@@ -84,6 +86,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           .repository<IndividualModel, IndividualSearchModel>(),
                       taskDataRepository:
                           context.repository<TaskModel, TaskSearchModel>(),
+                      adverseEventDataRepository: context.repository<
+                          AdverseEventModel, AdverseEventSearchModel>(),
                     )..add(const SearchHouseholdsClearEvent());
                   },
                 ),

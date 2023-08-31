@@ -35,8 +35,8 @@ class DigitCheckboxTile extends StatelessWidget {
               children: [
                 Icon(
                   value
-                      ? Icons.check_box_outline_blank_sharp
-                      : Icons.check_box_outlined,
+                      ? Icons.check_box_outlined
+                      : Icons.check_box_outline_blank_sharp,
                   color: theme.colorScheme.secondary,
                 ),
                 const SizedBox(width: 16),

@@ -86,160 +86,132 @@ class _DeliverInterventionPageState
                                 form.markAllAsTouched();
                                 if (!form.valid) return;
                                 final router = context.router;
-
-                                final shouldSubmit =
-                                    await DigitDialog.show<bool>(
+                                final clientReferenceId = taskData != null
+                                    ? taskData.isEmpty
+                                        ? IdGen.i.identifier
+                                        : taskData.first.clientReferenceId
+                                    : IdGen.i.identifier;
+                                final TaskModel taskModel = TaskModel(
+                                  id: taskData != null
+                                      ? taskData.isEmpty
+                                          ? null
+                                          : taskData.first.id
+                                      : null,
+                                  clientReferenceId: clientReferenceId,
+                                  projectBeneficiaryClientReferenceId:
+                                      projectBeneficiary
+                                          .first.clientReferenceId,
+                                  tenantId: envConfig.variables.tenantId,
+                                  rowVersion: taskData != null
+                                      ? taskData.isEmpty
+                                          ? 1
+                                          : taskData.first.rowVersion
+                                      : 1,
+                                  projectId: context.projectId,
+                                  status: Status.delivered.name,
+                                  createdDate: context.millisecondsSinceEpoch(),
+                                  resources: [
+                                    TaskResourceModel(
+                                      id: taskData != null
+                                          ? taskData.isNotEmpty
+                                              ? taskData
+                                                  .first.resources?.first.id
+                                              : null
+                                          : null,
+                                      taskId: taskData != null
+                                          ? taskData.isNotEmpty
+                                              ? taskData.first.id
+                                              : null
+                                          : null,
+                                      clientReferenceId: clientReferenceId,
+                                      rowVersion: taskData != null
+                                          ? taskData.isEmpty
+                                              ? 1
+                                              : taskData.first.resources?.first
+                                                  .rowVersion
+                                          : 1,
+                                      isDelivered: true,
+                                      tenantId: envConfig.variables.tenantId,
+                                      quantity: form
+                                          .control(
+                                            _quantityDistributedKey,
+                                          )
+                                          .value
+                                          .toString(),
+                                      productVariantId: (form
+                                              .control(
+                                                _resourceDeliveredKey,
+                                              )
+                                              .value as ProductVariantModel)
+                                          .id,
+                                      deliveryComment: form
+                                          .control(
+                                            _deliveryCommentKey,
+                                          )
+                                          .value,
+                                      auditDetails: AuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime: taskData != null
+                                            ? taskData.isNotEmpty
+                                                ? taskData
+                                                        .first
+                                                        .resources
+                                                        ?.first
+                                                        .auditDetails
+                                                        ?.createdTime ??
+                                                    context
+                                                        .millisecondsSinceEpoch()
+                                                : context
+                                                    .millisecondsSinceEpoch()
+                                            : context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                    ),
+                                  ],
+                                  address: householdMemberWrapper
+                                      .household.address
+                                      ?.copyWith(
+                                    relatedClientReferenceId: clientReferenceId,
+                                    id: null,
+                                  ),
+                                  auditDetails: AuditDetails(
+                                    createdBy: context.loggedInUserUuid,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
+                                    lastModifiedBy: context.loggedInUserUuid,
+                                    lastModifiedTime:
+                                        context.millisecondsSinceEpoch(),
+                                  ),
+                                );
+                                context.read<DeliverInterventionBloc>().add(
+                                      DeliverInterventionSubmitEvent(
+                                        taskModel,
+                                        taskData == null
+                                            ? false
+                                            : taskData.isEmpty
+                                                ? false
+                                                : true,
+                                        context.boundary,
+                                      ),
+                                    );
+                                await DigitDialog.show<bool>(
                                   context,
                                   options: DigitDialogOptions(
                                     titleText: localizations.translate(
-                                      i18.deliverIntervention.dialogTitle,
-                                    ),
-                                    contentText: localizations.translate(
-                                      i18.deliverIntervention.dialogContent,
+                                      i18.deliverIntervention
+                                          .didYouObserveAdvEventsTitle,
                                     ),
                                     primaryAction: DigitDialogActions(
                                       label: localizations.translate(
-                                        i18.common.coreCommonSubmit,
+                                        i18.common.coreCommonYes,
                                       ),
                                       action: (ctx) {
-                                        final clientReferenceId =
-                                            taskData != null
-                                                ? taskData.isEmpty
-                                                    ? IdGen.i.identifier
-                                                    : taskData
-                                                        .first.clientReferenceId
-                                                : IdGen.i.identifier;
-                                        context
-                                            .read<DeliverInterventionBloc>()
-                                            .add(
-                                              DeliverInterventionSubmitEvent(
-                                                TaskModel(
-                                                  id: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? null
-                                                          : taskData.first.id
-                                                      : null,
-                                                  clientReferenceId:
-                                                      clientReferenceId,
-                                                  projectBeneficiaryClientReferenceId:
-                                                      projectBeneficiary.first
-                                                          .clientReferenceId,
-                                                  tenantId: envConfig
-                                                      .variables.tenantId,
-                                                  rowVersion: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? 1
-                                                          : taskData
-                                                              .first.rowVersion
-                                                      : 1,
-                                                  projectId: context.projectId,
-                                                  status: Status.delivered.name,
-                                                  createdDate: context
-                                                      .millisecondsSinceEpoch(),
-                                                  resources: [
-                                                    TaskResourceModel(
-                                                      id: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .id
-                                                              : null
-                                                          : null,
-                                                      taskId: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first.id
-                                                              : null
-                                                          : null,
-                                                      clientReferenceId:
-                                                          clientReferenceId,
-                                                      rowVersion: taskData !=
-                                                              null
-                                                          ? taskData.isEmpty
-                                                              ? 1
-                                                              : taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .rowVersion
-                                                          : 1,
-                                                      isDelivered: true,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
-                                                      quantity: form
-                                                          .control(
-                                                            _quantityDistributedKey,
-                                                          )
-                                                          .value
-                                                          .toString(),
-                                                      productVariantId: (form
-                                                                  .control(
-                                                                    _resourceDeliveredKey,
-                                                                  )
-                                                                  .value
-                                                              as ProductVariantModel)
-                                                          .id,
-                                                      deliveryComment: form
-                                                          .control(
-                                                            _deliveryCommentKey,
-                                                          )
-                                                          .value,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: taskData !=
-                                                                null
-                                                            ? taskData
-                                                                    .isNotEmpty
-                                                                ? taskData
-                                                                        .first
-                                                                        .resources
-                                                                        ?.first
-                                                                        .auditDetails
-                                                                        ?.createdTime ??
-                                                                    context
-                                                                        .millisecondsSinceEpoch()
-                                                                : context
-                                                                    .millisecondsSinceEpoch()
-                                                            : context
-                                                                .millisecondsSinceEpoch(),
-                                                        lastModifiedBy: context
-                                                            .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  address:
-                                                      householdMemberWrapper
-                                                          .household.address
-                                                          ?.copyWith(
-                                                    relatedClientReferenceId:
-                                                        clientReferenceId,
-                                                    id: null,
-                                                  ),
-                                                  auditDetails: AuditDetails(
-                                                    createdBy: context
-                                                        .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy: context
-                                                        .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                ),
-                                                taskData == null
-                                                    ? false
-                                                    : taskData.isEmpty
-                                                        ? false
-                                                        : true,
-                                                context.boundary,
-                                              ),
-                                            );
+                                        router.push(AdverseEventsRoute(
+                                          tasks: [taskModel],
+                                        ));
                                         Navigator.of(
                                           context,
                                           rootNavigator: true,
@@ -248,7 +220,7 @@ class _DeliverInterventionPageState
                                     ),
                                     secondaryAction: DigitDialogActions(
                                       label: localizations.translate(
-                                        i18.common.coreCommonCancel,
+                                        i18.common.coreCommonNo,
                                       ),
                                       action: (context) => Navigator.of(
                                         context,
@@ -257,15 +229,6 @@ class _DeliverInterventionPageState
                                     ),
                                   ),
                                 );
-
-                                if (shouldSubmit ?? false) {
-                                  final parent = router.parent() as StackRouter;
-                                  parent
-                                    ..pop()
-                                    ..pop();
-
-                                  router.push(AdverseEventsRoute());
-                                }
                               },
                               child: Center(
                                 child: Text(

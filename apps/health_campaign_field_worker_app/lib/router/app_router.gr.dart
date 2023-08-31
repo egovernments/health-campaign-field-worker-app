@@ -296,13 +296,13 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     AdverseEventsRoute.name: (routeData) {
-      final args = routeData.argsAs<AdverseEventsRouteArgs>(
-          orElse: () => const AdverseEventsRouteArgs());
-      return MaterialPageX<dynamic>(
+      final args = routeData.argsAs<AdverseEventsRouteArgs>();
+      return MaterialPageX<List<TaskModel>>(
         routeData: routeData,
         child: AdverseEventsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
           isEditing: args.isEditing,
         ),
       );
@@ -1633,6 +1633,7 @@ class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
   AdverseEventsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    required List<TaskModel> tasks,
     bool isEditing = false,
   }) : super(
           AdverseEventsRoute.name,
@@ -1640,6 +1641,7 @@ class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
           args: AdverseEventsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            tasks: tasks,
             isEditing: isEditing,
           ),
         );
@@ -1651,6 +1653,7 @@ class AdverseEventsRouteArgs {
   const AdverseEventsRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.tasks,
     this.isEditing = false,
   });
 
@@ -1658,11 +1661,13 @@ class AdverseEventsRouteArgs {
 
   final AppLocalizations? appLocalizations;
 
+  final List<TaskModel> tasks;
+
   final bool isEditing;
 
   @override
   String toString() {
-    return 'AdverseEventsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+    return 'AdverseEventsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
   }
 }
 

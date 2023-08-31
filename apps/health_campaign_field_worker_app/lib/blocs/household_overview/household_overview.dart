@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/data_model.dart';
+import '../../models/entities/adverse_event.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
 
@@ -20,6 +21,7 @@ class HouseholdOverviewBloc
   final HouseholdMemberDataRepository householdMemberRepository;
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
   final TaskDataRepository taskDataRepository;
+  final AdverseEventDataRepository adverseEventDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -28,6 +30,7 @@ class HouseholdOverviewBloc
     required this.individualRepository,
     required this.householdMemberRepository,
     required this.taskDataRepository,
+    required this.adverseEventDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -127,6 +130,12 @@ class HouseholdOverviewBloc
           projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
     ));
 
+    final adverseEvents =
+        await adverseEventDataRepository.search(AdverseEventSearchModel(
+      taskClientReferenceId:
+          tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
+    ));
+
     emit(
       state.copyWith(
         householdMemberWrapper: HouseholdMemberWrapper(
@@ -135,6 +144,7 @@ class HouseholdOverviewBloc
           members: individuals,
           tasks: tasks.isEmpty ? null : tasks,
           projectBeneficiaries: projectBeneficiaries,
+          adverseEvents: adverseEvents,
         ),
         loading: false,
       ),

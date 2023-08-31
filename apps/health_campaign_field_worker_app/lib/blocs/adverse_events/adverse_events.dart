@@ -4,18 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
-import '../../models/data_model.dart';
+import '../../models/entities/adverse_event.dart';
 
 part 'adverse_events.freezed.dart';
 
 typedef BeneficiaryRegistrationEmitter = Emitter<AdverseEventsState>;
 
 class AdverseEventsBloc extends Bloc<AdverseEventsEvent, AdverseEventsState> {
-  final DataRepository<TaskModel, TaskSearchModel> taskRepository;
+  final DataRepository<AdverseEventModel, AdverseEventSearchModel>
+      adverseEventRepository;
 
   AdverseEventsBloc(
     super.initialState, {
-    required this.taskRepository,
+    required this.adverseEventRepository,
   }) {
     on(_handleSubmit);
     on(_handleSearch);
@@ -28,20 +29,9 @@ class AdverseEventsBloc extends Bloc<AdverseEventsEvent, AdverseEventsState> {
     emit(state.copyWith(loading: true));
     try {
       if (event.isEditing) {
-        await taskRepository.update(event.task);
+        await adverseEventRepository.update(event.adverseEvent);
       } else {
-        final code = event.boundaryModel.code;
-        final name = event.boundaryModel.name;
-
-        final localityModel = code == null || name == null
-            ? null
-            : LocalityModel(code: code, name: name);
-
-        await taskRepository.create(event.task.copyWith(
-          address: event.task.address?.copyWith(
-            locality: localityModel,
-          ),
-        ));
+        await adverseEventRepository.create(event.adverseEvent);
       }
     } catch (error) {
       rethrow;
@@ -56,13 +46,14 @@ class AdverseEventsBloc extends Bloc<AdverseEventsEvent, AdverseEventsState> {
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      final List<TaskModel> tasks = await taskRepository.search(
-        event.taskSearch,
+      final List<AdverseEventModel> adverseEvents =
+          await adverseEventRepository.search(
+        event.adverseEventSearch,
       );
-      if (tasks.isNotEmpty) {
-        emit(state.copyWith(tasks: tasks));
+      if (adverseEvents.isNotEmpty) {
+        emit(state.copyWith(adverseEvents: adverseEvents));
       } else {
-        emit(state.copyWith(tasks: null));
+        emit(state.copyWith(adverseEvents: null));
       }
     } catch (error) {
       rethrow;
@@ -75,13 +66,12 @@ class AdverseEventsBloc extends Bloc<AdverseEventsEvent, AdverseEventsState> {
 @freezed
 class AdverseEventsEvent with _$AdverseEventsEvent {
   const factory AdverseEventsEvent.handleSubmit(
-    TaskModel task,
+    AdverseEventModel adverseEvent,
     bool isEditing,
-    BoundaryModel boundaryModel,
   ) = AdverseEventsSubmitEvent;
 
   const factory AdverseEventsEvent.handleSearch(
-    TaskSearchModel taskSearch,
+    AdverseEventSearchModel adverseEventSearch,
   ) = AdverseEventsSearchEvent;
 }
 
@@ -90,6 +80,6 @@ class AdverseEventsState with _$AdverseEventsState {
   const factory AdverseEventsState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
-    List<TaskModel>? tasks,
+    List<AdverseEventModel>? adverseEvents,
   }) = _AdverseEventsState;
 }

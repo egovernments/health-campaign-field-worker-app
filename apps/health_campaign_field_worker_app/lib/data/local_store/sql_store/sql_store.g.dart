@@ -1165,11 +1165,9 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
 class AdverseEventData extends DataClass
     implements Insertable<AdverseEventData> {
   final String? id;
-  final String? projectId;
-  final String? projectBeneficiaryId;
-  final String? projectBeneficiaryClientReferenceId;
-  final String? createdBy;
-  final String? status;
+  final String? taskClientReferenceId;
+  final int? reAttempts;
+  final String? symptoms;
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final String? auditModifiedBy;
@@ -1178,19 +1176,12 @@ class AdverseEventData extends DataClass
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final int? plannedStartDate;
-  final int? plannedEndDate;
-  final int? actualStartDate;
-  final int? actualEndDate;
-  final int? createdDate;
   final String? additionalFields;
   AdverseEventData(
       {this.id,
-      this.projectId,
-      this.projectBeneficiaryId,
-      this.projectBeneficiaryClientReferenceId,
-      this.createdBy,
-      this.status,
+      this.taskClientReferenceId,
+      this.reAttempts,
+      this.symptoms,
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.auditModifiedBy,
@@ -1199,11 +1190,6 @@ class AdverseEventData extends DataClass
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
-      this.plannedStartDate,
-      this.plannedEndDate,
-      this.actualStartDate,
-      this.actualEndDate,
-      this.createdDate,
       this.additionalFields});
   factory AdverseEventData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
@@ -1211,17 +1197,12 @@ class AdverseEventData extends DataClass
     return AdverseEventData(
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      projectId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
-      projectBeneficiaryId: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}project_beneficiary_id']),
-      projectBeneficiaryClientReferenceId: const StringType()
-          .mapFromDatabaseResponse(data[
-              '${effectivePrefix}project_beneficiary_client_reference_id']),
-      createdBy: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_by']),
-      status: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}status']),
+      taskClientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}task_client_reference_id']),
+      reAttempts: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}re_attempts']),
+      symptoms: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}symptoms']),
       auditCreatedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
       auditCreatedTime: const IntType().mapFromDatabaseResponse(
@@ -1238,16 +1219,6 @@ class AdverseEventData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
       rowVersion: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
-      plannedStartDate: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}planned_start_date']),
-      plannedEndDate: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}planned_end_date']),
-      actualStartDate: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}actual_start_date']),
-      actualEndDate: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}actual_end_date']),
-      createdDate: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_date']),
       additionalFields: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
     );
@@ -1258,21 +1229,15 @@ class AdverseEventData extends DataClass
     if (!nullToAbsent || id != null) {
       map['id'] = Variable<String?>(id);
     }
-    if (!nullToAbsent || projectId != null) {
-      map['project_id'] = Variable<String?>(projectId);
+    if (!nullToAbsent || taskClientReferenceId != null) {
+      map['task_client_reference_id'] =
+          Variable<String?>(taskClientReferenceId);
     }
-    if (!nullToAbsent || projectBeneficiaryId != null) {
-      map['project_beneficiary_id'] = Variable<String?>(projectBeneficiaryId);
+    if (!nullToAbsent || reAttempts != null) {
+      map['re_attempts'] = Variable<int?>(reAttempts);
     }
-    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
-      map['project_beneficiary_client_reference_id'] =
-          Variable<String?>(projectBeneficiaryClientReferenceId);
-    }
-    if (!nullToAbsent || createdBy != null) {
-      map['created_by'] = Variable<String?>(createdBy);
-    }
-    if (!nullToAbsent || status != null) {
-      map['status'] = Variable<String?>(status);
+    if (!nullToAbsent || symptoms != null) {
+      map['symptoms'] = Variable<String?>(symptoms);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy);
@@ -1296,21 +1261,6 @@ class AdverseEventData extends DataClass
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int?>(rowVersion);
     }
-    if (!nullToAbsent || plannedStartDate != null) {
-      map['planned_start_date'] = Variable<int?>(plannedStartDate);
-    }
-    if (!nullToAbsent || plannedEndDate != null) {
-      map['planned_end_date'] = Variable<int?>(plannedEndDate);
-    }
-    if (!nullToAbsent || actualStartDate != null) {
-      map['actual_start_date'] = Variable<int?>(actualStartDate);
-    }
-    if (!nullToAbsent || actualEndDate != null) {
-      map['actual_end_date'] = Variable<int?>(actualEndDate);
-    }
-    if (!nullToAbsent || createdDate != null) {
-      map['created_date'] = Variable<int?>(createdDate);
-    }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String?>(additionalFields);
     }
@@ -1320,21 +1270,15 @@ class AdverseEventData extends DataClass
   AdverseEventCompanion toCompanion(bool nullToAbsent) {
     return AdverseEventCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      projectId: projectId == null && nullToAbsent
+      taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
           ? const Value.absent()
-          : Value(projectId),
-      projectBeneficiaryId: projectBeneficiaryId == null && nullToAbsent
+          : Value(taskClientReferenceId),
+      reAttempts: reAttempts == null && nullToAbsent
           ? const Value.absent()
-          : Value(projectBeneficiaryId),
-      projectBeneficiaryClientReferenceId:
-          projectBeneficiaryClientReferenceId == null && nullToAbsent
-              ? const Value.absent()
-              : Value(projectBeneficiaryClientReferenceId),
-      createdBy: createdBy == null && nullToAbsent
+          : Value(reAttempts),
+      symptoms: symptoms == null && nullToAbsent
           ? const Value.absent()
-          : Value(createdBy),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
+          : Value(symptoms),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -1357,21 +1301,6 @@ class AdverseEventData extends DataClass
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
-      plannedStartDate: plannedStartDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(plannedStartDate),
-      plannedEndDate: plannedEndDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(plannedEndDate),
-      actualStartDate: actualStartDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(actualStartDate),
-      actualEndDate: actualEndDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(actualEndDate),
-      createdDate: createdDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdDate),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -1383,13 +1312,10 @@ class AdverseEventData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AdverseEventData(
       id: serializer.fromJson<String?>(json['id']),
-      projectId: serializer.fromJson<String?>(json['projectId']),
-      projectBeneficiaryId:
-          serializer.fromJson<String?>(json['projectBeneficiaryId']),
-      projectBeneficiaryClientReferenceId: serializer
-          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
-      createdBy: serializer.fromJson<String?>(json['createdBy']),
-      status: serializer.fromJson<String?>(json['status']),
+      taskClientReferenceId:
+          serializer.fromJson<String?>(json['taskClientReferenceId']),
+      reAttempts: serializer.fromJson<int?>(json['reAttempts']),
+      symptoms: serializer.fromJson<String?>(json['symptoms']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
@@ -1398,11 +1324,6 @@ class AdverseEventData extends DataClass
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      plannedStartDate: serializer.fromJson<int?>(json['plannedStartDate']),
-      plannedEndDate: serializer.fromJson<int?>(json['plannedEndDate']),
-      actualStartDate: serializer.fromJson<int?>(json['actualStartDate']),
-      actualEndDate: serializer.fromJson<int?>(json['actualEndDate']),
-      createdDate: serializer.fromJson<int?>(json['createdDate']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -1411,12 +1332,10 @@ class AdverseEventData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String?>(id),
-      'projectId': serializer.toJson<String?>(projectId),
-      'projectBeneficiaryId': serializer.toJson<String?>(projectBeneficiaryId),
-      'projectBeneficiaryClientReferenceId':
-          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
-      'createdBy': serializer.toJson<String?>(createdBy),
-      'status': serializer.toJson<String?>(status),
+      'taskClientReferenceId':
+          serializer.toJson<String?>(taskClientReferenceId),
+      'reAttempts': serializer.toJson<int?>(reAttempts),
+      'symptoms': serializer.toJson<String?>(symptoms),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
@@ -1425,22 +1344,15 @@ class AdverseEventData extends DataClass
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'plannedStartDate': serializer.toJson<int?>(plannedStartDate),
-      'plannedEndDate': serializer.toJson<int?>(plannedEndDate),
-      'actualStartDate': serializer.toJson<int?>(actualStartDate),
-      'actualEndDate': serializer.toJson<int?>(actualEndDate),
-      'createdDate': serializer.toJson<int?>(createdDate),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
 
   AdverseEventData copyWith(
           {String? id,
-          String? projectId,
-          String? projectBeneficiaryId,
-          String? projectBeneficiaryClientReferenceId,
-          String? createdBy,
-          String? status,
+          String? taskClientReferenceId,
+          int? reAttempts,
+          String? symptoms,
           String? auditCreatedBy,
           int? auditCreatedTime,
           String? auditModifiedBy,
@@ -1449,21 +1361,13 @@ class AdverseEventData extends DataClass
           String? tenantId,
           bool? isDeleted,
           int? rowVersion,
-          int? plannedStartDate,
-          int? plannedEndDate,
-          int? actualStartDate,
-          int? actualEndDate,
-          int? createdDate,
           String? additionalFields}) =>
       AdverseEventData(
         id: id ?? this.id,
-        projectId: projectId ?? this.projectId,
-        projectBeneficiaryId: projectBeneficiaryId ?? this.projectBeneficiaryId,
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiaryClientReferenceId ??
-                this.projectBeneficiaryClientReferenceId,
-        createdBy: createdBy ?? this.createdBy,
-        status: status ?? this.status,
+        taskClientReferenceId:
+            taskClientReferenceId ?? this.taskClientReferenceId,
+        reAttempts: reAttempts ?? this.reAttempts,
+        symptoms: symptoms ?? this.symptoms,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
@@ -1472,23 +1376,15 @@ class AdverseEventData extends DataClass
         tenantId: tenantId ?? this.tenantId,
         isDeleted: isDeleted ?? this.isDeleted,
         rowVersion: rowVersion ?? this.rowVersion,
-        plannedStartDate: plannedStartDate ?? this.plannedStartDate,
-        plannedEndDate: plannedEndDate ?? this.plannedEndDate,
-        actualStartDate: actualStartDate ?? this.actualStartDate,
-        actualEndDate: actualEndDate ?? this.actualEndDate,
-        createdDate: createdDate ?? this.createdDate,
         additionalFields: additionalFields ?? this.additionalFields,
       );
   @override
   String toString() {
     return (StringBuffer('AdverseEventData(')
           ..write('id: $id, ')
-          ..write('projectId: $projectId, ')
-          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
-          ..write(
-              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
-          ..write('createdBy: $createdBy, ')
-          ..write('status: $status, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
@@ -1497,11 +1393,6 @@ class AdverseEventData extends DataClass
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('plannedStartDate: $plannedStartDate, ')
-          ..write('plannedEndDate: $plannedEndDate, ')
-          ..write('actualStartDate: $actualStartDate, ')
-          ..write('actualEndDate: $actualEndDate, ')
-          ..write('createdDate: $createdDate, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -1510,11 +1401,9 @@ class AdverseEventData extends DataClass
   @override
   int get hashCode => Object.hash(
       id,
-      projectId,
-      projectBeneficiaryId,
-      projectBeneficiaryClientReferenceId,
-      createdBy,
-      status,
+      taskClientReferenceId,
+      reAttempts,
+      symptoms,
       auditCreatedBy,
       auditCreatedTime,
       auditModifiedBy,
@@ -1523,23 +1412,15 @@ class AdverseEventData extends DataClass
       tenantId,
       isDeleted,
       rowVersion,
-      plannedStartDate,
-      plannedEndDate,
-      actualStartDate,
-      actualEndDate,
-      createdDate,
       additionalFields);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AdverseEventData &&
           other.id == this.id &&
-          other.projectId == this.projectId &&
-          other.projectBeneficiaryId == this.projectBeneficiaryId &&
-          other.projectBeneficiaryClientReferenceId ==
-              this.projectBeneficiaryClientReferenceId &&
-          other.createdBy == this.createdBy &&
-          other.status == this.status &&
+          other.taskClientReferenceId == this.taskClientReferenceId &&
+          other.reAttempts == this.reAttempts &&
+          other.symptoms == this.symptoms &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
@@ -1548,21 +1429,14 @@ class AdverseEventData extends DataClass
           other.tenantId == this.tenantId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.plannedStartDate == this.plannedStartDate &&
-          other.plannedEndDate == this.plannedEndDate &&
-          other.actualStartDate == this.actualStartDate &&
-          other.actualEndDate == this.actualEndDate &&
-          other.createdDate == this.createdDate &&
           other.additionalFields == this.additionalFields);
 }
 
 class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   final Value<String?> id;
-  final Value<String?> projectId;
-  final Value<String?> projectBeneficiaryId;
-  final Value<String?> projectBeneficiaryClientReferenceId;
-  final Value<String?> createdBy;
-  final Value<String?> status;
+  final Value<String?> taskClientReferenceId;
+  final Value<int?> reAttempts;
+  final Value<String?> symptoms;
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<String?> auditModifiedBy;
@@ -1571,19 +1445,12 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<int?> plannedStartDate;
-  final Value<int?> plannedEndDate;
-  final Value<int?> actualStartDate;
-  final Value<int?> actualEndDate;
-  final Value<int?> createdDate;
   final Value<String?> additionalFields;
   const AdverseEventCompanion({
     this.id = const Value.absent(),
-    this.projectId = const Value.absent(),
-    this.projectBeneficiaryId = const Value.absent(),
-    this.projectBeneficiaryClientReferenceId = const Value.absent(),
-    this.createdBy = const Value.absent(),
-    this.status = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
@@ -1592,20 +1459,13 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
-    this.plannedStartDate = const Value.absent(),
-    this.plannedEndDate = const Value.absent(),
-    this.actualStartDate = const Value.absent(),
-    this.actualEndDate = const Value.absent(),
-    this.createdDate = const Value.absent(),
     this.additionalFields = const Value.absent(),
   });
   AdverseEventCompanion.insert({
     this.id = const Value.absent(),
-    this.projectId = const Value.absent(),
-    this.projectBeneficiaryId = const Value.absent(),
-    this.projectBeneficiaryClientReferenceId = const Value.absent(),
-    this.createdBy = const Value.absent(),
-    this.status = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
@@ -1614,20 +1474,13 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
-    this.plannedStartDate = const Value.absent(),
-    this.plannedEndDate = const Value.absent(),
-    this.actualStartDate = const Value.absent(),
-    this.actualEndDate = const Value.absent(),
-    this.createdDate = const Value.absent(),
     this.additionalFields = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<AdverseEventData> custom({
     Expression<String?>? id,
-    Expression<String?>? projectId,
-    Expression<String?>? projectBeneficiaryId,
-    Expression<String?>? projectBeneficiaryClientReferenceId,
-    Expression<String?>? createdBy,
-    Expression<String?>? status,
+    Expression<String?>? taskClientReferenceId,
+    Expression<int?>? reAttempts,
+    Expression<String?>? symptoms,
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<String?>? auditModifiedBy,
@@ -1636,23 +1489,14 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     Expression<String?>? tenantId,
     Expression<bool?>? isDeleted,
     Expression<int?>? rowVersion,
-    Expression<int?>? plannedStartDate,
-    Expression<int?>? plannedEndDate,
-    Expression<int?>? actualStartDate,
-    Expression<int?>? actualEndDate,
-    Expression<int?>? createdDate,
     Expression<String?>? additionalFields,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (projectId != null) 'project_id': projectId,
-      if (projectBeneficiaryId != null)
-        'project_beneficiary_id': projectBeneficiaryId,
-      if (projectBeneficiaryClientReferenceId != null)
-        'project_beneficiary_client_reference_id':
-            projectBeneficiaryClientReferenceId,
-      if (createdBy != null) 'created_by': createdBy,
-      if (status != null) 'status': status,
+      if (taskClientReferenceId != null)
+        'task_client_reference_id': taskClientReferenceId,
+      if (reAttempts != null) 're_attempts': reAttempts,
+      if (symptoms != null) 'symptoms': symptoms,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -1661,22 +1505,15 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
-      if (plannedStartDate != null) 'planned_start_date': plannedStartDate,
-      if (plannedEndDate != null) 'planned_end_date': plannedEndDate,
-      if (actualStartDate != null) 'actual_start_date': actualStartDate,
-      if (actualEndDate != null) 'actual_end_date': actualEndDate,
-      if (createdDate != null) 'created_date': createdDate,
       if (additionalFields != null) 'additional_fields': additionalFields,
     });
   }
 
   AdverseEventCompanion copyWith(
       {Value<String?>? id,
-      Value<String?>? projectId,
-      Value<String?>? projectBeneficiaryId,
-      Value<String?>? projectBeneficiaryClientReferenceId,
-      Value<String?>? createdBy,
-      Value<String?>? status,
+      Value<String?>? taskClientReferenceId,
+      Value<int?>? reAttempts,
+      Value<String?>? symptoms,
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<String?>? auditModifiedBy,
@@ -1685,21 +1522,13 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<int?>? plannedStartDate,
-      Value<int?>? plannedEndDate,
-      Value<int?>? actualStartDate,
-      Value<int?>? actualEndDate,
-      Value<int?>? createdDate,
       Value<String?>? additionalFields}) {
     return AdverseEventCompanion(
       id: id ?? this.id,
-      projectId: projectId ?? this.projectId,
-      projectBeneficiaryId: projectBeneficiaryId ?? this.projectBeneficiaryId,
-      projectBeneficiaryClientReferenceId:
-          projectBeneficiaryClientReferenceId ??
-              this.projectBeneficiaryClientReferenceId,
-      createdBy: createdBy ?? this.createdBy,
-      status: status ?? this.status,
+      taskClientReferenceId:
+          taskClientReferenceId ?? this.taskClientReferenceId,
+      reAttempts: reAttempts ?? this.reAttempts,
+      symptoms: symptoms ?? this.symptoms,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
@@ -1708,11 +1537,6 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
-      plannedStartDate: plannedStartDate ?? this.plannedStartDate,
-      plannedEndDate: plannedEndDate ?? this.plannedEndDate,
-      actualStartDate: actualStartDate ?? this.actualStartDate,
-      actualEndDate: actualEndDate ?? this.actualEndDate,
-      createdDate: createdDate ?? this.createdDate,
       additionalFields: additionalFields ?? this.additionalFields,
     );
   }
@@ -1723,22 +1547,15 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     if (id.present) {
       map['id'] = Variable<String?>(id.value);
     }
-    if (projectId.present) {
-      map['project_id'] = Variable<String?>(projectId.value);
+    if (taskClientReferenceId.present) {
+      map['task_client_reference_id'] =
+          Variable<String?>(taskClientReferenceId.value);
     }
-    if (projectBeneficiaryId.present) {
-      map['project_beneficiary_id'] =
-          Variable<String?>(projectBeneficiaryId.value);
+    if (reAttempts.present) {
+      map['re_attempts'] = Variable<int?>(reAttempts.value);
     }
-    if (projectBeneficiaryClientReferenceId.present) {
-      map['project_beneficiary_client_reference_id'] =
-          Variable<String?>(projectBeneficiaryClientReferenceId.value);
-    }
-    if (createdBy.present) {
-      map['created_by'] = Variable<String?>(createdBy.value);
-    }
-    if (status.present) {
-      map['status'] = Variable<String?>(status.value);
+    if (symptoms.present) {
+      map['symptoms'] = Variable<String?>(symptoms.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
@@ -1764,21 +1581,6 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int?>(rowVersion.value);
     }
-    if (plannedStartDate.present) {
-      map['planned_start_date'] = Variable<int?>(plannedStartDate.value);
-    }
-    if (plannedEndDate.present) {
-      map['planned_end_date'] = Variable<int?>(plannedEndDate.value);
-    }
-    if (actualStartDate.present) {
-      map['actual_start_date'] = Variable<int?>(actualStartDate.value);
-    }
-    if (actualEndDate.present) {
-      map['actual_end_date'] = Variable<int?>(actualEndDate.value);
-    }
-    if (createdDate.present) {
-      map['created_date'] = Variable<int?>(createdDate.value);
-    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String?>(additionalFields.value);
     }
@@ -1789,12 +1591,9 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   String toString() {
     return (StringBuffer('AdverseEventCompanion(')
           ..write('id: $id, ')
-          ..write('projectId: $projectId, ')
-          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
-          ..write(
-              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
-          ..write('createdBy: $createdBy, ')
-          ..write('status: $status, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
@@ -1803,11 +1602,6 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('plannedStartDate: $plannedStartDate, ')
-          ..write('plannedEndDate: $plannedEndDate, ')
-          ..write('actualStartDate: $actualStartDate, ')
-          ..write('actualEndDate: $actualEndDate, ')
-          ..write('createdDate: $createdDate, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -1825,33 +1619,21 @@ class $AdverseEventTable extends AdverseEvent
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _projectIdMeta = const VerificationMeta('projectId');
+  final VerificationMeta _taskClientReferenceIdMeta =
+      const VerificationMeta('taskClientReferenceId');
   @override
-  late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
-      'project_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _projectBeneficiaryIdMeta =
-      const VerificationMeta('projectBeneficiaryId');
-  @override
-  late final GeneratedColumn<String?> projectBeneficiaryId =
-      GeneratedColumn<String?>('project_beneficiary_id', aliasedName, true,
+  late final GeneratedColumn<String?> taskClientReferenceId =
+      GeneratedColumn<String?>('task_client_reference_id', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
-      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  final VerificationMeta _reAttemptsMeta = const VerificationMeta('reAttempts');
   @override
-  late final GeneratedColumn<String?> projectBeneficiaryClientReferenceId =
-      GeneratedColumn<String?>(
-          'project_beneficiary_client_reference_id', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _createdByMeta = const VerificationMeta('createdBy');
+  late final GeneratedColumn<int?> reAttempts = GeneratedColumn<int?>(
+      're_attempts', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _symptomsMeta = const VerificationMeta('symptoms');
   @override
-  late final GeneratedColumn<String?> createdBy = GeneratedColumn<String?>(
-      'created_by', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
-      'status', aliasedName, true,
+  late final GeneratedColumn<String?> symptoms = GeneratedColumn<String?>(
+      'symptoms', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
@@ -1901,36 +1683,6 @@ class $AdverseEventTable extends AdverseEvent
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
       'row_version', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _plannedStartDateMeta =
-      const VerificationMeta('plannedStartDate');
-  @override
-  late final GeneratedColumn<int?> plannedStartDate = GeneratedColumn<int?>(
-      'planned_start_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _plannedEndDateMeta =
-      const VerificationMeta('plannedEndDate');
-  @override
-  late final GeneratedColumn<int?> plannedEndDate = GeneratedColumn<int?>(
-      'planned_end_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _actualStartDateMeta =
-      const VerificationMeta('actualStartDate');
-  @override
-  late final GeneratedColumn<int?> actualStartDate = GeneratedColumn<int?>(
-      'actual_start_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _actualEndDateMeta =
-      const VerificationMeta('actualEndDate');
-  @override
-  late final GeneratedColumn<int?> actualEndDate = GeneratedColumn<int?>(
-      'actual_end_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _createdDateMeta =
-      const VerificationMeta('createdDate');
-  @override
-  late final GeneratedColumn<int?> createdDate = GeneratedColumn<int?>(
-      'created_date', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -1940,11 +1692,9 @@ class $AdverseEventTable extends AdverseEvent
   @override
   List<GeneratedColumn> get $columns => [
         id,
-        projectId,
-        projectBeneficiaryId,
-        projectBeneficiaryClientReferenceId,
-        createdBy,
-        status,
+        taskClientReferenceId,
+        reAttempts,
+        symptoms,
         auditCreatedBy,
         auditCreatedTime,
         auditModifiedBy,
@@ -1953,11 +1703,6 @@ class $AdverseEventTable extends AdverseEvent
         tenantId,
         isDeleted,
         rowVersion,
-        plannedStartDate,
-        plannedEndDate,
-        actualStartDate,
-        actualEndDate,
-        createdDate,
         additionalFields
       ];
   @override
@@ -1972,30 +1717,21 @@ class $AdverseEventTable extends AdverseEvent
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('project_id')) {
-      context.handle(_projectIdMeta,
-          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
-    }
-    if (data.containsKey('project_beneficiary_id')) {
+    if (data.containsKey('task_client_reference_id')) {
       context.handle(
-          _projectBeneficiaryIdMeta,
-          projectBeneficiaryId.isAcceptableOrUnknown(
-              data['project_beneficiary_id']!, _projectBeneficiaryIdMeta));
+          _taskClientReferenceIdMeta,
+          taskClientReferenceId.isAcceptableOrUnknown(
+              data['task_client_reference_id']!, _taskClientReferenceIdMeta));
     }
-    if (data.containsKey('project_beneficiary_client_reference_id')) {
+    if (data.containsKey('re_attempts')) {
       context.handle(
-          _projectBeneficiaryClientReferenceIdMeta,
-          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
-              data['project_beneficiary_client_reference_id']!,
-              _projectBeneficiaryClientReferenceIdMeta));
+          _reAttemptsMeta,
+          reAttempts.isAcceptableOrUnknown(
+              data['re_attempts']!, _reAttemptsMeta));
     }
-    if (data.containsKey('created_by')) {
-      context.handle(_createdByMeta,
-          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
-    }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    if (data.containsKey('symptoms')) {
+      context.handle(_symptomsMeta,
+          symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(
@@ -2042,36 +1778,6 @@ class $AdverseEventTable extends AdverseEvent
           _rowVersionMeta,
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
-    }
-    if (data.containsKey('planned_start_date')) {
-      context.handle(
-          _plannedStartDateMeta,
-          plannedStartDate.isAcceptableOrUnknown(
-              data['planned_start_date']!, _plannedStartDateMeta));
-    }
-    if (data.containsKey('planned_end_date')) {
-      context.handle(
-          _plannedEndDateMeta,
-          plannedEndDate.isAcceptableOrUnknown(
-              data['planned_end_date']!, _plannedEndDateMeta));
-    }
-    if (data.containsKey('actual_start_date')) {
-      context.handle(
-          _actualStartDateMeta,
-          actualStartDate.isAcceptableOrUnknown(
-              data['actual_start_date']!, _actualStartDateMeta));
-    }
-    if (data.containsKey('actual_end_date')) {
-      context.handle(
-          _actualEndDateMeta,
-          actualEndDate.isAcceptableOrUnknown(
-              data['actual_end_date']!, _actualEndDateMeta));
-    }
-    if (data.containsKey('created_date')) {
-      context.handle(
-          _createdDateMeta,
-          createdDate.isAcceptableOrUnknown(
-              data['created_date']!, _createdDateMeta));
     }
     if (data.containsKey('additional_fields')) {
       context.handle(

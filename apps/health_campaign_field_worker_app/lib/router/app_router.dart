@@ -106,7 +106,7 @@ part 'app_router.gr.dart';
               page: DeliverInterventionPage,
               path: 'deliver-intervention',
             ),
-            AutoRoute(
+            AutoRoute<List<TaskModel>>(
               page: AdverseEventsPage,
               path: 'adverse-events',
             ),

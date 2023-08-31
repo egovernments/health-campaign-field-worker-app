@@ -79,6 +79,10 @@ class Common {
   String get coreCommonSkip => 'CORE_COMMON_SKIP';
 
   String get coreCommonNext => 'CORE_COMMON_NEXT';
+
+  String get coreCommonYes => 'CORE_COMMON_YES';
+
+  String get coreCommonNo => 'CORE_COMMON_NO';
 }
 
 class Login {
@@ -375,6 +379,9 @@ class DeliverIntervention {
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
+  String get didYouObserveAdvEventsTitle =>
+      'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
 }
 
@@ -384,6 +391,12 @@ class AdverseEvents {
   String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
 
   String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
+
+  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
+
+  String get resourcesToBeDelivered => 'RESOURCES_TO_BE_DELIVERED_LABEL';
 
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 }

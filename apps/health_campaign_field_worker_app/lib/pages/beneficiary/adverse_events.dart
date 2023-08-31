@@ -1,14 +1,17 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/adverse_events/adverse_events.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/product_variant/product_variant.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -21,10 +24,12 @@ import '../../widgets/localized.dart';
 
 class AdverseEventsPage extends LocalizedStatefulWidget {
   final bool isEditing;
+  final List<TaskModel> tasks;
 
   const AdverseEventsPage({
     super.key,
     super.appLocalizations,
+    required this.tasks,
     this.isEditing = false,
   });
 
@@ -33,320 +38,442 @@ class AdverseEventsPage extends LocalizedStatefulWidget {
 }
 
 class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
-  static const _resourceDeliveredKey = 'resourceDelivered';
-  static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
+  static const _noOfTimesReAdministeredKey = 'quantityDistributed';
   static const _reAdministerKey = 'reAdminister';
+  List<bool> symptomsValues = [];
+  List<String> symptomsTypes = [];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return ProductVariantBlocWrapper(
-      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-        builder: (context, state) {
-          final householdMemberWrapper = state.householdMemberWrapper;
+      child: BlocBuilder<ProductVariantBloc, ProductVariantState>(
+        builder: (context, productState) {
+          return productState.maybeWhen(
+            orElse: () => const Offstage(),
+            fetched: (productVariants) {
+              return BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                builder: (context, state) {
+                  final householdMemberWrapper = state.householdMemberWrapper;
 
-          final projectBeneficiary =
-              context.beneficiaryType != BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries.first]
-                  : householdMemberWrapper.projectBeneficiaries
-                      .where(
-                        (element) =>
-                            element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
-                      )
+                  final projectBeneficiary =
+                      context.beneficiaryType != BeneficiaryType.individual
+                          ? [householdMemberWrapper.projectBeneficiaries.first]
+                          : householdMemberWrapper.projectBeneficiaries
+                              .where(
+                                (element) =>
+                                    element.beneficiaryClientReferenceId ==
+                                    state.selectedIndividual?.clientReferenceId,
+                              )
+                              .toList();
+
+                  final taskData = state.householdMemberWrapper.tasks
+                      ?.where((element) =>
+                          element.projectBeneficiaryClientReferenceId ==
+                          projectBeneficiary.first.clientReferenceId)
                       .toList();
+                  final adverseEventData = state
+                      .householdMemberWrapper.adverseEvents
+                      ?.where((element) =>
+                          element.taskClientReferenceId ==
+                          taskData?.first.clientReferenceId)
+                      .toList();
+                  final filteredHeaderList = [
+                    TableHeader(
+                      localizations
+                          .translate(i18.adverseEvents.resourceHeaderLabel),
+                      cellKey: 'resource',
+                    ),
+                    TableHeader(
+                      localizations
+                          .translate(i18.adverseEvents.resourceHeaderLabel),
+                      cellKey: 'resourceCount',
+                    ),
+                  ];
 
-          final taskData = state.householdMemberWrapper.tasks
-              ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
-              .toList();
+                  final tableData = widget.tasks.first.resources?.map(
+                    (e) {
+                      final rowTableData = [
+                        TableData(
+                          productVariants
+                              .whereNotNull()
+                              .where((p) => p.id == e.productVariantId)
+                              .first
+                              .sku
+                              .toString(),
+                          cellKey: 'beneficiary',
+                        ),
+                        TableData(
+                          e.quantity ?? '',
+                          cellKey: 'gender',
+                        ),
+                      ];
 
-          return Scaffold(
-            body: state.loading
-                ? const Center(child: CircularProgressIndicator())
-                : ReactiveFormBuilder(
-                    form: () => buildForm(context),
-                    builder: (context, form, child) {
-                      return ScrollableContent(
-                        header: const BackNavigationHelpHeaderWidget(),
-                        footer: SizedBox(
-                          height: 100,
-                          child: DigitCard(
-                            child: DigitElevatedButton(
-                              onPressed: () async {
-                                form.markAllAsTouched();
-                                if (!form.valid) return;
-                                final router = context.router;
+                      return TableDataRow(
+                        rowTableData,
+                      );
+                      // rowTableData
+                    },
+                  ).toList();
 
-                                final shouldSubmit =
-                                    await DigitDialog.show<bool>(
-                                  context,
-                                  options: DigitDialogOptions(
-                                    titleText: localizations.translate(
-                                      i18.deliverIntervention.dialogTitle,
-                                    ),
-                                    contentText: localizations.translate(
-                                      i18.deliverIntervention.dialogContent,
-                                    ),
-                                    primaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonSubmit,
-                                      ),
-                                      action: (ctx) {
-                                        final clientReferenceId =
-                                            taskData != null
-                                                ? taskData.isEmpty
-                                                    ? IdGen.i.identifier
-                                                    : taskData
-                                                        .first.clientReferenceId
-                                                : IdGen.i.identifier;
-                                        context
-                                            .read<DeliverInterventionBloc>()
-                                            .add(
-                                              DeliverInterventionSubmitEvent(
-                                                TaskModel(
-                                                  id: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? null
-                                                          : taskData.first.id
-                                                      : null,
-                                                  clientReferenceId:
-                                                      clientReferenceId,
-                                                  projectBeneficiaryClientReferenceId:
-                                                      projectBeneficiary.first
-                                                          .clientReferenceId,
-                                                  tenantId: envConfig
-                                                      .variables.tenantId,
-                                                  rowVersion: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? 1
-                                                          : taskData
-                                                              .first.rowVersion
-                                                      : 1,
-                                                  projectId: context.projectId,
-                                                  status: Status.delivered.name,
-                                                  createdDate: context
-                                                      .millisecondsSinceEpoch(),
-                                                  resources: [
-                                                    TaskResourceModel(
-                                                      id: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .id
-                                                              : null
-                                                          : null,
-                                                      taskId: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first.id
-                                                              : null
-                                                          : null,
-                                                      clientReferenceId:
-                                                          clientReferenceId,
-                                                      rowVersion: taskData !=
-                                                              null
-                                                          ? taskData.isEmpty
-                                                              ? 1
-                                                              : taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .rowVersion
-                                                          : 1,
-                                                      isDelivered: true,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
-                                                      quantity: form
-                                                          .control(
-                                                            _quantityDistributedKey,
-                                                          )
-                                                          .value
-                                                          .toString(),
-                                                      productVariantId: (form
-                                                                  .control(
-                                                                    _resourceDeliveredKey,
-                                                                  )
-                                                                  .value
-                                                              as ProductVariantModel)
-                                                          .id,
-                                                      deliveryComment: form
-                                                          .control(
-                                                            _deliveryCommentKey,
-                                                          )
-                                                          .value,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: taskData !=
-                                                                null
-                                                            ? taskData
-                                                                    .isNotEmpty
-                                                                ? taskData
-                                                                        .first
-                                                                        .resources
-                                                                        ?.first
-                                                                        .auditDetails
-                                                                        ?.createdTime ??
-                                                                    context
-                                                                        .millisecondsSinceEpoch()
-                                                                : context
-                                                                    .millisecondsSinceEpoch()
-                                                            : context
-                                                                .millisecondsSinceEpoch(),
-                                                        lastModifiedBy: context
-                                                            .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  address:
-                                                      householdMemberWrapper
-                                                          .household.address
-                                                          ?.copyWith(
-                                                    relatedClientReferenceId:
-                                                        clientReferenceId,
-                                                    id: null,
-                                                  ),
-                                                  auditDetails: AuditDetails(
-                                                    createdBy: context
-                                                        .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy: context
-                                                        .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
+                  return BlocBuilder<DeliverInterventionBloc,
+                      DeliverInterventionState>(
+                    builder: (context, deliveryState) {
+                      return Scaffold(
+                        body: state.loading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ReactiveFormBuilder(
+                                form: () => buildForm(context),
+                                builder: (context, form, child) {
+                                  return ScrollableContent(
+                                    header:
+                                        const BackNavigationHelpHeaderWidget(),
+                                    footer: SizedBox(
+                                      height: 100,
+                                      child: DigitCard(
+                                        child: DigitElevatedButton(
+                                          onPressed: () async {
+                                            form.markAllAsTouched();
+                                            if (!form.valid) return;
+                                            final router = context.router;
+
+                                            final shouldSubmit =
+                                                await DigitDialog.show<bool>(
+                                              context,
+                                              options: DigitDialogOptions(
+                                                titleText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogTitle,
                                                 ),
-                                                taskData == null
-                                                    ? false
-                                                    : taskData.isEmpty
-                                                        ? false
-                                                        : true,
-                                                context.boundary,
+                                                contentText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogContent,
+                                                ),
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonSubmit,
+                                                  ),
+                                                  action: (ctx) {
+                                                    final List<String>
+                                                        symptoms = [];
+
+                                                    for (int i = 0;
+                                                        i <
+                                                            symptomsValues
+                                                                .length;
+                                                        i++) {
+                                                      if (symptomsValues[i]) {
+                                                        symptoms.add(
+                                                          symptomsTypes[i],
+                                                        );
+                                                      }
+                                                    }
+
+                                                    final clientReferenceId =
+                                                        adverseEventData != null
+                                                            ? adverseEventData
+                                                                    .isEmpty
+                                                                ? IdGen.i
+                                                                    .identifier
+                                                                : adverseEventData
+                                                                    .first
+                                                                    .clientReferenceId
+                                                            : IdGen
+                                                                .i.identifier;
+                                                    context
+                                                        .read<
+                                                            AdverseEventsBloc>()
+                                                        .add(
+                                                          AdverseEventsSubmitEvent(
+                                                            AdverseEventModel(
+                                                              id: adverseEventData !=
+                                                                      null
+                                                                  ? adverseEventData
+                                                                          .isEmpty
+                                                                      ? null
+                                                                      : adverseEventData
+                                                                          .first
+                                                                          .id
+                                                                  : null,
+                                                              taskClientReferenceId:
+                                                                  widget
+                                                                      .tasks
+                                                                      .first
+                                                                      .clientReferenceId,
+                                                              symptoms:
+                                                                  symptoms,
+                                                              reAttempts: form
+                                                                  .control(
+                                                                    _noOfTimesReAdministeredKey,
+                                                                  )
+                                                                  .value as int,
+                                                              clientReferenceId:
+                                                                  clientReferenceId,
+                                                              tenantId:
+                                                                  envConfig
+                                                                      .variables
+                                                                      .tenantId,
+                                                              rowVersion: adverseEventData !=
+                                                                      null
+                                                                  ? adverseEventData
+                                                                          .isEmpty
+                                                                      ? 1
+                                                                      : adverseEventData
+                                                                          .first
+                                                                          .rowVersion
+                                                                  : 1,
+                                                              auditDetails:
+                                                                  AuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
+                                                            ),
+                                                            adverseEventData ==
+                                                                    null
+                                                                ? false
+                                                                : adverseEventData
+                                                                        .isEmpty
+                                                                    ? false
+                                                                    : true,
+                                                          ),
+                                                        );
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  },
+                                                ),
+                                                secondaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
+                                                  action: (context) =>
+                                                      Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(false),
+                                                ),
                                               ),
                                             );
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(true);
-                                      },
-                                    ),
-                                    secondaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonCancel,
-                                      ),
-                                      action: (context) => Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(false),
-                                    ),
-                                  ),
-                                );
 
-                                if (shouldSubmit ?? false) {
-                                  final parent = router.parent() as StackRouter;
-                                  parent
-                                    ..pop()
-                                    ..pop();
+                                            if (shouldSubmit ?? false) {
+                                              final parent = router.parent()
+                                                  as StackRouter;
+                                              parent
+                                                ..pop()
+                                                ..pop();
 
-                                  router.push(AcknowledgementRoute());
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  localizations.translate(
-                                    i18.common.coreCommonNext,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        children: [
-                          DigitCard(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.adverseEvents.adverseEventsLabel,
+                                              router
+                                                  .push(AcknowledgementRoute());
+                                            }
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              localizations.translate(
+                                                i18.common.coreCommonNext,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        style: theme.textTheme.displayMedium,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                const DigitDivider(),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.adverseEvents.selectSymptomsLabel,
-                                      ),
-                                      style: theme.textTheme.headlineSmall,
-                                    ),
-                                  ),
-                                ),
-                                BlocBuilder<AppInitializationBloc,
-                                    AppInitializationState>(
-                                  builder: (context, state) => state.maybeWhen(
-                                    orElse: () => const Offstage(),
-                                    initialized: (appConfiguration, _) {
-                                      final symptomTypesOptions =
-                                          appConfiguration.symptomsTypes ??
-                                              <SymptomsTypes>[];
+                                    children: [
+                                      DigitCard(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    localizations.translate(
+                                                      i18.adverseEvents
+                                                          .adverseEventsLabel,
+                                                    ),
+                                                    style: theme.textTheme
+                                                        .displayMedium,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const DigitDivider(),
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Text(
+                                                  localizations.translate(
+                                                    i18.adverseEvents
+                                                        .resourcesToBeDelivered,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.headlineSmall,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            DigitTable(
+                                              headerList: filteredHeaderList,
+                                              tableData: tableData ?? [],
+                                              leftColumnWidth: 130,
+                                              rightColumnWidth:
+                                                  filteredHeaderList.length *
+                                                      17 *
+                                                      6,
+                                              height: (widget.tasks.first
+                                                                  .resources ??
+                                                              [])
+                                                          .length <=
+                                                      5
+                                                  ? ((widget.tasks.first
+                                                                      .resources ??
+                                                                  [])
+                                                              .length +
+                                                          1) *
+                                                      60
+                                                  : 6 * 60,
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Text(
+                                                  localizations.translate(
+                                                    i18.adverseEvents
+                                                        .selectSymptomsLabel,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.headlineSmall,
+                                                ),
+                                              ),
+                                            ),
+                                            BlocBuilder<AppInitializationBloc,
+                                                AppInitializationState>(
+                                              builder: (context, state) =>
+                                                  state.maybeWhen(
+                                                orElse: () => const Offstage(),
+                                                initialized:
+                                                    (appConfiguration, _) {
+                                                  final symptomTypesOptions =
+                                                      appConfiguration
+                                                              .symptomsTypes ??
+                                                          <SymptomsTypes>[];
+                                                  symptomsTypes =
+                                                      symptomTypesOptions
+                                                          .map((e) => e.code)
+                                                          .toList();
+                                                  for (var _
+                                                      in symptomTypesOptions) {
+                                                    symptomsValues.add(false);
+                                                  }
 
-                                      return Column(
-                                        children: symptomTypesOptions
-                                            .map((e) => DigitCheckboxTile(
-                                                  label: localizations
-                                                      .translate(e.code),
-                                                ))
-                                            .toList(),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                DigitIntegerFormPicker(
-                                  form: form,
-                                  minimum: 0,
-                                  formControlName: _quantityDistributedKey,
-                                  label: localizations.translate(
-                                    i18.deliverIntervention
-                                        .quantityDistributedLabel,
-                                  ),
-                                  incrementer: true,
-                                ),
-                                DigitRadioButtonList<KeyValue>(
-                                  labelText: localizations.translate(i18
-                                      .adverseEvents.didYouReAdministerLabel),
-                                  formControlName: _reAdministerKey,
-                                  valueMapper: (value) => localizations
-                                      .translate(value.label.toUpperCase()),
-                                  options: Constants.yesNo,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                                                  return Column(
+                                                    children:
+                                                        symptomTypesOptions
+                                                            .mapIndexed(
+                                                              (i, e) =>
+                                                                  StatefulBuilder(
+                                                                builder: (
+                                                                  BuildContext
+                                                                      context,
+                                                                  StateSetter
+                                                                      stateSetter,
+                                                                ) {
+                                                                  return DigitCheckboxTile(
+                                                                    label: localizations
+                                                                        .translate(
+                                                                      e.code,
+                                                                    ),
+                                                                    value:
+                                                                        symptomsValues[
+                                                                            i],
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      stateSetter(
+                                                                        () {
+                                                                          symptomsValues[i] =
+                                                                              !symptomsValues[i];
+                                                                        },
+                                                                      );
+                                                                    },
+                                                                  );
+                                                                },
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            DigitRadioButtonList<KeyValue>(
+                                              labelText:
+                                                  localizations.translate(i18
+                                                      .adverseEvents
+                                                      .didYouReAdministerLabel),
+                                              formControlName: _reAdministerKey,
+                                              valueMapper: (value) =>
+                                                  localizations.translate(
+                                                value.label.toUpperCase(),
+                                              ),
+                                              options: Constants.yesNo,
+                                            ),
+                                            Offstage(
+                                              offstage: (form
+                                                          .control(
+                                                            _reAdministerKey,
+                                                          )
+                                                          .value as KeyValue)
+                                                      .key ==
+                                                  false,
+                                              child: DigitIntegerFormPicker(
+                                                form: form,
+                                                minimum: 0,
+                                                formControlName:
+                                                    _noOfTimesReAdministeredKey,
+                                                label: localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .quantityDistributedLabel,
+                                                ),
+                                                incrementer: true,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                       );
                     },
-                  ),
+                  );
+                },
+              );
+            },
           );
         },
       ),
@@ -371,22 +498,26 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
             element.projectBeneficiaryClientReferenceId ==
             projectBeneficiary.first.clientReferenceId)
         .toList();
+    final adverseEventData = state.householdMemberWrapper.adverseEvents
+        ?.where((element) =>
+            element.taskClientReferenceId == taskData?.first.clientReferenceId)
+        .toList();
 
     return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<ProductVariantModel>(
+      _noOfTimesReAdministeredKey: FormControl<int>(
+        value: adverseEventData?.firstOrNull?.reAttempts != null &&
+                adverseEventData?.firstOrNull?.reAttempts != 0
+            ? int.tryParse(adverseEventData!.firstOrNull!.reAttempts.toString())
+            : 0,
         validators: [Validators.required],
       ),
-      _quantityDistributedKey: FormControl<int>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
-            ? int.tryParse(taskData!.first.resources!.first.quantity!)
-            : 1,
-        validators: [Validators.required],
-      ),
-      _deliveryCommentKey: FormControl<String>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
-      ),
-      _reAdministerKey: FormControl<String>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
+      _reAdministerKey: FormControl<KeyValue>(
+        value: KeyValue(
+          (adverseEventData?.firstOrNull?.reAttempts != 0)
+              ? Constants.yesNo.first.label
+              : Constants.yesNo.last.label,
+          adverseEventData?.firstOrNull?.reAttempts != 0 ? true : false,
+        ),
       ),
     });
   }
