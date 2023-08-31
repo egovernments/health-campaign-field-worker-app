@@ -110,8 +110,15 @@ class AdditionalField {
 class ClientAuditDetails {
   final int createdTime;
   final int? lastModifiedTime;
+  final String createdBy;
+  final String lastModifiedBy;
 
-  ClientAuditDetails(this.createdTime, this.lastModifiedTime);
+  ClientAuditDetails(
+    this.createdTime,
+    this.lastModifiedTime,
+    this.createdBy,
+    this.lastModifiedBy,
+  );
 }
 
 @MappableClass()

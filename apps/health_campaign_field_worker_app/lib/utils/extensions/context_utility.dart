@@ -70,7 +70,7 @@ extension ContextUtilityExtensions on BuildContext {
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated: (accessToken, refreshToken, userModel) {
+      authenticated: (accessToken, refreshToken, userModel, actions) {
         return userModel;
       },
     );
@@ -93,8 +93,8 @@ extension ContextUtilityExtensions on BuildContext {
 
     for (final role in loggedInUser.roles) {
       switch (role.code) {
-        case UserRoleCodeEnum.distributor:
-        case UserRoleCodeEnum.registrar:
+        case "REGISTRAR":
+        case "DISTRIBUTOR":
           return true;
         default:
           break;

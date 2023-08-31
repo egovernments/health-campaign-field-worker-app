@@ -190,6 +190,8 @@ class BeneficiaryRegistrationBloc
               clientAuditDetails: ClientAuditDetails(
                 createdAt,
                 initialModifiedAt,
+                event.userUuid,
+                event.userUuid,
               ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
@@ -209,6 +211,8 @@ class BeneficiaryRegistrationBloc
               clientAuditDetails: ClientAuditDetails(
                 createdAt,
                 initialModifiedAt,
+                event.userUuid,
+                event.userUuid,
               ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
@@ -353,6 +357,8 @@ class BeneficiaryRegistrationBloc
                 clientAuditDetails: ClientAuditDetails(
                   createdAt,
                   initialModifiedAt,
+                  event.userUuid,
+                  event.userUuid,
                 ),
               ),
             );
@@ -372,7 +378,12 @@ class BeneficiaryRegistrationBloc
                 createdBy: event.userUuid,
                 createdTime: createdAt,
               ),
-              clientAuditDetails: ClientAuditDetails(createdAt, createdAt),
+              clientAuditDetails: ClientAuditDetails(
+                createdAt,
+                createdAt,
+                event.userUuid,
+                event.userUuid,
+              ),
             ),
           );
         } catch (error) {

@@ -66,6 +66,8 @@ class IdentifierModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       clientCreatedTime: Value(clientAuditDetails?.createdTime),
       clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),

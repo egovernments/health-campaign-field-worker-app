@@ -26,6 +26,8 @@ class Addres extends DataClass implements Insertable<Addres> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -55,6 +57,8 @@ class Addres extends DataClass implements Insertable<Addres> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -104,6 +108,10 @@ class Addres extends DataClass implements Insertable<Addres> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -183,6 +191,12 @@ class Addres extends DataClass implements Insertable<Addres> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -268,6 +282,12 @@ class Addres extends DataClass implements Insertable<Addres> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -322,6 +342,8 @@ class Addres extends DataClass implements Insertable<Addres> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -359,6 +381,8 @@ class Addres extends DataClass implements Insertable<Addres> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -391,6 +415,8 @@ class Addres extends DataClass implements Insertable<Addres> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -421,6 +447,8 @@ class Addres extends DataClass implements Insertable<Addres> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -453,6 +481,8 @@ class Addres extends DataClass implements Insertable<Addres> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -487,6 +517,8 @@ class Addres extends DataClass implements Insertable<Addres> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -520,6 +552,8 @@ class Addres extends DataClass implements Insertable<Addres> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -551,6 +585,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -580,6 +616,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -610,6 +648,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -640,6 +680,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -671,6 +713,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -706,6 +750,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -736,6 +782,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -807,6 +855,12 @@ class AddressCompanion extends UpdateCompanion<Addres> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -864,6 +918,8 @@ class AddressCompanion extends UpdateCompanion<Addres> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -983,6 +1039,18 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -1063,6 +1131,8 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -1173,6 +1243,18 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -1254,6 +1336,8 @@ class NameData extends DataClass implements Insertable<NameData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -1270,6 +1354,8 @@ class NameData extends DataClass implements Insertable<NameData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -1296,6 +1382,10 @@ class NameData extends DataClass implements Insertable<NameData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -1339,6 +1429,12 @@ class NameData extends DataClass implements Insertable<NameData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -1389,6 +1485,12 @@ class NameData extends DataClass implements Insertable<NameData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -1426,6 +1528,8 @@ class NameData extends DataClass implements Insertable<NameData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -1448,6 +1552,8 @@ class NameData extends DataClass implements Insertable<NameData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -1467,6 +1573,8 @@ class NameData extends DataClass implements Insertable<NameData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -1484,6 +1592,8 @@ class NameData extends DataClass implements Insertable<NameData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -1503,6 +1613,8 @@ class NameData extends DataClass implements Insertable<NameData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -1524,6 +1636,8 @@ class NameData extends DataClass implements Insertable<NameData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -1544,6 +1658,8 @@ class NameData extends DataClass implements Insertable<NameData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -1562,6 +1678,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -1578,6 +1696,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -1595,6 +1715,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -1612,6 +1734,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -1630,6 +1754,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -1650,6 +1776,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -1667,6 +1795,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -1705,6 +1835,12 @@ class NameCompanion extends UpdateCompanion<NameData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -1740,6 +1876,8 @@ class NameCompanion extends UpdateCompanion<NameData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -1802,6 +1940,18 @@ class $NameTable extends Name with TableInfo<$NameTable, NameData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -1854,6 +2004,8 @@ class $NameTable extends Name with TableInfo<$NameTable, NameData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -1914,6 +2066,18 @@ class $NameTable extends Name with TableInfo<$NameTable, NameData> {
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -2642,6 +2806,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -2658,6 +2824,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -2683,6 +2851,10 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -2724,6 +2896,12 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -2771,6 +2949,12 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -2807,6 +2991,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -2828,6 +3014,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -2847,6 +3035,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -2863,6 +3053,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -2882,6 +3074,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -2903,6 +3097,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -2922,6 +3118,8 @@ class DocumentData extends DataClass implements Insertable<DocumentData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -2940,6 +3138,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -2956,6 +3156,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -2973,6 +3175,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -2990,6 +3194,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -3007,6 +3213,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -3027,6 +3235,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -3043,6 +3253,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -3077,6 +3289,12 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -3115,6 +3333,8 @@ class DocumentCompanion extends UpdateCompanion<DocumentData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -3175,6 +3395,18 @@ class $DocumentTable extends Document
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -3232,6 +3464,8 @@ class $DocumentTable extends Document
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -3288,6 +3522,18 @@ class $DocumentTable extends Document
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -3360,6 +3606,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -3375,6 +3623,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -3399,6 +3649,10 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -3436,6 +3690,12 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -3481,6 +3741,12 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -3516,6 +3782,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -3536,6 +3804,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -3554,6 +3824,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -3569,6 +3841,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -3587,6 +3861,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -3607,6 +3883,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -3625,6 +3903,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -3642,6 +3922,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -3657,6 +3939,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -3673,6 +3957,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -3689,6 +3975,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -3705,6 +3993,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -3724,6 +4014,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -3739,6 +4031,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -3772,6 +4066,12 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -3807,6 +4107,8 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -3867,6 +4169,18 @@ class $FacilityTable extends Facility
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -3918,6 +4232,8 @@ class $FacilityTable extends Facility
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -3973,6 +4289,18 @@ class $FacilityTable extends Facility
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -4038,6 +4366,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -4055,6 +4385,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -4082,6 +4414,10 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -4126,6 +4462,12 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -4176,6 +4518,12 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -4213,6 +4561,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -4235,6 +4585,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -4255,6 +4607,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -4272,6 +4626,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -4292,6 +4648,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -4314,6 +4672,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -4334,6 +4694,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -4353,6 +4715,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -4370,6 +4734,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -4388,6 +4754,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -4406,6 +4774,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -4424,6 +4794,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -4445,6 +4817,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -4462,6 +4836,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -4499,6 +4875,12 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -4538,6 +4920,8 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -4601,6 +4985,18 @@ class $HouseholdTable extends Household
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -4659,6 +5055,8 @@ class $HouseholdTable extends Household
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -4715,6 +5113,18 @@ class $HouseholdTable extends Household
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -4790,6 +5200,8 @@ class HouseholdMemberData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -4808,6 +5220,8 @@ class HouseholdMemberData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -4838,6 +5252,10 @@ class HouseholdMemberData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -4885,6 +5303,12 @@ class HouseholdMemberData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -4938,6 +5362,12 @@ class HouseholdMemberData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -4978,6 +5408,8 @@ class HouseholdMemberData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -5003,6 +5435,8 @@ class HouseholdMemberData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -5024,6 +5458,8 @@ class HouseholdMemberData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -5044,6 +5480,8 @@ class HouseholdMemberData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -5065,6 +5503,8 @@ class HouseholdMemberData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -5088,6 +5528,8 @@ class HouseholdMemberData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -5110,6 +5552,8 @@ class HouseholdMemberData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -5130,6 +5574,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -5148,6 +5594,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -5167,6 +5615,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -5187,6 +5637,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -5208,6 +5660,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -5230,6 +5684,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -5250,6 +5706,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -5293,6 +5751,12 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -5332,6 +5796,8 @@ class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -5408,6 +5874,18 @@ class $HouseholdMemberTable extends HouseholdMember
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -5467,6 +5945,8 @@ class $HouseholdMemberTable extends HouseholdMember
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -5541,6 +6021,18 @@ class $HouseholdMemberTable extends HouseholdMember
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -5611,6 +6103,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -5626,6 +6120,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -5649,6 +6145,10 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -5687,6 +6187,12 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -5731,6 +6237,12 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -5766,6 +6278,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -5786,6 +6300,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -5804,6 +6320,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -5819,6 +6337,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -5837,6 +6357,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -5857,6 +6379,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -5875,6 +6399,8 @@ class IdentifierData extends DataClass implements Insertable<IdentifierData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -5892,6 +6418,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -5907,6 +6435,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -5923,6 +6453,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -5939,6 +6471,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -5955,6 +6489,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -5974,6 +6510,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -5989,6 +6527,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -6020,6 +6560,12 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -6057,6 +6603,8 @@ class IdentifierCompanion extends UpdateCompanion<IdentifierData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -6111,6 +6659,18 @@ class $IdentifierTable extends Identifier
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -6167,6 +6727,8 @@ class $IdentifierTable extends Identifier
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -6217,6 +6779,18 @@ class $IdentifierTable extends Identifier
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -6294,6 +6868,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -6317,6 +6893,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -6354,6 +6932,10 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -6414,6 +6996,12 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -6481,6 +7069,12 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -6527,6 +7121,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -6555,6 +7151,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -6581,6 +7179,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -6604,6 +7204,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -6630,6 +7232,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -6658,6 +7262,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -6685,6 +7291,8 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -6710,6 +7318,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -6733,6 +7343,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -6757,6 +7369,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -6781,6 +7395,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -6805,6 +7421,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -6832,6 +7450,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -6855,6 +7475,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -6907,6 +7529,12 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -6957,6 +7585,8 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -7045,6 +7675,18 @@ class $IndividualTable extends Individual
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -7119,6 +7761,8 @@ class $IndividualTable extends Individual
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -7202,6 +7846,18 @@ class $IndividualTable extends Individual
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -7280,6 +7936,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -7296,6 +7954,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -7321,6 +7981,10 @@ class ProductData extends DataClass implements Insertable<ProductData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -7362,6 +8026,12 @@ class ProductData extends DataClass implements Insertable<ProductData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -7405,6 +8075,12 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -7441,6 +8117,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -7462,6 +8140,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -7481,6 +8161,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -7497,6 +8179,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -7516,6 +8200,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -7537,6 +8223,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -7556,6 +8244,8 @@ class ProductData extends DataClass implements Insertable<ProductData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -7574,6 +8264,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -7590,6 +8282,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -7607,6 +8301,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -7624,6 +8320,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -7641,6 +8339,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -7661,6 +8361,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -7677,6 +8379,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -7711,6 +8415,12 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -7749,6 +8459,8 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -7806,6 +8518,18 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -7863,6 +8587,8 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -7915,6 +8641,18 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -7988,6 +8726,8 @@ class ProductVariantData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -8003,6 +8743,8 @@ class ProductVariantData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -8028,6 +8770,10 @@ class ProductVariantData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -8065,6 +8811,12 @@ class ProductVariantData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -8109,6 +8861,12 @@ class ProductVariantData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -8144,6 +8902,8 @@ class ProductVariantData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -8164,6 +8924,8 @@ class ProductVariantData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -8182,6 +8944,8 @@ class ProductVariantData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -8197,6 +8961,8 @@ class ProductVariantData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -8215,6 +8981,8 @@ class ProductVariantData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -8235,6 +9003,8 @@ class ProductVariantData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -8253,6 +9023,8 @@ class ProductVariantData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -8270,6 +9042,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -8285,6 +9059,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -8301,6 +9077,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -8317,6 +9095,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -8333,6 +9113,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -8352,6 +9134,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -8367,6 +9151,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -8400,6 +9186,12 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -8435,6 +9227,8 @@ class ProductVariantCompanion extends UpdateCompanion<ProductVariantData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -8491,6 +9285,18 @@ class $ProductVariantTable extends ProductVariant
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -8542,6 +9348,8 @@ class $ProductVariantTable extends ProductVariant
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -8593,6 +9401,18 @@ class $ProductVariantTable extends ProductVariant
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -8664,6 +9484,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -8688,6 +9510,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -8728,6 +9552,10 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -8788,6 +9616,12 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -8858,6 +9692,12 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -8906,6 +9746,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -8935,6 +9777,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -8962,6 +9806,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -8986,6 +9832,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -9013,6 +9861,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -9042,6 +9892,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -9070,6 +9922,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -9096,6 +9950,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -9120,6 +9976,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -9145,6 +10003,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -9171,6 +10031,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -9196,6 +10058,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -9224,6 +10088,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -9248,6 +10114,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -9305,6 +10173,12 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -9352,6 +10226,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -9453,6 +10329,18 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -9521,6 +10409,8 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -9621,6 +10511,18 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -9693,6 +10595,8 @@ class ProjectBeneficiaryData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -9710,6 +10614,8 @@ class ProjectBeneficiaryData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -9737,6 +10643,10 @@ class ProjectBeneficiaryData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -9781,6 +10691,12 @@ class ProjectBeneficiaryData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -9830,6 +10746,12 @@ class ProjectBeneficiaryData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -9868,6 +10790,8 @@ class ProjectBeneficiaryData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -9891,6 +10815,8 @@ class ProjectBeneficiaryData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -9911,6 +10837,8 @@ class ProjectBeneficiaryData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -9929,6 +10857,8 @@ class ProjectBeneficiaryData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -9950,6 +10880,8 @@ class ProjectBeneficiaryData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -9972,6 +10904,8 @@ class ProjectBeneficiaryData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -9993,6 +10927,8 @@ class ProjectBeneficiaryData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -10013,6 +10949,8 @@ class ProjectBeneficiaryCompanion
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -10030,6 +10968,8 @@ class ProjectBeneficiaryCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -10048,6 +10988,8 @@ class ProjectBeneficiaryCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -10067,6 +11009,8 @@ class ProjectBeneficiaryCompanion
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -10086,6 +11030,8 @@ class ProjectBeneficiaryCompanion
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -10108,6 +11054,8 @@ class ProjectBeneficiaryCompanion
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -10126,6 +11074,8 @@ class ProjectBeneficiaryCompanion
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -10162,6 +11112,12 @@ class ProjectBeneficiaryCompanion
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -10204,6 +11160,8 @@ class ProjectBeneficiaryCompanion
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -10265,6 +11223,18 @@ class $ProjectBeneficiaryTable extends ProjectBeneficiary
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -10328,6 +11298,8 @@ class $ProjectBeneficiaryTable extends ProjectBeneficiary
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -10385,6 +11357,18 @@ class $ProjectBeneficiaryTable extends ProjectBeneficiary
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -10465,6 +11449,8 @@ class ProjectFacilityData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -10479,6 +11465,8 @@ class ProjectFacilityData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -10502,6 +11490,10 @@ class ProjectFacilityData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -10532,6 +11524,12 @@ class ProjectFacilityData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -10571,6 +11569,12 @@ class ProjectFacilityData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -10605,6 +11609,8 @@ class ProjectFacilityData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -10624,6 +11630,8 @@ class ProjectFacilityData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -10641,6 +11649,8 @@ class ProjectFacilityData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -10655,6 +11665,8 @@ class ProjectFacilityData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -10672,6 +11684,8 @@ class ProjectFacilityData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -10691,6 +11705,8 @@ class ProjectFacilityData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -10708,6 +11724,8 @@ class ProjectFacilityData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -10724,6 +11742,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -10738,6 +11758,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -10753,6 +11775,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -10770,6 +11794,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -10785,6 +11811,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -10803,6 +11831,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -10817,6 +11847,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -10847,6 +11879,12 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -10881,6 +11919,8 @@ class ProjectFacilityCompanion extends UpdateCompanion<ProjectFacilityData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -10932,6 +11972,18 @@ class $ProjectFacilityTable extends ProjectFacility
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -10982,6 +12034,8 @@ class $ProjectFacilityTable extends ProjectFacility
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -11036,6 +12090,18 @@ class $ProjectFacilityTable extends ProjectFacility
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -11100,6 +12166,8 @@ class ProjectProductVariantData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -11114,6 +12182,8 @@ class ProjectProductVariantData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -11137,6 +12207,10 @@ class ProjectProductVariantData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -11171,6 +12245,12 @@ class ProjectProductVariantData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -11212,6 +12292,12 @@ class ProjectProductVariantData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -11246,6 +12332,8 @@ class ProjectProductVariantData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -11265,6 +12353,8 @@ class ProjectProductVariantData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -11282,6 +12372,8 @@ class ProjectProductVariantData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -11296,6 +12388,8 @@ class ProjectProductVariantData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -11313,6 +12407,8 @@ class ProjectProductVariantData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -11332,6 +12428,8 @@ class ProjectProductVariantData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -11349,6 +12447,8 @@ class ProjectProductVariantData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -11366,6 +12466,8 @@ class ProjectProductVariantCompanion
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -11380,6 +12482,8 @@ class ProjectProductVariantCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -11395,6 +12499,8 @@ class ProjectProductVariantCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -11410,6 +12516,8 @@ class ProjectProductVariantCompanion
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -11425,6 +12533,8 @@ class ProjectProductVariantCompanion
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -11443,6 +12553,8 @@ class ProjectProductVariantCompanion
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -11457,6 +12569,8 @@ class ProjectProductVariantCompanion
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -11487,6 +12601,12 @@ class ProjectProductVariantCompanion
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -11521,6 +12641,8 @@ class ProjectProductVariantCompanion
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -11576,6 +12698,18 @@ class $ProjectProductVariantTable extends ProjectProductVariant
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -11626,6 +12760,8 @@ class $ProjectProductVariantTable extends ProjectProductVariant
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -11679,6 +12815,18 @@ class $ProjectProductVariantTable extends ProjectProductVariant
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -11743,6 +12891,8 @@ class ProjectResourceData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -11757,6 +12907,8 @@ class ProjectResourceData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -11779,6 +12931,10 @@ class ProjectResourceData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -11814,6 +12970,12 @@ class ProjectResourceData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -11855,6 +13017,12 @@ class ProjectResourceData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -11889,6 +13057,8 @@ class ProjectResourceData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -11908,6 +13078,8 @@ class ProjectResourceData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -11925,6 +13097,8 @@ class ProjectResourceData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -11939,6 +13113,8 @@ class ProjectResourceData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -11956,6 +13132,8 @@ class ProjectResourceData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -11975,6 +13153,8 @@ class ProjectResourceData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -11992,6 +13172,8 @@ class ProjectResourceData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -12008,6 +13190,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -12022,6 +13206,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -12037,6 +13223,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -12052,6 +13240,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -12067,6 +13257,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -12085,6 +13277,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -12099,6 +13293,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -12127,6 +13323,12 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -12163,6 +13365,8 @@ class ProjectResourceCompanion extends UpdateCompanion<ProjectResourceData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -12210,6 +13414,18 @@ class $ProjectResourceTable extends ProjectResource
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -12267,6 +13483,8 @@ class $ProjectResourceTable extends ProjectResource
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -12310,6 +13528,18 @@ class $ProjectResourceTable extends ProjectResource
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -12382,6 +13612,8 @@ class ProjectStaffData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -12400,6 +13632,8 @@ class ProjectStaffData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -12429,6 +13663,10 @@ class ProjectStaffData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -12473,6 +13711,12 @@ class ProjectStaffData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -12527,6 +13771,12 @@ class ProjectStaffData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -12569,6 +13819,8 @@ class ProjectStaffData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -12592,6 +13844,8 @@ class ProjectStaffData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -12613,6 +13867,8 @@ class ProjectStaffData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -12631,6 +13887,8 @@ class ProjectStaffData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -12652,6 +13910,8 @@ class ProjectStaffData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -12675,6 +13935,8 @@ class ProjectStaffData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -12696,6 +13958,8 @@ class ProjectStaffData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -12716,6 +13980,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -12734,6 +14000,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -12753,6 +14021,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -12772,6 +14042,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -12791,6 +14063,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -12813,6 +14087,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -12831,6 +14107,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -12869,6 +14147,12 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -12911,6 +14195,8 @@ class ProjectStaffCompanion extends UpdateCompanion<ProjectStaffData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -12974,6 +14260,18 @@ class $ProjectStaffTable extends ProjectStaff
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -13036,6 +14334,8 @@ class $ProjectStaffTable extends ProjectStaff
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -13093,6 +14393,18 @@ class $ProjectStaffTable extends ProjectStaff
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -13168,6 +14480,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -13187,6 +14501,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -13219,6 +14535,10 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -13270,6 +14590,12 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
     }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
     }
@@ -13320,6 +14646,12 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -13360,6 +14692,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -13384,6 +14718,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -13406,6 +14742,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -13425,6 +14763,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -13447,6 +14787,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -13471,6 +14813,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -13493,6 +14837,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -13514,6 +14860,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -13533,6 +14881,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -13553,6 +14903,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -13573,6 +14925,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -13594,6 +14948,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -13617,6 +14973,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -13636,6 +14994,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -13681,6 +15041,12 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -13721,6 +15087,8 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -13796,6 +15164,18 @@ class $ProjectTypeTable extends ProjectType
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -13856,6 +15236,8 @@ class $ProjectTypeTable extends ProjectType
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -13924,6 +15306,18 @@ class $ProjectTypeTable extends ProjectType
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -14002,6 +15396,8 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -14025,6 +15421,8 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -14063,6 +15461,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -14125,6 +15527,12 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -14197,6 +15605,12 @@ class StockData extends DataClass implements Insertable<StockData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -14244,6 +15658,8 @@ class StockData extends DataClass implements Insertable<StockData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -14274,6 +15690,8 @@ class StockData extends DataClass implements Insertable<StockData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -14301,6 +15719,8 @@ class StockData extends DataClass implements Insertable<StockData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -14324,6 +15744,8 @@ class StockData extends DataClass implements Insertable<StockData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -14350,6 +15772,8 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -14378,6 +15802,8 @@ class StockData extends DataClass implements Insertable<StockData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -14405,6 +15831,8 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -14430,6 +15858,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -14453,6 +15883,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -14477,6 +15909,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -14501,6 +15935,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -14527,6 +15963,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -14554,6 +15992,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -14577,6 +16017,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -14632,6 +16074,12 @@ class StockCompanion extends UpdateCompanion<StockData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -14682,6 +16130,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -14775,6 +16225,18 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -14849,6 +16311,8 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -14939,6 +16403,18 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -15019,6 +16495,8 @@ class StockReconciliationData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -15040,6 +16518,8 @@ class StockReconciliationData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -15076,6 +16556,10 @@ class StockReconciliationData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -15133,6 +16617,12 @@ class StockReconciliationData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -15193,6 +16683,12 @@ class StockReconciliationData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -15233,6 +16729,8 @@ class StockReconciliationData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -15261,6 +16759,8 @@ class StockReconciliationData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -15285,6 +16785,8 @@ class StockReconciliationData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -15307,6 +16809,8 @@ class StockReconciliationData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -15331,6 +16835,8 @@ class StockReconciliationData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -15344,27 +16850,30 @@ class StockReconciliationData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      tenantId,
-      facilityId,
-      productVariantId,
-      referenceId,
-      referenceIdType,
-      physicalCount,
-      calculatedCount,
-      commentsOnReconciliation,
-      auditCreatedBy,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      clientReferenceId,
-      isDeleted,
-      rowVersion,
-      dateOfReconciliation,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        tenantId,
+        facilityId,
+        productVariantId,
+        referenceId,
+        referenceIdType,
+        physicalCount,
+        calculatedCount,
+        commentsOnReconciliation,
+        auditCreatedBy,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion,
+        dateOfReconciliation,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -15381,6 +16890,8 @@ class StockReconciliationData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -15405,6 +16916,8 @@ class StockReconciliationCompanion
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -15426,6 +16939,8 @@ class StockReconciliationCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -15448,6 +16963,8 @@ class StockReconciliationCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -15471,6 +16988,8 @@ class StockReconciliationCompanion
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -15494,6 +17013,8 @@ class StockReconciliationCompanion
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -15520,6 +17041,8 @@ class StockReconciliationCompanion
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -15542,6 +17065,8 @@ class StockReconciliationCompanion
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -15593,6 +17118,12 @@ class StockReconciliationCompanion
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -15635,6 +17166,8 @@ class StockReconciliationCompanion
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -15723,6 +17256,18 @@ class $StockReconciliationTable extends StockReconciliation
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -15786,6 +17331,8 @@ class $StockReconciliationTable extends StockReconciliation
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -15873,6 +17420,18 @@ class $StockReconciliationTable extends StockReconciliation
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -15949,6 +17508,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -15965,6 +17526,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -15990,6 +17553,10 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -16029,6 +17596,12 @@ class TargetData extends DataClass implements Insertable<TargetData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -16080,6 +17653,12 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -16119,6 +17698,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -16141,6 +17722,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -16160,6 +17743,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -16176,6 +17761,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -16195,6 +17782,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -16216,6 +17805,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -16235,6 +17826,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -16253,6 +17846,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -16269,6 +17864,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -16286,6 +17883,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -16303,6 +17902,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -16320,6 +17921,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -16340,6 +17943,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -16356,6 +17961,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -16390,6 +17997,12 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -16430,6 +18043,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -16487,6 +18102,18 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -16546,6 +18173,8 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -16600,6 +18229,18 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -16670,6 +18311,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -16693,6 +18336,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -16728,6 +18373,10 @@ class TaskData extends DataClass implements Insertable<TaskData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -16786,6 +18435,12 @@ class TaskData extends DataClass implements Insertable<TaskData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -16854,6 +18509,12 @@ class TaskData extends DataClass implements Insertable<TaskData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -16909,6 +18570,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -16938,6 +18601,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -16964,6 +18629,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -16989,6 +18656,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -17016,6 +18685,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -17044,6 +18715,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -17072,6 +18745,8 @@ class TaskData extends DataClass implements Insertable<TaskData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -17097,6 +18772,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -17120,6 +18797,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -17144,6 +18823,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -17168,6 +18849,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -17195,6 +18878,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -17222,6 +18907,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -17247,6 +18934,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -17294,6 +18983,12 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -17350,6 +19045,8 @@ class TaskCompanion extends UpdateCompanion<TaskData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -17424,6 +19121,18 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -17513,6 +19222,8 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -17581,6 +19292,18 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -17687,6 +19410,8 @@ class TaskResourceData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -17705,6 +19430,8 @@ class TaskResourceData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -17736,6 +19463,10 @@ class TaskResourceData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -17782,6 +19513,12 @@ class TaskResourceData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -17834,6 +19571,12 @@ class TaskResourceData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -17872,6 +19615,8 @@ class TaskResourceData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -17895,6 +19640,8 @@ class TaskResourceData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -17916,6 +19663,8 @@ class TaskResourceData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -17934,6 +19683,8 @@ class TaskResourceData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -17955,6 +19706,8 @@ class TaskResourceData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -17978,6 +19731,8 @@ class TaskResourceData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -17999,6 +19754,8 @@ class TaskResourceData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -18019,6 +19776,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -18037,6 +19796,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -18056,6 +19817,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -18075,6 +19838,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -18094,6 +19859,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -18116,6 +19883,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -18134,6 +19903,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -18177,6 +19948,12 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -18214,6 +19991,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -18291,6 +20070,18 @@ class $TaskResourceTable extends TaskResource
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -18345,6 +20136,8 @@ class $TaskResourceTable extends TaskResource
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -18417,6 +20210,18 @@ class $TaskResourceTable extends TaskResource
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -18483,6 +20288,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -18501,6 +20308,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -18531,6 +20340,10 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -18577,6 +20390,12 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -18630,6 +20449,12 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -18669,6 +20494,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -18692,6 +20519,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -18713,6 +20542,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -18731,6 +20562,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -18752,6 +20585,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -18775,6 +20610,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -18796,6 +20633,8 @@ class ServiceData extends DataClass implements Insertable<ServiceData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -18816,6 +20655,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -18834,6 +20675,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -18853,6 +20696,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -18872,6 +20717,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -18891,6 +20738,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -18913,6 +20762,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -18931,6 +20782,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -18974,6 +20827,12 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -19011,6 +20870,8 @@ class ServiceCompanion extends UpdateCompanion<ServiceData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -19085,6 +20946,18 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -19139,6 +21012,8 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -19207,6 +21082,18 @@ class $ServiceTable extends Service with TableInfo<$ServiceTable, ServiceData> {
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -19272,6 +21159,8 @@ class ServiceAttribute extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -19289,6 +21178,8 @@ class ServiceAttribute extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -19317,6 +21208,10 @@ class ServiceAttribute extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -19361,6 +21256,12 @@ class ServiceAttribute extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -19412,6 +21313,12 @@ class ServiceAttribute extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -19450,6 +21357,8 @@ class ServiceAttribute extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -19472,6 +21381,8 @@ class ServiceAttribute extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -19492,6 +21403,8 @@ class ServiceAttribute extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -19509,6 +21422,8 @@ class ServiceAttribute extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -19529,6 +21444,8 @@ class ServiceAttribute extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -19551,6 +21468,8 @@ class ServiceAttribute extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -19571,6 +21490,8 @@ class ServiceAttribute extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -19590,6 +21511,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -19607,6 +21530,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -19625,6 +21550,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -19643,6 +21570,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -19661,6 +21590,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -19682,6 +21613,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -19699,6 +21632,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -19736,6 +21671,12 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -19775,6 +21716,8 @@ class ServiceAttributesCompanion extends UpdateCompanion<ServiceAttribute> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -19840,6 +21783,18 @@ class $ServiceAttributesTable extends ServiceAttributes
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -19898,6 +21853,8 @@ class $ServiceAttributesTable extends ServiceAttributes
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -19959,6 +21916,18 @@ class $ServiceAttributesTable extends ServiceAttributes
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -20032,6 +22001,8 @@ class ServiceDefinitionData extends DataClass
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -20046,6 +22017,8 @@ class ServiceDefinitionData extends DataClass
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -20070,6 +22043,10 @@ class ServiceDefinitionData extends DataClass
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -20107,6 +22084,12 @@ class ServiceDefinitionData extends DataClass
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -20148,6 +22131,12 @@ class ServiceDefinitionData extends DataClass
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -20180,6 +22169,8 @@ class ServiceDefinitionData extends DataClass
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -20199,6 +22190,8 @@ class ServiceDefinitionData extends DataClass
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -20216,6 +22209,8 @@ class ServiceDefinitionData extends DataClass
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -20230,6 +22225,8 @@ class ServiceDefinitionData extends DataClass
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -20247,6 +22244,8 @@ class ServiceDefinitionData extends DataClass
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -20266,6 +22265,8 @@ class ServiceDefinitionData extends DataClass
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -20283,6 +22284,8 @@ class ServiceDefinitionData extends DataClass
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -20300,6 +22303,8 @@ class ServiceDefinitionCompanion
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -20314,6 +22319,8 @@ class ServiceDefinitionCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -20329,6 +22336,8 @@ class ServiceDefinitionCompanion
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -20344,6 +22353,8 @@ class ServiceDefinitionCompanion
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -20359,6 +22370,8 @@ class ServiceDefinitionCompanion
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -20377,6 +22390,8 @@ class ServiceDefinitionCompanion
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -20391,6 +22406,8 @@ class ServiceDefinitionCompanion
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -20424,6 +22441,12 @@ class ServiceDefinitionCompanion
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -20455,6 +22478,8 @@ class ServiceDefinitionCompanion
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -20512,6 +22537,18 @@ class $ServiceDefinitionTable extends ServiceDefinition
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -20558,6 +22595,8 @@ class $ServiceDefinitionTable extends ServiceDefinition
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -20607,6 +22646,18 @@ class $ServiceDefinitionTable extends ServiceDefinition
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -20673,6 +22724,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -20693,6 +22746,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -20728,6 +22783,10 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -20784,6 +22843,12 @@ class Attribute extends DataClass implements Insertable<Attribute> {
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
     }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
     }
@@ -20839,6 +22904,12 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -20877,6 +22948,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -20902,6 +22975,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -20925,6 +23000,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -20945,6 +23022,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -20968,6 +23047,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -20979,26 +23060,29 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      dataType,
-      referenceId,
-      tenantId,
-      code,
-      values,
-      isActive,
-      required,
-      regex,
-      order,
-      auditCreatedBy,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      isDeleted,
-      rowVersion,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        dataType,
+        referenceId,
+        tenantId,
+        code,
+        values,
+        isActive,
+        required,
+        regex,
+        order,
+        auditCreatedBy,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -21016,6 +23100,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -21038,6 +23124,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -21058,6 +23146,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -21079,6 +23169,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -21100,6 +23192,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -21121,6 +23215,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -21145,6 +23241,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -21165,6 +23263,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -21216,6 +23316,12 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -21253,6 +23359,8 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -21341,6 +23449,18 @@ class $AttributesTable extends Attributes
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -21393,6 +23513,8 @@ class $AttributesTable extends Attributes
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -21468,6 +23590,18 @@ class $AttributesTable extends Attributes
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
     }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
     if (data.containsKey('client_modified_time')) {
       context.handle(
           _clientModifiedTimeMeta,
@@ -21525,6 +23659,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -21538,6 +23674,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -21558,6 +23696,10 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -21589,6 +23731,12 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
     }
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
     }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
@@ -21627,6 +23775,12 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -21660,6 +23814,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -21678,6 +23834,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -21694,6 +23852,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -21707,6 +23867,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -21723,6 +23885,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -21741,6 +23905,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
       clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
@@ -21757,6 +23923,8 @@ class LocalityData extends DataClass implements Insertable<LocalityData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -21772,6 +23940,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -21785,6 +23955,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -21799,6 +23971,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -21813,6 +23987,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -21827,6 +24003,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -21844,6 +24022,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -21857,6 +24037,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -21884,6 +24066,12 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
     }
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
     }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
@@ -21917,6 +24105,8 @@ class LocalityCompanion extends UpdateCompanion<LocalityData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -21963,6 +24153,18 @@ class $LocalityTable extends Locality
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -22012,6 +24214,8 @@ class $LocalityTable extends Locality
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -22056,6 +24260,18 @@ class $LocalityTable extends Locality
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(
@@ -23722,6 +25938,8 @@ class UserData extends DataClass implements Insertable<UserData> {
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
@@ -23765,6 +25983,8 @@ class UserData extends DataClass implements Insertable<UserData> {
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
@@ -23846,6 +26066,10 @@ class UserData extends DataClass implements Insertable<UserData> {
           data['${effectivePrefix}audit_created_time']),
       clientCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
       clientModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
@@ -23971,6 +26195,12 @@ class UserData extends DataClass implements Insertable<UserData> {
     if (!nullToAbsent || clientCreatedTime != null) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime);
     }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
     if (!nullToAbsent || clientModifiedTime != null) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime);
     }
@@ -24088,6 +26318,12 @@ class UserData extends DataClass implements Insertable<UserData> {
       clientCreatedTime: clientCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
       clientModifiedTime: clientModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(clientModifiedTime),
@@ -24155,6 +26391,8 @@ class UserData extends DataClass implements Insertable<UserData> {
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
@@ -24206,6 +26444,8 @@ class UserData extends DataClass implements Insertable<UserData> {
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
@@ -24252,6 +26492,8 @@ class UserData extends DataClass implements Insertable<UserData> {
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
@@ -24298,6 +26540,8 @@ class UserData extends DataClass implements Insertable<UserData> {
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -24344,6 +26588,8 @@ class UserData extends DataClass implements Insertable<UserData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -24392,6 +26638,8 @@ class UserData extends DataClass implements Insertable<UserData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -24439,6 +26687,8 @@ class UserData extends DataClass implements Insertable<UserData> {
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
@@ -24484,6 +26734,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
@@ -24527,6 +26779,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -24571,6 +26825,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
@@ -24615,6 +26871,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
@@ -24663,6 +26921,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
       if (clientModifiedTime != null)
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
@@ -24710,6 +26970,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
@@ -24756,6 +27018,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
@@ -24880,6 +27144,12 @@ class UserCompanion extends UpdateCompanion<UserData> {
     if (clientCreatedTime.present) {
       map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
     }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
     if (clientModifiedTime.present) {
       map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
@@ -24940,6 +27210,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
@@ -25160,6 +27432,18 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
       'client_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _clientModifiedTimeMeta =
       const VerificationMeta('clientModifiedTime');
   @override
@@ -25235,6 +27519,8 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
@@ -25437,6 +27723,18 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           _clientCreatedTimeMeta,
           clientCreatedTime.isAcceptableOrUnknown(
               data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
     }
     if (data.containsKey('client_modified_time')) {
       context.handle(

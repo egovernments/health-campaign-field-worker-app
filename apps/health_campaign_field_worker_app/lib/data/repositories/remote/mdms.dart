@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import '../../../models/data_model.mapper.g.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
+import '../../../models/role_actions/role_actions_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
@@ -272,5 +273,26 @@ class MdmsRepository {
       await isar.appConfigurations.put(appConfiguration);
       await isar.rowVersionLists.putAll(rowVersionList);
     });
+  }
+
+  Future<RoleActionsWrapperModel> searchRoleActions(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      print("api called here");
+      final Response response = await _client.post(apiEndPoint, data: body);
+      print(response);
+
+      return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
+
+      // Iterable<Map<String, dynamic>> entityResponse = response.data['actions'];
+
+      // final results = entityResponse
+      //     .map((e) => Mapper.fromMap<RoleActionsModel>(e))
+      //     .toList();
+    } catch (_) {
+      rethrow;
+    }
   }
 }

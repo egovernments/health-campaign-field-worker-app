@@ -415,15 +415,15 @@ class ClientAuditDetailsMapper extends BaseMapper<ClientAuditDetails> {
 
   @override Function get decoder => decode;
   ClientAuditDetails decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(Mapper.i.$get(map, 'createdTime'), Mapper.i.$getOpt(map, 'lastModifiedTime'));
+  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(Mapper.i.$get(map, 'createdTime'), Mapper.i.$getOpt(map, 'lastModifiedTime'), Mapper.i.$get(map, 'createdBy'), Mapper.i.$get(map, 'lastModifiedBy'));
 
   @override Function get encoder => (ClientAuditDetails v) => encode(v);
   dynamic encode(ClientAuditDetails v) => toMap(v);
-  Map<String, dynamic> toMap(ClientAuditDetails c) => {'createdTime': Mapper.i.$enc(c.createdTime, 'createdTime'), 'lastModifiedTime': Mapper.i.$enc(c.lastModifiedTime, 'lastModifiedTime')};
+  Map<String, dynamic> toMap(ClientAuditDetails c) => {'createdTime': Mapper.i.$enc(c.createdTime, 'createdTime'), 'lastModifiedTime': Mapper.i.$enc(c.lastModifiedTime, 'lastModifiedTime'), 'createdBy': Mapper.i.$enc(c.createdBy, 'createdBy'), 'lastModifiedBy': Mapper.i.$enc(c.lastModifiedBy, 'lastModifiedBy')};
 
-  @override String stringify(ClientAuditDetails self) => 'ClientAuditDetails(createdTime: ${Mapper.asString(self.createdTime)}, lastModifiedTime: ${Mapper.asString(self.lastModifiedTime)})';
-  @override int hash(ClientAuditDetails self) => Mapper.hash(self.createdTime) ^ Mapper.hash(self.lastModifiedTime);
-  @override bool equals(ClientAuditDetails self, ClientAuditDetails other) => Mapper.isEqual(self.createdTime, other.createdTime) && Mapper.isEqual(self.lastModifiedTime, other.lastModifiedTime);
+  @override String stringify(ClientAuditDetails self) => 'ClientAuditDetails(createdTime: ${Mapper.asString(self.createdTime)}, lastModifiedTime: ${Mapper.asString(self.lastModifiedTime)}, createdBy: ${Mapper.asString(self.createdBy)}, lastModifiedBy: ${Mapper.asString(self.lastModifiedBy)})';
+  @override int hash(ClientAuditDetails self) => Mapper.hash(self.createdTime) ^ Mapper.hash(self.lastModifiedTime) ^ Mapper.hash(self.createdBy) ^ Mapper.hash(self.lastModifiedBy);
+  @override bool equals(ClientAuditDetails self, ClientAuditDetails other) => Mapper.isEqual(self.createdTime, other.createdTime) && Mapper.isEqual(self.lastModifiedTime, other.lastModifiedTime) && Mapper.isEqual(self.createdBy, other.createdBy) && Mapper.isEqual(self.lastModifiedBy, other.lastModifiedBy);
 
   @override Function get typeFactory => (f) => f<ClientAuditDetails>();
 }
@@ -436,14 +436,14 @@ extension ClientAuditDetailsMapperExtension  on ClientAuditDetails {
 
 abstract class ClientAuditDetailsCopyWith<$R> {
   factory ClientAuditDetailsCopyWith(ClientAuditDetails value, Then<ClientAuditDetails, $R> then) = _ClientAuditDetailsCopyWithImpl<$R>;
-  $R call({int? createdTime, int? lastModifiedTime});
+  $R call({int? createdTime, int? lastModifiedTime, String? createdBy, String? lastModifiedBy});
   $R apply(ClientAuditDetails Function(ClientAuditDetails) transform);
 }
 
 class _ClientAuditDetailsCopyWithImpl<$R> extends BaseCopyWith<ClientAuditDetails, $R> implements ClientAuditDetailsCopyWith<$R> {
   _ClientAuditDetailsCopyWithImpl(ClientAuditDetails value, Then<ClientAuditDetails, $R> then) : super(value, then);
 
-  @override $R call({int? createdTime, Object? lastModifiedTime = $none}) => $then(ClientAuditDetails(createdTime ?? $value.createdTime, or(lastModifiedTime, $value.lastModifiedTime)));
+  @override $R call({int? createdTime, Object? lastModifiedTime = $none, String? createdBy, String? lastModifiedBy}) => $then(ClientAuditDetails(createdTime ?? $value.createdTime, or(lastModifiedTime, $value.lastModifiedTime), createdBy ?? $value.createdBy, lastModifiedBy ?? $value.lastModifiedBy));
 }
 
 class AuditDetailsMapper extends BaseMapper<AuditDetails> {

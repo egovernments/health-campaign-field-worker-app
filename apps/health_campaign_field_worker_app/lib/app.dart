@@ -85,8 +85,10 @@ class MainApplicationState extends State<MainApplication>
                 },
               ),
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read())
-                  ..add(
+                create: (ctx) => AuthBloc(
+                  authRepository: ctx.read(),
+                  mdmsRepository: MdmsRepository(widget.client),
+                )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
                     ),
@@ -281,7 +283,7 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___) => [
+                                authenticated: (_, __, ___, ____) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),
