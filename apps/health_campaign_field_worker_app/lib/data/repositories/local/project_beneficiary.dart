@@ -108,6 +108,14 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             auditDetails: AuditDetails(
               createdTime: projectBeneficiary.auditCreatedTime!,
               createdBy: projectBeneficiary.auditCreatedBy!,
+              lastModifiedBy: projectBeneficiary.auditModifiedBy,
+              lastModifiedTime: projectBeneficiary.auditModifiedTime,
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: projectBeneficiary.clientCreatedBy!,
+              createdTime: projectBeneficiary.clientCreatedTime!,
+              lastModifiedBy: projectBeneficiary.clientModifiedBy,
+              lastModifiedTime: projectBeneficiary.clientModifiedTime,
             ),
           );
         })

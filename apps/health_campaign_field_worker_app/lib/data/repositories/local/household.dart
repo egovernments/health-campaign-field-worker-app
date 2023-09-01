@@ -66,6 +66,12 @@ class HouseholdLocalRepository
               lastModifiedBy: household.auditModifiedBy,
               lastModifiedTime: household.auditModifiedTime,
             ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: household.clientCreatedBy!,
+              createdTime: household.clientCreatedTime!,
+              lastModifiedBy: household.clientModifiedBy,
+              lastModifiedTime: household.clientModifiedTime,
+            ),
             address: address == null
                 ? null
                 : AddressModel(
@@ -94,6 +100,12 @@ class HouseholdLocalRepository
                       createdTime: household.auditCreatedTime!,
                       lastModifiedBy: household.auditModifiedBy,
                       lastModifiedTime: household.auditModifiedTime,
+                    ),
+                    clientAuditDetails: ClientAuditDetails(
+                      createdBy: household.clientCreatedBy!,
+                      createdTime: household.clientCreatedTime!,
+                      lastModifiedBy: household.clientModifiedBy,
+                      lastModifiedTime: household.clientModifiedTime,
                     ),
                   ),
           );

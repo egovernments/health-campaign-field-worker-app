@@ -411,10 +411,14 @@ class _IndividualDetailsPageState
       auditDetails: AuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
 
@@ -426,10 +430,14 @@ class _IndividualDetailsPageState
       auditDetails: AuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
 
@@ -444,10 +452,14 @@ class _IndividualDetailsPageState
       auditDetails: AuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
 
