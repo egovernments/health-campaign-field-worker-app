@@ -190,12 +190,6 @@ class IndividualLocalRepository
                     lastModifiedBy: identifier.auditModifiedBy,
                     lastModifiedTime: identifier.auditModifiedTime,
                   ),
-                  clientAuditDetails: ClientAuditDetails(
-                    createdBy: identifier.clientCreatedBy!,
-                    createdTime: identifier.clientCreatedTime!,
-                    lastModifiedBy: identifier.clientModifiedBy,
-                    lastModifiedTime: identifier.clientModifiedTime,
-                  ),
                 ),
             ],
           );
@@ -266,6 +260,7 @@ class IndividualLocalRepository
           return e
               .copyWith(
                 relatedClientReferenceId: entity.clientReferenceId,
+                clientAuditDetails: entity.clientAuditDetails,
               )
               .companion;
         }).toList() ??

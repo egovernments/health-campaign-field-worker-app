@@ -425,12 +425,30 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
     ];
 
-    return homeItems
+    homeItems
         .where((element) => state.actionsWrapper.actions
             .map((e) => e.displayName)
             .toList()
             .contains(element.label))
         .toList();
+
+    homeItems.add(
+      HomeItemCard(
+        icon: Icons.table_chart,
+        label: 'DB',
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => DriftDbViewer(
+                context.read<LocalSqlDataStore>(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    return homeItems;
   }
 
   void _attemptSyncUp(BuildContext context) {

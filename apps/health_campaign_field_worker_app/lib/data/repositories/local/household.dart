@@ -160,6 +160,7 @@ class HouseholdLocalRepository
         ?.copyWith(
           relatedClientReferenceId: entity.clientReferenceId,
           auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
         )
         .companion;
 

@@ -173,7 +173,17 @@ class _IndividualDetailsPageState
                           bloc.add(
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                               addressModel: addressModel,
-                              model: individual,
+                              model: individual.copyWith(
+                                clientAuditDetails: ClientAuditDetails(
+                                  createdBy:
+                                      individual.clientAuditDetails!.createdBy,
+                                  createdTime: individual
+                                      .clientAuditDetails!.createdTime,
+                                  lastModifiedBy: context.loggedInUserUuid,
+                                  lastModifiedTime:
+                                      context.millisecondsSinceEpoch(),
+                                ),
+                              ),
                             ),
                           );
                         },

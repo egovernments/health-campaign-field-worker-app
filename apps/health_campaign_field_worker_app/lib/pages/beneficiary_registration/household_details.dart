@@ -120,7 +120,17 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           bloc.add(
                             BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
                               household: household,
-                              addressModel: addressModel,
+                              addressModel: addressModel.copyWith(
+                                clientAuditDetails: ClientAuditDetails(
+                                  createdBy: addressModel
+                                      .clientAuditDetails!.createdBy,
+                                  createdTime: addressModel
+                                      .clientAuditDetails!.createdTime,
+                                  lastModifiedBy: context.loggedInUserUuid,
+                                  lastModifiedTime:
+                                      context.millisecondsSinceEpoch(),
+                                ),
+                              ),
                             ),
                           );
 
