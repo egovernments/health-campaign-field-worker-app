@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
@@ -237,6 +238,12 @@ class HouseholdOverviewBloc
       await householdMemberRepository.update(
         element.copyWith(
           rowVersion: element.rowVersion,
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: element.clientAuditDetails!.createdBy,
+            createdTime: element.clientAuditDetails!.createdTime,
+            lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          ),
         ),
       );
     }

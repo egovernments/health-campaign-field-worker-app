@@ -62,6 +62,18 @@ class HouseholdMemberLocalRepository
             isDeleted: householdMember.isDeleted,
             tenantId: householdMember.tenantId,
             rowVersion: householdMember.rowVersion,
+            auditDetails: AuditDetails(
+              createdBy: householdMember.auditCreatedBy!,
+              createdTime: householdMember.auditCreatedTime!,
+              lastModifiedBy: householdMember.auditModifiedBy,
+              lastModifiedTime: householdMember.auditModifiedTime,
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: householdMember.clientCreatedBy!,
+              createdTime: householdMember.clientCreatedTime!,
+              lastModifiedBy: householdMember.clientModifiedBy,
+              lastModifiedTime: householdMember.clientModifiedTime,
+            ),
             clientReferenceId: householdMember.clientReferenceId,
           );
         })
