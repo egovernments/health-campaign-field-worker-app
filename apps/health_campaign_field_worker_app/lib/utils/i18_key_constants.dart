@@ -399,6 +399,8 @@ class AdverseEvents {
   String get resourcesToBeDelivered => 'RESOURCES_TO_BE_DELIVERED_LABEL';
 
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
+
+  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
 }
 
 class ProjectSelection {

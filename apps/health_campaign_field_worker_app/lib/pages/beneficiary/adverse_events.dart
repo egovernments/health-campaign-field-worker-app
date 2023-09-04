@@ -42,6 +42,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
   static const _reAdministerKey = 'reAdminister';
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
+  bool stateChanged = false;
 
   @override
   Widget build(BuildContext context) {
@@ -207,11 +208,13 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                                       .clientReferenceId,
                                                               symptoms:
                                                                   symptoms,
-                                                              reAttempts: form
-                                                                  .control(
-                                                                    _noOfTimesReAdministeredKey,
-                                                                  )
-                                                                  .value as int,
+                                                              reAttempts: stateChanged
+                                                                  ? form
+                                                                      .control(
+                                                                        _noOfTimesReAdministeredKey,
+                                                                      )
+                                                                      .value as int
+                                                                  : 0,
                                                               clientReferenceId:
                                                                   clientReferenceId,
                                                               tenantId:
@@ -439,24 +442,23 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                   localizations.translate(
                                                 value.label.toUpperCase(),
                                               ),
+                                              onValueChange: (value) {
+                                                setState(() {
+                                                  stateChanged = value.key;
+                                                });
+                                              },
                                               options: Constants.yesNo,
                                             ),
-                                            Offstage(
-                                              offstage: (form
-                                                          .control(
-                                                            _reAdministerKey,
-                                                          )
-                                                          .value as KeyValue)
-                                                      .key ==
-                                                  false,
+                                            Visibility(
+                                              visible: stateChanged,
                                               child: DigitIntegerFormPicker(
                                                 form: form,
-                                                minimum: 0,
+                                                minimum: 1,
                                                 formControlName:
                                                     _noOfTimesReAdministeredKey,
                                                 label: localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .quantityDistributedLabel,
+                                                  i18.adverseEvents
+                                                      .noOfTimesReAdministered,
                                                 ),
                                                 incrementer: true,
                                               ),
@@ -508,8 +510,13 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
         value: adverseEventData?.firstOrNull?.reAttempts != null &&
                 adverseEventData?.firstOrNull?.reAttempts != 0
             ? int.tryParse(adverseEventData!.firstOrNull!.reAttempts.toString())
-            : 0,
-        validators: [Validators.required],
+            : 1,
+        validators: stateChanged
+            ? [
+                Validators.required,
+                Validators.min(1),
+              ]
+            : [],
       ),
       _reAdministerKey: FormControl<KeyValue>(
         value: KeyValue(
