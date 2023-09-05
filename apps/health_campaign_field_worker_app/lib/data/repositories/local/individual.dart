@@ -305,6 +305,13 @@ class IndividualLocalRepository
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,
+      clientAuditDetails: entity.clientAuditDetails ??
+          ClientAuditDetails(
+            createdBy: entity.clientAuditDetails!.createdBy,
+            createdTime: entity.clientAuditDetails!.createdTime,
+            lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          ),
     );
     await sql.batch((batch) {
       batch.update(

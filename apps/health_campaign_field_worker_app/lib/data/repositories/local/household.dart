@@ -194,6 +194,13 @@ class HouseholdLocalRepository
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
+      clientAuditDetails: entity.clientAuditDetails ??
+          ClientAuditDetails(
+            createdBy: entity.clientAuditDetails!.createdBy,
+            createdTime: entity.clientAuditDetails!.createdTime,
+            lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          ),
       rowVersion: entity.rowVersion,
     );
     await sql.batch((batch) {
