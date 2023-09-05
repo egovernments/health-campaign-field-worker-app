@@ -8,6 +8,7 @@ class AdverseEventRemoteRepository extends RemoteRepository<AdverseEventModel, A
     super.dio, {
     required super.actionMap,
     super.entityName = 'AdverseEvent',
+    super.isSearchResponsePlural = true,
   });
 
   @override
