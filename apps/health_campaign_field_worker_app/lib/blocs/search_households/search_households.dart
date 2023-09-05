@@ -294,235 +294,123 @@ class SearchHouseholdsBloc
       searchQuery: event.searchText,
     ));
 
-    if (event.isProximityEnabled) {
-      try {
-        final results = await addressRepository.searchHouseHoldbyAddress(
-          AddressSearchModel(
-            latitude: event.latitude,
-            longitude: event.longitude,
-            maxRadius: event.maxRadius,
-          ),
-        );
-        final householdMembers = <HouseholdMemberModel>[];
+    final proximityBasedResults =
+        await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
+      latitude: event.latitude,
+      longitude: event.longitude,
+      maxRadius: event.maxRadius,
+    ));
 
-        for (final element in results) {
-          final members = await householdMember.search(
-            HouseholdMemberSearchModel(
-              householdClientReferenceId: element.clientReferenceId,
-            ),
-          );
+    final householdMembers = <HouseholdMemberModel>[];
 
-          for (final member in members) {
-            final allHouseholdMembers = await householdMember.search(
-              HouseholdMemberSearchModel(
-                householdClientReferenceId: member.householdClientReferenceId,
-              ),
-            );
-
-            householdMembers.addAll(allHouseholdMembers);
-          }
-        }
-
-        final containers = <HouseholdMemberWrapper>[];
-        final groupedHouseholds = householdMembers
-            .groupListsBy((element) => element.householdClientReferenceId);
-
-        for (final entry in groupedHouseholds.entries) {
-          final householdId = entry.key;
-          final individualIds = entry.value
-              .map((element) => element.individualClientReferenceId)
-              .whereNotNull()
-              .toList();
-
-          if (householdId == null) continue;
-          final households = await household.search(
-            HouseholdSearchModel(
-              clientReferenceId: [householdId],
-              latitude: event.latitude,
-              longitude: event.longitude,
-              maxRadius: event.maxRadius,
-            ),
-          );
-
-          if (households.isEmpty) continue;
-
-          final resultHousehold = households.first;
-
-          final individuals = await individual.search(
-            IndividualSearchModel(
-              clientReferenceId: individualIds,
-              name: NameSearchModel(givenName: event.searchText.trim()),
-            ),
-          );
-
-          final head = individuals.firstWhereOrNull(
-            (element) =>
-                element.clientReferenceId ==
-                entry.value
-                    .firstWhereOrNull(
-                      (element) => element.isHeadOfHousehold,
-                    )
-                    ?.individualClientReferenceId,
-          );
-
-          if (head == null) continue;
-
-          final projectBeneficiaries =
-              beneficiaryType != BeneficiaryType.individual
-                  ? await projectBeneficiary.search(
-                      ProjectBeneficiarySearchModel(
-                        beneficiaryClientReferenceId: [
-                          resultHousehold.clientReferenceId,
-                        ],
-                        //[TODO] Need to check for beneficiaryId
-                        projectId: event.projectId,
-                      ),
-                    )
-                  : await projectBeneficiary.search(
-                      ProjectBeneficiarySearchModel(
-                        beneficiaryClientReferenceId: individualIds,
-                        //[TODO] Need to check for beneficiaryId
-                        projectId: event.projectId,
-                      ),
-                    );
-
-          if (projectBeneficiaries.isEmpty) continue;
-          final tasks = await taskDataRepository.search(TaskSearchModel(
-            projectBeneficiaryClientReferenceId:
-                projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-          ));
-
-          containers.add(
-            HouseholdMemberWrapper(
-              household: resultHousehold,
-              headOfHousehold: head,
-              members: individuals,
-              projectBeneficiaries: projectBeneficiaries,
-              tasks: tasks.isEmpty ? null : tasks,
-            ),
-          );
-        }
-
-        emit(state.copyWith(
-          householdMembers: containers,
-          loading: false,
-        ));
-      } catch (error) {
-        emit(state.copyWith(
-          loading: false,
-          householdMembers: [],
-        ));
-      }
-    } else {
-      final results = await individual.search(
-        IndividualSearchModel(
-          name: NameSearchModel(givenName: event.searchText.trim()),
+    for (final element in proximityBasedResults) {
+      final members = await householdMember.search(
+        HouseholdMemberSearchModel(
+          householdClientReferenceId: element.clientReferenceId,
+          isHeadOfHousehold: true,
         ),
       );
 
-      final householdMembers = <HouseholdMemberModel>[];
-
-      for (final element in results) {
-        final members = await householdMember.search(
+      for (final member in members) {
+        final allHouseholdMembers = await householdMember.search(
           HouseholdMemberSearchModel(
-            individualClientReferenceId: element.clientReferenceId,
-            isHeadOfHousehold: true,
+            householdClientReferenceId: member.householdClientReferenceId,
           ),
         );
 
-        for (final member in members) {
-          final allHouseholdMembers = await householdMember.search(
-            HouseholdMemberSearchModel(
-              householdClientReferenceId: member.householdClientReferenceId,
-            ),
-          );
-
-          householdMembers.addAll(allHouseholdMembers);
-        }
+        householdMembers.addAll(allHouseholdMembers);
       }
-
-      final containers = <HouseholdMemberWrapper>[];
-      final groupedHouseholds = householdMembers
-          .groupListsBy((element) => element.householdClientReferenceId);
-
-      for (final entry in groupedHouseholds.entries) {
-        final householdId = entry.key;
-        final individualIds = entry.value
-            .map((element) => element.individualClientReferenceId)
-            .whereNotNull()
-            .toList();
-
-        if (householdId == null) continue;
-        final households = await household.search(
-          HouseholdSearchModel(
-            clientReferenceId: [householdId],
-            latitude: event.latitude,
-            longitude: event.longitude,
-            maxRadius: event.maxRadius,
-          ),
-        );
-
-        if (households.isEmpty) continue;
-
-        final resultHousehold = households.first;
-
-        final individuals = await individual.search(
-          IndividualSearchModel(clientReferenceId: individualIds),
-        );
-
-        final head = individuals.firstWhereOrNull(
-          (element) =>
-              element.clientReferenceId ==
-              entry.value
-                  .firstWhereOrNull(
-                    (element) => element.isHeadOfHousehold,
-                  )
-                  ?.individualClientReferenceId,
-        );
-
-        if (head == null) continue;
-
-        final projectBeneficiaries =
-            beneficiaryType != BeneficiaryType.individual
-                ? await projectBeneficiary.search(
-                    ProjectBeneficiarySearchModel(
-                      beneficiaryClientReferenceId: [
-                        resultHousehold.clientReferenceId,
-                      ],
-                      //[TODO] Need to check for beneficiaryId
-                      projectId: event.projectId,
-                    ),
-                  )
-                : await projectBeneficiary.search(
-                    ProjectBeneficiarySearchModel(
-                      beneficiaryClientReferenceId: individualIds,
-                      //[TODO] Need to check for beneficiaryId
-                      projectId: event.projectId,
-                    ),
-                  );
-
-        if (projectBeneficiaries.isEmpty) continue;
-        final tasks = await taskDataRepository.search(TaskSearchModel(
-          projectBeneficiaryClientReferenceId:
-              projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-        ));
-
-        containers.add(
-          HouseholdMemberWrapper(
-            household: resultHousehold,
-            headOfHousehold: head,
-            members: individuals,
-            projectBeneficiaries: projectBeneficiaries,
-            tasks: tasks.isEmpty ? null : tasks,
-          ),
-        );
-      }
-
-      emit(state.copyWith(
-        householdMembers: containers,
-        loading: false,
-      ));
     }
+
+    final containers = <HouseholdMemberWrapper>[];
+    final groupedHouseholds = householdMembers
+        .groupListsBy((element) => element.householdClientReferenceId);
+
+    for (final entry in groupedHouseholds.entries) {
+      final householdId = entry.key;
+      final individualIds = entry.value
+          .map((element) => element.individualClientReferenceId)
+          .whereNotNull()
+          .toList();
+
+      if (householdId == null) continue;
+      final households = await household.search(
+        HouseholdSearchModel(
+          clientReferenceId: [householdId],
+          latitude: event.latitude,
+          longitude: event.longitude,
+          maxRadius: event.maxRadius,
+        ),
+      );
+
+      if (households.isEmpty) continue;
+
+      final resultHousehold = households.first;
+
+      final individuals = event.isProximityEnabled
+          ? await individual.search(
+              IndividualSearchModel(
+                clientReferenceId: individualIds,
+                name: NameSearchModel(givenName: event.searchText.trim()),
+              ),
+            )
+          : await individual.search(
+              IndividualSearchModel(
+                clientReferenceId: individualIds,
+              ),
+            );
+
+      final head = individuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            entry.value
+                .firstWhereOrNull(
+                  (element) => element.isHeadOfHousehold,
+                )
+                ?.individualClientReferenceId,
+      );
+
+      if (head == null) continue;
+
+      final projectBeneficiaries = beneficiaryType != BeneficiaryType.individual
+          ? await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: [
+                  resultHousehold.clientReferenceId,
+                ],
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            )
+          : await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: individualIds,
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            );
+
+      if (projectBeneficiaries.isEmpty) continue;
+      final tasks = await taskDataRepository.search(TaskSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
+
+      containers.add(
+        HouseholdMemberWrapper(
+          household: resultHousehold,
+          headOfHousehold: head,
+          members: individuals,
+          projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isEmpty ? null : tasks,
+        ),
+      );
+    }
+
+    emit(state.copyWith(
+      householdMembers: containers,
+      loading: false,
+    ));
   }
 
   FutureOr<void> _handleClear(
