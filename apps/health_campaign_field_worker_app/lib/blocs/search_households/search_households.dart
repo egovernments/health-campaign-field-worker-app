@@ -300,25 +300,51 @@ class SearchHouseholdsBloc
       longitude: event.longitude,
       maxRadius: event.maxRadius,
     ));
+    final results = await individual.search(
+      IndividualSearchModel(
+        name: NameSearchModel(givenName: event.searchText.trim()),
+      ),
+    );
 
     final householdMembers = <HouseholdMemberModel>[];
 
-    for (final element in proximityBasedResults) {
-      final members = await householdMember.search(
-        HouseholdMemberSearchModel(
-          householdClientReferenceId: element.clientReferenceId,
-          isHeadOfHousehold: true,
-        ),
-      );
-
-      for (final member in members) {
-        final allHouseholdMembers = await householdMember.search(
+    if (event.isProximityEnabled) {
+      for (final element in proximityBasedResults) {
+        final members = await householdMember.search(
           HouseholdMemberSearchModel(
-            householdClientReferenceId: member.householdClientReferenceId,
+            householdClientReferenceId: element.clientReferenceId,
+            isHeadOfHousehold: true,
           ),
         );
 
-        householdMembers.addAll(allHouseholdMembers);
+        for (final member in members) {
+          final allHouseholdMembers = await householdMember.search(
+            HouseholdMemberSearchModel(
+              householdClientReferenceId: member.householdClientReferenceId,
+            ),
+          );
+
+          householdMembers.addAll(allHouseholdMembers);
+        }
+      }
+    } else {
+      for (final element in results) {
+        final members = await householdMember.search(
+          HouseholdMemberSearchModel(
+            individualClientReferenceId: element.clientReferenceId,
+            isHeadOfHousehold: true,
+          ),
+        );
+
+        for (final member in members) {
+          final allHouseholdMembers = await householdMember.search(
+            HouseholdMemberSearchModel(
+              householdClientReferenceId: member.householdClientReferenceId,
+            ),
+          );
+
+          householdMembers.addAll(allHouseholdMembers);
+        }
       }
     }
 
