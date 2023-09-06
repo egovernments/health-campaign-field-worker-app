@@ -40,20 +40,24 @@ class _BeneficiaryDetailsPageState
 
     final headerList = [
       TableHeader(
-        'Beneficiary',
-        cellKey: 'beneficiary',
+        'Dose',
+        cellKey: 'dose',
       ),
       TableHeader(
-        'Delivery',
-        cellKey: 'delivery',
+        'Completed on',
+        cellKey: 'completedOn',
       ),
       TableHeader(
-        'Age',
-        cellKey: 'age',
+        'Status',
+        cellKey: 'Status',
       ),
       TableHeader(
-        'Gender',
-        cellKey: 'gender',
+        'Resources',
+        cellKey: 'resources',
+      ),
+      TableHeader(
+        'Quantity',
+        cellKey: 'quantity',
       ),
     ];
 
@@ -266,11 +270,26 @@ class _BeneficiaryDetailsPageState
                       ],
                     ),
                   ),
-                  DigitTable(
-                      headerList: headerList,
-                      tableData: tableData,
-                      leftColumnWidth: leftColumnWidth,
-                      rightColumnWidth: rightColumnWidth)
+                  DigitCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Cycle 1",
+                          style: theme.textTheme.headlineMedium,
+                          textAlign: TextAlign.left,
+                        ),
+                        DigitTable(
+                          headerList: headerList,
+                          tableData: const [],
+                          leftColumnWidth: 130,
+                          rightColumnWidth: headerList.length * 17 * 6,
+                          height: 6 * 57,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
