@@ -493,7 +493,7 @@ class _HouseholdOverviewPageState
                           ),
                           onPressed: () async {
                             await context.router
-                                .push(DeliverInterventionRoute());
+                                .push(BeneficiaryDetailsRoute());
                           },
                         )
                       : DigitElevatedButton(
@@ -503,7 +503,7 @@ class _HouseholdOverviewPageState
                             final projectId = context.projectId;
 
                             await context.router
-                                .push(DeliverInterventionRoute());
+                                .push(BeneficiaryDetailsRoute());
 
                             bloc.add(
                               HouseholdOverviewReloadEvent(

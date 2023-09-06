@@ -283,6 +283,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BeneficiaryDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
+          orElse: () => const BeneficiaryDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     DeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<DeliverInterventionRouteArgs>(
           orElse: () => const DeliverInterventionRouteArgs());
@@ -557,6 +568,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   HouseholdOverviewRoute.name,
                   path: 'overview',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  BeneficiaryDetailsRoute.name,
+                  path: 'beneficiary-details',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1567,6 +1583,41 @@ class HouseholdOverviewRouteArgs {
   @override
   String toString() {
     return 'HouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryDetailsPage]
+class BeneficiaryDetailsRoute
+    extends PageRouteInfo<BeneficiaryDetailsRouteArgs> {
+  BeneficiaryDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          BeneficiaryDetailsRoute.name,
+          path: 'beneficiary-details',
+          args: BeneficiaryDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'BeneficiaryDetailsRoute';
+}
+
+class BeneficiaryDetailsRouteArgs {
+  const BeneficiaryDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

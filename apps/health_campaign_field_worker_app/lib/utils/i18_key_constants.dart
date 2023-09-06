@@ -5,6 +5,7 @@ const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
 const searchBeneficiary = SearchBeneficiary();
+const beneficiaryDetails = BeneficiaryDetails();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
@@ -181,6 +182,18 @@ class SearchBeneficiary {
   String get iconLabel => 'ICON_LABEL';
   String get yearsAbbr => 'YEARS_ABBR';
   String get monthsAbbr => 'MONTHS_ABBR';
+}
+
+class BeneficiaryDetails {
+  const BeneficiaryDetails();
+
+  String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabelText =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabel =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
+  String get beneficiarysDetailsDeleteIconLabel =>
+      'BENEFICIARY_DETAILS_Delete_ICON_LABEL';
 }
 
 class IndividualDetails {

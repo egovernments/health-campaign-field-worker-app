@@ -182,8 +182,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               ),
               Flexible(
                 child: DigitOutLineButton(
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                  label: localizations
+                      .translate(i18.searchBeneficiary.beneficiaryInfoTitle),
                   onPressed: widget.onOpenPressed,
                 ),
               ),
