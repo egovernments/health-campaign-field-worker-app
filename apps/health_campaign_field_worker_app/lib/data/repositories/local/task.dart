@@ -158,10 +158,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       lastModifiedTime: task.auditModifiedTime,
                     ),
                     clientAuditDetails: ClientAuditDetails(
-                      createdBy: task.auditCreatedBy!,
-                      createdTime: task.auditCreatedTime!,
-                      lastModifiedBy: task.auditModifiedBy,
-                      lastModifiedTime: task.auditModifiedTime,
+                      createdBy: task.clientCreatedBy!,
+                      createdTime: task.clientCreatedTime!,
+                      lastModifiedBy: task.clientModifiedBy,
+                      lastModifiedTime: task.clientModifiedTime,
                     ),
                   ),
             status: task.status,
@@ -172,10 +172,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               lastModifiedTime: task.auditModifiedTime,
             ),
             clientAuditDetails: ClientAuditDetails(
-              createdBy: task.auditCreatedBy!,
-              createdTime: task.auditCreatedTime!,
-              lastModifiedBy: task.auditModifiedBy,
-              lastModifiedTime: task.auditModifiedTime,
+              createdBy: task.clientCreatedBy!,
+              createdTime: task.clientCreatedTime!,
+              lastModifiedBy: task.clientModifiedBy,
+              lastModifiedTime: task.clientModifiedTime,
             ),
             resources: resources == null
                 ? null
@@ -254,6 +254,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         ?.copyWith(
           relatedClientReferenceId: entity.clientReferenceId,
           auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
         )
         .companion;
 

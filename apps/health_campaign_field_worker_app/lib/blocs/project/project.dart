@@ -178,6 +178,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       } catch (_) {
+        print(_);
         emit(state.copyWith(
           loading: false,
           syncError: ProjectSyncErrorType.project,

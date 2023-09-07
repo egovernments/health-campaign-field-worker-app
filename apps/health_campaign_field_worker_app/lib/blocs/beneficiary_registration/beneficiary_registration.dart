@@ -248,6 +248,14 @@ class BeneficiaryRegistrationBloc
         try {
           await householdRepository.update(
             value.householdModel.copyWith(
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: value.householdModel.clientAuditDetails!.createdBy,
+                createdTime:
+                    value.householdModel.clientAuditDetails!.createdTime,
+                lastModifiedBy:
+                    value.householdModel.clientAuditDetails!.lastModifiedBy,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+              ),
               memberCount: event.household.memberCount,
               address: value.addressModel.copyWith(
                 relatedClientReferenceId:

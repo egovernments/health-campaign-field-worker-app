@@ -415,11 +415,11 @@ class ClientAuditDetailsMapper extends BaseMapper<ClientAuditDetails> {
 
   @override Function get decoder => decode;
   ClientAuditDetails decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(createdTime: Mapper.i.$get(map, 'createdTime'), lastModifiedTime: Mapper.i.$get(map, 'lastModifiedTime'), createdBy: Mapper.i.$getOpt(map, 'createdBy'), lastModifiedBy: Mapper.i.$getOpt(map, 'lastModifiedBy'));
+  ClientAuditDetails fromMap(Map<String, dynamic> map) => ClientAuditDetails(createdBy: Mapper.i.$get(map, 'createdBy'), createdTime: Mapper.i.$get(map, 'createdTime'), lastModifiedBy: Mapper.i.$getOpt(map, 'lastModifiedBy'), lastModifiedTime: Mapper.i.$getOpt(map, 'lastModifiedTime'));
 
   @override Function get encoder => (ClientAuditDetails v) => encode(v);
   dynamic encode(ClientAuditDetails v) => toMap(v);
-  Map<String, dynamic> toMap(ClientAuditDetails c) => {'createdTime': Mapper.i.$enc(c.createdTime, 'createdTime'), 'lastModifiedTime': Mapper.i.$enc(c.lastModifiedTime, 'lastModifiedTime'), 'createdBy': Mapper.i.$enc(c.createdBy, 'createdBy'), 'lastModifiedBy': Mapper.i.$enc(c.lastModifiedBy, 'lastModifiedBy')};
+  Map<String, dynamic> toMap(ClientAuditDetails c) => {'createdBy': Mapper.i.$enc(c.createdBy, 'createdBy'), 'createdTime': Mapper.i.$enc(c.createdTime, 'createdTime'), 'lastModifiedBy': Mapper.i.$enc(c.lastModifiedBy, 'lastModifiedBy'), 'lastModifiedTime': Mapper.i.$enc(c.lastModifiedTime, 'lastModifiedTime')};
 
   @override String stringify(ClientAuditDetails self) => 'ClientAuditDetails(createdTime: ${Mapper.asString(self.createdTime)}, lastModifiedTime: ${Mapper.asString(self.lastModifiedTime)}, createdBy: ${Mapper.asString(self.createdBy)}, lastModifiedBy: ${Mapper.asString(self.lastModifiedBy)})';
   @override int hash(ClientAuditDetails self) => Mapper.hash(self.createdTime) ^ Mapper.hash(self.lastModifiedTime) ^ Mapper.hash(self.createdBy) ^ Mapper.hash(self.lastModifiedBy);
@@ -436,14 +436,14 @@ extension ClientAuditDetailsMapperExtension  on ClientAuditDetails {
 
 abstract class ClientAuditDetailsCopyWith<$R> {
   factory ClientAuditDetailsCopyWith(ClientAuditDetails value, Then<ClientAuditDetails, $R> then) = _ClientAuditDetailsCopyWithImpl<$R>;
-  $R call({int? createdTime, int? lastModifiedTime, String? createdBy, String? lastModifiedBy});
+  $R call({String? createdBy, int? createdTime, String? lastModifiedBy, int? lastModifiedTime});
   $R apply(ClientAuditDetails Function(ClientAuditDetails) transform);
 }
 
 class _ClientAuditDetailsCopyWithImpl<$R> extends BaseCopyWith<ClientAuditDetails, $R> implements ClientAuditDetailsCopyWith<$R> {
   _ClientAuditDetailsCopyWithImpl(ClientAuditDetails value, Then<ClientAuditDetails, $R> then) : super(value, then);
 
-  @override $R call({int? createdTime, int? lastModifiedTime, Object? createdBy = $none, Object? lastModifiedBy = $none}) => $then(ClientAuditDetails(createdTime: createdTime ?? $value.createdTime, lastModifiedTime: lastModifiedTime ?? $value.lastModifiedTime, createdBy: or(createdBy, $value.createdBy), lastModifiedBy: or(lastModifiedBy, $value.lastModifiedBy)));
+  @override $R call({String? createdBy, int? createdTime, Object? lastModifiedBy = $none, Object? lastModifiedTime = $none}) => $then(ClientAuditDetails(createdBy: createdBy ?? $value.createdBy, createdTime: createdTime ?? $value.createdTime, lastModifiedBy: or(lastModifiedBy, $value.lastModifiedBy), lastModifiedTime: or(lastModifiedTime, $value.lastModifiedTime)));
 }
 
 class AuditDetailsMapper extends BaseMapper<AuditDetails> {
@@ -4581,6 +4581,7 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (value) {
       case "INDIVIDUAL": return BeneficiaryType.individual;
       case "HOUSEHOLD": return BeneficiaryType.household;
+      case "PRODUCT": return BeneficiaryType.product;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4589,6 +4590,7 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (self) {
       case BeneficiaryType.individual: return "INDIVIDUAL";
       case BeneficiaryType.household: return "HOUSEHOLD";
+      case BeneficiaryType.product: return "PRODUCT";
     }
   }
 }

@@ -118,17 +118,16 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
-      clientAuditDetails: entity.clientAuditDetails ??
-          ClientAuditDetails(
-            createdBy: entity.clientAuditDetails!.createdBy,
-            createdTime: entity.clientAuditDetails!.createdTime,
-            lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
-            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-          ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: entity.clientAuditDetails!.createdBy,
+        createdTime: entity.clientAuditDetails!.createdTime,
+        lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+        lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+      ),
       rowVersion: entity.rowVersion.increment,
     );
     await sql.batch((batch) {

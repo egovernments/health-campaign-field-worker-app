@@ -114,6 +114,16 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           var household = householdModel.copyWith(
                             memberCount: memberCount,
                             address: addressModel,
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy:
+                                  householdModel.clientAuditDetails!.createdBy,
+                              createdTime: householdModel
+                                  .clientAuditDetails!.createdTime,
+                              lastModifiedBy: householdModel
+                                  .clientAuditDetails!.lastModifiedBy,
+                              lastModifiedTime:
+                                  DateTime.now().millisecondsSinceEpoch,
+                            ),
                             rowVersion: householdModel.rowVersion,
                           );
 

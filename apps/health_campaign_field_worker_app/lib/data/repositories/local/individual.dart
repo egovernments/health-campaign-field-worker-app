@@ -260,7 +260,10 @@ class IndividualLocalRepository
           return e
               .copyWith(
                 relatedClientReferenceId: entity.clientReferenceId,
-                clientAuditDetails: entity.clientAuditDetails,
+                clientAuditDetails: ClientAuditDetails(
+                  createdBy: entity.clientAuditDetails!.createdBy,
+                  createdTime: entity.clientAuditDetails!.createdTime,
+                ),
               )
               .companion;
         }).toList() ??
@@ -305,13 +308,12 @@ class IndividualLocalRepository
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,
-      clientAuditDetails: entity.clientAuditDetails ??
-          ClientAuditDetails(
-            createdBy: entity.clientAuditDetails!.createdBy,
-            createdTime: entity.clientAuditDetails!.createdTime,
-            lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
-            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-          ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: entity.clientAuditDetails!.createdBy,
+        createdTime: entity.clientAuditDetails!.createdTime,
+        lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+        lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+      ),
     );
     await sql.batch((batch) {
       batch.update(

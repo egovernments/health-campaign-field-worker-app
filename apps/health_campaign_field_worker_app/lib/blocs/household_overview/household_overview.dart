@@ -191,6 +191,13 @@ class HouseholdOverviewBloc
       await householdMemberRepository.delete(
         i.copyWith(
           rowVersion: i.rowVersion,
+          clientAuditDetails: i.clientAuditDetails ??
+              ClientAuditDetails(
+                createdBy: i.clientAuditDetails!.createdBy,
+                createdTime: i.clientAuditDetails!.createdTime,
+                lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+              ),
         ),
       );
     }

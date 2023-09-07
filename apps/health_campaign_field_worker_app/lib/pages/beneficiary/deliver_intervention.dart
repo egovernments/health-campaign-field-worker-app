@@ -213,17 +213,32 @@ class _DeliverInterventionPageState
                                                       clientReferenceId,
                                                   id: null,
                                                 ),
-                                                clientAuditDetails:
-                                                    ClientAuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                  lastModifiedBy:
-                                                      context.loggedInUserUuid,
-                                                  lastModifiedTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
+                                                clientAuditDetails: taskData
+                                                            ?.first
+                                                            .clientAuditDetails ==
+                                                        null
+                                                    ? ClientAuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      )
+                                                    : ClientAuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: taskData!
+                                                            .first
+                                                            .clientAuditDetails!
+                                                            .createdTime,
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
                                                 auditDetails: AuditDetails(
                                                   createdBy:
                                                       context.loggedInUserUuid,
