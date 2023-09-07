@@ -294,57 +294,45 @@ class SearchHouseholdsBloc
       searchQuery: event.searchText,
     ));
 
-    final proximityBasedResults =
+    final List<HouseholdModel> proximityBasedResults =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
       latitude: event.latitude,
       longitude: event.longitude,
       maxRadius: event.maxRadius,
     ));
-    final results = await individual.search(
+    final List<IndividualModel> results = await individual.search(
       IndividualSearchModel(
         name: NameSearchModel(givenName: event.searchText.trim()),
       ),
     );
 
     final householdMembers = <HouseholdMemberModel>[];
+    final r = event.isProximityEnabled ? proximityBasedResults : results;
+    for (final element in r) {
+      final members = event.isProximityEnabled
+          ? await householdMember.search(
+              HouseholdMemberSearchModel(
+                householdClientReferenceId:
+                    (element as HouseholdModel).clientReferenceId,
+                isHeadOfHousehold: true,
+              ),
+            )
+          : await householdMember.search(
+              HouseholdMemberSearchModel(
+                individualClientReferenceId:
+                    (element as IndividualModel).clientReferenceId,
+                isHeadOfHousehold: true,
+              ),
+            );
 
-    if (event.isProximityEnabled) {
-      for (final element in proximityBasedResults) {
-        final members = await householdMember.search(
+      for (final member in members) {
+        final allHouseholdMembers = await householdMember.search(
           HouseholdMemberSearchModel(
-            householdClientReferenceId: element.clientReferenceId,
-            isHeadOfHousehold: true,
+            householdClientReferenceId: member.householdClientReferenceId,
           ),
         );
 
-        for (final member in members) {
-          final allHouseholdMembers = await householdMember.search(
-            HouseholdMemberSearchModel(
-              householdClientReferenceId: member.householdClientReferenceId,
-            ),
-          );
-
-          householdMembers.addAll(allHouseholdMembers);
-        }
-      }
-    } else {
-      for (final element in results) {
-        final members = await householdMember.search(
-          HouseholdMemberSearchModel(
-            individualClientReferenceId: element.clientReferenceId,
-            isHeadOfHousehold: true,
-          ),
-        );
-
-        for (final member in members) {
-          final allHouseholdMembers = await householdMember.search(
-            HouseholdMemberSearchModel(
-              householdClientReferenceId: member.householdClientReferenceId,
-            ),
-          );
-
-          householdMembers.addAll(allHouseholdMembers);
-        }
+        householdMembers.addAll(allHouseholdMembers);
       }
     }
 
