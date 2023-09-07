@@ -396,6 +396,11 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_RESOURCE_DIALOG_TITLE';
   String get resourceDeleteBeneficiaryPrimaryActionLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get dose1 => 'DELIVER_INTERVENTION_DOSE_1';
+  String get dose2 => 'DELIVER_INTERVENTION_DOSE_2';
+  String get dose3 => 'DELIVER_INTERVENTION_DOSE_3';
+  String get dose4 => 'DELIVER_INTERVENTION_DOSE_4';
 }
 
 class ProjectSelection {

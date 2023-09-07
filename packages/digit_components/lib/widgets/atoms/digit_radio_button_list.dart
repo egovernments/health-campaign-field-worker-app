@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitRadioButtonList<T> extends StatelessWidget {
   final String labelText;
+  final TextStyle? labelStyle;
   final bool isRequired;
   final String formControlName;
   final String Function(T value) valueMapper;
@@ -30,6 +31,7 @@ class DigitRadioButtonList<T> extends StatelessWidget {
     this.contentPadding,
     this.margin,
     this.labelPadding,
+    this.labelStyle,
   });
 
   @override

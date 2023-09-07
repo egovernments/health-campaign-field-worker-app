@@ -209,10 +209,21 @@ class Constants {
 
     return actionResult ?? '';
   }
+
+  static List<KeyValue> yesNo = [
+    KeyValue('CORE_COMMON_YES', true),
+    KeyValue('CORE_COMMON_NO', false),
+  ];
 }
 
 /// By using this key, we can push pages without context
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+class KeyValue {
+  String label;
+  dynamic key;
+  KeyValue(this.label, this.key);
+}
 
 class RequestInfoData {
   static const String apiId = 'hcm';
