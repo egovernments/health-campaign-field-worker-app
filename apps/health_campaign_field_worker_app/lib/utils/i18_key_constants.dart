@@ -193,7 +193,7 @@ class BeneficiaryDetails {
   String get beneficiarysDetailsEditIconLabel =>
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
   String get beneficiarysDetailsDeleteIconLabel =>
-      'BENEFICIARY_DETAILS_Delete_ICON_LABEL';
+      'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
 }
 
 class IndividualDetails {
