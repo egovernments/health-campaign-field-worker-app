@@ -379,10 +379,18 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                           createdBy: context.loggedInUserUuid,
                                           createdTime:
                                               context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
                                         ),
                                         clientAuditDetails: ClientAuditDetails(
                                           createdBy: context.loggedInUserUuid,
                                           createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
                                               context.millisecondsSinceEpoch(),
                                         ),
                                         attributeCode: '${attribute[i].code}',
@@ -421,12 +429,20 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                     context.loggedInUserUuid,
                                                 createdTime: DateTime.now()
                                                     .millisecondsSinceEpoch,
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
                                               ),
                                               auditDetails: AuditDetails(
                                                 createdBy:
                                                     context.loggedInUserUuid,
                                                 createdTime: DateTime.now()
                                                     .millisecondsSinceEpoch,
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
                                               ),
                                             ),
                                           ),

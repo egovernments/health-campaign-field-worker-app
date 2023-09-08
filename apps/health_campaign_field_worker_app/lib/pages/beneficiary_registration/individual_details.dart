@@ -174,15 +174,24 @@ class _IndividualDetailsPageState
                             BeneficiaryRegistrationUpdateIndividualDetailsEvent(
                               addressModel: addressModel,
                               model: individual.copyWith(
-                                clientAuditDetails: ClientAuditDetails(
-                                  createdBy:
-                                      individual.clientAuditDetails!.createdBy,
-                                  createdTime: individual
-                                      .clientAuditDetails!.createdTime,
-                                  lastModifiedBy: context.loggedInUserUuid,
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
+                                clientAuditDetails: (individual
+                                                .clientAuditDetails
+                                                ?.createdBy !=
+                                            null &&
+                                        individual.clientAuditDetails
+                                                ?.createdTime !=
+                                            null)
+                                    ? ClientAuditDetails(
+                                        createdBy: individual
+                                            .clientAuditDetails!.createdBy,
+                                        createdTime: individual
+                                            .clientAuditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
                               ),
                             ),
                           );
