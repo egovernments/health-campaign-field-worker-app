@@ -191,13 +191,15 @@ class HouseholdOverviewBloc
       await householdMemberRepository.delete(
         i.copyWith(
           rowVersion: i.rowVersion,
-          clientAuditDetails: i.clientAuditDetails ??
-              ClientAuditDetails(
-                createdBy: i.clientAuditDetails!.createdBy,
-                createdTime: i.clientAuditDetails!.createdTime,
-                lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-              ),
+          clientAuditDetails: (i.clientAuditDetails?.createdBy != null &&
+                  i.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: i.clientAuditDetails!.createdBy,
+                  createdTime: i.clientAuditDetails!.createdTime,
+                  lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }
@@ -245,12 +247,15 @@ class HouseholdOverviewBloc
       await householdMemberRepository.update(
         element.copyWith(
           rowVersion: element.rowVersion,
-          clientAuditDetails: ClientAuditDetails(
-            createdBy: element.clientAuditDetails!.createdBy,
-            createdTime: element.clientAuditDetails!.createdTime,
-            lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
-            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-          ),
+          clientAuditDetails: (element.clientAuditDetails?.createdBy != null &&
+                  element.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: element.clientAuditDetails!.createdBy,
+                  createdTime: element.clientAuditDetails!.createdTime,
+                  lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }

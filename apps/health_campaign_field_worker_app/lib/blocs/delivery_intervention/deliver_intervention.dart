@@ -30,13 +30,16 @@ class DeliverInterventionBloc
     try {
       if (event.isEditing) {
         await taskRepository.update(event.task.copyWith(
-          clientAuditDetails: event.task.clientAuditDetails ??
-              ClientAuditDetails(
-                createdBy: event.task.clientAuditDetails!.createdBy,
-                createdTime: event.task.clientAuditDetails!.createdTime,
-                lastModifiedBy: event.task.clientAuditDetails!.lastModifiedBy,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-              ),
+          clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
+                      null &&
+                  event.task.clientAuditDetails?.createdTime == null)
+              ? ClientAuditDetails(
+                  createdBy: event.task.clientAuditDetails!.createdBy,
+                  createdTime: event.task.clientAuditDetails!.createdTime,
+                  lastModifiedBy: event.task.clientAuditDetails!.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ));
       } else {
         final code = event.boundaryModel.code;
