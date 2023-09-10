@@ -170,7 +170,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
-                      '${householdMember.household.memberCount ?? 1} ${'Members'} \n ${((widget.distance!) * 1000).round() > 999 ? '${((widget.distance!)).round()} (km)' : '${((widget.distance!) * 1000).round()} (mts)'} ',
+                      '${householdMember.household.memberCount ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? householdMember.tasks?.first.status != null
                           ? 'delivered'

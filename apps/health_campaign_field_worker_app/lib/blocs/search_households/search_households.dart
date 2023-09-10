@@ -201,7 +201,6 @@ class SearchHouseholdsBloc
     SearchHouseholdsByProximityEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
-    print("_handleSearchByProximitity");
     emit(state.copyWith(loading: true));
     final results =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
@@ -295,21 +294,36 @@ class SearchHouseholdsBloc
       searchQuery: event.searchText,
     ));
 
-    final results = await individual.search(
+    final List<HouseholdModel> proximityBasedResults =
+        await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
+      latitude: event.latitude,
+      longitude: event.longitude,
+      maxRadius: event.maxRadius,
+    ));
+    final List<IndividualModel> results = await individual.search(
       IndividualSearchModel(
         name: NameSearchModel(givenName: event.searchText.trim()),
       ),
     );
 
     final householdMembers = <HouseholdMemberModel>[];
-
-    for (final element in results) {
-      final members = await householdMember.search(
-        HouseholdMemberSearchModel(
-          individualClientReferenceId: element.clientReferenceId,
-          isHeadOfHousehold: true,
-        ),
-      );
+    final r = event.isProximityEnabled ? proximityBasedResults : results;
+    for (final element in r) {
+      final members = event.isProximityEnabled
+          ? await householdMember.search(
+              HouseholdMemberSearchModel(
+                householdClientReferenceId:
+                    (element as HouseholdModel).clientReferenceId,
+                isHeadOfHousehold: true,
+              ),
+            )
+          : await householdMember.search(
+              HouseholdMemberSearchModel(
+                individualClientReferenceId:
+                    (element as IndividualModel).clientReferenceId,
+                isHeadOfHousehold: true,
+              ),
+            );
 
       for (final member in members) {
         final allHouseholdMembers = await householdMember.search(
@@ -347,9 +361,18 @@ class SearchHouseholdsBloc
 
       final resultHousehold = households.first;
 
-      final individuals = await individual.search(
-        IndividualSearchModel(clientReferenceId: individualIds),
-      );
+      final individuals = event.isProximityEnabled
+          ? await individual.search(
+              IndividualSearchModel(
+                clientReferenceId: individualIds,
+                name: NameSearchModel(givenName: event.searchText.trim()),
+              ),
+            )
+          : await individual.search(
+              IndividualSearchModel(
+                clientReferenceId: individualIds,
+              ),
+            );
 
       final head = individuals.firstWhereOrNull(
         (element) =>
