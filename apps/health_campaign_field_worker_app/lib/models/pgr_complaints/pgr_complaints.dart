@@ -232,11 +232,13 @@ class PgrAdditionalDetails {
   String? supervisorName;
   String? supervisorContactNumber;
   String? otherComplaintDescription;
+  String? projectId;
 
   PgrAdditionalDetails({
     this.supervisorName,
     this.supervisorContactNumber,
     this.otherComplaintDescription,
+    this.projectId,
   });
 
   factory PgrAdditionalDetails.fromJson(Map<String, dynamic> json) {
@@ -244,6 +246,7 @@ class PgrAdditionalDetails {
       supervisorName: json['supervisorName'] ?? "",
       supervisorContactNumber: json['supervisorContactNumber'] ?? "",
       otherComplaintDescription: json['otherComplaintDescription'] ?? "",
+      projectId: json['projectId'] ?? "",
     );
   }
 
@@ -253,6 +256,7 @@ class PgrAdditionalDetails {
       "supervisorName": supervisorName,
       "supervisorContactNumber": supervisorContactNumber,
       "otherComplaintDescription": otherComplaintDescription,
+      "projectId": projectId,
     };
 
     return jsonEncode(map);

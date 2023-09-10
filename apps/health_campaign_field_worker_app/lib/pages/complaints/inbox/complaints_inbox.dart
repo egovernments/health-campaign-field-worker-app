@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,8 +33,19 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
     return Scaffold(
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
-          final inboxItems =
-              state.isFiltered ? state.filteredComplaints : state.complaints;
+          final complaints = state.complaints.where((element) =>
+              PgrAdditionalDetails.fromJson(
+                jsonDecode(element.additionalDetail!),
+              ).projectId ==
+              context.projectId);
+
+          final filteredComplaints = state.filteredComplaints.where((element) =>
+              PgrAdditionalDetails.fromJson(
+                jsonDecode(element.additionalDetail!),
+              ).projectId ==
+              context.projectId);
+
+          final inboxItems = state.isFiltered ? filteredComplaints : complaints;
 
           // TODO(ajil): Fix this scrollable component
           return Column(

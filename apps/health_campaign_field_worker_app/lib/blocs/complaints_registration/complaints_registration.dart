@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -144,6 +145,7 @@ class ComplaintsRegistrationBloc
           ),
           auditDetails: auditDetails,
           additionalDetail: PgrAdditionalDetails(
+            projectId: event.projectId,
             supervisorName: complaintDetailsModel.supervisorName,
             supervisorContactNumber:
                 complaintDetailsModel.supervisorContactNumber,
@@ -178,6 +180,7 @@ class ComplaintsRegistrationEvent with _$ComplaintsRegistrationEvent {
 
   const factory ComplaintsRegistrationEvent.submitComplaint({
     required String userId,
+    required String projectId,
   }) = ComplaintsRegistrationSubmitComplaintEvent;
 }
 

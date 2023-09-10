@@ -25,7 +25,7 @@ mixin _$ComplaintsRegistrationEvent {
     required TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)
         saveComplaintDetails,
-    required TResult Function(String userId) submitComplaint,
+    required TResult Function(String userId, String projectId) submitComplaint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,7 +36,7 @@ mixin _$ComplaintsRegistrationEvent {
     TResult? Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult? Function(String userId)? submitComplaint,
+    TResult? Function(String userId, String projectId)? submitComplaint,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -47,7 +47,7 @@ mixin _$ComplaintsRegistrationEvent {
     TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult Function(String userId)? submitComplaint,
+    TResult Function(String userId, String projectId)? submitComplaint,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -203,7 +203,7 @@ class _$ComplaintsRegistrationSaveComplaintTypeEvent
     required TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)
         saveComplaintDetails,
-    required TResult Function(String userId) submitComplaint,
+    required TResult Function(String userId, String projectId) submitComplaint,
   }) {
     return saveComplaintType(complaintType, otherComplaintDescription);
   }
@@ -217,7 +217,7 @@ class _$ComplaintsRegistrationSaveComplaintTypeEvent
     TResult? Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult? Function(String userId)? submitComplaint,
+    TResult? Function(String userId, String projectId)? submitComplaint,
   }) {
     return saveComplaintType?.call(complaintType, otherComplaintDescription);
   }
@@ -231,7 +231,7 @@ class _$ComplaintsRegistrationSaveComplaintTypeEvent
     TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult Function(String userId)? submitComplaint,
+    TResult Function(String userId, String projectId)? submitComplaint,
     required TResult orElse(),
   }) {
     if (saveComplaintType != null) {
@@ -384,7 +384,7 @@ class _$ComplaintsRegistrationSaveAddressEvent
     required TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)
         saveComplaintDetails,
-    required TResult Function(String userId) submitComplaint,
+    required TResult Function(String userId, String projectId) submitComplaint,
   }) {
     return saveAddress(addressModel);
   }
@@ -398,7 +398,7 @@ class _$ComplaintsRegistrationSaveAddressEvent
     TResult? Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult? Function(String userId)? submitComplaint,
+    TResult? Function(String userId, String projectId)? submitComplaint,
   }) {
     return saveAddress?.call(addressModel);
   }
@@ -412,7 +412,7 @@ class _$ComplaintsRegistrationSaveAddressEvent
     TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult Function(String userId)? submitComplaint,
+    TResult Function(String userId, String projectId)? submitComplaint,
     required TResult orElse(),
   }) {
     if (saveAddress != null) {
@@ -592,7 +592,7 @@ class _$ComplaintsRegistrationSaveComplaintDetailsEvent
     required TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)
         saveComplaintDetails,
-    required TResult Function(String userId) submitComplaint,
+    required TResult Function(String userId, String projectId) submitComplaint,
   }) {
     return saveComplaintDetails(complaintsDetailsModel, boundaryModel);
   }
@@ -606,7 +606,7 @@ class _$ComplaintsRegistrationSaveComplaintDetailsEvent
     TResult? Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult? Function(String userId)? submitComplaint,
+    TResult? Function(String userId, String projectId)? submitComplaint,
   }) {
     return saveComplaintDetails?.call(complaintsDetailsModel, boundaryModel);
   }
@@ -620,7 +620,7 @@ class _$ComplaintsRegistrationSaveComplaintDetailsEvent
     TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult Function(String userId)? submitComplaint,
+    TResult Function(String userId, String projectId)? submitComplaint,
     required TResult orElse(),
   }) {
     if (saveComplaintDetails != null) {
@@ -702,7 +702,7 @@ abstract class _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<$Res> {
           $Res Function(_$ComplaintsRegistrationSubmitComplaintEvent) then) =
       __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String userId});
+  $Res call({String userId, String projectId});
 }
 
 /// @nodoc
@@ -719,11 +719,16 @@ class __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userId = null,
+    Object? projectId = null,
   }) {
     return _then(_$ComplaintsRegistrationSubmitComplaintEvent(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -733,14 +738,17 @@ class __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>
 
 class _$ComplaintsRegistrationSubmitComplaintEvent
     implements ComplaintsRegistrationSubmitComplaintEvent {
-  const _$ComplaintsRegistrationSubmitComplaintEvent({required this.userId});
+  const _$ComplaintsRegistrationSubmitComplaintEvent(
+      {required this.userId, required this.projectId});
 
   @override
   final String userId;
+  @override
+  final String projectId;
 
   @override
   String toString() {
-    return 'ComplaintsRegistrationEvent.submitComplaint(userId: $userId)';
+    return 'ComplaintsRegistrationEvent.submitComplaint(userId: $userId, projectId: $projectId)';
   }
 
   @override
@@ -748,11 +756,13 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ComplaintsRegistrationSubmitComplaintEvent &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId);
+  int get hashCode => Object.hash(runtimeType, userId, projectId);
 
   @JsonKey(ignore: true)
   @override
@@ -773,9 +783,9 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
     required TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)
         saveComplaintDetails,
-    required TResult Function(String userId) submitComplaint,
+    required TResult Function(String userId, String projectId) submitComplaint,
   }) {
-    return submitComplaint(userId);
+    return submitComplaint(userId, projectId);
   }
 
   @override
@@ -787,9 +797,9 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
     TResult? Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult? Function(String userId)? submitComplaint,
+    TResult? Function(String userId, String projectId)? submitComplaint,
   }) {
-    return submitComplaint?.call(userId);
+    return submitComplaint?.call(userId, projectId);
   }
 
   @override
@@ -801,11 +811,11 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
     TResult Function(ComplaintsDetailsModel complaintsDetailsModel,
             BoundaryModel boundaryModel)?
         saveComplaintDetails,
-    TResult Function(String userId)? submitComplaint,
+    TResult Function(String userId, String projectId)? submitComplaint,
     required TResult orElse(),
   }) {
     if (submitComplaint != null) {
-      return submitComplaint(userId);
+      return submitComplaint(userId, projectId);
     }
     return orElse();
   }
@@ -864,10 +874,11 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
 abstract class ComplaintsRegistrationSubmitComplaintEvent
     implements ComplaintsRegistrationEvent {
   const factory ComplaintsRegistrationSubmitComplaintEvent(
-          {required final String userId}) =
+          {required final String userId, required final String projectId}) =
       _$ComplaintsRegistrationSubmitComplaintEvent;
 
   String get userId;
+  String get projectId;
   @JsonKey(ignore: true)
   _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<
           _$ComplaintsRegistrationSubmitComplaintEvent>

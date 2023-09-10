@@ -184,12 +184,14 @@ class _ComplaintsDetailsPageState
                         );
 
                         if (submit != true) return;
-
-                        bloc.add(
-                          ComplaintsRegistrationSubmitComplaintEvent(
-                            userId: userId,
-                          ),
-                        );
+                        if (context.mounted) {
+                          bloc.add(
+                            ComplaintsRegistrationSubmitComplaintEvent(
+                              userId: userId,
+                              projectId: context.projectId,
+                            ),
+                          );
+                        }
                       },
                       child: Center(
                         child: Text(

@@ -4204,15 +4204,15 @@ class PgrAdditionalDetailsMapper extends BaseMapper<PgrAdditionalDetails> {
 
   @override Function get decoder => decode;
   PgrAdditionalDetails decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  PgrAdditionalDetails fromMap(Map<String, dynamic> map) => PgrAdditionalDetails(supervisorName: Mapper.i.$getOpt(map, 'supervisorName'), supervisorContactNumber: Mapper.i.$getOpt(map, 'supervisorContactNumber'), otherComplaintDescription: Mapper.i.$getOpt(map, 'otherComplaintDescription'));
+  PgrAdditionalDetails fromMap(Map<String, dynamic> map) => PgrAdditionalDetails(supervisorName: Mapper.i.$getOpt(map, 'supervisorName'), supervisorContactNumber: Mapper.i.$getOpt(map, 'supervisorContactNumber'), otherComplaintDescription: Mapper.i.$getOpt(map, 'otherComplaintDescription'), projectId: Mapper.i.$getOpt(map, 'projectId'));
 
   @override Function get encoder => (PgrAdditionalDetails v) => encode(v);
   dynamic encode(PgrAdditionalDetails v) => toMap(v);
-  Map<String, dynamic> toMap(PgrAdditionalDetails p) => {if (Mapper.i.$enc(p.supervisorName, 'supervisorName') != null) 'supervisorName': Mapper.i.$enc(p.supervisorName, 'supervisorName'), if (Mapper.i.$enc(p.supervisorContactNumber, 'supervisorContactNumber') != null) 'supervisorContactNumber': Mapper.i.$enc(p.supervisorContactNumber, 'supervisorContactNumber'), if (Mapper.i.$enc(p.otherComplaintDescription, 'otherComplaintDescription') != null) 'otherComplaintDescription': Mapper.i.$enc(p.otherComplaintDescription, 'otherComplaintDescription')};
+  Map<String, dynamic> toMap(PgrAdditionalDetails p) => {if (Mapper.i.$enc(p.supervisorName, 'supervisorName') != null) 'supervisorName': Mapper.i.$enc(p.supervisorName, 'supervisorName'), if (Mapper.i.$enc(p.supervisorContactNumber, 'supervisorContactNumber') != null) 'supervisorContactNumber': Mapper.i.$enc(p.supervisorContactNumber, 'supervisorContactNumber'), if (Mapper.i.$enc(p.otherComplaintDescription, 'otherComplaintDescription') != null) 'otherComplaintDescription': Mapper.i.$enc(p.otherComplaintDescription, 'otherComplaintDescription'), if (Mapper.i.$enc(p.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(p.projectId, 'projectId')};
 
-  @override String stringify(PgrAdditionalDetails self) => 'PgrAdditionalDetails(supervisorName: ${Mapper.asString(self.supervisorName)}, supervisorContactNumber: ${Mapper.asString(self.supervisorContactNumber)}, otherComplaintDescription: ${Mapper.asString(self.otherComplaintDescription)})';
-  @override int hash(PgrAdditionalDetails self) => Mapper.hash(self.supervisorName) ^ Mapper.hash(self.supervisorContactNumber) ^ Mapper.hash(self.otherComplaintDescription);
-  @override bool equals(PgrAdditionalDetails self, PgrAdditionalDetails other) => Mapper.isEqual(self.supervisorName, other.supervisorName) && Mapper.isEqual(self.supervisorContactNumber, other.supervisorContactNumber) && Mapper.isEqual(self.otherComplaintDescription, other.otherComplaintDescription);
+  @override String stringify(PgrAdditionalDetails self) => 'PgrAdditionalDetails(supervisorName: ${Mapper.asString(self.supervisorName)}, supervisorContactNumber: ${Mapper.asString(self.supervisorContactNumber)}, otherComplaintDescription: ${Mapper.asString(self.otherComplaintDescription)}, projectId: ${Mapper.asString(self.projectId)})';
+  @override int hash(PgrAdditionalDetails self) => Mapper.hash(self.supervisorName) ^ Mapper.hash(self.supervisorContactNumber) ^ Mapper.hash(self.otherComplaintDescription) ^ Mapper.hash(self.projectId);
+  @override bool equals(PgrAdditionalDetails self, PgrAdditionalDetails other) => Mapper.isEqual(self.supervisorName, other.supervisorName) && Mapper.isEqual(self.supervisorContactNumber, other.supervisorContactNumber) && Mapper.isEqual(self.otherComplaintDescription, other.otherComplaintDescription) && Mapper.isEqual(self.projectId, other.projectId);
 
   @override Function get typeFactory => (f) => f<PgrAdditionalDetails>();
 }
@@ -4225,14 +4225,14 @@ extension PgrAdditionalDetailsMapperExtension  on PgrAdditionalDetails {
 
 abstract class PgrAdditionalDetailsCopyWith<$R> {
   factory PgrAdditionalDetailsCopyWith(PgrAdditionalDetails value, Then<PgrAdditionalDetails, $R> then) = _PgrAdditionalDetailsCopyWithImpl<$R>;
-  $R call({String? supervisorName, String? supervisorContactNumber, String? otherComplaintDescription});
+  $R call({String? supervisorName, String? supervisorContactNumber, String? otherComplaintDescription, String? projectId});
   $R apply(PgrAdditionalDetails Function(PgrAdditionalDetails) transform);
 }
 
 class _PgrAdditionalDetailsCopyWithImpl<$R> extends BaseCopyWith<PgrAdditionalDetails, $R> implements PgrAdditionalDetailsCopyWith<$R> {
   _PgrAdditionalDetailsCopyWithImpl(PgrAdditionalDetails value, Then<PgrAdditionalDetails, $R> then) : super(value, then);
 
-  @override $R call({Object? supervisorName = $none, Object? supervisorContactNumber = $none, Object? otherComplaintDescription = $none}) => $then(PgrAdditionalDetails(supervisorName: or(supervisorName, $value.supervisorName), supervisorContactNumber: or(supervisorContactNumber, $value.supervisorContactNumber), otherComplaintDescription: or(otherComplaintDescription, $value.otherComplaintDescription)));
+  @override $R call({Object? supervisorName = $none, Object? supervisorContactNumber = $none, Object? otherComplaintDescription = $none, Object? projectId = $none}) => $then(PgrAdditionalDetails(supervisorName: or(supervisorName, $value.supervisorName), supervisorContactNumber: or(supervisorContactNumber, $value.supervisorContactNumber), otherComplaintDescription: or(otherComplaintDescription, $value.otherComplaintDescription), projectId: or(projectId, $value.projectId)));
 }
 
 class PgrServiceCreateResponseModelMapper extends BaseMapper<PgrServiceCreateResponseModel> {
