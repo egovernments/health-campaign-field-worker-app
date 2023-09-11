@@ -291,6 +291,8 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
+                          if(form.control(_idTypeKey).value !=
+                              'DEFAULT')
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
