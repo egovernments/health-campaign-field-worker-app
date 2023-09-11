@@ -24,7 +24,7 @@ class _PoweredByDigitState extends State<PoweredByDigit> {
         child: Center(
           child: Column(children: [
             Container(
-              height: 24,
+              height: 34,
               padding: widget.padding ?? const EdgeInsets.all(4),
               alignment: Alignment.center,
               child: Image.asset('assets/images/powered_by_digit.png',
