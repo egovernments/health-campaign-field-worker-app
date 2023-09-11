@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/data_model.dart';
-import '../../../models/entities/adverse_event.dart';
 import '../../../utils/app_exception.dart';
 import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 

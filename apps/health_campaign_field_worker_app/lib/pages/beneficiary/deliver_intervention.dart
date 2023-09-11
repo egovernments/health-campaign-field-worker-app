@@ -197,38 +197,56 @@ class _DeliverInterventionPageState
                                         context.boundary,
                                       ),
                                     );
-                                await DigitDialog.show<bool>(
-                                  context,
-                                  options: DigitDialogOptions(
-                                    titleText: localizations.translate(
-                                      i18.deliverIntervention
-                                          .didYouObserveAdvEventsTitle,
-                                    ),
-                                    primaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonYes,
+
+                                if (taskData == null || taskData.isEmpty) {
+                                  DigitDialog.show<bool>(
+                                    context,
+                                    options: DigitDialogOptions(
+                                      titleText: localizations.translate(
+                                        i18.deliverIntervention
+                                            .didYouObserveAdvEventsTitle,
                                       ),
-                                      action: (ctx) {
-                                        router.push(AdverseEventsRoute(
-                                          tasks: [taskModel],
-                                        ));
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(true);
-                                      },
-                                    ),
-                                    secondaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonNo,
+                                      primaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.common.coreCommonYes,
+                                        ),
+                                        action: (ctx) {
+                                          router.popUntilRouteWithName(
+                                            SearchBeneficiaryRoute.name,
+                                          );
+                                          router.push(AdverseEventsRoute(
+                                            tasks: [taskModel],
+                                          ));
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(true);
+                                        },
                                       ),
-                                      action: (context) => Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(false),
+                                      secondaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.common.coreCommonNo,
+                                        ),
+                                        action: (context) {
+                                          final parent =
+                                              router.parent() as StackRouter;
+                                          parent.popUntilRouteWithName(
+                                            SearchBeneficiaryRoute.name,
+                                          );
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(false);
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  final parent = router.parent() as StackRouter;
+                                  parent.popUntilRouteWithName(
+                                    SearchBeneficiaryRoute.name,
+                                  );
+                                }
                               },
                               child: Center(
                                 child: Text(

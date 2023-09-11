@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:digit_components/digit_components.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:health_campaign_field_worker_app/data/local_store/sql_store/tables/adverse_event.dart';
+import 'tables/adverse_event.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 

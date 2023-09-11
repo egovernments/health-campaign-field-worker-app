@@ -128,6 +128,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.stockReconciliation:
                                   case DataModelType.service:
                                   case DataModelType.complaints:
+                                  case DataModelType.adverseEvent:
                                     return true;
                                   default:
                                     return false;
@@ -160,6 +161,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.stock:
                                   case DataModelType.stockReconciliation:
                                   case DataModelType.complaints:
+                                  case DataModelType.adverseEvent:
                                     return true;
                                   default:
                                     return false;
