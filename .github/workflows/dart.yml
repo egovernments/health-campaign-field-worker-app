@@ -7,9 +7,9 @@ name: Run analysis and tests
 
 on:
   push:
-    branches: [ "develop", "master", "qa", "demo", "uat" ]
+    branches: ['develop', 'master', 'qa', 'demo', 'uat']
   pull_request:
-    branches: [ "develop", "master", "qa", "demo", "uat" ]
+    branches: ['develop', 'master', 'qa', 'demo', 'uat']
 
 jobs:
   build:
@@ -17,7 +17,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - uses: dart-lang/setup-dart@v1
 
       - name: Flutter action
@@ -30,6 +29,3 @@ jobs:
 
       - name: Analyze code
         run: melos run analyze
-
-
-
