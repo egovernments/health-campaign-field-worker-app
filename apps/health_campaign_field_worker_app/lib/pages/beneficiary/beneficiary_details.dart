@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -37,6 +39,95 @@ class _BeneficiaryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
+
+    const String jsonData = '''
+  {
+    "id": "40a528a0-4e0e-11ee-be56-0242ac120002",
+    "name": "configuration for Multi Round Campaigns",
+    "code": "MR-DN",
+    "group": "MALARIA",
+    "beneficiaryType": "HOUSEHOLD",
+    "eligibilityCriteria": [
+      "All households having members under the age of 18 are eligible.",
+      "Prison inmates are eligible."
+    ],
+    "taskProcedure": [
+      "1 bednet is to be distributed per 2 household members.",
+      "If there are 4 household members, 2 bednets should be distributed.",
+      "If there are 5 household members, 3 bednets should be distributed."
+    ],
+    "resources": [
+      {
+        "productVariantId": "PVAR-2022-12-20-000036",
+        "isBaseUnitVariant": false
+      },
+      {
+        "productVariantId": "PVAR-2022-12-20-000037",
+        "isBaseUnitVariant": true
+      }
+    ],
+    "observationStrategy": "DOT1",
+    "cycles": [
+      {
+        "mandatoryWaitSinceLastCycleInDays": null,
+        "deliveries": [
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": null,
+            "ProductVariants": {
+              "SP500": "1",
+              "AQ500": "1"
+            },
+            "deliveryStrategy": "DIRECT"
+          },
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": "10",
+            "ProductVariants": {
+              "sp500": "1"
+            },
+            "deliveryStrategy": "INDIRECT"
+          },
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": "20",
+            "ProductVariants": {
+              "pvid2": "2"
+            },
+            "deliveryStrategy": "INDIRECT"
+          }
+        ]
+      },
+      {
+        "mandatoryWaitSinceLastCycleInDays": "30",
+        "deliveries": [
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": "15",
+            "ProductVariants": {
+              "SP500": "1",
+              "AQ500": "1"
+            },
+            "deliveryStrategy": "DIRECT"
+          },
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": "10",
+            "ProductVariants": {
+              "AQ500": "1"
+            },
+            "deliveryStrategy": "INDIRECT"
+          },
+          {
+            "mandatoryWaitSinceLastDeliveryInDays": "20",
+            "ProductVariants": {
+              "SP500": "1"
+            },
+            "deliveryStrategy": "INDIRECT"
+          }
+        ]
+      }
+    ]
+  }
+  '''; // code to be deleted jsonData once setup done
+
+    final Map<String, dynamic> jsonDataMap = jsonDecode(jsonData);
+    final List<dynamic> cycles = jsonDataMap['cycles'];
 
     final headerList = [
       TableHeader(
@@ -118,7 +209,6 @@ class _BeneficiaryDetailsPageState
                                 localizations.translate(i18.beneficiaryDetails
                                     .beneficiarysDetailsLabelText),
                                 style: theme.textTheme.displayMedium,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             DigitIconButton(
@@ -139,7 +229,7 @@ class _BeneficiaryDetailsPageState
                                       label: localizations.translate(i18
                                           .beneficiaryDetails
                                           .beneficiarysDetailsDeleteIconLabel),
-                                      action: () => (),
+                                      action: () => null,
                                       // action: () => DigitDialog.show(
                                       //   context,
                                       //   options: DigitDialogOptions(
@@ -270,25 +360,38 @@ class _BeneficiaryDetailsPageState
                       ],
                     ),
                   ),
-                  DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Cycle 1",
-                          style: theme.textTheme.headlineMedium,
-                          textAlign: TextAlign.left,
-                        ),
-                        DigitTable(
-                          headerList: headerList,
-                          tableData: const [],
-                          leftColumnWidth: 130,
-                          rightColumnWidth: headerList.length * 17 * 6,
-                          height: 6 * 57,
-                        ),
-                      ],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: List<Widget>.generate(cycles.length, (int i) {
+                      final cycleName = 'Cycle ${i + 1}';
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DigitCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  cycleName,
+                                  style: theme.textTheme.headlineMedium,
+                                  textAlign: TextAlign.left,
+                                ),
+                                DigitTable(
+                                  headerList: headerList,
+                                  tableData: const [], // You can replace this with actual data for each cycle
+                                  leftColumnWidth: 130,
+                                  rightColumnWidth: headerList.length * 17 * 6,
+                                  height: 6 * 57,
+                                ),
+                                // Add other widgets or components to display cycle-specific data here
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ],
               ),
