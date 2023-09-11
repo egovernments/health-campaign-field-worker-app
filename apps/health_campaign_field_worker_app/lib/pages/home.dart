@@ -346,11 +346,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       HomeItemCard(
         icon: Icons.menu_book,
         label: i18.home.stockReconciliationLabel,
-        onPressed: () => context.router.push(ReasonForDeletionRoute()),
+        onPressed: () => context.router.push(StockReconciliationRoute()),
       ),
       HomeItemCard(
         icon: Icons.store_mall_directory,
         label: i18.home.manageStockLabel,
+        onPressed: () => context.router.push(ManageStocksRoute()),
       ),
       HomeItemCard(
         icon: Icons.sync_alt,
@@ -431,22 +432,6 @@ class _HomePageState extends LocalizedState<HomePage> {
             .toList()
             .contains(element.label))
         .toList();
-
-    homeItems.add(
-      HomeItemCard(
-        icon: Icons.table_chart,
-        label: 'DB',
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
-              ),
-            ),
-          );
-        },
-      ),
-    );
 
     return homeItems;
   }
