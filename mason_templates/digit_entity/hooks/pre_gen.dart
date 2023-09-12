@@ -112,8 +112,9 @@ void run(HookContext context) {
       AttributeModel(
         name: 'isDeleted',
         type: 'bool',
-        includeForQuery: true,
-        includeForEntity: true,
+        defaultValue: "false",
+        includeForQuery: false,
+        includeForEntity: false,
         nullable: true,
       ),
     );
@@ -149,7 +150,9 @@ void run(HookContext context) {
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);
     }),
-    ...model.customAttributes.where((element) => element.isEnum),
+    ...model.customAttributes.where(
+      (element) => element.isEnum && element.includeForTable,
+    ),
   ];
 
   final references = [

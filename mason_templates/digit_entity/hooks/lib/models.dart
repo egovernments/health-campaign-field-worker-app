@@ -50,6 +50,7 @@ class AttributeModel {
   final bool includeForTable;
   final bool createReference;
   final String? referencePkName;
+  final String? defaultValue;
   final List<TableReferenceModel> references;
 
   const AttributeModel({
@@ -65,6 +66,7 @@ class AttributeModel {
     this.includeForEntity = true,
     this.createReference = false,
     this.referencePkName,
+    this.defaultValue,
     this.references = const [],
   });
 }

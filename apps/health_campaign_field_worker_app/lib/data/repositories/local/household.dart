@@ -1,7 +1,6 @@
 import 'dart:async';
-
+import 'dart:math';
 import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -25,7 +24,6 @@ class HouseholdLocalRepository
         ),
       ],
     );
-
     final results = await (selectQuery
           ..where(
             buildAnd(
@@ -83,6 +81,12 @@ class HouseholdLocalRepository
                     addressLine2: address.addressLine2,
                     city: address.city,
                     pincode: address.pincode,
+                    locality: address.localityBoundaryCode != null
+                        ? LocalityModel(
+                            code: address.localityBoundaryCode!,
+                            name: address.localityBoundaryName,
+                          )
+                        : null,
                     type: address.type,
                     rowVersion: address.rowVersion,
                     auditDetails: AuditDetails(
@@ -105,6 +109,7 @@ class HouseholdLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final householdCompanion = entity.companion;
+    final localityCompanion = entity.address?.locality?.companion;
     final addressCompanion = entity.address?.companion;
 
     await sql.batch((batch) async {
@@ -118,6 +123,13 @@ class HouseholdLocalRepository
         batch.insert(
           sql.address,
           addressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+      if (localityCompanion != null) {
+        batch.insert(
+          sql.locality,
+          localityCompanion,
           mode: InsertMode.insertOrReplace,
         );
       }

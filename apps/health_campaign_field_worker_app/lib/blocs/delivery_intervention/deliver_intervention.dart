@@ -57,9 +57,14 @@ class DeliverInterventionBloc
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      final List<TaskModel> tasks =
-          await taskRepository.search(event.taskSearch);
-      if (tasks.isNotEmpty) emit(state.copyWith(task: tasks.first));
+      final List<TaskModel> tasks = await taskRepository.search(
+        event.taskSearch,
+      );
+      if (tasks.isNotEmpty) {
+        emit(state.copyWith(tasks: tasks));
+      } else {
+        emit(state.copyWith(tasks: null));
+      }
     } catch (error) {
       rethrow;
     } finally {
@@ -86,6 +91,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
   const factory DeliverInterventionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
-    TaskModel? task,
+    List<TaskModel>? tasks,
   }) = _DeliverInterventionState;
 }

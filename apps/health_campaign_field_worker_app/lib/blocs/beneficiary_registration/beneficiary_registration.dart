@@ -13,6 +13,7 @@ part 'beneficiary_registration.freezed.dart';
 
 typedef BeneficiaryRegistrationEmitter = Emitter<BeneficiaryRegistrationState>;
 
+//This bloc is used for registration of Beneficiaries to the project
 class BeneficiaryRegistrationBloc
     extends Bloc<BeneficiaryRegistrationEvent, BeneficiaryRegistrationState> {
   final IndividualDataRepository individualRepository;
@@ -23,6 +24,8 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
+  final BeneficiaryType beneficiaryType;
+
   // final TaskDataRepository taskDataRepository;
 
   BeneficiaryRegistrationBloc(
@@ -31,6 +34,7 @@ class BeneficiaryRegistrationBloc
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    required this.beneficiaryType,
     // required this.taskDataRepository,
   }) {
     on(_handleSaveAddress);
@@ -42,6 +46,7 @@ class BeneficiaryRegistrationBloc
     on(_handleAddMember);
   }
 
+  //_handleSaveAddress event can be used for saving address details to the form
   FutureOr<void> _handleSaveAddress(
     BeneficiaryRegistrationSaveAddressEvent event,
     BeneficiaryRegistrationEmitter emit,
@@ -176,7 +181,10 @@ class BeneficiaryRegistrationBloc
               clientReferenceId: IdGen.i.identifier,
               dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
               projectId: event.projectId,
-              beneficiaryClientReferenceId: household.clientReferenceId,
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual
+                      ? individual.clientReferenceId
+                      : household.clientReferenceId,
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -237,9 +245,13 @@ class BeneficiaryRegistrationBloc
             await individualRepository.update(
               element.copyWith(
                 address: [
-                  value.addressModel.copyWith(
-                    relatedClientReferenceId: element.clientReferenceId,
-                  ),
+                  if (element.address != null)
+                    ...element.address!.map((e) {
+                      return value.addressModel.copyWith(
+                        id: e.id,
+                        relatedClientReferenceId: e.relatedClientReferenceId,
+                      );
+                    }),
                 ],
               ),
             );
@@ -313,6 +325,24 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
 
+          if (event.beneficiaryType == BeneficiaryType.individual) {
+            await projectBeneficiaryRepository.create(
+              ProjectBeneficiaryModel(
+                rowVersion: 1,
+                tenantId: envConfig.variables.tenantId,
+                clientReferenceId: IdGen.i.identifier,
+                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                projectId: event.projectId,
+                beneficiaryClientReferenceId:
+                    event.individualModel.clientReferenceId,
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
+              ),
+            );
+          }
+
           await householdMemberRepository.create(
             HouseholdMemberModel(
               householdClientReferenceId:
@@ -363,6 +393,8 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required IndividualModel individualModel,
     required AddressModel addressModel,
     required String userUuid,
+    required String projectId,
+    required BeneficiaryType beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({

@@ -1,8 +1,9 @@
+// Importing necessary packages and files
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/project/project.dart';
@@ -12,14 +13,30 @@ import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
 import '../app_exception.dart';
 
+// Importing the file 'context_utility.dart' with a 'part' directive.
 part 'context_utility.dart';
 
+// Extension to calculate age based on a DateTime object.
 extension DateAgeExtension on DateTime {
   int get age {
-    return (DateTime.now().difference(this).inDays / 365).round();
+    DateTime currentDate = DateTime.now();
+    int ageInYears = currentDate.year - year;
+    int ageInMonths = currentDate.month - month;
+
+    if (currentDate.day < day) {
+      ageInMonths--;
+    }
+
+    if (ageInMonths < 0) {
+      ageInYears--;
+      ageInMonths += 12;
+    }
+
+    return ageInYears;
   }
 }
 
+// Extension to format a DateTime object to a string.
 extension DateTimeExtension on DateTime? {
   String? getFormattedDate([String format = 'dd-MM-yyyy']) {
     if (this == null) return null;
@@ -28,6 +45,7 @@ extension DateTimeExtension on DateTime? {
   }
 }
 
+// Extension to increment an integer by a specific value.
 extension IntIncrementer on int? {
   int get increment {
     return _incrementBy(1);
@@ -38,6 +56,7 @@ extension IntIncrementer on int? {
   }
 }
 
+// Extension to remove duplicates from a list based on a provided constraint.
 extension UniqueListItem<E> on List<E> {
   void removeDuplicates<I>(I Function(E element) constraintMapper) {
     final distinctList = map(constraintMapper).toSet();
@@ -46,6 +65,7 @@ extension UniqueListItem<E> on List<E> {
   }
 }
 
+// Extension to convert an integer (epoch) to a DateTime object.
 extension EpochToDateTime on int? {
   DateTime? get toDateTime {
     return this == null ? null : DateTime.fromMillisecondsSinceEpoch(this!);

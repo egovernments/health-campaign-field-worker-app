@@ -12,6 +12,7 @@ import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
@@ -20,11 +21,11 @@ import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
-import 'utils/constants.dart';
 import 'utils/environment_config.dart';
+import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
-class MainApplication extends StatelessWidget {
+class MainApplication extends StatefulWidget {
   final Dio client;
   final AppRouter appRouter;
   final Isar isar;
@@ -39,24 +40,32 @@ class MainApplication extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return MainApplicationState();
+  }
+}
+
+class MainApplicationState extends State<MainApplication>
+    with WidgetsBindingObserver {
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<LocalSqlDataStore>.value(value: sql),
-        RepositoryProvider<Isar>.value(value: isar),
+        RepositoryProvider<LocalSqlDataStore>.value(value: widget.sql),
+        RepositoryProvider<Isar>.value(value: widget.isar),
       ],
       child: BlocProvider(
         create: (context) => AppInitializationBloc(
-          isar: isar,
-          mdmsRepository: MdmsRepository(client),
+          isar: widget.isar,
+          mdmsRepository: MdmsRepository(widget.client),
         )..add(const AppInitializationSetupEvent()),
         child: NetworkManagerProviderWrapper(
-          isar: isar,
+          isar: widget.isar,
           configuration: const NetworkManagerConfiguration(
             persistenceConfig: PersistenceConfiguration.offlineFirst,
           ),
-          dio: client,
-          sql: sql,
+          dio: widget.client,
+          sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
@@ -65,6 +74,15 @@ class MainApplication extends StatelessWidget {
                     ..add(const LoadLocationEvent());
                 },
                 lazy: false,
+              ),
+              BlocProvider(
+                create: (context) {
+                  return UserBloc(
+                    const UserEmptyState(),
+                    userRemoteRepository: context
+                        .read<RemoteRepository<UserModel, UserSearchModel>>(),
+                  );
+                },
               ),
               BlocProvider(
                 create: (ctx) => AuthBloc(authRepository: ctx.read())
@@ -112,8 +130,11 @@ class MainApplication extends StatelessWidget {
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
                                     const LocalizationState(),
-                                    LocalizationRepository(client, isar),
-                                    isar,
+                                    LocalizationRepository(
+                                      widget.client,
+                                      widget.isar,
+                                    ),
+                                    widget.isar,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
                                         module: localizationModulesList
@@ -131,12 +152,16 @@ class MainApplication extends StatelessWidget {
                                     )
                               : (context) => LocalizationBloc(
                                     const LocalizationState(),
-                                    LocalizationRepository(client, isar),
-                                    isar,
+                                    LocalizationRepository(
+                                      widget.client,
+                                      widget.isar,
+                                    ),
+                                    widget.isar,
                                   ),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
@@ -164,7 +189,7 @@ class MainApplication extends StatelessWidget {
                             serviceDefinitionRemoteRepository: ctx.read<
                                 RemoteRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
-                            isar: isar,
+                            isar: widget.isar,
                             serviceDefinitionLocalRepository: ctx.read<
                                 LocalRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
@@ -225,7 +250,10 @@ class MainApplication extends StatelessWidget {
                                   })
                                 : [defaultLocale],
                             localizationsDelegates: [
-                              AppLocalizations.getDelegate(appConfig, isar),
+                              AppLocalizations.getDelegate(
+                                appConfig,
+                                widget.isar,
+                              ),
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
@@ -244,10 +272,10 @@ class MainApplication extends StatelessWidget {
                                 : defaultLocale,
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
-                                appRouter.defaultRouteParser(),
+                                widget.appRouter.defaultRouteParser(),
                             scaffoldMessengerKey: scaffoldMessengerKey,
                             routerDelegate: AutoRouterDelegate.declarative(
-                              appRouter,
+                              widget.appRouter,
                               navigatorObservers: () => [AppRouterObserver()],
                               routes: (handler) => authState.maybeWhen(
                                 orElse: () => [

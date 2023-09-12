@@ -37,7 +37,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         children: [
@@ -113,6 +113,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         : localizations
                                             .translate("${e.code}_REGEX");
                                   }
+
+                                  return null;
                                 },
                                 label: localizations.translate(
                                   '${value.selectedServiceDefinition?.code}.${e.code}',
@@ -140,6 +142,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         : localizations
                                             .translate("${e.code}_REGEX");
                                   }
+
+                                  return null;
                                 },
                                 controller: controller[i],
                                 label: localizations.translate(
@@ -276,7 +280,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 ),
                                                 validator: (value) {
                                                   if (value == null ||
-                                                      value.toString().trim().isEmpty) {
+                                                      value
+                                                          .toString()
+                                                          .trim()
+                                                          .isEmpty) {
                                                     return localizations
                                                         .translate(
                                                       i18.checklist
@@ -431,6 +438,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                               ),
                             );
+
                             if (shouldSubmit ?? false) {
                               router.navigate(ChecklistRoute());
                               router.push(AcknowledgementRoute());

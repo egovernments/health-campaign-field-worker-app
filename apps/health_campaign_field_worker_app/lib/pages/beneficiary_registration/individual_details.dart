@@ -72,7 +72,7 @@ class _IndividualDetailsPageState
           },
           builder: (context, state) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
@@ -106,6 +106,8 @@ class _IndividualDetailsPageState
                             form: form,
                             oldIndividual: null,
                           );
+
+                          final boundary = context.boundary;
 
                           bloc.add(
                             BeneficiaryRegistrationSaveIndividualDetailsEvent(
@@ -151,7 +153,7 @@ class _IndividualDetailsPageState
                               BeneficiaryRegistrationCreateEvent(
                                 projectId: projectId,
                                 userUuid: userId,
-                                boundary: context.boundary,
+                                boundary: boundary,
                               ),
                             );
                           }
@@ -187,10 +189,12 @@ class _IndividualDetailsPageState
 
                           bloc.add(
                             BeneficiaryRegistrationAddMemberEvent(
+                              beneficiaryType: context.beneficiaryType,
                               householdModel: householdModel,
                               individualModel: individual,
                               addressModel: addressModel,
                               userUuid: userId,
+                              projectId: context.projectId,
                             ),
                           );
                         },
@@ -231,7 +235,9 @@ class _IndividualDetailsPageState
                             maxLength: 200,
                             isRequired: true,
                             validationMessages: {
-                              'required': (object) => 'Name is required',
+                              'required': (object) => localizations.translate(
+                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                  ),
                             },
                           ),
                           Offstage(
@@ -257,6 +263,12 @@ class _IndividualDetailsPageState
                                   label: localizations.translate(
                                     i18.individualDetails.idTypeLabelText,
                                   ),
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          '${i18.individualDetails.idTypeLabelText}_IS_REQUIRED',
+                                        ),
+                                  },
                                   valueMapper: (e) => e,
                                   onChanged: (value) {
                                     setState(() {
@@ -297,7 +309,9 @@ class _IndividualDetailsPageState
                                     ),
                                     validationMessages: {
                                       'required': (object) =>
-                                          'ID Number is required',
+                                          localizations.translate(
+                                            '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                          ),
                                     },
                                   );
                                 },
@@ -313,8 +327,17 @@ class _IndividualDetailsPageState
                             ageFieldLabel: localizations.translate(
                               i18.individualDetails.ageLabelText,
                             ),
+                            yearsHintLabel: localizations.translate(
+                              i18.individualDetails.yearsHintText,
+                            ),
+                            monthsHintLabel: localizations.translate(
+                              i18.individualDetails.monthsHintText,
+                            ),
                             separatorLabel: localizations.translate(
                               i18.individualDetails.separatorLabelText,
+                            ),
+                            yearsAndMonthsErrMsg: localizations.translate(
+                              i18.individualDetails.yearsAndMonthsErrorText,
                             ),
                           ),
                           BlocBuilder<AppInitializationBloc,
@@ -326,17 +349,18 @@ class _IndividualDetailsPageState
                                     appConfiguration.genderOptions ??
                                         <GenderOptions>[];
 
-                                return DigitReactiveDropdown<String>(
+                                return DigitDropdown<String>(
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
-                                  valueMapper: (value) => value,
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
                                   initialValue: genderOptions.firstOrNull?.name,
-                                  menuItems: genderOptions.map(
-                                    (e) {
-                                      return localizations.translate(e.name);
-                                    },
-                                  ).toList(),
+                                  menuItems: genderOptions
+                                      .map(
+                                        (e) => e.name,
+                                      )
+                                      .toList(),
                                   formControlName: _genderKey,
                                 );
                               },
@@ -477,10 +501,9 @@ class _IndividualDetailsPageState
                 final options =
                     appConfiguration.genderOptions ?? <GenderOptions>[];
 
-                return options
-                    .map((e) => localizations.translate(e.code))
-                    .firstWhereOrNull(
-                      (element) => element == individual?.gender?.name,
+                return options.map((e) => e.code).firstWhereOrNull(
+                      (element) =>
+                          element.toLowerCase() == individual?.gender?.name,
                     );
               },
             ),

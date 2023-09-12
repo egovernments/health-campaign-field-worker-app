@@ -5,7 +5,13 @@ extension ContextUtilityExtensions on BuildContext {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
   }
 
-  String get projectId {
+  Future<String> get packageInfo async {
+    final info = await PackageInfo.fromPlatform();
+
+    return info.version;
+  }
+
+  ProjectModel get selectedProject {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
@@ -15,8 +21,10 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No project is selected');
     }
 
-    return selectedProject.id;
+    return selectedProject;
   }
+
+  String get projectId => selectedProject.id;
 
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
@@ -34,6 +42,21 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  BeneficiaryType get beneficiaryType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+
+    final BeneficiaryType? selectedBeneficiary =
+        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+
+    if (selectedBeneficiary == null) {
+      throw AppException('No beneficiary type is selected');
+    }
+
+    return selectedBeneficiary;
+  }
+
   BoundaryModel? get boundaryOrNull {
     try {
       return boundary;
@@ -42,20 +65,7 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
-  String get loggedInUserUuid {
-    final authBloc = _get<AuthBloc>();
-    final userRequestObject = authBloc.state.whenOrNull(
-      authenticated: (accessToken, refreshToken, userModel) {
-        return userModel;
-      },
-    );
-
-    if (userRequestObject == null) {
-      throw AppException('User not authenticated');
-    }
-
-    return userRequestObject.uuid;
-  }
+  String get loggedInUserUuid => loggedInUser.uuid;
 
   UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
@@ -70,6 +80,28 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return userRequestObject;
+  }
+
+  bool get showProgressBar {
+    UserRequestModel loggedInUser;
+
+    try {
+      loggedInUser = this.loggedInUser;
+    } catch (_) {
+      return false;
+    }
+
+    for (final role in loggedInUser.roles) {
+      switch (role.code) {
+        case UserRoleCodeEnum.distributor:
+        case UserRoleCodeEnum.registrar:
+          return true;
+        default:
+          break;
+      }
+    }
+
+    return false;
   }
 
   NetworkManager get networkManager => read<NetworkManager>();

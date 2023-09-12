@@ -12,6 +12,21 @@
       "name": "memberCount",
       "type": "int",
       "includeForQuery": true
+    },
+    {
+      "name": "latitude",
+      "type": "double",
+      "includeForQuery": true
+    },
+    {
+      "name": "longitude",
+      "type": "double",
+      "includeForQuery": true
+    },
+    {
+      "name": "maxRadius",
+      "type": "double",
+      "includeForQuery": true
     }
   ],
   "customAttributes": [

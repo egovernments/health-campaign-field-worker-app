@@ -55,7 +55,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  message ?? 'Unable to login',
+                  message ?? localizations.translate('UNABLE_TO_LOGIN'),
                   true,
                   theme,
                 ),
@@ -85,7 +85,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         ),
                         validationMessages: {
                           "required": (control) {
-                            return '${localizations.translate(i18.login.userIdPlaceholder)} is Required';
+                            return localizations.translate(
+                              '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                            );
                           },
                         },
                         textCapitalization: TextCapitalization.none,
@@ -99,7 +101,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         ),
                         validationMessages: {
                           "required": (control) {
-                            return '${localizations.translate(i18.login.passwordPlaceholder)} is Required';
+                            return localizations.translate(
+                              '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+                            );
                           },
                         },
                         formControlName: _password,
@@ -183,10 +187,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
+          value: 'distNihAP1',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
+          value: 'eGov@1234',
         ),
       });
 }

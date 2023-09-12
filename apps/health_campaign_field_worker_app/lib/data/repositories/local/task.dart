@@ -99,7 +99,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 query.clientReferenceId!,
               ),
             if (query.projectBeneficiaryClientReferenceId != null)
-              sql.task.projectBeneficiaryClientReferenceId.equals(
+              sql.task.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
             if (userId != null)
@@ -125,6 +125,8 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             isDeleted: task.isDeleted,
             projectId: task.projectId,
             projectBeneficiaryId: task.projectBeneficiaryId,
+            projectBeneficiaryClientReferenceId:
+                task.projectBeneficiaryClientReferenceId,
             createdDate: task.createdDate,
             address: address == null
                 ? null
@@ -142,6 +144,12 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                     city: address.city,
                     pincode: address.pincode,
                     type: address.type,
+                    locality: address.localityBoundaryCode != null
+                        ? LocalityModel(
+                            code: address.localityBoundaryCode!,
+                            name: address.localityBoundaryName,
+                          )
+                        : null,
                     rowVersion: address.rowVersion,
                     auditDetails: AuditDetails(
                       createdBy: task.auditCreatedBy!,

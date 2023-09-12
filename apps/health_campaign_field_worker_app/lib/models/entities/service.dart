@@ -13,7 +13,6 @@ class ServiceSearchModel extends EntitySearchModel {
   final String? accountId;
   final String? createdAt;
   final String? tenantId;
-  final bool? isDeleted;
   
   ServiceSearchModel({
     this.id,
@@ -22,9 +21,20 @@ class ServiceSearchModel extends EntitySearchModel {
     this.accountId,
     this.createdAt,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ServiceSearchModel.ignoreDeleted({
+    this.id,
+    this.clientId,
+    this.serviceDefId,
+    this.accountId,
+    this.createdAt,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -40,7 +50,6 @@ class ServiceModel extends EntityModel {
   final String? additionalDetails;
   final String? createdAt;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final List<ServiceAttributesModel>? attributes;
   final ServiceAdditionalFields? additionalFields;
@@ -55,10 +64,10 @@ class ServiceModel extends EntityModel {
     this.additionalDetails,
     this.createdAt,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.attributes,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   ServiceCompanion get companion {
@@ -68,6 +77,7 @@ class ServiceModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       clientId: Value(clientId),
       serviceDefId: Value(serviceDefId),
@@ -76,7 +86,6 @@ class ServiceModel extends EntityModel {
       additionalDetails: Value(additionalDetails),
       createdAt: Value(createdAt),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

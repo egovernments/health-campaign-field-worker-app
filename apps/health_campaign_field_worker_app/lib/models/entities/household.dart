@@ -9,18 +9,35 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class HouseholdSearchModel extends EntitySearchModel {
   final String? id;
   final int? memberCount;
+  final double? latitude;
+  final double? longitude;
+  final double? maxRadius;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   
   HouseholdSearchModel({
     this.id,
     this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  HouseholdSearchModel.ignoreDeleted({
+    this.id,
+    this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
+    this.clientReferenceId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -30,9 +47,11 @@ class HouseholdModel extends EntityModel {
 
   final String? id;
   final int? memberCount;
+  final double? latitude;
+  final double? longitude;
+  final double? maxRadius;
   final String clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
   final HouseholdAdditionalFields? additionalFields;
@@ -41,12 +60,15 @@ class HouseholdModel extends EntityModel {
     this.additionalFields,
     this.id,
     this.memberCount,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     required this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.address,
     super.auditDetails,
+    super.isDeleted = false,
   }): super();
 
   HouseholdCompanion get companion {
@@ -56,11 +78,14 @@ class HouseholdModel extends EntityModel {
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       memberCount: Value(memberCount),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
+      maxRadius: Value(maxRadius),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

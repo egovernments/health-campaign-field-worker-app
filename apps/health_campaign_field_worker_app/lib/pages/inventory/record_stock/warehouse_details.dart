@@ -73,7 +73,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   form: buildForm,
                   builder: (context, form, child) {
                     return ScrollableContent(
-                      header: Column(children: const [
+                      header: const Column(children: [
                         BackNavigationHelpHeaderWidget(),
                       ]),
                       footer: SizedBox(

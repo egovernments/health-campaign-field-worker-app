@@ -47,7 +47,9 @@ import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
+import '../models/entities/user.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -74,7 +76,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (actionMap.isEmpty) {
           return const Offstage();
         }
-
         final remote = _getRemoteRepositories(dio, actionMap);
         final local = _getLocalRepositories(sql, isar);
 
@@ -401,6 +402,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
             create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.user)
+          RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
+            create: (_) => UserRemoteRepository(
               dio,
               actionMap: actions,
             ),

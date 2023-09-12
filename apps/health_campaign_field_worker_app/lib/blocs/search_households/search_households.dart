@@ -21,6 +21,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchHouseholdsBloc
     extends Bloc<SearchHouseholdsEvent, SearchHouseholdsState> {
+  final BeneficiaryType beneficiaryType;
   final String projectId;
   final String userUid;
   final IndividualDataRepository individual;
@@ -37,11 +38,12 @@ class SearchHouseholdsBloc
     required this.household,
     required this.projectBeneficiary,
     required this.taskDataRepository,
+    required this.beneficiaryType,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
       transformer: debounce<SearchHouseholdsSearchByHouseholdHeadEvent>(
-        const Duration(milliseconds: 500),
+        const Duration(milliseconds: 100),
       ),
     );
     on(_handleClear);
@@ -88,6 +90,8 @@ class SearchHouseholdsBloc
     );
 
     final interventionDelivered = tasks
+        .where((element) => element.projectId == projectId)
+        .whereNotNull()
         .map(
           (task) {
             return task.resources?.where((element) {
@@ -136,11 +140,15 @@ class SearchHouseholdsBloc
       final projectBeneficiaries = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
           projectId: event.projectId,
-          beneficiaryClientReferenceId: event.householdModel.clientReferenceId,
+          beneficiaryClientReferenceId:
+              beneficiaryType == BeneficiaryType.individual
+                  ? individuals.map((e) => e.clientReferenceId).toList()
+                  : [event.householdModel.clientReferenceId],
+
+          //[TODO] Need to check for beneficiaryId
         ),
       );
 
-      final projectBeneficiaryModel = projectBeneficiaries.firstOrNull;
       final headOfHousehold = individuals.firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
@@ -151,7 +159,7 @@ class SearchHouseholdsBloc
             )?.individualClientReferenceId,
       );
 
-      if (projectBeneficiaryModel == null || headOfHousehold == null) {
+      if (headOfHousehold == null) {
         emit(state.copyWith(
           loading: false,
           householdMembers: [],
@@ -161,7 +169,7 @@ class SearchHouseholdsBloc
           household: event.householdModel,
           headOfHousehold: headOfHousehold,
           members: individuals,
-          projectBeneficiary: projectBeneficiaryModel,
+          projectBeneficiaries: projectBeneficiaries,
         );
 
         emit(
@@ -210,6 +218,7 @@ class SearchHouseholdsBloc
     );
 
     final householdMembers = <HouseholdMemberModel>[];
+
     for (final element in results) {
       final members = await householdMember.search(
         HouseholdMemberSearchModel(
@@ -243,7 +252,9 @@ class SearchHouseholdsBloc
       if (householdId == null) continue;
 
       final households = await household.search(
-        HouseholdSearchModel(clientReferenceId: [householdId]),
+        HouseholdSearchModel(
+          clientReferenceId: [householdId],
+        ),
       );
 
       if (households.isEmpty) continue;
@@ -266,17 +277,28 @@ class SearchHouseholdsBloc
 
       if (head == null) continue;
 
-      final projectBeneficiaries = await projectBeneficiary.search(
-        ProjectBeneficiarySearchModel(
-          beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
-          projectId: event.projectId,
-        ),
-      );
+      final projectBeneficiaries = beneficiaryType != BeneficiaryType.individual
+          ? await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: [
+                  resultHousehold.clientReferenceId,
+                ],
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            )
+          : await projectBeneficiary.search(
+              ProjectBeneficiarySearchModel(
+                beneficiaryClientReferenceId: individualIds,
+                //[TODO] Need to check for beneficiaryId
+                projectId: event.projectId,
+              ),
+            );
 
       if (projectBeneficiaries.isEmpty) continue;
       final tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.first.clientReferenceId,
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
       containers.add(
@@ -284,8 +306,8 @@ class SearchHouseholdsBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          projectBeneficiary: projectBeneficiaries.first,
-          task: tasks.isEmpty ? null : tasks.first,
+          projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isEmpty ? null : tasks,
         ),
       );
     }
@@ -351,7 +373,7 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required HouseholdModel household,
     required IndividualModel headOfHousehold,
     required List<IndividualModel> members,
-    required ProjectBeneficiaryModel projectBeneficiary,
-    TaskModel? task,
+    required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    List<TaskModel>? tasks,
   }) = _HouseholdMemberWrapper;
 }

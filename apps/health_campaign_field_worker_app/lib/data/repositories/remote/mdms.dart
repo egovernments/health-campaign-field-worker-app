@@ -8,7 +8,10 @@ import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
+import '../../../models/project_type/project_type_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
+import '../../local_store/no_sql/schema/project_types.dart';
+import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
 
 class MdmsRepository {
@@ -37,11 +40,9 @@ class MdmsRepository {
   ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
     final data = result.serviceRegistry?.serviceRegistryList;
-
     if (data != null && data.isNotEmpty) {
       await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
     }
-
     for (final element in data ?? <ServiceRegistryModel>[]) {
       final newServiceRegistry = ServiceRegistry();
       newServiceRegistry.service = element.service;
@@ -113,13 +114,32 @@ class MdmsRepository {
     Isar isar,
   ) async {
     final appConfiguration = AppConfiguration();
+
+    final data = result.rowVersions?.rowVersionslist;
+
+    final List<RowVersionList> rowVersionList = [];
+
+    for (final element in data ?? <app_configuration.RowVersions>[]) {
+      final rowVersion = RowVersionList();
+      rowVersion.module = element.module;
+      rowVersion.version = element.version;
+      rowVersionList.add(rowVersion);
+    }
+
     result.appConfig?.appConfiglist?.forEach((element) {
+      final backgroundServiceConfig = BackgroundServiceConfig()
+        ..apiConcurrency = element.backgroundServiceConfig?.apiConcurrency
+        ..batteryPercentCutOff =
+            element.backgroundServiceConfig?.batteryPercentCutOff
+        ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
+
       appConfiguration
         ..networkDetection = element.networkDetection
         ..persistenceMode = element.persistenceMode
         ..syncMethod = element.syncMethod
         ..syncTrigger = element.syncTrigger
-        ..tenantId = element.tenantId;
+        ..tenantId = element.tenantId
+        ..backgroundServiceConfig = backgroundServiceConfig;
 
       final List<Languages> languageList = element.languages.map((element) {
         final languages = Languages()
@@ -127,6 +147,24 @@ class MdmsRepository {
           ..value = element.value;
 
         return languages;
+      }).toList();
+
+      final List<BandwidthBatchSize> bandwidthBatchSize =
+          element.bandWidthBatchSize.map((e) {
+        final bandwithBatchSizeElement = BandwidthBatchSize()
+          ..batchSize = e.batchSize
+          ..maxRange = e.maxRange
+          ..minRange = e.minRange;
+
+        return bandwithBatchSizeElement;
+      }).toList();
+      final List<CallSupportList> callSupportList =
+          element.callSupportOptions!.map((element) {
+        final callNumber = CallSupportList()
+          ..name = element.name
+          ..code = element.code;
+
+        return callNumber;
       }).toList();
 
       final List<HouseholdDeletionReasonOptions>
@@ -226,13 +264,72 @@ class MdmsRepository {
       appConfiguration.checklistTypes = checklistTypes;
       appConfiguration.transportTypes = transportTypes;
       appConfiguration.backendInterface = backendInterface;
-
+      appConfiguration.callSupportOptions = callSupportList;
       appConfiguration.languages = languageList;
       appConfiguration.complaintTypes = complaintTypesList;
+      appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     });
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);
+      await isar.rowVersionLists.putAll(rowVersionList);
+    });
+  }
+
+  Future<ProjectTypePrimaryWrapper> searchProjectType(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      return ProjectTypePrimaryWrapper.fromJson(
+        json.decode(response.toString())['MdmsRes'],
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  FutureOr<void> writeToProjectTypeDB(
+    ProjectTypePrimaryWrapper result,
+    Isar isar,
+  ) async {
+    final List<ProjectTypeListCycle> newProjectTypeList = [];
+    final data = result.projectTypeWrapper?.projectTypes;
+    if (data != null && data.isNotEmpty) {
+      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
+    }
+    for (final element in data ?? <ProjectType>[]) {
+      final newprojectType = ProjectTypeListCycle();
+
+      newprojectType.projectTypeId = element.id;
+      newprojectType.code = element.code;
+      newprojectType.group = element.group;
+      newprojectType.name = element.name;
+      newprojectType.beneficiaryType = element.beneficiaryType;
+      newprojectType.observationStrategy = element.observationStrategy;
+
+      newprojectType.cycles = element.cycles?.map((e) {
+        final newcycle = Cycles()
+          ..mandatoryWaitSinceLastCycleInDays =
+              e.mandatoryWaitSinceLastCycleInDays
+          ..deliveries = e.deliveries?.map((ele) {
+            final newDeliveries = Deliveries()
+              ..deliveryStrategy = ele.deliveryStrategy
+              ..mandatoryWaitSinceLastDeliveryInDays =
+                  ele.mandatoryWaitSinceLastDeliveryInDays;
+
+            return newDeliveries;
+          }).toList();
+
+        return newcycle;
+      }).toList();
+      newProjectTypeList.add(newprojectType);
+    }
+
+    return await isar.writeTxn(() async {
+      await isar.projectTypeListCycles.putAll(newProjectTypeList);
     });
   }
 }
