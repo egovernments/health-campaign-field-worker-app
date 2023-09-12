@@ -109,6 +109,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: true,
       projects: [],
       selectedProject: null,
+      projectType: null,
     ));
 
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -216,6 +217,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           state.copyWith(
             loading: false,
             syncError: ProjectSyncErrorType.productVariants,
+          ),
+        );
+      }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
       }
@@ -379,11 +390,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             moduleDetails: [
               const MdmsModuleDetailModel(
                 moduleName: 'HCM-PROJECT-TYPES',
-                masterDetails: [
-                  MdmsMasterDetailModel('projectTypes'),
-                  MdmsMasterDetailModel(
-                      "[?(@.id=='40a528a0-4e0e-11ee-be56-0242ac120002')]"),
-                ],
+                masterDetails: [MdmsMasterDetailModel('projectTypes')],
               ),
             ],
           ),
@@ -395,6 +402,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         isar,
       );
 
+      emit(state.copyWith(
+        projectType: projectType.projectTypeWrapper?.projectTypes
+            .where((element) => element.id == event.model.projectTypeId)
+            .toList()
+            .firstOrNull,
+      ));
       final rowversionList = await isar.rowVersionLists
           .filter()
           .moduleEqualTo('egov-location')
