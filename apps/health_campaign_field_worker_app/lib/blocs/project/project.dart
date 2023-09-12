@@ -15,6 +15,7 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
@@ -370,6 +371,29 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         ).toJson(),
       );
+      final projectType = await mdmsRepository.searchProjectType(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-PROJECT-TYPES',
+                masterDetails: [
+                  MdmsMasterDetailModel('projectTypes'),
+                  MdmsMasterDetailModel(
+                      "[?(@.id=='40a528a0-4e0e-11ee-be56-0242ac120002')]"),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+
+      await mdmsRepository.writeToProjectTypeDB(
+        projectType,
+        isar,
+      );
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -460,6 +484,7 @@ class ProjectState with _$ProjectState {
 
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
+    ProjectType? projectType,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,
