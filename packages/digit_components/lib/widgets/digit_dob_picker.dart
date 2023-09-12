@@ -15,6 +15,8 @@ class DigitDobPicker extends StatelessWidget {
   final String monthsHintLabel;
   final String separatorLabel;
   final String yearsAndMonthsErrMsg;
+  final String cancelText;
+  final String confirmText;
 
   const DigitDobPicker({
     super.key,
@@ -27,6 +29,8 @@ class DigitDobPicker extends StatelessWidget {
     required this.monthsHintLabel,
     required this.separatorLabel,
     required this.yearsAndMonthsErrMsg,
+    this.confirmText = 'OK',
+    this.cancelText = 'Cancel',
   });
 
   @override
@@ -49,6 +53,8 @@ class DigitDobPicker extends StatelessWidget {
             DigitDateFormPicker(
               label: datePickerLabel,
               formControlName: datePickerFormControl,
+              cancelText: cancelText,
+              confirmText: confirmText,
             ),
             const SizedBox(height: 16),
             // Text widget to display a separator label between the date picker and age fields

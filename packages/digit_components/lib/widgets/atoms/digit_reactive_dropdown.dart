@@ -13,7 +13,6 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   final Map<String, String Function(Object object)>? validationMessages;
   final EdgeInsets? padding;
   final double menuMaxHeight;
-  final bool isExpanded;
 
   const DigitReactiveDropdown({
     super.key,
@@ -27,7 +26,6 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     this.validationMessages,
     this.padding,
     this.menuMaxHeight = 500,
-    this.isExpanded = true,
   });
 
   @override
@@ -45,7 +43,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
           ReactiveDropdownField(
             menuMaxHeight: menuMaxHeight,
             icon: const Icon(Icons.arrow_drop_down),
-            isExpanded: isExpanded,
+            isExpanded: true,
             onChanged: (control) {
               final value = control.value;
               if (value == null) return;
@@ -60,10 +58,10 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
             items: menuItems
                 .map(
                   (e) => DropdownMenuItem<T>(
-                value: e,
-                child: Text(valueMapper(e)),
-              ),
-            )
+                    value: e,
+                    child: Text(valueMapper(e)),
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -71,4 +69,3 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     );
   }
 }
-
