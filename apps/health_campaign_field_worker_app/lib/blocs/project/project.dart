@@ -7,10 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
-
+import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/remote/mdms.dart';
+import '../../models/app_config/app_config_model.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -22,6 +25,7 @@ typedef ProjectEmitter = Emitter<ProjectState>;
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
   final Isar isar;
+  final MdmsRepository mdmsRepository;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -89,6 +93,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectResourceRemoteRepository,
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
+    required this.mdmsRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -349,12 +354,81 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
-      boundaries = await boundaryRemoteRepository.search(
-        BoundarySearchModel(
-          boundaryType: event.model.address?.boundaryType,
-          code: event.model.address?.boundary,
-        ),
+      final configResult = await mdmsRepository.searchAppConfig(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'module-version',
+                masterDetails: [
+                  MdmsMasterDetailModel('ROW_VERSIONS'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
       );
+
+      final rowversionList = await isar.rowVersionLists
+          .filter()
+          .moduleEqualTo('egov-location')
+          .findAll();
+
+      final serverVersion = configResult.rowVersions?.rowVersionslist
+          ?.where(
+            (element) => element.module == 'egov-location',
+          )
+          .toList()
+          .firstOrNull
+          ?.version;
+      final boundaryRefetched = await localSecureStore.boundaryRefetched;
+
+      if (rowversionList.firstOrNull?.version != serverVersion ||
+          boundaryRefetched) {
+        boundaries = await boundaryRemoteRepository.search(
+          BoundarySearchModel(
+            boundaryType: event.model.address?.boundaryType,
+            code: event.model.address?.boundary,
+          ),
+        );
+        await boundaryLocalRepository.bulkCreate(boundaries);
+        await localSecureStore.setSelectedProject(event.model);
+        await localSecureStore.setBoundaryRefetch(false);
+        final List<RowVersionList> rowVersionList = [];
+
+        final data = (configResult).rowVersions?.rowVersionslist;
+
+        for (final element in data ?? <app_configuration.RowVersions>[]) {
+          final rowVersion = RowVersionList();
+          rowVersion.module = element.module;
+          rowVersion.version = element.version;
+          rowVersionList.add(rowVersion);
+        }
+        await isar.writeTxn(() async {
+          await isar.rowVersionLists.clear();
+
+          await isar.rowVersionLists.putAll(rowVersionList);
+        });
+      } else {
+        boundaries = await boundaryLocalRepository.search(
+          BoundarySearchModel(
+            boundaryType: event.model.address?.boundaryType,
+            code: event.model.address?.boundary,
+          ),
+        );
+        if (boundaries.isEmpty) {
+          boundaries = await boundaryRemoteRepository.search(
+            BoundarySearchModel(
+              boundaryType: event.model.address?.boundaryType,
+              code: event.model.address?.boundary,
+            ),
+          );
+        }
+        await boundaryLocalRepository.bulkCreate(boundaries);
+        await localSecureStore.setSelectedProject(event.model);
+      }
     } catch (_) {
       emit(state.copyWith(
         loading: false,
@@ -364,8 +438,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       return;
     }
 
-    await boundaryLocalRepository.bulkCreate(boundaries);
-    await localSecureStore.setSelectedProject(event.model);
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,

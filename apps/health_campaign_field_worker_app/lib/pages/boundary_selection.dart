@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
 import '../models/data_model.dart';
@@ -16,6 +17,7 @@ class BoundarySelectionPage extends StatefulWidget {
 
 class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
   bool shouldPop = false;
+  static const _selectedBoundaryKey = 'boundary';
 
   @override
   Widget build(BuildContext context) {
@@ -37,90 +39,95 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
 
                 final labelList = state.selectedBoundaryMap.keys.toList();
 
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: labelList.length,
-                        itemBuilder: (context, labelIndex) {
-                          final label = labelList.elementAt(labelIndex);
+                return ReactiveFormBuilder(
+                  form: () => buildForm(),
+                  builder: (context, form, child) => Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: labelList.length,
+                          itemBuilder: (context, labelIndex) {
+                            final label = labelList.elementAt(labelIndex);
 
-                          final filteredItems =
-                              state.boundaryList.where((element) {
-                            if (element.label != label) return false;
+                            final filteredItems =
+                                state.boundaryList.where((element) {
+                              if (element.label != label) return false;
 
-                            if (labelIndex == 0) return true;
-                            final parentIndex = labelIndex - 1;
+                              if (labelIndex == 0) return true;
+                              final parentIndex = labelIndex - 1;
 
-                            final parentBoundaryEntry = state
-                                .selectedBoundaryMap.entries
-                                .elementAtOrNull(parentIndex);
-                            final parentBoundary = parentBoundaryEntry?.value;
-                            if (parentBoundary == null) return false;
+                              final parentBoundaryEntry = state
+                                  .selectedBoundaryMap.entries
+                                  .elementAtOrNull(parentIndex);
+                              final parentBoundary = parentBoundaryEntry?.value;
+                              if (parentBoundary == null) return false;
 
-                            if (element.materializedPathList
-                                .contains(parentBoundary.code)) {
-                              return true;
-                            }
+                              if (element.materializedPathList
+                                  .contains(parentBoundary.code)) {
+                                return true;
+                              }
 
-                            return false;
-                          }).toList();
+                              return false;
+                            }).toList();
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: kPadding * 2,
-                            ),
-                            child: DigitDropdown<BoundaryModel>(
-                              value: state.selectedBoundaryMap.entries
-                                  .firstWhereOrNull(
-                                    (element) => element.key == label,
-                                  )
-                                  ?.value,
-                              label: label,
-                              menuItems: filteredItems,
-                              onChanged: (value) {
-                                if (value == null) return;
-
-                                context.read<BoundaryBloc>().add(
-                                      BoundarySelectEvent(
-                                        label: label,
-                                        selectedBoundary: value,
-                                      ),
-                                    );
-                              },
-                              valueMapper: (value) {
-                                return value.name ?? value.code ?? 'No Value';
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    DigitCard(
-                      margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                      child: SafeArea(
-                        child: DigitElevatedButton(
-                          onPressed: selectedBoundary == null
-                              ? null
-                              : () async {
-                                  setState(() {
-                                    shouldPop = true;
-                                  });
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kPadding * 2,
+                              ),
+                              child: DigitDropdown<BoundaryModel>(
+                                initialValue: state.selectedBoundaryMap.entries
+                                    .firstWhereOrNull(
+                                      (element) => element.key == label,
+                                    )
+                                    ?.value,
+                                label: label,
+                                menuItems: filteredItems,
+                                onChanged: (value) {
+                                  if (value == null) return;
 
                                   context.read<BoundaryBloc>().add(
-                                        const BoundarySubmitEvent(),
+                                        BoundarySelectEvent(
+                                          label: label,
+                                          selectedBoundary: value,
+                                        ),
                                       );
-
-                                  Future.delayed(
-                                    const Duration(milliseconds: 100),
-                                    () => context.router.pop(),
-                                  );
                                 },
-                          child: const Text('Submit'),
+                                valueMapper: (value) {
+                                  return value.name ?? value.code ?? 'No Value';
+                                },
+                                formControlName: _selectedBoundaryKey,
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                      DigitCard(
+                        margin:
+                            const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        child: SafeArea(
+                          child: DigitElevatedButton(
+                            onPressed: selectedBoundary == null
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      shouldPop = true;
+                                    });
+
+                                    context.read<BoundaryBloc>().add(
+                                          const BoundarySubmitEvent(),
+                                        );
+
+                                    Future.delayed(
+                                      const Duration(milliseconds: 100),
+                                      () => context.router.pop(),
+                                    );
+                                  },
+                            child: const Text('Submit'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -128,5 +135,16 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
         },
       ),
     );
+  }
+
+  FormGroup buildForm() {
+    return fb.group(<String, Object>{
+      _selectedBoundaryKey: FormControl<BoundaryModel>(
+        validators: [
+          Validators.required,
+        ],
+        value: null,
+      ),
+    });
   }
 }

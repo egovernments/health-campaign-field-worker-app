@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -23,6 +25,7 @@ class InventoryReportBloc
   }) : super(const InventoryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadStockReconciliationDataEvent);
+    on(_handleLoadingEvent);
   }
 
   Future<void> _handleLoadDataEvent(
@@ -88,6 +91,13 @@ class InventoryReportBloc
     emit(InventoryReportStockState(stockData: groupedData));
   }
 
+  Future<void> _handleLoadingEvent(
+    InventoryReportLoadingEvent event,
+    InventoryReportEmitter emit,
+  ) async {
+    emit(const InventoryReportLoadingState());
+  }
+
   Future<void> _handleLoadStockReconciliationDataEvent(
     InventoryReportLoadStockReconciliationDataEvent event,
     InventoryReportEmitter emit,
@@ -125,6 +135,8 @@ class InventoryReportEvent with _$InventoryReportEvent {
     required String facilityId,
     required String productVariantId,
   }) = InventoryReportLoadStockReconciliationDataEvent;
+
+  const factory InventoryReportEvent.loading() = InventoryReportLoadingEvent;
 }
 
 @freezed

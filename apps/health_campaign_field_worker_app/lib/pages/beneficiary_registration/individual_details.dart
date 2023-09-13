@@ -336,11 +336,8 @@ class _IndividualDetailsPageState
                             separatorLabel: localizations.translate(
                               i18.individualDetails.separatorLabelText,
                             ),
-                            yearsErrorMessage: localizations.translate(
-                              i18.individualDetails.yearsErrorText,
-                            ),
-                            monthsErrorMessage: localizations.translate(
-                              i18.individualDetails.monthsErrorText,
+                            yearsAndMonthsErrMsg: localizations.translate(
+                              i18.individualDetails.yearsAndMonthsErrorText,
                             ),
                           ),
                           BlocBuilder<AppInitializationBloc,
@@ -352,18 +349,18 @@ class _IndividualDetailsPageState
                                     appConfiguration.genderOptions ??
                                         <GenderOptions>[];
 
-                                return DigitReactiveDropdown<String>(
+                                return DigitDropdown<String>(
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
                                   valueMapper: (value) =>
                                       localizations.translate(value),
                                   initialValue: genderOptions.firstOrNull?.name,
-                                  menuItems: genderOptions.map(
-                                    (e) {
-                                      return e.code;
-                                    },
-                                  ).toList(),
+                                  menuItems: genderOptions
+                                      .map(
+                                        (e) => e.name,
+                                      )
+                                      .toList(),
                                   formControlName: _genderKey,
                                 );
                               },
@@ -504,10 +501,9 @@ class _IndividualDetailsPageState
                 final options =
                     appConfiguration.genderOptions ?? <GenderOptions>[];
 
-                return options
-                    .map((e) => localizations.translate(e.name))
-                    .firstWhereOrNull(
-                      (element) => element == individual?.gender?.name,
+                return options.map((e) => e.code).firstWhereOrNull(
+                      (element) =>
+                          element.toLowerCase() == individual?.gender?.name,
                     );
               },
             ),

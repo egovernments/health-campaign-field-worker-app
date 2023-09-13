@@ -35,7 +35,7 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget
   State<InventoryReportDetailsPage> createState() =>
       _InventoryReportDetailsPageState();
 
-/* created a wrapper  Router which handles the BlocProvider 
+/* created a wrapper  Router which handles the BlocProvider
 and attached the event to load the data*/
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -61,35 +61,35 @@ class _InventoryReportDetailsPageState
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == UserRoleCodeEnum.distributor,
-        )
+    )
         .toList()
         .isNotEmpty;
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
-            facilityId: isDistributor
-                ? context.loggedInUserUuid
-                : form.control(_facilityKey).value != null
-                    ? (form.control(_facilityKey).value as FacilityModel).id
-                    : '',
-            productVariantId: form.control(_productVariantKey).value != null
-                ? (form.control(_productVariantKey).value
-                        as ProductVariantModel)
-                    .id
-                : '',
-          )
+      facilityId: isDistributor
+          ? context.loggedInUserUuid
+          : form.control(_facilityKey).value != null
+          ? (form.control(_facilityKey).value as FacilityModel).id
+          : '',
+      productVariantId: form.control(_productVariantKey).value != null
+          ? (form.control(_productVariantKey).value
+      as ProductVariantModel)
+          .id
+          : '',
+    )
         : InventoryReportLoadStockDataEvent(
-            reportType: widget.reportType,
-            facilityId: isDistributor
-                ? context.loggedInUserUuid
-                : form.control(_facilityKey).value != null
-                    ? (form.control(_facilityKey).value as FacilityModel).id
-                    : '',
-            productVariantId: form.control(_productVariantKey).value != null
-                ? (form.control(_productVariantKey).value
-                        as ProductVariantModel)
-                    .id
-                : '',
-          );
+      reportType: widget.reportType,
+      facilityId: isDistributor
+          ? context.loggedInUserUuid
+          : form.control(_facilityKey).value != null
+          ? (form.control(_facilityKey).value as FacilityModel).id
+          : '',
+      productVariantId: form.control(_productVariantKey).value != null
+          ? (form.control(_productVariantKey).value
+      as ProductVariantModel)
+          .id
+          : '',
+    );
 
     context.read<InventoryReportBloc>().add(event);
   }
@@ -110,13 +110,13 @@ class _InventoryReportDetailsPageState
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
           (role) => role.code == UserRoleCodeEnum.warehouseManager,
-        )
+    )
         .toList()
         .isNotEmpty;
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == UserRoleCodeEnum.distributor,
-        )
+    )
         .toList()
         .isNotEmpty;
 
@@ -192,24 +192,24 @@ class _InventoryReportDetailsPageState
                                               FacilityState>(
                                             listener: (context, state) =>
                                                 state.whenOrNull(
-                                              empty: () =>
-                                                  NoFacilitiesAssignedDialog
-                                                      .show(
-                                                context,
-                                              ),
-                                            ),
+                                                  empty: () =>
+                                                      NoFacilitiesAssignedDialog
+                                                          .show(
+                                                        context,
+                                                      ),
+                                                ),
                                             builder: (context, state) {
                                               final facilities =
                                                   state.whenOrNull(
-                                                        fetched:
-                                                            (facilities, _) =>
-                                                                facilities,
-                                                      ) ??
+                                                    fetched:
+                                                        (facilities, _) =>
+                                                    facilities,
+                                                  ) ??
                                                       [];
 
                                               return DigitTextFormField(
                                                 valueAccessor:
-                                                    FacilityValueAccessor(
+                                                FacilityValueAccessor(
                                                   facilities,
                                                 ),
                                                 label: localizations.translate(
@@ -225,8 +225,8 @@ class _InventoryReportDetailsPageState
                                                 isRequired: true,
                                                 onTap: () async {
                                                   final stockReconciliationBloc =
-                                                      context.read<
-                                                          StockReconciliationBloc>();
+                                                  context.read<
+                                                      StockReconciliationBloc>();
                                                   final loggedInUUID =
                                                       context.loggedInUserUuid;
 
@@ -268,9 +268,9 @@ class _InventoryReportDetailsPageState
                                                 return DigitReactiveDropdown<
                                                     ProductVariantModel>(
                                                   formControlName:
-                                                      _productVariantKey,
+                                                  _productVariantKey,
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.stockReconciliationDetails
                                                         .productLabel,
                                                   ),
@@ -339,7 +339,7 @@ class _InventoryReportDetailsPageState
                                               columns: [
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .dateLabel,
                                                   ),
@@ -348,7 +348,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .waybillLabel,
                                                   ),
@@ -368,9 +368,9 @@ class _InventoryReportDetailsPageState
                                               ],
                                               rows: [
                                                 for (final entry
-                                                    in data.entries) ...[
+                                                in data.entries) ...[
                                                   for (final model
-                                                      in entry.value)
+                                                  in entry.value)
                                                     DigitGridRow(
                                                       [
                                                         DigitGridCell(
@@ -380,7 +380,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: waybillKey,
                                                           value: model
-                                                                  .waybillNumber ??
+                                                              .waybillNumber ??
                                                               model
                                                                   .waybillNumber ??
                                                               '',
@@ -388,14 +388,14 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: quantityKey,
                                                           value:
-                                                              model.quantity ??
-                                                                  '',
+                                                          model.quantity ??
+                                                              '',
                                                         ),
                                                         DigitGridCell(
                                                           key:
-                                                              transactingPartyKey,
+                                                          transactingPartyKey,
                                                           value: model
-                                                                  .transactingPartyId ??
+                                                              .transactingPartyId ??
                                                               model
                                                                   .transactingPartyType ??
                                                               '',
@@ -435,7 +435,7 @@ class _InventoryReportDetailsPageState
                                               columns: [
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .dateLabel,
                                                   ),
@@ -444,7 +444,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .receivedCountLabel,
                                                   ),
@@ -453,7 +453,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .dispatchedCountLabel,
                                                   ),
@@ -462,7 +462,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .returnedCountLabel,
                                                   ),
@@ -471,7 +471,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .damagedCountLabel,
                                                   ),
@@ -480,7 +480,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .lostCountLabel,
                                                   ),
@@ -489,7 +489,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .stockInHandLabel,
                                                   ),
@@ -498,7 +498,7 @@ class _InventoryReportDetailsPageState
                                                 ),
                                                 DigitGridColumn(
                                                   label:
-                                                      localizations.translate(
+                                                  localizations.translate(
                                                     i18.inventoryReportDetails
                                                         .manualCountLabel,
                                                   ),
@@ -508,9 +508,9 @@ class _InventoryReportDetailsPageState
                                               ],
                                               rows: [
                                                 for (final entry
-                                                    in data.entries) ...[
+                                                in data.entries) ...[
                                                   for (final model
-                                                      in entry.value)
+                                                  in entry.value)
                                                     DigitGridRow(
                                                       [
                                                         DigitGridCell(
@@ -520,7 +520,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: receivedKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'received',
                                                           ),
@@ -528,7 +528,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: dispatchedKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'issued',
                                                           ),
@@ -536,7 +536,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: returnedKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'returned',
                                                           ),
@@ -544,7 +544,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: lossKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'lost',
                                                           ),
@@ -552,7 +552,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: damagedKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'damaged',
                                                           ),
@@ -560,7 +560,7 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: stockInHandKey,
                                                           value:
-                                                              _getCountFromAdditionalDetails(
+                                                          _getCountFromAdditionalDetails(
                                                             model,
                                                             'inHand',
                                                           ),
@@ -568,9 +568,9 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key: manualCountKey,
                                                           value:
-                                                              (model.physicalCount ??
-                                                                      '0')
-                                                                  .toString(),
+                                                          (model.physicalCount ??
+                                                              '0')
+                                                              .toString(),
                                                         ),
                                                       ],
                                                     ),
@@ -673,15 +673,15 @@ class _InventoryReportDetailsPageState
   }
 
   String _getCountFromAdditionalDetails(
-    StockReconciliationModel model,
-    String key,
-  ) {
+      StockReconciliationModel model,
+      String key,
+      ) {
     final additionalDetails = model.additionalFields;
     if (additionalDetails == null) {
       return '0';
     }
     final count = additionalDetails.fields.firstWhereOrNull(
-      (e) => e.key == key,
+          (e) => e.key == key,
     );
     if (count == null) {
       return '0';

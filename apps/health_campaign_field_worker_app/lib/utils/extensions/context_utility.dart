@@ -5,6 +5,12 @@ extension ContextUtilityExtensions on BuildContext {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
   }
 
+  Future<String> get packageInfo async {
+    final info = await PackageInfo.fromPlatform();
+
+    return info.version;
+  }
+
   ProjectModel get selectedProject {
     final projectBloc = _get<ProjectBloc>();
 
