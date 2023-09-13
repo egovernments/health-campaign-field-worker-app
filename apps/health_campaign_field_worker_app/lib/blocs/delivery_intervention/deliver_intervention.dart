@@ -32,7 +32,7 @@ class DeliverInterventionBloc
         await taskRepository.update(event.task.copyWith(
           clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
                       null &&
-                  event.task.clientAuditDetails?.createdTime == null)
+                  event.task.clientAuditDetails?.createdTime != null)
               ? ClientAuditDetails(
                   createdBy: event.task.clientAuditDetails!.createdBy,
                   createdTime: event.task.clientAuditDetails!.createdTime,
