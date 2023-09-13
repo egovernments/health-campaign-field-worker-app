@@ -57,12 +57,20 @@ class _InventoryReportDetailsPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
 
-  void handleSelection(FormGroup form) {
+  void handleSelection(FormGroup form, BuildContext context) {
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == UserRoleCodeEnum.distributor,
+        )
+        .toList()
+        .isNotEmpty;
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
-            facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
-                : '',
+            facilityId: isDistributor
+                ? context.loggedInUserUuid
+                : form.control(_facilityKey).value != null
+                    ? (form.control(_facilityKey).value as FacilityModel).id
+                    : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
                         as ProductVariantModel)
@@ -71,9 +79,11 @@ class _InventoryReportDetailsPageState
           )
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
-            facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
-                : '',
+            facilityId: isDistributor
+                ? context.loggedInUserUuid
+                : form.control(_facilityKey).value != null
+                    ? (form.control(_facilityKey).value as FacilityModel).id
+                    : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
                         as ProductVariantModel)
@@ -240,7 +250,8 @@ class _InventoryReportDetailsPageState
                                                           ),
                                                     ),
                                                   );
-                                                  handleSelection(form);
+                                                  handleSelection(
+                                                      form, context);
                                                 },
                                               );
                                             },
@@ -262,7 +273,8 @@ class _InventoryReportDetailsPageState
                                                   ),
                                                   isRequired: true,
                                                   onChanged: (value) {
-                                                    handleSelection(form);
+                                                    handleSelection(
+                                                        form, context);
                                                   },
                                                   valueMapper: (value) {
                                                     return localizations

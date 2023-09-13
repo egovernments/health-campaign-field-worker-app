@@ -32,7 +32,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _warehouseKey = 'warehouse';
   static const _teamCodeKey = 'teamCode';
 
-  FormGroup buildForm() => fb.group(<String, Object>{
+  FormGroup buildForm(bool isDistributor) => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
           value: context.boundary.name,
@@ -48,7 +48,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
               : [],
         ),
         _teamCodeKey: FormControl<String>(
-          value: '0',
+          validators: isDistributor ? [Validators.required] : [],
         ),
       });
 
@@ -97,7 +97,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   FocusScope.of(context).unfocus();
                 },
                 child: ReactiveFormBuilder(
-                  form: buildForm,
+                  form: () => buildForm(isDistributor),
                   builder: (context, form, child) {
                     return ScrollableContent(
                       header: const Column(children: [

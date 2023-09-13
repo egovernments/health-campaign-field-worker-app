@@ -464,7 +464,7 @@ class StockDetails {
   String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
 
   ///Supervisor Name Label
-  String get supervisorNameLabel => 'STOCK_DETAILS_SUPERVISOR_NAME';
+  String get supervisorCodeLabel => 'STOCK_DETAILS_SUPERVISOR_CODE';
 
   String get supervisorNameIsRequired =>
       'STOCK_DETAILS_SUPERVISOR_NAME_IS_REQUIRED';

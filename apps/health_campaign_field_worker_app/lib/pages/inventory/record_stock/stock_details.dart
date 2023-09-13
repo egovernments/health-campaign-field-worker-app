@@ -41,6 +41,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
   static const _supervisorKey = 'supervisorName';
+  bool supervisorSelected = false;
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -48,9 +49,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         validators: [Validators.required],
       ),
       _transactingPartyKey: FormControl<FacilityModel>(
-        validators: stockType == StockRecordEntryType.consumed
-            ? []
-            : [Validators.required],
+        validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
         Validators.number,
@@ -186,14 +185,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
-                                    if (entryType !=
-                                            StockRecordEntryType.consumed &&
-                                        (form
-                                                    .control(
-                                                        _transactingPartyKey)
-                                                    .value as FacilityModel)
-                                                .id ==
-                                            'Supervisor' &&
+                                    if (supervisorSelected &&
                                         (form.control(_supervisorKey).value ==
                                                 null ||
                                             form
@@ -241,16 +233,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           break;
                                       }
 
-                                      final transactingParty = entryType ==
-                                                  StockRecordEntryType
-                                                      .consumed &&
-                                              isDistributor
-                                          ? FacilityModel(
-                                              id: context.loggedInUserUuid,
-                                            )
-                                          : form
-                                              .control(_transactingPartyKey)
-                                              .value as FacilityModel;
+                                      final transactingParty =
+                                          supervisorSelected
+                                              ? FacilityModel(
+                                                  id: form
+                                                      .control(_supervisorKey)
+                                                      .value as String,
+                                                )
+                                              : form
+                                                  .control(_transactingPartyKey)
+                                                  .value as FacilityModel;
 
                                       final quantity = form
                                           .control(_transactionQuantityKey)
@@ -294,12 +286,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         final value = type?.value;
                                         if (value != null &&
                                             value is String &&
-                                            value.isNotEmpty) {
+                                            value.isNotEmpty &&
+                                            !isDistributor) {
                                           transactingPartyType = value;
                                         }
                                       }
 
-                                      transactingPartyType ??= 'WAREHOUSE';
+                                      transactingPartyType ??=
+                                          isDistributor ? 'STAFF' : 'WAREHOUSE';
                                       String? teamCode =
                                           BlocProvider.of<RecordStockBloc>(
                                         context,
@@ -472,63 +466,64 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 valueMapper: (value) => value.name.titleCase,
                                 isRequired: true,
                               ),
-                            if (entryType != StockRecordEntryType.consumed)
-                              BlocBuilder<FacilityBloc, FacilityState>(
-                                builder: (context, state) {
-                                  final facilities = state.whenOrNull(
-                                        fetched: (_, facilities) => facilities,
-                                      ) ??
-                                      [];
+                            BlocBuilder<FacilityBloc, FacilityState>(
+                              builder: (context, state) {
+                                final facilities = state.whenOrNull(
+                                      fetched: (_, facilities) => facilities,
+                                    ) ??
+                                    [];
 
-                                  return DigitTextFormField(
-                                    valueAccessor: FacilityValueAccessor(
-                                      facilities,
-                                    ),
-                                    label: localizations.translate(
-                                      '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                    ),
-                                    isRequired: true,
-                                    suffix: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(Icons.search),
-                                    ),
-                                    formControlName: _transactingPartyKey,
-                                    readOnly: true,
-                                    onTap: () async {
-                                      final parent = context.router.parent()
-                                          as StackRouter;
-                                      final facility =
-                                          await parent.push<FacilityModel>(
-                                        FacilitySelectionRoute(
-                                          facilities: facilities,
-                                        ),
-                                      );
+                                return DigitTextFormField(
+                                  valueAccessor: FacilityValueAccessor(
+                                    facilities,
+                                  ),
+                                  label: localizations.translate(
+                                    '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                  ),
+                                  isRequired: true,
+                                  suffix: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.search),
+                                  ),
+                                  formControlName: _transactingPartyKey,
+                                  readOnly: true,
+                                  onTap: () async {
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    final facility =
+                                        await parent.push<FacilityModel>(
+                                      FacilitySelectionRoute(
+                                        facilities: facilities,
+                                      ),
+                                    );
 
-                                      if (facility == null) return;
-                                      form.control(_transactingPartyKey).value =
-                                          facility;
-                                    },
-                                  );
-                                },
-                              ),
-                            if (entryType != StockRecordEntryType.consumed &&
-                                isDistributor)
-                              DigitTextFormField(
+                                    if (facility == null) return;
+                                    form.control(_transactingPartyKey).value =
+                                        facility;
+                                    if (facility.id == 'Supervisor') {
+                                      setState(() {
+                                        supervisorSelected = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        supervisorSelected = false;
+                                      });
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                            Visibility(
+                              visible: supervisorSelected,
+                              child: DigitTextFormField(
                                 label: localizations.translate(
-                                  i18.stockDetails.supervisorNameLabel,
+                                  i18.stockDetails.supervisorCodeLabel,
                                 ),
-                                isRequired: form
-                                            .control(_transactingPartyKey)
-                                            .value !=
-                                        null &&
-                                    (form.control(_transactingPartyKey).value
-                                                as FacilityModel)
-                                            .id ==
-                                        'Supervisor',
-                                minLines: 2,
+                                isRequired: supervisorSelected,
                                 maxLines: 3,
                                 formControlName: _supervisorKey,
                               ),
+                            ),
                             DigitTextFormField(
                               formControlName: _transactionQuantityKey,
                               keyboardType:
