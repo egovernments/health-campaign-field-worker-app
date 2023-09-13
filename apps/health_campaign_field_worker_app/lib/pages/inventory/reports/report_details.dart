@@ -227,6 +227,8 @@ class _InventoryReportDetailsPageState
                                                   final stockReconciliationBloc =
                                                       context.read<
                                                           StockReconciliationBloc>();
+                                                  final loggedInUUID =
+                                                      context.loggedInUserUuid;
 
                                                   final facility = await context
                                                       .router
@@ -245,13 +247,14 @@ class _InventoryReportDetailsPageState
                                                     StockReconciliationSelectFacilityEvent(
                                                       facility ??
                                                           FacilityModel(
-                                                            id: context
-                                                                .loggedInUserUuid,
+                                                            id: loggedInUUID,
                                                           ),
                                                     ),
                                                   );
                                                   handleSelection(
-                                                      form, context);
+                                                    form,
+                                                    context,
+                                                  );
                                                 },
                                               );
                                             },
@@ -274,7 +277,9 @@ class _InventoryReportDetailsPageState
                                                   isRequired: true,
                                                   onChanged: (value) {
                                                     handleSelection(
-                                                        form, context);
+                                                      form,
+                                                      context,
+                                                    );
                                                   },
                                                   valueMapper: (value) {
                                                     return localizations
