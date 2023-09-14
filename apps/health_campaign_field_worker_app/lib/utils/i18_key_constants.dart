@@ -396,7 +396,7 @@ class AdverseEvents {
 
   String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
 
-  String get resourcesToBeDelivered => 'RESOURCES_TO_BE_DELIVERED_LABEL';
+  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
 
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 

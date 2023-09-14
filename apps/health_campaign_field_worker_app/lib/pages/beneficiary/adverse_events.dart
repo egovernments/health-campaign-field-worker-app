@@ -43,6 +43,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
   bool stateChanged = false;
+  bool symptomsSelected = true;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +88,9 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                       cellKey: 'resource',
                     ),
                     TableHeader(
-                      localizations
-                          .translate(i18.adverseEvents.resourceHeaderLabel),
+                      localizations.translate(
+                        i18.adverseEvents.resourceCountHeaderLabel,
+                      ),
                       cellKey: 'resourceCount',
                     ),
                   ];
@@ -135,154 +137,165 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                       child: DigitCard(
                                         child: DigitElevatedButton(
                                           onPressed: () async {
-                                            form.markAllAsTouched();
-                                            if (!form.valid) return;
-                                            final router = context.router;
+                                            if (symptomsValues.any((e) => e)) {
+                                              setState(() {
+                                                symptomsSelected = true;
+                                              });
+                                              final router = context.router;
 
-                                            final shouldSubmit =
-                                                await DigitDialog.show<bool>(
-                                              context,
-                                              options: DigitDialogOptions(
-                                                titleText:
-                                                    localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .dialogTitle,
-                                                ),
-                                                contentText:
-                                                    localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .dialogContent,
-                                                ),
-                                                primaryAction:
-                                                    DigitDialogActions(
-                                                  label:
+                                              final shouldSubmit =
+                                                  await DigitDialog.show<bool>(
+                                                context,
+                                                options: DigitDialogOptions(
+                                                  titleText:
                                                       localizations.translate(
-                                                    i18.common.coreCommonSubmit,
+                                                    i18.deliverIntervention
+                                                        .dialogTitle,
                                                   ),
-                                                  action: (ctx) {
-                                                    final List<String>
-                                                        symptoms = [];
+                                                  contentText:
+                                                      localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .dialogContent,
+                                                  ),
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.common
+                                                          .coreCommonSubmit,
+                                                    ),
+                                                    action: (ctx) {
+                                                      final List<String>
+                                                          symptoms = [];
 
-                                                    for (int i = 0;
-                                                        i <
-                                                            symptomsValues
-                                                                .length;
-                                                        i++) {
-                                                      if (symptomsValues[i]) {
-                                                        symptoms.add(
-                                                          symptomsTypes[i],
-                                                        );
+                                                      for (int i = 0;
+                                                          i <
+                                                              symptomsValues
+                                                                  .length;
+                                                          i++) {
+                                                        if (symptomsValues[i]) {
+                                                          symptoms.add(
+                                                            symptomsTypes[i],
+                                                          );
+                                                        }
                                                       }
-                                                    }
 
-                                                    final clientReferenceId =
-                                                        adverseEventData != null
-                                                            ? adverseEventData
-                                                                    .isEmpty
-                                                                ? IdGen.i
-                                                                    .identifier
-                                                                : adverseEventData
-                                                                    .first
-                                                                    .clientReferenceId
-                                                            : IdGen
-                                                                .i.identifier;
-                                                    context
-                                                        .read<
-                                                            AdverseEventsBloc>()
-                                                        .add(
-                                                          AdverseEventsSubmitEvent(
-                                                            AdverseEventModel(
-                                                              id: adverseEventData !=
-                                                                      null
-                                                                  ? adverseEventData
-                                                                          .isEmpty
-                                                                      ? null
-                                                                      : adverseEventData
-                                                                          .first
-                                                                          .id
-                                                                  : null,
-                                                              taskClientReferenceId:
-                                                                  widget
-                                                                      .tasks
+                                                      final clientReferenceId =
+                                                          adverseEventData !=
+                                                                  null
+                                                              ? adverseEventData
+                                                                      .isEmpty
+                                                                  ? IdGen.i
+                                                                      .identifier
+                                                                  : adverseEventData
                                                                       .first
-                                                                      .clientReferenceId,
-                                                              symptoms:
-                                                                  symptoms,
-                                                              reAttempts: stateChanged
-                                                                  ? form
-                                                                      .control(
-                                                                        _noOfTimesReAdministeredKey,
-                                                                      )
-                                                                      .value as int
-                                                                  : 0,
-                                                              clientReferenceId:
-                                                                  clientReferenceId,
-                                                              tenantId:
-                                                                  envConfig
-                                                                      .variables
-                                                                      .tenantId,
-                                                              rowVersion: adverseEventData !=
-                                                                      null
-                                                                  ? adverseEventData
-                                                                          .isEmpty
-                                                                      ? 1
-                                                                      : adverseEventData
-                                                                          .first
-                                                                          .rowVersion
-                                                                  : 1,
-                                                              auditDetails:
-                                                                  AuditDetails(
-                                                                createdBy: context
-                                                                    .loggedInUserUuid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    context
-                                                                        .loggedInUserUuid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
+                                                                      .clientReferenceId
+                                                              : IdGen
+                                                                  .i.identifier;
+                                                      context
+                                                          .read<
+                                                              AdverseEventsBloc>()
+                                                          .add(
+                                                            AdverseEventsSubmitEvent(
+                                                              AdverseEventModel(
+                                                                id: adverseEventData !=
+                                                                        null
+                                                                    ? adverseEventData
+                                                                            .isEmpty
+                                                                        ? null
+                                                                        : adverseEventData
+                                                                            .first
+                                                                            .id
+                                                                    : null,
+                                                                taskClientReferenceId:
+                                                                    widget
+                                                                        .tasks
+                                                                        .first
+                                                                        .clientReferenceId,
+                                                                symptoms:
+                                                                    symptoms,
+                                                                reAttempts: stateChanged
+                                                                    ? form
+                                                                        .control(
+                                                                          _noOfTimesReAdministeredKey,
+                                                                        )
+                                                                        .value as int
+                                                                    : 0,
+                                                                clientReferenceId:
+                                                                    clientReferenceId,
+                                                                tenantId: envConfig
+                                                                    .variables
+                                                                    .tenantId,
+                                                                rowVersion: adverseEventData !=
+                                                                        null
+                                                                    ? adverseEventData
+                                                                            .isEmpty
+                                                                        ? 1
+                                                                        : adverseEventData
+                                                                            .first
+                                                                            .rowVersion
+                                                                    : 1,
+                                                                auditDetails:
+                                                                    AuditDetails(
+                                                                  createdBy: context
+                                                                      .loggedInUserUuid,
+                                                                  createdTime:
+                                                                      context
+                                                                          .millisecondsSinceEpoch(),
+                                                                  lastModifiedBy:
+                                                                      context
+                                                                          .loggedInUserUuid,
+                                                                  lastModifiedTime:
+                                                                      context
+                                                                          .millisecondsSinceEpoch(),
+                                                                ),
                                                               ),
+                                                              adverseEventData ==
+                                                                      null
+                                                                  ? false
+                                                                  : adverseEventData
+                                                                          .isEmpty
+                                                                      ? false
+                                                                      : true,
                                                             ),
-                                                            adverseEventData ==
-                                                                    null
-                                                                ? false
-                                                                : adverseEventData
-                                                                        .isEmpty
-                                                                    ? false
-                                                                    : true,
-                                                          ),
-                                                        );
-                                                    Navigator.of(
+                                                          );
+                                                      Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).pop(true);
+                                                    },
+                                                  ),
+                                                  secondaryAction:
+                                                      DigitDialogActions(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.common
+                                                          .coreCommonCancel,
+                                                    ),
+                                                    action: (context) =>
+                                                        Navigator.of(
                                                       context,
                                                       rootNavigator: true,
-                                                    ).pop(true);
-                                                  },
-                                                ),
-                                                secondaryAction:
-                                                    DigitDialogActions(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonCancel,
+                                                    ).pop(false),
                                                   ),
-                                                  action: (context) =>
-                                                      Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop(false),
                                                 ),
-                                              ),
-                                            );
+                                              );
 
-                                            if (shouldSubmit ?? false) {
-                                              final parent = router.parent()
-                                                  as StackRouter;
-                                              parent
-                                                ..pop()
-                                                ..pop();
+                                              if (shouldSubmit ?? false) {
+                                                final parent = router.parent()
+                                                    as StackRouter;
+                                                parent
+                                                  ..pop()
+                                                  ..pop();
 
-                                              router
-                                                  .push(AcknowledgementRoute());
+                                                router.push(
+                                                  AcknowledgementRoute(),
+                                                );
+                                              }
+                                            } else {
+                                              setState(() {
+                                                symptomsSelected = false;
+                                              });
                                             }
                                           },
                                           child: Center(
@@ -325,7 +338,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                 child: Text(
                                                   localizations.translate(
                                                     i18.adverseEvents
-                                                        .resourcesToBeDelivered,
+                                                        .resourcesAdministeredLabel,
                                                   ),
                                                   style: theme
                                                       .textTheme.headlineSmall,
@@ -365,10 +378,10 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                 padding:
                                                     const EdgeInsets.all(8),
                                                 child: Text(
-                                                  localizations.translate(
+                                                  '${localizations.translate(
                                                     i18.adverseEvents
                                                         .selectSymptomsLabel,
-                                                  ),
+                                                  )}*',
                                                   style: theme
                                                       .textTheme.headlineSmall,
                                                 ),
@@ -389,6 +402,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                       symptomTypesOptions
                                                           .map((e) => e.code)
                                                           .toList();
+
                                                   for (var _
                                                       in symptomTypesOptions) {
                                                     symptomsValues.add(false);
@@ -432,6 +446,22 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                 },
                                               ),
                                             ),
+                                            Offstage(
+                                              offstage: symptomsSelected,
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  localizations.translate(
+                                                    i18.common
+                                                        .corecommonRequired,
+                                                  ),
+                                                  style: TextStyle(
+                                                    color:
+                                                        theme.colorScheme.error,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                             DigitRadioButtonList<KeyValue>(
                                               labelText:
                                                   localizations.translate(i18
@@ -448,6 +478,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                 });
                                               },
                                               options: Constants.yesNo,
+                                              isRequired: true,
                                             ),
                                             Visibility(
                                               visible: stateChanged,
@@ -525,6 +556,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
               : Constants.yesNo.last.label,
           adverseEventData?.firstOrNull?.reAttempts != 0 ? true : false,
         ),
+        validators: [Validators.required],
       ),
     });
   }
