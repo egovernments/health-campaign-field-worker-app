@@ -197,6 +197,15 @@ class _DeliverInterventionPageState
                                         context.boundary,
                                       ),
                                     );
+                                if (taskData != null && taskData.isNotEmpty) {
+                                  final parent = router.parent() as StackRouter;
+                                  parent.popUntilRouteWithName(
+                                    SearchBeneficiaryRoute.name,
+                                  );
+                                  router.push(
+                                    AcknowledgementRoute(),
+                                  );
+                                }
 
                                 if (taskData == null || taskData.isEmpty) {
                                   DigitDialog.show<bool>(
