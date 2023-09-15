@@ -233,6 +233,9 @@ class _DeliverInterventionPageState
                                           parent.popUntilRouteWithName(
                                             SearchBeneficiaryRoute.name,
                                           );
+                                          router.push(
+                                            AcknowledgementRoute(),
+                                          );
                                           Navigator.of(
                                             context,
                                             rootNavigator: true,
