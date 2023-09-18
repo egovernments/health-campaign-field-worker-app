@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -119,8 +120,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
+    final selectedProject = await localSecureStore.selectedProject;
+    final isProjectSetUpComplete = await localSecureStore
+        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    if (isOnline) {
+    if (isOnline && !isProjectSetUpComplete) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
@@ -429,6 +433,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
       }
+      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
         loading: false,
