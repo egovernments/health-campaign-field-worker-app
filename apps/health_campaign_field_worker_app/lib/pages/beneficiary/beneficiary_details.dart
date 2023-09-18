@@ -45,24 +45,35 @@ class _BeneficiaryDetailsPageState
 
     final headerList = [
       TableHeader(
-        'Dose No.',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
         cellKey: 'dose',
       ),
       TableHeader(
-        'Status',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
         cellKey: 'Status',
       ),
       TableHeader(
-        'Resources',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
         cellKey: 'resources',
       ),
       TableHeader(
-        'Quantity',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryQuantity),
         cellKey: 'quantity',
       ),
       TableHeader(
-        'Completed on',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
+      ),
+    ];
+
+    final headerListResource = [
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+        cellKey: 'dose',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+        cellKey: 'resources',
       ),
     ];
 
@@ -88,195 +99,285 @@ class _BeneficiaryDetailsPageState
                   projectBeneficiary.first.clientReferenceId)
               .toList();
 
+          Widget buildTableContent(ProjectState projectState) {
+            print(projectState);
+
+            return SizedBox(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DigitTableCard(
+                    element: {
+                      localizations.translate(
+                        i18.beneficiaryDetails.beneficiaryAge,
+                      ): "2",
+                    },
+                  ),
+                  const Divider(),
+                  DigitTable(
+                    headerList: headerListResource,
+                    tableData: projectState.projectType!.cycles!
+                        .expand(
+                          (e) => e.deliveries!.map(
+                            (item) => TableDataRow([
+                              TableData(
+                                'Dose ${e.deliveries!.indexOf(item)}',
+                                cellKey: 'dose',
+                              ),
+                              TableData(
+                                taskData != null
+                                    ? taskData.length - 1 >=
+                                            e.deliveries!.indexOf(
+                                              item,
+                                            )
+                                        ? taskData
+                                            .elementAt(
+                                              e.deliveries!.indexOf(
+                                                item,
+                                              ),
+                                            )
+                                            .resources!
+                                            .map((e) => e.productVariantId)
+                                            .toList()
+                                            .join(
+                                              ' + ',
+                                            )
+                                        : '-'
+                                    : item.productVariants != null
+                                        ? item.productVariants!
+                                            .map((e) => e.productVariantId)
+                                            .toList()
+                                            .join(' + ')
+                                        : '-',
+                                cellKey: 'resources',
+                              ),
+                            ]),
+                          ),
+                        )
+                        .toList(),
+                    leftColumnWidth: 130,
+                    rightColumnWidth: headerList.length * 17 * 2,
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
+                ],
+              ),
+            );
+          }
+
           return Scaffold(
             body: ReactiveFormBuilder(
               form: buildForm,
-              builder: (context, formGroup, child) => ScrollableContent(
-                header: const Column(children: [
-                  BackNavigationHelpHeaderWidget(),
-                ]),
-                footer: SizedBox(
-                  height: 85,
-                  child: DigitCard(
-                    margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                    child: DigitElevatedButton(
-                      onPressed: () {
-                        router.push(DeliverInterventionRoute());
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(i18.common.coreCommonNext),
+              builder: (context, formGroup, child) =>
+                  BlocBuilder<ProjectBloc, ProjectState>(
+                builder: (context, state) {
+                  return ScrollableContent(
+                    header: const Column(children: [
+                      BackNavigationHelpHeaderWidget(),
+                    ]),
+                    footer: SizedBox(
+                      height: 85,
+                      child: DigitCard(
+                        margin:
+                            const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        child: DigitElevatedButton(
+                          onPressed: () async {
+                            DigitDialog.show<bool>(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18.beneficiaryDetails.reourcesTobeDelivered,
+                                ),
+                                content: buildTableContent(state),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.ctaProceed,
+                                  ),
+                                  action: (context) => {
+                                    Navigator.of(context).pop(),
+                                    router.push(DeliverInterventionRoute()),
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonNext),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                children: [
-                  DigitCard(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DigitCard(
+                        child: Column(
                           children: [
-                            Flexible(
-                              child: Text(
-                                localizations.translate(i18.beneficiaryDetails
-                                    .beneficiarysDetailsLabelText),
-                                style: theme.textTheme.displayMedium,
-                              ),
-                            ),
-                            DigitIconButton(
-                              onPressed: () => DigitActionDialog.show(
-                                context,
-                                widget: ActionCard(
-                                  items: [
-                                    ActionCardModel(
-                                      icon: Icons.edit,
-                                      label: localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .beneficiarysDetailsEditIconLabel,
-                                      ),
-                                      action: () async {},
-                                    ),
-                                    ActionCardModel(
-                                      icon: Icons.delete,
-                                      label: localizations.translate(i18
-                                          .beneficiaryDetails
-                                          .beneficiarysDetailsDeleteIconLabel),
-                                      action: () => null,
-                                      // action: () => DigitDialog.show(
-                                      //   context,
-                                      //   options: DigitDialogOptions(
-                                      //     titleText: localizations.translate(i18
-                                      //         .householdOverView
-                                      //         .householdOverViewActionCardTitle),
-                                      //     primaryAction: DigitDialogActions(
-                                      //       label: localizations.translate(i18
-                                      //           .householdOverView
-                                      //           .householdOverViewPrimaryActionLabel),
-                                      //       action: (ctx) {
-                                      //         Navigator.of(
-                                      //           ctx,
-                                      //           rootNavigator: true,
-                                      //         )
-                                      //           ..pop()
-                                      //           ..pop();
-                                      //         context.router.push(
-                                      //           ReasonForDeletionRoute(
-                                      //             isHousholdDelete: true,
-                                      //           ),
-                                      //         );
-                                      //       },
-                                      //     ),
-                                      //     secondaryAction: DigitDialogActions(
-                                      //       label: localizations.translate(i18
-                                      //           .householdOverView
-                                      //           .householdOverViewSecondaryActionLabel),
-                                      //       action: (context) {
-                                      //         Navigator.of(
-                                      //           context,
-                                      //           rootNavigator: true,
-                                      //         ).pop();
-                                      //       },
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                    ),
-                                  ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    localizations.translate(i18
+                                        .beneficiaryDetails
+                                        .beneficiarysDetailsLabelText),
+                                    style: theme.textTheme.displayMedium,
+                                  ),
                                 ),
-                              ),
-                              iconText: localizations.translate(
-                                i18.beneficiaryDetails
-                                    .beneficiarysDetailsEditIconLabelText,
-                              ),
-                              icon: Icons.edit,
+                                DigitIconButton(
+                                  onPressed: () => DigitActionDialog.show(
+                                    context,
+                                    widget: ActionCard(
+                                      items: [
+                                        ActionCardModel(
+                                          icon: Icons.edit,
+                                          label: localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .beneficiarysDetailsEditIconLabel,
+                                          ),
+                                          action: () async {},
+                                        ),
+                                        ActionCardModel(
+                                          icon: Icons.delete,
+                                          label: localizations.translate(i18
+                                              .beneficiaryDetails
+                                              .beneficiarysDetailsDeleteIconLabel),
+                                          action: () => null,
+                                          // action: () => DigitDialog.show(
+                                          //   context,
+                                          //   options: DigitDialogOptions(
+                                          //     titleText: localizations.translate(i18
+                                          //         .householdOverView
+                                          //         .householdOverViewActionCardTitle),
+                                          //     primaryAction: DigitDialogActions(
+                                          //       label: localizations.translate(i18
+                                          //           .householdOverView
+                                          //           .householdOverViewPrimaryActionLabel),
+                                          //       action: (ctx) {
+                                          //         Navigator.of(
+                                          //           ctx,
+                                          //           rootNavigator: true,
+                                          //         )
+                                          //           ..pop()
+                                          //           ..pop();
+                                          //         context.router.push(
+                                          //           ReasonForDeletionRoute(
+                                          //             isHousholdDelete: true,
+                                          //           ),
+                                          //         );
+                                          //       },
+                                          //     ),
+                                          //     secondaryAction: DigitDialogActions(
+                                          //       label: localizations.translate(i18
+                                          //           .householdOverView
+                                          //           .householdOverViewSecondaryActionLabel),
+                                          //       action: (context) {
+                                          //         Navigator.of(
+                                          //           context,
+                                          //           rootNavigator: true,
+                                          //         ).pop();
+                                          //       },
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  iconText: localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .beneficiarysDetailsEditIconLabelText,
+                                  ),
+                                  icon: Icons.edit,
+                                ),
+                              ],
+                            ),
+                            DigitTableCard(
+                              element: {
+                                localizations.translate(i18.householdOverView
+                                        .householdOverViewHouseholdHeadLabel):
+                                    householdMemberWrapper
+                                            .headOfHousehold.name?.givenName ??
+                                        '',
+                                localizations.translate(
+                                  i18.deliverIntervention.idTypeText,
+                                ): () {
+                                  final identifiers = householdMemberWrapper
+                                      .headOfHousehold.identifiers;
+                                  if (identifiers == null ||
+                                      identifiers.isEmpty) {
+                                    return '';
+                                  }
+
+                                  return identifiers.first.identifierType ?? '';
+                                }(),
+                                localizations.translate(
+                                  i18.deliverIntervention.idNumberText,
+                                ): () {
+                                  final identifiers = householdMemberWrapper
+                                      .headOfHousehold.identifiers;
+                                  if (identifiers == null ||
+                                      identifiers.isEmpty) {
+                                    return '';
+                                  }
+
+                                  return identifiers.first.identifierId ?? '';
+                                }(),
+                                localizations.translate(
+                                  i18.common.coreCommonAge,
+                                ): () {
+                                  final dob = householdMemberWrapper
+                                      .headOfHousehold.dateOfBirth;
+                                  if (dob == null || dob.isEmpty) {
+                                    return '';
+                                  }
+
+                                  final int years = DigitDateUtils.calculateAge(
+                                    DigitDateUtils.getFormattedDateToDateTime(
+                                          dob,
+                                        ) ??
+                                        DateTime.now(),
+                                  ).years;
+                                  final int months =
+                                      DigitDateUtils.calculateAge(
+                                    DigitDateUtils.getFormattedDateToDateTime(
+                                          dob,
+                                        ) ??
+                                        DateTime.now(),
+                                  ).months;
+
+                                  return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                                }(),
+                                localizations.translate(
+                                  i18.common.coreCommonGender,
+                                ): householdMemberWrapper.headOfHousehold.gender
+                                        ?.name.sentenceCase ??
+                                    '',
+                                localizations.translate(
+                                  i18.common.coreCommonMobileNumber,
+                                ): householdMemberWrapper
+                                        .headOfHousehold.mobileNumber ??
+                                    '',
+                                localizations.translate(i18.deliverIntervention
+                                    .dateOfRegistrationLabel): () {
+                                  final date = projectBeneficiary
+                                      .first.dateOfRegistration;
+
+                                  final registrationDate =
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                    date,
+                                  );
+
+                                  return DateFormat('dd MMMM yyyy')
+                                      .format(registrationDate);
+                                }(),
+                              },
                             ),
                           ],
                         ),
-                        DigitTableCard(
-                          element: {
-                            localizations.translate(i18.householdOverView
-                                    .householdOverViewHouseholdHeadLabel):
-                                householdMemberWrapper
-                                        .headOfHousehold.name?.givenName ??
-                                    '',
-                            localizations.translate(
-                              i18.deliverIntervention.idTypeText,
-                            ): () {
-                              final identifiers = householdMemberWrapper
-                                  .headOfHousehold.identifiers;
-                              if (identifiers == null || identifiers.isEmpty) {
-                                return '';
-                              }
-
-                              return identifiers.first.identifierType ?? '';
-                            }(),
-                            localizations.translate(
-                              i18.deliverIntervention.idNumberText,
-                            ): () {
-                              final identifiers = householdMemberWrapper
-                                  .headOfHousehold.identifiers;
-                              if (identifiers == null || identifiers.isEmpty) {
-                                return '';
-                              }
-
-                              return identifiers.first.identifierId ?? '';
-                            }(),
-                            localizations.translate(
-                              i18.common.coreCommonAge,
-                            ): () {
-                              final dob = householdMemberWrapper
-                                  .headOfHousehold.dateOfBirth;
-                              if (dob == null || dob.isEmpty) {
-                                return '';
-                              }
-
-                              final int years = DigitDateUtils.calculateAge(
-                                DigitDateUtils.getFormattedDateToDateTime(
-                                      dob,
-                                    ) ??
-                                    DateTime.now(),
-                              ).years;
-                              final int months = DigitDateUtils.calculateAge(
-                                DigitDateUtils.getFormattedDateToDateTime(
-                                      dob,
-                                    ) ??
-                                    DateTime.now(),
-                              ).months;
-
-                              return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
-                            }(),
-                            localizations.translate(
-                              i18.common.coreCommonGender,
-                            ): householdMemberWrapper.headOfHousehold.gender
-                                    ?.name.sentenceCase ??
-                                '',
-                            localizations.translate(
-                              i18.common.coreCommonMobileNumber,
-                            ): householdMemberWrapper
-                                    .headOfHousehold.mobileNumber ??
-                                '',
-                            localizations.translate(i18.deliverIntervention
-                                .dateOfRegistrationLabel): () {
-                              final date =
-                                  projectBeneficiary.first.dateOfRegistration;
-
-                              final registrationDate =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                date,
-                              );
-
-                              return DateFormat('dd MMMM yyyy')
-                                  .format(registrationDate);
-                            }(),
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  BlocBuilder<ProjectBloc, ProjectState>(
-                    builder: (context, state) {
-                      return Column(
+                      ),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: state.projectType!.cycles!.map((e) {
@@ -411,10 +512,10 @@ class _BeneficiaryDetailsPageState
                             ],
                           );
                         }).toList(),
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           );

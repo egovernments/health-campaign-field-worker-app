@@ -38,8 +38,6 @@ class _DeliverInterventionPageState
     extends LocalizedState<DeliverInterventionPage> {
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
-  static const _doseAdministeredKey = 'doseAdministered';
   bool doseAdministered = false;
   List<Widget> resourceCards = [const ResourceBeneficiaryCard()];
   int currentStep = 0;
@@ -202,11 +200,6 @@ class _DeliverInterventionPageState
                                                                   .value
                                                               as ProductVariantModel)
                                                           .id,
-                                                      deliveryComment: form
-                                                          .control(
-                                                            _deliveryCommentKey,
-                                                          )
-                                                          .value,
                                                       auditDetails:
                                                           AuditDetails(
                                                         createdBy: context
@@ -352,67 +345,48 @@ class _DeliverInterventionPageState
                                     ),
                                   ],
                                 ),
-                                DigitRadioButtonList<KeyValue>(
-                                  labelText: localizations.translate(i18
-                                      .deliverIntervention
-                                      .wasTheDoseAdministered),
-                                  labelStyle: DigitTheme.instance.mobileTheme
-                                      .textTheme.headlineSmall,
-                                  formControlName: _doseAdministeredKey,
-                                  valueMapper: (val) =>
-                                      localizations.translate(val.label),
-                                  options: Constants.yesNo,
-                                  isRequired: true,
-                                  onValueChange: (val) {
-                                    setState(() {
-                                      doseAdministered = val.key;
-                                    });
-                                  },
-                                ),
-                                if (form.control(_doseAdministeredKey).value ==
-                                    Constants.yesNo.first)
-                                  Column(children: [
-                                    DigitStepper(
-                                      activeStep: currentStep,
-                                      steps: steps,
-                                      maxStepReached: 3,
-                                      lineLength:
-                                          MediaQuery.of(context).size.width / 5,
-                                    ),
-                                    Column(
-                                      children: [
-                                        if (resourceCards.isNotEmpty) ...[
-                                          const ResourceBeneficiaryCard(
-                                            cardIndex: 0,
-                                          ),
-                                        ],
-                                        ...resourceCards.skip(1).map(
-                                              (card) => ResourceBeneficiaryCard(
-                                                onDelete: () {
-                                                  setState(() {
-                                                    resourceCards.remove(card);
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                        DigitIconButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              resourceCards.insert(
-                                                0,
-                                                const ResourceBeneficiaryCard(),
-                                              );
-                                            });
-                                          },
-                                          icon: Icons.add,
-                                          iconText: localizations.translate(
-                                            i18.deliverIntervention
-                                                .resourceAddBeneficiary,
-                                          ),
+                                Column(children: [
+                                  DigitStepper(
+                                    activeStep: currentStep,
+                                    steps: steps,
+                                    maxStepReached: 3,
+                                    lineLength:
+                                        MediaQuery.of(context).size.width / 5,
+                                  ),
+                                  Column(
+                                    children: [
+                                      if (resourceCards.isNotEmpty) ...[
+                                        const ResourceBeneficiaryCard(
+                                          cardIndex: 0,
                                         ),
                                       ],
-                                    ),
-                                  ]),
+                                      ...resourceCards.skip(1).map(
+                                            (card) => ResourceBeneficiaryCard(
+                                              onDelete: () {
+                                                setState(() {
+                                                  resourceCards.remove(card);
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                      DigitIconButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            resourceCards.insert(
+                                              0,
+                                              const ResourceBeneficiaryCard(),
+                                            );
+                                          });
+                                        },
+                                        icon: Icons.add,
+                                        iconText: localizations.translate(
+                                          i18.deliverIntervention
+                                              .resourceAddBeneficiary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ]),
                               ],
                             ),
                           ),
@@ -453,24 +427,13 @@ class _DeliverInterventionPageState
 
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<ProductVariantModel>(
-        validators: doseAdministered ? [Validators.required] : [],
+        validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(
         value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
             ? int.tryParse(taskData!.first.resources!.first.quantity!)
             : 1,
-        validators: doseAdministered ? [Validators.required] : [],
-      ),
-      _doseAdministeredKey: FormControl<KeyValue>(
-        value: taskData != null && taskData.isNotEmpty
-            ? Constants.yesNo.first
-            : null,
-        validators: [
-          Validators.required,
-        ],
-      ),
-      _deliveryCommentKey: FormControl<String>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
+        validators: [Validators.required],
       ),
     });
   }
