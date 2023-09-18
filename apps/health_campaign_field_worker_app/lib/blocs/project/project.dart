@@ -163,7 +163,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     List<ProjectModel> projects = [];
-
+    ProjectType? projectType = null;
     for (final projectStaff in projectStaffList) {
       await projectStaffLocalRepository.create(
         projectStaff,
@@ -240,12 +240,43 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
+      // TODO [Need to optimize the code]
+      try {
+        final projectTypes = await mdmsRepository.searchProjectType(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-PROJECT-TYPES',
+                  masterDetails: [MdmsMasterDetailModel('projectTypes')],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+
+        await mdmsRepository.writeToProjectTypeDB(
+          projectTypes,
+          isar,
+        );
+
+        emit(state.copyWith(
+          projectType: projectTypes.projectTypeWrapper?.projectTypes
+              .where((element) =>
+                  element.id == '644c4356-5214-11ee-be56-0242ac120002')
+              .toList()
+              .firstOrNull,
+        ));
+      } catch (_) {}
     }
 
     emit(ProjectState(
       projects: projects,
       loading: false,
       syncError: null,
+      projectType: projectType,
     ));
 
     if (projects.length == 1) {
@@ -404,7 +435,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       emit(state.copyWith(
         projectType: projectType.projectTypeWrapper?.projectTypes
-            .where((element) => element.id == event.model.projectTypeId)
+            .where((element) =>
+                element.id == '644c4356-5214-11ee-be56-0242ac120002')
             .toList()
             .firstOrNull,
       ));

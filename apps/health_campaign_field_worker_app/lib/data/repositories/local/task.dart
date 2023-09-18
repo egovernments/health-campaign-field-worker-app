@@ -128,6 +128,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             projectBeneficiaryClientReferenceId:
                 task.projectBeneficiaryClientReferenceId,
             createdDate: task.createdDate,
+            additionalFields: task.additionalFields == null
+                ? null
+                : Mapper.fromJson<TaskAdditionalFields>(
+                    task.additionalFields!,
+                  ),
             address: address == null
                 ? null
                 : AddressModel(

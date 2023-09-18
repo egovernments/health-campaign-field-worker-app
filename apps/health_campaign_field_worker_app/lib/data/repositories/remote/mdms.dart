@@ -318,7 +318,14 @@ class MdmsRepository {
             final newDeliveries = Deliveries()
               ..deliveryStrategy = ele.deliveryStrategy
               ..mandatoryWaitSinceLastDeliveryInDays =
-                  ele.mandatoryWaitSinceLastDeliveryInDays;
+                  ele.mandatoryWaitSinceLastDeliveryInDays
+              ..productVariants = ele.productVariants?.map((e) {
+                final productVariants = ProductVariants()
+                  ..productVariantId = e.productVariantId
+                  ..quantity = e.quantity.toString();
+
+                return productVariants;
+              }).toList();
 
             return newDeliveries;
           }).toList();

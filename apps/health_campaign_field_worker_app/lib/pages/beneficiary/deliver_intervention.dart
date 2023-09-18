@@ -8,7 +8,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/project/project.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -250,6 +252,38 @@ class _DeliverInterventionPageState
                                                     lastModifiedTime: context
                                                         .millisecondsSinceEpoch(),
                                                   ),
+                                                  additionalFields:
+                                                      TaskAdditionalFields(
+                                                    version: 1,
+                                                    fields: [
+                                                      AdditionalField(
+                                                        'DateOfDelivery',
+                                                        DateTime.now()
+                                                            .millisecondsSinceEpoch
+                                                            .toString(),
+                                                      ),
+                                                      AdditionalField(
+                                                        'DateOfAdministration',
+                                                        DateTime.now()
+                                                            .millisecondsSinceEpoch
+                                                            .toString(),
+                                                      ),
+                                                      AdditionalField(
+                                                        'DateOfVerification',
+                                                        DateTime.now()
+                                                            .millisecondsSinceEpoch
+                                                            .toString(),
+                                                      ),
+                                                      const AdditionalField(
+                                                        'CycleIndex',
+                                                        "01",
+                                                      ),
+                                                      const AdditionalField(
+                                                        'DoseIndex',
+                                                        "01",
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                                 taskData == null
                                                     ? false
@@ -394,6 +428,12 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
+    // Get projetTypes for ProjectBloc
+    final projectState = context.read<ProjectBloc>().state;
+
+    // Eztract the  prductVariants for ProjectBloc
+    List<ProductVariantsModel>? productVariants =
+        projectState.projectType?.cycles?[0].deliveries?[0].productVariants;
 
     final projectBeneficiary =
         context.beneficiaryType != BeneficiaryType.individual

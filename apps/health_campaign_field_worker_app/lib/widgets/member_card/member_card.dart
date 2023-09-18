@@ -177,7 +177,7 @@ class MemberCard extends StatelessWidget {
                               individualModel: individual,
                             ),
                           );
-                      await context.router.push(DeliverInterventionRoute());
+                      await context.router.push(BeneficiaryDetailsRoute());
                     },
                     child: Center(
                       child: Text(
@@ -202,7 +202,7 @@ class MemberCard extends StatelessWidget {
                                   ),
                                 );
                             await context.router
-                                .push(DeliverInterventionRoute());
+                                .push(BeneficiaryDetailsRoute());
                           },
                         ),
                       );
