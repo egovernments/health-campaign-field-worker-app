@@ -11,6 +11,7 @@ class DigitTable extends StatelessWidget {
   final double leftColumnWidth;
   final double rightColumnWidth;
   final double? height;
+  final int? selectedIndex;
 
   const DigitTable({
     Key? key,
@@ -19,6 +20,7 @@ class DigitTable extends StatelessWidget {
     required this.leftColumnWidth,
     required this.rightColumnWidth,
     this.height,
+    this.selectedIndex,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
@@ -94,9 +96,11 @@ class DigitTable extends StatelessWidget {
           : columnRowFixedHeight,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
       alignment: Alignment.centerLeft,
-      color: index % 2 == 0
-          ? DigitTheme.instance.colorScheme.background
-          : DigitTheme.instance.colorScheme.surface,
+      color: index == selectedIndex
+          ? DigitTheme.instance.colorScheme.tertiary
+          : index % 2 == 0
+              ? DigitTheme.instance.colorScheme.background
+              : DigitTheme.instance.colorScheme.surface,
       child: Row(
         children: <Widget>[
           Expanded(
@@ -138,7 +142,9 @@ class DigitTable extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: DigitTheme.instance.colorScheme.surface,
+            color: selectedIndex == index
+                ? DigitTheme.instance.colorScheme.tertiary
+                : DigitTheme.instance.colorScheme.surface,
             border: Border(
               left: tableCellBorder,
               right: tableCellStrongBorder,
