@@ -84,6 +84,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           sql.task.clientReferenceId,
         ),
       ),
+      // TODO :[Need to change this to taskclient reference Id]
       leftOuterJoin(
         sql.taskResource,
         sql.taskResource.clientReferenceId.equalsExp(

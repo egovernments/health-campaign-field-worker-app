@@ -359,6 +359,9 @@ class DeliverIntervention {
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
+  String get deliverInterventionResourceLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_LABEL';
+
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 

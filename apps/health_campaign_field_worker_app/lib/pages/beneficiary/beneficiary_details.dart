@@ -66,7 +66,8 @@ class _BeneficiaryDetailsPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-
+          print(context.beneficiaryType);
+          print(state.selectedIndividual?.clientReferenceId);
           final projectBeneficiary =
               context.beneficiaryType != BeneficiaryType.individual
                   ? [householdMemberWrapper.projectBeneficiaries.first]
@@ -83,6 +84,8 @@ class _BeneficiaryDetailsPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
               .toList();
+          print(taskData?.length);
+          print("---------taskData--------");
 
           return Scaffold(
             body: ReactiveFormBuilder(
@@ -105,12 +108,16 @@ class _BeneficiaryDetailsPageState
                                 context.read<DeliverInterventionBloc>();
 
                             bloc.add(DeliverInterventionEvent.selectCycleDose(
-                              int.tryParse(taskData?.last.additionalFields
-                                      ?.fields[3].value) ??
-                                  0,
-                              int.tryParse(taskData?.last.additionalFields
-                                      ?.fields[4].value) ??
-                                  0,
+                              taskData != null
+                                  ? int.tryParse(taskData.last.additionalFields
+                                          ?.fields[4].value) ??
+                                      0
+                                  : -1,
+                              taskData != null
+                                  ? int.tryParse(taskData.last.additionalFields
+                                          ?.fields[3].value) ??
+                                      0
+                                  : 1,
                             ));
 
                             router.push(DeliverInterventionRoute());
@@ -322,86 +329,89 @@ class _BeneficiaryDetailsPageState
                                                     orElse: () =>
                                                         const Offstage(),
                                                     fetched: (productVariants) {
+                                                      print('taskData');
+                                                      print(taskData);
                                                       final RegExp regexp =
                                                           RegExp(r'^0+(?=.)');
 
-                                                      final taskCycleindex =
-                                                          taskData != null
+                                                      final taskCycleindex = taskData !=
+                                                                  null &&
+                                                              taskData
+                                                                  .isNotEmpty
+                                                          ? int.tryParse(taskData
+                                                              .last
+                                                              .additionalFields!
+                                                              .fields[3]
+                                                              .value
+                                                              .toString()
+                                                              .replaceAll(
+                                                                regexp,
+                                                                '',
+                                                              ))
+                                                          : 1;
+                                                      final int? taskDoseindex =
+                                                          taskData != null &&
+                                                                  taskData
+                                                                      .isNotEmpty
                                                               ? int.tryParse(taskData
                                                                   .last
                                                                   .additionalFields!
-                                                                  .fields[3]
+                                                                  .fields[4]
                                                                   .value
                                                                   .toString()
                                                                   .replaceAll(
                                                                     regexp,
                                                                     '',
                                                                   ))
-                                                              : 0;
+                                                              : -1;
 
                                                       return DigitTable(
                                                         selectedIndex: cycleIndex ==
                                                                     taskCycleindex &&
                                                                 taskData != null
-                                                            ? int.tryParse(taskData
-                                                                .last
-                                                                .additionalFields!
-                                                                .fields[4]
-                                                                .value
-                                                                .toString()
-                                                                .replaceAll(
-                                                                  regexp,
-                                                                  '',
-                                                                ))
+                                                            ? taskDoseindex! + 1
                                                             : null,
 
                                                         headerList: headerList,
                                                         tableData:
                                                             e.deliveries!.map(
                                                           (item) {
+                                                            final tasks = taskData
+                                                                ?.where((element) =>
+                                                                    element
+                                                                        .additionalFields
+                                                                        ?.fields[
+                                                                            4]
+                                                                        .value ==
+                                                                    '0${e.deliveries!.indexOf(item)}')
+                                                                .firstOrNull;
+
+                                                            final resources =
+                                                                tasks
+                                                                    ?.resources;
+
                                                             return TableDataRow([
                                                               TableData(
-                                                                'Dose ${e.deliveries!.indexOf(item)}',
+                                                                'Dose ${e.deliveries!.indexOf(item) + 1}',
                                                                 cellKey: 'dose',
                                                               ),
                                                               TableData(
-                                                                'In complete ',
+                                                                tasks?.status ??
+                                                                    'In complete ',
                                                                 cellKey:
                                                                     'Status',
                                                               ),
                                                               TableData(
-                                                                taskData != null
-                                                                    ? taskData.length -
-                                                                                1 >=
-                                                                            e.deliveries!
-                                                                                .indexOf(
-                                                                              item,
-                                                                            )
-                                                                        ? taskData
-                                                                            .elementAt(
-                                                                              e.deliveries!.indexOf(
-                                                                                item,
-                                                                              ),
-                                                                            )
-                                                                            .resources!
-                                                                            .map((e) => e
-                                                                                .productVariantId)
-                                                                            .toList()
-                                                                            .join(
-                                                                              ' + ',
-                                                                            )
-                                                                        : '-'
-                                                                    : item.productVariants !=
-                                                                            null
-                                                                        ? item
-                                                                            .productVariants!
-                                                                            .map((e) =>
-                                                                                e.productVariantId)
-                                                                            .toList()
-                                                                            .join(' + ')
-                                                                        : '-',
+                                                                resources
+                                                                        ?.map((e) =>
+                                                                            e.productVariantId)
+                                                                        .toList()
+                                                                        .join(
+                                                                          '+',
+                                                                        ) ??
+                                                                    '',
                                                                 cellKey:
-                                                                    'resources',
+                                                                    'Status',
                                                               ),
                                                             ]);
                                                           },

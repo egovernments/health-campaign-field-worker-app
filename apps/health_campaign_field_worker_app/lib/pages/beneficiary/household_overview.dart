@@ -502,15 +502,15 @@ class _HouseholdOverviewPageState
 
                             final projectId = context.projectId;
 
-                            await context.router
-                                .push(BeneficiaryDetailsRoute());
-
                             bloc.add(
                               HouseholdOverviewReloadEvent(
                                 projectId: projectId,
                                 projectBeneficiaryType: beneficiaryType,
                               ),
                             );
+
+                            await context.router
+                                .push(BeneficiaryDetailsRoute());
                           },
                           child: Center(
                             child: Text(
