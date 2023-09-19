@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -9,19 +7,17 @@ import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
-import '../../blocs/search_households/search_households.dart';
-import '../../data/local_store/sql_store/tables/project.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
-import '../beneficiary_registration/household_details.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 
@@ -95,21 +91,40 @@ class _BeneficiaryDetailsPageState
                 header: const Column(children: [
                   BackNavigationHelpHeaderWidget(),
                 ]),
-                footer: SizedBox(
-                  height: 85,
-                  child: DigitCard(
-                    margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                    child: DigitElevatedButton(
-                      onPressed: () {
-                        router.push(DeliverInterventionRoute());
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(i18.common.coreCommonNext),
+                footer: BlocBuilder<DeliverInterventionBloc,
+                    DeliverInterventionState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                      height: 85,
+                      child: DigitCard(
+                        margin:
+                            const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        child: DigitElevatedButton(
+                          onPressed: () {
+                            final bloc =
+                                context.read<DeliverInterventionBloc>();
+
+                            bloc.add(DeliverInterventionEvent.selectCycleDose(
+                              int.tryParse(taskData?.last.additionalFields
+                                      ?.fields[3].value) ??
+                                  0,
+                              int.tryParse(taskData?.last.additionalFields
+                                      ?.fields[4].value) ??
+                                  0,
+                            ));
+
+                            router.push(DeliverInterventionRoute());
+                          },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonNext),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 children: [
                   DigitCard(

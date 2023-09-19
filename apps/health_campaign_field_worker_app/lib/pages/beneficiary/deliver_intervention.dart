@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
@@ -39,9 +41,11 @@ class _DeliverInterventionPageState
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
-  static const _doseAdministeredKey = 'doseAdministered';
+  static const _doseAdministrationKey = 'doseAdministered';
+  static const _dateOfAdministrationKey = 'dateOfAdministration';
   bool doseAdministered = false;
-  List<Widget> resourceCards = [const ResourceBeneficiaryCard()];
+  final List _controllers = [];
+
   int currentStep = 0;
 
   @override
@@ -88,320 +92,106 @@ class _DeliverInterventionPageState
                   projectBeneficiary.first.clientReferenceId)
               .toList();
 
+          final projectState = context.read<ProjectBloc>().state;
+          List<ProductVariantsModel>? productVariants = projectState
+              .projectType?.cycles?[0].deliveries?[0].productVariants;
+
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
-                : ReactiveFormBuilder(
-                    form: () => buildForm(context),
-                    builder: (context, form, child) {
+                : BlocBuilder<DeliverInterventionBloc,
+                    DeliverInterventionState>(
+                    builder: (context, deliveryInterventionstate) {
                       return ScrollableContent(
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
-                        footer: SizedBox(
-                          height: 100,
-                          child: DigitCard(
-                            child: DigitElevatedButton(
-                              onPressed: () async {
-                                form.markAllAsTouched();
-                                if (!form.valid) return;
-
-                                final router = context.router;
-
-                                final shouldSubmit =
-                                    await DigitDialog.show<bool>(
-                                  context,
-                                  options: DigitDialogOptions(
-                                    titleText: localizations.translate(
-                                      i18.deliverIntervention.dialogTitle,
-                                    ),
-                                    contentText: localizations.translate(
-                                      i18.deliverIntervention.dialogContent,
-                                    ),
-                                    primaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonSubmit,
-                                      ),
-                                      action: (ctx) {
-                                        final clientReferenceId =
-                                            taskData != null
-                                                ? taskData.isEmpty
-                                                    ? IdGen.i.identifier
-                                                    : taskData
-                                                        .first.clientReferenceId
-                                                : IdGen.i.identifier;
-                                        context
-                                            .read<DeliverInterventionBloc>()
-                                            .add(
-                                              DeliverInterventionSubmitEvent(
-                                                TaskModel(
-                                                  id: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? null
-                                                          : taskData.first.id
-                                                      : null,
-                                                  clientReferenceId:
-                                                      clientReferenceId,
-                                                  projectBeneficiaryClientReferenceId:
-                                                      projectBeneficiary.first
-                                                          .clientReferenceId,
-                                                  tenantId: envConfig
-                                                      .variables.tenantId,
-                                                  rowVersion: taskData != null
-                                                      ? taskData.isEmpty
-                                                          ? 1
-                                                          : taskData
-                                                              .first.rowVersion
-                                                      : 1,
-                                                  projectId: context.projectId,
-                                                  status: Status.delivered.name,
-                                                  createdDate: context
-                                                      .millisecondsSinceEpoch(),
-                                                  resources: [
-                                                    TaskResourceModel(
-                                                      id: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .id
-                                                              : null
-                                                          : null,
-                                                      taskId: taskData != null
-                                                          ? taskData.isNotEmpty
-                                                              ? taskData
-                                                                  .first.id
-                                                              : null
-                                                          : null,
-                                                      clientReferenceId:
-                                                          clientReferenceId,
-                                                      rowVersion: taskData !=
-                                                              null
-                                                          ? taskData.isEmpty
-                                                              ? 1
-                                                              : taskData
-                                                                  .first
-                                                                  .resources
-                                                                  ?.first
-                                                                  .rowVersion
-                                                          : 1,
-                                                      isDelivered: true,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
-                                                      quantity: form
-                                                          .control(
-                                                            _quantityDistributedKey,
-                                                          )
-                                                          .value
-                                                          .toString(),
-                                                      productVariantId: (form
-                                                                  .control(
-                                                                    _resourceDeliveredKey,
-                                                                  )
-                                                                  .value
-                                                              as ProductVariantModel)
-                                                          .id,
-                                                      deliveryComment: form
-                                                          .control(
-                                                            _deliveryCommentKey,
-                                                          )
-                                                          .value,
-                                                      auditDetails:
-                                                          AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
-                                                        createdTime: taskData !=
-                                                                null
-                                                            ? taskData
-                                                                    .isNotEmpty
-                                                                ? taskData
-                                                                        .first
-                                                                        .resources
-                                                                        ?.first
-                                                                        .auditDetails
-                                                                        ?.createdTime ??
-                                                                    context
-                                                                        .millisecondsSinceEpoch()
-                                                                : context
-                                                                    .millisecondsSinceEpoch()
-                                                            : context
-                                                                .millisecondsSinceEpoch(),
-                                                        lastModifiedBy: context
-                                                            .loggedInUserUuid,
-                                                        lastModifiedTime: context
-                                                            .millisecondsSinceEpoch(),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  address:
-                                                      householdMemberWrapper
-                                                          .household.address
-                                                          ?.copyWith(
-                                                    relatedClientReferenceId:
-                                                        clientReferenceId,
-                                                    id: null,
-                                                  ),
-                                                  auditDetails: AuditDetails(
-                                                    createdBy: context
-                                                        .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy: context
-                                                        .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                  additionalFields:
-                                                      TaskAdditionalFields(
-                                                    version: 1,
-                                                    fields: [
-                                                      AdditionalField(
-                                                        'DateOfDelivery',
-                                                        DateTime.now()
-                                                            .millisecondsSinceEpoch
-                                                            .toString(),
-                                                      ),
-                                                      AdditionalField(
-                                                        'DateOfAdministration',
-                                                        DateTime.now()
-                                                            .millisecondsSinceEpoch
-                                                            .toString(),
-                                                      ),
-                                                      AdditionalField(
-                                                        'DateOfVerification',
-                                                        DateTime.now()
-                                                            .millisecondsSinceEpoch
-                                                            .toString(),
-                                                      ),
-                                                      const AdditionalField(
-                                                        'CycleIndex',
-                                                        "01",
-                                                      ),
-                                                      const AdditionalField(
-                                                        'DoseIndex',
-                                                        "01",
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                taskData == null
-                                                    ? false
-                                                    : taskData.isEmpty
-                                                        ? false
-                                                        : true,
-                                                context.boundary,
-                                              ),
-                                            );
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(true);
-                                      },
-                                    ),
-                                    secondaryAction: DigitDialogActions(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonCancel,
-                                      ),
-                                      action: (context) => Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(false),
+                        children: [
+                          ReactiveFormBuilder(
+                            form: () => buildForm(context),
+                            builder: (context, form, child) {
+                              return Column(
+                                children: [
+                                  DigitCard(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          localizations.translate(
+                                            i18.individualDetails
+                                                .individualsDetailsLabelText,
+                                          ),
+                                          style: theme.textTheme.displayMedium,
+                                        ),
+                                        const DigitTextFormField(
+                                          readOnly: true,
+                                          formControlName:
+                                              _doseAdministrationKey,
+                                          keyboardType: TextInputType.number,
+                                          label: 'Current cycle',
+                                        ),
+                                        DigitStepper(
+                                          activeStep:
+                                              deliveryInterventionstate.dose,
+                                          steps: steps,
+                                          maxStepReached: 3,
+                                          lineLength: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              5,
+                                        ),
+                                        DigitDateFormPicker(
+                                          isEnabled: false,
+                                          formControlName:
+                                              _dateOfAdministrationKey,
+                                          label: localizations.translate(
+                                            i18.householdDetails
+                                                .dateOfRegistrationLabel,
+                                          ),
+                                          isRequired: false,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-
-                                if (shouldSubmit ?? false) {
-                                  final parent = router.parent() as StackRouter;
-                                  parent
-                                    ..pop()
-                                    ..pop();
-
-                                  router.push(AcknowledgementRoute());
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  currentStep < steps.length - 1
-                                      ? localizations
-                                          .translate(i18.common.coreCommonNext)
-                                      : localizations.translate(
-                                          i18.common.coreCommonSubmit,
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        children: [
-                          DigitCard(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.deliverIntervention
-                                              .deliverInterventionLabel,
-                                        ),
-                                        style: theme.textTheme.displayMedium,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                DigitRadioButtonList<KeyValue>(
-                                  labelText: localizations.translate(i18
-                                      .deliverIntervention
-                                      .wasTheDoseAdministered),
-                                  labelStyle: DigitTheme.instance.mobileTheme
-                                      .textTheme.headlineSmall,
-                                  formControlName: _doseAdministeredKey,
-                                  valueMapper: (val) =>
-                                      localizations.translate(val.label),
-                                  options: Constants.yesNo,
-                                  isRequired: true,
-                                  onValueChange: (val) {
-                                    setState(() {
-                                      doseAdministered = val.key;
-                                    });
-                                  },
-                                ),
-                                if (form.control(_doseAdministeredKey).value ==
-                                    Constants.yesNo.first)
-                                  Column(children: [
-                                    DigitStepper(
-                                      activeStep: currentStep,
-                                      steps: steps,
-                                      maxStepReached: 3,
-                                      lineLength:
-                                          MediaQuery.of(context).size.width / 5,
-                                    ),
-                                    Column(
+                                  DigitCard(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        if (resourceCards.isNotEmpty) ...[
-                                          const ResourceBeneficiaryCard(
-                                            cardIndex: 0,
+                                        Text(
+                                          localizations.translate(
+                                            i18.individualDetails
+                                                .individualsDetailsLabelText,
                                           ),
-                                        ],
-                                        ...resourceCards.skip(1).map(
-                                              (card) => ResourceBeneficiaryCard(
-                                                onDelete: () {
-                                                  setState(() {
-                                                    resourceCards.remove(card);
-                                                  });
-                                                },
-                                              ),
-                                            ),
+                                          style: theme.textTheme.displayMedium,
+                                        ),
+                                        ..._controllers
+                                            .map((e) => ResourceBeneficiaryCard(
+                                                  form: form,
+                                                  cardIndex:
+                                                      _controllers.indexOf(e),
+                                                  onDelete: (index) {
+                                                    (form.control(
+                                                      _resourceDeliveredKey,
+                                                    ) as FormArray)
+                                                        .removeAt(index);
+                                                    _controllers
+                                                        .removeAt(index);
+                                                    setState(() {
+                                                      _controllers;
+                                                    });
+                                                  },
+                                                ))
+                                            .toList(),
                                         DigitIconButton(
                                           onPressed: () async {
+                                            addController(form);
                                             setState(() {
-                                              resourceCards.insert(
-                                                0,
-                                                const ResourceBeneficiaryCard(),
-                                              );
+                                              _controllers
+                                                  .add(productVariants?.length);
                                             });
                                           },
                                           icon: Icons.add,
@@ -412,66 +202,433 @@ class _DeliverInterventionPageState
                                         ),
                                       ],
                                     ),
-                                  ]),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ],
                       );
                     },
                   ),
+            // : ReactiveFormBuilder(
+            // form: () => buildForm(context),
+            // builder: (context, form, child) {
+            //   return ScrollableContent(
+            //     header: const Column(children: [
+            //       BackNavigationHelpHeaderWidget(),
+            //     ]),
+            //     footer: SizedBox(
+            //       height: 100,
+            //       child: DigitCard(
+            //         child: DigitElevatedButton(
+            //           onPressed: () async {
+            //             form.markAllAsTouched();
+            //             if (!form.valid) return;
+
+            //             final router = context.router;
+
+            //             final shouldSubmit =
+            //                 await DigitDialog.show<bool>(
+            //               context,
+            //               options: DigitDialogOptions(
+            //                 titleText: localizations.translate(
+            //                   i18.deliverIntervention.dialogTitle,
+            //                 ),
+            //                 contentText: localizations.translate(
+            //                   i18.deliverIntervention.dialogContent,
+            //                 ),
+            //                 primaryAction: DigitDialogActions(
+            //                   label: localizations.translate(
+            //                     i18.common.coreCommonSubmit,
+            //                   ),
+            //                   action: (ctx) {
+            //                     final clientReferenceId =
+            //                         taskData != null
+            //                             ? taskData.isEmpty
+            //                                 ? IdGen.i.identifier
+            //                                 : taskData
+            //                                     .first.clientReferenceId
+            //                             : IdGen.i.identifier;
+            //                     context
+            //                         .read<DeliverInterventionBloc>()
+            //                         .add(
+            //                           DeliverInterventionSubmitEvent(
+            //                             TaskModel(
+            //                               id: taskData != null
+            //                                   ? taskData.isEmpty
+            //                                       ? null
+            //                                       : taskData.first.id
+            //                                   : null,
+            //                               clientReferenceId:
+            //                                   clientReferenceId,
+            //                               projectBeneficiaryClientReferenceId:
+            //                                   projectBeneficiary.first
+            //                                       .clientReferenceId,
+            //                               tenantId: envConfig
+            //                                   .variables.tenantId,
+            //                               rowVersion: taskData != null
+            //                                   ? taskData.isEmpty
+            //                                       ? 1
+            //                                       : taskData
+            //                                           .first.rowVersion
+            //                                   : 1,
+            //                               projectId: context.projectId,
+            //                               status: Status.delivered.name,
+            //                               createdDate: context
+            //                                   .millisecondsSinceEpoch(),
+            //                               resources: [
+            //                                 TaskResourceModel(
+            //                                   id: taskData != null
+            //                                       ? taskData.isNotEmpty
+            //                                           ? taskData
+            //                                               .first
+            //                                               .resources
+            //                                               ?.first
+            //                                               .id
+            //                                           : null
+            //                                       : null,
+            //                                   taskId: taskData != null
+            //                                       ? taskData.isNotEmpty
+            //                                           ? taskData
+            //                                               .first.id
+            //                                           : null
+            //                                       : null,
+            //                                   clientReferenceId:
+            //                                       clientReferenceId,
+            //                                   rowVersion: taskData !=
+            //                                           null
+            //                                       ? taskData.isEmpty
+            //                                           ? 1
+            //                                           : taskData
+            //                                               .first
+            //                                               .resources
+            //                                               ?.first
+            //                                               .rowVersion
+            //                                       : 1,
+            //                                   isDelivered: true,
+            //                                   tenantId: envConfig
+            //                                       .variables.tenantId,
+            //                                   quantity: form
+            //                                       .control(
+            //                                         _quantityDistributedKey,
+            //                                       )
+            //                                       .value
+            //                                       .toString(),
+            //                                   productVariantId: (form
+            //                                               .control(
+            //                                                 _resourceDeliveredKey,
+            //                                               )
+            //                                               .value
+            //                                           as ProductVariantModel)
+            //                                       .id,
+            //                                   deliveryComment: form
+            //                                       .control(
+            //                                         _deliveryCommentKey,
+            //                                       )
+            //                                       .value,
+            //                                   auditDetails:
+            //                                       AuditDetails(
+            //                                     createdBy: context
+            //                                         .loggedInUserUuid,
+            //                                     createdTime: taskData !=
+            //                                             null
+            //                                         ? taskData
+            //                                                 .isNotEmpty
+            //                                             ? taskData
+            //                                                     .first
+            //                                                     .resources
+            //                                                     ?.first
+            //                                                     .auditDetails
+            //                                                     ?.createdTime ??
+            //                                                 context
+            //                                                     .millisecondsSinceEpoch()
+            //                                             : context
+            //                                                 .millisecondsSinceEpoch()
+            //                                         : context
+            //                                             .millisecondsSinceEpoch(),
+            //                                     lastModifiedBy: context
+            //                                         .loggedInUserUuid,
+            //                                     lastModifiedTime: context
+            //                                         .millisecondsSinceEpoch(),
+            //                                   ),
+            //                                 ),
+            //                               ],
+            //                               address:
+            //                                   householdMemberWrapper
+            //                                       .household.address
+            //                                       ?.copyWith(
+            //                                 relatedClientReferenceId:
+            //                                     clientReferenceId,
+            //                                 id: null,
+            //                               ),
+            //                               auditDetails: AuditDetails(
+            //                                 createdBy: context
+            //                                     .loggedInUserUuid,
+            //                                 createdTime: context
+            //                                     .millisecondsSinceEpoch(),
+            //                                 lastModifiedBy: context
+            //                                     .loggedInUserUuid,
+            //                                 lastModifiedTime: context
+            //                                     .millisecondsSinceEpoch(),
+            //                               ),
+            //                               additionalFields:
+            //                                   TaskAdditionalFields(
+            //                                 version: 1,
+            //                                 fields: [
+            //                                   AdditionalField(
+            //                                     'DateOfDelivery',
+            //                                     DateTime.now()
+            //                                         .millisecondsSinceEpoch
+            //                                         .toString(),
+            //                                   ),
+            //                                   AdditionalField(
+            //                                     'DateOfAdministration',
+            //                                     DateTime.now()
+            //                                         .millisecondsSinceEpoch
+            //                                         .toString(),
+            //                                   ),
+            //                                   AdditionalField(
+            //                                     'DateOfVerification',
+            //                                     DateTime.now()
+            //                                         .millisecondsSinceEpoch
+            //                                         .toString(),
+            //                                   ),
+            //                                   const AdditionalField(
+            //                                     'CycleIndex',
+            //                                     "01",
+            //                                   ),
+            //                                   const AdditionalField(
+            //                                     'DoseIndex',
+            //                                     "01",
+            //                                   ),
+            //                                 ],
+            //                               ),
+            //                             ),
+            //                             taskData == null
+            //                                 ? false
+            //                                 : taskData.isEmpty
+            //                                     ? false
+            //                                     : true,
+            //                             context.boundary,
+            //                           ),
+            //                         );
+            //                     Navigator.of(
+            //                       context,
+            //                       rootNavigator: true,
+            //                     ).pop(true);
+            //                   },
+            //                 ),
+            //                 secondaryAction: DigitDialogActions(
+            //                   label: localizations.translate(
+            //                     i18.common.coreCommonCancel,
+            //                   ),
+            //                   action: (context) => Navigator.of(
+            //                     context,
+            //                     rootNavigator: true,
+            //                   ).pop(false),
+            //                 ),
+            //               ),
+            //             );
+
+            //             if (shouldSubmit ?? false) {
+            //               final parent = router.parent() as StackRouter;
+            //               parent
+            //                 ..pop()
+            //                 ..pop();
+
+            //               router.push(AcknowledgementRoute());
+            //             }
+            //           },
+            //           child: Center(
+            //             child: Text(
+            //               currentStep < steps.length - 1
+            //                   ? localizations
+            //                       .translate(i18.common.coreCommonNext)
+            //                   : localizations.translate(
+            //                       i18.common.coreCommonSubmit,
+            //                     ),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     children: [
+            //       DigitCard(
+            //         child: Column(
+            //           children: [
+            //             Row(
+            //               mainAxisAlignment:
+            //                   MainAxisAlignment.spaceBetween,
+            //               children: [
+            //                 Expanded(
+            //                   child: Text(
+            //                     localizations.translate(
+            //                       i18.deliverIntervention
+            //                           .deliverInterventionLabel,
+            //                     ),
+            //                     style: theme.textTheme.displayMedium,
+            //                   ),
+            //                 ),
+            //               ],
+            //             ),
+            //             DigitRadioButtonList<KeyValue>(
+            //               labelText: localizations.translate(i18
+            //                   .deliverIntervention
+            //                   .wasTheDoseAdministered),
+            //               labelStyle: DigitTheme.instance.mobileTheme
+            //                   .textTheme.headlineSmall,
+            //               formControlName: _doseAdministeredKey,
+            //               valueMapper: (val) =>
+            //                   localizations.translate(val.label),
+            //               options: Constants.yesNo,
+            //               isRequired: true,
+            //               onValueChange: (val) {
+            //                 setState(() {
+            //                   doseAdministered = val.key;
+            //                 });
+            //               },
+            //             ),
+            //             if (form.control(_doseAdministeredKey).value ==
+            //                 Constants.yesNo.first)
+            //               Column(children: [
+            //                 DigitStepper(
+            //                   activeStep: currentStep,
+            //                   steps: steps,
+            //                   maxStepReached: 3,
+            //                   lineLength:
+            //                       MediaQuery.of(context).size.width / 5,
+            //                 ),
+            //                 Column(
+            //                   children: [
+            //                     if (resourceCards.isNotEmpty) ...[
+            //                       const ResourceBeneficiaryCard(
+            //                         cardIndex: 0,
+            //                       ),
+            //                     ],
+            //                     ...resourceCards.skip(1).map(
+            //                           (card) => ResourceBeneficiaryCard(
+            //                             onDelete: () {
+            //                               setState(() {
+            //                                 resourceCards.remove(card);
+            //                               });
+            //                             },
+            //                           ),
+            //                         ),
+            //                     DigitIconButton(
+            //                       onPressed: () async {
+            //                         setState(() {
+            //                           resourceCards.insert(
+            //                             0,
+            //                             const ResourceBeneficiaryCard(),
+            //                           );
+            //                         });
+            //                       },
+            //                       icon: Icons.add,
+            //                       iconText: localizations.translate(
+            //                         i18.deliverIntervention
+            //                             .resourceAddBeneficiary,
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ]),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   );
+            // },
+            // ),
           );
         },
       ),
     );
   }
 
-  FormGroup buildForm(BuildContext context) {
-    final state = context.read<HouseholdOverviewBloc>().state;
-    // Get projetTypes for ProjectBloc
-    final projectState = context.read<ProjectBloc>().state;
+  addController(FormGroup form) {
+    (form.control(_resourceDeliveredKey) as FormArray)
+        .add(FormControl<ProductVariantModel>());
+    (form.control(_quantityDistributedKey) as FormArray)
+        .add(FormControl<int>(value: 1));
+    (form.control(_deliveryCommentKey) as FormArray)
+        .add(FormControl<String>(value: ''));
+  }
 
-    // Eztract the  prductVariants for ProjectBloc
+  FormGroup buildForm(BuildContext context) {
+    final projectState = context.read<ProjectBloc>().state;
     List<ProductVariantsModel>? productVariants =
         projectState.projectType?.cycles?[0].deliveries?[0].productVariants;
-
-    final projectBeneficiary =
-        context.beneficiaryType != BeneficiaryType.individual
-            ? [state.householdMemberWrapper.projectBeneficiaries.first]
-            : state.householdMemberWrapper.projectBeneficiaries
-                .where(
-                  (element) =>
-                      element.beneficiaryClientReferenceId ==
-                      state.selectedIndividual?.clientReferenceId,
-                )
-                .toList();
-    final taskData = state.householdMemberWrapper.tasks
-        ?.where((element) =>
-            element.projectBeneficiaryClientReferenceId ==
-            projectBeneficiary.first.clientReferenceId)
-        .toList();
+    _controllers
+        .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
     return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<ProductVariantModel>(
-        validators: doseAdministered ? [Validators.required] : [],
-      ),
-      _quantityDistributedKey: FormControl<int>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
-            ? int.tryParse(taskData!.first.resources!.first.quantity!)
-            : 1,
-        validators: doseAdministered ? [Validators.required] : [],
-      ),
-      _doseAdministeredKey: FormControl<KeyValue>(
-        value: taskData != null && taskData.isNotEmpty
-            ? Constants.yesNo.first
-            : null,
-        validators: [
-          Validators.required,
+      _doseAdministrationKey:
+          FormControl<String>(value: 'Cycle ${1}', validators: []),
+      _dateOfAdministrationKey:
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _resourceDeliveredKey: FormArray<ProductVariantModel>(
+        [
+          ..._controllers.map((e) => FormControl<ProductVariantModel>()),
         ],
       ),
-      _deliveryCommentKey: FormControl<String>(
-        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
-      ),
+      _quantityDistributedKey: FormArray<int>([
+        ..._controllers.map((e) => FormControl<int>(value: 1)),
+      ]),
+      _deliveryCommentKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(),
+        ),
+      ]),
     });
   }
+
+  // FormGroup buildForm(BuildContext context) {
+  //   final state = context.read<HouseholdOverviewBloc>().state;
+  //   // Get projetTypes for ProjectBloc
+  //   final projectState = context.read<ProjectBloc>().state;
+
+  //   // Eztract the  prductVariants for ProjectBloc
+  //   List<ProductVariantsModel>? productVariants =
+  //       projectState.projectType?.cycles?[0].deliveries?[0].productVariants;
+
+  //   final projectBeneficiary =
+  //       context.beneficiaryType != BeneficiaryType.individual
+  //           ? [state.householdMemberWrapper.projectBeneficiaries.first]
+  //           : state.householdMemberWrapper.projectBeneficiaries
+  //               .where(
+  //                 (element) =>
+  //                     element.beneficiaryClientReferenceId ==
+  //                     state.selectedIndividual?.clientReferenceId,
+  //               )
+  //               .toList();
+  //   final taskData = state.householdMemberWrapper.tasks
+  //       ?.where((element) =>
+  //           element.projectBeneficiaryClientReferenceId ==
+  //           projectBeneficiary.first.clientReferenceId)
+  //       .toList();
+
+  //   return fb.group(<String, Object>{
+  //     _resourceDeliveredKey: FormControl<ProductVariantModel>(
+  //       validators: doseAdministered ? [Validators.required] : [],
+  //     ),
+  //     _quantityDistributedKey: FormControl<int>(
+  //       value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
+  //           ? int.tryParse(taskData!.first.resources!.first.quantity!)
+  //           : 1,
+  //       validators: doseAdministered ? [Validators.required] : [],
+  //     ),
+  //     _doseAdministeredKey: FormControl<KeyValue>(
+  //       value: taskData != null && taskData.isNotEmpty
+  //           ? Constants.yesNo.first
+  //           : null,
+  //       validators: [
+  //         Validators.required,
+  //       ],
+  //     ),
+  //     _deliveryCommentKey: FormControl<String>(
+  //       value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
+  //     ),
+  //   });
+  // }
 }

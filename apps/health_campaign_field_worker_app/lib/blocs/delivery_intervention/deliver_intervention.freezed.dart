@@ -22,6 +22,7 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle) selectCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +31,7 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle)? selectCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +40,7 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle)? selectCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -47,18 +50,24 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -175,6 +184,7 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle) selectCycleDose,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
   }
@@ -186,6 +196,7 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle)? selectCycleDose,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
   }
@@ -197,6 +208,7 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle)? selectCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -212,6 +224,8 @@ class _$DeliverInterventionSubmitEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
   }) {
     return handleSubmit(this);
   }
@@ -221,6 +235,8 @@ class _$DeliverInterventionSubmitEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
   }) {
     return handleSubmit?.call(this);
   }
@@ -230,6 +246,8 @@ class _$DeliverInterventionSubmitEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -328,6 +346,7 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle) selectCycleDose,
   }) {
     return handleSearch(taskSearch);
   }
@@ -339,6 +358,7 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle)? selectCycleDose,
   }) {
     return handleSearch?.call(taskSearch);
   }
@@ -350,6 +370,7 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle)? selectCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -365,6 +386,8 @@ class _$DeliverInterventionSearchEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
   }) {
     return handleSearch(this);
   }
@@ -374,6 +397,8 @@ class _$DeliverInterventionSearchEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
   }) {
     return handleSearch?.call(this);
   }
@@ -383,6 +408,8 @@ class _$DeliverInterventionSearchEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -404,9 +431,181 @@ abstract class DeliverInterventionSearchEvent
 }
 
 /// @nodoc
+abstract class _$$DeliverInterventionCycleDoseSelectionEventCopyWith<$Res> {
+  factory _$$DeliverInterventionCycleDoseSelectionEventCopyWith(
+          _$DeliverInterventionCycleDoseSelectionEvent value,
+          $Res Function(_$DeliverInterventionCycleDoseSelectionEvent) then) =
+      __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int dose, int cycle});
+}
+
+/// @nodoc
+class __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>
+    extends _$DeliverInterventionEventCopyWithImpl<$Res,
+        _$DeliverInterventionCycleDoseSelectionEvent>
+    implements _$$DeliverInterventionCycleDoseSelectionEventCopyWith<$Res> {
+  __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl(
+      _$DeliverInterventionCycleDoseSelectionEvent _value,
+      $Res Function(_$DeliverInterventionCycleDoseSelectionEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? dose = null,
+    Object? cycle = null,
+  }) {
+    return _then(_$DeliverInterventionCycleDoseSelectionEvent(
+      null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DeliverInterventionCycleDoseSelectionEvent
+    implements DeliverInterventionCycleDoseSelectionEvent {
+  const _$DeliverInterventionCycleDoseSelectionEvent(this.dose, this.cycle);
+
+  @override
+  final int dose;
+  @override
+  final int cycle;
+
+  @override
+  String toString() {
+    return 'DeliverInterventionEvent.selectCycleDose(dose: $dose, cycle: $cycle)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeliverInterventionCycleDoseSelectionEvent &&
+            (identical(other.dose, dose) || other.dose == dose) &&
+            (identical(other.cycle, cycle) || other.cycle == cycle));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, dose, cycle);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeliverInterventionCycleDoseSelectionEventCopyWith<
+          _$DeliverInterventionCycleDoseSelectionEvent>
+      get copyWith =>
+          __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<
+              _$DeliverInterventionCycleDoseSelectionEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+        handleSubmit,
+    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle) selectCycleDose,
+  }) {
+    return selectCycleDose(dose, cycle);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle)? selectCycleDose,
+  }) {
+    return selectCycleDose?.call(dose, cycle);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle)? selectCycleDose,
+    required TResult orElse(),
+  }) {
+    if (selectCycleDose != null) {
+      return selectCycleDose(dose, cycle);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DeliverInterventionSubmitEvent value)
+        handleSubmit,
+    required TResult Function(DeliverInterventionSearchEvent value)
+        handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
+  }) {
+    return selectCycleDose(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+  }) {
+    return selectCycleDose?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+    required TResult orElse(),
+  }) {
+    if (selectCycleDose != null) {
+      return selectCycleDose(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DeliverInterventionCycleDoseSelectionEvent
+    implements DeliverInterventionEvent {
+  const factory DeliverInterventionCycleDoseSelectionEvent(
+          final int dose, final int cycle) =
+      _$DeliverInterventionCycleDoseSelectionEvent;
+
+  int get dose;
+  int get cycle;
+  @JsonKey(ignore: true)
+  _$$DeliverInterventionCycleDoseSelectionEventCopyWith<
+          _$DeliverInterventionCycleDoseSelectionEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$DeliverInterventionState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
+  int get cycle => throw _privateConstructorUsedError;
+  int get dose => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -420,7 +619,12 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
           $Res Function(DeliverInterventionState) then) =
       _$DeliverInterventionStateCopyWithImpl<$Res, DeliverInterventionState>;
   @useResult
-  $Res call({bool loading, bool isEditing, List<TaskModel>? tasks});
+  $Res call(
+      {bool loading,
+      bool isEditing,
+      int cycle,
+      int dose,
+      List<TaskModel>? tasks});
 }
 
 /// @nodoc
@@ -439,6 +643,8 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
+    Object? cycle = null,
+    Object? dose = null,
     Object? tasks = freezed,
   }) {
     return _then(_value.copyWith(
@@ -450,6 +656,14 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
+      cycle: null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as int,
+      dose: null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
       tasks: freezed == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -467,7 +681,12 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       __$$_DeliverInterventionStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool loading, bool isEditing, List<TaskModel>? tasks});
+  $Res call(
+      {bool loading,
+      bool isEditing,
+      int cycle,
+      int dose,
+      List<TaskModel>? tasks});
 }
 
 /// @nodoc
@@ -484,6 +703,8 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
+    Object? cycle = null,
+    Object? dose = null,
     Object? tasks = freezed,
   }) {
     return _then(_$_DeliverInterventionState(
@@ -495,6 +716,14 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
+      cycle: null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as int,
+      dose: null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
       tasks: freezed == tasks
           ? _value._tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -509,6 +738,8 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   const _$_DeliverInterventionState(
       {this.loading = false,
       this.isEditing = false,
+      this.cycle = 0,
+      this.dose = 0,
       final List<TaskModel>? tasks})
       : _tasks = tasks;
 
@@ -518,6 +749,12 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   @override
   @JsonKey()
   final bool isEditing;
+  @override
+  @JsonKey()
+  final int cycle;
+  @override
+  @JsonKey()
+  final int dose;
   final List<TaskModel>? _tasks;
   @override
   List<TaskModel>? get tasks {
@@ -529,7 +766,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
   @override
   String toString() {
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, tasks: $tasks)';
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, tasks: $tasks)';
   }
 
   @override
@@ -540,11 +777,13 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
+            (identical(other.cycle, cycle) || other.cycle == cycle) &&
+            (identical(other.dose, dose) || other.dose == dose) &&
             const DeepCollectionEquality().equals(other._tasks, _tasks));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loading, isEditing,
+  int get hashCode => Object.hash(runtimeType, loading, isEditing, cycle, dose,
       const DeepCollectionEquality().hash(_tasks));
 
   @JsonKey(ignore: true)
@@ -559,12 +798,18 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   const factory _DeliverInterventionState(
       {final bool loading,
       final bool isEditing,
+      final int cycle,
+      final int dose,
       final List<TaskModel>? tasks}) = _$_DeliverInterventionState;
 
   @override
   bool get loading;
   @override
   bool get isEditing;
+  @override
+  int get cycle;
+  @override
+  int get dose;
   @override
   List<TaskModel>? get tasks;
   @override

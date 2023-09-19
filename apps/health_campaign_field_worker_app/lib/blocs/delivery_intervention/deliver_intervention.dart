@@ -20,6 +20,7 @@ class DeliverInterventionBloc
   }) {
     on(_handleSubmit);
     on(_handleSearch);
+    on(_handleCycleDoseSelection);
   }
 
   FutureOr<void> _handleSubmit(
@@ -71,6 +72,20 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _handleCycleDoseSelection(
+    DeliverInterventionCycleDoseSelectionEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      emit(state.copyWith(cycle: event.cycle, dose: event.dose));
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
 }
 
 @freezed
@@ -84,6 +99,11 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.handleSearch(
     TaskSearchModel taskSearch,
   ) = DeliverInterventionSearchEvent;
+
+  const factory DeliverInterventionEvent.selectCycleDose(
+    int dose,
+    int cycle,
+  ) = DeliverInterventionCycleDoseSelectionEvent;
 }
 
 @freezed
@@ -91,6 +111,8 @@ class DeliverInterventionState with _$DeliverInterventionState {
   const factory DeliverInterventionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
+    @Default(0) int cycle,
+    @Default(0) int dose,
     List<TaskModel>? tasks,
   }) = _DeliverInterventionState;
 }

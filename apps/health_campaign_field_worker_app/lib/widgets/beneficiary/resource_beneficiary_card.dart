@@ -12,14 +12,16 @@ import '../localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
-  final VoidCallback? onDelete;
-  final int? cardIndex;
+  final void Function(int) onDelete;
+  final int cardIndex;
+  final FormGroup form;
 
   const ResourceBeneficiaryCard({
     Key? key,
     super.appLocalizations,
-    this.onDelete,
-    this.cardIndex,
+    required this.onDelete,
+    required this.cardIndex,
+    required this.form,
   }) : super(key: key);
 
   @override
@@ -29,14 +31,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class _ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
-  static const _resourceDeliveredKey = 'resourceDelivered';
-  static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
-
   @override
   Widget build(BuildContext context) {
-    final form = buildForm();
-
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.background,
@@ -66,14 +62,15 @@ class _ResourceBeneficiaryCardState
                       );
                     },
                   );
-                  form.control(_resourceDeliveredKey).value = variant;
 
-                  return DigitReactiveDropdown<ProductVariantModel>(
+                  print(widget.form.controls);
+
+                  return DigitReactiveDropdown(
                     label: localizations.translate(
                       i18.deliverIntervention.resourceDeliveredLabel,
                     ),
                     menuItems: productVariants,
-                    formControlName: _resourceDeliveredKey,
+                    formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {
                       return localizations.translate(
                         value.sku ?? value.id,
@@ -86,8 +83,8 @@ class _ResourceBeneficiaryCardState
           ),
           DigitIntegerFormPicker(
             incrementer: true,
-            formControlName: _quantityDistributedKey,
-            form: form,
+            formControlName: 'quantityDistributed.${widget.cardIndex}',
+            form: widget.form,
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
@@ -111,7 +108,7 @@ class _ResourceBeneficiaryCardState
                 menuItems: deliveryCommentOptions.map((e) {
                   return localizations.translate(e.name);
                 }).toList(),
-                formControlName: _deliveryCommentKey,
+                formControlName: 'deliveryComment.${widget.cardIndex}',
               );
             },
           ),
@@ -153,7 +150,7 @@ class _ResourceBeneficiaryCardState
                           ),
                         );
                         if (submit == true) {
-                          widget.onDelete?.call();
+                          widget.onDelete(widget.cardIndex);
                         }
                       },
                       iconText: localizations.translate(
@@ -166,18 +163,5 @@ class _ResourceBeneficiaryCardState
         ],
       ),
     );
-  }
-
-  FormGroup buildForm() {
-    return fb.group(<String, Object>{
-      _resourceDeliveredKey: FormControl<String>(
-        validators: [],
-      ),
-      _quantityDistributedKey: FormControl<int>(
-        value: 2,
-        validators: [Validators.required],
-      ),
-      _deliveryCommentKey: FormControl<String>(value: ""),
-    });
   }
 }
