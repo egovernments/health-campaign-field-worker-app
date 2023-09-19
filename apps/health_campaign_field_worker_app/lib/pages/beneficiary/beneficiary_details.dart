@@ -66,8 +66,7 @@ class _BeneficiaryDetailsPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-          print(context.beneficiaryType);
-          print(state.selectedIndividual?.clientReferenceId);
+
           final projectBeneficiary =
               context.beneficiaryType != BeneficiaryType.individual
                   ? [householdMemberWrapper.projectBeneficiaries.first]
@@ -84,8 +83,6 @@ class _BeneficiaryDetailsPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
               .toList();
-          print(taskData?.length);
-          print("---------taskData--------");
 
           return Scaffold(
             body: ReactiveFormBuilder(
@@ -108,12 +105,12 @@ class _BeneficiaryDetailsPageState
                                 context.read<DeliverInterventionBloc>();
 
                             bloc.add(DeliverInterventionEvent.selectCycleDose(
-                              taskData != null
+                              taskData != null && taskData.isNotEmpty
                                   ? int.tryParse(taskData.last.additionalFields
                                           ?.fields[4].value) ??
                                       0
                                   : -1,
-                              taskData != null
+                              taskData != null && taskData.isNotEmpty
                                   ? int.tryParse(taskData.last.additionalFields
                                           ?.fields[3].value) ??
                                       0
@@ -329,8 +326,6 @@ class _BeneficiaryDetailsPageState
                                                     orElse: () =>
                                                         const Offstage(),
                                                     fetched: (productVariants) {
-                                                      print('taskData');
-                                                      print(taskData);
                                                       final RegExp regexp =
                                                           RegExp(r'^0+(?=.)');
 

@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -311,110 +307,6 @@ class _DeliverInterventionPageState
           );
         },
       ),
-      // : ReactiveFormBuilder(
-      // form: () => buildForm(context),
-      // builder: (context, form, child) {
-      //   return ScrollableContent(
-      //     header: const Column(children: [
-      //       BackNavigationHelpHeaderWidget(),
-      //     ]),
-      //     footer: SizedBox(
-      //       height: 100,
-      //       child: DigitCard(
-      //         child: DigitElevatedButton(
-      //           onPressed: () async {
-      //             form.markAllAsTouched();
-      //             if (!form.valid) return;
-
-      //             final router = context.router;
-
-      //     children: [
-      //       DigitCard(
-      //         child: Column(
-      //           children: [
-      //             Row(
-      //               mainAxisAlignment:
-      //                   MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Expanded(
-      //                   child: Text(
-      //                     localizations.translate(
-      //                       i18.deliverIntervention
-      //                           .deliverInterventionLabel,
-      //                     ),
-      //                     style: theme.textTheme.displayMedium,
-      //                   ),
-      //                 ),
-      //               ],
-      //             ),
-      //             DigitRadioButtonList<KeyValue>(
-      //               labelText: localizations.translate(i18
-      //                   .deliverIntervention
-      //                   .wasTheDoseAdministered),
-      //               labelStyle: DigitTheme.instance.mobileTheme
-      //                   .textTheme.headlineSmall,
-      //               formControlName: _doseAdministeredKey,
-      //               valueMapper: (val) =>
-      //                   localizations.translate(val.label),
-      //               options: Constants.yesNo,
-      //               isRequired: true,
-      //               onValueChange: (val) {
-      //                 setState(() {
-      //                   doseAdministered = val.key;
-      //                 });
-      //               },
-      //             ),
-      //             if (form.control(_doseAdministeredKey).value ==
-      //                 Constants.yesNo.first)
-      //               Column(children: [
-      //                 DigitStepper(
-      //                   activeStep: currentStep,
-      //                   steps: steps,
-      //                   maxStepReached: 3,
-      //                   lineLength:
-      //                       MediaQuery.of(context).size.width / 5,
-      //                 ),
-      //                 Column(
-      //                   children: [
-      //                     if (resourceCards.isNotEmpty) ...[
-      //                       const ResourceBeneficiaryCard(
-      //                         cardIndex: 0,
-      //                       ),
-      //                     ],
-      //                     ...resourceCards.skip(1).map(
-      //                           (card) => ResourceBeneficiaryCard(
-      //                             onDelete: () {
-      //                               setState(() {
-      //                                 resourceCards.remove(card);
-      //                               });
-      //                             },
-      //                           ),
-      //                         ),
-      //                     DigitIconButton(
-      //                       onPressed: () async {
-      //                         setState(() {
-      //                           resourceCards.insert(
-      //                             0,
-      //                             const ResourceBeneficiaryCard(),
-      //                           );
-      //                         });
-      //                       },
-      //                       icon: Icons.add,
-      //                       iconText: localizations.translate(
-      //                         i18.deliverIntervention
-      //                             .resourceAddBeneficiary,
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               ]),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   );
-      // },
-      // ),
     );
   }
 
