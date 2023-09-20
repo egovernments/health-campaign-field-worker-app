@@ -53,10 +53,6 @@ class _BeneficiaryDetailsPageState
         cellKey: 'resources',
       ),
       TableHeader(
-        'Quantity',
-        cellKey: 'quantity',
-      ),
-      TableHeader(
         'Completed on',
         cellKey: 'completedOn',
       ),
@@ -360,63 +356,78 @@ class _BeneficiaryDetailsPageState
                                                                   ))
                                                               : -1;
 
-                                                      return DigitTable(
-                                                        selectedIndex: cycleIndex ==
-                                                                    taskCycleindex &&
-                                                                taskData != null
-                                                            ? taskDoseindex! + 1
-                                                            : null,
+                                                      return Offstage(
+                                                        offstage:
+                                                            taskCycleindex !=
+                                                                cycleIndex,
+                                                        child: DigitTable(
+                                                          selectedIndex: cycleIndex ==
+                                                                      taskCycleindex &&
+                                                                  taskData !=
+                                                                      null
+                                                              ? taskDoseindex! +
+                                                                  1
+                                                              : taskData ==
+                                                                          null &&
+                                                                      cycleIndex ==
+                                                                          1
+                                                                  ? 0
+                                                                  : null,
 
-                                                        headerList: headerList,
-                                                        tableData:
-                                                            e.deliveries!.map(
-                                                          (item) {
-                                                            final tasks = taskData
-                                                                ?.where((element) =>
-                                                                    element
-                                                                        .additionalFields
-                                                                        ?.fields[
-                                                                            4]
-                                                                        .value ==
-                                                                    '0${e.deliveries!.indexOf(item)}')
-                                                                .firstOrNull;
+                                                          headerList:
+                                                              headerList,
+                                                          tableData:
+                                                              e.deliveries!.map(
+                                                            (item) {
+                                                              final tasks = taskData
+                                                                  ?.where((element) =>
+                                                                      element
+                                                                          .additionalFields
+                                                                          ?.fields[
+                                                                              4]
+                                                                          .value ==
+                                                                      '0${e.deliveries!.indexOf(item)}')
+                                                                  .firstOrNull;
 
-                                                            final resources =
-                                                                tasks
-                                                                    ?.resources;
+                                                              final resources =
+                                                                  tasks
+                                                                      ?.resources;
 
-                                                            return TableDataRow([
-                                                              TableData(
-                                                                'Dose ${e.deliveries!.indexOf(item) + 1}',
-                                                                cellKey: 'dose',
-                                                              ),
-                                                              TableData(
-                                                                tasks?.status ??
-                                                                    'In complete ',
-                                                                cellKey:
-                                                                    'Status',
-                                                              ),
-                                                              TableData(
-                                                                resources
-                                                                        ?.map((e) =>
-                                                                            e.productVariantId)
-                                                                        .toList()
-                                                                        .join(
-                                                                          '+',
-                                                                        ) ??
-                                                                    '',
-                                                                cellKey:
-                                                                    'Status',
-                                                              ),
-                                                            ]);
-                                                          },
-                                                        ).toList(), // You can replace this with actual data for each cycle
-                                                        leftColumnWidth: 130,
-                                                        rightColumnWidth:
-                                                            headerList.length *
-                                                                17 *
-                                                                6,
-                                                        height: 6 * 57,
+                                                              return TableDataRow([
+                                                                TableData(
+                                                                  'Dose ${e.deliveries!.indexOf(item) + 1}',
+                                                                  cellKey:
+                                                                      'dose',
+                                                                ),
+                                                                TableData(
+                                                                  tasks?.status ??
+                                                                      'In complete ',
+                                                                  cellKey:
+                                                                      'Status',
+                                                                ),
+                                                                TableData(
+                                                                  resources
+                                                                          ?.map((e) =>
+                                                                              e.productVariantId)
+                                                                          .toList()
+                                                                          .join(
+                                                                            '+',
+                                                                          ) ??
+                                                                      '',
+                                                                  cellKey:
+                                                                      'Status',
+                                                                ),
+                                                              ]);
+                                                            },
+                                                          ).toList(), // You can replace this with actual data for each cycle
+                                                          leftColumnWidth: 130,
+                                                          rightColumnWidth:
+                                                              headerList
+                                                                      .length *
+                                                                  17 *
+                                                                  6,
+                                                          height: 6 * 57,
+                                                        ),
                                                       );
                                                     },
                                                   );
