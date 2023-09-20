@@ -39,22 +39,39 @@ class _BeneficiaryDetailsPageState
     final localizations = AppLocalizations.of(context);
     final router = context.router;
 
+    // Defining a list of table headers for cycle
     final headerList = [
       TableHeader(
-        'Dose No.',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
         cellKey: 'dose',
       ),
       TableHeader(
-        'Status',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
         cellKey: 'Status',
       ),
       TableHeader(
-        'Resources',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
         cellKey: 'resources',
       ),
       TableHeader(
-        'Completed on',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryQuantity),
+        cellKey: 'quantity',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
+      ),
+    ];
+
+    // Defining a list of table headers for resource popup
+    final headerListResource = [
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+        cellKey: 'dose',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+        cellKey: 'resources',
       ),
     ];
 
@@ -63,6 +80,7 @@ class _BeneficiaryDetailsPageState
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
 
+          // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
               context.beneficiaryType != BeneficiaryType.individual
                   ? [householdMemberWrapper.projectBeneficiaries.first]
@@ -74,11 +92,78 @@ class _BeneficiaryDetailsPageState
                       )
                       .toList();
 
+          // Extracting task data related to the selected project beneficiary
+
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
               .toList();
+
+          // Building the table content based on the DeliverInterventionState
+          Widget buildTableContent(
+            DeliverInterventionState deliverInterventionState,
+          ) {
+            final currentCycle = deliverInterventionState.cycle;
+
+            return SizedBox(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DigitTableCard(
+                    element: {
+                      localizations.translate(
+                        i18.beneficiaryDetails.beneficiaryAge,
+                      ): "2",
+                    },
+                  ),
+                  const Divider(),
+                  BlocBuilder<ProjectBloc, ProjectState>(
+                    builder: (context, projectState) {
+                      return DigitTable(
+                        headerList: headerListResource,
+                        tableData: projectState
+                            .projectType!.cycles![currentCycle].deliveries!
+                            .map(
+                          (item) {
+                            final tasks = taskData
+                                ?.where((element) =>
+                                    element.additionalFields?.fields[4].value ==
+                                    '0${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item)}')
+                                .firstOrNull;
+
+                            final resources = tasks?.resources;
+
+                            return TableDataRow([
+                              TableData(
+                                'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
+                                cellKey: 'dose',
+                              ),
+                              TableData(
+                                resources
+                                        ?.map((e) => e.productVariantId)
+                                        .toList()
+                                        .join(
+                                          '+',
+                                        ) ??
+                                    '',
+                                cellKey: 'resources',
+                              ),
+                            ]);
+                          },
+                        ).toList(),
+                        leftColumnWidth: 130,
+                        rightColumnWidth: headerList.length * 17 * 2,
+                        height: MediaQuery.of(context).size.height / 5,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
 
           return Scaffold(
             body: ReactiveFormBuilder(
@@ -96,7 +181,7 @@ class _BeneficiaryDetailsPageState
                         margin:
                             const EdgeInsets.only(left: 0, right: 0, top: 10),
                         child: DigitElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final bloc =
                                 context.read<DeliverInterventionBloc>();
 
@@ -112,8 +197,24 @@ class _BeneficiaryDetailsPageState
                                       0
                                   : 1,
                             ));
-
-                            router.push(DeliverInterventionRoute());
+                            await DigitDialog.show<bool>(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: localizations.translate(
+                                  i18.beneficiaryDetails.reourcesTobeDelivered,
+                                ),
+                                content: buildTableContent(state),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.ctaProceed,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.of(ctx).pop();
+                                    router.push(DeliverInterventionRoute());
+                                  },
+                                ),
+                              ),
+                            );
                           },
                           child: Center(
                             child: Text(
@@ -373,7 +474,6 @@ class _BeneficiaryDetailsPageState
                                                                           1
                                                                   ? 0
                                                                   : null,
-
                                                           headerList:
                                                               headerList,
                                                           tableData:
@@ -419,7 +519,7 @@ class _BeneficiaryDetailsPageState
                                                                 ),
                                                               ]);
                                                             },
-                                                          ).toList(), // You can replace this with actual data for each cycle
+                                                          ).toList(),
                                                           leftColumnWidth: 130,
                                                           rightColumnWidth:
                                                               headerList
@@ -433,7 +533,6 @@ class _BeneficiaryDetailsPageState
                                                   );
                                                 },
                                               ),
-                                              // Add other widgets or components to display cycle-specific data here
                                             ],
                                           )
                                         : const Offstage()

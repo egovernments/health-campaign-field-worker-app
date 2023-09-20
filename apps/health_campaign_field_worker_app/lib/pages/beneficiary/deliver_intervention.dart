@@ -47,24 +47,16 @@ class _DeliverInterventionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final List<StepsModel> steps = [
-      StepsModel(
-        title: localizations.translate(i18.deliverIntervention.dose1),
-        number: "1",
-      ),
-      StepsModel(
-        title: localizations.translate(i18.deliverIntervention.dose2),
-        number: "2",
-      ),
-      StepsModel(
-        title: localizations.translate(i18.deliverIntervention.dose3),
-        number: "3",
-      ),
-      StepsModel(
-        title: localizations.translate(i18.deliverIntervention.dose4),
-        number: "4",
-      ),
-    ];
+
+    List<StepsModel> generateSteps(int numberOfDoses) {
+      return List.generate(numberOfDoses, (index) {
+        return StepsModel(
+          title:
+              '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
+          number: (index + 1).toString(),
+        );
+      });
+    }
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
@@ -85,6 +77,10 @@ class _DeliverInterventionPageState
           final projectState = context.read<ProjectBloc>().state;
           List<ProductVariantsModel>? productVariants = projectState
               .projectType?.cycles?[0].deliveries?[0].productVariants;
+
+          final int numberOfDoses =
+              projectState.projectType?.cycles?[0].deliveries?.length ?? 0;
+          final steps = generateSteps(numberOfDoses);
 
           return Scaffold(
             body: state.loading
@@ -229,7 +225,7 @@ class _DeliverInterventionPageState
                                               deliveryInterventionstate.dose +
                                                   1,
                                           steps: steps,
-                                          maxStepReached: 3,
+                                          maxStepReached: numberOfDoses - 1,
                                           lineLength: MediaQuery.of(context)
                                                   .size
                                                   .width /
