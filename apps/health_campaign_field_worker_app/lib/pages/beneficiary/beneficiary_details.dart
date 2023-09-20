@@ -1,5 +1,4 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:recase/recase.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -20,6 +18,7 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import 'widgets/record_delivery_cycle.dart';
 
 class BeneficiaryDetailsPage extends LocalizedStatefulWidget {
   const BeneficiaryDetailsPage({
@@ -38,25 +37,7 @@ class _BeneficiaryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
-
-    final headerList = [
-      TableHeader(
-        'Dose No.',
-        cellKey: 'dose',
-      ),
-      TableHeader(
-        'Status',
-        cellKey: 'Status',
-      ),
-      TableHeader(
-        'Resources',
-        cellKey: 'resources',
-      ),
-      TableHeader(
-        'Completed on',
-        cellKey: 'completedOn',
-      ),
-    ];
+    bool hidePastDelivery = true;
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
@@ -299,146 +280,16 @@ class _BeneficiaryDetailsPageState
                               state.projectType!.cycles!.indexOf(e) + 1;
 
                           return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DigitCard(
-                                child: (state.projectType?.cycles != null)
-                                    ? state.projectType!.cycles!.isNotEmpty
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Cycle  $cycleIndex',
-                                                style: theme
-                                                    .textTheme.headlineMedium,
-                                                textAlign: TextAlign.left,
-                                              ),
-                                              BlocBuilder<ProductVariantBloc,
-                                                  ProductVariantState>(
-                                                builder:
-                                                    (context, productState) {
-                                                  return productState.maybeWhen(
-                                                    orElse: () =>
-                                                        const Offstage(),
-                                                    fetched: (productVariants) {
-                                                      final RegExp regexp =
-                                                          RegExp(r'^0+(?=.)');
-
-                                                      final taskCycleindex = taskData !=
-                                                                  null &&
-                                                              taskData
-                                                                  .isNotEmpty
-                                                          ? int.tryParse(taskData
-                                                              .last
-                                                              .additionalFields!
-                                                              .fields[3]
-                                                              .value
-                                                              .toString()
-                                                              .replaceAll(
-                                                                regexp,
-                                                                '',
-                                                              ))
-                                                          : 1;
-                                                      final int? taskDoseindex =
-                                                          taskData != null &&
-                                                                  taskData
-                                                                      .isNotEmpty
-                                                              ? int.tryParse(taskData
-                                                                  .last
-                                                                  .additionalFields!
-                                                                  .fields[4]
-                                                                  .value
-                                                                  .toString()
-                                                                  .replaceAll(
-                                                                    regexp,
-                                                                    '',
-                                                                  ))
-                                                              : -1;
-
-                                                      return Offstage(
-                                                        offstage:
-                                                            taskCycleindex !=
-                                                                cycleIndex,
-                                                        child: DigitTable(
-                                                          selectedIndex: cycleIndex ==
-                                                                      taskCycleindex &&
-                                                                  taskData !=
-                                                                      null
-                                                              ? taskDoseindex! +
-                                                                  1
-                                                              : taskData ==
-                                                                          null &&
-                                                                      cycleIndex ==
-                                                                          1
-                                                                  ? 0
-                                                                  : null,
-
-                                                          headerList:
-                                                              headerList,
-                                                          tableData:
-                                                              e.deliveries!.map(
-                                                            (item) {
-                                                              final tasks = taskData
-                                                                  ?.where((element) =>
-                                                                      element
-                                                                          .additionalFields
-                                                                          ?.fields[
-                                                                              4]
-                                                                          .value ==
-                                                                      '0${e.deliveries!.indexOf(item)}')
-                                                                  .firstOrNull;
-
-                                                              final resources =
-                                                                  tasks
-                                                                      ?.resources;
-
-                                                              return TableDataRow([
-                                                                TableData(
-                                                                  'Dose ${e.deliveries!.indexOf(item) + 1}',
-                                                                  cellKey:
-                                                                      'dose',
-                                                                ),
-                                                                TableData(
-                                                                  tasks?.status ??
-                                                                      'In complete ',
-                                                                  cellKey:
-                                                                      'Status',
-                                                                ),
-                                                                TableData(
-                                                                  resources
-                                                                          ?.map((e) =>
-                                                                              e.productVariantId)
-                                                                          .toList()
-                                                                          .join(
-                                                                            '+',
-                                                                          ) ??
-                                                                      '',
-                                                                  cellKey:
-                                                                      'Status',
-                                                                ),
-                                                              ]);
-                                                            },
-                                                          ).toList(), // You can replace this with actual data for each cycle
-                                                          leftColumnWidth: 130,
-                                                          rightColumnWidth:
-                                                              headerList
-                                                                      .length *
-                                                                  17 *
-                                                                  6,
-                                                          height: 6 * 57,
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                              // Add other widgets or components to display cycle-specific data here
-                                            ],
-                                          )
-                                        : const Offstage()
-                                    : const Offstage(),
-                              ),
+                              (state.projectType?.cycles != null)
+                                  ? state.projectType!.cycles!.isNotEmpty
+                                      ? RecordDeliveryCycle(
+                                          cycleIndex: cycleIndex,
+                                          e: e,
+                                          taskData: taskData ?? [],
+                                        )
+                                      : const Offstage()
+                                  : const Offstage(),
                             ],
                           );
                         }).toList(),
