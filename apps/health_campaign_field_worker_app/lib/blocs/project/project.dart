@@ -14,6 +14,7 @@ import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
+import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
 import '../../utils/environment_config.dart';
@@ -179,6 +180,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       } catch (_) {
+        print(_);
         emit(state.copyWith(
           loading: false,
           syncError: ProjectSyncErrorType.project,
@@ -337,11 +339,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final configs = await isar.appConfigurations.where().findAll();
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
-    for (var elements in userObject!.roles) {
+    for (UserRoleModel elements in userObject!.roles) {
       configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
         for (final project in projects) {
           codes.add(
-            '${project.name}.$element.${elements.code.name.snakeCase.toUpperCase()}',
+            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
           );
         }
       });

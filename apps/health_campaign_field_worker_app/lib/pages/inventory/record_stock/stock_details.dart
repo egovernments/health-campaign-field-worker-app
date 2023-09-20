@@ -259,6 +259,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         createdTime:
                                             context.millisecondsSinceEpoch(),
                                       ),
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
                                       additionalFields: [
                                                 waybillQuantity,
                                                 vehicleNumber,

@@ -86,6 +86,14 @@ class StockLocalRepository
         auditDetails: createdTime == null || createdBy == null
             ? null
             : AuditDetails(createdTime: createdTime, createdBy: createdBy),
+        clientAuditDetails: createdTime == null || createdBy == null
+            ? null
+            : ClientAuditDetails(
+                createdTime: data.clientCreatedTime!,
+                createdBy: data.clientCreatedBy!,
+                lastModifiedBy: data.clientModifiedBy,
+                lastModifiedTime: data.clientModifiedTime,
+              ),
       );
     }).toList();
   }

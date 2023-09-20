@@ -57,9 +57,10 @@ abstract class DataModel {
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
-
+  final ClientAuditDetails? clientAuditDetails;
   const EntityModel({
     this.auditDetails,
+    this.clientAuditDetails,
     super.isDeleted = false,
   });
 }
@@ -103,6 +104,22 @@ class AdditionalField {
   final dynamic value;
 
   const AdditionalField(this.key, this.value);
+}
+
+@MappableClass()
+class ClientAuditDetails {
+  final int createdTime;
+  final int? lastModifiedTime;
+  final String createdBy;
+  final String lastModifiedBy;
+
+  ClientAuditDetails({
+    required this.createdBy,
+    required this.createdTime,
+    String? lastModifiedBy,
+    int? lastModifiedTime,
+  })  : lastModifiedBy = lastModifiedBy ?? createdBy,
+        lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
 @MappableClass()

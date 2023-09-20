@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
@@ -190,6 +191,15 @@ class HouseholdOverviewBloc
       await householdMemberRepository.delete(
         i.copyWith(
           rowVersion: i.rowVersion,
+          clientAuditDetails: (i.clientAuditDetails?.createdBy != null &&
+                  i.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: i.clientAuditDetails!.createdBy,
+                  createdTime: i.clientAuditDetails!.createdTime,
+                  lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }
@@ -237,6 +247,15 @@ class HouseholdOverviewBloc
       await householdMemberRepository.update(
         element.copyWith(
           rowVersion: element.rowVersion,
+          clientAuditDetails: (element.clientAuditDetails?.createdBy != null &&
+                  element.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: element.clientAuditDetails!.createdBy,
+                  createdTime: element.clientAuditDetails!.createdTime,
+                  lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }

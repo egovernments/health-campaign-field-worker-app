@@ -157,20 +157,44 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                           )
                         : null,
                     rowVersion: address.rowVersion,
-                    auditDetails: AuditDetails(
-                      createdBy: task.auditCreatedBy!,
-                      createdTime: task.auditCreatedTime!,
-                      lastModifiedBy: task.auditModifiedBy,
-                      lastModifiedTime: task.auditModifiedTime,
-                    ),
+                    auditDetails: (task.auditCreatedBy != null &&
+                            task.auditCreatedTime != null)
+                        ? AuditDetails(
+                            createdBy: task.auditCreatedBy!,
+                            createdTime: task.auditCreatedTime!,
+                            lastModifiedBy: task.auditModifiedBy,
+                            lastModifiedTime: task.auditModifiedTime,
+                          )
+                        : null,
+                    clientAuditDetails: (task.clientCreatedBy != null &&
+                            task.clientCreatedTime != null)
+                        ? ClientAuditDetails(
+                            createdBy: task.clientCreatedBy!,
+                            createdTime: task.clientCreatedTime!,
+                            lastModifiedBy: task.clientModifiedBy,
+                            lastModifiedTime: task.clientModifiedTime,
+                          )
+                        : null,
                   ),
             status: task.status,
-            auditDetails: AuditDetails(
-              createdBy: task.auditCreatedBy!,
-              createdTime: task.auditCreatedTime!,
-              lastModifiedBy: task.auditModifiedBy,
-              lastModifiedTime: task.auditModifiedTime,
-            ),
+            auditDetails:
+                (task.auditCreatedBy != null && task.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: task.auditCreatedBy!,
+                        createdTime: task.auditCreatedTime!,
+                        lastModifiedBy: task.auditModifiedBy,
+                        lastModifiedTime: task.auditModifiedTime,
+                      )
+                    : null,
+            clientAuditDetails:
+                (task.clientCreatedBy != null && task.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: task.clientCreatedBy!,
+                        createdTime: task.clientCreatedTime!,
+                        lastModifiedBy: task.clientModifiedBy,
+                        lastModifiedTime: task.clientModifiedTime,
+                      )
+                    : null,
             resources: resources == null
                 ? null
                 : [
@@ -248,6 +272,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         ?.copyWith(
           relatedClientReferenceId: entity.clientReferenceId,
           auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
         )
         .companion;
 

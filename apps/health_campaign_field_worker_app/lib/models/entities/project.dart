@@ -115,7 +115,7 @@ class ProjectModel extends EntityModel {
     this.documents,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): startDateTime = startDate == null
           ? null
@@ -136,6 +136,10 @@ class ProjectModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),

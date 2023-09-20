@@ -100,12 +100,24 @@ class IndividualLocalRepository
             mobileNumber: individual.mobileNumber,
             isDeleted: individual.isDeleted,
             rowVersion: individual.rowVersion,
-            auditDetails: AuditDetails(
-              createdBy: individual.auditCreatedBy!,
-              createdTime: individual.auditCreatedTime!,
-              lastModifiedBy: individual.auditModifiedBy,
-              lastModifiedTime: individual.auditModifiedTime,
-            ),
+            clientAuditDetails: (individual.clientCreatedBy != null &&
+                    individual.clientCreatedTime != null)
+                ? ClientAuditDetails(
+                    createdBy: individual.clientCreatedBy!,
+                    createdTime: individual.clientCreatedTime!,
+                    lastModifiedBy: individual.clientModifiedBy,
+                    lastModifiedTime: individual.clientModifiedTime,
+                  )
+                : null,
+            auditDetails: (individual.auditCreatedBy != null &&
+                    individual.auditCreatedTime != null)
+                ? AuditDetails(
+                    createdBy: individual.auditCreatedBy!,
+                    createdTime: individual.auditCreatedTime!,
+                    lastModifiedBy: individual.auditModifiedBy,
+                    lastModifiedTime: individual.auditModifiedTime,
+                  )
+                : null,
             name: name == null
                 ? null
                 : NameModel(
@@ -116,12 +128,24 @@ class IndividualLocalRepository
                     otherNames: name.otherNames,
                     rowVersion: name.rowVersion,
                     tenantId: name.tenantId,
-                    auditDetails: AuditDetails(
-                      createdBy: name.auditCreatedBy!,
-                      createdTime: name.auditCreatedTime!,
-                      lastModifiedBy: name.auditModifiedBy,
-                      lastModifiedTime: name.auditModifiedTime,
-                    ),
+                    auditDetails: (name.auditCreatedBy != null &&
+                            name.auditCreatedTime != null)
+                        ? AuditDetails(
+                            createdBy: name.auditCreatedBy!,
+                            createdTime: name.auditCreatedTime!,
+                            lastModifiedBy: name.auditModifiedBy,
+                            lastModifiedTime: name.auditModifiedTime,
+                          )
+                        : null,
+                    clientAuditDetails: (name.clientCreatedBy != null &&
+                            name.clientCreatedTime != null)
+                        ? ClientAuditDetails(
+                            createdBy: name.clientCreatedBy!,
+                            createdTime: name.clientCreatedTime!,
+                            lastModifiedBy: name.clientModifiedBy,
+                            lastModifiedTime: name.clientModifiedTime,
+                          )
+                        : null,
                   ),
             bloodGroup: individual.bloodGroup,
             address: [
@@ -148,12 +172,24 @@ class IndividualLocalRepository
                             )
                           : null,
                       rowVersion: address.rowVersion,
-                      auditDetails: AuditDetails(
-                        createdBy: address.auditCreatedBy!,
-                        createdTime: address.auditCreatedTime!,
-                        lastModifiedBy: address.auditModifiedBy,
-                        lastModifiedTime: address.auditModifiedTime,
-                      ),
+                      auditDetails: (address.auditCreatedBy != null &&
+                              address.auditCreatedTime != null)
+                          ? AuditDetails(
+                              createdBy: address.auditCreatedBy!,
+                              createdTime: address.auditCreatedTime!,
+                              lastModifiedBy: address.auditModifiedBy,
+                              lastModifiedTime: address.auditModifiedTime,
+                            )
+                          : null,
+                      clientAuditDetails: (address.clientCreatedBy != null &&
+                              address.clientCreatedTime != null)
+                          ? ClientAuditDetails(
+                              createdBy: address.clientCreatedBy!,
+                              createdTime: address.clientCreatedTime!,
+                              lastModifiedBy: address.clientModifiedBy,
+                              lastModifiedTime: address.clientModifiedTime,
+                            )
+                          : null,
                     ),
             ].whereNotNull().toList(),
             gender: individual.gender,
@@ -242,6 +278,7 @@ class IndividualLocalRepository
           return e
               .copyWith(
                 relatedClientReferenceId: entity.clientReferenceId,
+                clientAuditDetails: entity.clientAuditDetails,
               )
               .companion;
         }).toList() ??
@@ -286,6 +323,12 @@ class IndividualLocalRepository
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: entity.clientAuditDetails!.createdBy,
+        createdTime: entity.clientAuditDetails!.createdTime,
+        lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+        lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+      ),
     );
     await sql.batch((batch) {
       batch.update(

@@ -83,14 +83,14 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
 
-      return NativeDatabase(file);
+      return NativeDatabase(file, logStatements: true, setup: (data) {});
     });
   }
 
@@ -120,6 +120,38 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             AppLogger.instance.info('Applying migration $from to $to');
             await m.addColumn(address, address.localityBoundaryName);
             await m.addColumn(address, address.localityBoundaryCode);
+          } catch (e) {
+            AppLogger.instance.error(
+              title: 'migration',
+              message: e.toString(),
+            );
+          }
+        }
+        if (from < 4) {
+          // Create table for PgrService
+          try {
+            allTables.forEach((e) async {
+              late final GeneratedColumn<int?> clientModifiedTime =
+                  GeneratedColumn<int?>(
+                'client_modified_time',
+                e.aliasedName,
+                true,
+                type: const IntType(),
+                requiredDuringInsert: false,
+              );
+
+              late final GeneratedColumn<int?> clientCreatedTime =
+                  GeneratedColumn<int?>(
+                'client_created_time',
+                e.aliasedName,
+                true,
+                type: const IntType(),
+                requiredDuringInsert: false,
+              );
+              AppLogger.instance.info('Applying migration $from to $to');
+              await m.addColumn(e, clientCreatedTime);
+              await m.addColumn(e, clientModifiedTime);
+            });
           } catch (e) {
             AppLogger.instance.error(
               title: 'migration',

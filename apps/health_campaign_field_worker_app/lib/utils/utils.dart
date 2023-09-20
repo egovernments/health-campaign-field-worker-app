@@ -106,14 +106,16 @@ performBackgroundService({
   if (stopService) {
     if (isRunning) {
       if (!isBackground && context != null) {
-        DigitToast.show(
-          context!,
-          options: DigitToastOptions(
-            'Background Service Stopped',
-            true,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
+        if (context.mounted) {
+          DigitToast.show(
+            context,
+            options: DigitToastOptions(
+              'Background Service Stopped',
+              true,
+              DigitTheme.instance.mobileTheme,
+            ),
+          );
+        }
       }
     }
   } else {
