@@ -76,10 +76,14 @@ class _DeliverInterventionPageState
 
           final projectState = context.read<ProjectBloc>().state;
           List<ProductVariantsModel>? productVariants = projectState
-              .projectType?.cycles?[0].deliveries?[0].productVariants;
+              .projectType
+              ?.cycles?[0]
+              .deliveries?[0]
+              .productVariants; //todo need to be removed [0]
 
           final int numberOfDoses =
-              projectState.projectType?.cycles?[0].deliveries?.length ?? 0;
+              projectState.projectType?.cycles?[0].deliveries?.length ??
+                  0; //todo need to be removed [0]
           final steps = generateSteps(numberOfDoses);
 
           return Scaffold(
