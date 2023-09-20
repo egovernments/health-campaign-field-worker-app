@@ -194,6 +194,15 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+  String get reourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get ctaProceed => 'PROCEED';
+  String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+  String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+  String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+  String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
 }
 
 class IndividualDetails {
