@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,7 +55,6 @@ import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
-import '../models/entities/user.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -74,7 +79,38 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       builder: (context, state) {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
-          return const Offstage();
+          return MaterialApp(
+            theme: DigitTheme.instance.mobileTheme,
+            home: Scaffold(
+              appBar: AppBar(),
+              body: state.maybeWhen(
+                orElse: () => const Center(
+                  child: Text('Não é possível inicializar o aplicativo'),
+                ),
+                loading: () => const Center(
+                  child: Text('Carregando'),
+                ),
+                failed: () => ScrollableContent(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  footer: DigitCard(
+                    child: DigitElevatedButton(
+                      onPressed: () => exit(0),
+                      child: const Center(
+                        child: Text('Fechar'),
+                      ),
+                    ),
+                  ),
+                  children: const [
+                    Center(
+                      child:
+                          Text('Internet não disponível. Tentar mais tarde.'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
         final remote = _getRemoteRepositories(dio, actionMap);
         final local = _getLocalRepositories(sql, isar);
