@@ -194,6 +194,15 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+  String get reourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get ctaProceed => 'PROCEED';
+  String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+  String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+  String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+  String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
 }
 
 class IndividualDetails {
@@ -400,10 +409,7 @@ class DeliverIntervention {
   String get resourceDeleteBeneficiaryPrimaryActionLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
-  String get dose1 => 'DELIVER_INTERVENTION_DOSE_1';
-  String get dose2 => 'DELIVER_INTERVENTION_DOSE_2';
-  String get dose3 => 'DELIVER_INTERVENTION_DOSE_3';
-  String get dose4 => 'DELIVER_INTERVENTION_DOSE_4';
+  String get dose => 'DELIVER_INTERVENTION_DOSE';
 }
 
 class ProjectSelection {

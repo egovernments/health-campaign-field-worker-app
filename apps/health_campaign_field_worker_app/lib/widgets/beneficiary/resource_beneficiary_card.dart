@@ -77,6 +77,7 @@ class _ResourceBeneficiaryCardState
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
+            minimum: 1,
           ),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
             builder: (context, state) {
