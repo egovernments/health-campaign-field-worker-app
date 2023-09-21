@@ -366,6 +366,13 @@ class MemberCard {
 
   String get deliverDetailsMonthsText =>
       'MEMBER_CARD_DELIVER_DETAILS_MONTHS_TEXT';
+
+  String get unableToDeliverLabel => 'MEMBER_CARD_UNABLE_TO_DELIVER_LABEL';
+
+  String get beneficiaryRefusedLabel => 'MEMBER_CARD_BENEFICIARY_REFUSED_LABEL';
+
+  String get recordAdverseEventsLabel =>
+      'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 }
 
 class DeliverIntervention {
@@ -424,6 +431,8 @@ class AdverseEvents {
   const AdverseEvents();
 
   String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get sideEffectsLabel => 'SIDE_EFFECTS_LABEL';
 
   String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
 

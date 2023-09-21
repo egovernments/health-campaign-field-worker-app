@@ -6,6 +6,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/individual.dart';
+import '../../models/entities/task.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -23,6 +24,7 @@ class MemberCard extends StatelessWidget {
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
+  final List<TaskModel>? tasks;
 
   const MemberCard({
     super.key,
@@ -37,6 +39,7 @@ class MemberCard extends StatelessWidget {
     required this.setAsHeadAction,
     required this.editMemberAction,
     required this.deleteMemberAction,
+    this.tasks,
   });
 
   @override
@@ -169,45 +172,103 @@ class MemberCard extends StatelessWidget {
           ),
           Offstage(
             offstage: beneficiaryType != BeneficiaryType.individual,
-            child: !isDelivered
-                ? DigitElevatedButton(
-                    onPressed: () async {
-                      context.read<HouseholdOverviewBloc>().add(
-                            HouseholdOverviewEvent.selectedIndividual(
-                              individualModel: individual,
+            child: Column(
+              children: [
+                !isDelivered
+                    ? DigitElevatedButton(
+                        onPressed: () async {
+                          context.read<HouseholdOverviewBloc>().add(
+                                HouseholdOverviewEvent.selectedIndividual(
+                                  individualModel: individual,
+                                ),
+                              );
+                          await context.router.push(BeneficiaryDetailsRoute());
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.householdOverView.householdOverViewActionText,
+                            ),
+                          ),
+                        ),
+                      )
+                    : BlocBuilder<HouseholdOverviewBloc,
+                        HouseholdOverviewState>(
+                        builder: (ctx, state) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: DigitOutLineButton(
+                              label: localizations.translate(
+                                i18.memberCard.deliverDetailsUpdateLabel,
+                              ),
+                              onPressed: () async {
+                                context.read<HouseholdOverviewBloc>().add(
+                                      HouseholdOverviewEvent.selectedIndividual(
+                                        individualModel: individual,
+                                      ),
+                                    );
+                                await context.router
+                                    .push(BeneficiaryDetailsRoute());
+                              },
                             ),
                           );
-                      await context.router.push(BeneficiaryDetailsRoute());
-                    },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(
-                          i18.householdOverView.householdOverViewActionText,
-                        ),
+                        },
                       ),
-                    ),
-                  )
-                : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-                    builder: (ctx, state) {
-                      return SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: DigitOutLineButton(
-                          label: localizations.translate(
-                            i18.memberCard.deliverDetailsUpdateLabel,
-                          ),
-                          onPressed: () async {
-                            context.read<HouseholdOverviewBloc>().add(
-                                  HouseholdOverviewEvent.selectedIndividual(
-                                    individualModel: individual,
-                                  ),
-                                );
-                            await context.router
-                                .push(BeneficiaryDetailsRoute());
-                          },
-                        ),
-                      );
-                    },
+                const SizedBox(
+                  height: 10,
+                ),
+                DigitOutLineButton(
+                  label: localizations.translate(
+                    i18.memberCard.unableToDeliverLabel,
                   ),
+                  buttonStyle: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    await DigitActionDialog.show(
+                      context,
+                      widget: Column(
+                        children: [
+                          DigitOutLineButton(
+                            label: localizations.translate(
+                              i18.memberCard.beneficiaryRefusedLabel,
+                            ),
+                            onPressed: () {
+                              // [TODO: Empty task need to be created wth status as beneficiaryRefused ]
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                          ),
+                          DigitOutLineButton(
+                            label: localizations.translate(
+                              i18.memberCard.recordAdverseEventsLabel,
+                            ),
+                            onPressed: () async {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              await context.router.push(
+                                AdverseEventsRoute(
+                                  tasks: tasks ??
+                                      [
+                                        TaskModel(
+                                          clientReferenceId:
+                                              "19e15730-588f-11ee-ba2c-15d414c9ae78",
+                                        ),
+                                      ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                    // context.read<HouseholdOverviewBloc>().add(
+                    //       HouseholdOverviewEvent.selectedIndividual(
+                    //         individualModel: individual,
+                    //       ),
+                    //     );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

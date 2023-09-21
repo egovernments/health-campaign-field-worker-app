@@ -1,11 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
-import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/adverse_events/adverse_events.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
@@ -81,7 +78,9 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                           element.taskClientReferenceId ==
                           taskData?.first.clientReferenceId)
                       .toList();
-                  final filteredHeaderList = [
+
+                  // TODO: Commenting table Data as per current requirement not required
+                  /*final filteredHeaderList = [
                     TableHeader(
                       localizations
                           .translate(i18.adverseEvents.resourceHeaderLabel),
@@ -118,7 +117,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                       );
                       // rowTableData
                     },
-                  ).toList();
+                  ).toList();*/
 
                   return BlocBuilder<DeliverInterventionBloc,
                       DeliverInterventionState>(
@@ -126,343 +125,329 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                       return Scaffold(
                         body: state.loading
                             ? const Center(child: CircularProgressIndicator())
-                            : ReactiveFormBuilder(
-                                form: () => buildForm(context),
-                                builder: (context, form, child) {
-                                  return ScrollableContent(
-                                    header:
-                                        const BackNavigationHelpHeaderWidget(),
-                                    footer: SizedBox(
-                                      height: 100,
-                                      child: DigitCard(
-                                        child: DigitElevatedButton(
-                                          onPressed: () async {
-                                            if (symptomsValues.any((e) => e)) {
-                                              setState(() {
-                                                symptomsSelected = true;
-                                              });
-                                              final router = context.router;
+                            : ScrollableContent(
+                                header: const BackNavigationHelpHeaderWidget(),
+                                footer: SizedBox(
+                                  height: 100,
+                                  child: DigitCard(
+                                    child: DigitElevatedButton(
+                                      onPressed: () async {
+                                        if (symptomsValues.any((e) => e)) {
+                                          setState(() {
+                                            symptomsSelected = true;
+                                          });
+                                          final router = context.router;
 
-                                              final shouldSubmit =
-                                                  await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  titleText:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .dialogTitle,
-                                                  ),
-                                                  contentText:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .dialogContent,
-                                                  ),
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.common
-                                                          .coreCommonSubmit,
-                                                    ),
-                                                    action: (ctx) {
-                                                      final List<String>
-                                                          symptoms = [];
-
-                                                      for (int i = 0;
-                                                          i <
-                                                              symptomsValues
-                                                                  .length;
-                                                          i++) {
-                                                        if (symptomsValues[i]) {
-                                                          symptoms.add(
-                                                            symptomsTypes[i],
-                                                          );
-                                                        }
-                                                      }
-
-                                                      final clientReferenceId =
-                                                          adverseEventData !=
-                                                                  null
-                                                              ? adverseEventData
-                                                                      .isEmpty
-                                                                  ? IdGen.i
-                                                                      .identifier
-                                                                  : adverseEventData
-                                                                      .first
-                                                                      .clientReferenceId
-                                                              : IdGen
-                                                                  .i.identifier;
-                                                      context
-                                                          .read<
-                                                              AdverseEventsBloc>()
-                                                          .add(
-                                                            AdverseEventsSubmitEvent(
-                                                              AdverseEventModel(
-                                                                id: adverseEventData !=
-                                                                        null
-                                                                    ? adverseEventData
-                                                                            .isEmpty
-                                                                        ? null
-                                                                        : adverseEventData
-                                                                            .first
-                                                                            .id
-                                                                    : null,
-                                                                taskClientReferenceId:
-                                                                    widget
-                                                                        .tasks
-                                                                        .first
-                                                                        .clientReferenceId,
-                                                                symptoms:
-                                                                    symptoms,
-                                                                reAttempts: stateChanged
-                                                                    ? form
-                                                                        .control(
-                                                                          _noOfTimesReAdministeredKey,
-                                                                        )
-                                                                        .value as int
-                                                                    : 0,
-                                                                clientReferenceId:
-                                                                    clientReferenceId,
-                                                                tenantId: envConfig
-                                                                    .variables
-                                                                    .tenantId,
-                                                                rowVersion: adverseEventData !=
-                                                                        null
-                                                                    ? adverseEventData
-                                                                            .isEmpty
-                                                                        ? 1
-                                                                        : adverseEventData
-                                                                            .first
-                                                                            .rowVersion
-                                                                    : 1,
-                                                                auditDetails:
-                                                                    AuditDetails(
-                                                                  createdBy: context
-                                                                      .loggedInUserUuid,
-                                                                  createdTime:
-                                                                      context
-                                                                          .millisecondsSinceEpoch(),
-                                                                  lastModifiedBy:
-                                                                      context
-                                                                          .loggedInUserUuid,
-                                                                  lastModifiedTime:
-                                                                      context
-                                                                          .millisecondsSinceEpoch(),
-                                                                ),
-                                                              ),
-                                                              adverseEventData ==
-                                                                      null
-                                                                  ? false
-                                                                  : adverseEventData
-                                                                          .isEmpty
-                                                                      ? false
-                                                                      : true,
-                                                            ),
-                                                          );
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop(true);
-                                                    },
-                                                  ),
-                                                  secondaryAction:
-                                                      DigitDialogActions(
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.common
-                                                          .coreCommonCancel,
-                                                    ),
-                                                    action: (context) =>
-                                                        Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop(false),
-                                                  ),
+                                          final shouldSubmit =
+                                              await DigitDialog.show<bool>(
+                                            context,
+                                            options: DigitDialogOptions(
+                                              titleText:
+                                                  localizations.translate(
+                                                i18.deliverIntervention
+                                                    .dialogTitle,
+                                              ),
+                                              contentText:
+                                                  localizations.translate(
+                                                i18.deliverIntervention
+                                                    .dialogContent,
+                                              ),
+                                              primaryAction: DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonSubmit,
                                                 ),
-                                              );
+                                                action: (ctx) {
+                                                  final List<String> symptoms =
+                                                      [];
 
-                                              if (shouldSubmit ?? false) {
-                                                final parent = router.parent()
-                                                    as StackRouter;
-                                                parent
-                                                  ..pop()
-                                                  ..pop();
+                                                  for (int i = 0;
+                                                      i < symptomsValues.length;
+                                                      i++) {
+                                                    if (symptomsValues[i]) {
+                                                      symptoms.add(
+                                                        symptomsTypes[i],
+                                                      );
+                                                    }
+                                                  }
 
-                                                router.push(
-                                                  AcknowledgementRoute(),
-                                                );
-                                              }
-                                            } else {
-                                              setState(() {
-                                                symptomsSelected = false;
-                                              });
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              localizations.translate(
-                                                i18.common.coreCommonNext,
+                                                  final clientReferenceId =
+                                                      adverseEventData != null
+                                                          ? adverseEventData
+                                                                  .isEmpty
+                                                              ? IdGen
+                                                                  .i.identifier
+                                                              : adverseEventData
+                                                                  .first
+                                                                  .clientReferenceId
+                                                          : IdGen.i.identifier;
+                                                  context
+                                                      .read<AdverseEventsBloc>()
+                                                      .add(
+                                                        AdverseEventsSubmitEvent(
+                                                          AdverseEventModel(
+                                                            id: adverseEventData !=
+                                                                    null
+                                                                ? adverseEventData
+                                                                        .isEmpty
+                                                                    ? null
+                                                                    : adverseEventData
+                                                                        .first
+                                                                        .id
+                                                                : null,
+                                                            taskClientReferenceId:
+                                                                widget
+                                                                    .tasks
+                                                                    .first
+                                                                    .clientReferenceId,
+                                                            symptoms: symptoms,
+                                                            clientReferenceId:
+                                                                clientReferenceId,
+                                                            tenantId: envConfig
+                                                                .variables
+                                                                .tenantId,
+                                                            rowVersion: adverseEventData !=
+                                                                    null
+                                                                ? adverseEventData
+                                                                        .isEmpty
+                                                                    ? 1
+                                                                    : adverseEventData
+                                                                        .first
+                                                                        .rowVersion
+                                                                : 1,
+                                                            auditDetails:
+                                                                AuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                              lastModifiedBy:
+                                                                  context
+                                                                      .loggedInUserUuid,
+                                                              lastModifiedTime:
+                                                                  context
+                                                                      .millisecondsSinceEpoch(),
+                                                            ),
+                                                            clientAuditDetails:
+                                                                ClientAuditDetails(
+                                                              createdBy: context
+                                                                  .loggedInUserUuid,
+                                                              createdTime: context
+                                                                  .millisecondsSinceEpoch(),
+                                                              lastModifiedBy:
+                                                                  context
+                                                                      .loggedInUserUuid,
+                                                              lastModifiedTime:
+                                                                  context
+                                                                      .millisecondsSinceEpoch(),
+                                                            ),
+                                                          ),
+                                                          adverseEventData ==
+                                                                  null
+                                                              ? false
+                                                              : adverseEventData
+                                                                      .isEmpty
+                                                                  ? false
+                                                                  : true,
+                                                        ),
+                                                      );
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(true);
+                                                },
+                                              ),
+                                              secondaryAction:
+                                                  DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonCancel,
+                                                ),
+                                                action: (context) =>
+                                                    Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop(false),
                                               ),
                                             ),
+                                          );
+
+                                          if (shouldSubmit ?? false) {
+                                            final parent =
+                                                router.parent() as StackRouter;
+                                            parent
+                                              ..pop()
+                                              ..pop();
+
+                                            router.push(
+                                              AcknowledgementRoute(),
+                                            );
+                                          }
+                                        } else {
+                                          setState(() {
+                                            symptomsSelected = false;
+                                          });
+                                        }
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.common.coreCommonNext,
                                           ),
                                         ),
                                       ),
                                     ),
-                                    children: [
-                                      DigitCard(
-                                        child: Column(
+                                  ),
+                                ),
+                                children: [
+                                  DigitCard(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    localizations.translate(
-                                                      i18.adverseEvents
-                                                          .adverseEventsLabel,
-                                                    ),
-                                                    style: theme.textTheme
-                                                        .displayMedium,
-                                                  ),
+                                            Expanded(
+                                              child: Text(
+                                                localizations.translate(
+                                                  i18.adverseEvents
+                                                      .sideEffectsLabel,
                                                 ),
-                                              ],
-                                            ),
-                                            const DigitDivider(),
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Text(
-                                                  localizations.translate(
-                                                    i18.adverseEvents
-                                                        .resourcesAdministeredLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.headlineSmall,
-                                                ),
+                                                style: theme
+                                                    .textTheme.displayMedium,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 10,
+                                          ],
+                                        ),
+                                        const DigitDivider(),
+                                        // TODO: Commenting the table data as per current requirement its not needed]
+                                        // Align(
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: Padding(
+                                        //     padding:
+                                        //         const EdgeInsets.all(8),
+                                        //     child: Text(
+                                        //       localizations.translate(
+                                        //         i18.adverseEvents
+                                        //             .resourcesAdministeredLabel,
+                                        //       ),
+                                        //       style: theme
+                                        //           .textTheme.headlineSmall,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        // const SizedBox(
+                                        //   height: 10,
+                                        // ),
+                                        // DigitTable(
+                                        //   headerList: filteredHeaderList,
+                                        //   tableData: tableData ?? [],
+                                        //   leftColumnWidth: 130,
+                                        //   rightColumnWidth:
+                                        //       filteredHeaderList.length *
+                                        //           17 *
+                                        //           6,
+                                        //   height: (widget.tasks.first
+                                        //                       .resources ??
+                                        //                   [])
+                                        //               .length <=
+                                        //           5
+                                        //       ? ((widget.tasks.first
+                                        //                           .resources ??
+                                        //                       [])
+                                        //                   .length +
+                                        //               1) *
+                                        //           60
+                                        //       : 6 * 60,
+                                        // ),
+                                        // const SizedBox(
+                                        //   height: 10,
+                                        // ),
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Text(
+                                              '${localizations.translate(
+                                                i18.adverseEvents
+                                                    .selectSymptomsLabel,
+                                              )}*',
+                                              style:
+                                                  theme.textTheme.headlineSmall,
                                             ),
-                                            DigitTable(
-                                              headerList: filteredHeaderList,
-                                              tableData: tableData ?? [],
-                                              leftColumnWidth: 130,
-                                              rightColumnWidth:
-                                                  filteredHeaderList.length *
-                                                      17 *
-                                                      6,
-                                              height: (widget.tasks.first
-                                                                  .resources ??
-                                                              [])
-                                                          .length <=
-                                                      5
-                                                  ? ((widget.tasks.first
-                                                                      .resources ??
-                                                                  [])
-                                                              .length +
-                                                          1) *
-                                                      60
-                                                  : 6 * 60,
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.topLeft,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Text(
-                                                  '${localizations.translate(
-                                                    i18.adverseEvents
-                                                        .selectSymptomsLabel,
-                                                  )}*',
-                                                  style: theme
-                                                      .textTheme.headlineSmall,
-                                                ),
-                                              ),
-                                            ),
-                                            BlocBuilder<AppInitializationBloc,
-                                                AppInitializationState>(
-                                              builder: (context, state) =>
-                                                  state.maybeWhen(
-                                                orElse: () => const Offstage(),
-                                                initialized:
-                                                    (appConfiguration, _) {
-                                                  final symptomTypesOptions =
-                                                      appConfiguration
-                                                              .symptomsTypes ??
-                                                          <SymptomsTypes>[];
-                                                  symptomsTypes =
-                                                      symptomTypesOptions
-                                                          .map((e) => e.code)
-                                                          .toList();
+                                          ),
+                                        ),
+                                        BlocBuilder<AppInitializationBloc,
+                                            AppInitializationState>(
+                                          builder: (context, state) =>
+                                              state.maybeWhen(
+                                            orElse: () => const Offstage(),
+                                            initialized: (appConfiguration, _) {
+                                              final symptomTypesOptions =
+                                                  appConfiguration
+                                                          .symptomsTypes ??
+                                                      <SymptomsTypes>[];
+                                              symptomsTypes =
+                                                  symptomTypesOptions
+                                                      .map((e) => e.code)
+                                                      .toList();
 
-                                                  for (var _
-                                                      in symptomTypesOptions) {
-                                                    symptomsValues.add(false);
-                                                  }
+                                              for (var _
+                                                  in symptomTypesOptions) {
+                                                symptomsValues.add(false);
+                                              }
 
-                                                  return Column(
-                                                    children:
-                                                        symptomTypesOptions
-                                                            .mapIndexed(
-                                                              (i, e) =>
-                                                                  StatefulBuilder(
-                                                                builder: (
-                                                                  BuildContext
-                                                                      context,
-                                                                  StateSetter
-                                                                      stateSetter,
-                                                                ) {
-                                                                  return DigitCheckboxTile(
-                                                                    label: localizations
-                                                                        .translate(
-                                                                      e.code,
-                                                                    ),
-                                                                    value:
-                                                                        symptomsValues[
-                                                                            i],
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      stateSetter(
-                                                                        () {
-                                                                          symptomsValues[i] =
-                                                                              !symptomsValues[i];
-                                                                        },
-                                                                      );
-                                                                    },
-                                                                  );
+                                              return Column(
+                                                children: symptomTypesOptions
+                                                    .mapIndexed(
+                                                      (i, e) => StatefulBuilder(
+                                                        builder: (
+                                                          BuildContext context,
+                                                          StateSetter
+                                                              stateSetter,
+                                                        ) {
+                                                          return DigitCheckboxTile(
+                                                            label: localizations
+                                                                .translate(
+                                                              e.code,
+                                                            ),
+                                                            value:
+                                                                symptomsValues[
+                                                                    i],
+                                                            onChanged: (value) {
+                                                              stateSetter(
+                                                                () {
+                                                                  symptomsValues[
+                                                                          i] =
+                                                                      !symptomsValues[
+                                                                          i];
                                                                 },
-                                                              ),
-                                                            )
-                                                            .toList(),
-                                                  );
-                                                },
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Offstage(
+                                          offstage: symptomsSelected,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                              style: TextStyle(
+                                                color: theme.colorScheme.error,
                                               ),
                                             ),
-                                            Offstage(
-                                              offstage: symptomsSelected,
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  localizations.translate(
-                                                    i18.common
-                                                        .corecommonRequired,
-                                                  ),
-                                                  style: TextStyle(
-                                                    color:
-                                                        theme.colorScheme.error,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            DigitRadioButtonList<KeyValue>(
+                                          ),
+                                        ),
+
+                                        // TODO: Commenting the reAdminister Field as not required as per current requirement
+                                        /*DigitRadioButtonList<KeyValue>(
                                               labelText:
                                                   localizations.translate(i18
                                                       .adverseEvents
@@ -493,13 +478,11 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                 ),
                                                 incrementer: true,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                            ),*/
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                       );
                     },
@@ -513,7 +496,8 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
     );
   }
 
-  FormGroup buildForm(BuildContext context) {
+  // TODO: Form builder is not needed as only we have MultiValue checklist only as per current requirement
+  /*FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
 
     final projectBeneficiary =
@@ -559,5 +543,5 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
         validators: [Validators.required],
       ),
     });
-  }
+  }*/
 }

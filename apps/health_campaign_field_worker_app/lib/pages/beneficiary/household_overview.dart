@@ -283,6 +283,8 @@ class _HouseholdOverviewPageState
                                         return MemberCard(
                                           isHead: isHead,
                                           individual: e,
+                                          tasks: state
+                                              .householdMemberWrapper.tasks,
                                           editMemberAction: () async {
                                             final bloc = ctx
                                                 .read<HouseholdOverviewBloc>();
