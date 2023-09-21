@@ -124,6 +124,7 @@ class AppInitializationBloc
         );
         emit(const AppUninitialized());
       } catch (e) {
+        /*Checks for if app initialization failed due to no internet or no retries left */
         emit(const AppInitializationState.failed());
       }
     }

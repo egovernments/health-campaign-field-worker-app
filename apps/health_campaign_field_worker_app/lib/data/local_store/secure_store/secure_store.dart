@@ -124,6 +124,7 @@ class LocalSecureStore {
     await storage.deleteAll();
   }
 
+  /*Sets the bool value of project setup as true once project data is downloaded*/
   Future<void> setProjectSetUpComplete(String key, bool value) async {
     await storage.write(
       key: key,
@@ -131,6 +132,7 @@ class LocalSecureStore {
     );
   }
 
+  /*Checks for project data loaded or not*/
   Future<bool> isProjectSetUpComplete(String projectId) async {
     final isProjectSetUpComplete = await storage.read(key: projectId);
 

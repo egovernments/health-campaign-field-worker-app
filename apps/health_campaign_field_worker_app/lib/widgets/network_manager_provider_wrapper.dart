@@ -87,9 +87,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 orElse: () => const Center(
                   child: Text('Não é possível inicializar o aplicativo'),
                 ),
+                /*Returns Loading state while app initialization is in progress*/
                 loading: () => const Center(
                   child: Text('Carregando'),
                 ),
+                /*Returns No Internet Connection warning if its failed to initialize after all retries
+                  and shows a button to close the app*/
                 failed: () => ScrollableContent(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
