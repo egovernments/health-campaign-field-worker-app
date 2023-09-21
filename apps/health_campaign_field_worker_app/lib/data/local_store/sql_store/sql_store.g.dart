@@ -19401,6 +19401,7 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
 class TaskResourceData extends DataClass
     implements Insertable<TaskResourceData> {
   final String clientReferenceId;
+  final String taskclientReferenceId;
   final String? taskId;
   final String? id;
   final String? productVariantId;
@@ -19421,6 +19422,7 @@ class TaskResourceData extends DataClass
   final String? additionalFields;
   TaskResourceData(
       {required this.clientReferenceId,
+      required this.taskclientReferenceId,
       this.taskId,
       this.id,
       this.productVariantId,
@@ -19445,6 +19447,8 @@ class TaskResourceData extends DataClass
     return TaskResourceData(
       clientReferenceId: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_reference_id'])!,
+      taskclientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}taskclient_reference_id'])!,
       taskId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}task_id']),
       id: const StringType()
@@ -19487,6 +19491,7 @@ class TaskResourceData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['client_reference_id'] = Variable<String>(clientReferenceId);
+    map['taskclient_reference_id'] = Variable<String>(taskclientReferenceId);
     if (!nullToAbsent || taskId != null) {
       map['task_id'] = Variable<String?>(taskId);
     }
@@ -19547,6 +19552,7 @@ class TaskResourceData extends DataClass
   TaskResourceCompanion toCompanion(bool nullToAbsent) {
     return TaskResourceCompanion(
       clientReferenceId: Value(clientReferenceId),
+      taskclientReferenceId: Value(taskclientReferenceId),
       taskId:
           taskId == null && nullToAbsent ? const Value.absent() : Value(taskId),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
@@ -19606,6 +19612,8 @@ class TaskResourceData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TaskResourceData(
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      taskclientReferenceId:
+          serializer.fromJson<String>(json['taskclientReferenceId']),
       taskId: serializer.fromJson<String?>(json['taskId']),
       id: serializer.fromJson<String?>(json['id']),
       productVariantId: serializer.fromJson<String?>(json['productVariantId']),
@@ -19631,6 +19639,7 @@ class TaskResourceData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'taskclientReferenceId': serializer.toJson<String>(taskclientReferenceId),
       'taskId': serializer.toJson<String?>(taskId),
       'id': serializer.toJson<String?>(id),
       'productVariantId': serializer.toJson<String?>(productVariantId),
@@ -19654,6 +19663,7 @@ class TaskResourceData extends DataClass
 
   TaskResourceData copyWith(
           {String? clientReferenceId,
+          String? taskclientReferenceId,
           String? taskId,
           String? id,
           String? productVariantId,
@@ -19674,6 +19684,8 @@ class TaskResourceData extends DataClass
           String? additionalFields}) =>
       TaskResourceData(
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        taskclientReferenceId:
+            taskclientReferenceId ?? this.taskclientReferenceId,
         taskId: taskId ?? this.taskId,
         id: id ?? this.id,
         productVariantId: productVariantId ?? this.productVariantId,
@@ -19697,6 +19709,7 @@ class TaskResourceData extends DataClass
   String toString() {
     return (StringBuffer('TaskResourceData(')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
           ..write('taskId: $taskId, ')
           ..write('id: $id, ')
           ..write('productVariantId: $productVariantId, ')
@@ -19722,6 +19735,7 @@ class TaskResourceData extends DataClass
   @override
   int get hashCode => Object.hash(
       clientReferenceId,
+      taskclientReferenceId,
       taskId,
       id,
       productVariantId,
@@ -19745,6 +19759,7 @@ class TaskResourceData extends DataClass
       identical(this, other) ||
       (other is TaskResourceData &&
           other.clientReferenceId == this.clientReferenceId &&
+          other.taskclientReferenceId == this.taskclientReferenceId &&
           other.taskId == this.taskId &&
           other.id == this.id &&
           other.productVariantId == this.productVariantId &&
@@ -19767,6 +19782,7 @@ class TaskResourceData extends DataClass
 
 class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String> clientReferenceId;
+  final Value<String> taskclientReferenceId;
   final Value<String?> taskId;
   final Value<String?> id;
   final Value<String?> productVariantId;
@@ -19787,6 +19803,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String?> additionalFields;
   const TaskResourceCompanion({
     this.clientReferenceId = const Value.absent(),
+    this.taskclientReferenceId = const Value.absent(),
     this.taskId = const Value.absent(),
     this.id = const Value.absent(),
     this.productVariantId = const Value.absent(),
@@ -19808,6 +19825,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   });
   TaskResourceCompanion.insert({
     required String clientReferenceId,
+    required String taskclientReferenceId,
     this.taskId = const Value.absent(),
     this.id = const Value.absent(),
     this.productVariantId = const Value.absent(),
@@ -19826,9 +19844,11 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
-  }) : clientReferenceId = Value(clientReferenceId);
+  })  : clientReferenceId = Value(clientReferenceId),
+        taskclientReferenceId = Value(taskclientReferenceId);
   static Insertable<TaskResourceData> custom({
     Expression<String>? clientReferenceId,
+    Expression<String>? taskclientReferenceId,
     Expression<String?>? taskId,
     Expression<String?>? id,
     Expression<String?>? productVariantId,
@@ -19850,6 +19870,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   }) {
     return RawValuesInsertable({
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (taskclientReferenceId != null)
+        'taskclient_reference_id': taskclientReferenceId,
       if (taskId != null) 'task_id': taskId,
       if (id != null) 'id': id,
       if (productVariantId != null) 'product_variant_id': productVariantId,
@@ -19874,6 +19896,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
 
   TaskResourceCompanion copyWith(
       {Value<String>? clientReferenceId,
+      Value<String>? taskclientReferenceId,
       Value<String?>? taskId,
       Value<String?>? id,
       Value<String?>? productVariantId,
@@ -19894,6 +19917,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
       Value<String?>? additionalFields}) {
     return TaskResourceCompanion(
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      taskclientReferenceId:
+          taskclientReferenceId ?? this.taskclientReferenceId,
       taskId: taskId ?? this.taskId,
       id: id ?? this.id,
       productVariantId: productVariantId ?? this.productVariantId,
@@ -19920,6 +19945,10 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     final map = <String, Expression>{};
     if (clientReferenceId.present) {
       map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (taskclientReferenceId.present) {
+      map['taskclient_reference_id'] =
+          Variable<String>(taskclientReferenceId.value);
     }
     if (taskId.present) {
       map['task_id'] = Variable<String?>(taskId.value);
@@ -19982,6 +20011,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   String toString() {
     return (StringBuffer('TaskResourceCompanion(')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
           ..write('taskId: $taskId, ')
           ..write('id: $id, ')
           ..write('productVariantId: $productVariantId, ')
@@ -20016,6 +20046,12 @@ class $TaskResourceTable extends TaskResource
   @override
   late final GeneratedColumn<String?> clientReferenceId =
       GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _taskclientReferenceIdMeta =
+      const VerificationMeta('taskclientReferenceId');
+  @override
+  late final GeneratedColumn<String?> taskclientReferenceId =
+      GeneratedColumn<String?>('taskclient_reference_id', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
   @override
@@ -20127,6 +20163,7 @@ class $TaskResourceTable extends TaskResource
   @override
   List<GeneratedColumn> get $columns => [
         clientReferenceId,
+        taskclientReferenceId,
         taskId,
         id,
         productVariantId,
@@ -20162,6 +20199,14 @@ class $TaskResourceTable extends TaskResource
               data['client_reference_id']!, _clientReferenceIdMeta));
     } else if (isInserting) {
       context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('taskclient_reference_id')) {
+      context.handle(
+          _taskclientReferenceIdMeta,
+          taskclientReferenceId.isAcceptableOrUnknown(
+              data['taskclient_reference_id']!, _taskclientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_taskclientReferenceIdMeta);
     }
     if (data.containsKey('task_id')) {
       context.handle(_taskIdMeta,

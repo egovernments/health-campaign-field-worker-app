@@ -17,7 +17,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final select = sql.select(sql.task).join([
       leftOuterJoin(
         sql.taskResource,
-        sql.taskResource.clientReferenceId.equalsExp(
+        sql.taskResource.taskclientReferenceId.equalsExp(
           sql.task.clientReferenceId,
         ),
       ),
@@ -53,6 +53,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                   ? null
                   : [
                       TaskResourceModel(
+                        taskclientReferenceId: resources.taskclientReferenceId,
                         clientReferenceId: resources.clientReferenceId,
                         id: resources.id,
                         productVariantId: resources.productVariantId,
@@ -85,9 +86,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         ),
       ),
       // TODO :[Need to change this to taskclient reference Id]
-      leftOuterJoin(
+      innerJoin(
         sql.taskResource,
-        sql.taskResource.clientReferenceId.equalsExp(
+        sql.taskResource.taskclientReferenceId.equalsExp(
           sql.task.clientReferenceId,
         ),
       ),
@@ -112,6 +113,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     return results
         .map((e) {
+          print(e.rawData.data);
+          print("RAW");
+
           final task = e.readTableOrNull(sql.task);
           final resources = e.readTableOrNull(sql.taskResource);
           final address = e.readTableOrNull(sql.address);
@@ -199,6 +203,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 ? null
                 : [
                     TaskResourceModel(
+                      taskclientReferenceId: task.clientReferenceId,
                       clientReferenceId: resources.clientReferenceId,
                       id: resources.id,
                       productVariantId: resources.productVariantId,

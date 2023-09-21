@@ -8,6 +8,7 @@ import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/entities/product_variant.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
@@ -53,18 +54,6 @@ class _ResourceBeneficiaryCardState
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
-                  const productVariantId = "";
-
-                  final variant = productState.whenOrNull(
-                    fetched: (productVariants) {
-                      return productVariants.firstWhereOrNull(
-                        (element) => element.id == productVariantId,
-                      );
-                    },
-                  );
-
-                  print(widget.form.controls);
-
                   return DigitReactiveDropdown(
                     label: localizations.translate(
                       i18.deliverIntervention.resourceDeliveredLabel,

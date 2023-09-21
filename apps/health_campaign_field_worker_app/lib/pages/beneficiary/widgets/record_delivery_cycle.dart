@@ -63,6 +63,7 @@ class RecordDeliveryCycle extends StatelessWidget {
                           '',
                         ))
                     : 1;
+
                 final int? taskDoseindex =
                     taskData != null && taskData!.isNotEmpty
                         ? int.tryParse(taskData!
@@ -74,7 +75,7 @@ class RecordDeliveryCycle extends StatelessWidget {
                             ))
                         : -1;
 
-                return cycleIndex == taskCycleindex
+                return true
                     ? DigitCard(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
