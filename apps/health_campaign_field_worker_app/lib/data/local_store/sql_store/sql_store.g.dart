@@ -1335,6 +1335,10 @@ class AdverseEventData extends DataClass
   final String? symptoms;
   final String? auditCreatedBy;
   final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
   final String clientReferenceId;
@@ -1349,6 +1353,10 @@ class AdverseEventData extends DataClass
       this.symptoms,
       this.auditCreatedBy,
       this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
       required this.clientReferenceId,
@@ -1372,6 +1380,14 @@ class AdverseEventData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
       auditCreatedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_time']),
       auditModifiedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
       auditModifiedTime: const IntType().mapFromDatabaseResponse(
@@ -1409,6 +1425,18 @@ class AdverseEventData extends DataClass
     }
     if (!nullToAbsent || auditCreatedTime != null) {
       map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime);
     }
     if (!nullToAbsent || auditModifiedBy != null) {
       map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
@@ -1450,6 +1478,18 @@ class AdverseEventData extends DataClass
       auditCreatedTime: auditCreatedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
       auditModifiedBy: auditModifiedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditModifiedBy),
@@ -1483,6 +1523,10 @@ class AdverseEventData extends DataClass
       symptoms: serializer.fromJson<String?>(json['symptoms']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
@@ -1503,6 +1547,10 @@ class AdverseEventData extends DataClass
       'symptoms': serializer.toJson<String?>(symptoms),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
@@ -1520,6 +1568,10 @@ class AdverseEventData extends DataClass
           String? symptoms,
           String? auditCreatedBy,
           int? auditCreatedTime,
+          int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
+          int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
           String? clientReferenceId,
@@ -1535,6 +1587,10 @@ class AdverseEventData extends DataClass
         symptoms: symptoms ?? this.symptoms,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
@@ -1552,6 +1608,10 @@ class AdverseEventData extends DataClass
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('clientReferenceId: $clientReferenceId, ')
@@ -1571,6 +1631,10 @@ class AdverseEventData extends DataClass
       symptoms,
       auditCreatedBy,
       auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
       auditModifiedBy,
       auditModifiedTime,
       clientReferenceId,
@@ -1588,6 +1652,10 @@ class AdverseEventData extends DataClass
           other.symptoms == this.symptoms &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
           other.clientReferenceId == this.clientReferenceId &&
@@ -1604,6 +1672,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   final Value<String?> symptoms;
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
   final Value<String> clientReferenceId;
@@ -1618,6 +1690,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
     this.clientReferenceId = const Value.absent(),
@@ -1633,6 +1709,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
     required String clientReferenceId,
@@ -1648,6 +1728,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     Expression<String?>? symptoms,
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
+    Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
+    Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
     Expression<String>? clientReferenceId,
@@ -1664,6 +1748,11 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       if (symptoms != null) 'symptoms': symptoms,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
@@ -1681,6 +1770,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       Value<String?>? symptoms,
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
       Value<String>? clientReferenceId,
@@ -1696,6 +1789,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       symptoms: symptoms ?? this.symptoms,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
@@ -1727,6 +1824,18 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     }
     if (auditCreatedTime.present) {
       map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
     }
     if (auditModifiedBy.present) {
       map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
@@ -1761,6 +1870,10 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('clientReferenceId: $clientReferenceId, ')
@@ -1812,6 +1925,30 @@ class $AdverseEventTable extends AdverseEvent
   late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
       'audit_created_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
+      'client_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int?> clientModifiedTime = GeneratedColumn<int?>(
+      'client_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _auditModifiedByMeta =
       const VerificationMeta('auditModifiedBy');
   @override
@@ -1862,6 +1999,10 @@ class $AdverseEventTable extends AdverseEvent
         symptoms,
         auditCreatedBy,
         auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
         clientReferenceId,
@@ -1909,6 +2050,30 @@ class $AdverseEventTable extends AdverseEvent
           _auditCreatedTimeMeta,
           auditCreatedTime.isAcceptableOrUnknown(
               data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
     }
     if (data.containsKey('audit_modified_by')) {
       context.handle(
