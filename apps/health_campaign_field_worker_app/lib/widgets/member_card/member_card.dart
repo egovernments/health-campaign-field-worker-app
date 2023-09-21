@@ -248,6 +248,7 @@ class MemberCard extends StatelessWidget {
                                 AdverseEventsRoute(
                                   tasks: tasks ??
                                       [
+                                        // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
                                         TaskModel(
                                           clientReferenceId:
                                               "19e15730-588f-11ee-ba2c-15d414c9ae78",
