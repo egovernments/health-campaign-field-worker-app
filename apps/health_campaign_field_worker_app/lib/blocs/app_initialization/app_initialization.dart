@@ -88,6 +88,12 @@ class AppInitializationBloc
                   MdmsMasterDetailModel('ROW_VERSIONS'),
                 ],
               ),
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-SYMPTOMS-TYPES',
+                masterDetails: [
+                  MdmsMasterDetailModel('symptomsTypes'),
+                ],
+              ),
             ],
           ),
         ).toJson(),

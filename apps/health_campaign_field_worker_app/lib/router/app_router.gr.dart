@@ -306,6 +306,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    AdverseEventsRoute.name: (routeData) {
+      final args = routeData.argsAs<AdverseEventsRouteArgs>();
+      return MaterialPageX<List<TaskModel>>(
+        routeData: routeData,
+        child: AdverseEventsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     ReasonForDeletionRoute.name: (routeData) {
       final args = routeData.argsAs<ReasonForDeletionRouteArgs>(
           orElse: () => const ReasonForDeletionRouteArgs());
@@ -578,6 +590,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   DeliverInterventionRoute.name,
                   path: 'deliver-intervention',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  AdverseEventsRoute.name,
+                  path: 'adverse-events',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1658,6 +1675,50 @@ class DeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'DeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [AdverseEventsPage]
+class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
+  AdverseEventsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required List<TaskModel> tasks,
+    bool isEditing = false,
+  }) : super(
+          AdverseEventsRoute.name,
+          path: 'adverse-events',
+          args: AdverseEventsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            tasks: tasks,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'AdverseEventsRoute';
+}
+
+class AdverseEventsRouteArgs {
+  const AdverseEventsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.tasks,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final List<TaskModel> tasks;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'AdverseEventsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
   }
 }
 

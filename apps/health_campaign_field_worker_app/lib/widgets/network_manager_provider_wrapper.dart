@@ -8,6 +8,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/adverse_event.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -26,6 +27,7 @@ import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/adverse_event.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
@@ -49,7 +51,6 @@ import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
-import '../models/entities/user.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -162,6 +163,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<AdverseEventModel, AdverseEventSearchModel>>(
+        create: (_) => AdverseEventLocalRepository(
+          sql,
+          AdverseEventOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -409,6 +417,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.adverseEvent)
+          RepositoryProvider<
+              RemoteRepository<AdverseEventModel, AdverseEventSearchModel>>(
+            create: (_) => AdverseEventRemoteRepository(
               dio,
               actionMap: actions,
             ),

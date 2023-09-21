@@ -13,6 +13,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
+const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -79,6 +80,10 @@ class Common {
   String get coreCommonSkip => 'CORE_COMMON_SKIP';
 
   String get coreCommonNext => 'CORE_COMMON_NEXT';
+
+  String get coreCommonYes => 'CORE_COMMON_YES';
+
+  String get coreCommonNo => 'CORE_COMMON_NO';
 }
 
 class Login {
@@ -399,6 +404,9 @@ class DeliverIntervention {
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
+  String get didYouObserveAdvEventsTitle =>
+      'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
   String get resourceAddBeneficiary =>
       'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
@@ -410,6 +418,24 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get dose => 'DELIVER_INTERVENTION_DOSE';
+}
+
+class AdverseEvents {
+  const AdverseEvents();
+
+  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
+
+  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
+
+  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
+
+  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
+
+  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
 }
 
 class ProjectSelection {
