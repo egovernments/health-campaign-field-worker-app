@@ -12,7 +12,9 @@ import '../pages/authenticated.dart';
 import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
+import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
+import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
@@ -110,12 +112,21 @@ part 'app_router.gr.dart';
               path: 'deliver-intervention',
             ),
             AutoRoute(
+              page: DoseAdministeredPage,
+              path: 'dose-administered',
+            ),
+            AutoRoute(
+              page: SplashAcknowledgementPage,
+              path: 'splash-acknowledgement',
+            ),
+            AutoRoute(
               page: ReasonForDeletionPage,
               path: 'reason-for-deletion',
             ),
             AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
         ),
+
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
           AutoRoute(
             page: ChecklistPage,
@@ -127,6 +138,7 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
+
         AutoRoute(
           page: ComplaintsAcknowledgementPage,
           path: 'complaints-acknowledgement',

@@ -77,6 +77,9 @@ class _DeliverInterventionPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
+          final currentCycle = context.read<DeliverInterventionBloc>().state;
+
+          int currentCyclestate = currentCycle.cycle;
 
 // [TODO] Index need to be dynamic
           final projectState = context.read<ProjectBloc>().state;
@@ -90,6 +93,43 @@ class _DeliverInterventionPageState
               projectState.projectType?.cycles?[0].deliveries?.length ??
                   0; //todo need to be removed [0]
           final steps = generateSteps(numberOfDoses);
+
+          final selectedCycle =
+              projectState.projectType?.cycles?.elementAt(currentCyclestate);
+
+          int currentDose = currentCycle.dose >= 0 ? currentCycle.dose : 0;
+          String? deliveryStrategy;
+
+          print("Initial currentDose: $currentDose");
+
+          if (selectedCycle != null && selectedCycle.deliveries != null) {
+            final deliveries = selectedCycle.deliveries;
+
+            print("Number of deliveries: ${deliveries!.length}");
+
+            for (currentDose = 0;
+                currentDose < deliveries.length;
+                currentDose++) {
+              final delivery = deliveries[currentDose];
+              deliveryStrategy = delivery.deliveryStrategy;
+
+              if (deliveryStrategy != null) {
+                // Handle the deliveryStrategy here
+                print(
+                    "Delivery Strategy at index $currentDose: $deliveryStrategy");
+              } else {
+                // Handle the case where deliveryStrategy is null
+                print("Delivery Strategy at index $currentDose is null.");
+              }
+            }
+          } else {
+            // Handle the case where selectedCycle or deliveries is null
+            print("Selected cycle or deliveries is null.");
+          }
+
+          print("Final currentDose: $deliveryStrategy");
+
+          // print("checkdeliverr, $checkDeliveryStratgey");
 
           return Scaffold(
             body: state.loading
@@ -178,9 +218,11 @@ class _DeliverInterventionPageState
                                                     final parent =
                                                         context.router.parent()
                                                             as StackRouter;
-                                                    parent
-                                                      ..pop()
-                                                      ..pop();
+                                                    context.router
+                                                        .popUntilRouteWithName(
+                                                      BeneficiaryWrapperRoute
+                                                          .name,
+                                                    );
                                                     context
                                                         .read<
                                                             DeliverInterventionBloc>()
@@ -213,9 +255,20 @@ class _DeliverInterventionPageState
                                                           ),
                                                         );
 
-                                                    context.router.push(
-                                                      AcknowledgementRoute(),
-                                                    );
+                                                    if (deliveryStrategy ==
+                                                        "INDIRECT") {
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: false,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: true,
+                                                        ),
+                                                      );
+                                                    }
                                                   }
                                                 }
                                               },
@@ -456,12 +509,16 @@ class _DeliverInterventionPageState
     List<ProductVariantsModel>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
+    final currentCycle = context.read<DeliverInterventionBloc>().state;
+
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
     return fb.group(<String, Object>{
-      _doseAdministrationKey:
-          FormControl<String>(value: 'Cycle ${1}', validators: []),
+      _doseAdministrationKey: FormControl<String>(
+        value: 'Cycle ${currentCycle.cycle}'.toString(),
+        validators: [],
+      ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(

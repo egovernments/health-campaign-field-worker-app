@@ -6,9 +6,11 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
+  final bool? isSearch;
   const AcknowledgementPage({
     super.key,
     super.appLocalizations,
+    this.isSearch,
   });
 
   @override
@@ -23,6 +25,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         action: () {
           context.router.pop();
         },
+        isSearch: widget.isSearch ?? true,
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(

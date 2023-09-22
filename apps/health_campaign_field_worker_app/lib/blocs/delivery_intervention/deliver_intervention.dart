@@ -5,6 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/delivery_strategy_type.dart';
+import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -21,6 +23,7 @@ class DeliverInterventionBloc
     on(_handleSubmit);
     on(_handleSearch);
     on(_handleCycleDoseSelection);
+    on(_handleFutureDeliveries);
   }
 
   FutureOr<void> _handleSubmit(
@@ -97,6 +100,92 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _handleFutureDeliveries(
+    DeliverInterventionCycleFutureDoseSelectionEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    emit(state.copyWith(loading: true));
+    try {
+      List<Map<String, dynamic>> futureDeliveries = [];
+      int currentDose = event.dose + 1;
+      int currentDoses = event.dose;
+
+      print("current dose for bloc $currentDoses");
+      Cycle? currentCycle = event.cycle;
+
+      if (currentCycle.deliveries != null) {
+        for (int index = 0; index < currentCycle.deliveries!.length; index++) {
+          var delivery = currentCycle.deliveries![index];
+          String? deliveryStrategy = delivery.deliveryStrategy;
+
+          if (index == currentDose) {
+            if (deliveryStrategy?.toLowerCase() ==
+                DeliverStrategyType.indirect.name.toLowerCase()) {
+              final List<Map<String, dynamic>> productVariantsList =
+                  delivery.productVariants?.map((productVariant) {
+                        return {
+                          'productVariantId': productVariant.productVariantId,
+                          'quantity': productVariant.quantity,
+                        };
+                      }).toList() ??
+                      [];
+
+              futureDeliveries.addAll(productVariantsList);
+            } else if (deliveryStrategy?.toLowerCase() ==
+                DeliverStrategyType.direct.name.toLowerCase()) {
+              break;
+            }
+          }
+        }
+      }
+
+      emit(state.copyWith(futureDeliveries: futureDeliveries));
+    } catch (error) {
+      rethrow;
+    } finally {
+      emit(state.copyWith(loading: false));
+    }
+  }
+  // FutureOr<void> _handleFutureDeliveries(
+  //   DeliverInterventionCycleFutureDoseSelectionEvent event,
+  //   BeneficiaryRegistrationEmitter emit,
+  // ) async {
+  //   emit(state.copyWith(loading: true));
+  //   try {
+  //     int currentDose = event.dose + 1;
+  //     Cycle? currentCycle = event.cycle;
+
+  //     if (currentCycle.deliveries != null) {
+  //       List<Map<String, dynamic>> futureDeliveries = [];
+
+  //       for (int index = currentDose;
+  //           index < currentCycle.deliveries!.length;
+  //           index++) {
+  //         var delivery = currentCycle.deliveries![index];
+  //         String? deliveryStrategy = delivery.deliveryStrategy;
+
+  //         if (deliveryStrategy == DeliverStrategyType.indirect.name) {
+  //           for (var productVariant in delivery.productVariants ?? []) {
+  //             futureDeliveries.add({
+  //               'productVariantId': productVariant.productVariantId,
+  //               'quantity': productVariant.quantity,
+  //             });
+  //           }
+  //         } else if (deliveryStrategy == DeliverStrategyType.direct.name) {
+  //           break;
+  //         }
+  //       }
+
+  //       print("futureDeliveries JSON: $futureDeliveries");
+  //       emit(state.copyWith(futureDeliveries: futureDeliveries));
+  //     }
+  //   } catch (error) {
+  //     rethrow;
+  //   } finally {
+  //     emit(state.copyWith(loading: false));
+  //   }
+  // }
 }
 
 @freezed
@@ -115,6 +204,11 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int dose,
     int cycle,
   ) = DeliverInterventionCycleDoseSelectionEvent;
+
+  const factory DeliverInterventionEvent.selectFutureCycleDose(
+    int dose,
+    Cycle cycle,
+  ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 }
 
 @freezed
@@ -125,5 +219,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(0) int cycle,
     @Default(0) int dose,
     List<TaskModel>? tasks,
+    List<Map<String, dynamic>>? futureDeliveries,
   }) = _DeliverInterventionState;
 }
