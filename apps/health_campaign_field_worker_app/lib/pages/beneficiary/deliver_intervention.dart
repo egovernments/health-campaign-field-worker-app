@@ -80,56 +80,41 @@ class _DeliverInterventionPageState
           final currentCycle = context.read<DeliverInterventionBloc>().state;
 
           int currentCyclestate = currentCycle.cycle;
+          int currentDoseState = currentCycle.dose;
 
-// [TODO] Index need to be dynamic
           final projectState = context.read<ProjectBloc>().state;
           List<ProductVariantsModel>? productVariants = projectState
               .projectType
-              ?.cycles?[0]
-              .deliveries?[0]
-              .productVariants; //todo need to be removed [0]
+              ?.cycles?[currentCyclestate]
+              .deliveries?[currentDoseState]
+              .productVariants;
 
-          final int numberOfDoses =
-              projectState.projectType?.cycles?[0].deliveries?.length ??
-                  0; //todo need to be removed [0]
+          final int numberOfDoses = projectState
+                  .projectType?.cycles?[currentCyclestate].deliveries?.length ??
+              0;
           final steps = generateSteps(numberOfDoses);
 
-          final selectedCycle =
-              projectState.projectType?.cycles?.elementAt(currentCyclestate);
-
-          int currentDose = currentCycle.dose >= 0 ? currentCycle.dose : 0;
           String? deliveryStrategy;
 
-          print("Initial currentDose: $currentDose");
+          if (currentCyclestate >= 0 &&
+              currentCyclestate < projectState.projectType!.cycles!.length) {
+            // Access the 'deliveries' list for the current cycle
+            var currentCycleData =
+                projectState.projectType!.cycles![currentCyclestate];
 
-          if (selectedCycle != null && selectedCycle.deliveries != null) {
-            final deliveries = selectedCycle.deliveries;
-
-            print("Number of deliveries: ${deliveries!.length}");
-
-            for (currentDose = 0;
-                currentDose < deliveries.length;
-                currentDose++) {
-              final delivery = deliveries[currentDose];
-              deliveryStrategy = delivery.deliveryStrategy;
-
-              if (deliveryStrategy != null) {
-                // Handle the deliveryStrategy here
-                print(
-                    "Delivery Strategy at index $currentDose: $deliveryStrategy");
-              } else {
-                // Handle the case where deliveryStrategy is null
-                print("Delivery Strategy at index $currentDose is null.");
-              }
+            // Check if the currentDose index is within the bounds of the 'deliveries' list for the current cycle
+            if (currentDoseState >= 0 &&
+                currentDoseState < currentCycleData.deliveries!.length) {
+              // Access the 'deliveryStrategy' for the current dose in the current cycle
+              var currentDoseData =
+                  currentCycleData.deliveries![currentDoseState];
+              deliveryStrategy = currentDoseData.deliveryStrategy;
+            } else {
+              print('getCurrentDose is out of bounds for the current cycle.');
             }
           } else {
-            // Handle the case where selectedCycle or deliveries is null
-            print("Selected cycle or deliveries is null.");
+            print('getCurrentCycle is out of bounds.');
           }
-
-          print("Final currentDose: $deliveryStrategy");
-
-          // print("checkdeliverr, $checkDeliveryStratgey");
 
           return Scaffold(
             body: state.loading
@@ -315,8 +300,7 @@ class _DeliverInterventionPageState
                                                 DigitStepper(
                                                   activeStep:
                                                       deliveryInterventionstate
-                                                              .dose +
-                                                          1,
+                                                          .dose,
                                                   steps: steps,
                                                   maxStepReached: 3,
                                                   lineLength:

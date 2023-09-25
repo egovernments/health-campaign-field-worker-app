@@ -191,10 +191,6 @@ class _BeneficiaryDetailsPageState
 
                             int selectedCycleIndex = state.cycle;
 
-                            print("objectobjectobject");
-                            print(taskData!
-                                .last.additionalFields?.fields[4].value);
-
                             bloc.add(DeliverInterventionEvent.selectCycleDose(
                               taskData != null && taskData.isNotEmpty
                                   ? int.tryParse(taskData.last.additionalFields
@@ -222,24 +218,11 @@ class _BeneficiaryDetailsPageState
                                               ?.fields[4]
                                               .value) ??
                                           0
-                                      : -1,
+                                      : 0,
                                   selectedCycle,
                                 ),
                               );
                             }
-                            // bloc.add(
-                            //   DeliverInterventionEvent.selectFutureCycleDose(
-                            //     taskData != null && taskData.isNotEmpty
-                            //         ? int.tryParse(taskData
-                            //                 .last
-                            //                 .additionalFields
-                            //                 ?.fields[4]
-                            //                 .value) ??
-                            //             0
-                            //         : -1,
-                            //     projectState.projectType!.cycles,
-                            //   ),
-                            // );
 
                             await DigitDialog.show<bool>(
                               context,
@@ -499,7 +482,7 @@ class _BeneficiaryDetailsPageState
                                                                     regexp,
                                                                     '',
                                                                   ))
-                                                              : -1;
+                                                              : 0;
 
                                                       return Offstage(
                                                         offstage:

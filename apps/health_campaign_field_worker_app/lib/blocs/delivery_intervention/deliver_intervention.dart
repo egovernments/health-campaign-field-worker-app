@@ -105,87 +105,50 @@ class DeliverInterventionBloc
     DeliverInterventionCycleFutureDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
+    // Set the loading state to true to indicate that an operation is in progress.
     emit(state.copyWith(loading: true));
-    try {
-      List<Map<String, dynamic>> futureDeliveries = [];
-      int currentDose = event.dose + 1;
-      int currentDoses = event.dose;
 
-      print("current dose for bloc $currentDoses");
+    try {
+      int currentDose = event.dose;
       Cycle? currentCycle = event.cycle;
 
+      // Check if the current cycle has deliveries.
       if (currentCycle.deliveries != null) {
-        for (int index = 0; index < currentCycle.deliveries!.length; index++) {
+        List<Map<String, dynamic>> futureDeliveries = [];
+
+        // Iterate through deliveries starting from the current dose.
+        for (int index = currentDose;
+            index < currentCycle.deliveries!.length;
+            index++) {
           var delivery = currentCycle.deliveries![index];
           String? deliveryStrategy = delivery.deliveryStrategy;
 
-          if (index == currentDose) {
-            if (deliveryStrategy?.toLowerCase() ==
-                DeliverStrategyType.indirect.name.toLowerCase()) {
-              final List<Map<String, dynamic>> productVariantsList =
-                  delivery.productVariants?.map((productVariant) {
-                        return {
-                          'productVariantId': productVariant.productVariantId,
-                          'quantity': productVariant.quantity,
-                        };
-                      }).toList() ??
-                      [];
-
-              futureDeliveries.addAll(productVariantsList);
-            } else if (deliveryStrategy?.toLowerCase() ==
-                DeliverStrategyType.direct.name.toLowerCase()) {
-              break;
+          // Check the delivery strategy type is INDIRECT.
+          if (deliveryStrategy == DeliverStrategyType.indirect.name) {
+            // Iterate through product variants and add them to future deliveries.
+            for (var productVariant in delivery.productVariants ?? []) {
+              futureDeliveries.add({
+                'productVariantId': productVariant.productVariantId,
+                'quantity': productVariant.quantity,
+              });
             }
+          } else if (deliveryStrategy == DeliverStrategyType.direct.name) {
+            // If the strategy is direct, exit the loop.
+            break;
           }
         }
-      }
 
-      emit(state.copyWith(futureDeliveries: futureDeliveries));
+        // Update the state with the collected future deliveries.
+        emit(state.copyWith(futureDeliveries: futureDeliveries));
+      }
     } catch (error) {
+      // Rethrow any errors that occur during processing.
       rethrow;
     } finally {
+      // Set the loading state to false after the operation is complete.
       emit(state.copyWith(loading: false));
     }
   }
-  // FutureOr<void> _handleFutureDeliveries(
-  //   DeliverInterventionCycleFutureDoseSelectionEvent event,
-  //   BeneficiaryRegistrationEmitter emit,
-  // ) async {
-  //   emit(state.copyWith(loading: true));
-  //   try {
-  //     int currentDose = event.dose + 1;
-  //     Cycle? currentCycle = event.cycle;
-
-  //     if (currentCycle.deliveries != null) {
-  //       List<Map<String, dynamic>> futureDeliveries = [];
-
-  //       for (int index = currentDose;
-  //           index < currentCycle.deliveries!.length;
-  //           index++) {
-  //         var delivery = currentCycle.deliveries![index];
-  //         String? deliveryStrategy = delivery.deliveryStrategy;
-
-  //         if (deliveryStrategy == DeliverStrategyType.indirect.name) {
-  //           for (var productVariant in delivery.productVariants ?? []) {
-  //             futureDeliveries.add({
-  //               'productVariantId': productVariant.productVariantId,
-  //               'quantity': productVariant.quantity,
-  //             });
-  //           }
-  //         } else if (deliveryStrategy == DeliverStrategyType.direct.name) {
-  //           break;
-  //         }
-  //       }
-
-  //       print("futureDeliveries JSON: $futureDeliveries");
-  //       emit(state.copyWith(futureDeliveries: futureDeliveries));
-  //     }
-  //   } catch (error) {
-  //     rethrow;
-  //   } finally {
-  //     emit(state.copyWith(loading: false));
-  //   }
-  // }
 }
 
 @freezed
