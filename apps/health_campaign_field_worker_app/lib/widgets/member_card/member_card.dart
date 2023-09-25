@@ -263,8 +263,6 @@ class MemberCard extends StatelessWidget {
                             ),
                             onPressed: tasks != null
                                 ? () async {
-                                    print('Task client id');
-                                    print(tasks?.first.clientReferenceId);
                                     Navigator.of(context, rootNavigator: true)
                                         .pop();
                                     await context.router.push(
@@ -285,11 +283,6 @@ class MemberCard extends StatelessWidget {
                         ],
                       ),
                     );
-                    // context.read<HouseholdOverviewBloc>().add(
-                    //       HouseholdOverviewEvent.selectedIndividual(
-                    //         individualModel: individual,
-                    //       ),
-                    //     );
                   },
                 ),
               ],
