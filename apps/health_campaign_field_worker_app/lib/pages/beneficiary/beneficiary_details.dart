@@ -353,28 +353,50 @@ class _BeneficiaryDetailsPageState
                           ),
                           BlocBuilder<ProjectBloc, ProjectState>(
                             builder: (context, state) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: state.projectType!.cycles!.map((e) {
-                                  final int cycleIndex =
-                                      state.projectType!.cycles!.indexOf(e) + 1;
+                              return DigitCard(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: state.projectType != null
+                                      ? state.projectType!.cycles!.map((e) {
+                                          final int cycleIndex = state
+                                                  .projectType!.cycles!
+                                                  .indexOf(e) +
+                                              1;
 
-                                  return Column(
-                                    children: [
-                                      (state.projectType?.cycles != null)
-                                          ? state.projectType!.cycles!
-                                                  .isNotEmpty
-                                              ? RecordDeliveryCycle(
-                                                  cycleIndex: cycleIndex,
-                                                  e: e,
-                                                  taskData: taskData ?? [],
-                                                )
-                                              : const Offstage()
-                                          : const Offstage(),
-                                    ],
-                                  );
-                                }).toList(),
+                                          return Column(
+                                            children: [
+                                              (state.projectType?.cycles !=
+                                                      null)
+                                                  ? state.projectType!.cycles!
+                                                          .isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(
+                                                            kPadding,
+                                                          ),
+                                                          child:
+                                                              RecordDeliveryCycle(
+                                                            cycleIndex:
+                                                                cycleIndex,
+                                                            e: e,
+                                                            isLastCycle: state
+                                                                    .projectType
+                                                                    ?.cycles
+                                                                    ?.length ==
+                                                                cycleIndex,
+                                                            taskData:
+                                                                taskData ?? [],
+                                                          ),
+                                                        )
+                                                      : const Offstage()
+                                                  : const Offstage(),
+                                            ],
+                                          );
+                                        }).toList()
+                                      : [],
+                                ),
                               );
                             },
                           ),

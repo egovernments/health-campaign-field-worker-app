@@ -21,7 +21,8 @@ Widget buildTableContent(
   final localizations = AppLocalizations.of(context);
 
   return SizedBox(
-    height: 400,
+    // [TODO - need to set the height of the card based on the number of items]
+    height: 280,
     width: 500,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,46 +35,41 @@ Widget buildTableContent(
             ): "2",
           },
         ),
-        const Divider(),
+        // const Divider(),
         BlocBuilder<ProjectBloc, ProjectState>(
           builder: (context, projectState) {
             final item = projectState
                 .projectType!.cycles![currentCycle].deliveries![currentDose];
-            final tableData =
-                item.productVariants?.asMap().entries.map((entry) {
-              final index = entry.key;
-              final productVariant = entry.value;
-              final value = variant
-                  ?.where((element) =>
-                      element.id == productVariant.productVariantId)
-                  .firstOrNull
-                  ?.id;
-
-              final rowTableData = [
-                TableData(
-                  index == 0
-                      ? 'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}'
-                      : '',
-                  cellKey: 'dose',
-                ),
-                TableData(
-                  value.toString(),
-                  cellKey: 'resources',
-                ),
-              ];
-
-              return TableDataRow(
-                rowTableData,
-              );
-            }).toList();
 
             return DigitTable(
               headerList: headerListResource,
-              tableData: tableData ?? [],
+              tableData: [
+                ...item.productVariants!.map(
+                  (e) {
+                    final value = variant!
+                        .firstWhere(
+                          (element) => element.id == e.productVariantId,
+                        )
+                        .sku;
+
+                    return TableDataRow([
+                      item.productVariants?.indexOf(e) == 0
+                          ? TableData(
+                              'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
+                              cellKey: 'dose',
+                            )
+                          : TableData(''),
+                      TableData(
+                        localizations.translate(value.toString()),
+                        cellKey: 'resources',
+                      ),
+                    ]);
+                  },
+                ),
+              ],
               leftColumnWidth: 130,
-              rightColumnWidth: headerListResource.length * 17 * 5,
-              height: ((item.productVariants ?? []).length + 1) * 57,
-              scrollPhysics: const NeverScrollableScrollPhysics(),
+              rightColumnWidth: headerListResource.length * 20 * 5,
+              height: MediaQuery.of(context).size.height / 5,
             );
           },
         ),
