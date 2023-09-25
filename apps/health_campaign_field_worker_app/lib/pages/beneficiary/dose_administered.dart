@@ -105,7 +105,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                 children: [
                   Text(
                     localizations.translate(
-                      i18.beneficiaryDetails.reourcesTobeProvided,
+                      i18.beneficiaryDetails.resourcesTobeProvided,
                     ),
                     style: theme.textTheme.displayMedium,
                   ),

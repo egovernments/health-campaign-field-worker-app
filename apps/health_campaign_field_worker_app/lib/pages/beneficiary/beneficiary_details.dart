@@ -228,7 +228,7 @@ class _BeneficiaryDetailsPageState
                               context,
                               options: DigitDialogOptions(
                                 titleText: localizations.translate(
-                                  i18.beneficiaryDetails.reourcesTobeDelivered,
+                                  i18.beneficiaryDetails.resourcesTobeDelivered,
                                 ),
                                 content: buildTableContent(state),
                                 primaryAction: DigitDialogActions(
