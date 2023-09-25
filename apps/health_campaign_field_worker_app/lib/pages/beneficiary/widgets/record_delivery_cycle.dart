@@ -34,10 +34,6 @@ class RecordDeliveryCycle extends StatelessWidget {
         cellKey: 'Status',
       ),
       TableHeader(
-        'Resources',
-        cellKey: 'resources',
-      ),
-      TableHeader(
         'Completed on',
         cellKey: 'completedOn',
       ),
@@ -75,9 +71,9 @@ class RecordDeliveryCycle extends StatelessWidget {
                               regexp,
                               '',
                             ))
-                        : -1;
+                        : 0;
 
-                return true
+                return taskCycleindex != null && taskCycleindex >= cycleIndex
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -90,7 +86,7 @@ class RecordDeliveryCycle extends StatelessWidget {
                           DigitTable(
                             selectedIndex:
                                 cycleIndex == taskCycleindex && taskData != null
-                                    ? taskDoseindex! + 1
+                                    ? taskDoseindex!
                                     : taskData == null && cycleIndex == 1
                                         ? 0
                                         : null,
@@ -102,10 +98,8 @@ class RecordDeliveryCycle extends StatelessWidget {
                                     ?.where((element) =>
                                         element.additionalFields?.fields[4]
                                             .value ==
-                                        '0${e.deliveries!.indexOf(item)}')
+                                        '0${e.deliveries!.indexOf(item) + 1}')
                                     .firstOrNull;
-
-                                final resources = tasks?.resources;
 
                                 return TableDataRow([
                                   TableData(
@@ -113,18 +107,15 @@ class RecordDeliveryCycle extends StatelessWidget {
                                     cellKey: 'dose',
                                   ),
                                   TableData(
-                                    tasks?.status ?? 'In complete ',
+                                    tasks?.status ?? 'In complete',
+                                    // TODO[Task status needs to be mapped]
                                     cellKey: 'Status',
                                   ),
                                   TableData(
-                                    resources
-                                            ?.map((e) => e.productVariantId)
-                                            .toList()
-                                            .join(
-                                              '+',
-                                            ) ??
+                                    tasks?.clientAuditDetails?.createdTime
+                                            .toString() ??
                                         '',
-                                    cellKey: 'Status',
+                                    cellKey: 'completedOn',
                                   ),
                                 ]);
                               },

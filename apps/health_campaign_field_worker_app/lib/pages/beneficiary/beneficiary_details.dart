@@ -36,6 +36,12 @@ class BeneficiaryDetailsPage extends LocalizedStatefulWidget {
 class _BeneficiaryDetailsPageState
     extends LocalizedState<BeneficiaryDetailsPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
@@ -81,6 +87,24 @@ class _BeneficiaryDetailsPageState
                   projectBeneficiary.first.clientReferenceId)
               .toList();
 
+          final bloc = context.read<DeliverInterventionBloc>();
+
+          bloc.add(
+            DeliverInterventionEvent.selectCycleDose(
+              taskData != null && taskData.isNotEmpty
+                  ? int.tryParse(
+                        taskData.last.additionalFields?.fields[4].value,
+                      ) ??
+                      0
+                  : 0,
+              taskData != null && taskData.isNotEmpty
+                  ? int.tryParse(
+                        taskData.last.additionalFields?.fields[3].value,
+                      ) ??
+                      0
+                  : 0,
+            ),
+          );
           // Building the table content based on the DeliverInterventionState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -114,29 +138,6 @@ class _BeneficiaryDetailsPageState
                                 ),
                                 child: DigitElevatedButton(
                                   onPressed: () async {
-                                    final bloc =
-                                        context.read<DeliverInterventionBloc>();
-
-                                    bloc.add(
-                                      DeliverInterventionEvent.selectCycleDose(
-                                        taskData != null && taskData.isNotEmpty
-                                            ? int.tryParse(taskData
-                                                    .last
-                                                    .additionalFields
-                                                    ?.fields[4]
-                                                    .value) ??
-                                                0
-                                            : -1,
-                                        taskData != null && taskData.isNotEmpty
-                                            ? int.tryParse(taskData
-                                                    .last
-                                                    .additionalFields
-                                                    ?.fields[3]
-                                                    .value) ??
-                                                0
-                                            : 1,
-                                      ),
-                                    );
                                     await DigitDialog.show<bool>(
                                       context,
                                       options: DigitDialogOptions(
@@ -166,8 +167,7 @@ class _BeneficiaryDetailsPageState
                                   },
                                   child: Center(
                                     child: Text(
-                                      localizations
-                                          .translate(i18.common.coreCommonNext),
+                                      'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose + 1).toString()}',
                                     ),
                                   ),
                                 ),
@@ -356,7 +356,7 @@ class _BeneficiaryDetailsPageState
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
-                                  children: state.projectType != null
+                                  children: state.projectType?.cycles != null
                                       ? state.projectType!.cycles!.map((e) {
                                           final int cycleIndex = state
                                                   .projectType!.cycles!
