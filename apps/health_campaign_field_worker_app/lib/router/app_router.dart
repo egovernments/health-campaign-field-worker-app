@@ -13,6 +13,7 @@ import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/household_overview.dart';
+import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
@@ -112,6 +113,10 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: ReasonForDeletionPage,
               path: 'reason-for-deletion',
+            ),
+            AutoRoute(
+              page: RecordPastDeliveryDetailsPage,
+              path: 'record-past-delivery-details',
             ),
             AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
