@@ -15,11 +15,11 @@ import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import 'widgets/record_delivery_cycle.dart';
 
@@ -108,7 +108,10 @@ class _BeneficiaryDetailsPageState
                               height: 85,
                               child: DigitCard(
                                 margin: const EdgeInsets.only(
-                                    left: 0, right: 0, top: 10),
+                                  left: 0,
+                                  right: 0,
+                                  top: 10,
+                                ),
                                 child: DigitElevatedButton(
                                   onPressed: () async {
                                     final bloc =
@@ -147,6 +150,7 @@ class _BeneficiaryDetailsPageState
                                           headerListResource,
                                           variant,
                                         ),
+                                        barrierDismissible: true,
                                         primaryAction: DigitDialogActions(
                                           label: localizations.translate(
                                             i18.beneficiaryDetails.ctaProceed,
@@ -154,7 +158,8 @@ class _BeneficiaryDetailsPageState
                                           action: (ctx) {
                                             Navigator.of(ctx).pop();
                                             router.push(
-                                                DeliverInterventionRoute());
+                                              DeliverInterventionRoute(),
+                                            );
                                           },
                                         ),
                                       ),

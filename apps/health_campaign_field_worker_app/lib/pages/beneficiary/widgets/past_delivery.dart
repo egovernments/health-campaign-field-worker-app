@@ -2,12 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
-import '../../../blocs/product_variant/product_variant.dart';
+import '../../../blocs/project/project.dart';
 import '../../../models/entities/product_variant.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../../blocs/project/project.dart';
 
 Widget buildTableContent(
   DeliverInterventionState deliverInterventionState,
@@ -39,40 +39,41 @@ Widget buildTableContent(
           builder: (context, projectState) {
             final item = projectState
                 .projectType!.cycles![currentCycle].deliveries![currentDose];
+            final tableData =
+                item.productVariants?.asMap().entries.map((entry) {
+              final index = entry.key;
+              final productVariant = entry.value;
+              final value = variant
+                  ?.where((element) =>
+                      element.id == productVariant.productVariantId)
+                  .firstOrNull
+                  ?.id;
+
+              final rowTableData = [
+                TableData(
+                  index == 0
+                      ? 'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}'
+                      : '',
+                  cellKey: 'dose',
+                ),
+                TableData(
+                  value.toString(),
+                  cellKey: 'resources',
+                ),
+              ];
+
+              return TableDataRow(
+                rowTableData,
+              );
+            }).toList();
 
             return DigitTable(
               headerList: headerListResource,
-              tableData: [
-                TableDataRow([
-                  TableData(
-                    'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
-                    cellKey: 'dose',
-                  ),
-                  // TODO [need to handle the null check]
-                  TableData(
-                    item.productVariants
-                            ?.map((e) {
-                              // print(e.productVariantId);
-                              // print(variant?.last.id);
-                              final value = variant
-                                  ?.where((element) =>
-                                      element.id == e.productVariantId)
-                                  .toList()
-                                  .firstOrNull
-                                  ?.id;
-
-                              return '${e.quantity} of ${value != null ? localizations.translate(value) : ''}';
-                            })
-                            .toList()
-                            .join() ??
-                        '',
-                    cellKey: 'resources',
-                  ),
-                ]),
-              ],
+              tableData: tableData ?? [],
               leftColumnWidth: 130,
               rightColumnWidth: headerListResource.length * 17 * 5,
-              height: MediaQuery.of(context).size.height / 5,
+              height: ((item.productVariants ?? []).length + 1) * 57,
+              scrollPhysics: const NeverScrollableScrollPhysics(),
             );
           },
         ),

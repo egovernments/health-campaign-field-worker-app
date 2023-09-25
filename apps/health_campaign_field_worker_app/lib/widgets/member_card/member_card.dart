@@ -223,6 +223,8 @@ class MemberCard extends StatelessWidget {
                   ),
                   buttonStyle: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width / 1.15, 50),
                   ),
                   onPressed: () async {
                     await DigitActionDialog.show(
@@ -233,30 +235,52 @@ class MemberCard extends StatelessWidget {
                             label: localizations.translate(
                               i18.memberCard.beneficiaryRefusedLabel,
                             ),
+                            buttonStyle: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              minimumSize: Size(
+                                MediaQuery.of(context).size.width / 1.25,
+                                50,
+                              ),
+                            ),
                             onPressed: () {
                               // [TODO: Empty task need to be created wth status as beneficiaryRefused ]
                               Navigator.of(context, rootNavigator: true).pop();
                             },
                           ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           DigitOutLineButton(
                             label: localizations.translate(
                               i18.memberCard.recordAdverseEventsLabel,
                             ),
-                            onPressed: () async {
-                              Navigator.of(context, rootNavigator: true).pop();
-                              await context.router.push(
-                                AdverseEventsRoute(
-                                  tasks: tasks ??
-                                      [
-                                        // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
-                                        TaskModel(
-                                          clientReferenceId:
-                                              "19e15730-588f-11ee-ba2c-15d414c9ae78",
-                                        ),
-                                      ],
-                                ),
-                              );
-                            },
+                            buttonStyle: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              minimumSize: Size(
+                                MediaQuery.of(context).size.width / 1.25,
+                                50,
+                              ),
+                            ),
+                            onPressed: tasks != null
+                                ? () async {
+                                    print('Task client id');
+                                    print(tasks?.first.clientReferenceId);
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                    await context.router.push(
+                                      AdverseEventsRoute(
+                                        tasks: tasks ??
+                                            [
+                                              // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
+                                              TaskModel(
+                                                clientReferenceId:
+                                                    "19e15730-588f-11ee-ba2c-15d414c9ae78",
+                                              ),
+                                            ],
+                                      ),
+                                    );
+                                  }
+                                : null,
                           ),
                         ],
                       ),

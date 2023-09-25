@@ -43,6 +43,13 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
   bool symptomsSelected = true;
 
   @override
+  void initState() {
+    print('Adverse event page');
+    print(widget.tasks.first.clientReferenceId);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -66,18 +73,6 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                     state.selectedIndividual?.clientReferenceId,
                               )
                               .toList();
-
-                  final taskData = state.householdMemberWrapper.tasks
-                      ?.where((element) =>
-                          element.projectBeneficiaryClientReferenceId ==
-                          projectBeneficiary.first.clientReferenceId)
-                      .toList();
-                  final adverseEventData = state
-                      .householdMemberWrapper.adverseEvents
-                      ?.where((element) =>
-                          element.taskClientReferenceId ==
-                          taskData?.first.clientReferenceId)
-                      .toList();
 
                   // TODO: Commenting table Data as per current requirement not required
                   /*final filteredHeaderList = [
@@ -171,29 +166,13 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                   }
 
                                                   final clientReferenceId =
-                                                      adverseEventData != null
-                                                          ? adverseEventData
-                                                                  .isEmpty
-                                                              ? IdGen
-                                                                  .i.identifier
-                                                              : adverseEventData
-                                                                  .first
-                                                                  .clientReferenceId
-                                                          : IdGen.i.identifier;
+                                                      IdGen.i.identifier;
                                                   context
                                                       .read<AdverseEventsBloc>()
                                                       .add(
                                                         AdverseEventsSubmitEvent(
                                                           AdverseEventModel(
-                                                            id: adverseEventData !=
-                                                                    null
-                                                                ? adverseEventData
-                                                                        .isEmpty
-                                                                    ? null
-                                                                    : adverseEventData
-                                                                        .first
-                                                                        .id
-                                                                : null,
+                                                            id: null,
                                                             taskClientReferenceId:
                                                                 widget
                                                                     .tasks
@@ -205,15 +184,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                             tenantId: envConfig
                                                                 .variables
                                                                 .tenantId,
-                                                            rowVersion: adverseEventData !=
-                                                                    null
-                                                                ? adverseEventData
-                                                                        .isEmpty
-                                                                    ? 1
-                                                                    : adverseEventData
-                                                                        .first
-                                                                        .rowVersion
-                                                                : 1,
+                                                            rowVersion: 1,
                                                             auditDetails:
                                                                 AuditDetails(
                                                               createdBy: context
@@ -241,13 +212,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                                       .millisecondsSinceEpoch(),
                                                             ),
                                                           ),
-                                                          adverseEventData ==
-                                                                  null
-                                                              ? false
-                                                              : adverseEventData
-                                                                      .isEmpty
-                                                                  ? false
-                                                                  : true,
+                                                          false,
                                                         ),
                                                       );
                                                   Navigator.of(
