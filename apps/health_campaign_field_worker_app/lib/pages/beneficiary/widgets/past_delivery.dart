@@ -21,7 +21,8 @@ Widget buildTableContent(
   final localizations = AppLocalizations.of(context);
 
   return SizedBox(
-    height: 400,
+    // [TODO - need to set the height of the card based on the number of items]
+    height: 280,
     width: 500,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +35,7 @@ Widget buildTableContent(
             ): "2",
           },
         ),
-        const Divider(),
+        // const Divider(),
         BlocBuilder<ProjectBloc, ProjectState>(
           builder: (context, projectState) {
             final item = projectState
@@ -43,35 +44,31 @@ Widget buildTableContent(
             return DigitTable(
               headerList: headerListResource,
               tableData: [
-                TableDataRow([
-                  TableData(
-                    'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
-                    cellKey: 'dose',
-                  ),
-                  // TODO [need to handle the null check]
-                  TableData(
-                    item.productVariants
-                            ?.map((e) {
-                              // print(e.productVariantId);
-                              // print(variant?.last.id);
-                              final value = variant
-                                  ?.where((element) =>
-                                      element.id == e.productVariantId)
-                                  .toList()
-                                  .firstOrNull
-                                  ?.id;
+                ...item.productVariants!.map(
+                  (e) {
+                    final value = variant!
+                        .firstWhere(
+                          (element) => element.id == e.productVariantId,
+                        )
+                        .sku;
 
-                              return '${e.quantity} of ${value != null ? localizations.translate(value) : ''}';
-                            })
-                            .toList()
-                            .join() ??
-                        '',
-                    cellKey: 'resources',
-                  ),
-                ]),
+                    return TableDataRow([
+                      item.productVariants?.indexOf(e) == 0
+                          ? TableData(
+                              'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
+                              cellKey: 'dose',
+                            )
+                          : TableData(''),
+                      TableData(
+                        localizations.translate(value.toString()),
+                        cellKey: 'resources',
+                      ),
+                    ]);
+                  },
+                ),
               ],
               leftColumnWidth: 130,
-              rightColumnWidth: headerListResource.length * 17 * 5,
+              rightColumnWidth: headerListResource.length * 20 * 5,
               height: MediaQuery.of(context).size.height / 5,
             );
           },

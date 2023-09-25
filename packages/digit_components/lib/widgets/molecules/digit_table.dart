@@ -61,7 +61,7 @@ class DigitTable extends StatelessWidget {
               ),
               color: surfaceColor)
           : null,
-      width: leftColumnWidth,
+      width: leftColumnWidth + rightColumnWidth,
       height: 56,
       color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),

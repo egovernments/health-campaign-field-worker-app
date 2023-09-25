@@ -164,7 +164,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     List<ProjectModel> projects = [];
-    ProjectType? projectType = null;
+    ProjectType? projectType;
     for (final projectStaff in projectStaffList) {
       await projectStaffLocalRepository.create(
         projectStaff,
@@ -180,7 +180,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       } catch (_) {
-        print(_);
         emit(state.copyWith(
           loading: false,
           syncError: ProjectSyncErrorType.project,
@@ -263,7 +262,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           projectTypes,
           isar,
         );
-
+// Todo[Need to remove this hardcoded id before creating PR]
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) =>
