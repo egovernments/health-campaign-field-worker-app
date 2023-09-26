@@ -15,7 +15,8 @@ Widget buildTableContent(
   List<TableHeader> headerListResource,
   List<ProductVariantModel>? variant,
 ) {
-  final currentCycle = deliverInterventionState.cycle;
+  final currentCycle =
+      deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
   final currentDose =
       deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
   final localizations = AppLocalizations.of(context);
@@ -39,7 +40,9 @@ Widget buildTableContent(
         BlocBuilder<ProjectBloc, ProjectState>(
           builder: (context, projectState) {
             final item = projectState
-                .projectType!.cycles![currentCycle].deliveries![currentDose];
+                .projectType!
+                .cycles![currentCycle == 0 ? currentCycle : currentCycle - 1]
+                .deliveries![currentDose];
 
             return DigitTable(
               headerList: headerListResource,
@@ -55,7 +58,7 @@ Widget buildTableContent(
                     return TableDataRow([
                       item.productVariants?.indexOf(e) == 0
                           ? TableData(
-                              'Dose ${projectState.projectType!.cycles![currentCycle].deliveries!.indexOf(item) + 1}',
+                              'Dose ${projectState.projectType!.cycles![currentCycle == 0 ? currentCycle : currentCycle - 1].deliveries!.indexOf(item) + 1}',
                               cellKey: 'dose',
                             )
                           : TableData(''),

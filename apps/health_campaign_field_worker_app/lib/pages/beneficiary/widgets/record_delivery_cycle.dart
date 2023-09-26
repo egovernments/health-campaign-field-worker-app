@@ -2,11 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../blocs/localization/app_localization.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/project_type/project_type_model.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
 
 class RecordDeliveryCycle extends StatelessWidget {
   final List<TaskModel>? taskData;
@@ -34,10 +35,6 @@ class RecordDeliveryCycle extends StatelessWidget {
         cellKey: 'Status',
       ),
       TableHeader(
-        'Resources',
-        cellKey: 'resources',
-      ),
-      TableHeader(
         'Completed on',
         cellKey: 'completedOn',
       ),
@@ -58,95 +55,90 @@ class RecordDeliveryCycle extends StatelessWidget {
 
                 final taskCycleindex = taskData != null && taskData!.isNotEmpty
                     ? int.tryParse(taskData!
-                    .last.additionalFields!.fields[3].value
-                    .toString()
-                    .replaceAll(
-                  regexp,
-                  '',
-                ))
+                        .last.additionalFields!.fields[3].value
+                        .toString()
+                        .replaceAll(
+                          regexp,
+                          '',
+                        ))
                     : 1;
 
                 final int? taskDoseindex =
-                taskData != null && taskData!.isNotEmpty
-                    ? int.tryParse(taskData!
-                    .last.additionalFields!.fields[4].value
-                    .toString()
-                    .replaceAll(
-                  regexp,
-                  '',
-                ))
-                    : -1;
+                    taskData != null && taskData!.isNotEmpty
+                        ? int.tryParse(taskData!
+                            .last.additionalFields!.fields[4].value
+                            .toString()
+                            .replaceAll(
+                              regexp,
+                              '',
+                            ))
+                        : 0;
 
-                return true
+                return taskCycleindex != null && taskCycleindex >= cycleIndex
                     ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Cycle  $cycleIndex',
-                      style: theme.textTheme.headlineMedium,
-                      textAlign: TextAlign.left,
-                    ),
-                    DigitTable(
-                      selectedIndex:
-                      cycleIndex == taskCycleindex && taskData != null
-                          ? taskDoseindex! + 1
-                          : taskData == null && cycleIndex == 1
-                          ? 0
-                          : null,
-
-                      headerList: headerList,
-                      tableData: e.deliveries!.map(
-                            (item) {
-                          final tasks = taskData
-                              ?.where((element) =>
-                          element.additionalFields?.fields[4]
-                              .value ==
-                              '0${e.deliveries!.indexOf(item)}')
-                              .firstOrNull;
-
-                          final resources = tasks?.resources;
-
-                          return TableDataRow([
-                            TableData(
-                              'Dose ${e.deliveries!.indexOf(item) + 1}',
-                              cellKey: 'dose',
-                            ),
-                            TableData(
-                              tasks?.status ?? 'In complete ',
-                              cellKey: 'Status',
-                            ),
-                            TableData(
-                              resources
-                                  ?.map((e) => e.productVariantId)
-                                  .toList()
-                                  .join(
-                                '+',
-                              ) ??
-                                  '',
-                              cellKey: 'Status',
-                            ),
-                          ]);
-                        },
-                      ).toList(), // You can replace this with actual data for each cycle
-                      leftColumnWidth: 130,
-                      rightColumnWidth: headerList.length * 17 * 6,
-                      height: 6 * 57,
-                    ),
-                    isLastCycle
-                        ? TextButton(
-                      onPressed: () {},
-                      child: Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention.hidePastCycles,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Cycle  $cycleIndex',
+                            style: theme.textTheme.headlineMedium,
+                            textAlign: TextAlign.left,
                           ),
-                        ),
-                      ),
-                    )
-                        : const Offstage(),
-                  ],
-                )
+                          DigitTable(
+                            selectedIndex:
+                                cycleIndex == taskCycleindex && taskData != null
+                                    ? taskDoseindex!
+                                    : taskData == null && cycleIndex == 1
+                                        ? 0
+                                        : null,
+
+                            headerList: headerList,
+                            tableData: e.deliveries!.map(
+                              (item) {
+                                final tasks = taskData
+                                    ?.where((element) =>
+                                        element.additionalFields?.fields[4]
+                                            .value ==
+                                        '0${e.deliveries!.indexOf(item) + 1}')
+                                    .firstOrNull;
+
+                                return TableDataRow([
+                                  TableData(
+                                    'Dose ${e.deliveries!.indexOf(item) + 1}',
+                                    cellKey: 'dose',
+                                  ),
+                                  TableData(
+                                    tasks?.status ?? 'In complete',
+                                    // TODO[Task status needs to be mapped]
+                                    cellKey: 'Status',
+                                  ),
+                                  TableData(
+                                    tasks?.clientAuditDetails?.createdTime
+                                            .toString() ??
+                                        '',
+                                    cellKey: 'completedOn',
+                                  ),
+                                ]);
+                              },
+                            ).toList(), // You can replace this with actual data for each cycle
+                            leftColumnWidth: 130,
+                            rightColumnWidth: headerList.length * 17 * 6,
+                            height: 6 * 57,
+                          ),
+                          isLastCycle
+                              ? TextButton(
+                                  onPressed: () {},
+                                  child: Center(
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.deliverIntervention.hidePastCycles,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const Offstage(),
+                        ],
+                      )
                     : const Offstage();
               },
             );

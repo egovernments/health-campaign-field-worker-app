@@ -79,29 +79,6 @@ class _ResourceBeneficiaryCardState
             ),
             minimum: 1,
           ),
-          BlocBuilder<AppInitializationBloc, AppInitializationState>(
-            builder: (context, state) {
-              if (state is! AppInitialized) {
-                return const Offstage();
-              }
-
-              final deliveryCommentOptions =
-                  state.appConfiguration.deliveryCommentOptions ??
-                      <DeliveryCommentOptions>[];
-
-              return DigitReactiveDropdown<String>(
-                label: localizations.translate(
-                  i18.deliverIntervention.deliveryCommentLabel,
-                ),
-                valueMapper: (value) => value,
-                initialValue: deliveryCommentOptions.firstOrNull?.name,
-                menuItems: deliveryCommentOptions.map((e) {
-                  return localizations.translate(e.name);
-                }).toList(),
-                formControlName: 'deliveryComment.${widget.cardIndex}',
-              );
-            },
-          ),
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,

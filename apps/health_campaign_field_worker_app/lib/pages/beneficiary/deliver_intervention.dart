@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
+
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 
 import '../../models/project_type/project_type_model.dart';
@@ -80,16 +83,7 @@ class _DeliverInterventionPageState
 
 // [TODO] Index need to be dynamic
           final projectState = context.read<ProjectBloc>().state;
-          List<ProductVariantsModel>? productVariants = projectState
-              .projectType
-              ?.cycles?[0]
-              .deliveries?[0]
-              .productVariants; //todo need to be removed [0]
-
-          final int numberOfDoses =
-              projectState.projectType?.cycles?[0].deliveries?.length ??
-                  0; //todo need to be removed [0]
-          final steps = generateSteps(numberOfDoses);
+          //todo need to be removed [0]
 
           return Scaffold(
             body: state.loading
@@ -97,6 +91,24 @@ class _DeliverInterventionPageState
                 : BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                     builder: (context, deliveryInterventionstate) {
+                      List<ProductVariantsModel>? productVariants = projectState
+                          .projectType
+                          ?.cycles?[deliveryInterventionstate.cycle == 0
+                              ? deliveryInterventionstate.cycle
+                              : deliveryInterventionstate.cycle - 1]
+                          .deliveries?[deliveryInterventionstate.dose]
+                          .productVariants;
+
+                      final int numberOfDoses = projectState
+                              .projectType
+                              ?.cycles?[deliveryInterventionstate.cycle == 0
+                                  ? deliveryInterventionstate.cycle
+                                  : deliveryInterventionstate.cycle - 1]
+                              .deliveries
+                              ?.length ??
+                          0;
+                      final steps = generateSteps(numberOfDoses);
+
                       return BlocBuilder<ProductVariantBloc,
                           ProductVariantState>(
                         builder: (context, productState) {
@@ -262,8 +274,7 @@ class _DeliverInterventionPageState
                                                 DigitStepper(
                                                   activeStep:
                                                       deliveryInterventionstate
-                                                              .dose +
-                                                          1,
+                                                          .dose,
                                                   steps: steps,
                                                   maxStepReached: 3,
                                                   lineLength:
@@ -343,6 +354,61 @@ class _DeliverInterventionPageState
                                               ],
                                             ),
                                           ),
+                                          DigitCard(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliveryCommentLabel,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.displayMedium,
+                                                ),
+                                                BlocBuilder<
+                                                    AppInitializationBloc,
+                                                    AppInitializationState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is! AppInitialized) {
+                                                      return const Offstage();
+                                                    }
+
+                                                    final deliveryCommentOptions = state
+                                                            .appConfiguration
+                                                            .deliveryCommentOptions ??
+                                                        <DeliveryCommentOptions>[];
+
+                                                    return DigitReactiveDropdown<
+                                                        String>(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.deliverIntervention
+                                                            .deliveryCommentLabel,
+                                                      ),
+                                                      valueMapper: (value) =>
+                                                          value,
+                                                      initialValue:
+                                                          deliveryCommentOptions
+                                                              .firstOrNull
+                                                              ?.name,
+                                                      menuItems:
+                                                          deliveryCommentOptions
+                                                              .map((e) {
+                                                        return localizations
+                                                            .translate(e.name);
+                                                      }).toList(),
+                                                      formControlName:
+                                                          _deliveryCommentKey,
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -365,9 +431,7 @@ class _DeliverInterventionPageState
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
-        .add(FormControl<int>(value: 1));
-    (form.control(_deliveryCommentKey) as FormArray)
-        .add(FormControl<String>(value: ''));
+        .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
   }
 
   // ignore: long-parameter-list
@@ -391,6 +455,10 @@ class _DeliverInterventionPageState
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),
+      clientAuditDetails: ClientAuditDetails(
+        createdBy: context.loggedInUserUuid,
+        createdTime: context.millisecondsSinceEpoch(),
+      ),
     );
 
     final productvariantList =
@@ -408,9 +476,10 @@ class _DeliverInterventionPageState
                 quantity: (((form.control(_quantityDistributedKey) as FormArray)
                         .value)?[productvariantList.indexOf(e)])
                     .toString(),
-                deliveryComment:
-                    ((form.control(_deliveryCommentKey) as FormArray)
-                        .value)?[productvariantList.indexOf(e)],
+                clientAuditDetails: ClientAuditDetails(
+                  createdBy: context.loggedInUserUuid,
+                  createdTime: context.millisecondsSinceEpoch(),
+                ),
                 auditDetails: AuditDetails(
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
@@ -438,11 +507,11 @@ class _DeliverInterventionPageState
           ),
           AdditionalField(
             'CycleIndex',
-            "0${cycle ?? 1}",
+            "0${cycle == 0 ? 1 : cycle ?? 1}",
           ),
           AdditionalField(
             'DoseIndex',
-            "0${dose ?? 1}",
+            "0${dose == 0 ? 1 : dose ?? 1}",
           ),
         ],
       ),
@@ -462,6 +531,7 @@ class _DeliverInterventionPageState
     return fb.group(<String, Object>{
       _doseAdministrationKey:
           FormControl<String>(value: 'Cycle ${1}', validators: []),
+      _deliveryCommentKey: FormControl<String>(value: '', validators: []),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
@@ -475,11 +545,8 @@ class _DeliverInterventionPageState
         ],
       ),
       _quantityDistributedKey: FormArray<int>([
-        ..._controllers.map((e) => FormControl<int>(value: 1)),
-      ]),
-      _deliveryCommentKey: FormArray<String>([
         ..._controllers.map(
-          (e) => FormControl<String>(),
+          (e) => FormControl<int>(value: 0, validators: [Validators.min(1)]),
         ),
       ]),
     });
