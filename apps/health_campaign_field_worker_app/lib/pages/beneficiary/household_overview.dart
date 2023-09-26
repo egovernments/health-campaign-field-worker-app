@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -301,6 +302,44 @@ class _HouseholdOverviewPageState
                                               DateTime.now(),
                                         ).months;
 
+                                        final isBeneficiaryRefused = (state
+                                                    .householdMemberWrapper
+                                                    .tasks !=
+                                                null &&
+                                            (state.householdMemberWrapper
+                                                        .tasks ??
+                                                    [])
+                                                .isNotEmpty &&
+                                            state.householdMemberWrapper.tasks?.first
+                                                    .additionalFields !=
+                                                null &&
+                                            (state
+                                                        .householdMemberWrapper
+                                                        .tasks
+                                                        ?.first
+                                                        .additionalFields
+                                                        ?.fields ??
+                                                    [])
+                                                .isNotEmpty &&
+                                            state
+                                                    .householdMemberWrapper
+                                                    .tasks
+                                                    ?.first
+                                                    .additionalFields
+                                                    ?.fields
+                                                    .firstWhereOrNull((e) =>
+                                                        e.key == 'taskStatus')
+                                                    ?.value ==
+                                                'beneficiaryRefused');
+                                        final recordedAdverseEvent = state
+                                                    .householdMemberWrapper
+                                                    .adverseEvents !=
+                                                null &&
+                                            (state.householdMemberWrapper
+                                                        .adverseEvents ??
+                                                    [])
+                                                .isNotEmpty;
+
                                         return MemberCard(
                                           isHead: isHead,
                                           individual: e,
@@ -421,15 +460,9 @@ class _HouseholdOverviewPageState
                                             );
                                           },
                                           isNotEligible: (ageInYears > 0 ||
-                                              (ageInMonths < 3 ||
-                                                  ageInMonths > 11)),
-                                          // ||
-                                          // (deliverState.tasks?.first
-                                          //         .additionalFields?.fields
-                                          //         .firstWhere((e) =>
-                                          //             e.key == 'taskStatus')
-                                          //         .value ==
-                                          //     'beneficiaryRefused'),
+                                                  (ageInMonths < 3 ||
+                                                      ageInMonths > 11)) ||
+                                              recordedAdverseEvent,
                                           name: e.name?.givenName ?? ' - ',
                                           years: (e.dateOfBirth == null
                                                   ? null
@@ -452,9 +485,13 @@ class _HouseholdOverviewPageState
                                                     ).months) ??
                                               0,
                                           gender: e.gender?.name ?? ' - ',
+                                          isBeneficiaryRefused:
+                                              isBeneficiaryRefused,
                                           isDelivered: taskdata == null
                                               ? false
-                                              : taskdata.isNotEmpty
+                                              : taskdata.isNotEmpty &&
+                                                      !isBeneficiaryRefused &&
+                                                      !recordedAdverseEvent
                                                   ? true
                                                   : false,
                                           localizations: localizations,

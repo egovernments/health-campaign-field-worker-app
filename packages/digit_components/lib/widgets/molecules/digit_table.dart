@@ -186,7 +186,7 @@ class DigitTable extends StatelessWidget {
             height: 1.0,
             thickness: 0.0,
           ),
-          scrollPhysics: scrollPhysics,
+          scrollPhysics: scrollPhysics ?? const NeverScrollableScrollPhysics(),
         ),
       ),
     );

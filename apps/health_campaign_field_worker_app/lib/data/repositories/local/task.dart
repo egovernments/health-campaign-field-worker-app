@@ -86,7 +86,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         ),
       ),
       // TODO :[Need to change this to taskclient reference Id]
-      innerJoin(
+      leftOuterJoin(
         sql.taskResource,
         sql.taskResource.taskclientReferenceId.equalsExp(
           sql.task.clientReferenceId,
@@ -113,9 +113,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     return results
         .map((e) {
-          print(e.rawData.data);
-          print("RAW");
-
           final task = e.readTableOrNull(sql.task);
           final resources = e.readTableOrNull(sql.taskResource);
           final address = e.readTableOrNull(sql.address);

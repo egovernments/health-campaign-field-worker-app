@@ -93,6 +93,39 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 projectBeneficiary.first.clientReferenceId)
             .toList();
 
+        final adverseEvents = householdMember.adverseEvents
+            ?.where((element) =>
+                element.taskClientReferenceId ==
+                taskdata?.first.clientReferenceId)
+            .toList();
+
+        final ageInYears = DigitDateUtils.calculateAge(
+          DigitDateUtils.getFormattedDateToDateTime(
+                e.dateOfBirth!,
+              ) ??
+              DateTime.now(),
+        ).years;
+        final ageInMonths = DigitDateUtils.calculateAge(
+          DigitDateUtils.getFormattedDateToDateTime(
+                e.dateOfBirth!,
+              ) ??
+              DateTime.now(),
+        ).months;
+
+        final isNotEligible =
+            (ageInYears > 0 || (ageInMonths < 3 || ageInMonths > 11)) ||
+                (adverseEvents ?? []).isNotEmpty;
+
+        final isBeneficiaryRefused = (householdMember.tasks != null &&
+            (householdMember.tasks ?? []).isNotEmpty &&
+            householdMember.tasks?.first.additionalFields != null &&
+            (householdMember.tasks?.first.additionalFields?.fields ?? [])
+                .isNotEmpty &&
+            householdMember.tasks?.first.additionalFields?.fields
+                    .firstWhereOrNull((e) => e.key == 'taskStatus')
+                    ?.value ==
+                'beneficiaryRefused');
+
         final rowTableData = [
           TableData(
             [
@@ -102,15 +135,21 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'beneficiary',
           ),
           TableData(
-            taskdata != null
-                ? taskdata.isEmpty
-                    ? 'Not delivered'
-                    : 'delivered'
-                : 'Not delivered',
+            isNotEligible
+                ? 'Not Eligible'
+                : taskdata != null
+                    ? taskdata.isEmpty
+                        ? 'Not delivered'
+                        : isBeneficiaryRefused
+                            ? 'Beneficiary Refused'
+                            : 'delivered'
+                    : 'Not delivered',
             cellKey: 'delivery',
             style: TextStyle(
               color: taskdata != null
-                  ? taskdata.isNotEmpty
+                  ? taskdata.isNotEmpty &&
+                          !isBeneficiaryRefused &&
+                          !isNotEligible
                       ? theme.colorScheme.onSurfaceVariant
                       : theme.colorScheme.error
                   : theme.colorScheme.error,
@@ -149,6 +188,33 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       },
     ).toList();
 
+    final ageInYears = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            householdMember.headOfHousehold.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    ).years;
+    final ageInMonths = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            householdMember.headOfHousehold.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    ).months;
+
+    final isNotEligible =
+        (ageInYears > 0 || (ageInMonths < 3 || ageInMonths > 11)) ||
+            (householdMember.adverseEvents ?? []).isNotEmpty;
+
+    final isBeneficiaryRefused = (householdMember.tasks != null &&
+        (householdMember.tasks ?? []).isNotEmpty &&
+        householdMember.tasks?.first.additionalFields != null &&
+        (householdMember.tasks?.first.additionalFields?.fields ?? [])
+            .isNotEmpty &&
+        householdMember.tasks?.first.additionalFields?.fields
+                .firstWhereOrNull((e) => e.key == 'taskStatus')
+                ?.value ==
+            'beneficiaryRefused');
+
     return DigitCard(
       child: Column(
         children: [
@@ -170,7 +236,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   subtitle:
                       '${householdMember.household.memberCount ?? 1} ${'Members'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
-                      ? householdMember.tasks?.first.status != null
+                      ? (householdMember.tasks ?? []).isNotEmpty &&
+                              !isNotEligible &&
+                              !isBeneficiaryRefused
                           ? 'delivered'
                           : 'Not Delivered'
                       : null,

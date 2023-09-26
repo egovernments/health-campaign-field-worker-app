@@ -26,8 +26,8 @@ class MemberCard extends StatelessWidget {
   final AppLocalizations localizations;
   final List<TaskModel>? tasks;
   final bool isNotEligible;
+  final bool isBeneficiaryRefused;
   final String projectBeneficiaryClientReferenceId;
-  final AddressModel? address;
 
   const MemberCard({
     super.key,
@@ -45,7 +45,7 @@ class MemberCard extends StatelessWidget {
     this.tasks,
     this.isNotEligible = false,
     required this.projectBeneficiaryClientReferenceId,
-    this.address,
+    this.isBeneficiaryRefused = false,
   });
 
   @override
@@ -148,7 +148,7 @@ class MemberCard extends StatelessWidget {
           ),
           Offstage(
             offstage: beneficiaryType != BeneficiaryType.individual,
-            child: !isDelivered || isNotEligible
+            child: !isDelivered || isNotEligible || isBeneficiaryRefused
                 ? Align(
                     alignment: Alignment.centerLeft,
                     child: DigitIconButton(
@@ -157,8 +157,10 @@ class MemberCard extends StatelessWidget {
                         isNotEligible
                             ? i18.householdOverView
                                 .householdOverViewNotEligibleIconLabel
-                            : i18.householdOverView
-                                .householdOverViewNotDeliveredIconLabel,
+                            : isBeneficiaryRefused
+                                ? 'Beneficiary Refused'
+                                : i18.householdOverView
+                                    .householdOverViewNotDeliveredIconLabel,
                       ),
                       iconTextColor: theme.colorScheme.error,
                       iconColor: theme.colorScheme.error,
@@ -185,7 +187,7 @@ class MemberCard extends StatelessWidget {
               children: [
                 isNotEligible
                     ? const Offstage()
-                    : !isDelivered && !isNotEligible
+                    : !isNotEligible
                         ? DigitElevatedButton(
                             onPressed: () async {
                               context.read<HouseholdOverviewBloc>().add(
@@ -205,29 +207,7 @@ class MemberCard extends StatelessWidget {
                               ),
                             ),
                           )
-                        : BlocBuilder<HouseholdOverviewBloc,
-                            HouseholdOverviewState>(
-                            builder: (ctx, state) {
-                              return SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: DigitOutLineButton(
-                                  label: localizations.translate(
-                                    i18.memberCard.deliverDetailsUpdateLabel,
-                                  ),
-                                  onPressed: () async {
-                                    context.read<HouseholdOverviewBloc>().add(
-                                          HouseholdOverviewEvent
-                                              .selectedIndividual(
-                                            individualModel: individual,
-                                          ),
-                                        );
-                                    await context.router
-                                        .push(BeneficiaryDetailsRoute());
-                                  },
-                                ),
-                              );
-                            },
-                          ),
+                        : const Offstage(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -346,17 +326,6 @@ class MemberCard extends StatelessWidget {
                           );
                         },
                       ),
-                DigitOutLineButton(
-                  label: 'Beneficiary Refused check,',
-                  onPressed: () {
-                    context.read<HouseholdOverviewBloc>().add(
-                          HouseholdOverviewReloadEvent(
-                            projectId: context.projectId,
-                            projectBeneficiaryType: context.beneficiaryType,
-                          ),
-                        );
-                  },
-                ),
               ],
             ),
           ),
