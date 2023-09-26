@@ -2,12 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../models/entities/beneficiary_type.dart';
-import '../../models/entities/individual.dart';
-import '../../models/entities/task.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../action_card/action_card.dart';
@@ -25,6 +25,9 @@ class MemberCard extends StatelessWidget {
   final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
   final List<TaskModel>? tasks;
+  final bool isNotEligible;
+  final String projectBeneficiaryClientReferenceId;
+  final AddressModel? address;
 
   const MemberCard({
     super.key,
@@ -40,6 +43,9 @@ class MemberCard extends StatelessWidget {
     required this.editMemberAction,
     required this.deleteMemberAction,
     this.tasks,
+    this.isNotEligible = false,
+    required this.projectBeneficiaryClientReferenceId,
+    this.address,
   });
 
   @override
@@ -142,14 +148,17 @@ class MemberCard extends StatelessWidget {
           ),
           Offstage(
             offstage: beneficiaryType != BeneficiaryType.individual,
-            child: !isDelivered
+            child: !isDelivered || isNotEligible
                 ? Align(
                     alignment: Alignment.centerLeft,
                     child: DigitIconButton(
                       icon: Icons.info_rounded,
                       iconText: localizations.translate(
-                        i18.householdOverView
-                            .householdOverViewNotDeliveredIconLabel,
+                        isNotEligible
+                            ? i18.householdOverView
+                                .householdOverViewNotEligibleIconLabel
+                            : i18.householdOverView
+                                .householdOverViewNotDeliveredIconLabel,
                       ),
                       iconTextColor: theme.colorScheme.error,
                       iconColor: theme.colorScheme.error,
@@ -174,115 +183,178 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual,
             child: Column(
               children: [
-                !isDelivered
-                    ? DigitElevatedButton(
-                        onPressed: () async {
-                          context.read<HouseholdOverviewBloc>().add(
-                                HouseholdOverviewEvent.selectedIndividual(
-                                  individualModel: individual,
+                isNotEligible
+                    ? const Offstage()
+                    : !isDelivered && !isNotEligible
+                        ? DigitElevatedButton(
+                            onPressed: () async {
+                              context.read<HouseholdOverviewBloc>().add(
+                                    HouseholdOverviewEvent.selectedIndividual(
+                                      individualModel: individual,
+                                    ),
+                                  );
+                              await context.router
+                                  .push(BeneficiaryDetailsRoute());
+                            },
+                            child: Center(
+                              child: Text(
+                                localizations.translate(
+                                  i18.householdOverView
+                                      .householdOverViewActionText,
+                                ),
+                              ),
+                            ),
+                          )
+                        : BlocBuilder<HouseholdOverviewBloc,
+                            HouseholdOverviewState>(
+                            builder: (ctx, state) {
+                              return SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: DigitOutLineButton(
+                                  label: localizations.translate(
+                                    i18.memberCard.deliverDetailsUpdateLabel,
+                                  ),
+                                  onPressed: () async {
+                                    context.read<HouseholdOverviewBloc>().add(
+                                          HouseholdOverviewEvent
+                                              .selectedIndividual(
+                                            individualModel: individual,
+                                          ),
+                                        );
+                                    await context.router
+                                        .push(BeneficiaryDetailsRoute());
+                                  },
                                 ),
                               );
-                          await context.router.push(BeneficiaryDetailsRoute());
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.householdOverView.householdOverViewActionText,
-                            ),
+                            },
+                          ),
+                const SizedBox(
+                  height: 10,
+                ),
+                isNotEligible
+                    ? const Offstage()
+                    : DigitOutLineButton(
+                        label: localizations.translate(
+                          i18.memberCard.unableToDeliverLabel,
+                        ),
+                        buttonStyle: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          minimumSize: Size(
+                            MediaQuery.of(context).size.width / 1.15,
+                            50,
                           ),
                         ),
-                      )
-                    : BlocBuilder<HouseholdOverviewBloc,
-                        HouseholdOverviewState>(
-                        builder: (ctx, state) {
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: DigitOutLineButton(
-                              label: localizations.translate(
-                                i18.memberCard.deliverDetailsUpdateLabel,
-                              ),
-                              onPressed: () async {
-                                context.read<HouseholdOverviewBloc>().add(
-                                      HouseholdOverviewEvent.selectedIndividual(
-                                        individualModel: individual,
-                                      ),
+                        onPressed: () async {
+                          await DigitActionDialog.show(
+                            context,
+                            widget: Column(
+                              children: [
+                                DigitOutLineButton(
+                                  label: localizations.translate(
+                                    i18.memberCard.beneficiaryRefusedLabel,
+                                  ),
+                                  buttonStyle: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    minimumSize: Size(
+                                      MediaQuery.of(context).size.width / 1.25,
+                                      50,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                    context.read<DeliverInterventionBloc>().add(
+                                          DeliverInterventionSubmitEvent(
+                                            TaskModel(
+                                              projectBeneficiaryClientReferenceId:
+                                                  projectBeneficiaryClientReferenceId,
+                                              clientReferenceId:
+                                                  IdGen.i.identifier,
+                                              tenantId:
+                                                  envConfig.variables.tenantId,
+                                              rowVersion: 1,
+                                              auditDetails: AuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              projectId: context.projectId,
+                                              additionalFields:
+                                                  TaskAdditionalFields(
+                                                version: 1,
+                                                fields: [
+                                                  const AdditionalField(
+                                                    'taskStatus',
+                                                    'beneficiaryRefused',
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            false,
+                                            context.boundary,
+                                          ),
+                                        );
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    parent
+                                      ..pop()
+                                      ..pop();
+                                    // [TODO: Empty task need to be created wth status as beneficiaryRefused ]
+                                    context.router.push(
+                                      AcknowledgementRoute(),
                                     );
-                                await context.router
-                                    .push(BeneficiaryDetailsRoute());
-                              },
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                DigitOutLineButton(
+                                  label: localizations.translate(
+                                    i18.memberCard.recordAdverseEventsLabel,
+                                  ),
+                                  buttonStyle: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    minimumSize: Size(
+                                      MediaQuery.of(context).size.width / 1.25,
+                                      50,
+                                    ),
+                                  ),
+                                  onPressed: tasks != null
+                                      ? () async {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                          await context.router.push(
+                                            AdverseEventsRoute(
+                                              tasks: tasks ??
+                                                  [
+                                                    // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
+                                                    TaskModel(
+                                                      clientReferenceId:
+                                                          "19e15730-588f-11ee-ba2c-15d414c9ae78",
+                                                    ),
+                                                  ],
+                                            ),
+                                          );
+                                        }
+                                      : null,
+                                ),
+                              ],
                             ),
                           );
                         },
                       ),
-                const SizedBox(
-                  height: 10,
-                ),
                 DigitOutLineButton(
-                  label: localizations.translate(
-                    i18.memberCard.unableToDeliverLabel,
-                  ),
-                  buttonStyle: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width / 1.15, 50),
-                  ),
-                  onPressed: () async {
-                    await DigitActionDialog.show(
-                      context,
-                      widget: Column(
-                        children: [
-                          DigitOutLineButton(
-                            label: localizations.translate(
-                              i18.memberCard.beneficiaryRefusedLabel,
-                            ),
-                            buttonStyle: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              minimumSize: Size(
-                                MediaQuery.of(context).size.width / 1.25,
-                                50,
-                              ),
-                            ),
-                            onPressed: () {
-                              // [TODO: Empty task need to be created wth status as beneficiaryRefused ]
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
+                  label: 'Beneficiary Refused check,',
+                  onPressed: () {
+                    context.read<HouseholdOverviewBloc>().add(
+                          HouseholdOverviewReloadEvent(
+                            projectId: context.projectId,
+                            projectBeneficiaryType: context.beneficiaryType,
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          DigitOutLineButton(
-                            label: localizations.translate(
-                              i18.memberCard.recordAdverseEventsLabel,
-                            ),
-                            buttonStyle: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              minimumSize: Size(
-                                MediaQuery.of(context).size.width / 1.25,
-                                50,
-                              ),
-                            ),
-                            onPressed: tasks != null
-                                ? () async {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                    await context.router.push(
-                                      AdverseEventsRoute(
-                                        tasks: tasks ??
-                                            [
-                                              // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
-                                              TaskModel(
-                                                clientReferenceId:
-                                                    "19e15730-588f-11ee-ba2c-15d414c9ae78",
-                                              ),
-                                            ],
-                                      ),
-                                    );
-                                  }
-                                : null,
-                          ),
-                        ],
-                      ),
-                    );
+                        );
                   },
                 ),
               ],

@@ -320,6 +320,7 @@ class SearchHouseholdsBloc
         projectBeneficiaryClientReferenceId:
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
+
       final adverseEvents =
           await adverseEventDataRepository.search(AdverseEventSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),

@@ -26,6 +26,11 @@ class HouseholdOverviewPage extends LocalizedStatefulWidget {
 class _HouseholdOverviewPageState
     extends LocalizedState<HouseholdOverviewPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
@@ -279,6 +284,22 @@ class _HouseholdOverviewPageState
                                                 projectBeneficiary
                                                     .first.clientReferenceId)
                                             .toList();
+                                        final ageInYears =
+                                            DigitDateUtils.calculateAge(
+                                          DigitDateUtils
+                                                  .getFormattedDateToDateTime(
+                                                e.dateOfBirth!,
+                                              ) ??
+                                              DateTime.now(),
+                                        ).years;
+                                        final ageInMonths =
+                                            DigitDateUtils.calculateAge(
+                                          DigitDateUtils
+                                                  .getFormattedDateToDateTime(
+                                                e.dateOfBirth!,
+                                              ) ??
+                                              DateTime.now(),
+                                        ).months;
 
                                         return MemberCard(
                                           isHead: isHead,
@@ -399,6 +420,16 @@ class _HouseholdOverviewPageState
                                               ),
                                             );
                                           },
+                                          isNotEligible: (ageInYears > 0 ||
+                                              (ageInMonths < 3 ||
+                                                  ageInMonths > 11)),
+                                          // ||
+                                          // (deliverState.tasks?.first
+                                          //         .additionalFields?.fields
+                                          //         .firstWhere((e) =>
+                                          //             e.key == 'taskStatus')
+                                          //         .value ==
+                                          //     'beneficiaryRefused'),
                                           name: e.name?.givenName ?? ' - ',
                                           years: (e.dateOfBirth == null
                                                   ? null
@@ -427,6 +458,12 @@ class _HouseholdOverviewPageState
                                                   ? true
                                                   : false,
                                           localizations: localizations,
+                                          projectBeneficiaryClientReferenceId:
+                                              state
+                                                  .householdMemberWrapper
+                                                  .projectBeneficiaries
+                                                  .first
+                                                  .clientReferenceId,
                                         );
                                       },
                                     );
