@@ -23,6 +23,7 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,6 +33,7 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -41,6 +43,7 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -52,6 +55,9 @@ mixin _$DeliverInterventionEvent {
         handleSearch,
     required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
         selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -60,6 +66,8 @@ mixin _$DeliverInterventionEvent {
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +76,8 @@ mixin _$DeliverInterventionEvent {
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -185,6 +195,7 @@ class _$DeliverInterventionSubmitEvent
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
   }
@@ -197,6 +208,7 @@ class _$DeliverInterventionSubmitEvent
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
   }
@@ -209,6 +221,7 @@ class _$DeliverInterventionSubmitEvent
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -226,6 +239,9 @@ class _$DeliverInterventionSubmitEvent
         handleSearch,
     required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
         selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
   }) {
     return handleSubmit(this);
   }
@@ -237,6 +253,8 @@ class _$DeliverInterventionSubmitEvent
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
   }) {
     return handleSubmit?.call(this);
   }
@@ -248,6 +266,8 @@ class _$DeliverInterventionSubmitEvent
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -347,6 +367,7 @@ class _$DeliverInterventionSearchEvent
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
   }) {
     return handleSearch(taskSearch);
   }
@@ -359,6 +380,7 @@ class _$DeliverInterventionSearchEvent
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
   }) {
     return handleSearch?.call(taskSearch);
   }
@@ -371,6 +393,7 @@ class _$DeliverInterventionSearchEvent
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -388,6 +411,9 @@ class _$DeliverInterventionSearchEvent
         handleSearch,
     required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
         selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
   }) {
     return handleSearch(this);
   }
@@ -399,6 +425,8 @@ class _$DeliverInterventionSearchEvent
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
   }) {
     return handleSearch?.call(this);
   }
@@ -410,6 +438,8 @@ class _$DeliverInterventionSearchEvent
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -514,6 +544,7 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
   }) {
     return selectCycleDose(dose, cycle);
   }
@@ -526,6 +557,7 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
   }) {
     return selectCycleDose?.call(dose, cycle);
   }
@@ -538,6 +570,7 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
@@ -555,6 +588,9 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         handleSearch,
     required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
         selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
   }) {
     return selectCycleDose(this);
   }
@@ -566,6 +602,8 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
   }) {
     return selectCycleDose?.call(this);
   }
@@ -577,6 +615,8 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
     TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
         selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
@@ -601,12 +641,209 @@ abstract class DeliverInterventionCycleDoseSelectionEvent
 }
 
 /// @nodoc
+abstract class _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
+    $Res> {
+  factory _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith(
+          _$DeliverInterventionCycleFutureDoseSelectionEvent value,
+          $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEvent)
+              then) =
+      __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int dose, Cycle cycle});
+
+  $CycleCopyWith<$Res> get cycle;
+}
+
+/// @nodoc
+class __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>
+    extends _$DeliverInterventionEventCopyWithImpl<$Res,
+        _$DeliverInterventionCycleFutureDoseSelectionEvent>
+    implements
+        _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<$Res> {
+  __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl(
+      _$DeliverInterventionCycleFutureDoseSelectionEvent _value,
+      $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? dose = null,
+    Object? cycle = null,
+  }) {
+    return _then(_$DeliverInterventionCycleFutureDoseSelectionEvent(
+      null == dose
+          ? _value.dose
+          : dose // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == cycle
+          ? _value.cycle
+          : cycle // ignore: cast_nullable_to_non_nullable
+              as Cycle,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $CycleCopyWith<$Res> get cycle {
+    return $CycleCopyWith<$Res>(_value.cycle, (value) {
+      return _then(_value.copyWith(cycle: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$DeliverInterventionCycleFutureDoseSelectionEvent
+    implements DeliverInterventionCycleFutureDoseSelectionEvent {
+  const _$DeliverInterventionCycleFutureDoseSelectionEvent(
+      this.dose, this.cycle);
+
+  @override
+  final int dose;
+  @override
+  final Cycle cycle;
+
+  @override
+  String toString() {
+    return 'DeliverInterventionEvent.selectFutureCycleDose(dose: $dose, cycle: $cycle)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeliverInterventionCycleFutureDoseSelectionEvent &&
+            (identical(other.dose, dose) || other.dose == dose) &&
+            (identical(other.cycle, cycle) || other.cycle == cycle));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, dose, cycle);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
+          _$DeliverInterventionCycleFutureDoseSelectionEvent>
+      get copyWith =>
+          __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<
+                  _$DeliverInterventionCycleFutureDoseSelectionEvent>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+        handleSubmit,
+    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+  }) {
+    return selectFutureCycleDose(dose, cycle);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+  }) {
+    return selectFutureCycleDose?.call(dose, cycle);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    required TResult orElse(),
+  }) {
+    if (selectFutureCycleDose != null) {
+      return selectFutureCycleDose(dose, cycle);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DeliverInterventionSubmitEvent value)
+        handleSubmit,
+    required TResult Function(DeliverInterventionSearchEvent value)
+        handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
+  }) {
+    return selectFutureCycleDose(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
+  }) {
+    return selectFutureCycleDose?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
+    required TResult orElse(),
+  }) {
+    if (selectFutureCycleDose != null) {
+      return selectFutureCycleDose(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DeliverInterventionCycleFutureDoseSelectionEvent
+    implements DeliverInterventionEvent {
+  const factory DeliverInterventionCycleFutureDoseSelectionEvent(
+          final int dose, final Cycle cycle) =
+      _$DeliverInterventionCycleFutureDoseSelectionEvent;
+
+  int get dose;
+  Cycle get cycle;
+  @JsonKey(ignore: true)
+  _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
+          _$DeliverInterventionCycleFutureDoseSelectionEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$DeliverInterventionState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
   int get cycle => throw _privateConstructorUsedError;
   int get dose => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
+  List<Map<String, dynamic>>? get futureDeliveries =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DeliverInterventionStateCopyWith<DeliverInterventionState> get copyWith =>
@@ -624,7 +861,8 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       bool isEditing,
       int cycle,
       int dose,
-      List<TaskModel>? tasks});
+      List<TaskModel>? tasks,
+      List<Map<String, dynamic>>? futureDeliveries});
 }
 
 /// @nodoc
@@ -646,6 +884,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? cycle = null,
     Object? dose = null,
     Object? tasks = freezed,
+    Object? futureDeliveries = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -668,6 +907,10 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
+      futureDeliveries: freezed == futureDeliveries
+          ? _value.futureDeliveries
+          : futureDeliveries // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -686,7 +929,8 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       bool isEditing,
       int cycle,
       int dose,
-      List<TaskModel>? tasks});
+      List<TaskModel>? tasks,
+      List<Map<String, dynamic>>? futureDeliveries});
 }
 
 /// @nodoc
@@ -706,6 +950,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? cycle = null,
     Object? dose = null,
     Object? tasks = freezed,
+    Object? futureDeliveries = freezed,
   }) {
     return _then(_$_DeliverInterventionState(
       loading: null == loading
@@ -728,6 +973,10 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value._tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
+      futureDeliveries: freezed == futureDeliveries
+          ? _value._futureDeliveries
+          : futureDeliveries // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -740,8 +989,10 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.isEditing = false,
       this.cycle = 0,
       this.dose = 0,
-      final List<TaskModel>? tasks})
-      : _tasks = tasks;
+      final List<TaskModel>? tasks,
+      final List<Map<String, dynamic>>? futureDeliveries})
+      : _tasks = tasks,
+        _futureDeliveries = futureDeliveries;
 
   @override
   @JsonKey()
@@ -764,9 +1015,18 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Map<String, dynamic>>? _futureDeliveries;
+  @override
+  List<Map<String, dynamic>>? get futureDeliveries {
+    final value = _futureDeliveries;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, tasks: $tasks)';
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, tasks: $tasks, futureDeliveries: $futureDeliveries)';
   }
 
   @override
@@ -779,12 +1039,20 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
                 other.isEditing == isEditing) &&
             (identical(other.cycle, cycle) || other.cycle == cycle) &&
             (identical(other.dose, dose) || other.dose == dose) &&
-            const DeepCollectionEquality().equals(other._tasks, _tasks));
+            const DeepCollectionEquality().equals(other._tasks, _tasks) &&
+            const DeepCollectionEquality()
+                .equals(other._futureDeliveries, _futureDeliveries));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loading, isEditing, cycle, dose,
-      const DeepCollectionEquality().hash(_tasks));
+  int get hashCode => Object.hash(
+      runtimeType,
+      loading,
+      isEditing,
+      cycle,
+      dose,
+      const DeepCollectionEquality().hash(_tasks),
+      const DeepCollectionEquality().hash(_futureDeliveries));
 
   @JsonKey(ignore: true)
   @override
@@ -796,11 +1064,13 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
 abstract class _DeliverInterventionState implements DeliverInterventionState {
   const factory _DeliverInterventionState(
-      {final bool loading,
-      final bool isEditing,
-      final int cycle,
-      final int dose,
-      final List<TaskModel>? tasks}) = _$_DeliverInterventionState;
+          {final bool loading,
+          final bool isEditing,
+          final int cycle,
+          final int dose,
+          final List<TaskModel>? tasks,
+          final List<Map<String, dynamic>>? futureDeliveries}) =
+      _$_DeliverInterventionState;
 
   @override
   bool get loading;
@@ -812,6 +1082,8 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   int get dose;
   @override
   List<TaskModel>? get tasks;
+  @override
+  List<Map<String, dynamic>>? get futureDeliveries;
   @override
   @JsonKey(ignore: true)
   _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>

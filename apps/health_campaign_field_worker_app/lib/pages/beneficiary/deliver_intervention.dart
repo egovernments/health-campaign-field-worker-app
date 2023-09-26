@@ -80,10 +80,45 @@ class _DeliverInterventionPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
+          final currentCycle = context.read<DeliverInterventionBloc>().state;
 
-// [TODO] Index need to be dynamic
+          int currentCyclestate = currentCycle.cycle;
+          int currentDoseState = currentCycle.dose;
+
           final projectState = context.read<ProjectBloc>().state;
           //todo need to be removed [0]
+          List<ProductVariantsModel>? productVariants = projectState
+              .projectType
+              ?.cycles?[currentCyclestate]
+              .deliveries?[currentDoseState]
+              .productVariants;
+
+          final int numberOfDoses = projectState
+                  .projectType?.cycles?[currentCyclestate].deliveries?.length ??
+              0;
+          final steps = generateSteps(numberOfDoses);
+
+          String? deliveryStrategy;
+
+          if (currentCyclestate >= 0 &&
+              currentCyclestate < projectState.projectType!.cycles!.length) {
+            // Access the 'deliveries' list for the current cycle
+            var currentCycleData =
+                projectState.projectType!.cycles![currentCyclestate];
+
+            // Check if the currentDose index is within the bounds of the 'deliveries' list for the current cycle
+            if (currentDoseState >= 0 &&
+                currentDoseState < currentCycleData.deliveries!.length) {
+              // Access the 'deliveryStrategy' for the current dose in the current cycle
+              var currentDoseData =
+                  currentCycleData.deliveries![currentDoseState];
+              deliveryStrategy = currentDoseData.deliveryStrategy;
+            } else {
+              print('getCurrentDose is out of bounds for the current cycle.');
+            }
+          } else {
+            print('getCurrentCycle is out of bounds.');
+          }
 
           return Scaffold(
             body: state.loading
@@ -187,12 +222,11 @@ class _DeliverInterventionPageState
 
                                                 if (shouldSubmit ?? false) {
                                                   if (context.mounted) {
-                                                    final parent =
-                                                        context.router.parent()
-                                                            as StackRouter;
-                                                    parent
-                                                      ..pop()
-                                                      ..pop();
+                                                    context.router
+                                                        .popUntilRouteWithName(
+                                                      BeneficiaryWrapperRoute
+                                                          .name,
+                                                    );
                                                     context
                                                         .read<
                                                             DeliverInterventionBloc>()
@@ -225,9 +259,21 @@ class _DeliverInterventionPageState
                                                           ),
                                                         );
 
-                                                    context.router.push(
-                                                      AcknowledgementRoute(),
-                                                    );
+                                                    if (deliveryStrategy ==
+                                                        "INDIRECT") {
+                                                      // TODO [Need to make it as enum]
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: false,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: true,
+                                                        ),
+                                                      );
+                                                    }
                                                   }
                                                 }
                                               },
@@ -270,6 +316,7 @@ class _DeliverInterventionPageState
                                                   keyboardType:
                                                       TextInputType.number,
                                                   label: 'Current cycle',
+                                                  //TODO : [Need to change this to i18 localization ]
                                                 ),
                                                 DigitStepper(
                                                   activeStep:
@@ -525,13 +572,20 @@ class _DeliverInterventionPageState
     List<ProductVariantsModel>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
+    final currentCycle = context.read<DeliverInterventionBloc>().state;
+
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
     return fb.group(<String, Object>{
-      _doseAdministrationKey:
-          FormControl<String>(value: 'Cycle ${1}', validators: []),
-      _deliveryCommentKey: FormControl<String>(value: '', validators: []),
+      _doseAdministrationKey: FormControl<String>(
+        value: 'Cycle ${currentCycle.cycle}'.toString(),
+        validators: [],
+      ),
+      _deliveryCommentKey: FormControl<String>(
+        value: '',
+        validators: [],
+      ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(

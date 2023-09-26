@@ -143,7 +143,7 @@ class _BeneficiaryDetailsPageState
                                       options: DigitDialogOptions(
                                         titleText: localizations.translate(
                                           i18.beneficiaryDetails
-                                              .reourcesTobeDelivered,
+                                              .resourcesTobeDelivered,
                                         ),
                                         content: buildTableContent(
                                           state,
