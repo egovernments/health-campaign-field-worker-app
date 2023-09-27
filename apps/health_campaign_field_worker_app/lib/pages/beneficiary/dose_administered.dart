@@ -12,8 +12,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../blocs/project/project.dart';
-import '../../models/entities/product_variant.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -125,7 +123,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         int doseIndex =
                             deliveryState.futureDeliveries!.indexOf(e) +
                                 deliveryState.dose +
-                                1; // Adjusting for 1-based indexing
+                                1;
 
                         return TableDataRow([
                           TableData(
@@ -147,9 +145,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
                       return DigitTable(
                         headerList: headerListResource,
-                        tableData:
-                            tableDataRows, // Use the updated tableDataRows
-
+                        tableData: tableDataRows,
                         leftColumnWidth: 130,
                         rightColumnWidth: headerListResource.length * 17 * 6,
                         height: MediaQuery.of(context).size.height / 5,

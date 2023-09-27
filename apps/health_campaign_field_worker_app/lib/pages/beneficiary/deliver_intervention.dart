@@ -13,8 +13,6 @@ import '../../blocs/project/project.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
-
-import '../../models/entities/delivery_strategy_type.dart';
 import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -81,37 +79,8 @@ class _DeliverInterventionPageState
                             state.selectedIndividual?.clientReferenceId,
                       )
                       .toList();
-          final currentCycle = context.read<DeliverInterventionBloc>().state;
 
           final projectState = context.read<ProjectBloc>().state;
-
-          final getFutureDeliveries =
-              context.read<DeliverInterventionBloc>().state;
-          // print("getFutureDeliveries");
-
-          // print(getFutureDeliveries);
-
-          // if (currentCyclestate >= 0 &&
-          //     currentCyclestate < projectState.projectType!.cycles!.length) {
-          //   // Access the 'deliveries' list for the current cycle
-          //   var currentCycleData = projectState.projectType!.cycles![
-          //       currentCycle.cycle == 0
-          //           ? currentCycle.cycle
-          //           : currentCycle.cycle - 1];
-
-          //   // Check if the currentDose index is within the bounds of the 'deliveries' list for the current cycle
-          //   if (currentDoseState >= 0 &&
-          //       currentDoseState < currentCycleData.deliveries!.length) {
-          //     // Access the 'deliveryStrategy' for the current dose in the current cycle
-          //     var currentDoseData =
-          //         currentCycleData.deliveries![currentDoseState + 1];
-          //     deliveryStrategy = currentDoseData.deliveryStrategy;
-          //   } else {
-          //     print('getCurrentDose is out of bounds for the current cycle.');
-          //   }
-          // } else {
-          //   print('getCurrentCycle is out of bounds.');
-          // }
 
           return Scaffold(
             body: state.loading
