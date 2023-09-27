@@ -266,7 +266,7 @@ class MemberCard extends StatelessWidget {
                                                 fields: [
                                                   const AdditionalField(
                                                     'taskStatus',
-                                                    'beneficiaryRefused',
+                                                    Status.beneficiaryRefused,
                                                   ),
                                                 ],
                                               ),
@@ -280,7 +280,6 @@ class MemberCard extends StatelessWidget {
                                     parent
                                       ..pop()
                                       ..pop();
-                                    // [TODO: Empty task need to be created wth status as beneficiaryRefused ]
                                     context.router.push(
                                       AcknowledgementRoute(),
                                     );
@@ -300,26 +299,20 @@ class MemberCard extends StatelessWidget {
                                       50,
                                     ),
                                   ),
-                                  onPressed: tasks != null
-                                      ? () async {
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
-                                          await context.router.push(
-                                            AdverseEventsRoute(
-                                              tasks: tasks ??
-                                                  [
-                                                    // TODO: Hardcoded task model need to be removed and adverse events to be mapped with projectBeneficiaryClientReferenceId
-                                                    TaskModel(
-                                                      clientReferenceId:
-                                                          "19e15730-588f-11ee-ba2c-15d414c9ae78",
-                                                    ),
-                                                  ],
-                                            ),
-                                          );
-                                        }
-                                      : null,
+                                  onPressed:
+                                      tasks != null && (tasks ?? []).isNotEmpty
+                                          ? () async {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop();
+                                              await context.router.push(
+                                                AdverseEventsRoute(
+                                                  tasks: tasks!,
+                                                ),
+                                              );
+                                            }
+                                          : null,
                                 ),
                               ],
                             ),

@@ -1,11 +1,16 @@
+import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/molecules/digit_table.dart';
+import 'package:digit_components/widgets/molecules/digit_table_card.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
@@ -33,6 +38,17 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
     final localizations = AppLocalizations.of(context);
     final router = context.router;
 
+    final headerListResource = [
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+        cellKey: 'dose',
+      ),
+      TableHeader(
+        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+        cellKey: 'resources',
+      ),
+    ];
+
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(context),
@@ -43,7 +59,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
           footer: SizedBox(
             height: 85,
             child: DigitCard(
-              margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+              margin: const EdgeInsets.only(top: kPadding),
               child: DigitElevatedButton(
                 onPressed: () {
                   router.push(DeliverInterventionRoute());
@@ -77,6 +93,63 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                       setState(() {
                         doseAdministered = val.key;
                       });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            DigitCard(
+              child: Column(
+                children: [
+                  Text(
+                    localizations.translate(
+                      i18.beneficiaryDetails.resourcesTobeProvided,
+                    ),
+                    style: theme.textTheme.displayMedium,
+                  ),
+                  DigitTableCard(
+                    element: {
+                      localizations.translate(
+                        i18.beneficiaryDetails.beneficiaryAge,
+                      ): "2",
+                    },
+                  ),
+                  const Divider(),
+                  BlocBuilder<DeliverInterventionBloc,
+                      DeliverInterventionState>(
+                    builder: (context, deliveryState) {
+                      List<TableDataRow> tableDataRows =
+                          deliveryState.futureDeliveries!.map((e) {
+                        int doseIndex =
+                            deliveryState.futureDeliveries!.indexOf(e) +
+                                deliveryState.dose +
+                                1;
+
+                        return TableDataRow([
+                          TableData(
+                            'Dose $doseIndex',
+                            cellKey: 'dose',
+                          ),
+                          TableData(
+                            e.productVariants
+                                    ?.map((e) => e.productVariantId)
+                                    .toList()
+                                    .join(
+                                      "+",
+                                    ) ??
+                                "",
+                            cellKey: 'resources',
+                          ),
+                        ]);
+                      }).toList();
+
+                      return DigitTable(
+                        headerList: headerListResource,
+                        tableData: tableDataRows,
+                        leftColumnWidth: 130,
+                        rightColumnWidth: headerListResource.length * 17 * 6,
+                        height: MediaQuery.of(context).size.height / 5,
+                      );
                     },
                   ),
                 ],

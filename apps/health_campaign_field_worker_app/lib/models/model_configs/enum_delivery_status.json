@@ -8,6 +8,10 @@
         {
             "name": "Not Delivered",
             "value": "NOT_DELIVERED"
+        },
+        {
+            "name": "Beneficiary Refused",
+            "value": "BENEFICIARY_REFUSED"
         }
     ],
     "isEnum": true

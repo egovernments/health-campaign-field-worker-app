@@ -13,7 +13,6 @@ import '../../blocs/project/project.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
-
 import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -81,9 +80,7 @@ class _DeliverInterventionPageState
                       )
                       .toList();
 
-// [TODO] Index need to be dynamic
           final projectState = context.read<ProjectBloc>().state;
-          //todo need to be removed [0]
 
           return Scaffold(
             body: state.loading
@@ -187,12 +184,11 @@ class _DeliverInterventionPageState
 
                                                 if (shouldSubmit ?? false) {
                                                   if (context.mounted) {
-                                                    final parent =
-                                                        context.router.parent()
-                                                            as StackRouter;
-                                                    parent
-                                                      ..pop()
-                                                      ..pop();
+                                                    context.router
+                                                        .popUntilRouteWithName(
+                                                      BeneficiaryWrapperRoute
+                                                          .name,
+                                                    );
                                                     context
                                                         .read<
                                                             DeliverInterventionBloc>()
@@ -225,9 +221,20 @@ class _DeliverInterventionPageState
                                                           ),
                                                         );
 
-                                                    context.router.push(
-                                                      AcknowledgementRoute(),
-                                                    );
+                                                    if (state.futureDeliveries!
+                                                        .isNotEmpty) {
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: false,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      context.router.push(
+                                                        SplashAcknowledgementRoute(
+                                                          isSearch: true,
+                                                        ),
+                                                      );
+                                                    }
                                                   }
                                                 }
                                               },
@@ -270,6 +277,7 @@ class _DeliverInterventionPageState
                                                   keyboardType:
                                                       TextInputType.number,
                                                   label: 'Current cycle',
+                                                  //TODO : [Need to change this to i18 localization ]
                                                 ),
                                                 DigitStepper(
                                                   activeStep:
@@ -525,13 +533,20 @@ class _DeliverInterventionPageState
     List<ProductVariantsModel>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
+    final currentCycle = context.read<DeliverInterventionBloc>().state;
+
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
     return fb.group(<String, Object>{
-      _doseAdministrationKey:
-          FormControl<String>(value: 'Cycle ${1}', validators: []),
-      _deliveryCommentKey: FormControl<String>(value: '', validators: []),
+      _doseAdministrationKey: FormControl<String>(
+        value: 'Cycle ${currentCycle.cycle}'.toString(),
+        validators: [],
+      ),
+      _deliveryCommentKey: FormControl<String>(
+        value: '',
+        validators: [],
+      ),
       _dateOfAdministrationKey:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(

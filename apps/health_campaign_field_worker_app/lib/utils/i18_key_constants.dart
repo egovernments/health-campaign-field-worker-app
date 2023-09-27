@@ -199,7 +199,9 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
   String get beneficiarysDetailsDeleteIconLabel =>
       'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
-  String get reourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
+
   String get beneficiaryAge => 'BENEFICIARY_AGE';
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';

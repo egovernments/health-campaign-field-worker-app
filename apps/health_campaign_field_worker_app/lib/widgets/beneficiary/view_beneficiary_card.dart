@@ -116,15 +116,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             (ageInYears > 0 || (ageInMonths < 3 || ageInMonths > 11)) ||
                 (adverseEvents ?? []).isNotEmpty;
 
-        final isBeneficiaryRefused = (householdMember.tasks != null &&
-            (householdMember.tasks ?? []).isNotEmpty &&
-            householdMember.tasks?.first.additionalFields != null &&
-            (householdMember.tasks?.first.additionalFields?.fields ?? [])
-                .isNotEmpty &&
-            householdMember.tasks?.first.additionalFields?.fields
-                    .firstWhereOrNull((e) => e.key == 'taskStatus')
-                    ?.value ==
-                'beneficiaryRefused');
+        final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
         final rowTableData = [
           TableData(
@@ -201,19 +193,18 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           DateTime.now(),
     ).months;
 
-    final isNotEligible =
-        (ageInYears > 0 || (ageInMonths < 3 || ageInMonths > 11)) ||
-            (householdMember.adverseEvents ?? []).isNotEmpty;
+    final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+      DigitDOBAge(
+        years: ageInYears,
+        months: ageInMonths,
+      ),
+      3,
+      11,
+      householdMember,
+    );
 
-    final isBeneficiaryRefused = (householdMember.tasks != null &&
-        (householdMember.tasks ?? []).isNotEmpty &&
-        householdMember.tasks?.first.additionalFields != null &&
-        (householdMember.tasks?.first.additionalFields?.fields ?? [])
-            .isNotEmpty &&
-        householdMember.tasks?.first.additionalFields?.fields
-                .firstWhereOrNull((e) => e.key == 'taskStatus')
-                ?.value ==
-            'beneficiaryRefused');
+    final isBeneficiaryRefused =
+        checkIfBeneficiaryRefused(householdMember.tasks);
 
     return DigitCard(
       child: Column(
