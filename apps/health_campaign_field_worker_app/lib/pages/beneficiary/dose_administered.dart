@@ -12,8 +12,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../blocs/project/project.dart';
-import '../../models/entities/product_variant.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -61,7 +59,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
           footer: SizedBox(
             height: 85,
             child: DigitCard(
-              margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+              margin: const EdgeInsets.only(top: kPadding),
               child: DigitElevatedButton(
                 onPressed: () {
                   router.push(DeliverInterventionRoute());
@@ -117,24 +115,15 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                     },
                   ),
                   const Divider(),
-                  BlocBuilder<ProjectBloc, ProjectState>(
-                    builder: (context, projectState) {
-                      final bloc =
-                          context.read<DeliverInterventionBloc>().state;
-                      int getCurrentCycle = bloc.cycle;
-                      int getCurrentDose = bloc.dose;
-                      List<ProductVariantModel>? variant;
-
-                      List<TableDataRow> tableDataRows = projectState
-                          .projectType!.cycles![getCurrentCycle].deliveries!
-                          .asMap()
-                          .entries
-                          .where((entry) => entry.key >= getCurrentDose)
-                          .where((entry) =>
-                              entry.value.deliveryStrategy == "INDIRECT")
-                          .map((entry) {
+                  BlocBuilder<DeliverInterventionBloc,
+                      DeliverInterventionState>(
+                    builder: (context, deliveryState) {
+                      List<TableDataRow> tableDataRows =
+                          deliveryState.futureDeliveries!.map((e) {
                         int doseIndex =
-                            entry.key + 1; // Adjusting for 1-based indexing
+                            deliveryState.futureDeliveries!.indexOf(e) +
+                                deliveryState.dose +
+                                1;
 
                         return TableDataRow([
                           TableData(
@@ -142,7 +131,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             cellKey: 'dose',
                           ),
                           TableData(
-                            entry.value.productVariants
+                            e.productVariants
                                     ?.map((e) => e.productVariantId)
                                     .toList()
                                     .join(
@@ -156,9 +145,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
                       return DigitTable(
                         headerList: headerListResource,
-                        tableData:
-                            tableDataRows, // Use the updated tableDataRows
-
+                        tableData: tableDataRows,
                         leftColumnWidth: 130,
                         rightColumnWidth: headerListResource.length * 17 * 6,
                         height: MediaQuery.of(context).size.height / 5,

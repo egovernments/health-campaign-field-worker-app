@@ -842,7 +842,7 @@ mixin _$DeliverInterventionState {
   int get cycle => throw _privateConstructorUsedError;
   int get dose => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
-  List<Map<String, dynamic>>? get futureDeliveries =>
+  List<DeliveryModel>? get futureDeliveries =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -862,7 +862,7 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       int cycle,
       int dose,
       List<TaskModel>? tasks,
-      List<Map<String, dynamic>>? futureDeliveries});
+      List<DeliveryModel>? futureDeliveries});
 }
 
 /// @nodoc
@@ -910,7 +910,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
       futureDeliveries: freezed == futureDeliveries
           ? _value.futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<DeliveryModel>?,
     ) as $Val);
   }
 }
@@ -930,7 +930,7 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       int cycle,
       int dose,
       List<TaskModel>? tasks,
-      List<Map<String, dynamic>>? futureDeliveries});
+      List<DeliveryModel>? futureDeliveries});
 }
 
 /// @nodoc
@@ -976,7 +976,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
       futureDeliveries: freezed == futureDeliveries
           ? _value._futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<DeliveryModel>?,
     ));
   }
 }
@@ -990,7 +990,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.cycle = 0,
       this.dose = 0,
       final List<TaskModel>? tasks,
-      final List<Map<String, dynamic>>? futureDeliveries})
+      final List<DeliveryModel>? futureDeliveries})
       : _tasks = tasks,
         _futureDeliveries = futureDeliveries;
 
@@ -1015,9 +1015,9 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Map<String, dynamic>>? _futureDeliveries;
+  final List<DeliveryModel>? _futureDeliveries;
   @override
-  List<Map<String, dynamic>>? get futureDeliveries {
+  List<DeliveryModel>? get futureDeliveries {
     final value = _futureDeliveries;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
@@ -1069,7 +1069,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
           final int cycle,
           final int dose,
           final List<TaskModel>? tasks,
-          final List<Map<String, dynamic>>? futureDeliveries}) =
+          final List<DeliveryModel>? futureDeliveries}) =
       _$_DeliverInterventionState;
 
   @override
@@ -1083,7 +1083,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   @override
   List<TaskModel>? get tasks;
   @override
-  List<Map<String, dynamic>>? get futureDeliveries;
+  List<DeliveryModel>? get futureDeliveries;
   @override
   @JsonKey(ignore: true)
   _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>

@@ -109,36 +109,27 @@ class DeliverInterventionBloc
     emit(state.copyWith(loading: true));
 
     try {
-      int currentDose = event.dose;
+      int currentDose = event.dose + 1;
       Cycle? currentCycle = event.cycle;
 
-      // Check if the current cycle has deliveries.
       if (currentCycle.deliveries != null) {
-        List<Map<String, dynamic>> futureDeliveries = [];
-
-        // Iterate through deliveries starting from the current dose.
+        List<DeliveryModel> futureDeliveries = [];
         for (int index = currentDose;
             index < currentCycle.deliveries!.length;
             index++) {
           var delivery = currentCycle.deliveries![index];
+
           String? deliveryStrategy = delivery.deliveryStrategy;
 
-          // Check the delivery strategy type is INDIRECT.
-          if (deliveryStrategy == DeliverStrategyType.indirect.name) {
-            // Iterate through product variants and add them to future deliveries.
-            for (var productVariant in delivery.productVariants ?? []) {
-              futureDeliveries.add({
-                'productVariantId': productVariant.productVariantId,
-                'quantity': productVariant.quantity,
-              });
-            }
-          } else if (deliveryStrategy == DeliverStrategyType.direct.name) {
-            // If the strategy is direct, exit the loop.
+          if (deliveryStrategy?.toLowerCase() ==
+              DeliverStrategyType.indirect.name) {
+            futureDeliveries.add(delivery);
+          } else if (deliveryStrategy?.toLowerCase() ==
+              DeliverStrategyType.direct.name) {
             break;
           }
         }
 
-        // Update the state with the collected future deliveries.
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
     } catch (error) {
@@ -182,6 +173,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(0) int cycle,
     @Default(0) int dose,
     List<TaskModel>? tasks,
-    List<Map<String, dynamic>>? futureDeliveries,
+    List<DeliveryModel>? futureDeliveries,
   }) = _DeliverInterventionState;
 }
