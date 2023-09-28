@@ -24,6 +24,7 @@ class DeliverInterventionBloc
     on(_handleSearch);
     on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
+    on(_updateFutureTask);
   }
 
   FutureOr<void> _handleSubmit(
@@ -140,6 +141,23 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _updateFutureTask(
+    DeliverInterventionUpdateFutureTaskEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    // Set the loading state to true to indicate that an operation is in progress.
+    emit(state.copyWith(loading: true));
+
+    final filteredFutureTask = event.task.where((element) {
+      return element.additionalFields?.fields
+              .firstWhere((element) => element.key == 'deliveryStrategy')
+              .value ==
+          'INDIRECT';
+    }).toList();
+
+    emit(state.copyWith(filteredFutureTask: filteredFutureTask));
+  }
 }
 
 @freezed
@@ -163,6 +181,10 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int dose,
     Cycle cycle,
   ) = DeliverInterventionCycleFutureDoseSelectionEvent;
+
+  const factory DeliverInterventionEvent.updateFutureTask(
+    List<TaskModel> task,
+  ) = DeliverInterventionUpdateFutureTaskEvent;
 }
 
 @freezed
@@ -174,5 +196,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(0) int dose,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,
+    List<TaskModel>? filteredFutureTask,
   }) = _DeliverInterventionState;
 }
