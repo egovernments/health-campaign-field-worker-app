@@ -123,7 +123,6 @@ class _$AppRouter extends RootStackRouter {
         child: AcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          isSearch: args.isSearch,
         ),
       );
     },
@@ -326,7 +325,7 @@ class _$AppRouter extends RootStackRouter {
         child: SplashAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          isSearch: args.isSearch,
+          enableBackToSearch: args.enableBackToSearch,
         ),
       );
     },
@@ -1105,14 +1104,12 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
   AcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
-    bool? isSearch,
   }) : super(
           AcknowledgementRoute.name,
           path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            isSearch: isSearch,
           ),
         );
 
@@ -1123,18 +1120,15 @@ class AcknowledgementRouteArgs {
   const AcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
-    this.isSearch,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final bool? isSearch;
-
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isSearch: $isSearch}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1741,14 +1735,14 @@ class SplashAcknowledgementRoute
   SplashAcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
-    bool? isSearch,
+    bool? enableBackToSearch,
   }) : super(
           SplashAcknowledgementRoute.name,
           path: 'splash-acknowledgement',
           args: SplashAcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            isSearch: isSearch,
+            enableBackToSearch: enableBackToSearch,
           ),
         );
 
@@ -1759,18 +1753,18 @@ class SplashAcknowledgementRouteArgs {
   const SplashAcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
-    this.isSearch,
+    this.enableBackToSearch,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final bool? isSearch;
+  final bool? enableBackToSearch;
 
   @override
   String toString() {
-    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isSearch: $isSearch}';
+    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
   }
 }
 

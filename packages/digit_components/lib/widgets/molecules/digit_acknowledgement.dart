@@ -9,7 +9,7 @@ class DigitAcknowledgement extends StatelessWidget {
   final VoidCallback action;
   final String actionLabel;
   final Color color;
-  final bool isSearch;
+  final bool enableBackToSearch;
 
   DigitAcknowledgement.success({
     super.key,
@@ -20,7 +20,7 @@ class DigitAcknowledgement extends StatelessWidget {
     required this.actionLabel,
     IconData? icon,
     Color? color,
-    this.isSearch = true,
+    this.enableBackToSearch = true,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -33,7 +33,7 @@ class DigitAcknowledgement extends StatelessWidget {
     required this.actionLabel,
     IconData? icon,
     Color? color,
-    this.isSearch = true,
+    this.enableBackToSearch = true,
   })  : color = color ?? DigitTheme.instance.colors.lavaRed,
         icon = icon ?? Icons.error;
 
@@ -99,7 +99,7 @@ class DigitAcknowledgement extends StatelessWidget {
                   ),
                 ),
               ),
-              if (isSearch)
+              if (enableBackToSearch)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     kPadding,

@@ -225,14 +225,15 @@ class _DeliverInterventionPageState
                                                         .isNotEmpty) {
                                                       context.router.push(
                                                         SplashAcknowledgementRoute(
-                                                          isSearch: false,
-                                                          //TODO[Naming convention need to be changed]
+                                                          enableBackToSearch:
+                                                              false,
                                                         ),
                                                       );
                                                     } else {
                                                       context.router.push(
                                                         SplashAcknowledgementRoute(
-                                                          isSearch: true,
+                                                          enableBackToSearch:
+                                                              true,
                                                         ),
                                                       );
                                                     }
