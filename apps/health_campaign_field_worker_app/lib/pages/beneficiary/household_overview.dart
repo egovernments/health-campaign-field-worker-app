@@ -280,6 +280,9 @@ class _HouseholdOverviewPageState
                                                     .first.clientReferenceId)
                                             .toList();
 
+                                        print(
+                                            state.householdMemberWrapper.tasks);
+
                                         return MemberCard(
                                           isHead: isHead,
                                           individual: e,
