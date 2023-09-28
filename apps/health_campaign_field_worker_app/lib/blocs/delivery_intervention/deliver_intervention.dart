@@ -110,6 +110,7 @@ class DeliverInterventionBloc
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
+    // [TODO : Need to map the start date and end date to the cycles,
     final currentRunningCycle = (event.projectType.cycles?.indexWhere((e) =>
             DateTime.now().millisecondsSinceEpoch >=
                 (e.startDate ?? 1695772800000) &&
