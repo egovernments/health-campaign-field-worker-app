@@ -342,6 +342,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    RecordPastDeliveryDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<RecordPastDeliveryDetailsRouteArgs>(
+          orElse: () => const RecordPastDeliveryDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: RecordPastDeliveryDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ChecklistViewRoute.name: (routeData) {
       final args = routeData.argsAs<ChecklistViewRouteArgs>(
           orElse: () => const ChecklistViewRouteArgs());
@@ -617,6 +628,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   ReasonForDeletionRoute.name,
                   path: 'reason-for-deletion',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  RecordPastDeliveryDetailsRoute.name,
+                  path: 'record-past-delivery-details',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1810,6 +1826,41 @@ class ReasonForDeletionRouteArgs {
   @override
   String toString() {
     return 'ReasonForDeletionRouteArgs{key: $key, appLocalizations: $appLocalizations, isHousholdDelete: $isHousholdDelete}';
+  }
+}
+
+/// generated route for
+/// [RecordPastDeliveryDetailsPage]
+class RecordPastDeliveryDetailsRoute
+    extends PageRouteInfo<RecordPastDeliveryDetailsRouteArgs> {
+  RecordPastDeliveryDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          RecordPastDeliveryDetailsRoute.name,
+          path: 'record-past-delivery-details',
+          args: RecordPastDeliveryDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'RecordPastDeliveryDetailsRoute';
+}
+
+class RecordPastDeliveryDetailsRouteArgs {
+  const RecordPastDeliveryDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
