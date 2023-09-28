@@ -38,7 +38,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
-    final router = context.router;
 
     final headerListResource = [
       TableHeader(
@@ -66,8 +65,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                 onPressed: () {
                   final bloc = context.read<DeliverInterventionBloc>().state;
                   final event = context.read<DeliverInterventionBloc>();
-
-                  if (context.mounted) {
+                  final parent = context.router.parent() as StackRouter;
+                  parent
+                    ..pop()
+                    ..pop();
+                  if (doseAdministered && context.mounted) {
                     for (var e in bloc.futureDeliveries!) {
                       int doseIndex =
                           bloc.futureDeliveries!.indexOf(e) + bloc.dose + 1;
@@ -140,6 +142,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 'DoseIndex',
                                 "0${doseIndex == 0 ? 1 : doseIndex}",
                               ),
+                              AdditionalField(
+                                'DeliveryStrategy',
+                                e.deliveryStrategy,
+                              ),
                             ],
                           ),
                         ),
@@ -148,9 +154,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                       ));
                     }
                   }
-// TODO[Need to navigate user to home screen]
 
-                  router.push(AcknowledgementRoute());
+                  context.router.push(AcknowledgementRoute());
                 },
                 child: Center(
                   child: Text(

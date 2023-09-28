@@ -1,17 +1,16 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/entities/address.dart';
 import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 
 class SplashAcknowledgementPage extends LocalizedStatefulWidget {
-  final bool? isSearch;
+  final bool? enableBackToSearch;
   const SplashAcknowledgementPage({
     super.key,
     super.appLocalizations,
-    this.isSearch,
+    this.enableBackToSearch,
   });
 
   @override
@@ -24,7 +23,7 @@ class _SplashAcknowledgementPageState
   @override
   void initState() {
     super.initState();
-    if (widget.isSearch == false) {
+    if (widget.enableBackToSearch == false) {
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
           try {
@@ -46,7 +45,7 @@ class _SplashAcknowledgementPageState
         action: () {
           context.router.pop();
         },
-        isSearch: widget.isSearch ?? true,
+        enableBackToSearch: widget.enableBackToSearch ?? true,
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(

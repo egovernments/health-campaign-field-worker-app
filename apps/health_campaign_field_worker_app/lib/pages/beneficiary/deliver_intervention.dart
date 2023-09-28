@@ -98,6 +98,15 @@ class _DeliverInterventionPageState
                               .deliveries
                               ?.length ??
                           0;
+
+                      final String? getDeliveryStrategy = projectState
+                          .projectType
+                          ?.cycles?[deliveryInterventionstate.cycle == 0
+                              ? deliveryInterventionstate.cycle
+                              : deliveryInterventionstate.cycle - 1]
+                          .deliveries?[deliveryInterventionstate.dose]
+                          .deliveryStrategy;
+
                       final steps = generateSteps(numberOfDoses);
 
                       return BlocBuilder<ProductVariantBloc,
@@ -202,6 +211,8 @@ class _DeliverInterventionPageState
                                                               cycle:
                                                                   deliveryInterventionstate
                                                                       .cycle,
+                                                              deliveryStrategy:
+                                                                  getDeliveryStrategy,
                                                               address:
                                                                   householdMemberWrapper
                                                                       .members
@@ -218,14 +229,15 @@ class _DeliverInterventionPageState
                                                         .isNotEmpty) {
                                                       context.router.push(
                                                         SplashAcknowledgementRoute(
-                                                          isSearch: false,
-                                                          //TODO[Naming convention need to be changed]
+                                                          enableBackToSearch:
+                                                              false,
                                                         ),
                                                       );
                                                     } else {
                                                       context.router.push(
                                                         SplashAcknowledgementRoute(
-                                                          isSearch: true,
+                                                          enableBackToSearch:
+                                                              true,
                                                         ),
                                                       );
                                                     }
@@ -444,6 +456,7 @@ class _DeliverInterventionPageState
     TaskModel? oldTask,
     int? cycle,
     int? dose,
+    String? deliveryStrategy,
     String? projectBeneficiaryClientReferenceId,
     AddressModel? address,
   }) {
@@ -516,6 +529,10 @@ class _DeliverInterventionPageState
             'DoseIndex',
             "0${dose ?? 1}",
           ),
+          AdditionalField(
+            'DeliveryStrategy',
+            deliveryStrategy,
+          ),
         ],
       ),
     );
@@ -528,14 +545,15 @@ class _DeliverInterventionPageState
     List<ProductVariantsModel>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
-    final currentCycle = context.read<DeliverInterventionBloc>().state;
+    final bloc = context.read<DeliverInterventionBloc>().state;
 
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
-        value: 'Cycle ${currentCycle.cycle}'.toString(),
+        value: 'Cycle ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+            .toString(),
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(

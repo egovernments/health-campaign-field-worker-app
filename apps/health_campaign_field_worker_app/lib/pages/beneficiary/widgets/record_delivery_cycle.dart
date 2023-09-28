@@ -8,6 +8,7 @@ import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 
 class RecordDeliveryCycle extends StatelessWidget {
   final List<TaskModel>? taskData;
@@ -25,17 +26,18 @@ class RecordDeliveryCycle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+
     final headerList = [
       TableHeader(
-        'Dose No.',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryDoseNo),
         cellKey: 'dose',
       ),
       TableHeader(
-        'Status',
-        cellKey: 'Status',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryStatus),
+        cellKey: 'status',
       ),
       TableHeader(
-        'Completed on',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
       ),
     ];
@@ -110,11 +112,12 @@ class RecordDeliveryCycle extends StatelessWidget {
                                   TableData(
                                     tasks?.status ?? 'In complete',
                                     // TODO[Task status needs to be mapped]
-                                    cellKey: 'Status',
+                                    cellKey: 'status',
                                   ),
                                   TableData(
                                     tasks?.clientAuditDetails?.createdTime
-                                            .toString() ??
+                                            .toDateTime
+                                            .getFormattedDate() ??
                                         '',
                                     cellKey: 'completedOn',
                                   ),
