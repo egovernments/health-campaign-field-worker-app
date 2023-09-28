@@ -416,6 +416,12 @@ class DeliverIntervention {
   String get dose => 'DELIVER_INTERVENTION_DOSE';
   String get hidePastCycles => 'DELIVER_INTERVENTION_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+  String get recordPastDeliveryDeatils =>
+      'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
+  String get wasDosePastDeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
+  String get wasDosePast24DeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_24_DOSE_DELIVERY_DETAILS';
 }
 
 class ProjectSelection {
