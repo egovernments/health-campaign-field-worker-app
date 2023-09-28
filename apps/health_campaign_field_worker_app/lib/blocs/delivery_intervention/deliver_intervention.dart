@@ -5,6 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/delivery_strategy_type.dart';
+import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -21,6 +23,7 @@ class DeliverInterventionBloc
     on(_handleSubmit);
     on(_handleSearch);
     on(_handleCycleDoseSelection);
+    on(_handleFutureDeliveries);
   }
 
   FutureOr<void> _handleSubmit(
@@ -97,6 +100,46 @@ class DeliverInterventionBloc
       emit(state.copyWith(loading: false));
     }
   }
+
+  FutureOr<void> _handleFutureDeliveries(
+    DeliverInterventionCycleFutureDoseSelectionEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    // Set the loading state to true to indicate that an operation is in progress.
+    emit(state.copyWith(loading: true));
+
+    try {
+      int currentDose = event.dose + 1;
+      Cycle? currentCycle = event.cycle;
+
+      if (currentCycle.deliveries != null) {
+        List<DeliveryModel> futureDeliveries = [];
+        for (int index = currentDose;
+            index < currentCycle.deliveries!.length;
+            index++) {
+          var delivery = currentCycle.deliveries![index];
+
+          String? deliveryStrategy = delivery.deliveryStrategy;
+
+          if (deliveryStrategy?.toLowerCase() ==
+              DeliverStrategyType.indirect.name) {
+            futureDeliveries.add(delivery);
+          } else if (deliveryStrategy?.toLowerCase() ==
+              DeliverStrategyType.direct.name) {
+            break;
+          }
+        }
+
+        emit(state.copyWith(futureDeliveries: futureDeliveries));
+      }
+    } catch (error) {
+      // Rethrow any errors that occur during processing.
+      rethrow;
+    } finally {
+      // Set the loading state to false after the operation is complete.
+      emit(state.copyWith(loading: false));
+    }
+  }
 }
 
 @freezed
@@ -115,6 +158,11 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int dose,
     int cycle,
   ) = DeliverInterventionCycleDoseSelectionEvent;
+
+  const factory DeliverInterventionEvent.selectFutureCycleDose(
+    int dose,
+    Cycle cycle,
+  ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 }
 
 @freezed
@@ -125,5 +173,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(0) int cycle,
     @Default(0) int dose,
     List<TaskModel>? tasks,
+    List<DeliveryModel>? futureDeliveries,
   }) = _DeliverInterventionState;
 }

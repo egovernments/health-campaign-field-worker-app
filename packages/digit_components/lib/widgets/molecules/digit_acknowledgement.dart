@@ -9,6 +9,7 @@ class DigitAcknowledgement extends StatelessWidget {
   final VoidCallback action;
   final String actionLabel;
   final Color color;
+  final bool isSearch;
 
   DigitAcknowledgement.success({
     super.key,
@@ -19,6 +20,7 @@ class DigitAcknowledgement extends StatelessWidget {
     required this.actionLabel,
     IconData? icon,
     Color? color,
+    this.isSearch = true,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -31,13 +33,13 @@ class DigitAcknowledgement extends StatelessWidget {
     required this.actionLabel,
     IconData? icon,
     Color? color,
+    this.isSearch = true,
   })  : color = color ?? DigitTheme.instance.colors.lavaRed,
         icon = icon ?? Icons.error;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return ScrollableContent(
       children: [
         DigitCard(
@@ -97,18 +99,19 @@ class DigitAcknowledgement extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  kPadding,
-                  kPadding,
-                  kPadding,
-                  kPadding * 2,
-                ),
-                child: DigitElevatedButton(
-                  onPressed: action,
-                  child: Text(actionLabel),
-                ),
-              )
+              if (isSearch)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    kPadding,
+                    kPadding,
+                    kPadding,
+                    kPadding * 2,
+                  ),
+                  child: DigitElevatedButton(
+                    onPressed: action,
+                    child: Text(actionLabel),
+                  ),
+                )
             ],
           ),
         ),

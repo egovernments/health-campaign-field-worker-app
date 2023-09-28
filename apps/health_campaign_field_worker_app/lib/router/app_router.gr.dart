@@ -123,6 +123,7 @@ class _$AppRouter extends RootStackRouter {
         child: AcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          isSearch: args.isSearch,
         ),
       );
     },
@@ -303,6 +304,29 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
+        ),
+      );
+    },
+    DoseAdministeredRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredRouteArgs>(
+          orElse: () => const DoseAdministeredRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SplashAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SplashAcknowledgementRouteArgs>(
+          orElse: () => const SplashAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SplashAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isSearch: args.isSearch,
         ),
       );
     },
@@ -589,6 +613,16 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   DeliverInterventionRoute.name,
                   path: 'deliver-intervention',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  DoseAdministeredRoute.name,
+                  path: 'dose-administered',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SplashAcknowledgementRoute.name,
+                  path: 'splash-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1087,12 +1121,14 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
   AcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    bool? isSearch,
   }) : super(
           AcknowledgementRoute.name,
           path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            isSearch: isSearch,
           ),
         );
 
@@ -1103,15 +1139,18 @@ class AcknowledgementRouteArgs {
   const AcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
+    this.isSearch,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final bool? isSearch;
+
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isSearch: $isSearch}';
   }
 }
 
@@ -1674,6 +1713,80 @@ class DeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'DeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredPage]
+class DoseAdministeredRoute extends PageRouteInfo<DoseAdministeredRouteArgs> {
+  DoseAdministeredRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          DoseAdministeredRoute.name,
+          path: 'dose-administered',
+          args: DoseAdministeredRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'DoseAdministeredRoute';
+}
+
+class DoseAdministeredRouteArgs {
+  const DoseAdministeredRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SplashAcknowledgementPage]
+class SplashAcknowledgementRoute
+    extends PageRouteInfo<SplashAcknowledgementRouteArgs> {
+  SplashAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? isSearch,
+  }) : super(
+          SplashAcknowledgementRoute.name,
+          path: 'splash-acknowledgement',
+          args: SplashAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isSearch: isSearch,
+          ),
+        );
+
+  static const String name = 'SplashAcknowledgementRoute';
+}
+
+class SplashAcknowledgementRouteArgs {
+  const SplashAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isSearch,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? isSearch;
+
+  @override
+  String toString() {
+    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isSearch: $isSearch}';
   }
 }
 
