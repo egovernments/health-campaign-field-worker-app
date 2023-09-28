@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -440,6 +441,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 element.id == '644c4356-5214-11ee-be56-0242ac120002')
             .toList()
             .firstOrNull,
+        //[TODO] need to add sorting based on order
       ));
       final rowversionList = await isar.rowVersionLists
           .filter()

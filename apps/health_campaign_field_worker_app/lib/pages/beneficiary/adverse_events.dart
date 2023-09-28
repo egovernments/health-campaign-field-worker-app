@@ -44,8 +44,6 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
 
   @override
   void initState() {
-    print('Adverse event page');
-    print(widget.tasks.first.clientReferenceId);
     super.initState();
   }
 

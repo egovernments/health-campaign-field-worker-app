@@ -185,7 +185,7 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual,
             child: Column(
               children: [
-                isNotEligible
+                isNotEligible || isBeneficiaryRefused
                     ? const Offstage()
                     : !isNotEligible
                         ? DigitElevatedButton(
@@ -211,7 +211,7 @@ class MemberCard extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                isNotEligible
+                isNotEligible || isBeneficiaryRefused
                     ? const Offstage()
                     : DigitOutLineButton(
                         label: localizations.translate(
@@ -264,9 +264,10 @@ class MemberCard extends StatelessWidget {
                                                   TaskAdditionalFields(
                                                 version: 1,
                                                 fields: [
-                                                  const AdditionalField(
+                                                  AdditionalField(
                                                     'taskStatus',
-                                                    Status.beneficiaryRefused,
+                                                    Status.beneficiaryRefused
+                                                        .toValue(),
                                                   ),
                                                 ],
                                               ),

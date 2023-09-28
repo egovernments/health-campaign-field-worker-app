@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -90,43 +91,28 @@ class _BeneficiaryDetailsPageState
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
 
-          bloc.add(
-            DeliverInterventionEvent.selectCycleDose(
-              taskData != null && taskData.isNotEmpty
-                  ? int.tryParse(
-                        taskData.last.additionalFields?.fields[4].value,
-                      ) ??
-                      0
-                  : 0,
-              taskData != null && taskData.isNotEmpty
-                  ? int.tryParse(
-                        taskData.last.additionalFields?.fields[3].value,
-                      ) ??
-                      0
-                  : 0,
-            ),
-          );
+          final lastDose = taskData?.last.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == 'DoseIndex')
+              ?.value;
+          final lastCycle = taskData?.last.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              ?.value;
 
-          int selectedCyleIndex = taskData != null && taskData.isNotEmpty
-              ? int.tryParse(
-                    taskData.last.additionalFields?.fields[3].value,
-                  ) ??
-                  0
-              : 0;
-
-          final selectedCycle = projectState.projectType!.cycles![
-              selectedCyleIndex == 0
-                  ? selectedCyleIndex
-                  : selectedCyleIndex - 1];
           bloc.add(
-            DeliverInterventionEvent.selectFutureCycleDose(
+            DeliverInterventionEvent.setActiveCycleDose(
               taskData != null && taskData.isNotEmpty
                   ? int.tryParse(
-                        taskData.last.additionalFields?.fields[4].value,
+                        lastDose,
                       ) ??
                       0
                   : 0,
-              selectedCycle,
+              taskData != null && taskData.isNotEmpty
+                  ? int.tryParse(
+                        lastCycle,
+                      ) ??
+                      0
+                  : 0,
+              projectState.projectType!,
             ),
           );
 
@@ -163,6 +149,14 @@ class _BeneficiaryDetailsPageState
                                 ),
                                 child: DigitElevatedButton(
                                   onPressed: () async {
+                                    bloc.add(
+                                      DeliverInterventionEvent
+                                          .selectFutureCycleDose(
+                                        state.dose,
+                                        projectState.projectType!
+                                            .cycles![state.cycle - 1],
+                                      ),
+                                    );
                                     await DigitDialog.show<bool>(
                                       context,
                                       options: DigitDialogOptions(
@@ -193,7 +187,7 @@ class _BeneficiaryDetailsPageState
                                   },
                                   child: Center(
                                     child: Text(
-                                      'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose + 1).toString()}',
+                                      'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
                                     ),
                                   ),
                                 ),

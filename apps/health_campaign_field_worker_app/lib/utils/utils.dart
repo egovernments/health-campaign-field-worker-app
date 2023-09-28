@@ -15,8 +15,7 @@ import 'package:uuid/uuid.dart';
 
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../models/entities/status.dart';
-import '../models/entities/task.dart';
+import '../models/data_model.dart';
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -220,13 +219,11 @@ bool checkEligibilityForActiveCycle(
   HouseholdMemberWrapper householdWrapper,
 ) {
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
-      ? householdWrapper.tasks?.first.additionalFields?.fields
-          .where((e) => e.key == 'CycleIndex')
-          .first
-          .value
-      : '0';
-  print('Past');
-  print(pastCycle);
+      ? householdWrapper.tasks?.last.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              ?.value ??
+          '1'
+      : '1';
 
   return (activeCycle == int.parse(pastCycle));
 }
@@ -256,12 +253,12 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.first.additionalFields != null &&
-      (tasks.first.additionalFields?.fields ?? []).isNotEmpty &&
-      tasks.first.additionalFields?.fields
+      tasks.last.additionalFields != null &&
+      (tasks.last.additionalFields?.fields ?? []).isNotEmpty &&
+      tasks.last.additionalFields?.fields
               .firstWhereOrNull((e) => e.key == 'taskStatus')
               ?.value ==
-          Status.beneficiaryRefused);
+          Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }

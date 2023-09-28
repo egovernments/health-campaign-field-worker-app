@@ -39,10 +39,8 @@ Widget buildTableContent(
         // const Divider(),
         BlocBuilder<ProjectBloc, ProjectState>(
           builder: (context, projectState) {
-            final item = projectState
-                .projectType!
-                .cycles![currentCycle == 0 ? currentCycle : currentCycle - 1]
-                .deliveries![currentDose];
+            final item = projectState.projectType!.cycles![currentCycle - 1]
+                .deliveries![currentDose - 1];
 
             return DigitTable(
               headerList: headerListResource,
@@ -58,7 +56,7 @@ Widget buildTableContent(
                     return TableDataRow([
                       item.productVariants?.indexOf(e) == 0
                           ? TableData(
-                              'Dose ${projectState.projectType!.cycles![currentCycle == 0 ? currentCycle : currentCycle - 1].deliveries!.indexOf(item) + 1}',
+                              'Dose ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
                           : TableData(''),
@@ -72,7 +70,7 @@ Widget buildTableContent(
               ],
               leftColumnWidth: 130,
               rightColumnWidth: headerListResource.length * 20 * 5,
-              height: MediaQuery.of(context).size.height / 5,
+              height: ((item.productVariants ?? []).length + 1) * 60,
             );
           },
         ),

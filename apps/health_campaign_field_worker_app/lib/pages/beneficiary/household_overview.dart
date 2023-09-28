@@ -299,19 +299,9 @@ class _HouseholdOverviewPageState
                                                         (e.startDate ??
                                                             1695772800000) &&
                                                     DateTime.now()
-                                                            .millisecondsSinceEpoch <
+                                                            .millisecondsSinceEpoch <=
                                                         (e.endDate ??
-                                                            1695859200000));
-                                            print('Current time');
-                                            print(DateTime.now()
-                                                .millisecondsSinceEpoch);
-                                            print(activeCycle);
-                                            print(
-                                              checkEligibilityForActiveCycle(
-                                                activeCycle ?? 0,
-                                                state.householdMemberWrapper,
-                                              ),
-                                            );
+                                                            1695945600000));
                                             final ageInYears =
                                                 DigitDateUtils.calculateAge(
                                               DigitDateUtils
@@ -472,22 +462,16 @@ class _HouseholdOverviewPageState
                                               },
                                               isNotEligible:
                                                   (!checkEligibilityForAgeAndAdverseEvent(
-                                                            DigitDOBAge(
-                                                              years: ageInYears,
-                                                              months:
-                                                                  ageInMonths,
-                                                            ),
-                                                            3,
-                                                            11,
-                                                            state
-                                                                .householdMemberWrapper,
-                                                          ) ||
-                                                          recordedAdverseEvent) &&
-                                                      checkEligibilityForActiveCycle(
-                                                        activeCycle ?? 0,
+                                                        DigitDOBAge(
+                                                          years: ageInYears,
+                                                          months: ageInMonths,
+                                                        ),
+                                                        3,
+                                                        11,
                                                         state
                                                             .householdMemberWrapper,
-                                                      ),
+                                                      ) ||
+                                                      recordedAdverseEvent),
                                               name: e.name?.givenName ?? ' - ',
                                               years: (e.dateOfBirth == null
                                                       ? null

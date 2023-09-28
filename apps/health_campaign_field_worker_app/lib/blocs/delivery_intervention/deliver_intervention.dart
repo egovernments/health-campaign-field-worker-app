@@ -24,6 +24,7 @@ class DeliverInterventionBloc
     on(_handleSearch);
     on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
+    on(_handleActiveCycleDose);
   }
 
   FutureOr<void> _handleSubmit(
@@ -93,11 +94,36 @@ class DeliverInterventionBloc
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      emit(state.copyWith(cycle: event.cycle, dose: event.dose));
+      emit(state.copyWith(
+        cycle: event.cycle,
+        dose: event.dose,
+        isLastDoseOfCycle: event.isLastDoseOfCycle,
+      ));
     } catch (error) {
       rethrow;
     } finally {
       emit(state.copyWith(loading: false));
+    }
+  }
+
+  FutureOr<void> _handleActiveCycleDose(
+    DeliverInterventionActiveCycleDoseSelectionEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    final currentRunningCycle = (event.projectType.cycles?.indexWhere((e) =>
+            DateTime.now().millisecondsSinceEpoch >=
+                (e.startDate ?? 1695772800000) &&
+            DateTime.now().millisecondsSinceEpoch <
+                (e.endDate ?? 1695945600000)))! +
+        1;
+    if (event.lastCycle == currentRunningCycle) {
+      final isNotLastDose = event.lastDose <
+          event.projectType.cycles![event.lastCycle].deliveries!.length;
+      if (isNotLastDose) {
+        emit(state.copyWith(cycle: event.lastCycle, dose: event.lastDose + 1));
+      }
+    } else {
+      emit(state.copyWith(cycle: currentRunningCycle ?? 1, dose: 1));
     }
   }
 
@@ -109,7 +135,7 @@ class DeliverInterventionBloc
     emit(state.copyWith(loading: true));
 
     try {
-      int currentDose = event.dose + 1;
+      int currentDose = event.dose;
       Cycle? currentCycle = event.cycle;
 
       if (currentCycle.deliveries != null) {
@@ -154,15 +180,23 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     TaskSearchModel taskSearch,
   ) = DeliverInterventionSearchEvent;
 
+  // [TODO: Need to remove this event
   const factory DeliverInterventionEvent.selectCycleDose(
     int dose,
     int cycle,
+    bool isLastDoseOfCycle,
   ) = DeliverInterventionCycleDoseSelectionEvent;
 
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
     Cycle cycle,
   ) = DeliverInterventionCycleFutureDoseSelectionEvent;
+
+  const factory DeliverInterventionEvent.setActiveCycleDose(
+    int lastDose,
+    int lastCycle,
+    ProjectType projectType,
+  ) = DeliverInterventionActiveCycleDoseSelectionEvent;
 }
 
 @freezed
@@ -170,8 +204,9 @@ class DeliverInterventionState with _$DeliverInterventionState {
   const factory DeliverInterventionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
-    @Default(0) int cycle,
-    @Default(0) int dose,
+    @Default(1) int cycle,
+    @Default(1) int dose,
+    @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,
   }) = _DeliverInterventionState;
