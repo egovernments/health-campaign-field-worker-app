@@ -142,6 +142,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 'DoseIndex',
                                 "0${doseIndex == 0 ? 1 : doseIndex}",
                               ),
+                              AdditionalField(
+                                'DeliveryStrategy',
+                                e.deliveryStrategy,
+                              ),
                             ],
                           ),
                         ),

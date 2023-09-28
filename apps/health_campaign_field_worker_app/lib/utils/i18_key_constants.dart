@@ -205,6 +205,8 @@ class BeneficiaryDetails {
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
   String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
+  String get beneficiaryDeliveryStrategy =>
+      'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
 }
 
 class IndividualDetails {
@@ -412,8 +414,8 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get dose => 'DELIVER_INTERVENTION_DOSE';
-
   String get hidePastCycles => 'DELIVER_INTERVENTION_PAST_CYCLES';
+  String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
 }
 
 class ProjectSelection {
