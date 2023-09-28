@@ -1,13 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:isar/isar.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
-import '../no_sql/schema/app_configuration.dart';
-import '../no_sql/schema/localization.dart';
-import '../no_sql/schema/service_registry.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';
@@ -126,5 +122,25 @@ class LocalSecureStore {
 
   Future<void> deleteAll() async {
     await storage.deleteAll();
+  }
+
+  /*Sets the bool value of project setup as true once project data is downloaded*/
+  Future<void> setProjectSetUpComplete(String key, bool value) async {
+    await storage.write(
+      key: key,
+      value: value.toString(),
+    );
+  }
+
+  /*Checks for project data loaded or not*/
+  Future<bool> isProjectSetUpComplete(String projectId) async {
+    final isProjectSetUpComplete = await storage.read(key: projectId);
+
+    switch (isProjectSetUpComplete) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
   }
 }
