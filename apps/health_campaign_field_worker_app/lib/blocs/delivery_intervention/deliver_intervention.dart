@@ -131,6 +131,8 @@ class DeliverInterventionBloc
           }
         }
 
+        print("object, $futureDeliveries");
+
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
     } catch (error) {
@@ -149,12 +151,14 @@ class DeliverInterventionBloc
     // Set the loading state to true to indicate that an operation is in progress.
     emit(state.copyWith(loading: true));
 
-    final filteredFutureTask = event.task.where((element) {
+    final List<TaskModel> filteredFutureTask = event.task.where((element) {
       return element.additionalFields?.fields
-              .firstWhere((element) => element.key == 'deliveryStrategy')
+              .firstWhere((element) => element.key == 'DeliveryStrategy')
               .value ==
           'INDIRECT';
     }).toList();
+
+    print("filteredFutureTask $filteredFutureTask");
 
     emit(state.copyWith(filteredFutureTask: filteredFutureTask));
   }

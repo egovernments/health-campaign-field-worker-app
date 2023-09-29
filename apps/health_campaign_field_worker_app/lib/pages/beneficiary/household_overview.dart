@@ -280,8 +280,19 @@ class _HouseholdOverviewPageState
                                                     .first.clientReferenceId)
                                             .toList();
 
-                                        print(
-                                            state.householdMemberWrapper.tasks);
+                                        final get =
+                                            state.householdMemberWrapper.tasks;
+
+                                        if (get != null) {
+                                          final bloc = context
+                                              .read<DeliverInterventionBloc>();
+                                          bloc.add(
+                                            DeliverInterventionEvent
+                                                .updateFutureTask(
+                                              get,
+                                            ),
+                                          );
+                                        }
 
                                         return MemberCard(
                                           isHead: isHead,
