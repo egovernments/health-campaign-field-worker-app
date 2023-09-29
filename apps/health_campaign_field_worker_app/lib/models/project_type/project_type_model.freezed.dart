@@ -631,6 +631,8 @@ Cycle _$CycleFromJson(Map<String, dynamic> json) {
 mixin _$Cycle {
   String? get mandatoryWaitSinceLastCycleInDays =>
       throw _privateConstructorUsedError;
+  int? get startDate => throw _privateConstructorUsedError;
+  int? get endDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'deliveries')
   List<DeliveryModel>? get deliveries => throw _privateConstructorUsedError;
 
@@ -646,6 +648,8 @@ abstract class $CycleCopyWith<$Res> {
   @useResult
   $Res call(
       {String? mandatoryWaitSinceLastCycleInDays,
+      int? startDate,
+      int? endDate,
       @JsonKey(name: 'deliveries') List<DeliveryModel>? deliveries});
 }
 
@@ -663,6 +667,8 @@ class _$CycleCopyWithImpl<$Res, $Val extends Cycle>
   @override
   $Res call({
     Object? mandatoryWaitSinceLastCycleInDays = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? deliveries = freezed,
   }) {
     return _then(_value.copyWith(
@@ -671,6 +677,14 @@ class _$CycleCopyWithImpl<$Res, $Val extends Cycle>
           ? _value.mandatoryWaitSinceLastCycleInDays
           : mandatoryWaitSinceLastCycleInDays // ignore: cast_nullable_to_non_nullable
               as String?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as int?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as int?,
       deliveries: freezed == deliveries
           ? _value.deliveries
           : deliveries // ignore: cast_nullable_to_non_nullable
@@ -687,6 +701,8 @@ abstract class _$$_CycleCopyWith<$Res> implements $CycleCopyWith<$Res> {
   @useResult
   $Res call(
       {String? mandatoryWaitSinceLastCycleInDays,
+      int? startDate,
+      int? endDate,
       @JsonKey(name: 'deliveries') List<DeliveryModel>? deliveries});
 }
 
@@ -700,6 +716,8 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
   @override
   $Res call({
     Object? mandatoryWaitSinceLastCycleInDays = freezed,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
     Object? deliveries = freezed,
   }) {
     return _then(_$_Cycle(
@@ -708,6 +726,14 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
           ? _value.mandatoryWaitSinceLastCycleInDays
           : mandatoryWaitSinceLastCycleInDays // ignore: cast_nullable_to_non_nullable
               as String?,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as int?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as int?,
       deliveries: freezed == deliveries
           ? _value._deliveries
           : deliveries // ignore: cast_nullable_to_non_nullable
@@ -721,6 +747,8 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
 class _$_Cycle implements _Cycle {
   const _$_Cycle(
       {this.mandatoryWaitSinceLastCycleInDays,
+      this.startDate,
+      this.endDate,
       @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries})
       : _deliveries = deliveries;
 
@@ -729,6 +757,10 @@ class _$_Cycle implements _Cycle {
 
   @override
   final String? mandatoryWaitSinceLastCycleInDays;
+  @override
+  final int? startDate;
+  @override
+  final int? endDate;
   final List<DeliveryModel>? _deliveries;
   @override
   @JsonKey(name: 'deliveries')
@@ -741,7 +773,7 @@ class _$_Cycle implements _Cycle {
 
   @override
   String toString() {
-    return 'Cycle(mandatoryWaitSinceLastCycleInDays: $mandatoryWaitSinceLastCycleInDays, deliveries: $deliveries)';
+    return 'Cycle(mandatoryWaitSinceLastCycleInDays: $mandatoryWaitSinceLastCycleInDays, startDate: $startDate, endDate: $endDate, deliveries: $deliveries)';
   }
 
   @override
@@ -753,6 +785,9 @@ class _$_Cycle implements _Cycle {
                     mandatoryWaitSinceLastCycleInDays) ||
                 other.mandatoryWaitSinceLastCycleInDays ==
                     mandatoryWaitSinceLastCycleInDays) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
             const DeepCollectionEquality()
                 .equals(other._deliveries, _deliveries));
   }
@@ -762,6 +797,8 @@ class _$_Cycle implements _Cycle {
   int get hashCode => Object.hash(
       runtimeType,
       mandatoryWaitSinceLastCycleInDays,
+      startDate,
+      endDate,
       const DeepCollectionEquality().hash(_deliveries));
 
   @JsonKey(ignore: true)
@@ -781,6 +818,8 @@ class _$_Cycle implements _Cycle {
 abstract class _Cycle implements Cycle {
   const factory _Cycle(
           {final String? mandatoryWaitSinceLastCycleInDays,
+          final int? startDate,
+          final int? endDate,
           @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries}) =
       _$_Cycle;
 
@@ -788,6 +827,10 @@ abstract class _Cycle implements Cycle {
 
   @override
   String? get mandatoryWaitSinceLastCycleInDays;
+  @override
+  int? get startDate;
+  @override
+  int? get endDate;
   @override
   @JsonKey(name: 'deliveries')
   List<DeliveryModel>? get deliveries;

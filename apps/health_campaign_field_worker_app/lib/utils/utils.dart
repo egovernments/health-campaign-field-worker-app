@@ -2,15 +2,21 @@ library app_utils;
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
+
+import '../blocs/search_households/search_households.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../models/data_model.dart';
+
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
@@ -205,3 +211,54 @@ final requestData = {
     // ... Repeat the above structure to reach approximately 100KB in size
   ],
 };
+
+/// This checks for if the active cycle is a new cycle or its the past cycle,
+/// If the active cycle is same as past cycle then all validations for tracking delivery applies, else validations do not get applied
+bool checkEligibilityForActiveCycle(
+  int activeCycle,
+  HouseholdMemberWrapper householdWrapper,
+) {
+  final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
+      ? householdWrapper.tasks?.last.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              ?.value ??
+          '1'
+      : '1';
+
+  return (activeCycle == int.parse(pastCycle));
+}
+
+/*Check for if the individual falls on the valid age category*/
+///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
+bool checkEligibilityForAgeAndAdverseEvent(
+  DigitDOBAge age,
+  int validMinMonths,
+  int validMaxMonths,
+  HouseholdMemberWrapper householdWrapper,
+) {
+  int totalAgeMonths = age.years * 12 + age.months;
+
+  final recordedAdverseEvent = householdWrapper.adverseEvents != null &&
+      (householdWrapper.adverseEvents ?? []).isNotEmpty;
+
+  return totalAgeMonths >= validMinMonths && totalAgeMonths <= validMaxMonths
+      ? recordedAdverseEvent
+          ? false
+          : true
+      : false;
+}
+
+bool checkIfBeneficiaryRefused(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryRefused = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.additionalFields != null &&
+      (tasks.last.additionalFields?.fields ?? []).isNotEmpty &&
+      tasks.last.additionalFields?.fields
+              .firstWhereOrNull((e) => e.key == 'taskStatus')
+              ?.value ==
+          Status.beneficiaryRefused.toValue());
+
+  return isBeneficiaryRefused;
+}

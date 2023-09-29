@@ -13,6 +13,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/adverse_event.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -31,6 +32,7 @@ import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/adverse_event.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
@@ -94,6 +96,7 @@ class Constants {
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      AdverseEventLocalRepository(sql, AdverseEventOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),
@@ -191,6 +194,8 @@ class Constants {
           IndividualRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.adverseEvent)
+          AdverseEventRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

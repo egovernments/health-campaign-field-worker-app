@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../models/data_model.dart';
@@ -18,7 +19,6 @@ import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
 
 class DoseAdministeredPage extends LocalizedStatefulWidget {
   const DoseAdministeredPage({
@@ -72,7 +72,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   if (doseAdministered && context.mounted) {
                     for (var e in bloc.futureDeliveries!) {
                       int doseIndex =
-                          bloc.futureDeliveries!.indexOf(e) + bloc.dose + 2;
+                          bloc.futureDeliveries!.indexOf(e) + bloc.dose + 1;
                       final clientReferenceId = IdGen.i.identifier;
                       final address = bloc.tasks?.first.address;
                       event.add(DeliverInterventionSubmitEvent(
@@ -216,7 +216,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         int doseIndex =
                             deliveryState.futureDeliveries!.indexOf(e) +
                                 deliveryState.dose +
-                                2;
+                                1;
 
                         return TableDataRow([
                           TableData(
@@ -241,7 +241,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         tableData: tableDataRows,
                         leftColumnWidth: 130,
                         rightColumnWidth: headerListResource.length * 17 * 6,
-                        height: MediaQuery.of(context).size.height / 5,
+                        height: (tableDataRows.length + 1) * 60,
                       );
                     },
                   ),

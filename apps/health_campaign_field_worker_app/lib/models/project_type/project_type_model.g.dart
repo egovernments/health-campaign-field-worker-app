@@ -63,6 +63,8 @@ Map<String, dynamic> _$$_ProjectTypeToJson(_$_ProjectType instance) =>
 _$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
       mandatoryWaitSinceLastCycleInDays:
           json['mandatoryWaitSinceLastCycleInDays'] as String?,
+      startDate: json['startDate'] as int?,
+      endDate: json['endDate'] as int?,
       deliveries: (json['deliveries'] as List<dynamic>?)
           ?.map((e) => DeliveryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -71,6 +73,8 @@ _$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
 Map<String, dynamic> _$$_CycleToJson(_$_Cycle instance) => <String, dynamic>{
       'mandatoryWaitSinceLastCycleInDays':
           instance.mandatoryWaitSinceLastCycleInDays,
+      'startDate': instance.startDate,
+      'endDate': instance.endDate,
       'deliveries': instance.deliveries,
     };
 

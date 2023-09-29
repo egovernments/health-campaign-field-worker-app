@@ -13,6 +13,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
+const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -79,6 +80,10 @@ class Common {
   String get coreCommonSkip => 'CORE_COMMON_SKIP';
 
   String get coreCommonNext => 'CORE_COMMON_NEXT';
+
+  String get coreCommonYes => 'CORE_COMMON_YES';
+
+  String get coreCommonNo => 'CORE_COMMON_NO';
 }
 
 class Login {
@@ -329,6 +334,9 @@ class HouseholdOverView {
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
+  String get householdOverViewNotEligibleIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL';
+
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
@@ -365,6 +373,13 @@ class MemberCard {
 
   String get deliverDetailsMonthsText =>
       'MEMBER_CARD_DELIVER_DETAILS_MONTHS_TEXT';
+
+  String get unableToDeliverLabel => 'MEMBER_CARD_UNABLE_TO_DELIVER_LABEL';
+
+  String get beneficiaryRefusedLabel => 'MEMBER_CARD_BENEFICIARY_REFUSED_LABEL';
+
+  String get recordAdverseEventsLabel =>
+      'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 }
 
 class DeliverIntervention {
@@ -403,6 +418,9 @@ class DeliverIntervention {
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
+  String get didYouObserveAdvEventsTitle =>
+      'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
   String get resourceAddBeneficiary =>
       'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
@@ -422,6 +440,26 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
   String get wasDosePast24DeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_24_DOSE_DELIVERY_DETAILS';
+}
+
+class AdverseEvents {
+  const AdverseEvents();
+
+  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get sideEffectsLabel => 'SIDE_EFFECTS_LABEL';
+
+  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
+
+  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
+
+  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
+
+  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
+
+  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
 }
 
 class ProjectSelection {

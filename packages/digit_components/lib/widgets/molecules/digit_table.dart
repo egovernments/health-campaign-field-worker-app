@@ -12,7 +12,7 @@ class DigitTable extends StatelessWidget {
   final double rightColumnWidth;
   final double? height;
   final int? selectedIndex;
-
+  final ScrollPhysics? scrollPhysics;
   const DigitTable({
     Key? key,
     required this.headerList,
@@ -21,6 +21,7 @@ class DigitTable extends StatelessWidget {
     required this.rightColumnWidth,
     this.height,
     this.selectedIndex,
+    this.scrollPhysics,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
@@ -185,6 +186,7 @@ class DigitTable extends StatelessWidget {
             height: 1.0,
             thickness: 0.0,
           ),
+          scrollPhysics: scrollPhysics ?? const NeverScrollableScrollPhysics(),
         ),
       ),
     );

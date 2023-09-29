@@ -10,7 +10,6 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
-
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
@@ -19,7 +18,6 @@ import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
-
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -90,17 +88,13 @@ class _DeliverInterventionPageState
                     builder: (context, deliveryInterventionstate) {
                       List<ProductVariantsModel>? productVariants = projectState
                           .projectType
-                          ?.cycles?[deliveryInterventionstate.cycle == 0
-                              ? deliveryInterventionstate.cycle
-                              : deliveryInterventionstate.cycle - 1]
-                          .deliveries?[deliveryInterventionstate.dose]
+                          ?.cycles?[deliveryInterventionstate.cycle - 1]
+                          .deliveries?[deliveryInterventionstate.dose - 1]
                           .productVariants;
 
                       final int numberOfDoses = projectState
                               .projectType
-                              ?.cycles?[deliveryInterventionstate.cycle == 0
-                                  ? deliveryInterventionstate.cycle
-                                  : deliveryInterventionstate.cycle - 1]
+                              ?.cycles?[deliveryInterventionstate.cycle - 1]
                               .deliveries
                               ?.length ??
                           0;
@@ -213,8 +207,7 @@ class _DeliverInterventionPageState
                                                                       .clientReferenceId,
                                                               dose:
                                                                   deliveryInterventionstate
-                                                                          .dose +
-                                                                      1,
+                                                                      .dose,
                                                               cycle:
                                                                   deliveryInterventionstate
                                                                       .cycle,
@@ -295,7 +288,8 @@ class _DeliverInterventionPageState
                                                 DigitStepper(
                                                   activeStep:
                                                       deliveryInterventionstate
-                                                          .dose,
+                                                              .dose -
+                                                          1,
                                                   steps: steps,
                                                   maxStepReached: 3,
                                                   lineLength:
@@ -529,11 +523,11 @@ class _DeliverInterventionPageState
           ),
           AdditionalField(
             'CycleIndex',
-            "0${cycle == 0 ? 1 : cycle ?? 1}",
+            "0${cycle ?? 1}",
           ),
           AdditionalField(
             'DoseIndex',
-            "0${dose == 0 ? 1 : dose ?? 1}",
+            "0${dose ?? 1}",
           ),
           AdditionalField(
             'DeliveryStrategy',
@@ -573,7 +567,14 @@ class _DeliverInterventionPageState
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
                 value: variants != null &&
                         _controllers.indexOf(e) < variants.length
-                    ? variants[_controllers.indexOf(e)]
+                    ? variants!.firstWhere(
+                        (element) =>
+                            element.id ==
+                            productVariants
+                                .elementAt(_controllers.indexOf(e))
+                                .productVariantId,
+                      )
+                    // variants[_controllers.indexOf(e)]
                     : null,
               )),
         ],

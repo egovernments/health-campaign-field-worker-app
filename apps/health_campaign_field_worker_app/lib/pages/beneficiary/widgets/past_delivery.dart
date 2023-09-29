@@ -2,11 +2,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
+import '../../../blocs/project/project.dart';
 import '../../../models/entities/product_variant.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../../blocs/project/project.dart';
 
 Widget buildTableContent(
   DeliverInterventionState deliverInterventionState,
@@ -38,10 +39,8 @@ Widget buildTableContent(
         // const Divider(),
         BlocBuilder<ProjectBloc, ProjectState>(
           builder: (context, projectState) {
-            final item = projectState
-                .projectType!
-                .cycles![currentCycle == 0 ? currentCycle : currentCycle - 1]
-                .deliveries![currentDose];
+            final item = projectState.projectType!.cycles![currentCycle - 1]
+                .deliveries![currentDose - 1];
 
             return DigitTable(
               headerList: headerListResource,
@@ -57,7 +56,7 @@ Widget buildTableContent(
                     return TableDataRow([
                       item.productVariants?.indexOf(e) == 0
                           ? TableData(
-                              'Dose ${projectState.projectType!.cycles![currentCycle == 0 ? currentCycle : currentCycle - 1].deliveries!.indexOf(item) + 1}',
+                              'Dose ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
                           : TableData(''),
@@ -71,7 +70,7 @@ Widget buildTableContent(
               ],
               leftColumnWidth: 130,
               rightColumnWidth: headerListResource.length * 20 * 5,
-              height: MediaQuery.of(context).size.height / 5,
+              height: ((item.productVariants ?? []).length + 1) * 60,
             );
           },
         ),

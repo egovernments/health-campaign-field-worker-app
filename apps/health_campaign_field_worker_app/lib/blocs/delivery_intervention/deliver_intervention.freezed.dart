@@ -22,8 +22,12 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -32,8 +36,11 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -42,8 +49,11 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -58,6 +68,9 @@ mixin _$DeliverInterventionEvent {
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +81,8 @@ mixin _$DeliverInterventionEvent {
         selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -78,6 +93,8 @@ mixin _$DeliverInterventionEvent {
         selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -194,8 +211,12 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
   }
@@ -207,8 +228,11 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
   }
@@ -220,8 +244,11 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -242,6 +269,9 @@ class _$DeliverInterventionSubmitEvent
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
   }) {
     return handleSubmit(this);
   }
@@ -255,6 +285,8 @@ class _$DeliverInterventionSubmitEvent
         selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
   }) {
     return handleSubmit?.call(this);
   }
@@ -268,6 +300,8 @@ class _$DeliverInterventionSubmitEvent
         selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -366,8 +400,12 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
   }) {
     return handleSearch(taskSearch);
   }
@@ -379,8 +417,11 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
   }) {
     return handleSearch?.call(taskSearch);
   }
@@ -392,8 +433,11 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -414,6 +458,9 @@ class _$DeliverInterventionSearchEvent
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
   }) {
     return handleSearch(this);
   }
@@ -427,6 +474,8 @@ class _$DeliverInterventionSearchEvent
         selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
   }) {
     return handleSearch?.call(this);
   }
@@ -440,6 +489,8 @@ class _$DeliverInterventionSearchEvent
         selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -467,7 +518,7 @@ abstract class _$$DeliverInterventionCycleDoseSelectionEventCopyWith<$Res> {
           $Res Function(_$DeliverInterventionCycleDoseSelectionEvent) then) =
       __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int dose, int cycle});
+  $Res call({int dose, int cycle, bool isLastDoseOfCycle});
 }
 
 /// @nodoc
@@ -485,6 +536,7 @@ class __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>
   $Res call({
     Object? dose = null,
     Object? cycle = null,
+    Object? isLastDoseOfCycle = null,
   }) {
     return _then(_$DeliverInterventionCycleDoseSelectionEvent(
       null == dose
@@ -495,6 +547,10 @@ class __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>
           ? _value.cycle
           : cycle // ignore: cast_nullable_to_non_nullable
               as int,
+      null == isLastDoseOfCycle
+          ? _value.isLastDoseOfCycle
+          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -503,16 +559,19 @@ class __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>
 
 class _$DeliverInterventionCycleDoseSelectionEvent
     implements DeliverInterventionCycleDoseSelectionEvent {
-  const _$DeliverInterventionCycleDoseSelectionEvent(this.dose, this.cycle);
+  const _$DeliverInterventionCycleDoseSelectionEvent(
+      this.dose, this.cycle, this.isLastDoseOfCycle);
 
   @override
   final int dose;
   @override
   final int cycle;
+  @override
+  final bool isLastDoseOfCycle;
 
   @override
   String toString() {
-    return 'DeliverInterventionEvent.selectCycleDose(dose: $dose, cycle: $cycle)';
+    return 'DeliverInterventionEvent.selectCycleDose(dose: $dose, cycle: $cycle, isLastDoseOfCycle: $isLastDoseOfCycle)';
   }
 
   @override
@@ -521,11 +580,13 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         (other.runtimeType == runtimeType &&
             other is _$DeliverInterventionCycleDoseSelectionEvent &&
             (identical(other.dose, dose) || other.dose == dose) &&
-            (identical(other.cycle, cycle) || other.cycle == cycle));
+            (identical(other.cycle, cycle) || other.cycle == cycle) &&
+            (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
+                other.isLastDoseOfCycle == isLastDoseOfCycle));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, dose, cycle);
+  int get hashCode => Object.hash(runtimeType, dose, cycle, isLastDoseOfCycle);
 
   @JsonKey(ignore: true)
   @override
@@ -543,10 +604,14 @@ class _$DeliverInterventionCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
   }) {
-    return selectCycleDose(dose, cycle);
+    return selectCycleDose(dose, cycle, isLastDoseOfCycle);
   }
 
   @override
@@ -556,10 +621,13 @@ class _$DeliverInterventionCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
   }) {
-    return selectCycleDose?.call(dose, cycle);
+    return selectCycleDose?.call(dose, cycle, isLastDoseOfCycle);
   }
 
   @override
@@ -569,12 +637,15 @@ class _$DeliverInterventionCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
-      return selectCycleDose(dose, cycle);
+      return selectCycleDose(dose, cycle, isLastDoseOfCycle);
     }
     return orElse();
   }
@@ -591,6 +662,9 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
   }) {
     return selectCycleDose(this);
   }
@@ -604,6 +678,8 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
   }) {
     return selectCycleDose?.call(this);
   }
@@ -617,6 +693,8 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
@@ -629,11 +707,12 @@ class _$DeliverInterventionCycleDoseSelectionEvent
 abstract class DeliverInterventionCycleDoseSelectionEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionCycleDoseSelectionEvent(
-          final int dose, final int cycle) =
+          final int dose, final int cycle, final bool isLastDoseOfCycle) =
       _$DeliverInterventionCycleDoseSelectionEvent;
 
   int get dose;
   int get cycle;
+  bool get isLastDoseOfCycle;
   @JsonKey(ignore: true)
   _$$DeliverInterventionCycleDoseSelectionEventCopyWith<
           _$DeliverInterventionCycleDoseSelectionEvent>
@@ -738,8 +817,12 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle) selectCycleDose,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
   }) {
     return selectFutureCycleDose(dose, cycle);
   }
@@ -751,8 +834,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle)? selectCycleDose,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
   }) {
     return selectFutureCycleDose?.call(dose, cycle);
   }
@@ -764,8 +850,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle)? selectCycleDose,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -786,6 +875,9 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
   }) {
     return selectFutureCycleDose(this);
   }
@@ -799,6 +891,8 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
         selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
   }) {
     return selectFutureCycleDose?.call(this);
   }
@@ -812,6 +906,8 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
         selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -836,11 +932,239 @@ abstract class DeliverInterventionCycleFutureDoseSelectionEvent
 }
 
 /// @nodoc
+abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
+    $Res> {
+  factory _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith(
+          _$DeliverInterventionActiveCycleDoseSelectionEvent value,
+          $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEvent)
+              then) =
+      __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int lastDose, int lastCycle, ProjectType projectType});
+
+  $ProjectTypeCopyWith<$Res> get projectType;
+}
+
+/// @nodoc
+class __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>
+    extends _$DeliverInterventionEventCopyWithImpl<$Res,
+        _$DeliverInterventionActiveCycleDoseSelectionEvent>
+    implements
+        _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<$Res> {
+  __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl(
+      _$DeliverInterventionActiveCycleDoseSelectionEvent _value,
+      $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? lastDose = null,
+    Object? lastCycle = null,
+    Object? projectType = null,
+  }) {
+    return _then(_$DeliverInterventionActiveCycleDoseSelectionEvent(
+      null == lastDose
+          ? _value.lastDose
+          : lastDose // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == lastCycle
+          ? _value.lastCycle
+          : lastCycle // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == projectType
+          ? _value.projectType
+          : projectType // ignore: cast_nullable_to_non_nullable
+              as ProjectType,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProjectTypeCopyWith<$Res> get projectType {
+    return $ProjectTypeCopyWith<$Res>(_value.projectType, (value) {
+      return _then(_value.copyWith(projectType: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$DeliverInterventionActiveCycleDoseSelectionEvent
+    implements DeliverInterventionActiveCycleDoseSelectionEvent {
+  const _$DeliverInterventionActiveCycleDoseSelectionEvent(
+      this.lastDose, this.lastCycle, this.projectType);
+
+  @override
+  final int lastDose;
+  @override
+  final int lastCycle;
+  @override
+  final ProjectType projectType;
+
+  @override
+  String toString() {
+    return 'DeliverInterventionEvent.setActiveCycleDose(lastDose: $lastDose, lastCycle: $lastCycle, projectType: $projectType)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeliverInterventionActiveCycleDoseSelectionEvent &&
+            (identical(other.lastDose, lastDose) ||
+                other.lastDose == lastDose) &&
+            (identical(other.lastCycle, lastCycle) ||
+                other.lastCycle == lastCycle) &&
+            (identical(other.projectType, projectType) ||
+                other.projectType == projectType));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, lastDose, lastCycle, projectType);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
+          _$DeliverInterventionActiveCycleDoseSelectionEvent>
+      get copyWith =>
+          __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<
+                  _$DeliverInterventionActiveCycleDoseSelectionEvent>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
+        handleSubmit,
+    required TResult Function(TaskSearchModel taskSearch) handleSearch,
+    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
+        selectCycleDose,
+    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
+    required TResult Function(
+            int lastDose, int lastCycle, ProjectType projectType)
+        setActiveCycleDose,
+  }) {
+    return setActiveCycleDose(lastDose, lastCycle, projectType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
+    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
+  }) {
+    return setActiveCycleDose?.call(lastDose, lastCycle, projectType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
+        handleSubmit,
+    TResult Function(TaskSearchModel taskSearch)? handleSearch,
+    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
+        selectCycleDose,
+    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
+    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
+        setActiveCycleDose,
+    required TResult orElse(),
+  }) {
+    if (setActiveCycleDose != null) {
+      return setActiveCycleDose(lastDose, lastCycle, projectType);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DeliverInterventionSubmitEvent value)
+        handleSubmit,
+    required TResult Function(DeliverInterventionSearchEvent value)
+        handleSearch,
+    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
+        selectCycleDose,
+    required TResult Function(
+            DeliverInterventionCycleFutureDoseSelectionEvent value)
+        selectFutureCycleDose,
+    required TResult Function(
+            DeliverInterventionActiveCycleDoseSelectionEvent value)
+        setActiveCycleDose,
+  }) {
+    return setActiveCycleDose(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
+    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
+  }) {
+    return setActiveCycleDose?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
+    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
+    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
+        selectCycleDose,
+    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
+        selectFutureCycleDose,
+    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
+        setActiveCycleDose,
+    required TResult orElse(),
+  }) {
+    if (setActiveCycleDose != null) {
+      return setActiveCycleDose(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DeliverInterventionActiveCycleDoseSelectionEvent
+    implements DeliverInterventionEvent {
+  const factory DeliverInterventionActiveCycleDoseSelectionEvent(
+          final int lastDose,
+          final int lastCycle,
+          final ProjectType projectType) =
+      _$DeliverInterventionActiveCycleDoseSelectionEvent;
+
+  int get lastDose;
+  int get lastCycle;
+  ProjectType get projectType;
+  @JsonKey(ignore: true)
+  _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
+          _$DeliverInterventionActiveCycleDoseSelectionEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$DeliverInterventionState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
   int get cycle => throw _privateConstructorUsedError;
   int get dose => throw _privateConstructorUsedError;
+  bool get isLastDoseOfCycle => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<DeliveryModel>? get futureDeliveries =>
       throw _privateConstructorUsedError;
@@ -861,6 +1185,7 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       bool isEditing,
       int cycle,
       int dose,
+      bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries});
 }
@@ -883,6 +1208,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? isEditing = null,
     Object? cycle = null,
     Object? dose = null,
+    Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
   }) {
@@ -903,6 +1229,10 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
+      isLastDoseOfCycle: null == isLastDoseOfCycle
+          ? _value.isLastDoseOfCycle
+          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
+              as bool,
       tasks: freezed == tasks
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -929,6 +1259,7 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       bool isEditing,
       int cycle,
       int dose,
+      bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries});
 }
@@ -949,6 +1280,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? isEditing = null,
     Object? cycle = null,
     Object? dose = null,
+    Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
   }) {
@@ -969,6 +1301,10 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
+      isLastDoseOfCycle: null == isLastDoseOfCycle
+          ? _value.isLastDoseOfCycle
+          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
+              as bool,
       tasks: freezed == tasks
           ? _value._tasks
           : tasks // ignore: cast_nullable_to_non_nullable
@@ -989,6 +1325,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.isEditing = false,
       this.cycle = 0,
       this.dose = 0,
+      this.isLastDoseOfCycle = false,
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries})
       : _tasks = tasks,
@@ -1006,6 +1343,9 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   @override
   @JsonKey()
   final int dose;
+  @override
+  @JsonKey()
+  final bool isLastDoseOfCycle;
   final List<TaskModel>? _tasks;
   @override
   List<TaskModel>? get tasks {
@@ -1026,7 +1366,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
   @override
   String toString() {
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, tasks: $tasks, futureDeliveries: $futureDeliveries)';
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries)';
   }
 
   @override
@@ -1039,6 +1379,8 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
                 other.isEditing == isEditing) &&
             (identical(other.cycle, cycle) || other.cycle == cycle) &&
             (identical(other.dose, dose) || other.dose == dose) &&
+            (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
+                other.isLastDoseOfCycle == isLastDoseOfCycle) &&
             const DeepCollectionEquality().equals(other._tasks, _tasks) &&
             const DeepCollectionEquality()
                 .equals(other._futureDeliveries, _futureDeliveries));
@@ -1051,6 +1393,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       isEditing,
       cycle,
       dose,
+      isLastDoseOfCycle,
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_futureDeliveries));
 
@@ -1068,6 +1411,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
           final bool isEditing,
           final int cycle,
           final int dose,
+          final bool isLastDoseOfCycle,
           final List<TaskModel>? tasks,
           final List<DeliveryModel>? futureDeliveries}) =
       _$_DeliverInterventionState;
@@ -1080,6 +1424,8 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   int get cycle;
   @override
   int get dose;
+  @override
+  bool get isLastDoseOfCycle;
   @override
   List<TaskModel>? get tasks;
   @override

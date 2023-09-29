@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/adverse_event.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
@@ -29,6 +30,7 @@ class SearchHouseholdsBloc
   final HouseholdMemberDataRepository householdMember;
   final ProjectBeneficiaryDataRepository projectBeneficiary;
   final TaskDataRepository taskDataRepository;
+  final AdverseEventDataRepository adverseEventDataRepository;
 
   SearchHouseholdsBloc({
     required this.userUid,
@@ -39,6 +41,7 @@ class SearchHouseholdsBloc
     required this.projectBeneficiary,
     required this.taskDataRepository,
     required this.beneficiaryType,
+    required this.adverseEventDataRepository,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -71,6 +74,16 @@ class SearchHouseholdsBloc
         },
       );
     }
+
+    if (adverseEventDataRepository is AdverseEventLocalRepository) {
+      (adverseEventDataRepository as AdverseEventLocalRepository)
+          .listenToChanges(
+        query: AdverseEventSearchModel(),
+        listener: (data) {
+          add(const SearchHouseholdsInitializedEvent());
+        },
+      );
+    }
   }
 
   void _handleInitialize(
@@ -87,6 +100,10 @@ class SearchHouseholdsBloc
       TaskSearchModel(
         projectId: projectId,
       ),
+    );
+
+    final adverseEvents = await adverseEventDataRepository.search(
+      AdverseEventSearchModel(),
     );
 
     final interventionDelivered = tasks
@@ -107,11 +124,14 @@ class SearchHouseholdsBloc
         .expand((element) => [...element])
         .fold(0, (previousValue, element) => previousValue + element);
 
+    final observedAdverseEvents = adverseEvents.length;
+
     emit(state.copyWith(
       registeredHouseholds: beneficiaries.where((element) {
         return element.auditDetails?.createdBy == userUid;
       }).length,
       deliveredInterventions: interventionDelivered,
+      adverseEventsObserved: observedAdverseEvents,
     ));
   }
 
@@ -301,6 +321,11 @@ class SearchHouseholdsBloc
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final adverseEvents =
+          await adverseEventDataRepository.search(AdverseEventSearchModel(
+        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
+      ));
+
       containers.add(
         HouseholdMemberWrapper(
           household: resultHousehold,
@@ -308,6 +333,7 @@ class SearchHouseholdsBloc
           members: individuals,
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
+          adverseEvents: adverseEvents.isEmpty ? null : adverseEvents,
         ),
       );
     }
@@ -357,6 +383,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
     @Default(0) int registeredHouseholds,
     @Default(0) int deliveredInterventions,
+    @Default(0) int adverseEventsObserved,
   }) = _SearchHouseholdsState;
 
   bool get resultsNotFound {
@@ -375,5 +402,6 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     required List<IndividualModel> members,
     required List<ProjectBeneficiaryModel> projectBeneficiaries,
     List<TaskModel>? tasks,
+    List<AdverseEventModel>? adverseEvents,
   }) = _HouseholdMemberWrapper;
 }

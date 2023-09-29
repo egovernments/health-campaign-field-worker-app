@@ -421,6 +421,31 @@ class TaskOpLogManager extends OpLogManager<TaskModel> {
   int? getRowVersion(TaskModel entity) => entity.rowVersion;
 }
 
+class AdverseEventOpLogManager extends OpLogManager<AdverseEventModel> {
+  AdverseEventOpLogManager(super.isar);
+
+  @override
+  AdverseEventModel applyServerGeneratedIdToEntity(
+    AdverseEventModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(
+        id: serverGeneratedId,
+        rowVersion: rowVersion,
+      );
+
+  @override
+  String getClientReferenceId(AdverseEventModel entity) =>
+      entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(AdverseEventModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(AdverseEventModel entity) => entity.rowVersion;
+}
+
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
   ProjectStaffOpLogManager(super.isar);
 

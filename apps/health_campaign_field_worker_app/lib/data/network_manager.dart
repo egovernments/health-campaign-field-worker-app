@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
+
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
 import '../utils/debound.dart';
@@ -556,6 +558,43 @@ class NetworkManager {
 
             break;
 
+          case DataModelType.adverseEvent:
+            responseEntities = await remote.search(AdverseEventSearchModel(
+              clientReferenceId: entities
+                  .whereType<AdverseEventModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final adverseEventModel = element.entity as AdverseEventModel;
+              var responseEntity = responseEntities
+                  .whereType<AdverseEventModel>()
+                  .firstWhereOrNull(
+                    (e) =>
+                        e.clientReferenceId ==
+                        adverseEventModel.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: adverseEventModel.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              }
+            }
+
+            break;
+
           default:
             continue;
         }
@@ -679,6 +718,10 @@ class NetworkManager {
                       return e.copyWith(taskId: serverGeneratedId);
                     }).toList(),
                   );
+                }
+
+                if (updatedEntity is AdverseEventModel) {
+                  updatedEntity = updatedEntity.copyWith(id: serverGeneratedId);
                 }
 
                 return updatedEntity;

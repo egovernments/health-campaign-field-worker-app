@@ -163,18 +163,15 @@ class _SearchBeneficiaryPageState
                 final searchQuery = state.searchQuery;
                 VoidCallback? onPressed;
 
-                onPressed =
-                    state.loading || searchQuery == null || searchQuery.isEmpty
-                        ? null
-                        : () {
-                            FocusManager.instance.primaryFocus?.unfocus();
+                onPressed = () {
+                  FocusManager.instance.primaryFocus?.unfocus();
 
-                            router.push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: state.searchQuery,
-                              ),
-                            ));
-                          };
+                  router.push(BeneficiaryRegistrationWrapperRoute(
+                    initialState: BeneficiaryRegistrationCreateState(
+                      searchQuery: state.searchQuery,
+                    ),
+                  ));
+                };
 
                 return DigitElevatedButton(
                   onPressed: onPressed,
