@@ -190,13 +190,25 @@ class MemberCard extends StatelessWidget {
                     : !isNotEligible
                         ? DigitElevatedButton(
                             onPressed: () async {
-                              context.read<HouseholdOverviewBloc>().add(
-                                    HouseholdOverviewEvent.selectedIndividual(
-                                      individualModel: individual,
-                                    ),
-                                  );
-                              await context.router
-                                  .push(BeneficiaryDetailsRoute());
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
+
+                              final event =
+                                  context.read<DeliverInterventionBloc>();
+
+                              if ((event.state.futureTask ?? []).isNotEmpty) {
+                                context.router
+                                    .push(RecordPastDeliveryDetailsRoute());
+                              } else {
+                                bloc.add(
+                                  HouseholdOverviewEvent.selectedIndividual(
+                                    individualModel: individual,
+                                  ),
+                                );
+
+                                await context.router
+                                    .push(BeneficiaryDetailsRoute());
+                              }
                             },
                             child: Center(
                               child: Text(

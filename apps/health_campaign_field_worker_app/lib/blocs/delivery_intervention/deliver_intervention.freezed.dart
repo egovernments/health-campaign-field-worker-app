@@ -22,16 +22,10 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -40,15 +34,9 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,15 +45,9 @@ mixin _$DeliverInterventionEvent {
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -75,53 +57,32 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -238,16 +199,10 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
   }
@@ -259,15 +214,9 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
   }
@@ -279,15 +228,9 @@ class _$DeliverInterventionSubmitEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -303,19 +246,12 @@ class _$DeliverInterventionSubmitEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
   }) {
     return handleSubmit(this);
   }
@@ -325,17 +261,10 @@ class _$DeliverInterventionSubmitEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
   }) {
     return handleSubmit?.call(this);
   }
@@ -345,17 +274,10 @@ class _$DeliverInterventionSubmitEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -454,16 +376,10 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return handleSearch(taskSearch);
   }
@@ -475,15 +391,9 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return handleSearch?.call(taskSearch);
   }
@@ -495,15 +405,9 @@ class _$DeliverInterventionSearchEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -519,19 +423,12 @@ class _$DeliverInterventionSearchEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
   }) {
     return handleSearch(this);
   }
@@ -541,17 +438,10 @@ class _$DeliverInterventionSearchEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
   }) {
     return handleSearch?.call(this);
   }
@@ -561,17 +451,10 @@ class _$DeliverInterventionSearchEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -589,241 +472,6 @@ abstract class DeliverInterventionSearchEvent
   TaskSearchModel get taskSearch;
   @JsonKey(ignore: true)
   _$$DeliverInterventionSearchEventCopyWith<_$DeliverInterventionSearchEvent>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$DeliverInterventionCycleDoseSelectionEventCopyWith<$Res> {
-  factory _$$DeliverInterventionCycleDoseSelectionEventCopyWith(
-          _$DeliverInterventionCycleDoseSelectionEvent value,
-          $Res Function(_$DeliverInterventionCycleDoseSelectionEvent) then) =
-      __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int dose, int cycle, bool isLastDoseOfCycle});
-}
-
-/// @nodoc
-class __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<$Res>
-    extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionCycleDoseSelectionEvent>
-    implements _$$DeliverInterventionCycleDoseSelectionEventCopyWith<$Res> {
-  __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl(
-      _$DeliverInterventionCycleDoseSelectionEvent _value,
-      $Res Function(_$DeliverInterventionCycleDoseSelectionEvent) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? dose = null,
-    Object? cycle = null,
-    Object? isLastDoseOfCycle = null,
-  }) {
-    return _then(_$DeliverInterventionCycleDoseSelectionEvent(
-      null == dose
-          ? _value.dose
-          : dose // ignore: cast_nullable_to_non_nullable
-              as int,
-      null == cycle
-          ? _value.cycle
-          : cycle // ignore: cast_nullable_to_non_nullable
-              as int,
-      null == isLastDoseOfCycle
-          ? _value.isLastDoseOfCycle
-          : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$DeliverInterventionCycleDoseSelectionEvent
-    implements DeliverInterventionCycleDoseSelectionEvent {
-  const _$DeliverInterventionCycleDoseSelectionEvent(
-      this.dose, this.cycle, this.isLastDoseOfCycle);
-
-  @override
-  final int dose;
-  @override
-  final int cycle;
-  @override
-  final bool isLastDoseOfCycle;
-
-  @override
-  String toString() {
-    return 'DeliverInterventionEvent.selectCycleDose(dose: $dose, cycle: $cycle, isLastDoseOfCycle: $isLastDoseOfCycle)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionCycleDoseSelectionEvent &&
-            (identical(other.dose, dose) || other.dose == dose) &&
-            (identical(other.cycle, cycle) || other.cycle == cycle) &&
-            (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
-                other.isLastDoseOfCycle == isLastDoseOfCycle));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, dose, cycle, isLastDoseOfCycle);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeliverInterventionCycleDoseSelectionEventCopyWith<
-          _$DeliverInterventionCycleDoseSelectionEvent>
-      get copyWith =>
-          __$$DeliverInterventionCycleDoseSelectionEventCopyWithImpl<
-              _$DeliverInterventionCycleDoseSelectionEvent>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
-        handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
-    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-<<<<<<< HEAD
-    required TResult Function(
-            int lastDose, int lastCycle, ProjectType projectType)
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
-  }) {
-    return selectCycleDose(dose, cycle, isLastDoseOfCycle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
-  }) {
-    return selectCycleDose?.call(dose, cycle, isLastDoseOfCycle);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
-    required TResult orElse(),
-  }) {
-    if (selectCycleDose != null) {
-      return selectCycleDose(dose, cycle, isLastDoseOfCycle);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DeliverInterventionSubmitEvent value)
-        handleSubmit,
-    required TResult Function(DeliverInterventionSearchEvent value)
-        handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
-    required TResult Function(
-            DeliverInterventionCycleFutureDoseSelectionEvent value)
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    required TResult Function(
-            DeliverInterventionActiveCycleDoseSelectionEvent value)
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
-  }) {
-    return selectCycleDose(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
-  }) {
-    return selectCycleDose?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
-    required TResult orElse(),
-  }) {
-    if (selectCycleDose != null) {
-      return selectCycleDose(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DeliverInterventionCycleDoseSelectionEvent
-    implements DeliverInterventionEvent {
-  const factory DeliverInterventionCycleDoseSelectionEvent(
-          final int dose, final int cycle, final bool isLastDoseOfCycle) =
-      _$DeliverInterventionCycleDoseSelectionEvent;
-
-  int get dose;
-  int get cycle;
-  bool get isLastDoseOfCycle;
-  @JsonKey(ignore: true)
-  _$$DeliverInterventionCycleDoseSelectionEventCopyWith<
-          _$DeliverInterventionCycleDoseSelectionEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -925,16 +573,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return selectFutureCycleDose(dose, cycle);
   }
@@ -946,15 +588,9 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return selectFutureCycleDose?.call(dose, cycle);
   }
@@ -966,15 +602,9 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -990,19 +620,12 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
-<<<<<<< HEAD
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
   }) {
     return selectFutureCycleDose(this);
   }
@@ -1012,17 +635,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
   }) {
     return selectFutureCycleDose?.call(this);
   }
@@ -1032,17 +648,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
-<<<<<<< HEAD
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -1067,7 +676,6 @@ abstract class DeliverInterventionCycleFutureDoseSelectionEvent
 }
 
 /// @nodoc
-<<<<<<< HEAD
 abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
     $Res> {
   factory _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith(
@@ -1177,13 +785,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
     required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return setActiveCycleDose(lastDose, lastCycle, projectType);
   }
@@ -1195,12 +800,9 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return setActiveCycleDose?.call(lastDose, lastCycle, projectType);
   }
@@ -1212,12 +814,9 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
             TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (setActiveCycleDose != null) {
@@ -1233,16 +832,12 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
         handleSubmit,
     required TResult Function(DeliverInterventionSearchEvent value)
         handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
     required TResult Function(
             DeliverInterventionCycleFutureDoseSelectionEvent value)
         selectFutureCycleDose,
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
   }) {
     return setActiveCycleDose(this);
   }
@@ -1252,14 +847,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
   }) {
     return setActiveCycleDose?.call(this);
   }
@@ -1269,14 +860,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
     TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
     TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
     required TResult orElse(),
   }) {
     if (setActiveCycleDose != null) {
@@ -1304,233 +891,6 @@ abstract class DeliverInterventionActiveCycleDoseSelectionEvent
 }
 
 /// @nodoc
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-abstract class _$$DeliverInterventionUpdateFutureTaskEventCopyWith<$Res> {
-  factory _$$DeliverInterventionUpdateFutureTaskEventCopyWith(
-          _$DeliverInterventionUpdateFutureTaskEvent value,
-          $Res Function(_$DeliverInterventionUpdateFutureTaskEvent) then) =
-      __$$DeliverInterventionUpdateFutureTaskEventCopyWithImpl<$Res>;
-  @useResult
-  $Res call({List<TaskModel> task});
-}
-
-/// @nodoc
-class __$$DeliverInterventionUpdateFutureTaskEventCopyWithImpl<$Res>
-    extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionUpdateFutureTaskEvent>
-    implements _$$DeliverInterventionUpdateFutureTaskEventCopyWith<$Res> {
-  __$$DeliverInterventionUpdateFutureTaskEventCopyWithImpl(
-      _$DeliverInterventionUpdateFutureTaskEvent _value,
-      $Res Function(_$DeliverInterventionUpdateFutureTaskEvent) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? task = null,
-  }) {
-    return _then(_$DeliverInterventionUpdateFutureTaskEvent(
-      null == task
-          ? _value._task
-          : task // ignore: cast_nullable_to_non_nullable
-              as List<TaskModel>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$DeliverInterventionUpdateFutureTaskEvent
-    implements DeliverInterventionUpdateFutureTaskEvent {
-  const _$DeliverInterventionUpdateFutureTaskEvent(final List<TaskModel> task)
-      : _task = task;
-
-  final List<TaskModel> _task;
-  @override
-  List<TaskModel> get task {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_task);
-  }
-
-  @override
-  String toString() {
-    return 'DeliverInterventionEvent.updateFutureTask(task: $task)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionUpdateFutureTaskEvent &&
-            const DeepCollectionEquality().equals(other._task, _task));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_task));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeliverInterventionUpdateFutureTaskEventCopyWith<
-          _$DeliverInterventionUpdateFutureTaskEvent>
-      get copyWith => __$$DeliverInterventionUpdateFutureTaskEventCopyWithImpl<
-          _$DeliverInterventionUpdateFutureTaskEvent>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
-        handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
-<<<<<<< HEAD
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
-    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-    required TResult Function(
-            int lastDose, int lastCycle, ProjectType projectType)
-        setActiveCycleDose,
-=======
-    required TResult Function(int dose, int cycle) selectCycleDose,
-    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(List<TaskModel> task) updateFutureTask,
-  }) {
-    return updateFutureTask(task);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-<<<<<<< HEAD
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-=======
-    TResult? Function(int dose, int cycle)? selectCycleDose,
-    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(List<TaskModel> task)? updateFutureTask,
-  }) {
-    return updateFutureTask?.call(task);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
-<<<<<<< HEAD
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-=======
-    TResult Function(int dose, int cycle)? selectCycleDose,
-    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(List<TaskModel> task)? updateFutureTask,
-    required TResult orElse(),
-  }) {
-    if (updateFutureTask != null) {
-      return updateFutureTask(task);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DeliverInterventionSubmitEvent value)
-        handleSubmit,
-    required TResult Function(DeliverInterventionSearchEvent value)
-        handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
-    required TResult Function(
-            DeliverInterventionCycleFutureDoseSelectionEvent value)
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    required TResult Function(
-            DeliverInterventionActiveCycleDoseSelectionEvent value)
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    required TResult Function(DeliverInterventionUpdateFutureTaskEvent value)
-        updateFutureTask,
-  }) {
-    return updateFutureTask(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult? Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
-  }) {
-    return updateFutureTask?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-<<<<<<< HEAD
-    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
-    TResult Function(DeliverInterventionUpdateFutureTaskEvent value)?
-        updateFutureTask,
-    required TResult orElse(),
-  }) {
-    if (updateFutureTask != null) {
-      return updateFutureTask(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DeliverInterventionUpdateFutureTaskEvent
-    implements DeliverInterventionEvent {
-  const factory DeliverInterventionUpdateFutureTaskEvent(
-      final List<TaskModel> task) = _$DeliverInterventionUpdateFutureTaskEvent;
-
-  List<TaskModel> get task;
-  @JsonKey(ignore: true)
-  _$$DeliverInterventionUpdateFutureTaskEventCopyWith<
-          _$DeliverInterventionUpdateFutureTaskEvent>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$DeliverInterventionState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
@@ -1540,7 +900,7 @@ mixin _$DeliverInterventionState {
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<DeliveryModel>? get futureDeliveries =>
       throw _privateConstructorUsedError;
-  List<TaskModel>? get filteredFutureTask => throw _privateConstructorUsedError;
+  List<TaskModel>? get futureTask => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DeliverInterventionStateCopyWith<DeliverInterventionState> get copyWith =>
@@ -1561,7 +921,7 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries,
-      List<TaskModel>? filteredFutureTask});
+      List<TaskModel>? futureTask});
 }
 
 /// @nodoc
@@ -1585,7 +945,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
-    Object? filteredFutureTask = freezed,
+    Object? futureTask = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1616,9 +976,9 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
-      filteredFutureTask: freezed == filteredFutureTask
-          ? _value.filteredFutureTask
-          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
+      futureTask: freezed == futureTask
+          ? _value.futureTask
+          : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
     ) as $Val);
   }
@@ -1641,7 +1001,7 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries,
-      List<TaskModel>? filteredFutureTask});
+      List<TaskModel>? futureTask});
 }
 
 /// @nodoc
@@ -1663,7 +1023,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
-    Object? filteredFutureTask = freezed,
+    Object? futureTask = freezed,
   }) {
     return _then(_$_DeliverInterventionState(
       loading: null == loading
@@ -1694,9 +1054,9 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value._futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
-      filteredFutureTask: freezed == filteredFutureTask
-          ? _value._filteredFutureTask
-          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
+      futureTask: freezed == futureTask
+          ? _value._futureTask
+          : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
     ));
   }
@@ -1713,10 +1073,10 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.isLastDoseOfCycle = false,
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries,
-      final List<TaskModel>? filteredFutureTask})
+      final List<TaskModel>? futureTask})
       : _tasks = tasks,
         _futureDeliveries = futureDeliveries,
-        _filteredFutureTask = filteredFutureTask;
+        _futureTask = futureTask;
 
   @override
   @JsonKey()
@@ -1751,10 +1111,10 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<TaskModel>? _filteredFutureTask;
+  final List<TaskModel>? _futureTask;
   @override
-  List<TaskModel>? get filteredFutureTask {
-    final value = _filteredFutureTask;
+  List<TaskModel>? get futureTask {
+    final value = _futureTask;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
@@ -1762,11 +1122,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
   @override
   String toString() {
-<<<<<<< HEAD
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, filteredFutureTask: $filteredFutureTask)';
-=======
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, tasks: $tasks, futureDeliveries: $futureDeliveries, filteredFutureTask: $filteredFutureTask)';
->>>>>>> 19d8448e (HLM:4064: Added bloc)
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask)';
   }
 
   @override
@@ -1785,7 +1141,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
             const DeepCollectionEquality()
                 .equals(other._futureDeliveries, _futureDeliveries) &&
             const DeepCollectionEquality()
-                .equals(other._filteredFutureTask, _filteredFutureTask));
+                .equals(other._futureTask, _futureTask));
   }
 
   @override
@@ -1798,7 +1154,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       isLastDoseOfCycle,
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_futureDeliveries),
-      const DeepCollectionEquality().hash(_filteredFutureTask));
+      const DeepCollectionEquality().hash(_futureTask));
 
   @JsonKey(ignore: true)
   @override
@@ -1814,13 +1170,10 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
       final bool isEditing,
       final int cycle,
       final int dose,
-<<<<<<< HEAD
       final bool isLastDoseOfCycle,
-=======
->>>>>>> 19d8448e (HLM:4064: Added bloc)
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries,
-      final List<TaskModel>? filteredFutureTask}) = _$_DeliverInterventionState;
+      final List<TaskModel>? futureTask}) = _$_DeliverInterventionState;
 
   @override
   bool get loading;
@@ -1837,7 +1190,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   @override
   List<DeliveryModel>? get futureDeliveries;
   @override
-  List<TaskModel>? get filteredFutureTask;
+  List<TaskModel>? get futureTask;
   @override
   @JsonKey(ignore: true)
   _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>

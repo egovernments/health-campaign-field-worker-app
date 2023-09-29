@@ -22,10 +22,8 @@ class DeliverInterventionBloc
   }) {
     on(_handleSubmit);
     on(_handleSearch);
-    on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
     on(_handleActiveCycleDose);
-    on(_updateFutureTask);
   }
 
   FutureOr<void> _handleSubmit(
@@ -77,29 +75,22 @@ class DeliverInterventionBloc
       final List<TaskModel> tasks = await taskRepository.search(
         event.taskSearch,
       );
+
+      final List<TaskModel> futureTask = tasks
+          .where((element) =>
+              element.additionalFields?.fields
+                  .firstWhere(
+                    (a) => a.key == "DeliveryStrategy",
+                  )
+                  .value ==
+              DeliverStrategyType.indirect.name.toUpperCase())
+          .toList();
+
       if (tasks.isNotEmpty) {
-        emit(state.copyWith(tasks: tasks));
+        emit(state.copyWith(tasks: tasks, futureTask: futureTask));
       } else {
         emit(state.copyWith(tasks: null));
       }
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
-  }
-
-  FutureOr<void> _handleCycleDoseSelection(
-    DeliverInterventionCycleDoseSelectionEvent event,
-    BeneficiaryRegistrationEmitter emit,
-  ) async {
-    emit(state.copyWith(loading: true));
-    try {
-      emit(state.copyWith(
-        cycle: event.cycle,
-        dose: event.dose,
-        isLastDoseOfCycle: event.isLastDoseOfCycle,
-      ));
     } catch (error) {
       rethrow;
     } finally {
@@ -112,11 +103,12 @@ class DeliverInterventionBloc
     BeneficiaryRegistrationEmitter emit,
   ) async {
     // [TODO : Need to map the start date and end date to the cycles,
+    //[TODO]: Need to handle if date is not in the range.
     final currentRunningCycle = (event.projectType.cycles?.indexWhere((e) =>
             DateTime.now().millisecondsSinceEpoch >=
                 (e.startDate ?? 1695772800000) &&
             DateTime.now().millisecondsSinceEpoch <
-                (e.endDate ?? 1695945600000)))! +
+                (e.endDate ?? 1696032000000)))! +
         1;
     if (event.lastCycle == currentRunningCycle) {
       final isNotLastDose = event.lastDose <
@@ -158,8 +150,6 @@ class DeliverInterventionBloc
           }
         }
 
-        print("object, $futureDeliveries");
-
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
     } catch (error) {
@@ -169,25 +159,6 @@ class DeliverInterventionBloc
       // Set the loading state to false after the operation is complete.
       emit(state.copyWith(loading: false));
     }
-  }
-
-  FutureOr<void> _updateFutureTask(
-    DeliverInterventionUpdateFutureTaskEvent event,
-    BeneficiaryRegistrationEmitter emit,
-  ) async {
-    // Set the loading state to true to indicate that an operation is in progress.
-    emit(state.copyWith(loading: true));
-
-    final List<TaskModel> filteredFutureTask = event.task.where((element) {
-      return element.additionalFields?.fields
-              .firstWhere((element) => element.key == 'DeliveryStrategy')
-              .value ==
-          'INDIRECT';
-    }).toList();
-
-    print("filteredFutureTask $filteredFutureTask");
-
-    emit(state.copyWith(filteredFutureTask: filteredFutureTask));
   }
 }
 
@@ -203,13 +174,6 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     TaskSearchModel taskSearch,
   ) = DeliverInterventionSearchEvent;
 
-  // [TODO: Need to remove this event
-  const factory DeliverInterventionEvent.selectCycleDose(
-    int dose,
-    int cycle,
-    bool isLastDoseOfCycle,
-  ) = DeliverInterventionCycleDoseSelectionEvent;
-
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
     Cycle cycle,
@@ -220,9 +184,6 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int lastCycle,
     ProjectType projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
-  const factory DeliverInterventionEvent.updateFutureTask(
-    List<TaskModel> task,
-  ) = DeliverInterventionUpdateFutureTaskEvent;
 }
 
 @freezed
@@ -235,6 +196,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,
-    List<TaskModel>? filteredFutureTask,
+    List<TaskModel>? futureTask,
   }) = _DeliverInterventionState;
 }

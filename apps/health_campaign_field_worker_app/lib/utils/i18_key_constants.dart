@@ -438,7 +438,8 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
-  String get wasDosePast24DeliveryDetails =>
+  //[todo] need to change the 24
+  String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_24_DOSE_DELIVERY_DETAILS';
 }
 
