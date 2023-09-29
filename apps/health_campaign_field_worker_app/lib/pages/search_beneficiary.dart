@@ -128,19 +128,16 @@ class _SearchBeneficiaryPageState
                         householdMember: i,
                         onOpenPressed: () async {
                           final bloc = context.read<SearchHouseholdsBloc>();
-                          final projectId = context.projectId;
-
                           await context.router.push(
                             BeneficiaryWrapperRoute(
                               wrapper: i,
                             ),
                           );
 
+                          ///To reload the search data - Clear the search data on Open Pressed,and search back on Back to Search
+                          searchController.clear();
                           bloc.add(
-                            SearchHouseholdsSearchByHouseholdHeadEvent(
-                              searchText: searchController.text,
-                              projectId: projectId,
-                            ),
+                            const SearchHouseholdsClearEvent(),
                           );
                         },
                       );

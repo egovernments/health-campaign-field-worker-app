@@ -1323,8 +1323,8 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   const _$_DeliverInterventionState(
       {this.loading = false,
       this.isEditing = false,
-      this.cycle = 0,
-      this.dose = 0,
+      this.cycle = 1,
+      this.dose = 1,
       this.isLastDoseOfCycle = false,
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries})
