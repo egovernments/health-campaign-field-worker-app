@@ -4,8 +4,10 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
@@ -32,7 +34,6 @@ class _RecordPastDeliveryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
-    int doseNumber = 2; // todo to be removed
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -67,19 +68,36 @@ class _RecordPastDeliveryDetailsPageState
                     ),
                     style: theme.textTheme.displayMedium,
                   ),
-                  DigitRadioButtonList<KeyValue>(
-                    labelText: "${localizations.translate(
-                      i18.deliverIntervention.wasDosePastDeliveryDetails,
-                    )} $doseNumber ${localizations.translate(
-                      i18.deliverIntervention.wasDosePast24DeliveryDetails,
-                    )} ",
-                    labelStyle:
-                        DigitTheme.instance.mobileTheme.textTheme.displayMedium,
-                    formControlName: _recordDoseAdministeredKey,
-                    valueMapper: (val) => localizations.translate(val.label),
-                    options: Constants.yesNo,
-                    isRequired: true,
-                    onValueChange: (val) {},
+                  BlocBuilder<DeliverInterventionBloc,
+                      DeliverInterventionState>(
+                    builder: (context, state) {
+                      int doseNumber = state.dose;
+
+                      print(state.filteredFutureTask);
+
+                      return Column(
+                        children: state.futureDeliveries?.map((e) {
+                              return DigitRadioButtonList<KeyValue>(
+                                labelText: "${localizations.translate(
+                                  i18.deliverIntervention
+                                      .wasDosePastDeliveryDetails,
+                                )} $doseNumber ${localizations.translate(
+                                  i18.deliverIntervention
+                                      .wasDosePast24DeliveryDetails,
+                                )} ",
+                                labelStyle: DigitTheme.instance.mobileTheme
+                                    .textTheme.displayMedium,
+                                formControlName: _recordDoseAdministeredKey,
+                                valueMapper: (val) =>
+                                    localizations.translate(val.label),
+                                options: Constants.yesNo,
+                                isRequired: true,
+                                onValueChange: (val) {},
+                              );
+                            }).toList() ??
+                            [],
+                      );
+                    },
                   ),
                 ],
               ),
