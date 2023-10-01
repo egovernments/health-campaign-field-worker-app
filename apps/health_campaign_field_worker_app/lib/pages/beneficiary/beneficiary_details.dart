@@ -98,6 +98,14 @@ class _BeneficiaryDetailsPageState
               .firstWhereOrNull((e) => e.key == 'CycleIndex')
               ?.value;
 
+          final currentRunningCycle = projectState.projectType?.cycles
+              ?.firstWhere((e) =>
+                  DateTime(2023, 09, 30).millisecondsSinceEpoch >=
+                      (e.startDate ?? 1695772800000) &&
+                  DateTime(2023, 09, 30).millisecondsSinceEpoch <
+                      (e.endDate ?? 1696204800000))
+              .id;
+
           bloc.add(
             DeliverInterventionEvent.setActiveCycleDose(
               taskData != null && taskData.isNotEmpty
@@ -120,6 +128,13 @@ class _BeneficiaryDetailsPageState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(
             builder: (context, productState) {
+              bloc.add(
+                DeliverInterventionEvent.setPastCycles(
+                  activeCycle: currentRunningCycle ?? 1,
+                  projectCycles: projectState.projectType?.cycles ?? [],
+                ),
+              );
+
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariantsvalue) {
@@ -383,35 +398,48 @@ class _BeneficiaryDetailsPageState
                                                   .indexOf(e) +
                                               1;
 
-                                          return Column(
-                                            children: [
-                                              (state.projectType?.cycles !=
-                                                      null)
-                                                  ? state.projectType!.cycles!
-                                                          .isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(
-                                                            kPadding,
-                                                          ),
-                                                          child:
-                                                              RecordDeliveryCycle(
-                                                            cycleIndex:
-                                                                cycleIndex,
-                                                            e: e,
-                                                            isLastCycle: state
-                                                                    .projectType
-                                                                    ?.cycles
-                                                                    ?.length ==
-                                                                cycleIndex,
-                                                            taskData:
-                                                                taskData ?? [],
-                                                          ),
-                                                        )
-                                                      : const Offstage()
-                                                  : const Offstage(),
-                                            ],
+                                          return BlocBuilder<
+                                              DeliverInterventionBloc,
+                                              DeliverInterventionState>(
+                                            builder: (context, deliverState) {
+                                              return Column(
+                                                children: [
+                                                  (state.projectType?.cycles !=
+                                                          null)
+                                                      ? state
+                                                              .projectType!
+                                                              .cycles!
+                                                              .isNotEmpty
+                                                          ? Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                kPadding,
+                                                              ),
+                                                              child:
+                                                                  RecordDeliveryCycle(
+                                                                cycleIndex:
+                                                                    cycleIndex,
+                                                                activeCycleIndex:
+                                                                    deliverState
+                                                                        .cycle,
+                                                                e: e,
+                                                                isLastCycle: state
+                                                                        .projectType
+                                                                        ?.cycles
+                                                                        ?.length ==
+                                                                    cycleIndex -
+                                                                        1,
+                                                                taskData:
+                                                                    taskData ??
+                                                                        [],
+                                                              ),
+                                                            )
+                                                          : const Offstage()
+                                                      : const Offstage(),
+                                                ],
+                                              );
+                                            },
                                           );
                                         }).toList()
                                       : [],

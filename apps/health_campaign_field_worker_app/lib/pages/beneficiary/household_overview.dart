@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -262,6 +263,8 @@ class _HouseholdOverviewPageState
                                             DeliverInterventionBloc,
                                             DeliverInterventionState>(
                                           builder: (ctx, deliverState) {
+                                            print(
+                                                'Project id: ${projectState.projectType?.id}');
                                             final projectBeneficiary =
                                                 beneficiaryType !=
                                                         BeneficiaryType
@@ -301,7 +304,13 @@ class _HouseholdOverviewPageState
                                                     DateTime.now()
                                                             .millisecondsSinceEpoch <=
                                                         (e.endDate ??
-                                                            1695945600000));
+                                                            1696204800000));
+                                            final lastCycle = taskdata
+                                                ?.last.additionalFields?.fields
+                                                .firstWhereOrNull((e) =>
+                                                    e.key == 'CycleIndex')
+                                                ?.value;
+
                                             final ageInYears =
                                                 DigitDateUtils.calculateAge(
                                               DigitDateUtils
