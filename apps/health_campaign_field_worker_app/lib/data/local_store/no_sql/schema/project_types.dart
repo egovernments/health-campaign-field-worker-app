@@ -31,7 +31,9 @@ class ProjectTypeListCycle {
 @embedded
 class Cycles {
   String? mandatoryWaitSinceLastCycleInDays;
-
+  int? startDate;
+  int? endDate;
+  int? id;
   @Name("deliveries")
   List<Deliveries>? deliveries;
 }

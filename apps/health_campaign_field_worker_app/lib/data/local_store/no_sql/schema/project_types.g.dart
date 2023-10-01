@@ -1608,10 +1608,25 @@ const CyclesSchema = Schema(
       type: IsarType.objectList,
       target: r'Deliveries',
     ),
-    r'mandatoryWaitSinceLastCycleInDays': PropertySchema(
+    r'endDate': PropertySchema(
       id: 1,
+      name: r'endDate',
+      type: IsarType.long,
+    ),
+    r'id': PropertySchema(
+      id: 2,
+      name: r'id',
+      type: IsarType.long,
+    ),
+    r'mandatoryWaitSinceLastCycleInDays': PropertySchema(
+      id: 3,
       name: r'mandatoryWaitSinceLastCycleInDays',
       type: IsarType.string,
+    ),
+    r'startDate': PropertySchema(
+      id: 4,
+      name: r'startDate',
+      type: IsarType.long,
     )
   },
   estimateSize: _cyclesEstimateSize,
@@ -1661,7 +1676,10 @@ void _cyclesSerialize(
     DeliveriesSchema.serialize,
     object.deliveries,
   );
-  writer.writeString(offsets[1], object.mandatoryWaitSinceLastCycleInDays);
+  writer.writeLong(offsets[1], object.endDate);
+  writer.writeLong(offsets[2], object.id);
+  writer.writeString(offsets[3], object.mandatoryWaitSinceLastCycleInDays);
+  writer.writeLong(offsets[4], object.startDate);
 }
 
 Cycles _cyclesDeserialize(
@@ -1677,8 +1695,11 @@ Cycles _cyclesDeserialize(
     allOffsets,
     Deliveries(),
   );
+  object.endDate = reader.readLongOrNull(offsets[1]);
+  object.id = reader.readLongOrNull(offsets[2]);
   object.mandatoryWaitSinceLastCycleInDays =
-      reader.readStringOrNull(offsets[1]);
+      reader.readStringOrNull(offsets[3]);
+  object.startDate = reader.readLongOrNull(offsets[4]);
   return object;
 }
 
@@ -1697,7 +1718,13 @@ P _cyclesDeserializeProp<P>(
         Deliveries(),
       )) as P;
     case 1:
+      return (reader.readLongOrNull(offset)) as P;
+    case 2:
+      return (reader.readLongOrNull(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1802,6 +1829,143 @@ extension CyclesQueryFilter on QueryBuilder<Cycles, Cycles, QFilterCondition> {
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'endDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'endDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'endDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'endDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'endDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> endDateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'endDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> idBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
@@ -1957,6 +2121,75 @@ extension CyclesQueryFilter on QueryBuilder<Cycles, Cycles, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'mandatoryWaitSinceLastCycleInDays',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'startDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'startDate',
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'startDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'startDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Cycles, Cycles, QAfterFilterCondition> startDateBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'startDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
