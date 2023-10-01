@@ -85,6 +85,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                               relatedClientReferenceId: clientReferenceId,
                               id: null,
                             ),
+                            status: Status.partialDelivered.name,
                             clientReferenceId: clientReferenceId,
                             projectBeneficiaryClientReferenceId: bloc.tasks
                                 ?.first.projectBeneficiaryClientReferenceId,
@@ -144,7 +145,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 ),
                                 AdditionalField(
                                   'DoseIndex',
-                                  "0${doseIndex}",
+                                  "0$doseIndex",
                                 ),
                                 AdditionalField(
                                   'DeliveryStrategy',
