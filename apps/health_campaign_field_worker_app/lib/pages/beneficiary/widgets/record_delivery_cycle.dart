@@ -3,6 +3,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/entities/task.dart';
@@ -15,12 +16,14 @@ class RecordDeliveryCycle extends StatelessWidget {
   final int cycleIndex;
   final Cycle e;
   final bool isLastCycle;
+  final int activeCycleIndex;
   const RecordDeliveryCycle({
     Key? key,
     this.taskData,
     required this.cycleIndex,
     required this.e,
     required this.isLastCycle,
+    required this.activeCycleIndex,
   }) : super(key: key);
 
   @override
@@ -75,72 +78,87 @@ class RecordDeliveryCycle extends StatelessWidget {
                               '',
                             ))
                         : 0;
+                print('taskCycleIndex: $taskCycleindex');
+                print('cycleIndex: $cycleIndex');
+                print('Active Cycle: $activeCycleIndex');
+                final isActiveCycle = cycleIndex == activeCycleIndex;
 
-                return taskCycleindex != null && taskCycleindex >= cycleIndex
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Cycle  $cycleIndex',
-                            style: theme.textTheme.headlineMedium,
-                            textAlign: TextAlign.left,
-                          ),
-                          DigitTable(
-                            selectedIndex:
-                                cycleIndex == taskCycleindex && taskData != null
+                return taskCycleindex != null
+                    ? BlocBuilder<DeliverInterventionBloc,
+                        DeliverInterventionState>(
+                        builder: (context, deliverState) {
+                          print(
+                              'Delivery State Active Cycle: ${deliverState.activeCycle}');
+                          print(
+                              'Delivery State Past Cycles: ${deliverState.pastCycles}');
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Cycle  $cycleIndex',
+                                style: theme.textTheme.headlineMedium,
+                                textAlign: TextAlign.left,
+                              ),
+                              DigitTable(
+                                selectedIndex: cycleIndex == taskCycleindex &&
+                                        taskData != null
                                     ? taskDoseindex!
                                     : taskData == null && cycleIndex == 1
                                         ? 0
                                         : null,
 
-                            headerList: headerList,
-                            tableData: e.deliveries!.map(
-                              (item) {
-                                final tasks = taskData
-                                    ?.where((element) =>
-                                        element.additionalFields?.fields[4]
-                                            .value ==
-                                        '0${e.deliveries!.indexOf(item) + 1}')
-                                    .firstOrNull;
+                                headerList: headerList,
+                                tableData: e.deliveries!.map(
+                                  (item) {
+                                    final tasks = taskData
+                                        ?.where((element) =>
+                                            element.additionalFields?.fields[4]
+                                                .value ==
+                                            '0${e.deliveries!.indexOf(item) + 1}')
+                                        .firstOrNull;
 
-                                return TableDataRow([
-                                  TableData(
-                                    'Dose ${e.deliveries!.indexOf(item) + 1}',
-                                    cellKey: 'dose',
-                                  ),
-                                  TableData(
-                                    tasks?.status ?? 'In complete',
-                                    // TODO[Task status needs to be mapped]
-                                    cellKey: 'status',
-                                  ),
-                                  TableData(
-                                    tasks?.clientAuditDetails?.createdTime
-                                            .toDateTime
-                                            .getFormattedDate() ??
-                                        '',
-                                    cellKey: 'completedOn',
-                                  ),
-                                ]);
-                              },
-                            ).toList(), // You can replace this with actual data for each cycle
-                            leftColumnWidth: 130,
-                            rightColumnWidth: headerList.length * 17 * 6,
-                            height: 6 * 57,
-                          ),
-                          isLastCycle
-                              ? TextButton(
-                                  onPressed: () {},
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.deliverIntervention.hidePastCycles,
+                                    return TableDataRow([
+                                      TableData(
+                                        'Dose ${e.deliveries!.indexOf(item) + 1}',
+                                        cellKey: 'dose',
                                       ),
-                                    ),
-                                  ),
-                                )
-                              : const Offstage(),
-                        ],
+                                      TableData(
+                                        tasks?.status ?? 'In complete',
+                                        // TODO[Task status needs to be mapped]
+                                        cellKey: 'status',
+                                      ),
+                                      TableData(
+                                        tasks?.clientAuditDetails?.createdTime
+                                                .toDateTime
+                                                .getFormattedDate() ??
+                                            '',
+                                        cellKey: 'completedOn',
+                                      ),
+                                    ]);
+                                  },
+                                ).toList(), // You can replace this with actual data for each cycle
+                                leftColumnWidth: 130,
+                                rightColumnWidth: headerList.length * 17 * 6,
+                                height: 6 * 57,
+                              ),
+                              isLastCycle
+                                  ? TextButton(
+                                      onPressed: () {},
+                                      child: Center(
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.deliverIntervention
+                                                .hidePastCycles,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const Offstage(),
+                            ],
+                          );
+                        },
                       )
                     : const Offstage();
               },

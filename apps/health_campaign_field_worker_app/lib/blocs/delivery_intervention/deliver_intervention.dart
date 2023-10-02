@@ -25,6 +25,7 @@ class DeliverInterventionBloc
     on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
     on(_handleActiveCycleDose);
+    on(_handleActiveAndPastCycles);
   }
 
   FutureOr<void> _handleSubmit(
@@ -115,7 +116,7 @@ class DeliverInterventionBloc
             DateTime.now().millisecondsSinceEpoch >=
                 (e.startDate ?? 1695772800000) &&
             DateTime.now().millisecondsSinceEpoch <
-                (e.endDate ?? 1695945600000)))! +
+                (e.endDate ?? 1696204800000)))! +
         1;
     if (event.lastCycle == currentRunningCycle) {
       final isNotLastDose = event.lastDose <
@@ -126,6 +127,20 @@ class DeliverInterventionBloc
     } else {
       emit(state.copyWith(cycle: currentRunningCycle ?? 1, dose: 1));
     }
+  }
+
+  FutureOr<void> _handleActiveAndPastCycles(
+    DeliverInterventionSetActiveAndPastCyclesEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    final activeCycle =
+        event.projectCycles.where((e) => e.id == event.activeCycle).firstOrNull;
+    final pastCycles = event.projectCycles
+        .where((p) => p.id != event.activeCycle && p.id < event.activeCycle)
+        .toList();
+    pastCycles.sort((a, b) => b.id.compareTo(a.id));
+
+    emit(state.copyWith(activeCycle: activeCycle, pastCycles: pastCycles));
   }
 
   FutureOr<void> _handleFutureDeliveries(
@@ -198,6 +213,11 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int lastCycle,
     ProjectType projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
+
+  const factory DeliverInterventionEvent.setPastCycles({
+    required int activeCycle,
+    required List<Cycle> projectCycles,
+  }) = DeliverInterventionSetActiveAndPastCyclesEvent;
 }
 
 @freezed
@@ -207,6 +227,8 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(false) bool isEditing,
     @Default(1) int cycle,
     @Default(1) int dose,
+    Cycle? activeCycle,
+    List<Cycle>? pastCycles,
     @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,

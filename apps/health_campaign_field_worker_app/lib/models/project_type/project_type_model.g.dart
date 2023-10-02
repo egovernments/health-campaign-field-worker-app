@@ -39,25 +39,29 @@ Map<String, dynamic> _$$_ProjectTypesSecondaryModelToJson(
 _$_ProjectType _$$_ProjectTypeFromJson(Map<String, dynamic> json) =>
     _$_ProjectType(
       id: json['id'] as String,
-      name: json['name'] as String,
       code: json['code'] as String,
+      name: json['name'] as String,
       group: json['group'] as String,
       beneficiaryType: json['beneficiaryType'] as String,
       observationStrategy: json['observationStrategy'] as String?,
       cycles: (json['cycles'] as List<dynamic>?)
           ?.map((e) => Cycle.fromJson(e as Map<String, dynamic>))
           .toList(),
+      validMinAge: json['validMinAge'] as int?,
+      validMaxAge: json['validMaxAge'] as int?,
     );
 
 Map<String, dynamic> _$$_ProjectTypeToJson(_$_ProjectType instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
       'code': instance.code,
+      'name': instance.name,
       'group': instance.group,
       'beneficiaryType': instance.beneficiaryType,
       'observationStrategy': instance.observationStrategy,
       'cycles': instance.cycles,
+      'validMinAge': instance.validMinAge,
+      'validMaxAge': instance.validMaxAge,
     };
 
 _$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
@@ -65,6 +69,7 @@ _$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
           json['mandatoryWaitSinceLastCycleInDays'] as String?,
       startDate: json['startDate'] as int?,
       endDate: json['endDate'] as int?,
+      id: json['id'] as int? ?? 0,
       deliveries: (json['deliveries'] as List<dynamic>?)
           ?.map((e) => DeliveryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -75,6 +80,7 @@ Map<String, dynamic> _$$_CycleToJson(_$_Cycle instance) => <String, dynamic>{
           instance.mandatoryWaitSinceLastCycleInDays,
       'startDate': instance.startDate,
       'endDate': instance.endDate,
+      'id': instance.id,
       'deliveries': instance.deliveries,
     };
 
@@ -86,6 +92,7 @@ _$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
           ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       deliveryStrategy: json['deliveryStrategy'] as String?,
+      id: json['id'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
@@ -94,6 +101,7 @@ Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
           instance.mandatoryWaitSinceLastDeliveryInDays,
       'ProductVariants': instance.productVariants,
       'deliveryStrategy': instance.deliveryStrategy,
+      'id': instance.id,
     };
 
 _$_ProductVariantsModel _$$_ProductVariantsModelFromJson(

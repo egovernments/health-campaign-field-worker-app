@@ -353,12 +353,14 @@ ProjectType _$ProjectTypeFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ProjectType {
   String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String get group => throw _privateConstructorUsedError;
   String get beneficiaryType => throw _privateConstructorUsedError;
   String? get observationStrategy => throw _privateConstructorUsedError;
   List<Cycle>? get cycles => throw _privateConstructorUsedError;
+  int? get validMinAge => throw _privateConstructorUsedError;
+  int? get validMaxAge => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -374,12 +376,14 @@ abstract class $ProjectTypeCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String name,
       String code,
+      String name,
       String group,
       String beneficiaryType,
       String? observationStrategy,
-      List<Cycle>? cycles});
+      List<Cycle>? cycles,
+      int? validMinAge,
+      int? validMaxAge});
 }
 
 /// @nodoc
@@ -396,25 +400,27 @@ class _$ProjectTypeCopyWithImpl<$Res, $Val extends ProjectType>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
     Object? code = null,
+    Object? name = null,
     Object? group = null,
     Object? beneficiaryType = null,
     Object? observationStrategy = freezed,
     Object? cycles = freezed,
+    Object? validMinAge = freezed,
+    Object? validMaxAge = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       group: null == group
           ? _value.group
@@ -432,6 +438,14 @@ class _$ProjectTypeCopyWithImpl<$Res, $Val extends ProjectType>
           ? _value.cycles
           : cycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      validMinAge: freezed == validMinAge
+          ? _value.validMinAge
+          : validMinAge // ignore: cast_nullable_to_non_nullable
+              as int?,
+      validMaxAge: freezed == validMaxAge
+          ? _value.validMaxAge
+          : validMaxAge // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -446,12 +460,14 @@ abstract class _$$_ProjectTypeCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String name,
       String code,
+      String name,
       String group,
       String beneficiaryType,
       String? observationStrategy,
-      List<Cycle>? cycles});
+      List<Cycle>? cycles,
+      int? validMinAge,
+      int? validMaxAge});
 }
 
 /// @nodoc
@@ -466,25 +482,27 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
     Object? code = null,
+    Object? name = null,
     Object? group = null,
     Object? beneficiaryType = null,
     Object? observationStrategy = freezed,
     Object? cycles = freezed,
+    Object? validMinAge = freezed,
+    Object? validMaxAge = freezed,
   }) {
     return _then(_$_ProjectType(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       group: null == group
           ? _value.group
@@ -502,6 +520,14 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
           ? _value._cycles
           : cycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      validMinAge: freezed == validMinAge
+          ? _value.validMinAge
+          : validMinAge // ignore: cast_nullable_to_non_nullable
+              as int?,
+      validMaxAge: freezed == validMaxAge
+          ? _value.validMaxAge
+          : validMaxAge // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -511,12 +537,14 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
 class _$_ProjectType implements _ProjectType {
   const _$_ProjectType(
       {required this.id,
-      required this.name,
       required this.code,
+      required this.name,
       required this.group,
       required this.beneficiaryType,
       this.observationStrategy,
-      final List<Cycle>? cycles})
+      final List<Cycle>? cycles,
+      this.validMinAge,
+      this.validMaxAge})
       : _cycles = cycles;
 
   factory _$_ProjectType.fromJson(Map<String, dynamic> json) =>
@@ -525,9 +553,9 @@ class _$_ProjectType implements _ProjectType {
   @override
   final String id;
   @override
-  final String name;
-  @override
   final String code;
+  @override
+  final String name;
   @override
   final String group;
   @override
@@ -544,8 +572,13 @@ class _$_ProjectType implements _ProjectType {
   }
 
   @override
+  final int? validMinAge;
+  @override
+  final int? validMaxAge;
+
+  @override
   String toString() {
-    return 'ProjectType(id: $id, name: $name, code: $code, group: $group, beneficiaryType: $beneficiaryType, observationStrategy: $observationStrategy, cycles: $cycles)';
+    return 'ProjectType(id: $id, code: $code, name: $name, group: $group, beneficiaryType: $beneficiaryType, observationStrategy: $observationStrategy, cycles: $cycles, validMinAge: $validMinAge, validMaxAge: $validMaxAge)';
   }
 
   @override
@@ -554,14 +587,18 @@ class _$_ProjectType implements _ProjectType {
         (other.runtimeType == runtimeType &&
             other is _$_ProjectType &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.group, group) || other.group == group) &&
             (identical(other.beneficiaryType, beneficiaryType) ||
                 other.beneficiaryType == beneficiaryType) &&
             (identical(other.observationStrategy, observationStrategy) ||
                 other.observationStrategy == observationStrategy) &&
-            const DeepCollectionEquality().equals(other._cycles, _cycles));
+            const DeepCollectionEquality().equals(other._cycles, _cycles) &&
+            (identical(other.validMinAge, validMinAge) ||
+                other.validMinAge == validMinAge) &&
+            (identical(other.validMaxAge, validMaxAge) ||
+                other.validMaxAge == validMaxAge));
   }
 
   @JsonKey(ignore: true)
@@ -569,12 +606,14 @@ class _$_ProjectType implements _ProjectType {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      name,
       code,
+      name,
       group,
       beneficiaryType,
       observationStrategy,
-      const DeepCollectionEquality().hash(_cycles));
+      const DeepCollectionEquality().hash(_cycles),
+      validMinAge,
+      validMaxAge);
 
   @JsonKey(ignore: true)
   @override
@@ -593,12 +632,14 @@ class _$_ProjectType implements _ProjectType {
 abstract class _ProjectType implements ProjectType {
   const factory _ProjectType(
       {required final String id,
-      required final String name,
       required final String code,
+      required final String name,
       required final String group,
       required final String beneficiaryType,
       final String? observationStrategy,
-      final List<Cycle>? cycles}) = _$_ProjectType;
+      final List<Cycle>? cycles,
+      final int? validMinAge,
+      final int? validMaxAge}) = _$_ProjectType;
 
   factory _ProjectType.fromJson(Map<String, dynamic> json) =
       _$_ProjectType.fromJson;
@@ -606,9 +647,9 @@ abstract class _ProjectType implements ProjectType {
   @override
   String get id;
   @override
-  String get name;
-  @override
   String get code;
+  @override
+  String get name;
   @override
   String get group;
   @override
@@ -617,6 +658,10 @@ abstract class _ProjectType implements ProjectType {
   String? get observationStrategy;
   @override
   List<Cycle>? get cycles;
+  @override
+  int? get validMinAge;
+  @override
+  int? get validMaxAge;
   @override
   @JsonKey(ignore: true)
   _$$_ProjectTypeCopyWith<_$_ProjectType> get copyWith =>
@@ -633,6 +678,7 @@ mixin _$Cycle {
       throw _privateConstructorUsedError;
   int? get startDate => throw _privateConstructorUsedError;
   int? get endDate => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'deliveries')
   List<DeliveryModel>? get deliveries => throw _privateConstructorUsedError;
 
@@ -650,6 +696,7 @@ abstract class $CycleCopyWith<$Res> {
       {String? mandatoryWaitSinceLastCycleInDays,
       int? startDate,
       int? endDate,
+      int id,
       @JsonKey(name: 'deliveries') List<DeliveryModel>? deliveries});
 }
 
@@ -669,6 +716,7 @@ class _$CycleCopyWithImpl<$Res, $Val extends Cycle>
     Object? mandatoryWaitSinceLastCycleInDays = freezed,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? id = null,
     Object? deliveries = freezed,
   }) {
     return _then(_value.copyWith(
@@ -685,6 +733,10 @@ class _$CycleCopyWithImpl<$Res, $Val extends Cycle>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as int?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       deliveries: freezed == deliveries
           ? _value.deliveries
           : deliveries // ignore: cast_nullable_to_non_nullable
@@ -703,6 +755,7 @@ abstract class _$$_CycleCopyWith<$Res> implements $CycleCopyWith<$Res> {
       {String? mandatoryWaitSinceLastCycleInDays,
       int? startDate,
       int? endDate,
+      int id,
       @JsonKey(name: 'deliveries') List<DeliveryModel>? deliveries});
 }
 
@@ -718,6 +771,7 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
     Object? mandatoryWaitSinceLastCycleInDays = freezed,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? id = null,
     Object? deliveries = freezed,
   }) {
     return _then(_$_Cycle(
@@ -734,6 +788,10 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as int?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       deliveries: freezed == deliveries
           ? _value._deliveries
           : deliveries // ignore: cast_nullable_to_non_nullable
@@ -749,6 +807,7 @@ class _$_Cycle implements _Cycle {
       {this.mandatoryWaitSinceLastCycleInDays,
       this.startDate,
       this.endDate,
+      this.id = 0,
       @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries})
       : _deliveries = deliveries;
 
@@ -761,6 +820,9 @@ class _$_Cycle implements _Cycle {
   final int? startDate;
   @override
   final int? endDate;
+  @override
+  @JsonKey()
+  final int id;
   final List<DeliveryModel>? _deliveries;
   @override
   @JsonKey(name: 'deliveries')
@@ -773,7 +835,7 @@ class _$_Cycle implements _Cycle {
 
   @override
   String toString() {
-    return 'Cycle(mandatoryWaitSinceLastCycleInDays: $mandatoryWaitSinceLastCycleInDays, startDate: $startDate, endDate: $endDate, deliveries: $deliveries)';
+    return 'Cycle(mandatoryWaitSinceLastCycleInDays: $mandatoryWaitSinceLastCycleInDays, startDate: $startDate, endDate: $endDate, id: $id, deliveries: $deliveries)';
   }
 
   @override
@@ -788,6 +850,7 @@ class _$_Cycle implements _Cycle {
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality()
                 .equals(other._deliveries, _deliveries));
   }
@@ -799,6 +862,7 @@ class _$_Cycle implements _Cycle {
       mandatoryWaitSinceLastCycleInDays,
       startDate,
       endDate,
+      id,
       const DeepCollectionEquality().hash(_deliveries));
 
   @JsonKey(ignore: true)
@@ -820,6 +884,7 @@ abstract class _Cycle implements Cycle {
           {final String? mandatoryWaitSinceLastCycleInDays,
           final int? startDate,
           final int? endDate,
+          final int id,
           @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries}) =
       _$_Cycle;
 
@@ -831,6 +896,8 @@ abstract class _Cycle implements Cycle {
   int? get startDate;
   @override
   int? get endDate;
+  @override
+  int get id;
   @override
   @JsonKey(name: 'deliveries')
   List<DeliveryModel>? get deliveries;
@@ -854,6 +921,7 @@ mixin _$DeliveryModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'deliveryStrategy')
   String? get deliveryStrategy => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -873,7 +941,8 @@ abstract class $DeliveryModelCopyWith<$Res> {
       @JsonKey(name: 'ProductVariants')
           List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
-          String? deliveryStrategy});
+          String? deliveryStrategy,
+      int id});
 }
 
 /// @nodoc
@@ -892,6 +961,7 @@ class _$DeliveryModelCopyWithImpl<$Res, $Val extends DeliveryModel>
     Object? mandatoryWaitSinceLastDeliveryInDays = freezed,
     Object? productVariants = freezed,
     Object? deliveryStrategy = freezed,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       mandatoryWaitSinceLastDeliveryInDays: freezed ==
@@ -907,6 +977,10 @@ class _$DeliveryModelCopyWithImpl<$Res, $Val extends DeliveryModel>
           ? _value.deliveryStrategy
           : deliveryStrategy // ignore: cast_nullable_to_non_nullable
               as String?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -925,7 +999,8 @@ abstract class _$$_DeliveryModelCopyWith<$Res>
       @JsonKey(name: 'ProductVariants')
           List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
-          String? deliveryStrategy});
+          String? deliveryStrategy,
+      int id});
 }
 
 /// @nodoc
@@ -942,6 +1017,7 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
     Object? mandatoryWaitSinceLastDeliveryInDays = freezed,
     Object? productVariants = freezed,
     Object? deliveryStrategy = freezed,
+    Object? id = null,
   }) {
     return _then(_$_DeliveryModel(
       mandatoryWaitSinceLastDeliveryInDays: freezed ==
@@ -957,6 +1033,10 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
           ? _value.deliveryStrategy
           : deliveryStrategy // ignore: cast_nullable_to_non_nullable
               as String?,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -970,7 +1050,8 @@ class _$_DeliveryModel implements _DeliveryModel {
       @JsonKey(name: 'ProductVariants')
           final List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
-          this.deliveryStrategy})
+          this.deliveryStrategy,
+      this.id = 0})
       : _productVariants = productVariants;
 
   factory _$_DeliveryModel.fromJson(Map<String, dynamic> json) =>
@@ -992,10 +1073,13 @@ class _$_DeliveryModel implements _DeliveryModel {
   @override
   @JsonKey(name: 'deliveryStrategy')
   final String? deliveryStrategy;
+  @override
+  @JsonKey()
+  final int id;
 
   @override
   String toString() {
-    return 'DeliveryModel(mandatoryWaitSinceLastDeliveryInDays: $mandatoryWaitSinceLastDeliveryInDays, productVariants: $productVariants, deliveryStrategy: $deliveryStrategy)';
+    return 'DeliveryModel(mandatoryWaitSinceLastDeliveryInDays: $mandatoryWaitSinceLastDeliveryInDays, productVariants: $productVariants, deliveryStrategy: $deliveryStrategy, id: $id)';
   }
 
   @override
@@ -1010,7 +1094,8 @@ class _$_DeliveryModel implements _DeliveryModel {
             const DeepCollectionEquality()
                 .equals(other._productVariants, _productVariants) &&
             (identical(other.deliveryStrategy, deliveryStrategy) ||
-                other.deliveryStrategy == deliveryStrategy));
+                other.deliveryStrategy == deliveryStrategy) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(ignore: true)
@@ -1019,7 +1104,8 @@ class _$_DeliveryModel implements _DeliveryModel {
       runtimeType,
       mandatoryWaitSinceLastDeliveryInDays,
       const DeepCollectionEquality().hash(_productVariants),
-      deliveryStrategy);
+      deliveryStrategy,
+      id);
 
   @JsonKey(ignore: true)
   @override
@@ -1042,7 +1128,8 @@ abstract class _DeliveryModel implements DeliveryModel {
       @JsonKey(name: 'ProductVariants')
           final List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
-          final String? deliveryStrategy}) = _$_DeliveryModel;
+          final String? deliveryStrategy,
+      final int id}) = _$_DeliveryModel;
 
   factory _DeliveryModel.fromJson(Map<String, dynamic> json) =
       _$_DeliveryModel.fromJson;
@@ -1056,6 +1143,8 @@ abstract class _DeliveryModel implements DeliveryModel {
   @override
   @JsonKey(name: 'deliveryStrategy')
   String? get deliveryStrategy;
+  @override
+  int get id;
   @override
   @JsonKey(ignore: true)
   _$$_DeliveryModelCopyWith<_$_DeliveryModel> get copyWith =>
