@@ -22,7 +22,6 @@ class DeliverInterventionBloc
   }) {
     on(_handleSubmit);
     on(_handleSearch);
-    on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
     on(_handleActiveCycleDose);
   }
@@ -79,29 +78,22 @@ class DeliverInterventionBloc
       final List<TaskModel> tasks = await taskRepository.search(
         event.taskSearch,
       );
+
+      final List<TaskModel> futureTask = tasks
+          .where((element) =>
+              element.additionalFields?.fields
+                  .firstWhere(
+                    (a) => a.key == "DeliveryStrategy",
+                  )
+                  .value ==
+              DeliverStrategyType.indirect.name.toUpperCase())
+          .toList();
+
       if (tasks.isNotEmpty) {
-        emit(state.copyWith(tasks: tasks));
+        emit(state.copyWith(tasks: tasks, futureTask: futureTask));
       } else {
         emit(state.copyWith(tasks: null));
       }
-    } catch (error) {
-      rethrow;
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
-  }
-
-  FutureOr<void> _handleCycleDoseSelection(
-    DeliverInterventionCycleDoseSelectionEvent event,
-    BeneficiaryRegistrationEmitter emit,
-  ) async {
-    emit(state.copyWith(loading: true));
-    try {
-      emit(state.copyWith(
-        cycle: event.cycle,
-        dose: event.dose,
-        isLastDoseOfCycle: event.isLastDoseOfCycle,
-      ));
     } catch (error) {
       rethrow;
     } finally {
@@ -217,13 +209,6 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     TaskSearchModel taskSearch,
   ) = DeliverInterventionSearchEvent;
 
-  // [TODO: Need to remove this event
-  const factory DeliverInterventionEvent.selectCycleDose(
-    int dose,
-    int cycle,
-    bool isLastDoseOfCycle,
-  ) = DeliverInterventionCycleDoseSelectionEvent;
-
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
     Cycle cycle,
@@ -248,6 +233,7 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,
+    List<TaskModel>? futureTask,
     TaskModel? oldTask,
   }) = _DeliverInterventionState;
 }

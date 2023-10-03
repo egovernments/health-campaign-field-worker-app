@@ -42,6 +42,7 @@ mixin _$HouseholdOverviewEvent {
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +69,7 @@ mixin _$HouseholdOverviewEvent {
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -94,6 +96,7 @@ mixin _$HouseholdOverviewEvent {
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -107,6 +110,8 @@ mixin _$HouseholdOverviewEvent {
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -119,6 +124,8 @@ mixin _$HouseholdOverviewEvent {
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -131,6 +138,8 @@ mixin _$HouseholdOverviewEvent {
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -308,6 +317,7 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return deleteHousehold(projectId, householdModel, members,
         projectBeneficiaryModel, projectBeneficiaryType);
@@ -338,6 +348,7 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return deleteHousehold?.call(projectId, householdModel, members,
         projectBeneficiaryModel, projectBeneficiaryType);
@@ -368,6 +379,7 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (deleteHousehold != null) {
@@ -388,6 +400,8 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) {
     return deleteHousehold(this);
   }
@@ -403,6 +417,8 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) {
     return deleteHousehold?.call(this);
   }
@@ -418,6 +434,8 @@ class _$HouseholdOverviewDeleteHouseholdEvent
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) {
     if (deleteHousehold != null) {
@@ -579,6 +597,7 @@ class _$HouseholdOverviewDeleteIndividualEvent
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return deleteIndividual(
         projectId, householdModel, individualModel, projectBeneficiaryType);
@@ -609,6 +628,7 @@ class _$HouseholdOverviewDeleteIndividualEvent
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return deleteIndividual?.call(
         projectId, householdModel, individualModel, projectBeneficiaryType);
@@ -639,6 +659,7 @@ class _$HouseholdOverviewDeleteIndividualEvent
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (deleteIndividual != null) {
@@ -659,6 +680,8 @@ class _$HouseholdOverviewDeleteIndividualEvent
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) {
     return deleteIndividual(this);
   }
@@ -674,6 +697,8 @@ class _$HouseholdOverviewDeleteIndividualEvent
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) {
     return deleteIndividual?.call(this);
   }
@@ -689,6 +714,8 @@ class _$HouseholdOverviewDeleteIndividualEvent
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) {
     if (deleteIndividual != null) {
@@ -847,6 +874,7 @@ class _$HouseholdOverviewSetAsHeadEvent
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return setAsHead(
         projectId, individualModel, householdModel, projectBeneficiaryType);
@@ -877,6 +905,7 @@ class _$HouseholdOverviewSetAsHeadEvent
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return setAsHead?.call(
         projectId, individualModel, householdModel, projectBeneficiaryType);
@@ -907,6 +936,7 @@ class _$HouseholdOverviewSetAsHeadEvent
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (setAsHead != null) {
@@ -927,6 +957,8 @@ class _$HouseholdOverviewSetAsHeadEvent
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) {
     return setAsHead(this);
   }
@@ -942,6 +974,8 @@ class _$HouseholdOverviewSetAsHeadEvent
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) {
     return setAsHead?.call(this);
   }
@@ -957,6 +991,8 @@ class _$HouseholdOverviewSetAsHeadEvent
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) {
     if (setAsHead != null) {
@@ -1080,6 +1116,7 @@ class _$HouseholdOverviewSelectIndividualEvent
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return selectedIndividual(individualModel);
   }
@@ -1109,6 +1146,7 @@ class _$HouseholdOverviewSelectIndividualEvent
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return selectedIndividual?.call(individualModel);
   }
@@ -1138,6 +1176,7 @@ class _$HouseholdOverviewSelectIndividualEvent
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (selectedIndividual != null) {
@@ -1157,6 +1196,8 @@ class _$HouseholdOverviewSelectIndividualEvent
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) {
     return selectedIndividual(this);
   }
@@ -1172,6 +1213,8 @@ class _$HouseholdOverviewSelectIndividualEvent
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) {
     return selectedIndividual?.call(this);
   }
@@ -1187,6 +1230,8 @@ class _$HouseholdOverviewSelectIndividualEvent
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) {
     if (selectedIndividual != null) {
@@ -1313,6 +1358,7 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     required TResult Function(
             String projectId, BeneficiaryType projectBeneficiaryType)
         reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
   }) {
     return reload(projectId, projectBeneficiaryType);
   }
@@ -1342,6 +1388,7 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
     TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
   }) {
     return reload?.call(projectId, projectBeneficiaryType);
   }
@@ -1371,6 +1418,7 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     TResult Function(IndividualModel individualModel)? selectedIndividual,
     TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
         reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
     required TResult orElse(),
   }) {
     if (reload != null) {
@@ -1390,6 +1438,8 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     required TResult Function(HouseholdOverviewSelectIndividualEvent value)
         selectedIndividual,
     required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
   }) {
     return reload(this);
   }
@@ -1405,6 +1455,8 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
   }) {
     return reload?.call(this);
   }
@@ -1420,6 +1472,8 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
     TResult Function(HouseholdOverviewSelectIndividualEvent value)?
         selectedIndividual,
     TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
     required TResult orElse(),
   }) {
     if (reload != null) {
@@ -1443,11 +1497,249 @@ abstract class HouseholdOverviewReloadEvent implements HouseholdOverviewEvent {
 }
 
 /// @nodoc
+abstract class _$$HouseholdOverviewUpdateFutureTaskEventCopyWith<$Res> {
+  factory _$$HouseholdOverviewUpdateFutureTaskEventCopyWith(
+          _$HouseholdOverviewUpdateFutureTaskEvent value,
+          $Res Function(_$HouseholdOverviewUpdateFutureTaskEvent) then) =
+      __$$HouseholdOverviewUpdateFutureTaskEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<TaskModel> task});
+}
+
+/// @nodoc
+class __$$HouseholdOverviewUpdateFutureTaskEventCopyWithImpl<$Res>
+    extends _$HouseholdOverviewEventCopyWithImpl<$Res,
+        _$HouseholdOverviewUpdateFutureTaskEvent>
+    implements _$$HouseholdOverviewUpdateFutureTaskEventCopyWith<$Res> {
+  __$$HouseholdOverviewUpdateFutureTaskEventCopyWithImpl(
+      _$HouseholdOverviewUpdateFutureTaskEvent _value,
+      $Res Function(_$HouseholdOverviewUpdateFutureTaskEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? task = null,
+  }) {
+    return _then(_$HouseholdOverviewUpdateFutureTaskEvent(
+      null == task
+          ? _value._task
+          : task // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$HouseholdOverviewUpdateFutureTaskEvent
+    implements HouseholdOverviewUpdateFutureTaskEvent {
+  const _$HouseholdOverviewUpdateFutureTaskEvent(final List<TaskModel> task)
+      : _task = task;
+
+  final List<TaskModel> _task;
+  @override
+  List<TaskModel> get task {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_task);
+  }
+
+  @override
+  String toString() {
+    return 'HouseholdOverviewEvent.updateFutureTask(task: $task)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HouseholdOverviewUpdateFutureTaskEvent &&
+            const DeepCollectionEquality().equals(other._task, _task));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_task));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HouseholdOverviewUpdateFutureTaskEventCopyWith<
+          _$HouseholdOverviewUpdateFutureTaskEvent>
+      get copyWith => __$$HouseholdOverviewUpdateFutureTaskEventCopyWithImpl<
+          _$HouseholdOverviewUpdateFutureTaskEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String projectId,
+            HouseholdModel householdModel,
+            List<IndividualModel> members,
+            ProjectBeneficiaryModel projectBeneficiaryModel,
+            BeneficiaryType projectBeneficiaryType)
+        deleteHousehold,
+    required TResult Function(
+            String projectId,
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            BeneficiaryType projectBeneficiaryType)
+        deleteIndividual,
+    required TResult Function(
+            String projectId,
+            IndividualModel individualModel,
+            HouseholdModel householdModel,
+            BeneficiaryType projectBeneficiaryType)
+        setAsHead,
+    required TResult Function(IndividualModel individualModel)
+        selectedIndividual,
+    required TResult Function(
+            String projectId, BeneficiaryType projectBeneficiaryType)
+        reload,
+    required TResult Function(List<TaskModel> task) updateFutureTask,
+  }) {
+    return updateFutureTask(task);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String projectId,
+            HouseholdModel householdModel,
+            List<IndividualModel> members,
+            ProjectBeneficiaryModel projectBeneficiaryModel,
+            BeneficiaryType projectBeneficiaryType)?
+        deleteHousehold,
+    TResult? Function(
+            String projectId,
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            BeneficiaryType projectBeneficiaryType)?
+        deleteIndividual,
+    TResult? Function(
+            String projectId,
+            IndividualModel individualModel,
+            HouseholdModel householdModel,
+            BeneficiaryType projectBeneficiaryType)?
+        setAsHead,
+    TResult? Function(IndividualModel individualModel)? selectedIndividual,
+    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType)?
+        reload,
+    TResult? Function(List<TaskModel> task)? updateFutureTask,
+  }) {
+    return updateFutureTask?.call(task);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String projectId,
+            HouseholdModel householdModel,
+            List<IndividualModel> members,
+            ProjectBeneficiaryModel projectBeneficiaryModel,
+            BeneficiaryType projectBeneficiaryType)?
+        deleteHousehold,
+    TResult Function(
+            String projectId,
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            BeneficiaryType projectBeneficiaryType)?
+        deleteIndividual,
+    TResult Function(
+            String projectId,
+            IndividualModel individualModel,
+            HouseholdModel householdModel,
+            BeneficiaryType projectBeneficiaryType)?
+        setAsHead,
+    TResult Function(IndividualModel individualModel)? selectedIndividual,
+    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType)?
+        reload,
+    TResult Function(List<TaskModel> task)? updateFutureTask,
+    required TResult orElse(),
+  }) {
+    if (updateFutureTask != null) {
+      return updateFutureTask(task);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(HouseholdOverviewDeleteHouseholdEvent value)
+        deleteHousehold,
+    required TResult Function(HouseholdOverviewDeleteIndividualEvent value)
+        deleteIndividual,
+    required TResult Function(HouseholdOverviewSetAsHeadEvent value) setAsHead,
+    required TResult Function(HouseholdOverviewSelectIndividualEvent value)
+        selectedIndividual,
+    required TResult Function(HouseholdOverviewReloadEvent value) reload,
+    required TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)
+        updateFutureTask,
+  }) {
+    return updateFutureTask(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(HouseholdOverviewDeleteHouseholdEvent value)?
+        deleteHousehold,
+    TResult? Function(HouseholdOverviewDeleteIndividualEvent value)?
+        deleteIndividual,
+    TResult? Function(HouseholdOverviewSetAsHeadEvent value)? setAsHead,
+    TResult? Function(HouseholdOverviewSelectIndividualEvent value)?
+        selectedIndividual,
+    TResult? Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult? Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
+  }) {
+    return updateFutureTask?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(HouseholdOverviewDeleteHouseholdEvent value)?
+        deleteHousehold,
+    TResult Function(HouseholdOverviewDeleteIndividualEvent value)?
+        deleteIndividual,
+    TResult Function(HouseholdOverviewSetAsHeadEvent value)? setAsHead,
+    TResult Function(HouseholdOverviewSelectIndividualEvent value)?
+        selectedIndividual,
+    TResult Function(HouseholdOverviewReloadEvent value)? reload,
+    TResult Function(HouseholdOverviewUpdateFutureTaskEvent value)?
+        updateFutureTask,
+    required TResult orElse(),
+  }) {
+    if (updateFutureTask != null) {
+      return updateFutureTask(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class HouseholdOverviewUpdateFutureTaskEvent
+    implements HouseholdOverviewEvent {
+  const factory HouseholdOverviewUpdateFutureTaskEvent(
+      final List<TaskModel> task) = _$HouseholdOverviewUpdateFutureTaskEvent;
+
+  List<TaskModel> get task;
+  @JsonKey(ignore: true)
+  _$$HouseholdOverviewUpdateFutureTaskEventCopyWith<
+          _$HouseholdOverviewUpdateFutureTaskEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$HouseholdOverviewState {
   bool get loading => throw _privateConstructorUsedError;
   HouseholdMemberWrapper get householdMemberWrapper =>
       throw _privateConstructorUsedError;
   IndividualModel? get selectedIndividual => throw _privateConstructorUsedError;
+  List<TaskModel>? get filteredFutureTask => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HouseholdOverviewStateCopyWith<HouseholdOverviewState> get copyWith =>
@@ -1463,7 +1755,8 @@ abstract class $HouseholdOverviewStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       HouseholdMemberWrapper householdMemberWrapper,
-      IndividualModel? selectedIndividual});
+      IndividualModel? selectedIndividual,
+      List<TaskModel>? filteredFutureTask});
 
   $HouseholdMemberWrapperCopyWith<$Res> get householdMemberWrapper;
 }
@@ -1485,6 +1778,7 @@ class _$HouseholdOverviewStateCopyWithImpl<$Res,
     Object? loading = null,
     Object? householdMemberWrapper = null,
     Object? selectedIndividual = freezed,
+    Object? filteredFutureTask = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1499,6 +1793,10 @@ class _$HouseholdOverviewStateCopyWithImpl<$Res,
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      filteredFutureTask: freezed == filteredFutureTask
+          ? _value.filteredFutureTask
+          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
     ) as $Val);
   }
 
@@ -1523,7 +1821,8 @@ abstract class _$$_HouseholdOverviewStateCopyWith<$Res>
   $Res call(
       {bool loading,
       HouseholdMemberWrapper householdMemberWrapper,
-      IndividualModel? selectedIndividual});
+      IndividualModel? selectedIndividual,
+      List<TaskModel>? filteredFutureTask});
 
   @override
   $HouseholdMemberWrapperCopyWith<$Res> get householdMemberWrapper;
@@ -1544,6 +1843,7 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
     Object? loading = null,
     Object? householdMemberWrapper = null,
     Object? selectedIndividual = freezed,
+    Object? filteredFutureTask = freezed,
   }) {
     return _then(_$_HouseholdOverviewState(
       loading: null == loading
@@ -1558,6 +1858,10 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      filteredFutureTask: freezed == filteredFutureTask
+          ? _value._filteredFutureTask
+          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
+              as List<TaskModel>?,
     ));
   }
 }
@@ -1568,7 +1872,9 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   const _$_HouseholdOverviewState(
       {this.loading = false,
       required this.householdMemberWrapper,
-      this.selectedIndividual});
+      this.selectedIndividual,
+      final List<TaskModel>? filteredFutureTask})
+      : _filteredFutureTask = filteredFutureTask;
 
   @override
   @JsonKey()
@@ -1577,10 +1883,18 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   final HouseholdMemberWrapper householdMemberWrapper;
   @override
   final IndividualModel? selectedIndividual;
+  final List<TaskModel>? _filteredFutureTask;
+  @override
+  List<TaskModel>? get filteredFutureTask {
+    final value = _filteredFutureTask;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'HouseholdOverviewState(loading: $loading, householdMemberWrapper: $householdMemberWrapper, selectedIndividual: $selectedIndividual)';
+    return 'HouseholdOverviewState(loading: $loading, householdMemberWrapper: $householdMemberWrapper, selectedIndividual: $selectedIndividual, filteredFutureTask: $filteredFutureTask)';
   }
 
   @override
@@ -1592,12 +1906,18 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
             (identical(other.householdMemberWrapper, householdMemberWrapper) ||
                 other.householdMemberWrapper == householdMemberWrapper) &&
             (identical(other.selectedIndividual, selectedIndividual) ||
-                other.selectedIndividual == selectedIndividual));
+                other.selectedIndividual == selectedIndividual) &&
+            const DeepCollectionEquality()
+                .equals(other._filteredFutureTask, _filteredFutureTask));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, loading, householdMemberWrapper, selectedIndividual);
+      runtimeType,
+      loading,
+      householdMemberWrapper,
+      selectedIndividual,
+      const DeepCollectionEquality().hash(_filteredFutureTask));
 
   @JsonKey(ignore: true)
   @override
@@ -1611,7 +1931,8 @@ abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   const factory _HouseholdOverviewState(
       {final bool loading,
       required final HouseholdMemberWrapper householdMemberWrapper,
-      final IndividualModel? selectedIndividual}) = _$_HouseholdOverviewState;
+      final IndividualModel? selectedIndividual,
+      final List<TaskModel>? filteredFutureTask}) = _$_HouseholdOverviewState;
 
   @override
   bool get loading;
@@ -1619,6 +1940,8 @@ abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   HouseholdMemberWrapper get householdMemberWrapper;
   @override
   IndividualModel? get selectedIndividual;
+  @override
+  List<TaskModel>? get filteredFutureTask;
   @override
   @JsonKey(ignore: true)
   _$$_HouseholdOverviewStateCopyWith<_$_HouseholdOverviewState> get copyWith =>

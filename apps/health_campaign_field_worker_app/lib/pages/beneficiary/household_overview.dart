@@ -291,17 +291,6 @@ class _HouseholdOverviewPageState
                                                     projectBeneficiary.first
                                                         .clientReferenceId)
                                                 .toList();
-                                            final activeCycle = projectState
-                                                .projectType!.cycles
-                                                ?.where((e) =>
-                                                    (e.startDate ??
-                                                            1696032000000) <
-                                                        DateTime.now()
-                                                            .millisecondsSinceEpoch &&
-                                                    (e.endDate ??
-                                                            1696032000000) >=
-                                                        DateTime.now()
-                                                            .millisecondsSinceEpoch);
 
                                             final ageInYears =
                                                 DigitDateUtils.calculateAge(
