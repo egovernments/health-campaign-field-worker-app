@@ -7,7 +7,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart';
 
 import '../../models/data_model.dart';
+import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/adverse_event.dart';
+import '../../models/entities/deliver_strategy_type.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
 
@@ -286,9 +288,10 @@ class HouseholdOverviewBloc
 
     final List<TaskModel> filteredFutureTask = event.task.where((element) {
       return element.additionalFields?.fields
-              .firstWhereOrNull((element) => element.key == 'DeliveryStrategy')
+              .firstWhereOrNull((element) =>
+                  element.key == AdditionalFieldsType.deliveryStrategy.name)
               ?.value ==
-          'INDIRECT';
+          DeliverStrategyType.indirect.name.toUpperCase();
     }).toList();
 
     emit(

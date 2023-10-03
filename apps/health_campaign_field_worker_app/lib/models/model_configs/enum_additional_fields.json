@@ -1,0 +1,10 @@
+{
+  "name": "AdditionalFieldsType",
+  "enumValues": [
+    {
+      "name": "DeliveryStrategy",
+      "value": "DeliveryStrategy"
+    }
+  ],
+  "isEnum": true
+}

@@ -5,7 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/delivery_strategy_type.dart';
+import '../../models/entities/additional_fields_type.dart';
+import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
@@ -83,10 +84,12 @@ class DeliverInterventionBloc
           .where((element) =>
               element.additionalFields?.fields
                       .firstWhere(
-                        (a) => a.key == "DeliveryStrategy",
+                        (a) =>
+                            a.key ==
+                            AdditionalFieldsType.deliveryStrategy.toValue(),
                       )
                       .value ==
-                  DeliverStrategyType.indirect.name.toUpperCase() &&
+                  DeliverStrategyType.indirect.toValue() &&
               element.status == Status.partiallyDelivered.toValue())
           .toList();
 
@@ -176,11 +179,9 @@ class DeliverInterventionBloc
 
           String? deliveryStrategy = delivery.deliveryStrategy;
 
-          if (deliveryStrategy?.toLowerCase() ==
-              DeliverStrategyType.indirect.name) {
+          if (deliveryStrategy == DeliverStrategyType.indirect.toValue()) {
             futureDeliveries.add(delivery);
-          } else if (deliveryStrategy?.toLowerCase() ==
-              DeliverStrategyType.direct.name) {
+          } else if (deliveryStrategy == DeliverStrategyType.direct.toValue()) {
             break;
           }
         }
