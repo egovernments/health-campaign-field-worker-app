@@ -372,13 +372,14 @@ class _IndividualDetailsPageState
                                   label: localizations.translate(
                                     i18.individualDetails.genderLabelText,
                                   ),
-                                  valueMapper: (value) => value,
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
                                   initialValue: genderOptions.firstOrNull?.name,
-                                  menuItems: genderOptions.map(
-                                    (e) {
-                                      return localizations.translate(e.name);
-                                    },
-                                  ).toList(),
+                                  menuItems: genderOptions
+                                      .map(
+                                        (e) => e.name,
+                                      )
+                                      .toList(),
                                   formControlName: _genderKey,
                                 );
                               },

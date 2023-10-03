@@ -62,7 +62,7 @@ class DigitInfoCard extends StatelessWidget {
             padding: const EdgeInsets.all(kPadding),
             child: Text(
               description,
-              style: theme.textTheme.bodyLarge,
+              style: descStyle ?? theme.textTheme.bodyLarge,
               textAlign: TextAlign.start,
             ),
           )
