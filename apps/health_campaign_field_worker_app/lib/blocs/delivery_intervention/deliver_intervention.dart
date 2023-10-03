@@ -5,7 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/delivery_strategy_type.dart';
+import '../../models/entities/additional_fields_type.dart';
+import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
@@ -82,11 +83,14 @@ class DeliverInterventionBloc
       final List<TaskModel> futureTask = tasks
           .where((element) =>
               element.additionalFields?.fields
-                  .firstWhere(
-                    (a) => a.key == "DeliveryStrategy",
-                  )
-                  .value ==
-              DeliverStrategyType.indirect.name.toUpperCase())
+                      .firstWhere(
+                        (a) =>
+                            a.key ==
+                            AdditionalFieldsType.deliveryStrategy.toValue(),
+                      )
+                      .value ==
+                  DeliverStrategyType.indirect.toValue() &&
+              element.status == Status.partiallyDelivered.toValue())
           .toList();
 
       if (tasks.isNotEmpty) {
@@ -105,13 +109,11 @@ class DeliverInterventionBloc
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    // [TODO : Need to map the start date and end date to the cycles,
-    // [TODO: Need to compare with DateTime.now()
     final currentRunningCycle = (event.projectType.cycles?.firstWhere((e) =>
             (e.startDate ?? 1696032000000) <=
-                DateTime(2023, 10, 01).millisecondsSinceEpoch &&
+                DateTime.now().millisecondsSinceEpoch &&
             (e.endDate ?? 1696032000000) >=
-                DateTime(2023, 10, 01).millisecondsSinceEpoch))!
+                DateTime.now().millisecondsSinceEpoch))!
         .id;
     if (event.lastCycle == currentRunningCycle) {
       final deliveryLength = event.projectType.cycles!
@@ -177,11 +179,9 @@ class DeliverInterventionBloc
 
           String? deliveryStrategy = delivery.deliveryStrategy;
 
-          if (deliveryStrategy?.toLowerCase() ==
-              DeliverStrategyType.indirect.name) {
+          if (deliveryStrategy == DeliverStrategyType.indirect.toValue()) {
             futureDeliveries.add(delivery);
-          } else if (deliveryStrategy?.toLowerCase() ==
-              DeliverStrategyType.direct.name) {
+          } else if (deliveryStrategy == DeliverStrategyType.direct.toValue()) {
             break;
           }
         }

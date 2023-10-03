@@ -5,6 +5,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/search_households/search_households.dart';
+import '../../models/data_model.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -131,11 +132,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 ? 'Not Eligible'
                 : taskdata != null
                     ? taskdata.isEmpty
-                        ? 'Not delivered'
+                        ? Status.notDelivered.toValue()
                         : isBeneficiaryRefused
-                            ? 'Beneficiary Refused'
-                            : 'delivered'
-                    : 'Not delivered',
+                            ? Status.beneficiaryRefused.toValue()
+                            : Status.delivered.toValue()
+                    : Status.notDelivered.toValue(),
             cellKey: 'delivery',
             style: TextStyle(
               color: taskdata != null
@@ -230,8 +231,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused
-                          ? 'delivered'
-                          : 'Not Delivered'
+                          ? Status.delivered.toValue()
+                          : Status.notDelivered.toValue()
                       : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,

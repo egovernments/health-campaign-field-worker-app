@@ -420,6 +420,8 @@ class DeliverIntervention {
 
   String get didYouObserveAdvEventsTitle =>
       'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+  String get didYouObservePreviousAdvEventsTitle =>
+      'DID_YOU_OBSERVE_PREVIOUS_ADVERSE_EVENTS_TITLE';
 
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
   String get resourceAddBeneficiary =>
@@ -441,7 +443,7 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
   //[todo] need to change the 24
   String get wasDosePastRecordDeliveryDetails =>
-      'DELIVER_INTERVENTION_PAST_24_DOSE_DELIVERY_DETAILS';
+      'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
 }
 
 class AdverseEvents {

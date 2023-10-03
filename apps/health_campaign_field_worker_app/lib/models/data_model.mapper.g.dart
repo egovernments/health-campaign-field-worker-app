@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
 import 'data_model.dart';
+import 'entities/additional_fields_type.dart';
 import 'entities/address.dart';
 import 'entities/address_type.dart';
 import 'entities/adverse_event.dart';
@@ -9,6 +10,7 @@ import 'entities/attributes.dart';
 import 'entities/beneficiary_type.dart';
 import 'entities/blood_group.dart';
 import 'entities/boundary.dart';
+import 'entities/deliver_strategy_type.dart';
 import 'entities/document.dart';
 import 'entities/facility.dart';
 import 'entities/gender.dart';
@@ -163,9 +165,11 @@ var _mappers = <BaseMapper>{
   PgrComplainantResponseModelMapper._(),
   PgrServiceResponseModelMapper._(),
   // enum mappers
+  AdditionalFieldsTypeMapper._(),
   AddressTypeMapper._(),
   BeneficiaryTypeMapper._(),
   BloodGroupMapper._(),
+  DeliverStrategyTypeMapper._(),
   GenderMapper._(),
   StatusMapper._(),
   TransactionReasonMapper._(),
@@ -4612,6 +4616,27 @@ class _PgrServiceResponseModelCopyWithImpl<$R> extends BaseCopyWith<PgrServiceRe
 
 // === GENERATED ENUM MAPPERS AND EXTENSIONS ===
 
+class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
+  AdditionalFieldsTypeMapper._();
+
+  @override  AdditionalFieldsType decode(dynamic value) {
+    switch (value) {
+      case "DeliveryStrategy": return AdditionalFieldsType.deliveryStrategy;
+      default: throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override  dynamic encode(AdditionalFieldsType self) {
+    switch (self) {
+      case AdditionalFieldsType.deliveryStrategy: return "DeliveryStrategy";
+    }
+  }
+}
+
+extension AdditionalFieldsTypeMapperExtension on AdditionalFieldsType {
+  dynamic toValue() => Mapper.toValue(this);
+}
+
 class AddressTypeMapper extends EnumMapper<AddressType> {
   AddressTypeMapper._();
 
@@ -4692,6 +4717,29 @@ class BloodGroupMapper extends EnumMapper<BloodGroup> {
 }
 
 extension BloodGroupMapperExtension on BloodGroup {
+  dynamic toValue() => Mapper.toValue(this);
+}
+
+class DeliverStrategyTypeMapper extends EnumMapper<DeliverStrategyType> {
+  DeliverStrategyTypeMapper._();
+
+  @override  DeliverStrategyType decode(dynamic value) {
+    switch (value) {
+      case "INDIRECT": return DeliverStrategyType.indirect;
+      case "DIRECT": return DeliverStrategyType.direct;
+      default: throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override  dynamic encode(DeliverStrategyType self) {
+    switch (self) {
+      case DeliverStrategyType.indirect: return "INDIRECT";
+      case DeliverStrategyType.direct: return "DIRECT";
+    }
+  }
+}
+
+extension DeliverStrategyTypeMapperExtension on DeliverStrategyType {
   dynamic toValue() => Mapper.toValue(this);
 }
 

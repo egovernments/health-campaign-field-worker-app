@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/digit_card.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../models/data_model.mapper.g.dart';
 import '../../models/entities/status.dart';
@@ -53,7 +55,7 @@ class _RecordPastDeliveryDetailsPageState
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final event = context.read<DeliverInterventionBloc>();
 
                       for (int i = 0;
@@ -65,21 +67,69 @@ class _RecordPastDeliveryDetailsPageState
                             .key;
 
                         final status = formControllValue
-                            ? Status.delivered.name
-                            : Status.notDelivered.name;
+                            ? Status.delivered.toValue()
+                            : Status.notDelivered.toValue();
 
                         final result =
                             state.futureTask![i].copyWith(status: status);
 
-//[TODO]: value are updating but throwig error bad element, need to check
                         event.add(DeliverInterventionSubmitEvent(
                           result,
                           true,
                           context.boundary,
                         ));
-
-                        router.push(BeneficiaryDetailsRoute());
                       }
+                      await DigitDialog.show<bool>(
+                        context,
+                        options: DigitDialogOptions(
+                          titleText: i18.deliverIntervention
+                              .didYouObservePreviousAdvEventsTitle,
+                          barrierDismissible: true,
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.common.coreCommonNo,
+                            ),
+                            action: (ctx) {
+                              router.pop();
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
+
+                              final projectId = context.projectId;
+                              final projectBeneficiaryType =
+                                  context.beneficiaryType;
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: projectId,
+                                projectBeneficiaryType: projectBeneficiaryType,
+                              ));
+
+                              Navigator.of(
+                                ctx,
+                                rootNavigator: true,
+                              ).pop();
+                              router.push(
+                                BeneficiaryDetailsRoute(),
+                              );
+                            },
+                          ),
+                          secondaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.common.coreCommonYes,
+                            ),
+                            action: (ctx) {
+                              router.pop();
+                              Navigator.of(
+                                ctx,
+                                rootNavigator: true,
+                              ).pop();
+                              router.push(
+                                AdverseEventsRoute(
+                                  tasks: [(state.futureTask ?? []).last],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     },
                     child: Center(
                       child: Text(
