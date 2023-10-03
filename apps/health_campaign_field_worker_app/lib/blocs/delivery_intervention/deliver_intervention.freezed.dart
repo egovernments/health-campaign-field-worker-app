@@ -902,11 +902,8 @@ mixin _$DeliverInterventionState {
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<DeliveryModel>? get futureDeliveries =>
       throw _privateConstructorUsedError;
-<<<<<<< HEAD
   List<TaskModel>? get futureTask => throw _privateConstructorUsedError;
-=======
   TaskModel? get oldTask => throw _privateConstructorUsedError;
->>>>>>> HLM-2650-resource-card-multiround
 
   @JsonKey(ignore: true)
   $DeliverInterventionStateCopyWith<DeliverInterventionState> get copyWith =>
@@ -929,11 +926,8 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries,
-<<<<<<< HEAD
-      List<TaskModel>? futureTask});
-=======
+      List<TaskModel>? futureTask,
       TaskModel? oldTask});
->>>>>>> HLM-2650-resource-card-multiround
 }
 
 /// @nodoc
@@ -959,11 +953,8 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
-<<<<<<< HEAD
     Object? futureTask = freezed,
-=======
     Object? oldTask = freezed,
->>>>>>> HLM-2650-resource-card-multiround
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1002,17 +993,14 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
-<<<<<<< HEAD
       futureTask: freezed == futureTask
           ? _value.futureTask
           : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
-=======
       oldTask: freezed == oldTask
           ? _value.oldTask
           : oldTask // ignore: cast_nullable_to_non_nullable
               as TaskModel?,
->>>>>>> HLM-2650-resource-card-multiround
     ) as $Val);
   }
 }
@@ -1036,11 +1024,8 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
       List<DeliveryModel>? futureDeliveries,
-<<<<<<< HEAD
-      List<TaskModel>? futureTask});
-=======
+      List<TaskModel>? futureTask,
       TaskModel? oldTask});
->>>>>>> HLM-2650-resource-card-multiround
 }
 
 /// @nodoc
@@ -1064,11 +1049,8 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
-<<<<<<< HEAD
     Object? futureTask = freezed,
-=======
     Object? oldTask = freezed,
->>>>>>> HLM-2650-resource-card-multiround
   }) {
     return _then(_$_DeliverInterventionState(
       loading: null == loading
@@ -1107,17 +1089,14 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value._futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
-<<<<<<< HEAD
       futureTask: freezed == futureTask
           ? _value._futureTask
           : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
-=======
       oldTask: freezed == oldTask
           ? _value.oldTask
           : oldTask // ignore: cast_nullable_to_non_nullable
               as TaskModel?,
->>>>>>> HLM-2650-resource-card-multiround
     ));
   }
 }
@@ -1130,25 +1109,17 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.isEditing = false,
       this.cycle = 1,
       this.dose = 1,
-<<<<<<< HEAD
-      this.isLastDoseOfCycle = false,
-      final List<TaskModel>? tasks,
-      final List<DeliveryModel>? futureDeliveries,
-      final List<TaskModel>? futureTask})
-      : _tasks = tasks,
-        _futureDeliveries = futureDeliveries,
-        _futureTask = futureTask;
-=======
       final List<Cycle>? pastCycles,
       this.hasCycleArrived = true,
       this.isLastDoseOfCycle = false,
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries,
+      final List<TaskModel>? futureTask,
       this.oldTask})
       : _pastCycles = pastCycles,
         _tasks = tasks,
-        _futureDeliveries = futureDeliveries;
->>>>>>> HLM-2650-resource-card-multiround
+        _futureDeliveries = futureDeliveries,
+        _futureTask = futureTask;
 
   @override
   @JsonKey()
@@ -1209,11 +1180,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
   @override
   String toString() {
-<<<<<<< HEAD
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask)';
-=======
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, oldTask: $oldTask)';
->>>>>>> HLM-2650-resource-card-multiround
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, futureTask: $futureTask, oldTask: $oldTask)';
   }
 
   @override
@@ -1235,12 +1202,9 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
             const DeepCollectionEquality().equals(other._tasks, _tasks) &&
             const DeepCollectionEquality()
                 .equals(other._futureDeliveries, _futureDeliveries) &&
-<<<<<<< HEAD
             const DeepCollectionEquality()
-                .equals(other._futureTask, _futureTask));
-=======
+                .equals(other._futureTask, _futureTask) &&
             (identical(other.oldTask, oldTask) || other.oldTask == oldTask));
->>>>>>> HLM-2650-resource-card-multiround
   }
 
   @override
@@ -1255,11 +1219,8 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       isLastDoseOfCycle,
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_futureDeliveries),
-<<<<<<< HEAD
-      const DeepCollectionEquality().hash(_futureTask));
-=======
+      const DeepCollectionEquality().hash(_futureTask),
       oldTask);
->>>>>>> HLM-2650-resource-card-multiround
 
   @JsonKey(ignore: true)
   @override
@@ -1275,19 +1236,13 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
       final bool isEditing,
       final int cycle,
       final int dose,
-<<<<<<< HEAD
-      final bool isLastDoseOfCycle,
-      final List<TaskModel>? tasks,
-      final List<DeliveryModel>? futureDeliveries,
-      final List<TaskModel>? futureTask}) = _$_DeliverInterventionState;
-=======
       final List<Cycle>? pastCycles,
       final bool hasCycleArrived,
       final bool isLastDoseOfCycle,
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries,
+      final List<TaskModel>? futureTask,
       final TaskModel? oldTask}) = _$_DeliverInterventionState;
->>>>>>> HLM-2650-resource-card-multiround
 
   @override
   bool get loading;
@@ -1308,11 +1263,9 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   @override
   List<DeliveryModel>? get futureDeliveries;
   @override
-<<<<<<< HEAD
   List<TaskModel>? get futureTask;
-=======
+  @override
   TaskModel? get oldTask;
->>>>>>> HLM-2650-resource-card-multiround
   @override
   @JsonKey(ignore: true)
   _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>
