@@ -83,7 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final actionsWrapper = await mdmsRepository
           .searchRoleActions(envConfig.variables.actionMapApiPath, {
         "roleCodes": result.userRequestModel.roles.map((e) => e.code).toList(),
-        "tenantId": "default",
+        "tenantId": envConfig.variables.tenantId,
         "actionMaster": "actions-test",
         "enabled": true,
       });
@@ -98,9 +98,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           actionsWrapper: actionsWrapper,
         ),
       );
-      print("--Role actions---");
     } on DioError catch (error) {
-      print(error);
       emit(const AuthErrorState());
       emit(const AuthUnauthenticatedState());
 
