@@ -101,7 +101,9 @@ class _DeliverInterventionPageState
 
                       final String? getDeliveryStrategy = projectState
                           .projectType
-                          ?.cycles?[deliveryInterventionstate.cycle - 1]
+                          ?.cycles?[deliveryInterventionstate.cycle == 0
+                              ? deliveryInterventionstate.cycle
+                              : deliveryInterventionstate.cycle - 1]
                           .deliveries?[deliveryInterventionstate.dose - 1]
                           .deliveryStrategy;
 

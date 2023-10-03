@@ -28,12 +28,14 @@ class ProjectTypesSecondaryModel with _$ProjectTypesSecondaryModel {
 class ProjectType with _$ProjectType {
   const factory ProjectType({
     required String id,
-    required String name,
     required String code,
+    required String name,
     required String group,
     required String beneficiaryType,
     String? observationStrategy,
     List<Cycle>? cycles,
+    int? validMinAge,
+    int? validMaxAge,
   }) = _ProjectType;
 
   factory ProjectType.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +48,7 @@ class Cycle with _$Cycle {
     String? mandatoryWaitSinceLastCycleInDays,
     int? startDate,
     int? endDate,
+    @Default(0) int id,
     @JsonKey(name: 'deliveries') List<DeliveryModel>? deliveries,
   }) = _Cycle;
   factory Cycle.fromJson(Map<String, dynamic> json) => _$CycleFromJson(json);
@@ -60,6 +63,8 @@ class DeliveryModel with _$DeliveryModel {
         List<ProductVariantsModel>? productVariants,
     @JsonKey(name: 'deliveryStrategy')
         String? deliveryStrategy,
+    @Default(0)
+        int id,
   }) = _DeliveryModel;
 
   factory DeliveryModel.fromJson(Map<String, dynamic> json) =>

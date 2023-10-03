@@ -432,7 +432,8 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get dose => 'DELIVER_INTERVENTION_DOSE';
-  String get hidePastCycles => 'DELIVER_INTERVENTION_PAST_CYCLES';
+  String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
+  String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';

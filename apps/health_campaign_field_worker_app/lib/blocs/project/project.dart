@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
@@ -435,14 +436,26 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         isar,
       );
 
+      final selectedProject = projectType.projectTypeWrapper?.projectTypes
+          .where(
+            (element) => element.id == '644c4356-5214-11ee-be56-0242ac120002',
+          )
+          .toList()
+          .firstOrNull;
+      final cycles = List<Cycle>.from(
+        selectedProject?.cycles ?? [],
+      );
+      // for (var e in cycles) {
+      //   e.deliveries?.sort((c, d) => c.id.compareTo(d.id));
+      // }
+      cycles.sort((a, b) => a.id.compareTo(b.id));
+
+      final reqProjectType = selectedProject?.copyWith(cycles: cycles);
       emit(state.copyWith(
-        projectType: projectType.projectTypeWrapper?.projectTypes
-            .where((element) =>
-                element.id == '644c4356-5214-11ee-be56-0242ac120002')
-            .toList()
-            .firstOrNull,
+        projectType: reqProjectType,
         //[TODO] need to add sorting based on order
       ));
+
       final rowversionList = await isar.rowVersionLists
           .filter()
           .moduleEqualTo('egov-location')
