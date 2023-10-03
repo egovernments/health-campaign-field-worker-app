@@ -103,8 +103,8 @@ class _BeneficiaryDetailsPageState
                   ? int.tryParse(
                         lastDose,
                       ) ??
-                      1
-                  : 1,
+                      0
+                  : 0,
               taskData != null && taskData.isNotEmpty
                   ? int.tryParse(
                         lastCycle,

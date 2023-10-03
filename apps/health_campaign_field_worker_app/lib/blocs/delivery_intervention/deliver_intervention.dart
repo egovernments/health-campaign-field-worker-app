@@ -82,11 +82,12 @@ class DeliverInterventionBloc
       final List<TaskModel> futureTask = tasks
           .where((element) =>
               element.additionalFields?.fields
-                  .firstWhere(
-                    (a) => a.key == "DeliveryStrategy",
-                  )
-                  .value ==
-              DeliverStrategyType.indirect.name.toUpperCase())
+                      .firstWhere(
+                        (a) => a.key == "DeliveryStrategy",
+                      )
+                      .value ==
+                  DeliverStrategyType.indirect.name.toUpperCase() &&
+              element.status == Status.partiallyDelivered.toValue())
           .toList();
 
       if (tasks.isNotEmpty) {
@@ -105,13 +106,11 @@ class DeliverInterventionBloc
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    // [TODO : Need to map the start date and end date to the cycles,
-    // [TODO: Need to compare with DateTime.now()
     final currentRunningCycle = (event.projectType.cycles?.firstWhere((e) =>
             (e.startDate ?? 1696032000000) <=
-                DateTime(2023, 10, 01).millisecondsSinceEpoch &&
+                DateTime.now().millisecondsSinceEpoch &&
             (e.endDate ?? 1696032000000) >=
-                DateTime(2023, 10, 01).millisecondsSinceEpoch))!
+                DateTime.now().millisecondsSinceEpoch))!
         .id;
     if (event.lastCycle == currentRunningCycle) {
       final deliveryLength = event.projectType.cycles!

@@ -84,7 +84,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                               relatedClientReferenceId: clientReferenceId,
                               id: null,
                             ),
-                            status: Status.partiallyDelivered.name,
+                            status: Status.partiallyDelivered.toValue(),
                             clientReferenceId: clientReferenceId,
                             projectBeneficiaryClientReferenceId: bloc
                                 .oldTask?.projectBeneficiaryClientReferenceId,
