@@ -87,28 +87,10 @@ class _RecordPastDeliveryDetailsPageState
                           barrierDismissible: true,
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
-                              i18.common.coreCommonYes,
-                            ),
-                            action: (ctx) {
-                              final parent = router.parent() as StackRouter;
-                              router.pop();
-
-                              Navigator.of(
-                                ctx,
-                                rootNavigator: true,
-                              ).pop();
-                              router.push(
-                                AdverseEventsRoute(
-                                  tasks: [state.futureTask!.last],
-                                ),
-                              );
-                            },
-                          ),
-                          secondaryAction: DigitDialogActions(
-                            label: localizations.translate(
                               i18.common.coreCommonNo,
                             ),
                             action: (ctx) {
+                              router.pop();
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
 
@@ -119,14 +101,30 @@ class _RecordPastDeliveryDetailsPageState
                                 projectId: projectId,
                                 projectBeneficiaryType: projectBeneficiaryType,
                               ));
-                              final parent = router.parent() as StackRouter;
-                              router.pop();
+
                               Navigator.of(
                                 ctx,
                                 rootNavigator: true,
                               ).pop();
                               router.push(
                                 BeneficiaryDetailsRoute(),
+                              );
+                            },
+                          ),
+                          secondaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.common.coreCommonYes,
+                            ),
+                            action: (ctx) {
+                              router.pop();
+                              Navigator.of(
+                                ctx,
+                                rootNavigator: true,
+                              ).pop();
+                              router.push(
+                                AdverseEventsRoute(
+                                  tasks: [(state.futureTask ?? []).last],
+                                ),
                               );
                             },
                           ),
