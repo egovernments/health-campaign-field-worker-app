@@ -25,7 +25,6 @@ class DeliverInterventionBloc
     on(_handleCycleDoseSelection);
     on(_handleFutureDeliveries);
     on(_handleActiveCycleDose);
-    on(_handleActiveAndPastCycles);
   }
 
   FutureOr<void> _handleSubmit(
@@ -59,6 +58,9 @@ class DeliverInterventionBloc
           address: event.task.address?.copyWith(
             locality: localityModel,
           ),
+        ));
+        emit(state.copyWith(
+          oldTask: event.task,
         ));
       }
     } catch (error) {
@@ -112,35 +114,55 @@ class DeliverInterventionBloc
     BeneficiaryRegistrationEmitter emit,
   ) async {
     // [TODO : Need to map the start date and end date to the cycles,
-    final currentRunningCycle = (event.projectType.cycles?.indexWhere((e) =>
-            DateTime.now().millisecondsSinceEpoch >=
-                (e.startDate ?? 1695772800000) &&
-            DateTime.now().millisecondsSinceEpoch <
-                (e.endDate ?? 1696204800000)))! +
-        1;
+    // [TODO: Need to compare with DateTime.now()
+    final currentRunningCycle = (event.projectType.cycles?.firstWhere((e) =>
+            (e.startDate ?? 1696032000000) <=
+                DateTime(2023, 10, 01).millisecondsSinceEpoch &&
+            (e.endDate ?? 1696032000000) >=
+                DateTime(2023, 10, 01).millisecondsSinceEpoch))!
+        .id;
     if (event.lastCycle == currentRunningCycle) {
-      final isNotLastDose = event.lastDose <
-          event.projectType.cycles![event.lastCycle].deliveries!.length;
+      final deliveryLength = event.projectType.cycles!
+              .firstWhere((c) => c.id == event.lastCycle)
+              .deliveries
+              ?.length ??
+          0;
+      final isNotLastDose = event.lastDose < deliveryLength;
+      final pastCycles = event.projectType.cycles
+          ?.where(
+            (p) => p.id != event.lastCycle && p.id < event.lastCycle,
+          )
+          .toList();
+      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
       if (isNotLastDose) {
-        emit(state.copyWith(cycle: event.lastCycle, dose: event.lastDose + 1));
+        emit(state.copyWith(
+          cycle: event.lastCycle,
+          dose: event.lastDose + 1,
+          pastCycles: pastCycles,
+          hasCycleArrived: true,
+        ));
+      } else {
+        emit(state.copyWith(
+          cycle: event.lastCycle + 1,
+          hasCycleArrived: false,
+          dose: event.lastDose,
+          pastCycles: pastCycles,
+        ));
       }
     } else {
-      emit(state.copyWith(cycle: currentRunningCycle ?? 1, dose: 1));
+      final pastCycles = event.projectType.cycles
+          ?.where(
+            (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
+          )
+          .toList();
+      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
+      emit(state.copyWith(
+        cycle: currentRunningCycle,
+        dose: 1,
+        pastCycles: pastCycles,
+        hasCycleArrived: true,
+      ));
     }
-  }
-
-  FutureOr<void> _handleActiveAndPastCycles(
-    DeliverInterventionSetActiveAndPastCyclesEvent event,
-    BeneficiaryRegistrationEmitter emit,
-  ) async {
-    final activeCycle =
-        event.projectCycles.where((e) => e.id == event.activeCycle).firstOrNull;
-    final pastCycles = event.projectCycles
-        .where((p) => p.id != event.activeCycle && p.id < event.activeCycle)
-        .toList();
-    pastCycles.sort((a, b) => b.id.compareTo(a.id));
-
-    emit(state.copyWith(activeCycle: activeCycle, pastCycles: pastCycles));
   }
 
   FutureOr<void> _handleFutureDeliveries(
@@ -171,7 +193,6 @@ class DeliverInterventionBloc
             break;
           }
         }
-
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
     } catch (error) {
@@ -213,11 +234,6 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int lastCycle,
     ProjectType projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
-
-  const factory DeliverInterventionEvent.setPastCycles({
-    required int activeCycle,
-    required List<Cycle> projectCycles,
-  }) = DeliverInterventionSetActiveAndPastCyclesEvent;
 }
 
 @freezed
@@ -227,10 +243,11 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(false) bool isEditing,
     @Default(1) int cycle,
     @Default(1) int dose,
-    Cycle? activeCycle,
     List<Cycle>? pastCycles,
+    @Default(true) bool hasCycleArrived,
     @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
     List<DeliveryModel>? futureDeliveries,
+    TaskModel? oldTask,
   }) = _DeliverInterventionState;
 }

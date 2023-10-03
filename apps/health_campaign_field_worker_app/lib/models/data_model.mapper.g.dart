@@ -4728,6 +4728,7 @@ class StatusMapper extends EnumMapper<Status> {
       case "DELIVERED": return Status.delivered;
       case "NOT_DELIVERED": return Status.notDelivered;
       case "BENEFICIARY_REFUSED": return Status.beneficiaryRefused;
+      case "PARTIALLY_DELIVERED": return Status.partiallyDelivered;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4737,6 +4738,7 @@ class StatusMapper extends EnumMapper<Status> {
       case Status.delivered: return "DELIVERED";
       case Status.notDelivered: return "NOT_DELIVERED";
       case Status.beneficiaryRefused: return "BENEFICIARY_REFUSED";
+      case Status.partiallyDelivered: return "PARTIALLY_DELIVERED";
     }
   }
 }

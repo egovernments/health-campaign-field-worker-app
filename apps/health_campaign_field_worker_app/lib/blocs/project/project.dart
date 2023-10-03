@@ -451,7 +451,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       cycles.sort((a, b) => a.id.compareTo(b.id));
 
       final reqProjectType = selectedProject?.copyWith(cycles: cycles);
-      print(cycles);
       emit(state.copyWith(
         projectType: reqProjectType,
         //[TODO] need to add sorting based on order

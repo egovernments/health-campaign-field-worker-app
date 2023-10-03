@@ -104,7 +104,7 @@ class _DeliverInterventionPageState
                           ?.cycles?[deliveryInterventionstate.cycle == 0
                               ? deliveryInterventionstate.cycle
                               : deliveryInterventionstate.cycle - 1]
-                          .deliveries?[deliveryInterventionstate.dose]
+                          .deliveries?[deliveryInterventionstate.dose - 1]
                           .deliveryStrategy;
 
                       final steps = generateSteps(numberOfDoses);
