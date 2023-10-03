@@ -12,6 +12,10 @@
         {
             "name": "Beneficiary Refused",
             "value": "BENEFICIARY_REFUSED"
+        },
+        {
+            "name": "Partially Delivered",
+            "value": "PARTIALLY_DELIVERED"
         }
     ],
     "isEnum": true

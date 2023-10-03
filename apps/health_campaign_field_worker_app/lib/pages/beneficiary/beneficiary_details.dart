@@ -87,7 +87,6 @@ class _BeneficiaryDetailsPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
               .toList();
-
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
 
@@ -98,28 +97,20 @@ class _BeneficiaryDetailsPageState
               .firstWhereOrNull((e) => e.key == 'CycleIndex')
               ?.value;
 
-          final currentRunningCycle = projectState.projectType?.cycles
-              ?.firstWhere((e) =>
-                  DateTime(2023, 09, 30).millisecondsSinceEpoch >=
-                      (e.startDate ?? 1695772800000) &&
-                  DateTime(2023, 09, 30).millisecondsSinceEpoch <
-                      (e.endDate ?? 1696204800000))
-              .id;
-
           bloc.add(
             DeliverInterventionEvent.setActiveCycleDose(
               taskData != null && taskData.isNotEmpty
                   ? int.tryParse(
                         lastDose,
                       ) ??
-                      0
-                  : 0,
+                      1
+                  : 1,
               taskData != null && taskData.isNotEmpty
                   ? int.tryParse(
                         lastCycle,
                       ) ??
-                      0
-                  : 0,
+                      1
+                  : 1,
               projectState.projectType!,
             ),
           );
@@ -128,13 +119,6 @@ class _BeneficiaryDetailsPageState
 
           return BlocBuilder<ProductVariantBloc, ProductVariantState>(
             builder: (context, productState) {
-              bloc.add(
-                DeliverInterventionEvent.setPastCycles(
-                  activeCycle: currentRunningCycle ?? 1,
-                  projectCycles: projectState.projectType?.cycles ?? [],
-                ),
-              );
-
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariantsvalue) {
@@ -154,60 +138,65 @@ class _BeneficiaryDetailsPageState
                         footer: BlocBuilder<DeliverInterventionBloc,
                             DeliverInterventionState>(
                           builder: (context, state) {
-                            return SizedBox(
-                              height: 85,
-                              child: DigitCard(
-                                margin: const EdgeInsets.only(
-                                  left: 0,
-                                  right: 0,
-                                  top: 10,
-                                ),
-                                child: DigitElevatedButton(
-                                  onPressed: () async {
-                                    bloc.add(
-                                      DeliverInterventionEvent
-                                          .selectFutureCycleDose(
-                                        state.dose,
-                                        projectState.projectType!
-                                            .cycles![state.cycle - 1],
+                            return state.hasCycleArrived
+                                ? SizedBox(
+                                    height: 85,
+                                    child: DigitCard(
+                                      margin: const EdgeInsets.only(
+                                        left: 0,
+                                        right: 0,
+                                        top: 10,
                                       ),
-                                    );
-                                    await DigitDialog.show<bool>(
-                                      context,
-                                      options: DigitDialogOptions(
-                                        titleText: localizations.translate(
-                                          i18.beneficiaryDetails
-                                              .resourcesTobeDelivered,
-                                        ),
-                                        content: buildTableContent(
-                                          state,
-                                          context,
-                                          headerListResource,
-                                          variant,
-                                        ),
-                                        barrierDismissible: true,
-                                        primaryAction: DigitDialogActions(
-                                          label: localizations.translate(
-                                            i18.beneficiaryDetails.ctaProceed,
+                                      child: DigitElevatedButton(
+                                        onPressed: () async {
+                                          bloc.add(
+                                            DeliverInterventionEvent
+                                                .selectFutureCycleDose(
+                                              state.dose,
+                                              projectState.projectType!.cycles!
+                                                  .firstWhere((c) =>
+                                                      c.id == state.cycle),
+                                            ),
+                                          );
+                                          await DigitDialog.show<bool>(
+                                            context,
+                                            options: DigitDialogOptions(
+                                              titleText:
+                                                  localizations.translate(
+                                                i18.beneficiaryDetails
+                                                    .resourcesTobeDelivered,
+                                              ),
+                                              content: buildTableContent(
+                                                state,
+                                                context,
+                                                headerListResource,
+                                                variant,
+                                              ),
+                                              barrierDismissible: true,
+                                              primaryAction: DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.beneficiaryDetails
+                                                      .ctaProceed,
+                                                ),
+                                                action: (ctx) {
+                                                  Navigator.of(ctx).pop();
+                                                  router.push(
+                                                    DeliverInterventionRoute(),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
                                           ),
-                                          action: (ctx) {
-                                            Navigator.of(ctx).pop();
-                                            router.push(
-                                              DeliverInterventionRoute(),
-                                            );
-                                          },
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
                                     ),
-                                  ),
-                                ),
-                              ),
-                            );
+                                  )
+                                : const SizedBox.shrink();
                           },
                         ),
                         children: [
@@ -392,14 +381,8 @@ class _BeneficiaryDetailsPageState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: state.projectType?.cycles != null
-                                      ? state.projectType!.cycles!.map((e) {
-                                          final int cycleIndex = state
-                                                  .projectType!.cycles!
-                                                  .indexOf(e) +
-                                              1;
-
-                                          return BlocBuilder<
-                                              DeliverInterventionBloc,
+                                      ? [
+                                          BlocBuilder<DeliverInterventionBloc,
                                               DeliverInterventionState>(
                                             builder: (context, deliverState) {
                                               return Column(
@@ -418,18 +401,11 @@ class _BeneficiaryDetailsPageState
                                                               ),
                                                               child:
                                                                   RecordDeliveryCycle(
-                                                                cycleIndex:
-                                                                    cycleIndex,
-                                                                activeCycleIndex:
-                                                                    deliverState
-                                                                        .cycle,
-                                                                e: e,
-                                                                isLastCycle: state
-                                                                        .projectType
-                                                                        ?.cycles
-                                                                        ?.length ==
-                                                                    cycleIndex -
-                                                                        1,
+                                                                projectCycles:
+                                                                    projectState
+                                                                            .projectType
+                                                                            ?.cycles ??
+                                                                        [],
                                                                 taskData:
                                                                     taskData ??
                                                                         [],
@@ -440,8 +416,8 @@ class _BeneficiaryDetailsPageState
                                                 ],
                                               );
                                             },
-                                          );
-                                        }).toList()
+                                          ),
+                                        ]
                                       : [],
                                 ),
                               );

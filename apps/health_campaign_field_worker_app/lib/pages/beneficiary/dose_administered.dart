@@ -74,10 +74,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                       ..pop();
                     if (doseAdministered && context.mounted) {
                       for (var e in bloc.futureDeliveries!) {
-                        int doseIndex =
-                            bloc.futureDeliveries!.indexOf(e) + bloc.dose + 1;
+                        int doseIndex = e.id;
                         final clientReferenceId = IdGen.i.identifier;
-                        final address = bloc.tasks?.first.address;
+                        final address = bloc.oldTask?.address;
                         event.add(DeliverInterventionSubmitEvent(
                           TaskModel(
                             projectId: context.projectId,
@@ -85,10 +84,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                               relatedClientReferenceId: clientReferenceId,
                               id: null,
                             ),
-                            status: Status.partialDelivered.name,
+                            status: Status.partiallyDelivered.name,
                             clientReferenceId: clientReferenceId,
-                            projectBeneficiaryClientReferenceId: bloc.tasks
-                                ?.first.projectBeneficiaryClientReferenceId,
+                            projectBeneficiaryClientReferenceId: bloc
+                                .oldTask?.projectBeneficiaryClientReferenceId,
                             tenantId: envConfig.variables.tenantId,
                             rowVersion: 1,
                             auditDetails: AuditDetails(

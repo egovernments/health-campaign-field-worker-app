@@ -28,8 +28,6 @@ mixin _$DeliverInterventionEvent {
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,8 +41,6 @@ mixin _$DeliverInterventionEvent {
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,7 +54,6 @@ mixin _$DeliverInterventionEvent {
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -76,9 +71,6 @@ mixin _$DeliverInterventionEvent {
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -91,8 +83,6 @@ mixin _$DeliverInterventionEvent {
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -105,8 +95,6 @@ mixin _$DeliverInterventionEvent {
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -229,8 +217,6 @@ class _$DeliverInterventionSubmitEvent
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
   }
@@ -247,8 +233,6 @@ class _$DeliverInterventionSubmitEvent
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
   }
@@ -265,7 +249,6 @@ class _$DeliverInterventionSubmitEvent
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -289,9 +272,6 @@ class _$DeliverInterventionSubmitEvent
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) {
     return handleSubmit(this);
   }
@@ -307,8 +287,6 @@ class _$DeliverInterventionSubmitEvent
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) {
     return handleSubmit?.call(this);
   }
@@ -324,8 +302,6 @@ class _$DeliverInterventionSubmitEvent
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -430,8 +406,6 @@ class _$DeliverInterventionSearchEvent
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) {
     return handleSearch(taskSearch);
   }
@@ -448,8 +422,6 @@ class _$DeliverInterventionSearchEvent
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) {
     return handleSearch?.call(taskSearch);
   }
@@ -466,7 +438,6 @@ class _$DeliverInterventionSearchEvent
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -490,9 +461,6 @@ class _$DeliverInterventionSearchEvent
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) {
     return handleSearch(this);
   }
@@ -508,8 +476,6 @@ class _$DeliverInterventionSearchEvent
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) {
     return handleSearch?.call(this);
   }
@@ -525,8 +491,6 @@ class _$DeliverInterventionSearchEvent
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
@@ -646,8 +610,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) {
     return selectCycleDose(dose, cycle, isLastDoseOfCycle);
   }
@@ -664,8 +626,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) {
     return selectCycleDose?.call(dose, cycle, isLastDoseOfCycle);
   }
@@ -682,7 +642,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
@@ -706,9 +665,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) {
     return selectCycleDose(this);
   }
@@ -724,8 +680,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) {
     return selectCycleDose?.call(this);
   }
@@ -741,8 +695,6 @@ class _$DeliverInterventionCycleDoseSelectionEvent
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) {
     if (selectCycleDose != null) {
@@ -871,8 +823,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) {
     return selectFutureCycleDose(dose, cycle);
   }
@@ -889,8 +839,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) {
     return selectFutureCycleDose?.call(dose, cycle);
   }
@@ -907,7 +855,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -931,9 +878,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) {
     return selectFutureCycleDose(this);
   }
@@ -949,8 +893,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) {
     return selectFutureCycleDose?.call(this);
   }
@@ -966,8 +908,6 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) {
     if (selectFutureCycleDose != null) {
@@ -1107,8 +1047,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
     required TResult Function(
             int lastDose, int lastCycle, ProjectType projectType)
         setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
   }) {
     return setActiveCycleDose(lastDose, lastCycle, projectType);
   }
@@ -1125,8 +1063,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
     TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
   }) {
     return setActiveCycleDose?.call(lastDose, lastCycle, projectType);
   }
@@ -1143,7 +1079,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
     TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
         setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
     required TResult orElse(),
   }) {
     if (setActiveCycleDose != null) {
@@ -1167,9 +1102,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
     required TResult Function(
             DeliverInterventionActiveCycleDoseSelectionEvent value)
         setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
   }) {
     return setActiveCycleDose(this);
   }
@@ -1185,8 +1117,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
         selectFutureCycleDose,
     TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
   }) {
     return setActiveCycleDose?.call(this);
   }
@@ -1202,8 +1132,6 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
         selectFutureCycleDose,
     TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
         setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
     required TResult orElse(),
   }) {
     if (setActiveCycleDose != null) {
@@ -1231,238 +1159,18 @@ abstract class DeliverInterventionActiveCycleDoseSelectionEvent
 }
 
 /// @nodoc
-abstract class _$$DeliverInterventionSetActiveAndPastCyclesEventCopyWith<$Res> {
-  factory _$$DeliverInterventionSetActiveAndPastCyclesEventCopyWith(
-          _$DeliverInterventionSetActiveAndPastCyclesEvent value,
-          $Res Function(_$DeliverInterventionSetActiveAndPastCyclesEvent)
-              then) =
-      __$$DeliverInterventionSetActiveAndPastCyclesEventCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int activeCycle, List<Cycle> projectCycles});
-}
-
-/// @nodoc
-class __$$DeliverInterventionSetActiveAndPastCyclesEventCopyWithImpl<$Res>
-    extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionSetActiveAndPastCyclesEvent>
-    implements _$$DeliverInterventionSetActiveAndPastCyclesEventCopyWith<$Res> {
-  __$$DeliverInterventionSetActiveAndPastCyclesEventCopyWithImpl(
-      _$DeliverInterventionSetActiveAndPastCyclesEvent _value,
-      $Res Function(_$DeliverInterventionSetActiveAndPastCyclesEvent) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? activeCycle = null,
-    Object? projectCycles = null,
-  }) {
-    return _then(_$DeliverInterventionSetActiveAndPastCyclesEvent(
-      activeCycle: null == activeCycle
-          ? _value.activeCycle
-          : activeCycle // ignore: cast_nullable_to_non_nullable
-              as int,
-      projectCycles: null == projectCycles
-          ? _value._projectCycles
-          : projectCycles // ignore: cast_nullable_to_non_nullable
-              as List<Cycle>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$DeliverInterventionSetActiveAndPastCyclesEvent
-    implements DeliverInterventionSetActiveAndPastCyclesEvent {
-  const _$DeliverInterventionSetActiveAndPastCyclesEvent(
-      {required this.activeCycle, required final List<Cycle> projectCycles})
-      : _projectCycles = projectCycles;
-
-  @override
-  final int activeCycle;
-  final List<Cycle> _projectCycles;
-  @override
-  List<Cycle> get projectCycles {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_projectCycles);
-  }
-
-  @override
-  String toString() {
-    return 'DeliverInterventionEvent.setPastCycles(activeCycle: $activeCycle, projectCycles: $projectCycles)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionSetActiveAndPastCyclesEvent &&
-            (identical(other.activeCycle, activeCycle) ||
-                other.activeCycle == activeCycle) &&
-            const DeepCollectionEquality()
-                .equals(other._projectCycles, _projectCycles));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, activeCycle,
-      const DeepCollectionEquality().hash(_projectCycles));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DeliverInterventionSetActiveAndPastCyclesEventCopyWith<
-          _$DeliverInterventionSetActiveAndPastCyclesEvent>
-      get copyWith =>
-          __$$DeliverInterventionSetActiveAndPastCyclesEventCopyWithImpl<
-                  _$DeliverInterventionSetActiveAndPastCyclesEvent>(
-              this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)
-        handleSubmit,
-    required TResult Function(TaskSearchModel taskSearch) handleSearch,
-    required TResult Function(int dose, int cycle, bool isLastDoseOfCycle)
-        selectCycleDose,
-    required TResult Function(int dose, Cycle cycle) selectFutureCycleDose,
-    required TResult Function(
-            int lastDose, int lastCycle, ProjectType projectType)
-        setActiveCycleDose,
-    required TResult Function(int activeCycle, List<Cycle> projectCycles)
-        setPastCycles,
-  }) {
-    return setPastCycles(activeCycle, projectCycles);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult? Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult? Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult? Function(int dose, Cycle cycle)? selectFutureCycleDose,
-    TResult? Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-    TResult? Function(int activeCycle, List<Cycle> projectCycles)?
-        setPastCycles,
-  }) {
-    return setPastCycles?.call(activeCycle, projectCycles);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            TaskModel task, bool isEditing, BoundaryModel boundaryModel)?
-        handleSubmit,
-    TResult Function(TaskSearchModel taskSearch)? handleSearch,
-    TResult Function(int dose, int cycle, bool isLastDoseOfCycle)?
-        selectCycleDose,
-    TResult Function(int dose, Cycle cycle)? selectFutureCycleDose,
-    TResult Function(int lastDose, int lastCycle, ProjectType projectType)?
-        setActiveCycleDose,
-    TResult Function(int activeCycle, List<Cycle> projectCycles)? setPastCycles,
-    required TResult orElse(),
-  }) {
-    if (setPastCycles != null) {
-      return setPastCycles(activeCycle, projectCycles);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(DeliverInterventionSubmitEvent value)
-        handleSubmit,
-    required TResult Function(DeliverInterventionSearchEvent value)
-        handleSearch,
-    required TResult Function(DeliverInterventionCycleDoseSelectionEvent value)
-        selectCycleDose,
-    required TResult Function(
-            DeliverInterventionCycleFutureDoseSelectionEvent value)
-        selectFutureCycleDose,
-    required TResult Function(
-            DeliverInterventionActiveCycleDoseSelectionEvent value)
-        setActiveCycleDose,
-    required TResult Function(
-            DeliverInterventionSetActiveAndPastCyclesEvent value)
-        setPastCycles,
-  }) {
-    return setPastCycles(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult? Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult? Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult? Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-    TResult? Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-    TResult? Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
-  }) {
-    return setPastCycles?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(DeliverInterventionSubmitEvent value)? handleSubmit,
-    TResult Function(DeliverInterventionSearchEvent value)? handleSearch,
-    TResult Function(DeliverInterventionCycleDoseSelectionEvent value)?
-        selectCycleDose,
-    TResult Function(DeliverInterventionCycleFutureDoseSelectionEvent value)?
-        selectFutureCycleDose,
-    TResult Function(DeliverInterventionActiveCycleDoseSelectionEvent value)?
-        setActiveCycleDose,
-    TResult Function(DeliverInterventionSetActiveAndPastCyclesEvent value)?
-        setPastCycles,
-    required TResult orElse(),
-  }) {
-    if (setPastCycles != null) {
-      return setPastCycles(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class DeliverInterventionSetActiveAndPastCyclesEvent
-    implements DeliverInterventionEvent {
-  const factory DeliverInterventionSetActiveAndPastCyclesEvent(
-          {required final int activeCycle,
-          required final List<Cycle> projectCycles}) =
-      _$DeliverInterventionSetActiveAndPastCyclesEvent;
-
-  int get activeCycle;
-  List<Cycle> get projectCycles;
-  @JsonKey(ignore: true)
-  _$$DeliverInterventionSetActiveAndPastCyclesEventCopyWith<
-          _$DeliverInterventionSetActiveAndPastCyclesEvent>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$DeliverInterventionState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
   int get cycle => throw _privateConstructorUsedError;
   int get dose => throw _privateConstructorUsedError;
-  Cycle? get activeCycle => throw _privateConstructorUsedError;
   List<Cycle>? get pastCycles => throw _privateConstructorUsedError;
+  bool get hasCycleArrived => throw _privateConstructorUsedError;
   bool get isLastDoseOfCycle => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
   List<DeliveryModel>? get futureDeliveries =>
       throw _privateConstructorUsedError;
+  TaskModel? get oldTask => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DeliverInterventionStateCopyWith<DeliverInterventionState> get copyWith =>
@@ -1480,13 +1188,12 @@ abstract class $DeliverInterventionStateCopyWith<$Res> {
       bool isEditing,
       int cycle,
       int dose,
-      Cycle? activeCycle,
       List<Cycle>? pastCycles,
+      bool hasCycleArrived,
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
-      List<DeliveryModel>? futureDeliveries});
-
-  $CycleCopyWith<$Res>? get activeCycle;
+      List<DeliveryModel>? futureDeliveries,
+      TaskModel? oldTask});
 }
 
 /// @nodoc
@@ -1507,11 +1214,12 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? isEditing = null,
     Object? cycle = null,
     Object? dose = null,
-    Object? activeCycle = freezed,
     Object? pastCycles = freezed,
+    Object? hasCycleArrived = null,
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
+    Object? oldTask = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1530,14 +1238,14 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
-      activeCycle: freezed == activeCycle
-          ? _value.activeCycle
-          : activeCycle // ignore: cast_nullable_to_non_nullable
-              as Cycle?,
       pastCycles: freezed == pastCycles
           ? _value.pastCycles
           : pastCycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      hasCycleArrived: null == hasCycleArrived
+          ? _value.hasCycleArrived
+          : hasCycleArrived // ignore: cast_nullable_to_non_nullable
+              as bool,
       isLastDoseOfCycle: null == isLastDoseOfCycle
           ? _value.isLastDoseOfCycle
           : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
@@ -1550,19 +1258,11 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
+      oldTask: freezed == oldTask
+          ? _value.oldTask
+          : oldTask // ignore: cast_nullable_to_non_nullable
+              as TaskModel?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CycleCopyWith<$Res>? get activeCycle {
-    if (_value.activeCycle == null) {
-      return null;
-    }
-
-    return $CycleCopyWith<$Res>(_value.activeCycle!, (value) {
-      return _then(_value.copyWith(activeCycle: value) as $Val);
-    });
   }
 }
 
@@ -1580,14 +1280,12 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
       bool isEditing,
       int cycle,
       int dose,
-      Cycle? activeCycle,
       List<Cycle>? pastCycles,
+      bool hasCycleArrived,
       bool isLastDoseOfCycle,
       List<TaskModel>? tasks,
-      List<DeliveryModel>? futureDeliveries});
-
-  @override
-  $CycleCopyWith<$Res>? get activeCycle;
+      List<DeliveryModel>? futureDeliveries,
+      TaskModel? oldTask});
 }
 
 /// @nodoc
@@ -1606,11 +1304,12 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? isEditing = null,
     Object? cycle = null,
     Object? dose = null,
-    Object? activeCycle = freezed,
     Object? pastCycles = freezed,
+    Object? hasCycleArrived = null,
     Object? isLastDoseOfCycle = null,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
+    Object? oldTask = freezed,
   }) {
     return _then(_$_DeliverInterventionState(
       loading: null == loading
@@ -1629,14 +1328,14 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
-      activeCycle: freezed == activeCycle
-          ? _value.activeCycle
-          : activeCycle // ignore: cast_nullable_to_non_nullable
-              as Cycle?,
       pastCycles: freezed == pastCycles
           ? _value._pastCycles
           : pastCycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      hasCycleArrived: null == hasCycleArrived
+          ? _value.hasCycleArrived
+          : hasCycleArrived // ignore: cast_nullable_to_non_nullable
+              as bool,
       isLastDoseOfCycle: null == isLastDoseOfCycle
           ? _value.isLastDoseOfCycle
           : isLastDoseOfCycle // ignore: cast_nullable_to_non_nullable
@@ -1649,6 +1348,10 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value._futureDeliveries
           : futureDeliveries // ignore: cast_nullable_to_non_nullable
               as List<DeliveryModel>?,
+      oldTask: freezed == oldTask
+          ? _value.oldTask
+          : oldTask // ignore: cast_nullable_to_non_nullable
+              as TaskModel?,
     ));
   }
 }
@@ -1661,11 +1364,12 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       this.isEditing = false,
       this.cycle = 1,
       this.dose = 1,
-      this.activeCycle,
       final List<Cycle>? pastCycles,
+      this.hasCycleArrived = true,
       this.isLastDoseOfCycle = false,
       final List<TaskModel>? tasks,
-      final List<DeliveryModel>? futureDeliveries})
+      final List<DeliveryModel>? futureDeliveries,
+      this.oldTask})
       : _pastCycles = pastCycles,
         _tasks = tasks,
         _futureDeliveries = futureDeliveries;
@@ -1682,8 +1386,6 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   @override
   @JsonKey()
   final int dose;
-  @override
-  final Cycle? activeCycle;
   final List<Cycle>? _pastCycles;
   @override
   List<Cycle>? get pastCycles {
@@ -1693,6 +1395,9 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  @JsonKey()
+  final bool hasCycleArrived;
   @override
   @JsonKey()
   final bool isLastDoseOfCycle;
@@ -1715,8 +1420,11 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   }
 
   @override
+  final TaskModel? oldTask;
+
+  @override
   String toString() {
-    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, activeCycle: $activeCycle, pastCycles: $pastCycles, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries)';
+    return 'DeliverInterventionState(loading: $loading, isEditing: $isEditing, cycle: $cycle, dose: $dose, pastCycles: $pastCycles, hasCycleArrived: $hasCycleArrived, isLastDoseOfCycle: $isLastDoseOfCycle, tasks: $tasks, futureDeliveries: $futureDeliveries, oldTask: $oldTask)';
   }
 
   @override
@@ -1729,15 +1437,16 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
                 other.isEditing == isEditing) &&
             (identical(other.cycle, cycle) || other.cycle == cycle) &&
             (identical(other.dose, dose) || other.dose == dose) &&
-            (identical(other.activeCycle, activeCycle) ||
-                other.activeCycle == activeCycle) &&
             const DeepCollectionEquality()
                 .equals(other._pastCycles, _pastCycles) &&
+            (identical(other.hasCycleArrived, hasCycleArrived) ||
+                other.hasCycleArrived == hasCycleArrived) &&
             (identical(other.isLastDoseOfCycle, isLastDoseOfCycle) ||
                 other.isLastDoseOfCycle == isLastDoseOfCycle) &&
             const DeepCollectionEquality().equals(other._tasks, _tasks) &&
             const DeepCollectionEquality()
-                .equals(other._futureDeliveries, _futureDeliveries));
+                .equals(other._futureDeliveries, _futureDeliveries) &&
+            (identical(other.oldTask, oldTask) || other.oldTask == oldTask));
   }
 
   @override
@@ -1747,11 +1456,12 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       isEditing,
       cycle,
       dose,
-      activeCycle,
       const DeepCollectionEquality().hash(_pastCycles),
+      hasCycleArrived,
       isLastDoseOfCycle,
       const DeepCollectionEquality().hash(_tasks),
-      const DeepCollectionEquality().hash(_futureDeliveries));
+      const DeepCollectionEquality().hash(_futureDeliveries),
+      oldTask);
 
   @JsonKey(ignore: true)
   @override
@@ -1763,16 +1473,16 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
 
 abstract class _DeliverInterventionState implements DeliverInterventionState {
   const factory _DeliverInterventionState(
-          {final bool loading,
-          final bool isEditing,
-          final int cycle,
-          final int dose,
-          final Cycle? activeCycle,
-          final List<Cycle>? pastCycles,
-          final bool isLastDoseOfCycle,
-          final List<TaskModel>? tasks,
-          final List<DeliveryModel>? futureDeliveries}) =
-      _$_DeliverInterventionState;
+      {final bool loading,
+      final bool isEditing,
+      final int cycle,
+      final int dose,
+      final List<Cycle>? pastCycles,
+      final bool hasCycleArrived,
+      final bool isLastDoseOfCycle,
+      final List<TaskModel>? tasks,
+      final List<DeliveryModel>? futureDeliveries,
+      final TaskModel? oldTask}) = _$_DeliverInterventionState;
 
   @override
   bool get loading;
@@ -1783,15 +1493,17 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   @override
   int get dose;
   @override
-  Cycle? get activeCycle;
-  @override
   List<Cycle>? get pastCycles;
+  @override
+  bool get hasCycleArrived;
   @override
   bool get isLastDoseOfCycle;
   @override
   List<TaskModel>? get tasks;
   @override
   List<DeliveryModel>? get futureDeliveries;
+  @override
+  TaskModel? get oldTask;
   @override
   @JsonKey(ignore: true)
   _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>
