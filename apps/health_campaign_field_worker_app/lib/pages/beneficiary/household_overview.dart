@@ -467,6 +467,7 @@ class _HouseholdOverviewPageState
                                                     18,
                                                 adverseEventData,
                                               )),
+                                              // TODO Need to handle the null check
                                               name: e.name?.givenName ?? ' - ',
                                               years: (e.dateOfBirth == null
                                                       ? null
@@ -499,7 +500,12 @@ class _HouseholdOverviewPageState
                                                           !isBeneficiaryRefused &&
                                                           (adverseEventData ??
                                                                   [])
-                                                              .isEmpty
+                                                              .isEmpty &&
+                                                          !checkStatus(
+                                                            taskdata,
+                                                            null,
+                                                          )
+                                                      // TODO Need to pass the cycle
                                                       ? true
                                                       : false,
                                               localizations: localizations,

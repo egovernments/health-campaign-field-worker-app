@@ -20,6 +20,7 @@ class MemberCard extends StatelessWidget {
   final bool isHead;
   final IndividualModel individual;
   final bool isDelivered;
+
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
@@ -159,6 +160,7 @@ class MemberCard extends StatelessWidget {
                                 .householdOverViewNotEligibleIconLabel
                             : isBeneficiaryRefused
                                 ? 'Beneficiary Refused'
+                                // [TODO Need to update the localization]
                                 : i18.householdOverView
                                     .householdOverViewNotDeliveredIconLabel,
                       ),

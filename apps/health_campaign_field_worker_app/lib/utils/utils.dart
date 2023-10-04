@@ -16,6 +16,7 @@ import 'package:uuid/uuid.dart';
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
+import '../models/project_type/project_type_model.dart';
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -261,4 +262,25 @@ bool checkIfBeneficiaryRefused(
           Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
+}
+
+bool checkStatus(
+  List<TaskModel> tasks,
+  List<Cycle>? cycles,
+) {
+  final lastTask = tasks.last;
+
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+  if (lastTaskCreatedTime != null) {
+    final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+    final diff = DateTime.now().difference(date);
+
+    return lastTask.status == Status.partiallyDelivered.name
+        ? true
+        : diff.inHours > 24
+            ? true
+            : false;
+  } else {
+    return false;
+  }
 }

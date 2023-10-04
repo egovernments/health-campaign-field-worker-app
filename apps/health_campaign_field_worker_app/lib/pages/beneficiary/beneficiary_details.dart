@@ -101,23 +101,26 @@ class _BeneficiaryDetailsPageState
                   ?.value
               : 1;
 
-          bloc.add(
-            DeliverInterventionEvent.setActiveCycleDose(
-              taskData != null && taskData.isNotEmpty
-                  ? int.tryParse(
-                        lastDose,
-                      ) ??
-                      0
-                  : 0,
-              taskData != null && taskData.isNotEmpty
-                  ? int.tryParse(
-                        lastCycle,
-                      ) ??
-                      1
-                  : 1,
-              projectState.projectType!,
-            ),
-          );
+          // [TODO] Need to move this to Bloc Lisitner or consumer
+          if (projectState.projectType != null) {
+            bloc.add(
+              DeliverInterventionEvent.setActiveCycleDose(
+                taskData != null && taskData.isNotEmpty
+                    ? int.tryParse(
+                          lastDose,
+                        ) ??
+                        0
+                    : 0,
+                taskData != null && taskData.isNotEmpty
+                    ? int.tryParse(
+                          lastCycle,
+                        ) ??
+                        1
+                    : 1,
+                projectState.projectType!,
+              ),
+            );
+          }
 
           // Building the table content based on the DeliverInterventionState
 

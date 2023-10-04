@@ -129,6 +129,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
+// TODO need to pass the cycle
+        final isStatusReset = checkStatus(taskdata!, null);
+
         final rowTableData = [
           TableData(
             [
@@ -138,24 +141,21 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'beneficiary',
           ),
           TableData(
-            isNotEligible
-                ? 'Not Eligible'
-                : taskdata != null
-                    ? taskdata.isEmpty
-                        ? Status.notDelivered.toValue()
-                        : isBeneficiaryRefused
-                            ? Status.beneficiaryRefused.toValue()
-                            : Status.delivered.toValue()
-                    : Status.notDelivered.toValue(),
+            getTableCellText(
+              isNotEligible,
+              taskdata,
+              isBeneficiaryRefused,
+              isStatusReset,
+            ),
             cellKey: 'delivery',
             style: TextStyle(
-              color: taskdata != null
-                  ? taskdata.isNotEmpty &&
-                          !isBeneficiaryRefused &&
-                          !isNotEligible
-                      ? theme.colorScheme.onSurfaceVariant
-                      : theme.colorScheme.error
-                  : theme.colorScheme.error,
+              color: getTableCellTextColor(
+                isNotEligible: isNotEligible,
+                taskdata: taskdata,
+                isBeneficiaryRefused: isBeneficiaryRefused,
+                isStatusReset: isStatusReset,
+                theme: theme,
+              ),
             ),
           ),
           TableData(
@@ -288,5 +288,44 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ],
       ),
     );
+  }
+
+  String getTableCellText(
+    bool isNotEligible,
+    List<TaskModel> taskdata,
+    bool isBeneficiaryRefused,
+    bool isStatusReset,
+  ) {
+    if (isNotEligible) {
+      return 'Not Eligible';
+    } else if (taskdata != null) {
+      if (taskdata.isEmpty) {
+        return Status.notDelivered.toValue();
+      } else if (isBeneficiaryRefused) {
+        return Status.beneficiaryRefused.toValue();
+      } else if (isStatusReset) {
+        return Status.notDelivered.toValue();
+      } else {
+        return Status.delivered.toValue();
+      }
+    } else {
+      return Status.notDelivered.toValue();
+    }
+  }
+
+  // ignore: long-parameter-list
+  Color getTableCellTextColor({
+    required bool isNotEligible,
+    required List<TaskModel> taskdata,
+    required bool isBeneficiaryRefused,
+    required bool isStatusReset,
+    required ThemeData theme,
+  }) {
+    return taskdata.isNotEmpty &&
+            !isBeneficiaryRefused &&
+            !isNotEligible &&
+            !isStatusReset
+        ? theme.colorScheme.onSurfaceVariant
+        : theme.colorScheme.error;
   }
 }

@@ -1,14 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/product_variant/product_variant.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
-import '../../models/entities/product_variant.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
