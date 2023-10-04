@@ -58,21 +58,27 @@ class _RecordPastDeliveryDetailsPageState
                     onPressed: () async {
                       final event = context.read<DeliverInterventionBloc>();
 
+                      // Loop through each future task
                       for (int i = 0;
                           i < (state.futureTask ?? []).length;
                           i++) {
+                        // Get the value of the form control for each task
+
                         final formControllValue = (form
                                 .control("$_recordDoseAdministeredKey.$i")
                                 .value as KeyValue)
                             .key;
 
+                        // Determine the status based on the form control value
                         final status = formControllValue
                             ? Status.delivered.toValue()
                             : Status.notDelivered.toValue();
 
+                        // Create a new task with the updated status
                         final result =
                             state.futureTask![i].copyWith(status: status);
 
+                        // Add the updated task to the event
                         event.add(DeliverInterventionSubmitEvent(
                           result,
                           true,
@@ -201,6 +207,7 @@ class _RecordPastDeliveryDetailsPageState
   FormGroup buildForm(BuildContext context) {
     final bloc = context.read<DeliverInterventionBloc>().state;
 
+    // Create a form group with a FormArray of KeyValue form controls
     return fb.group(
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([

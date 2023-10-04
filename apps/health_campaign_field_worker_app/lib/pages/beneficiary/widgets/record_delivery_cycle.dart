@@ -31,7 +31,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    bool isPastCyclesVisible = false;
+    bool isPastCyclesVisible =
+        false; // A boolean flag to track visibility of past cycles
 
     final headerList = [
       TableHeader(
@@ -46,7 +47,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
         localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
       ),
-    ];
+    ]; // List of table headers for displaying cycle and dose information
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,29 +58,32 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             return productState.maybeWhen(
               orElse: () => const Offstage(),
               fetched: (productVariants) {
-                final RegExp regexp = RegExp(r'^0+(?=.)');
+                final RegExp regexp = RegExp(
+                  r'^0+(?=.)',
+                ); // Regular expression to match leading zeros
 
-                final taskCycleindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[3].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 1;
+                // Calculate current cycle and dose index
+                final taskCycleindex = widget.taskData != null &&
+                        widget.taskData!.isNotEmpty
+                    ? int.tryParse(widget
+                        .taskData!.last.additionalFields!.fields[3].value
+                        .toString()
+                        .replaceAll(
+                          regexp,
+                          '',
+                        ))
+                    : 1; // Parse and extract cycle index, default to 1 if not available
 
-                final int? taskDoseindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[4].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 0;
+                final int? taskDoseindex = widget.taskData != null &&
+                        widget.taskData!.isNotEmpty
+                    ? int.tryParse(widget
+                        .taskData!.last.additionalFields!.fields[4].value
+                        .toString()
+                        .replaceAll(
+                          regexp,
+                          '',
+                        ))
+                    : 0; // Parse and extract dose index, default to 0 if not available
 
                 return taskCycleindex != null
                     ? BlocBuilder<DeliverInterventionBloc,
@@ -149,6 +153,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
   ) {
     final theme = DigitTheme.instance.mobileTheme;
+
+    // Create a list of widgets for each cycle
     final widgetList = cycles
         .map(
           (e) => Column(
@@ -163,7 +169,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               ),
               DigitTable(
                 selectedIndex: selectedIndex,
-
                 headerList: headerList,
                 tableData: e.deliveries!.map(
                   (item) {
@@ -201,7 +206,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ]);
                   },
-                ).toList(), // You can replace this with actual data for each cycle
+                ).toList(),
                 leftColumnWidth: 130,
                 rightColumnWidth: headerList.length * 17 * 6,
                 height: 6 * 57,
