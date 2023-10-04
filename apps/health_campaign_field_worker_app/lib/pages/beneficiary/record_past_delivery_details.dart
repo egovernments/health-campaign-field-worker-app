@@ -13,6 +13,7 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../models/data_model.mapper.g.dart';
+import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../router/app_router.dart';
@@ -49,7 +50,9 @@ class _RecordPastDeliveryDetailsPageState
             form: () => buildForm(context),
             builder: (context, form, child) => ScrollableContent(
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
+                BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                ),
               ]),
               footer: SizedBox(
                 height: 85,
@@ -59,21 +62,27 @@ class _RecordPastDeliveryDetailsPageState
                     onPressed: () async {
                       final event = context.read<DeliverInterventionBloc>();
 
+                      // Loop through each future task
                       for (int i = 0;
                           i < (state.futureTask ?? []).length;
                           i++) {
+                        // Get the value of the form control for each task
+
                         final formControllValue = (form
                                 .control("$_recordDoseAdministeredKey.$i")
                                 .value as KeyValue)
                             .key;
 
+                        // Determine the status based on the form control value
                         final status = formControllValue
                             ? Status.delivered.toValue()
                             : Status.notDelivered.toValue();
 
+                        // Create a new task with the updated status
                         final result =
                             state.futureTask![i].copyWith(status: status);
 
+                        // Add the updated task to the event
                         event.add(DeliverInterventionSubmitEvent(
                           result,
                           true,
@@ -156,17 +165,20 @@ class _RecordPastDeliveryDetailsPageState
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
-                      Column(
-                        children: [
-                          ...(state.futureTask?.map((e) {
-                                final int doseNumber =
-                                    int.parse(e.additionalFields!.fields
-                                        .firstWhereOrNull(
-                                          (ele) => ele.key == "DoseIndex",
-                                        )!
-                                        .value);
+                      ...(state.futureTask?.asMap().entries.map((entry) {
+                            final int doseNumber =
+                                int.parse(entry.value.additionalFields!.fields
+                                    .firstWhereOrNull(
+                                      (ele) =>
+                                          ele.key ==
+                                          AdditionalFieldsType.doseIndex
+                                              .toValue(),
+                                    )!
+                                    .value);
 
-                                return DigitRadioButtonList(
+                            return Column(
+                              children: [
+                                DigitRadioButtonList(
                                   labelText: "${localizations.translate(
                                     i18.deliverIntervention
                                         .wasDosePastDeliveryDetails,
@@ -178,7 +190,7 @@ class _RecordPastDeliveryDetailsPageState
                                   )} ${doseNumber - 1} ?",
                                   labelStyle: theme.textTheme.displayMedium,
                                   formControlName:
-                                      "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(e)}",
+                                      "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
                                   valueMapper: (val) =>
                                       localizations.translate(val.label),
                                   options: Constants.yesNo,
@@ -186,16 +198,17 @@ class _RecordPastDeliveryDetailsPageState
                                   onValueChange: (val) {
                                     form
                                         .control(
-                                          "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(e)}",
+                                          "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
                                         )
                                         .value = val;
                                   },
-                                );
-                              }).toList() ??
-                              []),
-                          const Divider(),
-                        ],
-                      ),
+                                ),
+                                if (entry.key != state.futureTask!.length - 1)
+                                  const Divider(), // Add Divider conditionally
+                              ],
+                            );
+                          }).toList() ??
+                          []),
                     ],
                   ),
                 ),
@@ -210,6 +223,7 @@ class _RecordPastDeliveryDetailsPageState
   FormGroup buildForm(BuildContext context) {
     final bloc = context.read<DeliverInterventionBloc>().state;
 
+    // Create a form group with a FormArray of KeyValue form controls
     return fb.group(
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([

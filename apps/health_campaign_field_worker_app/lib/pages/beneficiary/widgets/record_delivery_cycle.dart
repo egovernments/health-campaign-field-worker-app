@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
+import '../../../models/data_model.dart';
+import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -31,7 +33,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    bool isPastCyclesVisible = false;
+    bool isPastCyclesVisible =
+        false; // A boolean flag to track visibility of past cycles
 
     final headerList = [
       TableHeader(
@@ -46,7 +49,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
         localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
       ),
-    ];
+    ]; // List of table headers for displaying cycle and dose information
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,83 +60,60 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             return productState.maybeWhen(
               orElse: () => const Offstage(),
               fetched: (productVariants) {
-                final RegExp regexp = RegExp(r'^0+(?=.)');
+                // Calculate current cycle and dose index
 
-                final taskCycleindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[3].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 1;
+                return BlocBuilder<DeliverInterventionBloc,
+                    DeliverInterventionState>(
+                  builder: (context, deliverState) {
+                    final pastCycles = deliverState.pastCycles;
 
-                final int? taskDoseindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[4].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 0;
-
-                return taskCycleindex != null
-                    ? BlocBuilder<DeliverInterventionBloc,
-                        DeliverInterventionState>(
-                        builder: (context, deliverState) {
-                          final pastCycles = deliverState.pastCycles;
-
-                          return Column(
-                            children: [
-                              buildCycleAndDoseTable(
-                                deliverState.hasCycleArrived
-                                    ? widget.projectCycles
-                                        .where(
-                                          (e) => e.id == deliverState.cycle,
-                                        )
-                                        .toList()
-                                    : widget.projectCycles
-                                        .where(
-                                          (e) => e.id == deliverState.cycle - 1,
-                                        )
-                                        .toList(),
-                                headerList,
-                                deliverState.dose - 1,
-                              ),
-                              if (pastCycles != null && pastCycles.isNotEmpty)
-                                DigitIconButton(
-                                  iconText: isPastCyclesVisible
-                                      ? localizations.translate(i18
-                                          .deliverIntervention.hidePastCycles)
-                                      : localizations.translate(i18
-                                          .deliverIntervention.viewPastCycles),
-                                  iconTextColor:
-                                      DigitTheme.instance.colorScheme.secondary,
-                                  onPressed: () {
-                                    setState(() {
-                                      isPastCyclesVisible =
-                                          !isPastCyclesVisible;
-                                    });
-                                  },
-                                ),
-                              Visibility(
-                                // [TODO: Need to manage the visibility of pastCycles]
-                                visible: true,
-                                child: buildCycleAndDoseTable(
-                                  pastCycles ?? [],
-                                  headerList,
-                                  null,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    : const Offstage();
+                    return Column(
+                      children: [
+                        buildCycleAndDoseTable(
+                          deliverState.hasCycleArrived
+                              ? widget.projectCycles
+                                  .where(
+                                    (e) => e.id == deliverState.cycle,
+                                  )
+                                  .toList()
+                              : widget.projectCycles
+                                  .where(
+                                    (e) => e.id == deliverState.cycle - 1,
+                                  )
+                                  .toList(),
+                          headerList,
+                          deliverState.dose - 1,
+                        ),
+                        if (pastCycles != null && pastCycles.isNotEmpty)
+                          DigitIconButton(
+                            iconText: isPastCyclesVisible
+                                ? localizations.translate(
+                                    i18.deliverIntervention.hidePastCycles,
+                                  )
+                                : localizations.translate(
+                                    i18.deliverIntervention.viewPastCycles,
+                                  ),
+                            iconTextColor:
+                                DigitTheme.instance.colorScheme.secondary,
+                            onPressed: () {
+                              setState(() {
+                                isPastCyclesVisible = !isPastCyclesVisible;
+                              });
+                            },
+                          ),
+                        Visibility(
+                          // [TODO: Need to manage the visibility of pastCycles]
+                          visible: true,
+                          child: buildCycleAndDoseTable(
+                            pastCycles ?? [],
+                            headerList,
+                            null,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             );
           },
@@ -149,6 +129,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
   ) {
     final theme = DigitTheme.instance.mobileTheme;
+
+    // Create a list of widgets for each cycle
     final widgetList = cycles
         .map(
           (e) => Column(
@@ -156,14 +138,13 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Cycle  ${e.id}',
+                  '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
                   style: theme.textTheme.headlineMedium,
                   textAlign: TextAlign.left,
                 ),
               ),
               DigitTable(
                 selectedIndex: selectedIndex,
-
                 headerList: headerList,
                 tableData: e.deliveries!.map(
                   (item) {
@@ -171,13 +152,19 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         ?.where((element) =>
                             element.additionalFields?.fields
                                     .firstWhereOrNull(
-                                      (f) => f.key == 'DoseIndex',
+                                      (f) =>
+                                          f.key ==
+                                          AdditionalFieldsType.doseIndex
+                                              .toValue(),
                                     )
                                     ?.value ==
                                 '0${item.id}' &&
                             element.additionalFields?.fields
                                     .firstWhereOrNull(
-                                      (c) => c.key == 'CycleIndex',
+                                      (c) =>
+                                          c.key ==
+                                          AdditionalFieldsType.cycleIndex
+                                              .toValue(),
                                     )
                                     ?.value ==
                                 '0${e.id}')
@@ -189,8 +176,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         cellKey: 'dose',
                       ),
                       TableData(
-                        tasks?.status ?? 'In complete',
-                        // TODO[Task status needs to be mapped]
+                        tasks?.status ?? Status.inComplete.toValue(),
                         cellKey: 'status',
                       ),
                       TableData(
@@ -201,7 +187,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ]);
                   },
-                ).toList(), // You can replace this with actual data for each cycle
+                ).toList(),
                 leftColumnWidth: 130,
                 rightColumnWidth: headerList.length * 17 * 6,
                 height: 6 * 57,

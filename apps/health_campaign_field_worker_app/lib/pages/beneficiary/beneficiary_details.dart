@@ -91,10 +91,14 @@ class _BeneficiaryDetailsPageState
           final bloc = context.read<DeliverInterventionBloc>();
 
           final lastDose = taskData?.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'DoseIndex')
+              .firstWhereOrNull(
+                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+              )
               ?.value;
           final lastCycle = taskData?.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              .firstWhereOrNull(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
               ?.value;
 
           bloc.add(
@@ -214,72 +218,6 @@ class _BeneficiaryDetailsPageState
                                             .beneficiarysDetailsLabelText),
                                         style: theme.textTheme.displayMedium,
                                       ),
-                                    ),
-                                    DigitIconButton(
-                                      onPressed: () => DigitActionDialog.show(
-                                        context,
-                                        widget: ActionCard(
-                                          items: [
-                                            ActionCardModel(
-                                              icon: Icons.edit,
-                                              label: localizations.translate(
-                                                i18.beneficiaryDetails
-                                                    .beneficiarysDetailsEditIconLabel,
-                                              ),
-                                              action: () async {},
-                                            ),
-                                            ActionCardModel(
-                                              icon: Icons.delete,
-                                              label: localizations.translate(i18
-                                                  .beneficiaryDetails
-                                                  .beneficiarysDetailsDeleteIconLabel),
-                                              action: () => null,
-                                              // action: () => DigitDialog.show(
-                                              //   context,
-                                              //   options: DigitDialogOptions(
-                                              //     titleText: localizations.translate(i18
-                                              //         .householdOverView
-                                              //         .householdOverViewActionCardTitle),
-                                              //     primaryAction: DigitDialogActions(
-                                              //       label: localizations.translate(i18
-                                              //           .householdOverView
-                                              //           .householdOverViewPrimaryActionLabel),
-                                              //       action: (ctx) {
-                                              //         Navigator.of(
-                                              //           ctx,
-                                              //           rootNavigator: true,
-                                              //         )
-                                              //           ..pop()
-                                              //           ..pop();
-                                              //         context.router.push(
-                                              //           ReasonForDeletionRoute(
-                                              //             isHousholdDelete: true,
-                                              //           ),
-                                              //         );
-                                              //       },
-                                              //     ),
-                                              //     secondaryAction: DigitDialogActions(
-                                              //       label: localizations.translate(i18
-                                              //           .householdOverView
-                                              //           .householdOverViewSecondaryActionLabel),
-                                              //       action: (context) {
-                                              //         Navigator.of(
-                                              //           context,
-                                              //           rootNavigator: true,
-                                              //         ).pop();
-                                              //       },
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      iconText: localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .beneficiarysDetailsEditIconLabelText,
-                                      ),
-                                      icon: Icons.edit,
                                     ),
                                   ],
                                 ),
