@@ -4,23 +4,8 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:path/path.dart';
 
-import '../../models/data_model.dart';
-import '../../models/entities/additional_fields_type.dart';
-import '../../models/entities/adverse_event.dart';
-import '../../models/entities/deliver_strategy_type.dart';
-import '../../utils/typedefs.dart';
-import '../search_households/search_households.dart';
-
-part 'household_overview.freezed.dart';
-
-typedef HouseholdOverviewEmitter = Emitter<HouseholdOverviewState>;
-
-class HouseholdOverviewBloc
-    extends Bloc<HouseholdOverviewEvent, HouseholdOverviewState> {
-  final IndividualDataRepository individualRepository;
-  final HouseholdDataRepository householdRepository;
+import '../../models/data_modelseholdRepository;
   final HouseholdMemberDataRepository householdMemberRepository;
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
   final TaskDataRepository taskDataRepository;
@@ -325,28 +310,6 @@ class HouseholdOverviewBloc
     ));
   }
 
-// This function updates the state based on certain conditions and filters the tasks.
-  FutureOr<void> _updateFutureTask(
-    HouseholdOverviewUpdateFutureTaskEvent event,
-    HouseholdOverviewEmitter emit,
-  ) async {
-    // Set the loading state to true to indicate that an operation is in progress.
-    emit(state.copyWith(loading: true));
-
-    // Filter tasks based on a specific condition related to delivery strategy.
-    final List<TaskModel> filteredFutureTask = event.task.where((element) {
-      return element.additionalFields?.fields
-              .firstWhereOrNull((element) =>
-                  element.key == AdditionalFieldsType.deliveryStrategy.name)
-              ?.value ==
-          DeliverStrategyType.indirect.name.toUpperCase();
-    }).toList();
-
-    // Update the state with the filtered tasks and set loading to false.
-    emit(
-      state.copyWith(filteredFutureTask: filteredFutureTask, loading: false),
-    );
-  }
 }
 
 @freezed
