@@ -175,19 +175,15 @@ class _$DeliverInterventionSubmitEvent
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DeliverInterventionSubmitEvent &&
-            const DeepCollectionEquality().equals(other.task, task) &&
+            (identical(other.task, task) || other.task == task) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
-            const DeepCollectionEquality()
-                .equals(other.boundaryModel, boundaryModel));
+            (identical(other.boundaryModel, boundaryModel) ||
+                other.boundaryModel == boundaryModel));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(task),
-      isEditing,
-      const DeepCollectionEquality().hash(boundaryModel));
+  int get hashCode => Object.hash(runtimeType, task, isEditing, boundaryModel);
 
   @JsonKey(ignore: true)
   @override
@@ -359,13 +355,12 @@ class _$DeliverInterventionSearchEvent
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DeliverInterventionSearchEvent &&
-            const DeepCollectionEquality()
-                .equals(other.taskSearch, taskSearch));
+            (identical(other.taskSearch, taskSearch) ||
+                other.taskSearch == taskSearch));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(taskSearch));
+  int get hashCode => Object.hash(runtimeType, taskSearch);
 
   @JsonKey(ignore: true)
   @override
@@ -959,7 +954,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
     Object? futureTask = freezed,
-    Object? oldTask = null,
+    Object? oldTask = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1002,7 +997,7 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
           ? _value.futureTask
           : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
-      oldTask: null == oldTask
+      oldTask: freezed == oldTask
           ? _value.oldTask
           : oldTask // ignore: cast_nullable_to_non_nullable
               as TaskModel?,
@@ -1055,7 +1050,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? tasks = freezed,
     Object? futureDeliveries = freezed,
     Object? futureTask = freezed,
-    Object? oldTask = null,
+    Object? oldTask = freezed,
   }) {
     return _then(_$_DeliverInterventionState(
       loading: null == loading
@@ -1098,7 +1093,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
           ? _value._futureTask
           : futureTask // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
-      oldTask: null == oldTask
+      oldTask: freezed == oldTask
           ? _value.oldTask
           : oldTask // ignore: cast_nullable_to_non_nullable
               as TaskModel?,
@@ -1209,7 +1204,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
                 .equals(other._futureDeliveries, _futureDeliveries) &&
             const DeepCollectionEquality()
                 .equals(other._futureTask, _futureTask) &&
-            const DeepCollectionEquality().equals(other.oldTask, oldTask));
+            (identical(other.oldTask, oldTask) || other.oldTask == oldTask));
   }
 
   @override
@@ -1225,7 +1220,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
       const DeepCollectionEquality().hash(_tasks),
       const DeepCollectionEquality().hash(_futureDeliveries),
       const DeepCollectionEquality().hash(_futureTask),
-      const DeepCollectionEquality().hash(oldTask));
+      oldTask);
 
   @JsonKey(ignore: true)
   @override

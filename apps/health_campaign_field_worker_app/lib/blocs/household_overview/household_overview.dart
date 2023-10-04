@@ -5,7 +5,18 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../models/data_modelseholdRepository;
+import '../../models/data_model.dart';
+import '../../utils/typedefs.dart';
+import '../search_households/search_households.dart';
+
+part 'household_overview.freezed.dart';
+
+typedef HouseholdOverviewEmitter = Emitter<HouseholdOverviewState>;
+
+class HouseholdOverviewBloc
+    extends Bloc<HouseholdOverviewEvent, HouseholdOverviewState> {
+  final IndividualDataRepository individualRepository;
+  final HouseholdDataRepository householdRepository;
   final HouseholdMemberDataRepository householdMemberRepository;
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
   final TaskDataRepository taskDataRepository;
@@ -310,6 +321,7 @@ import '../../models/data_modelseholdRepository;
     ));
   }
 
+// This function updates the state based on certain conditions and filters the tasks.
 }
 
 @freezed
