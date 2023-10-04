@@ -13,6 +13,7 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../models/data_model.mapper.g.dart';
+import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
@@ -48,7 +49,9 @@ class _RecordPastDeliveryDetailsPageState
             form: () => buildForm(context),
             builder: (context, form, child) => ScrollableContent(
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(),
+                BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                ),
               ]),
               footer: SizedBox(
                 height: 85,
@@ -155,17 +158,20 @@ class _RecordPastDeliveryDetailsPageState
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
-                      Column(
-                        children: [
-                          ...(state.futureTask?.map((e) {
-                                final int doseNumber =
-                                    int.parse(e.additionalFields!.fields
-                                        .firstWhereOrNull(
-                                          (ele) => ele.key == "DoseIndex",
-                                        )!
-                                        .value);
+                      ...(state.futureTask?.asMap().entries.map((entry) {
+                            final int doseNumber =
+                                int.parse(entry.value.additionalFields!.fields
+                                    .firstWhereOrNull(
+                                      (ele) =>
+                                          ele.key ==
+                                          AdditionalFieldsType.doseIndex
+                                              .toValue(),
+                                    )!
+                                    .value);
 
-                                return DigitRadioButtonList(
+                            return Column(
+                              children: [
+                                DigitRadioButtonList(
                                   labelText: "${localizations.translate(
                                     i18.deliverIntervention
                                         .wasDosePastDeliveryDetails,
@@ -175,7 +181,7 @@ class _RecordPastDeliveryDetailsPageState
                                   )} ",
                                   labelStyle: theme.textTheme.displayMedium,
                                   formControlName:
-                                      "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(e)}",
+                                      "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
                                   valueMapper: (val) =>
                                       localizations.translate(val.label),
                                   options: Constants.yesNo,
@@ -183,16 +189,17 @@ class _RecordPastDeliveryDetailsPageState
                                   onValueChange: (val) {
                                     form
                                         .control(
-                                          "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(e)}",
+                                          "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
                                         )
                                         .value = val;
                                   },
-                                );
-                              }).toList() ??
-                              []),
-                          const Divider(),
-                        ],
-                      ),
+                                ),
+                                if (entry.key != state.futureTask!.length - 1)
+                                  const Divider(), // Add Divider conditionally
+                              ],
+                            );
+                          }).toList() ??
+                          []),
                     ],
                   ),
                 ),

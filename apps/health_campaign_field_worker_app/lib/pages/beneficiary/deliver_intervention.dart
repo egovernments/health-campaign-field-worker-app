@@ -180,7 +180,7 @@ class _DeliverInterventionPageState
                                                       label: localizations
                                                           .translate(
                                                         i18.common
-                                                            .coreCommonCancel,
+                                                            .coreCommonGoback,
                                                       ),
                                                       action: (context) =>
                                                           Navigator.of(
@@ -282,14 +282,16 @@ class _DeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.displayMedium,
                                                 ),
-                                                const DigitTextFormField(
+                                                DigitTextFormField(
                                                   readOnly: true,
                                                   formControlName:
                                                       _doseAdministrationKey,
                                                   keyboardType:
                                                       TextInputType.number,
-                                                  label: 'Current cycle',
-                                                  //TODO : [Need to change this to i18 localization ]
+                                                  label: localizations
+                                                      .translate(i18
+                                                          .deliverIntervention
+                                                          .currentCycle),
                                                 ),
                                                 DigitStepper(
                                                   activeStep:

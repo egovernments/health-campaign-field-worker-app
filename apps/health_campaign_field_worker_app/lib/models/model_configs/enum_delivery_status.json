@@ -1,22 +1,26 @@
 {
-    "name": "Status",
-    "enumValues": [
-        {
-            "name": "Delivered",
-            "value": "DELIVERED"
-        },
-        {
-            "name": "Not Delivered",
-            "value": "NOT_DELIVERED"
-        },
-        {
-            "name": "Beneficiary Refused",
-            "value": "BENEFICIARY_REFUSED"
-        },
-        {
-            "name": "Partially Delivered",
-            "value": "PARTIALLY_DELIVERED"
-        }
-    ],
-    "isEnum": true
+  "name": "Status",
+  "enumValues": [
+    {
+      "name": "Delivered",
+      "value": "DELIVERED"
+    },
+    {
+      "name": "Not Delivered",
+      "value": "NOT_DELIVERED"
+    },
+    {
+      "name": "Beneficiary Refused",
+      "value": "BENEFICIARY_REFUSED"
+    },
+    {
+      "name": "Partially Delivered",
+      "value": "PARTIALLY_DELIVERED"
+    },
+    {
+      "name": "In Complete",
+      "value": "IN_COMPLETE"
+    }
+  ],
+  "isEnum": true
 }
