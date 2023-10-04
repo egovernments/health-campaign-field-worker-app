@@ -40,7 +40,6 @@ class HouseholdOverviewBloc
     on(_handleSetAsHead);
     on(_handleReloadMember);
     on(_selectedIndividual);
-    on(_updateFutureTask);
   }
 
   FutureOr<void> _selectedIndividual(
@@ -278,26 +277,6 @@ class HouseholdOverviewBloc
       projectBeneficiaryType: event.projectBeneficiaryType,
     ));
   }
-
-  FutureOr<void> _updateFutureTask(
-    HouseholdOverviewUpdateFutureTaskEvent event,
-    HouseholdOverviewEmitter emit,
-  ) async {
-    // Set the loading state to true to indicate that an operation is in progress.
-    emit(state.copyWith(loading: true));
-
-    final List<TaskModel> filteredFutureTask = event.task.where((element) {
-      return element.additionalFields?.fields
-              .firstWhereOrNull((element) =>
-                  element.key == AdditionalFieldsType.deliveryStrategy.name)
-              ?.value ==
-          DeliverStrategyType.indirect.name.toUpperCase();
-    }).toList();
-
-    emit(
-      state.copyWith(filteredFutureTask: filteredFutureTask, loading: false),
-    );
-  }
 }
 
 @freezed
@@ -332,10 +311,6 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required String projectId,
     required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewReloadEvent;
-
-  const factory HouseholdOverviewEvent.updateFutureTask(
-    List<TaskModel> task,
-  ) = HouseholdOverviewUpdateFutureTaskEvent;
 }
 
 @freezed
