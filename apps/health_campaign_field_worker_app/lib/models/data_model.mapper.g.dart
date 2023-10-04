@@ -4622,6 +4622,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
   @override  AdditionalFieldsType decode(dynamic value) {
     switch (value) {
       case "DeliveryStrategy": return AdditionalFieldsType.deliveryStrategy;
+      case "CycleIndex": return AdditionalFieldsType.cycleIndex;
+      case "DoseIndex": return AdditionalFieldsType.doseIndex;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4629,6 +4631,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
   @override  dynamic encode(AdditionalFieldsType self) {
     switch (self) {
       case AdditionalFieldsType.deliveryStrategy: return "DeliveryStrategy";
+      case AdditionalFieldsType.cycleIndex: return "CycleIndex";
+      case AdditionalFieldsType.doseIndex: return "DoseIndex";
     }
   }
 }
@@ -4777,6 +4781,7 @@ class StatusMapper extends EnumMapper<Status> {
       case "NOT_DELIVERED": return Status.notDelivered;
       case "BENEFICIARY_REFUSED": return Status.beneficiaryRefused;
       case "PARTIALLY_DELIVERED": return Status.partiallyDelivered;
+      case "IN_COMPLETE": return Status.inComplete;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4787,6 +4792,7 @@ class StatusMapper extends EnumMapper<Status> {
       case Status.notDelivered: return "NOT_DELIVERED";
       case Status.beneficiaryRefused: return "BENEFICIARY_REFUSED";
       case Status.partiallyDelivered: return "PARTIALLY_DELIVERED";
+      case Status.inComplete: return "IN_COMPLETE";
     }
   }
 }

@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
+import '../../../models/data_model.dart';
+import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -32,7 +34,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    bool isPastCyclesVisible = false;
 
     final headerList = [
       TableHeader(
@@ -47,7 +48,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
         localizations.translate(i18.beneficiaryDetails.beneficiaryCompletedOn),
         cellKey: 'completedOn',
       ),
-    ];
+    ]; // List of table headers for displaying cycle and dose information
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,97 +59,71 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             return productState.maybeWhen(
               orElse: () => const Offstage(),
               fetched: (productVariants) {
-                final RegExp regexp = RegExp(r'^0+(?=.)');
+                // Calculate current cycle and dose index
+                return BlocBuilder<DeliverInterventionBloc,
+                    DeliverInterventionState>(
+                  builder: (context, deliverState) {
+                    final pastCycles = deliverState.pastCycles;
 
-                final taskCycleindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[3].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 1;
-
-                final int? taskDoseindex =
-                    widget.taskData != null && widget.taskData!.isNotEmpty
-                        ? int.tryParse(widget
-                            .taskData!.last.additionalFields!.fields[4].value
-                            .toString()
-                            .replaceAll(
-                              regexp,
-                              '',
-                            ))
-                        : 0;
-
-                return taskCycleindex != null
-                    ? BlocBuilder<DeliverInterventionBloc,
-                        DeliverInterventionState>(
-                        builder: (context, deliverState) {
-                          final pastCycles = deliverState.pastCycles;
-
-                          return Column(
-                            children: [
-                              deliverState.hasCycleArrived
-                                  ? buildCycleAndDoseTable(
-                                      widget.projectCycles
-                                          .where(
-                                            (e) => e.id == deliverState.cycle,
-                                          )
-                                          .toList(),
-                                      headerList,
-                                      deliverState.dose - 1,
+                    return Column(
+                      children: [
+                        deliverState.hasCycleArrived
+                            ? buildCycleAndDoseTable(
+                                widget.projectCycles
+                                    .where(
+                                      (e) => e.id == deliverState.cycle,
                                     )
-                                  : const SizedBox.shrink(),
-                              ExpandableNotifier(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expandable(
-                                      collapsed: const SizedBox.shrink(),
-                                      expanded: Container(
-                                        child: buildCycleAndDoseTable(
-                                          pastCycles ?? [],
-                                          headerList,
-                                          null,
-                                        ),
-                                      ),
-                                    ),
-                                    Builder(
-                                      builder: (context) {
-                                        var controller =
-                                            ExpandableController.of(
-                                          context,
-                                          required: true,
-                                        )!;
-
-                                        return DigitIconButton(
-                                          iconText: controller.expanded
-                                              ? localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .hidePastCycles,
-                                                )
-                                              : localizations.translate(
-                                                  i18.deliverIntervention
-                                                      .viewPastCycles,
-                                                ),
-                                          iconTextColor: DigitTheme
-                                              .instance.colorScheme.secondary,
-                                          onPressed: () {
-                                            controller.toggle();
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                    .toList(),
+                                headerList,
+                                deliverState.dose - 1,
+                              )
+                            : const SizedBox.shrink(),
+                        ExpandableNotifier(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expandable(
+                                collapsed: const SizedBox.shrink(),
+                                expanded: Container(
+                                  child: buildCycleAndDoseTable(
+                                    pastCycles ?? [],
+                                    headerList,
+                                    null,
+                                  ),
                                 ),
                               ),
+                              Builder(
+                                builder: (context) {
+                                  var controller = ExpandableController.of(
+                                    context,
+                                    required: true,
+                                  )!;
+
+                                  return DigitIconButton(
+                                    iconText: controller.expanded
+                                        ? localizations.translate(
+                                            i18.deliverIntervention
+                                                .hidePastCycles,
+                                          )
+                                        : localizations.translate(
+                                            i18.deliverIntervention
+                                                .viewPastCycles,
+                                          ),
+                                    iconTextColor: DigitTheme
+                                        .instance.colorScheme.secondary,
+                                    onPressed: () {
+                                      controller.toggle();
+                                    },
+                                  );
+                                },
+                              ),
                             ],
-                          );
-                        },
-                      )
-                    : const Offstage();
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             );
           },
@@ -164,6 +139,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     int? selectedIndex,
   ) {
     final theme = DigitTheme.instance.mobileTheme;
+
+    // Create a list of widgets for each cycle
     final widgetList = cycles
         .map(
           (e) => Column(
@@ -171,14 +148,13 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Cycle  ${e.id}',
+                  '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
                   style: theme.textTheme.headlineMedium,
                   textAlign: TextAlign.left,
                 ),
               ),
               DigitTable(
                 selectedIndex: selectedIndex,
-
                 headerList: headerList,
                 tableData: e.deliveries!.map(
                   (item) {
@@ -186,13 +162,19 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         ?.where((element) =>
                             element.additionalFields?.fields
                                     .firstWhereOrNull(
-                                      (f) => f.key == 'DoseIndex',
+                                      (f) =>
+                                          f.key ==
+                                          AdditionalFieldsType.doseIndex
+                                              .toValue(),
                                     )
                                     ?.value ==
                                 '0${item.id}' &&
                             element.additionalFields?.fields
                                     .firstWhereOrNull(
-                                      (c) => c.key == 'CycleIndex',
+                                      (c) =>
+                                          c.key ==
+                                          AdditionalFieldsType.cycleIndex
+                                              .toValue(),
                                     )
                                     ?.value ==
                                 '0${e.id}')
@@ -204,8 +186,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         cellKey: 'dose',
                       ),
                       TableData(
-                        tasks?.status ?? 'In complete',
-                        // TODO[Task status needs to be mapped]
+                        tasks?.status ?? Status.inComplete.toValue(),
                         cellKey: 'status',
                       ),
                       TableData(
@@ -216,7 +197,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ]);
                   },
-                ).toList(), // You can replace this with actual data for each cycle
+                ).toList(),
                 leftColumnWidth: 130,
                 rightColumnWidth: headerList.length * 17 * 6,
                 height: 6 * 57,

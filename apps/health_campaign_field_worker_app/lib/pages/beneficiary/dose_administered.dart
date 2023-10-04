@@ -41,6 +41,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
 
+    // Define a list of TableHeader objects for the header of a table
     final headerListResource = [
       TableHeader(
         localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
@@ -69,14 +70,20 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                     final bloc = context.read<DeliverInterventionBloc>().state;
                     final event = context.read<DeliverInterventionBloc>();
                     final parent = context.router.parent() as StackRouter;
+
+                    // Pop twice to navigate back to the previous screen
                     parent
                       ..pop()
                       ..pop();
                     if (doseAdministered && context.mounted) {
+                      // Iterate through future deliveries
+
                       for (var e in bloc.futureDeliveries!) {
                         int doseIndex = e.id;
                         final clientReferenceId = IdGen.i.identifier;
                         final address = bloc.oldTask?.address;
+
+                        // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
                         event.add(DeliverInterventionSubmitEvent(
                           TaskModel(
                             projectId: context.projectId,
@@ -158,7 +165,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         ));
                       }
                     }
-
+                    // Navigate to the AcknowledgementRoute
                     context.router.push(AcknowledgementRoute());
                   },
                   child: Center(

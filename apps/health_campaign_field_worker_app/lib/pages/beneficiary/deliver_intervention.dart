@@ -38,14 +38,20 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
 
 class _DeliverInterventionPageState
     extends LocalizedState<DeliverInterventionPage> {
+  // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
+
+  // Variable to track dose administration status
   bool doseAdministered = false;
+
+  // List of controllers for form elements
   final List _controllers = [];
 
+// Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
 
   @override
@@ -174,7 +180,7 @@ class _DeliverInterventionPageState
                                                       label: localizations
                                                           .translate(
                                                         i18.common
-                                                            .coreCommonCancel,
+                                                            .coreCommonGoback,
                                                       ),
                                                       action: (context) =>
                                                           Navigator.of(
@@ -276,14 +282,16 @@ class _DeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.displayMedium,
                                                 ),
-                                                const DigitTextFormField(
+                                                DigitTextFormField(
                                                   readOnly: true,
                                                   formControlName:
                                                       _doseAdministrationKey,
                                                   keyboardType:
                                                       TextInputType.number,
-                                                  label: 'Current cycle',
-                                                  //TODO : [Need to change this to i18 localization ]
+                                                  label: localizations
+                                                      .translate(i18
+                                                          .deliverIntervention
+                                                          .currentCycle),
                                                 ),
                                                 DigitStepper(
                                                   activeStep:
@@ -460,6 +468,7 @@ class _DeliverInterventionPageState
     String? projectBeneficiaryClientReferenceId,
     AddressModel? address,
   }) {
+    // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
     task ??= TaskModel(
@@ -477,9 +486,12 @@ class _DeliverInterventionPageState
       ),
     );
 
+    // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
+
+    // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: context.projectId,
       resources: productvariantList
@@ -541,12 +553,16 @@ class _DeliverInterventionPageState
     return task;
   }
 
+// This method builds a form used for delivering interventions.
+
   FormGroup buildForm(
     BuildContext context,
     List<ProductVariantsModel>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
+
+    // Add controllers for each product variant to the _controllers list.
 
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));

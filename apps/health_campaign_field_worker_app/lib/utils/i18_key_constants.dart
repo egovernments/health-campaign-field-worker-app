@@ -84,6 +84,7 @@ class Common {
   String get coreCommonYes => 'CORE_COMMON_YES';
 
   String get coreCommonNo => 'CORE_COMMON_NO';
+  String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 }
 
 class Login {
@@ -212,6 +213,7 @@ class BeneficiaryDetails {
   String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
   String get beneficiaryDeliveryStrategy =>
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
+  String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
 }
 
 class IndividualDetails {

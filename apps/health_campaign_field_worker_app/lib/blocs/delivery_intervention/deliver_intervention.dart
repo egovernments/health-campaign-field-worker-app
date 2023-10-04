@@ -25,13 +25,16 @@ class DeliverInterventionBloc
     on(_handleActiveCycleDose);
   }
 
+  // Event handler for submitting a task
   FutureOr<void> _handleSubmit(
     DeliverInterventionSubmitEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
+    // Update loading state to indicate an operation is in progress
     emit(state.copyWith(loading: true));
     try {
       if (event.isEditing) {
+        // Update an existing task
         await taskRepository.update(event.task.copyWith(
           clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
                       null &&
@@ -45,6 +48,7 @@ class DeliverInterventionBloc
               : null,
         ));
       } else {
+        // Create a new task
         final code = event.boundaryModel.code;
         final name = event.boundaryModel.name;
 
@@ -68,6 +72,7 @@ class DeliverInterventionBloc
     }
   }
 
+  // Search for tasks and process the results
   FutureOr<void> _handleSearch(
     DeliverInterventionSearchEvent event,
     BeneficiaryRegistrationEmitter emit,
@@ -103,36 +108,42 @@ class DeliverInterventionBloc
     }
   }
 
+// Event handler for handling active cycle and dose selection
   FutureOr<void> _handleActiveCycleDose(
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
+    // Calculate the current running cycle based on start and end dates
     final currentRunningCycle = (event.projectType.cycles?.firstWhere(
           (e) =>
-              (e.startDate ?? 1696032000000) <=
-                  DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate ?? 1696032000000) >=
-                  DateTime.now().millisecondsSinceEpoch,
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
           orElse: () =>
               const Cycle(), // Return null when no matching cycle is found
         ))?.id ??
         0;
 
+    // If the current running cycle is different, update state accordingly
     if (currentRunningCycle != 0) {
-      print('CURRENT CYCLE NOT -1 : ${currentRunningCycle}');
       if (event.lastCycle == currentRunningCycle) {
+        // Calculate the length of deliveries in the current cycle
         final deliveryLength = event.projectType.cycles!
                 .firstWhere((c) => c.id == event.lastCycle)
                 .deliveries
                 ?.length ??
             0;
         final isNotLastDose = event.lastDose < deliveryLength;
+        // Get a list of past cycles
         final pastCycles = event.projectType.cycles
             ?.where(
               (p) => p.id != event.lastCycle && p.id < event.lastCycle,
             )
             .toList();
+
+        // Sort the past cycles in descending order by ID
         pastCycles?.sort((a, b) => b.id.compareTo(a.id));
+
+        // If it's not the last dose, update state accordingly
         if (isNotLastDose) {
           emit(state.copyWith(
             cycle: event.lastCycle,
@@ -140,7 +151,9 @@ class DeliverInterventionBloc
             pastCycles: pastCycles,
             hasCycleArrived: true,
           ));
-        } else {
+        }
+        // If it's the last dose, move to the next cycle
+        else {
           emit(state.copyWith(
             cycle: event.lastCycle + 1,
             hasCycleArrived: false,
@@ -154,6 +167,7 @@ class DeliverInterventionBloc
               (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
             )
             .toList();
+        // Sort the past cycles in descending order by ID
         pastCycles?.sort((a, b) => b.id.compareTo(a.id));
         emit(state.copyWith(
           cycle: currentRunningCycle,
@@ -163,7 +177,6 @@ class DeliverInterventionBloc
         ));
       }
     } else {
-      print('ELSE: ${event.lastCycle}');
       final pastCycles = event.projectType.cycles
           ?.where(
             (p) => p.id != currentRunningCycle,
@@ -178,6 +191,7 @@ class DeliverInterventionBloc
     }
   }
 
+  // Event handler for selecting future deliveries
   FutureOr<void> _handleFutureDeliveries(
     DeliverInterventionCycleFutureDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
@@ -191,6 +205,7 @@ class DeliverInterventionBloc
 
       if (currentCycle.deliveries != null) {
         List<DeliveryModel> futureDeliveries = [];
+        // Iterate over deliveries starting from the current dose
         for (int index = currentDose;
             index < currentCycle.deliveries!.length;
             index++) {
@@ -198,12 +213,15 @@ class DeliverInterventionBloc
 
           String? deliveryStrategy = delivery.deliveryStrategy;
 
+          // Check if the delivery strategy is indirect
           if (deliveryStrategy == DeliverStrategyType.indirect.toValue()) {
             futureDeliveries.add(delivery);
           } else if (deliveryStrategy == DeliverStrategyType.direct.toValue()) {
+            // If it's direct, stop adding deliveries
             break;
           }
         }
+        // Update the state with the list of future deliveries
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
     } catch (error) {

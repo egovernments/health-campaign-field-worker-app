@@ -17,9 +17,7 @@ import '../../blocs/project/project.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
-import '../../widgets/action_card/action_card.dart';
-import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../utils/utilsct_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import 'widgets/record_delivery_cycle.dart';
@@ -96,7 +94,7 @@ class _BeneficiaryDetailsPageState
                   ?.value
               : 0;
           final lastCycle = taskData != null && taskData.isNotEmpty
-              ? taskData?.last.additionalFields?.fields
+              ? taskData.last.additionalFields?.fields
                   .firstWhereOrNull((e) => e.key == 'CycleIndex')
                   ?.value
               : 1;
@@ -218,72 +216,6 @@ class _BeneficiaryDetailsPageState
                                             .beneficiarysDetailsLabelText),
                                         style: theme.textTheme.displayMedium,
                                       ),
-                                    ),
-                                    DigitIconButton(
-                                      onPressed: () => DigitActionDialog.show(
-                                        context,
-                                        widget: ActionCard(
-                                          items: [
-                                            ActionCardModel(
-                                              icon: Icons.edit,
-                                              label: localizations.translate(
-                                                i18.beneficiaryDetails
-                                                    .beneficiarysDetailsEditIconLabel,
-                                              ),
-                                              action: () async {},
-                                            ),
-                                            ActionCardModel(
-                                              icon: Icons.delete,
-                                              label: localizations.translate(i18
-                                                  .beneficiaryDetails
-                                                  .beneficiarysDetailsDeleteIconLabel),
-                                              action: () => null,
-                                              // action: () => DigitDialog.show(
-                                              //   context,
-                                              //   options: DigitDialogOptions(
-                                              //     titleText: localizations.translate(i18
-                                              //         .householdOverView
-                                              //         .householdOverViewActionCardTitle),
-                                              //     primaryAction: DigitDialogActions(
-                                              //       label: localizations.translate(i18
-                                              //           .householdOverView
-                                              //           .householdOverViewPrimaryActionLabel),
-                                              //       action: (ctx) {
-                                              //         Navigator.of(
-                                              //           ctx,
-                                              //           rootNavigator: true,
-                                              //         )
-                                              //           ..pop()
-                                              //           ..pop();
-                                              //         context.router.push(
-                                              //           ReasonForDeletionRoute(
-                                              //             isHousholdDelete: true,
-                                              //           ),
-                                              //         );
-                                              //       },
-                                              //     ),
-                                              //     secondaryAction: DigitDialogActions(
-                                              //       label: localizations.translate(i18
-                                              //           .householdOverView
-                                              //           .householdOverViewSecondaryActionLabel),
-                                              //       action: (context) {
-                                              //         Navigator.of(
-                                              //           context,
-                                              //           rootNavigator: true,
-                                              //         ).pop();
-                                              //       },
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      iconText: localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .beneficiarysDetailsEditIconLabelText,
-                                      ),
-                                      icon: Icons.edit,
                                     ),
                                   ],
                                 ),

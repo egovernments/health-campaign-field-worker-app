@@ -4,6 +4,14 @@
     {
       "name": "DeliveryStrategy",
       "value": "DeliveryStrategy"
+    },
+    {
+      "name": "CycleIndex",
+      "value": "CycleIndex"
+    },
+    {
+      "name": "DoseIndex",
+      "value": "DoseIndex"
     }
   ],
   "isEnum": true
