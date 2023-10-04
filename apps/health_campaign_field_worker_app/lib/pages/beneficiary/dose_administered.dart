@@ -69,12 +69,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   onPressed: () {
                     final bloc = context.read<DeliverInterventionBloc>().state;
                     final event = context.read<DeliverInterventionBloc>();
-                    final parent = context.router.parent() as StackRouter;
 
-                    // Pop twice to navigate back to the previous screen
-                    parent
-                      ..pop()
-                      ..pop();
                     if (doseAdministered && context.mounted) {
                       // Iterate through future deliveries
 

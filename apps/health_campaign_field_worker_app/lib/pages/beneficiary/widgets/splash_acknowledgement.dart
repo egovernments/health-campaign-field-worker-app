@@ -27,6 +27,7 @@ class _SplashAcknowledgementPageState
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
           try {
+            // context.router.pop();
             context.router.push(DoseAdministeredRoute());
           } catch (e) {
             print('Error during navigation: $e');
