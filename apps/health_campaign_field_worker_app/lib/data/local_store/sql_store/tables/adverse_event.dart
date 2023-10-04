@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 
 class AdverseEvent extends Table {
   TextColumn get id => text().nullable()();
+  TextColumn get projectId => text().nullable()();
   TextColumn get taskClientReferenceId => text().nullable()();
   IntColumn get reAttempts => integer().nullable()();
   TextColumn get symptoms => text().nullable()();

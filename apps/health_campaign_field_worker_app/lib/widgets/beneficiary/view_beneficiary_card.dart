@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
@@ -93,13 +92,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 element.projectBeneficiaryClientReferenceId ==
                 projectBeneficiary.first.clientReferenceId)
             .toList();
-
-        final adverseEvents = householdMember.adverseEvents
-            ?.where((element) =>
-                element.taskClientReferenceId ==
-                taskdata?.first.clientReferenceId)
-            .toList();
-
+        final adverseEvents = taskdata != null && taskdata.isNotEmpty
+            ? householdMember.adverseEvents
+                ?.where((element) =>
+                    element.taskClientReferenceId ==
+                    taskdata.first.clientReferenceId)
+                .toList()
+            : null;
         final ageInYears = DigitDateUtils.calculateAge(
           DigitDateUtils.getFormattedDateToDateTime(
                 e.dateOfBirth!,
@@ -113,9 +112,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               DateTime.now(),
         ).months;
 
-        final isNotEligible =
-            (ageInYears > 0 || (ageInMonths < 3 || ageInMonths > 11)) ||
-                (adverseEvents ?? []).isNotEmpty;
+        final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+          DigitDOBAge(
+            years: ageInYears,
+            months: ageInMonths,
+          ),
+          3,
+          11,
+          adverseEvents,
+        );
 
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
@@ -201,7 +206,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       ),
       3,
       11,
-      householdMember,
+      householdMember.adverseEvents,
     );
 
     final isBeneficiaryRefused =

@@ -78,7 +78,9 @@ class SearchHouseholdsBloc
     if (adverseEventDataRepository is AdverseEventLocalRepository) {
       (adverseEventDataRepository as AdverseEventLocalRepository)
           .listenToChanges(
-        query: AdverseEventSearchModel(),
+        query: AdverseEventSearchModel(
+          projectId: projectId,
+        ),
         listener: (data) {
           add(const SearchHouseholdsInitializedEvent());
         },
@@ -103,9 +105,8 @@ class SearchHouseholdsBloc
     );
 
     final adverseEvents = await adverseEventDataRepository.search(
-      AdverseEventSearchModel(),
+      AdverseEventSearchModel(projectId: projectId),
     );
-
     final interventionDelivered = tasks
         .where((element) => element.projectId == projectId)
         .whereNotNull()

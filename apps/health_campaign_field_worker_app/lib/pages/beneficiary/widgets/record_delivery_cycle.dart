@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +9,7 @@ import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/data_model.dart';
-import '../../../models/entities/additional_fields_type.dart';
+import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -33,8 +34,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    bool isPastCyclesVisible =
-        false; // A boolean flag to track visibility of past cycles
 
     final headerList = [
       TableHeader(
@@ -61,7 +60,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               orElse: () => const Offstage(),
               fetched: (productVariants) {
                 // Calculate current cycle and dose index
-
                 return BlocBuilder<DeliverInterventionBloc,
                     DeliverInterventionState>(
                   builder: (context, deliverState) {
@@ -69,45 +67,57 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                     return Column(
                       children: [
-                        buildCycleAndDoseTable(
-                          deliverState.hasCycleArrived
-                              ? widget.projectCycles
-                                  .where(
-                                    (e) => e.id == deliverState.cycle,
-                                  )
-                                  .toList()
-                              : widget.projectCycles
-                                  .where(
-                                    (e) => e.id == deliverState.cycle - 1,
-                                  )
-                                  .toList(),
-                          headerList,
-                          deliverState.dose - 1,
-                        ),
-                        if (pastCycles != null && pastCycles.isNotEmpty)
-                          DigitIconButton(
-                            iconText: isPastCyclesVisible
-                                ? localizations.translate(
-                                    i18.deliverIntervention.hidePastCycles,
-                                  )
-                                : localizations.translate(
-                                    i18.deliverIntervention.viewPastCycles,
+                        deliverState.hasCycleArrived
+                            ? buildCycleAndDoseTable(
+                                widget.projectCycles
+                                    .where(
+                                      (e) => e.id == deliverState.cycle,
+                                    )
+                                    .toList(),
+                                headerList,
+                                deliverState.dose - 1,
+                              )
+                            : const SizedBox.shrink(),
+                        ExpandableNotifier(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expandable(
+                                collapsed: const SizedBox.shrink(),
+                                expanded: Container(
+                                  child: buildCycleAndDoseTable(
+                                    pastCycles ?? [],
+                                    headerList,
+                                    null,
                                   ),
-                            iconTextColor:
-                                DigitTheme.instance.colorScheme.secondary,
-                            onPressed: () {
-                              setState(() {
-                                isPastCyclesVisible = !isPastCyclesVisible;
-                              });
-                            },
-                          ),
-                        Visibility(
-                          // [TODO: Need to manage the visibility of pastCycles]
-                          visible: true,
-                          child: buildCycleAndDoseTable(
-                            pastCycles ?? [],
-                            headerList,
-                            null,
+                                ),
+                              ),
+                              Builder(
+                                builder: (context) {
+                                  var controller = ExpandableController.of(
+                                    context,
+                                    required: true,
+                                  )!;
+
+                                  return DigitIconButton(
+                                    iconText: controller.expanded
+                                        ? localizations.translate(
+                                            i18.deliverIntervention
+                                                .hidePastCycles,
+                                          )
+                                        : localizations.translate(
+                                            i18.deliverIntervention
+                                                .viewPastCycles,
+                                          ),
+                                    iconTextColor: DigitTheme
+                                        .instance.colorScheme.secondary,
+                                    onPressed: () {
+                                      controller.toggle();
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ],

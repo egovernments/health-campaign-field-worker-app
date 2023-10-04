@@ -9,7 +9,6 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -293,7 +292,18 @@ class _HouseholdOverviewPageState
                                                     projectBeneficiary.first
                                                         .clientReferenceId)
                                                 .toList();
-
+                                            final adverseEventData = taskdata !=
+                                                        null &&
+                                                    taskdata.isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .adverseEvents
+                                                    ?.where((element) =>
+                                                        element
+                                                            .taskClientReferenceId ==
+                                                        taskdata.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
                                             final ageInYears =
                                                 DigitDateUtils.calculateAge(
                                               DigitDateUtils
@@ -315,20 +325,11 @@ class _HouseholdOverviewPageState
                                                 checkIfBeneficiaryRefused(
                                               taskdata,
                                             );
-                                            final recordedAdverseEvent = state
-                                                        .householdMemberWrapper
-                                                        .adverseEvents !=
-                                                    null &&
-                                                (state.householdMemberWrapper
-                                                            .adverseEvents ??
-                                                        [])
-                                                    .isNotEmpty;
 
                                             return MemberCard(
                                               isHead: isHead,
                                               individual: e,
-                                              tasks: state
-                                                  .householdMemberWrapper.tasks,
+                                              tasks: taskdata,
                                               editMemberAction: () async {
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
@@ -454,16 +455,14 @@ class _HouseholdOverviewPageState
                                               },
                                               isNotEligible:
                                                   (!checkEligibilityForAgeAndAdverseEvent(
-                                                        DigitDOBAge(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        3,
-                                                        11,
-                                                        state
-                                                            .householdMemberWrapper,
-                                                      ) ||
-                                                      recordedAdverseEvent),
+                                                DigitDOBAge(
+                                                  years: ageInYears,
+                                                  months: ageInMonths,
+                                                ),
+                                                3,
+                                                11,
+                                                adverseEventData,
+                                              )),
                                               name: e.name?.givenName ?? ' - ',
                                               years: (e.dateOfBirth == null
                                                       ? null
@@ -494,7 +493,9 @@ class _HouseholdOverviewPageState
                                                   ? false
                                                   : taskdata.isNotEmpty &&
                                                           !isBeneficiaryRefused &&
-                                                          !recordedAdverseEvent
+                                                          (adverseEventData ??
+                                                                  [])
+                                                              .isEmpty
                                                       ? true
                                                       : false,
                                               localizations: localizations,

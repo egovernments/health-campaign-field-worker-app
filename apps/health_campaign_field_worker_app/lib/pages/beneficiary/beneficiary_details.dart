@@ -90,16 +90,16 @@ class _BeneficiaryDetailsPageState
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
 
-          final lastDose = taskData?.last.additionalFields?.fields
-              .firstWhereOrNull(
-                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
-              )
-              ?.value;
-          final lastCycle = taskData?.last.additionalFields?.fields
-              .firstWhereOrNull(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-              )
-              ?.value;
+          final lastDose = taskData != null && taskData.isNotEmpty
+              ? taskData.last.additionalFields?.fields
+                  .firstWhereOrNull((e) => e.key == 'DoseIndex')
+                  ?.value
+              : 0;
+          final lastCycle = taskData != null && taskData.isNotEmpty
+              ? taskData.last.additionalFields?.fields
+                  .firstWhereOrNull((e) => e.key == 'CycleIndex')
+                  ?.value
+              : 1;
 
           bloc.add(
             DeliverInterventionEvent.setActiveCycleDose(

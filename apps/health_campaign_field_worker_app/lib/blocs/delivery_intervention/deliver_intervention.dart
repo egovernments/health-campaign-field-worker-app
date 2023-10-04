@@ -5,26 +5,20 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/additional_fields_type.dart';
-import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
 
-// Define a custom type for emitting state changes
 typedef BeneficiaryRegistrationEmitter = Emitter<DeliverInterventionState>;
 
-// Define a Bloc class for managing state and events
 class DeliverInterventionBloc
     extends Bloc<DeliverInterventionEvent, DeliverInterventionState> {
   final DataRepository<TaskModel, TaskSearchModel> taskRepository;
 
-  // Constructor for the DeliverInterventionBloc
   DeliverInterventionBloc(
     super.initialState, {
     required this.taskRepository,
   }) {
-    // Define event handlers for different events
     on(_handleSubmit);
     on(_handleSearch);
     on(_handleFutureDeliveries);
@@ -38,12 +32,10 @@ class DeliverInterventionBloc
   ) async {
     // Update loading state to indicate an operation is in progress
     emit(state.copyWith(loading: true));
-
     try {
       if (event.isEditing) {
         // Update an existing task
         await taskRepository.update(event.task.copyWith(
-          // Check if client audit details are available
           clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
                       null &&
                   event.task.clientAuditDetails?.createdTime != null)
@@ -69,32 +61,27 @@ class DeliverInterventionBloc
             locality: localityModel,
           ),
         ));
-        // Update the state with the old task
         emit(state.copyWith(
           oldTask: event.task,
         ));
       }
     } catch (error) {
-      // Rethrow any errors that occur during processing.
       rethrow;
     } finally {
-      // Set the loading state to false after the operation is complete.
       emit(state.copyWith(loading: false));
     }
   }
 
-  // Event handler for searching tasks
+  // Search for tasks and process the results
   FutureOr<void> _handleSearch(
     DeliverInterventionSearchEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    // Update loading state
     emit(state.copyWith(loading: true));
     try {
       final List<TaskModel> tasks = await taskRepository.search(
         event.taskSearch,
       );
-      // Search for tasks and process the results
 
       final List<TaskModel> futureTask = tasks
           .where((element) =>
@@ -121,73 +108,85 @@ class DeliverInterventionBloc
     }
   }
 
-  // Event handler for handling active cycle and dose selection
+// Event handler for handling active cycle and dose selection
   FutureOr<void> _handleActiveCycleDose(
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
     // Calculate the current running cycle based on start and end dates
-    final currentRunningCycle = (event.projectType.cycles?.firstWhere((e) =>
-            (e.startDate ?? 1696032000000) <=
-                DateTime.now().millisecondsSinceEpoch &&
-            (e.endDate ?? 1696032000000) >=
-                DateTime.now().millisecondsSinceEpoch))!
-        .id;
+    final currentRunningCycle = (event.projectType.cycles?.firstWhere(
+          (e) =>
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+          orElse: () =>
+              const Cycle(), // Return null when no matching cycle is found
+        ))?.id ??
+        0;
 
-    if (event.lastCycle == currentRunningCycle) {
-      // Calculate the length of deliveries in the current cycle
-      final deliveryLength = event.projectType.cycles!
-              .firstWhere((c) => c.id == event.lastCycle)
-              .deliveries
-              ?.length ??
-          0;
+    // If the current running cycle is different, update state accordingly
+    if (currentRunningCycle != 0) {
+      if (event.lastCycle == currentRunningCycle) {
+        // Calculate the length of deliveries in the current cycle
+        final deliveryLength = event.projectType.cycles!
+                .firstWhere((c) => c.id == event.lastCycle)
+                .deliveries
+                ?.length ??
+            0;
+        final isNotLastDose = event.lastDose < deliveryLength;
+        // Get a list of past cycles
+        final pastCycles = event.projectType.cycles
+            ?.where(
+              (p) => p.id != event.lastCycle && p.id < event.lastCycle,
+            )
+            .toList();
 
-      // Check if the current dose is not the last dose in the cycle
-      final isNotLastDose = event.lastDose < deliveryLength;
+        // Sort the past cycles in descending order by ID
+        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
 
-      // Get a list of past cycles
-      final pastCycles = event.projectType.cycles
-          ?.where(
-            (p) => p.id != event.lastCycle && p.id < event.lastCycle,
-          )
-          .toList();
-
-      // Sort the past cycles in descending order by ID
-      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
-
-      if (isNotLastDose) {
         // If it's not the last dose, update state accordingly
+        if (isNotLastDose) {
+          emit(state.copyWith(
+            cycle: event.lastCycle,
+            dose: event.lastDose + 1,
+            pastCycles: pastCycles,
+            hasCycleArrived: true,
+          ));
+        }
+        // If it's the last dose, move to the next cycle
+        else {
+          emit(state.copyWith(
+            cycle: event.lastCycle + 1,
+            hasCycleArrived: false,
+            dose: event.lastDose,
+            pastCycles: pastCycles,
+          ));
+        }
+      } else {
+        final pastCycles = event.projectType.cycles
+            ?.where(
+              (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
+            )
+            .toList();
+        // Sort the past cycles in descending order by ID
+        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
         emit(state.copyWith(
-          cycle: event.lastCycle,
-          dose: event.lastDose + 1,
+          cycle: currentRunningCycle,
+          dose: 1,
           pastCycles: pastCycles,
           hasCycleArrived: true,
         ));
-      } else {
-        // If it's the last dose, move to the next cycle
-        emit(state.copyWith(
-          cycle: event.lastCycle + 1,
-          hasCycleArrived: false,
-          dose: event.lastDose,
-          pastCycles: pastCycles,
-        ));
       }
     } else {
-      // If the current running cycle is different, update state accordingly
       final pastCycles = event.projectType.cycles
           ?.where(
-            (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
+            (p) => p.id != currentRunningCycle,
           )
           .toList();
-
-      // Sort the past cycles in descending order by ID
-      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
-
       emit(state.copyWith(
-        cycle: currentRunningCycle,
+        cycle: event.lastCycle,
         dose: 1,
+        hasCycleArrived: false,
         pastCycles: pastCycles,
-        hasCycleArrived: true,
       ));
     }
   }
@@ -206,7 +205,6 @@ class DeliverInterventionBloc
 
       if (currentCycle.deliveries != null) {
         List<DeliveryModel> futureDeliveries = [];
-
         // Iterate over deliveries starting from the current dose
         for (int index = currentDose;
             index < currentCycle.deliveries!.length;
@@ -223,7 +221,6 @@ class DeliverInterventionBloc
             break;
           }
         }
-
         // Update the state with the list of future deliveries
         emit(state.copyWith(futureDeliveries: futureDeliveries));
       }
