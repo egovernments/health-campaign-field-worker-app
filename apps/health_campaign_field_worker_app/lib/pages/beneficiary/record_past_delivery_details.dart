@@ -15,6 +15,7 @@ import '../../blocs/localization/app_localization.dart';
 import '../../models/data_model.mapper.g.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
+import '../../models/entities/task.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
@@ -56,7 +57,7 @@ class _RecordPastDeliveryDetailsPageState
               footer: SizedBox(
                 height: 85,
                 child: DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                  margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
                     onPressed: () async {
                       final event = context.read<DeliverInterventionBloc>();
@@ -103,14 +104,20 @@ class _RecordPastDeliveryDetailsPageState
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
 
-                              final projectId = context.projectId;
-                              final projectBeneficiaryType =
-                                  context.beneficiaryType;
                               bloc.add(HouseholdOverviewReloadEvent(
-                                projectId: projectId,
-                                projectBeneficiaryType: projectBeneficiaryType,
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
                               ));
-
+                              event.add(DeliverInterventionSearchEvent(
+                                TaskSearchModel(
+                                  projectBeneficiaryClientReferenceId: bloc
+                                      .state
+                                      .householdMemberWrapper
+                                      .projectBeneficiaries
+                                      .map((e) => e.clientReferenceId)
+                                      .toList(),
+                                ),
+                              ));
                               Navigator.of(
                                 ctx,
                                 rootNavigator: true,
@@ -178,7 +185,9 @@ class _RecordPastDeliveryDetailsPageState
                                   )} $doseNumber ${localizations.translate(
                                     i18.deliverIntervention
                                         .wasDosePastRecordDeliveryDetails,
-                                  )} ",
+                                  )} ${localizations.translate(
+                                    i18.beneficiaryDetails.beneficiaryDose,
+                                  )} ${doseNumber - 1} ?",
                                   labelStyle: theme.textTheme.displayMedium,
                                   formControlName:
                                       "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",

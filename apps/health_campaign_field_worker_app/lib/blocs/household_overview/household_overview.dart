@@ -40,7 +40,6 @@ class HouseholdOverviewBloc
     on(_handleSetAsHead);
     on(_handleReloadMember);
     on(_selectedIndividual);
-    on(_updateFutureTask);
   }
 
   // This function handles the selection of an individual in the household overview.
@@ -382,10 +381,6 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required String projectId,
     required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewReloadEvent;
-
-  const factory HouseholdOverviewEvent.updateFutureTask(
-    List<TaskModel> task,
-  ) = HouseholdOverviewUpdateFutureTaskEvent;
 }
 
 @freezed
