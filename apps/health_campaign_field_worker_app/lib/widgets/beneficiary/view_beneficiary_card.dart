@@ -3,7 +3,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -73,6 +75,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             BeneficiaryType.individual
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
+    final bloc = context.read<ProjectBloc>().state;
+    final validMinAge = bloc.projectType?.validMinAge ?? 3;
+    final validMaxage = bloc.projectType?.validMaxAge ?? 18;
 
     final tableData = householdMember.members.map(
       (e) {
@@ -117,8 +122,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             years: ageInYears,
             months: ageInMonths,
           ),
-          3,
-          11,
+          validMinAge,
+          validMaxage,
           adverseEvents,
         );
 
@@ -204,8 +209,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         years: ageInYears,
         months: ageInMonths,
       ),
-      3,
-      11,
+      validMinAge,
+      validMaxage,
       householdMember.adverseEvents,
     );
 

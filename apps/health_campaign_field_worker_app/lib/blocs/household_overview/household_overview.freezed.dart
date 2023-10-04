@@ -1448,7 +1448,6 @@ mixin _$HouseholdOverviewState {
   HouseholdMemberWrapper get householdMemberWrapper =>
       throw _privateConstructorUsedError;
   IndividualModel? get selectedIndividual => throw _privateConstructorUsedError;
-  List<TaskModel>? get filteredFutureTask => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HouseholdOverviewStateCopyWith<HouseholdOverviewState> get copyWith =>
@@ -1464,8 +1463,7 @@ abstract class $HouseholdOverviewStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       HouseholdMemberWrapper householdMemberWrapper,
-      IndividualModel? selectedIndividual,
-      List<TaskModel>? filteredFutureTask});
+      IndividualModel? selectedIndividual});
 
   $HouseholdMemberWrapperCopyWith<$Res> get householdMemberWrapper;
 }
@@ -1487,7 +1485,6 @@ class _$HouseholdOverviewStateCopyWithImpl<$Res,
     Object? loading = null,
     Object? householdMemberWrapper = null,
     Object? selectedIndividual = freezed,
-    Object? filteredFutureTask = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1502,10 +1499,6 @@ class _$HouseholdOverviewStateCopyWithImpl<$Res,
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
-      filteredFutureTask: freezed == filteredFutureTask
-          ? _value.filteredFutureTask
-          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
-              as List<TaskModel>?,
     ) as $Val);
   }
 
@@ -1530,8 +1523,7 @@ abstract class _$$_HouseholdOverviewStateCopyWith<$Res>
   $Res call(
       {bool loading,
       HouseholdMemberWrapper householdMemberWrapper,
-      IndividualModel? selectedIndividual,
-      List<TaskModel>? filteredFutureTask});
+      IndividualModel? selectedIndividual});
 
   @override
   $HouseholdMemberWrapperCopyWith<$Res> get householdMemberWrapper;
@@ -1552,7 +1544,6 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
     Object? loading = null,
     Object? householdMemberWrapper = null,
     Object? selectedIndividual = freezed,
-    Object? filteredFutureTask = freezed,
   }) {
     return _then(_$_HouseholdOverviewState(
       loading: null == loading
@@ -1567,10 +1558,6 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
           ? _value.selectedIndividual
           : selectedIndividual // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
-      filteredFutureTask: freezed == filteredFutureTask
-          ? _value._filteredFutureTask
-          : filteredFutureTask // ignore: cast_nullable_to_non_nullable
-              as List<TaskModel>?,
     ));
   }
 }
@@ -1581,9 +1568,7 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   const _$_HouseholdOverviewState(
       {this.loading = false,
       required this.householdMemberWrapper,
-      this.selectedIndividual,
-      final List<TaskModel>? filteredFutureTask})
-      : _filteredFutureTask = filteredFutureTask;
+      this.selectedIndividual});
 
   @override
   @JsonKey()
@@ -1592,18 +1577,10 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   final HouseholdMemberWrapper householdMemberWrapper;
   @override
   final IndividualModel? selectedIndividual;
-  final List<TaskModel>? _filteredFutureTask;
-  @override
-  List<TaskModel>? get filteredFutureTask {
-    final value = _filteredFutureTask;
-    if (value == null) return null;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
 
   @override
   String toString() {
-    return 'HouseholdOverviewState(loading: $loading, householdMemberWrapper: $householdMemberWrapper, selectedIndividual: $selectedIndividual, filteredFutureTask: $filteredFutureTask)';
+    return 'HouseholdOverviewState(loading: $loading, householdMemberWrapper: $householdMemberWrapper, selectedIndividual: $selectedIndividual)';
   }
 
   @override
@@ -1615,18 +1592,12 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
             (identical(other.householdMemberWrapper, householdMemberWrapper) ||
                 other.householdMemberWrapper == householdMemberWrapper) &&
             (identical(other.selectedIndividual, selectedIndividual) ||
-                other.selectedIndividual == selectedIndividual) &&
-            const DeepCollectionEquality()
-                .equals(other._filteredFutureTask, _filteredFutureTask));
+                other.selectedIndividual == selectedIndividual));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      loading,
-      householdMemberWrapper,
-      selectedIndividual,
-      const DeepCollectionEquality().hash(_filteredFutureTask));
+      runtimeType, loading, householdMemberWrapper, selectedIndividual);
 
   @JsonKey(ignore: true)
   @override
@@ -1640,8 +1611,7 @@ abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   const factory _HouseholdOverviewState(
       {final bool loading,
       required final HouseholdMemberWrapper householdMemberWrapper,
-      final IndividualModel? selectedIndividual,
-      final List<TaskModel>? filteredFutureTask}) = _$_HouseholdOverviewState;
+      final IndividualModel? selectedIndividual}) = _$_HouseholdOverviewState;
 
   @override
   bool get loading;
@@ -1649,8 +1619,6 @@ abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   HouseholdMemberWrapper get householdMemberWrapper;
   @override
   IndividualModel? get selectedIndividual;
-  @override
-  List<TaskModel>? get filteredFutureTask;
   @override
   @JsonKey(ignore: true)
   _$$_HouseholdOverviewStateCopyWith<_$_HouseholdOverviewState> get copyWith =>

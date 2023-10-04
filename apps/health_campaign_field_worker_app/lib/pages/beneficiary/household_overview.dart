@@ -459,8 +459,12 @@ class _HouseholdOverviewPageState
                                                   years: ageInYears,
                                                   months: ageInMonths,
                                                 ),
-                                                3,
-                                                11,
+                                                projectState.projectType
+                                                        ?.validMinAge ??
+                                                    3,
+                                                projectState.projectType
+                                                        ?.validMaxAge ??
+                                                    18,
                                                 adverseEventData,
                                               )),
                                               name: e.name?.givenName ?? ' - ',

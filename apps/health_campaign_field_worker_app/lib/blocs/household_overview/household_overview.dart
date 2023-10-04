@@ -364,6 +364,5 @@ class HouseholdOverviewState with _$HouseholdOverviewState {
     @Default(false) bool loading,
     required HouseholdMemberWrapper householdMemberWrapper,
     IndividualModel? selectedIndividual,
-    List<TaskModel>? filteredFutureTask,
   }) = _HouseholdOverviewState;
 }
