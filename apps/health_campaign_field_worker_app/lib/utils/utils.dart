@@ -234,12 +234,12 @@ bool checkEligibilityForAgeAndAdverseEvent(
   DigitDOBAge age,
   int validMinMonths,
   int validMaxMonths,
-  HouseholdMemberWrapper householdWrapper,
+  List<AdverseEventModel>? adverseEvents,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
 
-  final recordedAdverseEvent = householdWrapper.adverseEvents != null &&
-      (householdWrapper.adverseEvents ?? []).isNotEmpty;
+  final recordedAdverseEvent =
+      adverseEvents != null && adverseEvents.isNotEmpty;
 
   return totalAgeMonths >= validMinMonths && totalAgeMonths <= validMaxMonths
       ? recordedAdverseEvent

@@ -1330,6 +1330,7 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
 class AdverseEventData extends DataClass
     implements Insertable<AdverseEventData> {
   final String? id;
+  final String? projectId;
   final String? taskClientReferenceId;
   final int? reAttempts;
   final String? symptoms;
@@ -1348,6 +1349,7 @@ class AdverseEventData extends DataClass
   final String? additionalFields;
   AdverseEventData(
       {this.id,
+      this.projectId,
       this.taskClientReferenceId,
       this.reAttempts,
       this.symptoms,
@@ -1370,6 +1372,8 @@ class AdverseEventData extends DataClass
     return AdverseEventData(
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      projectId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
       taskClientReferenceId: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}task_client_reference_id']),
       reAttempts: const IntType()
@@ -1409,6 +1413,9 @@ class AdverseEventData extends DataClass
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
       map['id'] = Variable<String?>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String?>(projectId);
     }
     if (!nullToAbsent || taskClientReferenceId != null) {
       map['task_client_reference_id'] =
@@ -1463,6 +1470,9 @@ class AdverseEventData extends DataClass
   AdverseEventCompanion toCompanion(bool nullToAbsent) {
     return AdverseEventCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
       taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
           ? const Value.absent()
           : Value(taskClientReferenceId),
@@ -1517,6 +1527,7 @@ class AdverseEventData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AdverseEventData(
       id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
       taskClientReferenceId:
           serializer.fromJson<String?>(json['taskClientReferenceId']),
       reAttempts: serializer.fromJson<int?>(json['reAttempts']),
@@ -1541,6 +1552,7 @@ class AdverseEventData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
       'taskClientReferenceId':
           serializer.toJson<String?>(taskClientReferenceId),
       'reAttempts': serializer.toJson<int?>(reAttempts),
@@ -1563,6 +1575,7 @@ class AdverseEventData extends DataClass
 
   AdverseEventData copyWith(
           {String? id,
+          String? projectId,
           String? taskClientReferenceId,
           int? reAttempts,
           String? symptoms,
@@ -1581,6 +1594,7 @@ class AdverseEventData extends DataClass
           String? additionalFields}) =>
       AdverseEventData(
         id: id ?? this.id,
+        projectId: projectId ?? this.projectId,
         taskClientReferenceId:
             taskClientReferenceId ?? this.taskClientReferenceId,
         reAttempts: reAttempts ?? this.reAttempts,
@@ -1603,6 +1617,7 @@ class AdverseEventData extends DataClass
   String toString() {
     return (StringBuffer('AdverseEventData(')
           ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
@@ -1626,6 +1641,7 @@ class AdverseEventData extends DataClass
   @override
   int get hashCode => Object.hash(
       id,
+      projectId,
       taskClientReferenceId,
       reAttempts,
       symptoms,
@@ -1647,6 +1663,7 @@ class AdverseEventData extends DataClass
       identical(this, other) ||
       (other is AdverseEventData &&
           other.id == this.id &&
+          other.projectId == this.projectId &&
           other.taskClientReferenceId == this.taskClientReferenceId &&
           other.reAttempts == this.reAttempts &&
           other.symptoms == this.symptoms &&
@@ -1667,6 +1684,7 @@ class AdverseEventData extends DataClass
 
 class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   final Value<String?> id;
+  final Value<String?> projectId;
   final Value<String?> taskClientReferenceId;
   final Value<int?> reAttempts;
   final Value<String?> symptoms;
@@ -1685,6 +1703,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   final Value<String?> additionalFields;
   const AdverseEventCompanion({
     this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
@@ -1704,6 +1723,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   });
   AdverseEventCompanion.insert({
     this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
@@ -1723,6 +1743,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<AdverseEventData> custom({
     Expression<String?>? id,
+    Expression<String?>? projectId,
     Expression<String?>? taskClientReferenceId,
     Expression<int?>? reAttempts,
     Expression<String?>? symptoms,
@@ -1742,6 +1763,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
       if (taskClientReferenceId != null)
         'task_client_reference_id': taskClientReferenceId,
       if (reAttempts != null) 're_attempts': reAttempts,
@@ -1765,6 +1787,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
 
   AdverseEventCompanion copyWith(
       {Value<String?>? id,
+      Value<String?>? projectId,
       Value<String?>? taskClientReferenceId,
       Value<int?>? reAttempts,
       Value<String?>? symptoms,
@@ -1783,6 +1806,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
       Value<String?>? additionalFields}) {
     return AdverseEventCompanion(
       id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
       taskClientReferenceId:
           taskClientReferenceId ?? this.taskClientReferenceId,
       reAttempts: reAttempts ?? this.reAttempts,
@@ -1808,6 +1832,9 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String?>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String?>(projectId.value);
     }
     if (taskClientReferenceId.present) {
       map['task_client_reference_id'] =
@@ -1865,6 +1892,7 @@ class AdverseEventCompanion extends UpdateCompanion<AdverseEventData> {
   String toString() {
     return (StringBuffer('AdverseEventCompanion(')
           ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
@@ -1896,6 +1924,11 @@ class $AdverseEventTable extends AdverseEvent
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectIdMeta = const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
+      'project_id', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _taskClientReferenceIdMeta =
       const VerificationMeta('taskClientReferenceId');
@@ -1994,6 +2027,7 @@ class $AdverseEventTable extends AdverseEvent
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        projectId,
         taskClientReferenceId,
         reAttempts,
         symptoms,
@@ -2022,6 +2056,10 @@ class $AdverseEventTable extends AdverseEvent
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
     }
     if (data.containsKey('task_client_reference_id')) {
       context.handle(

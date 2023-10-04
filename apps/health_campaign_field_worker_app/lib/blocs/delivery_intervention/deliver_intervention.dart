@@ -5,8 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/additional_fields_type.dart';
-import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
@@ -109,52 +107,73 @@ class DeliverInterventionBloc
     DeliverInterventionActiveCycleDoseSelectionEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {
-    final currentRunningCycle = (event.projectType.cycles?.firstWhere((e) =>
-            (e.startDate ?? 1696032000000) <=
-                DateTime.now().millisecondsSinceEpoch &&
-            (e.endDate ?? 1696032000000) >=
-                DateTime.now().millisecondsSinceEpoch))!
-        .id;
-    if (event.lastCycle == currentRunningCycle) {
-      final deliveryLength = event.projectType.cycles!
-              .firstWhere((c) => c.id == event.lastCycle)
-              .deliveries
-              ?.length ??
-          0;
-      final isNotLastDose = event.lastDose < deliveryLength;
-      final pastCycles = event.projectType.cycles
-          ?.where(
-            (p) => p.id != event.lastCycle && p.id < event.lastCycle,
-          )
-          .toList();
-      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
-      if (isNotLastDose) {
+    final currentRunningCycle = (event.projectType.cycles?.firstWhere(
+          (e) =>
+              (e.startDate ?? 1696032000000) <=
+                  DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate ?? 1696032000000) >=
+                  DateTime.now().millisecondsSinceEpoch,
+          orElse: () =>
+              const Cycle(), // Return null when no matching cycle is found
+        ))?.id ??
+        0;
+
+    if (currentRunningCycle != 0) {
+      print('CURRENT CYCLE NOT -1 : ${currentRunningCycle}');
+      if (event.lastCycle == currentRunningCycle) {
+        final deliveryLength = event.projectType.cycles!
+                .firstWhere((c) => c.id == event.lastCycle)
+                .deliveries
+                ?.length ??
+            0;
+        final isNotLastDose = event.lastDose < deliveryLength;
+        final pastCycles = event.projectType.cycles
+            ?.where(
+              (p) => p.id != event.lastCycle && p.id < event.lastCycle,
+            )
+            .toList();
+        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
+        if (isNotLastDose) {
+          emit(state.copyWith(
+            cycle: event.lastCycle,
+            dose: event.lastDose + 1,
+            pastCycles: pastCycles,
+            hasCycleArrived: true,
+          ));
+        } else {
+          emit(state.copyWith(
+            cycle: event.lastCycle + 1,
+            hasCycleArrived: false,
+            dose: event.lastDose,
+            pastCycles: pastCycles,
+          ));
+        }
+      } else {
+        final pastCycles = event.projectType.cycles
+            ?.where(
+              (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
+            )
+            .toList();
+        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
         emit(state.copyWith(
-          cycle: event.lastCycle,
-          dose: event.lastDose + 1,
+          cycle: currentRunningCycle,
+          dose: 1,
           pastCycles: pastCycles,
           hasCycleArrived: true,
         ));
-      } else {
-        emit(state.copyWith(
-          cycle: event.lastCycle + 1,
-          hasCycleArrived: false,
-          dose: event.lastDose,
-          pastCycles: pastCycles,
-        ));
       }
     } else {
+      print('ELSE: ${event.lastCycle}');
       final pastCycles = event.projectType.cycles
           ?.where(
-            (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
+            (p) => p.id != currentRunningCycle,
           )
           .toList();
-      pastCycles?.sort((a, b) => b.id.compareTo(a.id));
       emit(state.copyWith(
-        cycle: currentRunningCycle,
+        cycle: event.lastCycle,
         dose: 1,
+        hasCycleArrived: false,
         pastCycles: pastCycles,
-        hasCycleArrived: true,
       ));
     }
   }

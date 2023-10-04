@@ -9,6 +9,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class AdverseEventSearchModel extends EntitySearchModel {
   final String? id;
   final List<String>? taskClientReferenceId;
+  final String? projectId;
   final int? reAttempts;
   final List<String>? symptoms;
   final List<String>? clientReferenceId;
@@ -17,6 +18,7 @@ class AdverseEventSearchModel extends EntitySearchModel {
   AdverseEventSearchModel({
     this.id,
     this.taskClientReferenceId,
+    this.projectId,
     this.reAttempts,
     this.symptoms,
     this.clientReferenceId,
@@ -29,6 +31,7 @@ class AdverseEventSearchModel extends EntitySearchModel {
   AdverseEventSearchModel.ignoreDeleted({
     this.id,
     this.taskClientReferenceId,
+    this.projectId,
     this.reAttempts,
     this.symptoms,
     this.clientReferenceId,
@@ -43,6 +46,7 @@ class AdverseEventModel extends EntityModel {
   static const schemaName = 'AdverseEvent';
 
   final String? id;
+  final String? projectId;
   final String? taskClientReferenceId;
   final int? reAttempts;
   final List<String>? symptoms;
@@ -54,6 +58,7 @@ class AdverseEventModel extends EntityModel {
   AdverseEventModel({
     this.additionalFields,
     this.id,
+    this.projectId,
     this.taskClientReferenceId,
     this.reAttempts,
     this.symptoms,
@@ -77,6 +82,7 @@ class AdverseEventModel extends EntityModel {
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      projectId: Value(projectId),
       taskClientReferenceId: Value(taskClientReferenceId),
       reAttempts: Value(reAttempts),
       symptoms: Value(symptoms?.toString()),

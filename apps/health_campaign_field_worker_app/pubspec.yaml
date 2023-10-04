@@ -57,6 +57,7 @@ dependencies:
   workmanager: ^0.5.1
   digit_firebase_services: ^0.0.1
   package_info_plus: ^4.1.0
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:

@@ -17,6 +17,11 @@
       "isList": true
     },
     {
+      "name": "projectId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "taskClientReferenceId",
       "type": "String"
     },

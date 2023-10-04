@@ -176,6 +176,8 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                                     .tasks
                                                                     .first
                                                                     .clientReferenceId,
+                                                            projectId: context
+                                                                .projectId,
                                                             symptoms: symptoms,
                                                             clientReferenceId:
                                                                 clientReferenceId,
