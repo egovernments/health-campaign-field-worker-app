@@ -189,8 +189,12 @@ class _ComplaintsInboxFilterPageState
                                 ComplaintInboxFilterComplaintsEvent(
                                   complaintAssignedTo: assignedTo,
                                   currentUserName: userBloc.state.whenOrNull(
-                                    authenticated:
-                                        (accessToken, refreshToken, userModel) {
+                                    authenticated: (
+                                      accessToken,
+                                      refreshToken,
+                                      userModel,
+                                      actions,
+                                    ) {
                                       return userModel.name;
                                     },
                                   ),

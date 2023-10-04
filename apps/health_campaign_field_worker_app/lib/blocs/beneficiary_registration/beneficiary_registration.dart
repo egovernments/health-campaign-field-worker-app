@@ -157,17 +157,19 @@ class BeneficiaryRegistrationBloc
               address: address.copyWith(
                 relatedClientReferenceId: household.clientReferenceId,
                 auditDetails: individual.auditDetails,
+                clientAuditDetails: individual.clientAuditDetails,
                 locality: locality,
               ),
             ),
           );
-
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
           await individualRepository.create(
             individual.copyWith(
               address: [
                 address.copyWith(
                   relatedClientReferenceId: individual.clientReferenceId,
                   auditDetails: individual.auditDetails,
+                  clientAuditDetails: individual.clientAuditDetails,
                   locality: locality,
                 ),
               ],
@@ -185,6 +187,12 @@ class BeneficiaryRegistrationBloc
                   beneficiaryType == BeneficiaryType.individual
                       ? individual.clientReferenceId
                       : household.clientReferenceId,
+              clientAuditDetails: ClientAuditDetails(
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
+              ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -200,6 +208,12 @@ class BeneficiaryRegistrationBloc
               tenantId: envConfig.variables.tenantId,
               rowVersion: 1,
               clientReferenceId: IdGen.i.identifier,
+              clientAuditDetails: ClientAuditDetails(
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
+              ),
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
@@ -234,6 +248,14 @@ class BeneficiaryRegistrationBloc
         try {
           await householdRepository.update(
             value.householdModel.copyWith(
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: value.householdModel.clientAuditDetails!.createdBy,
+                createdTime:
+                    value.householdModel.clientAuditDetails!.createdTime,
+                lastModifiedBy:
+                    value.householdModel.clientAuditDetails!.lastModifiedBy,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+              ),
               memberCount: event.household.memberCount,
               address: value.addressModel.copyWith(
                 relatedClientReferenceId:
@@ -324,6 +346,7 @@ class BeneficiaryRegistrationBloc
           );
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
 
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
@@ -338,6 +361,12 @@ class BeneficiaryRegistrationBloc
                 auditDetails: AuditDetails(
                   createdBy: event.userUuid,
                   createdTime: createdAt,
+                ),
+                clientAuditDetails: ClientAuditDetails(
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
                 ),
               ),
             );
@@ -356,6 +385,12 @@ class BeneficiaryRegistrationBloc
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
+              ),
+              clientAuditDetails: ClientAuditDetails(
+                createdTime: createdAt,
+                lastModifiedTime: initialModifiedAt,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
               ),
             ),
           );

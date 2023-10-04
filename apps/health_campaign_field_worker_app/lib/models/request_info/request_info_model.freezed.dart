@@ -181,7 +181,7 @@ RequestInfoModel _$RequestInfoModelFromJson(Map<String, dynamic> json) {
 mixin _$RequestInfoModel {
   String? get apiId => throw _privateConstructorUsedError;
   String? get ver => throw _privateConstructorUsedError;
-  String? get ts => throw _privateConstructorUsedError;
+  num? get ts => throw _privateConstructorUsedError;
   String? get action => throw _privateConstructorUsedError;
   String? get did => throw _privateConstructorUsedError;
   String? get key => throw _privateConstructorUsedError;
@@ -203,7 +203,7 @@ abstract class $RequestInfoModelCopyWith<$Res> {
   $Res call(
       {String? apiId,
       String? ver,
-      String? ts,
+      num? ts,
       String? action,
       String? did,
       String? key,
@@ -245,7 +245,7 @@ class _$RequestInfoModelCopyWithImpl<$Res, $Val extends RequestInfoModel>
       ts: freezed == ts
           ? _value.ts
           : ts // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       action: freezed == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
@@ -281,7 +281,7 @@ abstract class _$$_RequestInfoModelCopyWith<$Res>
   $Res call(
       {String? apiId,
       String? ver,
-      String? ts,
+      num? ts,
       String? action,
       String? did,
       String? key,
@@ -321,7 +321,7 @@ class __$$_RequestInfoModelCopyWithImpl<$Res>
       ts: freezed == ts
           ? _value.ts
           : ts // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as num?,
       action: freezed == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
@@ -368,7 +368,7 @@ class _$_RequestInfoModel implements _RequestInfoModel {
   @override
   final String? ver;
   @override
-  final String? ts;
+  final num? ts;
   @override
   final String? action;
   @override
@@ -424,7 +424,7 @@ abstract class _RequestInfoModel implements RequestInfoModel {
   const factory _RequestInfoModel(
       {final String? apiId,
       final String? ver,
-      final String? ts,
+      final num? ts,
       final String? action,
       final String? did,
       final String? key,
@@ -439,7 +439,7 @@ abstract class _RequestInfoModel implements RequestInfoModel {
   @override
   String? get ver;
   @override
-  String? get ts;
+  num? get ts;
   @override
   String? get action;
   @override

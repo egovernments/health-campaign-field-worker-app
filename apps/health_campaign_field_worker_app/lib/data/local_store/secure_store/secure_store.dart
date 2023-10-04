@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
+import '../../../models/role_actions/role_actions_model.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';
@@ -13,6 +14,7 @@ class LocalSecureStore {
   static const hasAppRunBeforeKey = 'hasAppRunBefore';
   static const backgroundServiceKey = 'backgroundServiceKey';
   static const boundaryRefetchInKey = 'boundaryRefetchInKey';
+  static const actionsListkey = 'actionsListkey';
 
   final storage = const FlutterSecureStorage();
 
@@ -66,6 +68,21 @@ class LocalSecureStore {
     }
   }
 
+  Future<RoleActionsWrapperModel?> get savedActions async {
+    final actionsListString = await storage.read(key: actionsListkey);
+    if (actionsListString == null) return null;
+
+    try {
+      final actions = Mapper.fromMap<RoleActionsWrapperModel>(json.decode(
+        actionsListString,
+      ));
+
+      return actions;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<bool> get boundaryRefetched async {
     final isboundaryRefetchRequired =
         await storage.read(key: boundaryRefetchInKey);
@@ -98,6 +115,13 @@ class LocalSecureStore {
     await storage.write(
       key: boundaryRefetchInKey,
       value: isboundaryRefetch.toString(),
+    );
+  }
+
+  Future<void> setRoleActions(RoleActionsWrapperModel actions) async {
+    await storage.write(
+      key: actionsListkey,
+      value: actions.toString(),
     );
   }
 
