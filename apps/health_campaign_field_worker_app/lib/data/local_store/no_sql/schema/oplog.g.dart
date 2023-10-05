@@ -251,6 +251,7 @@ P _opLogDeserializeProp<P>(
 const _OpLogentityTypeEnumValueMap = {
   r'user': r'user',
   r'facility': r'facility',
+  r'address': r'address',
   r'household': r'household',
   r'householdMember': r'householdMember',
   r'individual': r'individual',
@@ -277,6 +278,7 @@ const _OpLogentityTypeEnumValueMap = {
 const _OpLogentityTypeValueEnumMap = {
   r'user': DataModelType.user,
   r'facility': DataModelType.facility,
+  r'address': DataModelType.address,
   r'household': DataModelType.household,
   r'householdMember': DataModelType.householdMember,
   r'individual': DataModelType.individual,

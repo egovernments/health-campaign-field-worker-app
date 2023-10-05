@@ -14,12 +14,14 @@ import 'beneficiary_card.dart';
 class ViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdMemberWrapper householdMember;
   final VoidCallback? onOpenPressed;
+  final double? distance;
 
   const ViewBeneficiaryCard({
     Key? key,
     super.appLocalizations,
     required this.householdMember,
     this.onOpenPressed,
+    this.distance,
   }) : super(key: key);
 
   @override
@@ -168,7 +170,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle:
-                      '${householdMember.household.memberCount ?? 1} ${'Members'}',
+                      '${householdMember.household.memberCount ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? householdMember.tasks?.first.status != null
                           ? 'delivered'

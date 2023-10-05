@@ -141,6 +141,7 @@ class AuditDetails {
 enum DataModelType {
   user,
   facility,
+  address,
   household,
   householdMember,
   individual,

@@ -8,7 +8,6 @@ class Household extends Table {
   IntColumn get memberCount => integer().nullable()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
-  RealColumn get maxRadius => real().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();

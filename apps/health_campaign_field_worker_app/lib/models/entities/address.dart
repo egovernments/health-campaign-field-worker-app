@@ -8,10 +8,16 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class AddressSearchModel extends EntitySearchModel {
   final String? id;
+  final double? latitude;
+  final double? longitude;
+  final double? maxRadius;
   final String? tenantId;
   
   AddressSearchModel({
     this.id,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
@@ -20,6 +26,9 @@ class AddressSearchModel extends EntitySearchModel {
   @MappableConstructor()
   AddressSearchModel.ignoreDeleted({
     this.id,
+    this.latitude,
+    this.longitude,
+    this.maxRadius,
     this.tenantId,
     super.boundaryCode,
   }):  super(isDeleted: false);
