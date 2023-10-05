@@ -214,6 +214,7 @@ class BeneficiaryDetails {
   String get beneficiaryDeliveryStrategy =>
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
+  String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
 }
 
 class IndividualDetails {
