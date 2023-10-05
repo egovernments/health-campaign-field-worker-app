@@ -47,6 +47,9 @@ _$_ProjectType _$$_ProjectTypeFromJson(Map<String, dynamic> json) =>
       cycles: (json['cycles'] as List<dynamic>?)
           ?.map((e) => Cycle.fromJson(e as Map<String, dynamic>))
           .toList(),
+      resources: (json['resources'] as List<dynamic>?)
+          ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       validMinAge: json['validMinAge'] as int?,
       validMaxAge: json['validMaxAge'] as int?,
     );
@@ -60,6 +63,7 @@ Map<String, dynamic> _$$_ProjectTypeToJson(_$_ProjectType instance) =>
       'beneficiaryType': instance.beneficiaryType,
       'observationStrategy': instance.observationStrategy,
       'cycles': instance.cycles,
+      'resources': instance.resources,
       'validMinAge': instance.validMinAge,
       'validMaxAge': instance.validMaxAge,
     };

@@ -24,6 +24,9 @@ class ProjectTypeListCycle {
   @Name("observationStrategy")
   String? observationStrategy;
 
+  @Name("resources")
+  List<ProductVariants>? resources;
+
   @Name("cycles")
   List<Cycles>? cycles;
 }

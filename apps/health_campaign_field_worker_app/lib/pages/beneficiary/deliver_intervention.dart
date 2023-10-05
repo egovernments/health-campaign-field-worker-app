@@ -93,25 +93,37 @@ class _DeliverInterventionPageState
                     DeliverInterventionState>(
                     builder: (context, deliveryInterventionstate) {
                       List<ProductVariantsModel>? productVariants = projectState
-                          .projectType
-                          ?.cycles?[deliveryInterventionstate.cycle - 1]
-                          .deliveries?[deliveryInterventionstate.dose - 1]
-                          .productVariants;
+                                  .projectType?.cycles?.isNotEmpty ==
+                              true
+                          ? (projectState
+                              .projectType!
+                              .cycles![deliveryInterventionstate.cycle - 1]
+                              .deliveries?[deliveryInterventionstate.dose - 1]
+                              .productVariants)
+                          : projectState.projectType?.resources;
 
-                      final int numberOfDoses = projectState
-                              .projectType
-                              ?.cycles?[deliveryInterventionstate.cycle - 1]
-                              .deliveries
-                              ?.length ??
-                          0;
+                      final int numberOfDoses = (projectState
+                                  .projectType?.cycles?.isNotEmpty ==
+                              true)
+                          ? (projectState
+                                  .projectType
+                                  ?.cycles?[deliveryInterventionstate.cycle - 1]
+                                  .deliveries
+                                  ?.length) ??
+                              0
+                          : 0;
 
                       final String? getDeliveryStrategy = projectState
-                          .projectType
-                          ?.cycles?[deliveryInterventionstate.cycle == 0
-                              ? deliveryInterventionstate.cycle
-                              : deliveryInterventionstate.cycle - 1]
-                          .deliveries?[deliveryInterventionstate.dose - 1]
-                          .deliveryStrategy;
+                                  .projectType?.cycles?.isNotEmpty ==
+                              true
+                          ? (projectState
+                              .projectType
+                              ?.cycles?[deliveryInterventionstate.cycle == 0
+                                  ? deliveryInterventionstate.cycle
+                                  : deliveryInterventionstate.cycle - 1]
+                              .deliveries?[deliveryInterventionstate.dose - 1]
+                              .deliveryStrategy)
+                          : DeliverStrategyType.direct.toValue();
 
                       final steps = generateSteps(numberOfDoses);
 
@@ -231,8 +243,15 @@ class _DeliverInterventionPageState
                                                           ),
                                                         );
 
-                                                    if (state.futureDeliveries!
-                                                        .isNotEmpty) {
+                                                    if (state.futureDeliveries !=
+                                                            null &&
+                                                        state.futureDeliveries!
+                                                            .isNotEmpty &&
+                                                        projectState
+                                                                .projectType
+                                                                ?.cycles
+                                                                ?.isNotEmpty ==
+                                                            true) {
                                                       context.router.push(
                                                         SplashAcknowledgementRoute(
                                                           enableBackToSearch:
@@ -584,7 +603,7 @@ class _DeliverInterventionPageState
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
                 value: variants != null &&
                         _controllers.indexOf(e) < variants.length
-                    ? variants!.firstWhere(
+                    ? variants.firstWhereOrNull(
                         (element) =>
                             element.id ==
                             productVariants

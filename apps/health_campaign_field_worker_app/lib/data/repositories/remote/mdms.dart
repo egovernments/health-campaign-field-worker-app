@@ -332,7 +332,13 @@ class MdmsRepository {
       newprojectType.name = element.name;
       newprojectType.beneficiaryType = element.beneficiaryType;
       newprojectType.observationStrategy = element.observationStrategy;
+      newprojectType.resources = element.resources?.map((e) {
+        final productVariants = ProductVariants()
+          ..productVariantId = e.productVariantId
+          ..quantity = e.quantity.toString();
 
+        return productVariants;
+      }).toList();
       newprojectType.cycles = element.cycles?.map((e) {
         final newcycle = Cycles()
           ..mandatoryWaitSinceLastCycleInDays =

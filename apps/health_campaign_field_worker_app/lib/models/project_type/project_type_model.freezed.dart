@@ -359,6 +359,8 @@ mixin _$ProjectType {
   String get beneficiaryType => throw _privateConstructorUsedError;
   String? get observationStrategy => throw _privateConstructorUsedError;
   List<Cycle>? get cycles => throw _privateConstructorUsedError;
+  List<ProductVariantsModel>? get resources =>
+      throw _privateConstructorUsedError;
   int? get validMinAge => throw _privateConstructorUsedError;
   int? get validMaxAge => throw _privateConstructorUsedError;
 
@@ -382,6 +384,7 @@ abstract class $ProjectTypeCopyWith<$Res> {
       String beneficiaryType,
       String? observationStrategy,
       List<Cycle>? cycles,
+      List<ProductVariantsModel>? resources,
       int? validMinAge,
       int? validMaxAge});
 }
@@ -406,6 +409,7 @@ class _$ProjectTypeCopyWithImpl<$Res, $Val extends ProjectType>
     Object? beneficiaryType = null,
     Object? observationStrategy = freezed,
     Object? cycles = freezed,
+    Object? resources = freezed,
     Object? validMinAge = freezed,
     Object? validMaxAge = freezed,
   }) {
@@ -438,6 +442,10 @@ class _$ProjectTypeCopyWithImpl<$Res, $Val extends ProjectType>
           ? _value.cycles
           : cycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      resources: freezed == resources
+          ? _value.resources
+          : resources // ignore: cast_nullable_to_non_nullable
+              as List<ProductVariantsModel>?,
       validMinAge: freezed == validMinAge
           ? _value.validMinAge
           : validMinAge // ignore: cast_nullable_to_non_nullable
@@ -466,6 +474,7 @@ abstract class _$$_ProjectTypeCopyWith<$Res>
       String beneficiaryType,
       String? observationStrategy,
       List<Cycle>? cycles,
+      List<ProductVariantsModel>? resources,
       int? validMinAge,
       int? validMaxAge});
 }
@@ -488,6 +497,7 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
     Object? beneficiaryType = null,
     Object? observationStrategy = freezed,
     Object? cycles = freezed,
+    Object? resources = freezed,
     Object? validMinAge = freezed,
     Object? validMaxAge = freezed,
   }) {
@@ -520,6 +530,10 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
           ? _value._cycles
           : cycles // ignore: cast_nullable_to_non_nullable
               as List<Cycle>?,
+      resources: freezed == resources
+          ? _value._resources
+          : resources // ignore: cast_nullable_to_non_nullable
+              as List<ProductVariantsModel>?,
       validMinAge: freezed == validMinAge
           ? _value.validMinAge
           : validMinAge // ignore: cast_nullable_to_non_nullable
@@ -543,9 +557,11 @@ class _$_ProjectType implements _ProjectType {
       required this.beneficiaryType,
       this.observationStrategy,
       final List<Cycle>? cycles,
+      final List<ProductVariantsModel>? resources,
       this.validMinAge,
       this.validMaxAge})
-      : _cycles = cycles;
+      : _cycles = cycles,
+        _resources = resources;
 
   factory _$_ProjectType.fromJson(Map<String, dynamic> json) =>
       _$$_ProjectTypeFromJson(json);
@@ -571,6 +587,15 @@ class _$_ProjectType implements _ProjectType {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<ProductVariantsModel>? _resources;
+  @override
+  List<ProductVariantsModel>? get resources {
+    final value = _resources;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final int? validMinAge;
   @override
@@ -578,7 +603,7 @@ class _$_ProjectType implements _ProjectType {
 
   @override
   String toString() {
-    return 'ProjectType(id: $id, code: $code, name: $name, group: $group, beneficiaryType: $beneficiaryType, observationStrategy: $observationStrategy, cycles: $cycles, validMinAge: $validMinAge, validMaxAge: $validMaxAge)';
+    return 'ProjectType(id: $id, code: $code, name: $name, group: $group, beneficiaryType: $beneficiaryType, observationStrategy: $observationStrategy, cycles: $cycles, resources: $resources, validMinAge: $validMinAge, validMaxAge: $validMaxAge)';
   }
 
   @override
@@ -595,6 +620,8 @@ class _$_ProjectType implements _ProjectType {
             (identical(other.observationStrategy, observationStrategy) ||
                 other.observationStrategy == observationStrategy) &&
             const DeepCollectionEquality().equals(other._cycles, _cycles) &&
+            const DeepCollectionEquality()
+                .equals(other._resources, _resources) &&
             (identical(other.validMinAge, validMinAge) ||
                 other.validMinAge == validMinAge) &&
             (identical(other.validMaxAge, validMaxAge) ||
@@ -612,6 +639,7 @@ class _$_ProjectType implements _ProjectType {
       beneficiaryType,
       observationStrategy,
       const DeepCollectionEquality().hash(_cycles),
+      const DeepCollectionEquality().hash(_resources),
       validMinAge,
       validMaxAge);
 
@@ -638,6 +666,7 @@ abstract class _ProjectType implements ProjectType {
       required final String beneficiaryType,
       final String? observationStrategy,
       final List<Cycle>? cycles,
+      final List<ProductVariantsModel>? resources,
       final int? validMinAge,
       final int? validMaxAge}) = _$_ProjectType;
 
@@ -658,6 +687,8 @@ abstract class _ProjectType implements ProjectType {
   String? get observationStrategy;
   @override
   List<Cycle>? get cycles;
+  @override
+  List<ProductVariantsModel>? get resources;
   @override
   int? get validMinAge;
   @override

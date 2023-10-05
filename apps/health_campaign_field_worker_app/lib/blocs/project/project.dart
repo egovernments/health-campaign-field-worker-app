@@ -267,8 +267,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 // Todo[Need to remove this hardcoded id before creating PR]
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
-              .where((element) =>
-                  element.id == '644c4356-5214-11ee-be56-0242ac120002')
+              .where((element) => element.id == projects.first.projectTypeId)
               .toList()
               .firstOrNull,
         ));
@@ -438,7 +437,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       final selectedProject = projectType.projectTypeWrapper?.projectTypes
           .where(
-            (element) => element.id == '644c4356-5214-11ee-be56-0242ac120002',
+            (element) => element.id == event.model.projectTypeId,
           )
           .toList()
           .firstOrNull;
