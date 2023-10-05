@@ -459,12 +459,10 @@ class _HouseholdOverviewPageState
                                                   years: ageInYears,
                                                   months: ageInMonths,
                                                 ),
-                                                projectState.projectType
-                                                        ?.validMinAge ??
-                                                    3,
-                                                projectState.projectType
-                                                        ?.validMaxAge ??
-                                                    18,
+                                                projectState
+                                                    .projectType?.validMinAge,
+                                                projectState
+                                                    .projectType?.validMaxAge,
                                                 adverseEventData,
                                               )),
                                               // TODO Need to handle the null check

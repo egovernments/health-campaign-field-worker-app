@@ -83,8 +83,9 @@ class DigitDobPicker extends StatelessWidget {
                         DigitDOBAge age =
                             DigitDateUtils.calculateAge(formControl.value);
                         DateTime formValue = formControl.value;
+
                         return formValue.isAfter(DateTime.now()) ||
-                                age.years < 0 ||
+                                age.years <= 0 ||
                                 age.years > 150 ||
                                 (age.years >= 150 && age.months > 0)
                             ? {'': true}
@@ -123,7 +124,7 @@ class DigitDobPicker extends StatelessWidget {
                             DigitDateUtils.calculateAge(formControl.value);
                         DateTime formValue = formControl.value;
                         return formValue.isAfter(DateTime.now()) ||
-                                age.months < 0 ||
+                                age.months <= 0 ||
                                 age.months > 11 ||
                                 (age.years >= 150 && age.months > 0)
                             ? {'': true}
@@ -140,7 +141,7 @@ class DigitDobPicker extends StatelessWidget {
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);
-                if (datePickerControl.invalid) {
+                if (datePickerControl.invalid && form.touched) {
                   return Text(
                     yearsAndMonthsErrMsg,
                     style:

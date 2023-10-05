@@ -76,8 +76,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
     final bloc = context.read<ProjectBloc>().state;
-    final validMinAge = bloc.projectType?.validMinAge ?? 3;
-    final validMaxage = bloc.projectType?.validMaxAge ?? 18;
+    final validMinAge = bloc.projectType?.validMinAge;
+    final validMaxAge = bloc.projectType?.validMaxAge;
 
     final tableData = householdMember.members.map(
       (e) {
@@ -123,7 +123,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             months: ageInMonths,
           ),
           validMinAge,
-          validMaxage,
+          validMaxAge,
           adverseEvents,
         );
 
@@ -211,7 +211,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         months: ageInMonths,
       ),
       validMinAge,
-      validMaxage,
+      validMaxAge,
       householdMember.adverseEvents,
     );
 
