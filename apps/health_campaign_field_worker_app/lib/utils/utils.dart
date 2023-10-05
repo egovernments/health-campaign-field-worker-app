@@ -233,8 +233,8 @@ bool checkEligibilityForActiveCycle(
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndAdverseEvent(
   DigitDOBAge age,
-  int validMinMonths,
-  int validMaxMonths,
+  int? validMinMonths,
+  int? validMaxMonths,
   List<AdverseEventModel>? adverseEvents,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
@@ -242,10 +242,12 @@ bool checkEligibilityForAgeAndAdverseEvent(
   final recordedAdverseEvent =
       adverseEvents != null && adverseEvents.isNotEmpty;
 
-  return totalAgeMonths >= validMinMonths && totalAgeMonths <= validMaxMonths
-      ? recordedAdverseEvent
-          ? false
-          : true
+  return validMinMonths != null && validMaxMonths != null
+      ? totalAgeMonths >= validMinMonths && totalAgeMonths <= validMaxMonths
+          ? recordedAdverseEvent
+              ? false
+              : true
+          : false
       : false;
 }
 

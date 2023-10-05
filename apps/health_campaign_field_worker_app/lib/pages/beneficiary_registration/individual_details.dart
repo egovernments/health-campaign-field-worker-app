@@ -536,6 +536,9 @@ class _IndividualDetailsPageState
                 individual!.dateOfBirth!,
               )
             : null,
+        validators: [
+          Validators.required,
+        ],
       ),
       _genderKey: FormControl<String>(
         value: context.read<AppInitializationBloc>().state.maybeWhen(

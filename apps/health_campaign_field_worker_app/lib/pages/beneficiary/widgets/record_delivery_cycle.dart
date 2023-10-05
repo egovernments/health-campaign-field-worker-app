@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -76,6 +75,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .toList(),
                               headerList,
                               deliverState.dose - 1,
+                              true,
                             )
                           : const SizedBox.shrink(),
                       Column(
@@ -89,6 +89,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                         pastCycles ?? [],
                                         headerList,
                                         null,
+                                        false,
                                       )
                                     : const Offstage(),
                                 SizedBox(
@@ -132,6 +133,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     List<Cycle> cycles,
     List<TableHeader> headerList,
     int? selectedIndex,
+    bool isCurrentCycle,
   ) {
     final theme = DigitTheme.instance.mobileTheme;
 
@@ -142,7 +144,10 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                    isCurrentCycle
+                        ? localizations
+                            .translate(i18.beneficiaryDetails.currentCycleLabel)
+                        : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
                     style: theme.textTheme.headlineMedium,
                     textAlign: TextAlign.left,
                   ),
