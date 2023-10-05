@@ -186,7 +186,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         TableData(
                           tasks?.clientAuditDetails?.createdTime.toDateTime
                                   .getFormattedDate() ??
-                              '',
+                              '--',
                           cellKey: 'completedOn',
                         ),
                       ]);
