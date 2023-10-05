@@ -148,8 +148,6 @@ class SearchHouseholdsBloc
               beneficiaryType == BeneficiaryType.individual
                   ? individuals.map((e) => e.clientReferenceId).toList()
                   : [event.householdModel.clientReferenceId],
-
-          //[TODO] Need to check for beneficiaryId
         ),
       );
 
@@ -240,14 +238,12 @@ class SearchHouseholdsBloc
           ? await projectBeneficiary.search(
               ProjectBeneficiarySearchModel(
                 beneficiaryClientReferenceId: [element.clientReferenceId],
-                //[TODO] Need to check for beneficiaryId
                 projectId: event.projectId,
               ),
             )
           : await projectBeneficiary.search(
               ProjectBeneficiarySearchModel(
                 beneficiaryClientReferenceId: individualIds,
-                //[TODO] Need to check for beneficiaryId
                 projectId: event.projectId,
               ),
             );
@@ -392,14 +388,12 @@ class SearchHouseholdsBloc
                 beneficiaryClientReferenceId: [
                   resultHousehold.clientReferenceId,
                 ],
-                //[TODO] Need to check for beneficiaryId
                 projectId: event.projectId,
               ),
             )
           : await projectBeneficiary.search(
               ProjectBeneficiarySearchModel(
                 beneficiaryClientReferenceId: individualIds,
-                //[TODO] Need to check for beneficiaryId
                 projectId: event.projectId,
               ),
             );
