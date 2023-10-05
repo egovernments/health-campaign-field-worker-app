@@ -28,7 +28,7 @@ class MemberCard extends StatelessWidget {
   final List<TaskModel>? tasks;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
-  final String projectBeneficiaryClientReferenceId;
+  final String? projectBeneficiaryClientReferenceId;
 
   const MemberCard({
     super.key,
@@ -45,7 +45,7 @@ class MemberCard extends StatelessWidget {
     required this.deleteMemberAction,
     this.tasks,
     this.isNotEligible = false,
-    required this.projectBeneficiaryClientReferenceId,
+    this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
   });
 
@@ -272,6 +272,19 @@ class MemberCard extends StatelessWidget {
                                                     .millisecondsSinceEpoch(),
                                               ),
                                               projectId: context.projectId,
+                                              status: Status.beneficiaryRefused
+                                                  .toValue(),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                               additionalFields:
                                                   TaskAdditionalFields(
                                                 version: 1,

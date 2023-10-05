@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -255,6 +256,13 @@ class _HouseholdOverviewPageState
                                             .headOfHousehold
                                             .clientReferenceId ==
                                         e.clientReferenceId;
+                                    final projectBeneficiaryId = state
+                                        .householdMemberWrapper
+                                        .projectBeneficiaries
+                                        .firstWhereOrNull((b) =>
+                                            b.beneficiaryClientReferenceId ==
+                                            e.clientReferenceId)
+                                        ?.clientReferenceId;
 
                                     return BlocBuilder<ProjectBloc,
                                         ProjectState>(
@@ -320,6 +328,18 @@ class _HouseholdOverviewPageState
                                                   ) ??
                                                   DateTime.now(),
                                             ).months;
+                                            final currentCycle = projectState
+                                                .projectType?.cycles
+                                                ?.firstWhereOrNull(
+                                              (e) =>
+                                                  (e.startDate!) <
+                                                      DateTime.now()
+                                                          .millisecondsSinceEpoch &&
+                                                  (e.endDate!) >
+                                                      DateTime.now()
+                                                          .millisecondsSinceEpoch,
+                                              // Return null when no matching cycle is found
+                                            );
 
                                             final isBeneficiaryRefused =
                                                 checkIfBeneficiaryRefused(
@@ -454,17 +474,21 @@ class _HouseholdOverviewPageState
                                                 );
                                               },
                                               isNotEligible:
-                                                  (!checkEligibilityForAgeAndAdverseEvent(
-                                                DigitDOBAge(
-                                                  years: ageInYears,
-                                                  months: ageInMonths,
-                                                ),
-                                                projectState
-                                                    .projectType?.validMinAge,
-                                                projectState
-                                                    .projectType?.validMaxAge,
-                                                adverseEventData,
-                                              )),
+                                                  !checkEligibilityForAgeAndAdverseEvent(
+                                                        DigitDOBAge(
+                                                          years: ageInYears,
+                                                          months: ageInMonths,
+                                                        ),
+                                                        projectState.projectType
+                                                            ?.validMinAge,
+                                                        projectState.projectType
+                                                            ?.validMaxAge,
+                                                        adverseEventData,
+                                                      ) &&
+                                                      !checkStatus(
+                                                        taskdata,
+                                                        currentCycle,
+                                                      ),
                                               // TODO Need to handle the null check
                                               name: e.name?.givenName ?? ' - ',
                                               years: (e.dateOfBirth == null
@@ -491,7 +515,11 @@ class _HouseholdOverviewPageState
                                                   0,
                                               gender: e.gender?.name ?? ' - ',
                                               isBeneficiaryRefused:
-                                                  isBeneficiaryRefused,
+                                                  isBeneficiaryRefused &&
+                                                      !checkStatus(
+                                                        taskdata,
+                                                        currentCycle,
+                                                      ),
                                               isDelivered: taskdata == null
                                                   ? false
                                                   : taskdata.isNotEmpty &&
@@ -501,18 +529,14 @@ class _HouseholdOverviewPageState
                                                               .isEmpty &&
                                                           !checkStatus(
                                                             taskdata,
-                                                            null,
+                                                            currentCycle,
                                                           )
                                                       // TODO Need to pass the cycle
                                                       ? true
                                                       : false,
                                               localizations: localizations,
                                               projectBeneficiaryClientReferenceId:
-                                                  state
-                                                      .householdMemberWrapper
-                                                      .projectBeneficiaries
-                                                      .first
-                                                      .clientReferenceId,
+                                                  projectBeneficiaryId,
                                             );
                                           },
                                         );

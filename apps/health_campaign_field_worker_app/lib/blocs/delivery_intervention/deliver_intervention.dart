@@ -140,9 +140,6 @@ class DeliverInterventionBloc
             )
             .toList();
 
-        // Sort the past cycles in descending order by ID
-        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
-
         // If it's not the last dose, update state accordingly
         if (isNotLastDose) {
           emit(state.copyWith(
@@ -154,8 +151,14 @@ class DeliverInterventionBloc
         }
         // If it's the last dose, move to the next cycle
         else {
+          final pastCycles = event.projectType.cycles
+              ?.where(
+                (p) => p.id <= event.lastCycle,
+              )
+              .toList();
+
           emit(state.copyWith(
-            cycle: event.lastCycle + 1,
+            cycle: event.lastCycle,
             hasCycleArrived: false,
             dose: event.lastDose,
             pastCycles: pastCycles,
@@ -167,8 +170,6 @@ class DeliverInterventionBloc
               (p) => p.id != currentRunningCycle && p.id < currentRunningCycle,
             )
             .toList();
-        // Sort the past cycles in descending order by ID
-        pastCycles?.sort((a, b) => b.id.compareTo(a.id));
         emit(state.copyWith(
           cycle: currentRunningCycle,
           dose: 1,

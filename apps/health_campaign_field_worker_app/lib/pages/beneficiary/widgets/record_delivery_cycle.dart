@@ -78,46 +78,49 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                               true,
                             )
                           : const SizedBox.shrink(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          StatefulBuilder(
-                            builder: (context, setState) {
-                              return Column(children: [
-                                isExpanded
-                                    ? buildCycleAndDoseTable(
-                                        pastCycles ?? [],
-                                        headerList,
-                                        null,
-                                        false,
-                                      )
-                                    : const Offstage(),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: DigitIconButton(
-                                    iconText: isExpanded
-                                        ? localizations.translate(
-                                            i18.deliverIntervention
-                                                .hidePastCycles,
-                                          )
-                                        : localizations.translate(
-                                            i18.deliverIntervention
-                                                .viewPastCycles,
-                                          ),
-                                    iconTextColor: DigitTheme
-                                        .instance.colorScheme.secondary,
-                                    onPressed: () {
-                                      setState(() {
-                                        isExpanded = !isExpanded;
-                                      });
-                                    },
+                      if ((pastCycles ?? []).isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            StatefulBuilder(
+                              builder: (context, setState) {
+                                return Column(children: [
+                                  isExpanded
+                                      ? buildCycleAndDoseTable(
+                                          pastCycles ?? [],
+                                          headerList,
+                                          null,
+                                          false,
+                                        )
+                                      : const Offstage(),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                      child: DigitIconButton(
+                                        iconText: isExpanded
+                                            ? localizations.translate(
+                                                i18.deliverIntervention
+                                                    .hidePastCycles,
+                                              )
+                                            : localizations.translate(
+                                                i18.deliverIntervention
+                                                    .viewPastCycles,
+                                              ),
+                                        iconTextColor: DigitTheme
+                                            .instance.colorScheme.secondary,
+                                        onPressed: () {
+                                          setState(() {
+                                            isExpanded = !isExpanded;
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ]);
-                            },
-                          ),
-                        ],
-                      ),
+                                ]);
+                              },
+                            ),
+                          ],
+                        ),
                     ]);
                   },
                 );
