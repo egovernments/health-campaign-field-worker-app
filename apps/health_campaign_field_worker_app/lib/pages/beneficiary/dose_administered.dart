@@ -58,8 +58,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
         body: ReactiveFormBuilder(
           form: () => buildForm(context),
           builder: (context, form, child) => ScrollableContent(
-            header: const Column(children: [
-              BackNavigationHelpHeaderWidget(),
+            header: Column(children: [
+              BackNavigationHelpHeaderWidget(handleback: () {
+                final parent = context.router.parent() as StackRouter;
+                // Pop twice to navigate back to the previous screen
+                parent
+                  ..pop()
+                  ..pop();
+              }),
             ]),
             footer: SizedBox(
               height: 85,

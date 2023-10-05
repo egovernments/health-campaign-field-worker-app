@@ -10,6 +10,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showBackNavigation;
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
+  final VoidCallback? handleback;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
@@ -17,6 +18,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,
+    this.handleback,
   });
 
   @override
@@ -37,7 +39,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         foregroundColor: theme.colorScheme.onBackground,
                         padding: EdgeInsets.zero,
                       ),
-                      onPressed: () => context.router.pop(),
+                      onPressed: () {
+                        context.router.pop();
+                        handleback != null ? handleback!() : null;
+                      },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
                         AppLocalizations.of(context).translate(
