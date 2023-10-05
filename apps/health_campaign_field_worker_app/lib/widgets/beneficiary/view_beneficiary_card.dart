@@ -130,7 +130,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
 // TODO need to pass the cycle
-        final isStatusReset = checkStatus(taskdata!, null);
+
+        final isStatusReset = checkStatus(taskdata, null);
 
         final rowTableData = [
           TableData(
@@ -292,7 +293,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
   String getTableCellText(
     bool isNotEligible,
-    List<TaskModel> taskdata,
+    List<TaskModel>? taskdata,
     bool isBeneficiaryRefused,
     bool isStatusReset,
   ) {
@@ -316,12 +317,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   // ignore: long-parameter-list
   Color getTableCellTextColor({
     required bool isNotEligible,
-    required List<TaskModel> taskdata,
+    required List<TaskModel>? taskdata,
     required bool isBeneficiaryRefused,
     required bool isStatusReset,
     required ThemeData theme,
   }) {
-    return taskdata.isNotEmpty &&
+    return taskdata != null &&
+            taskdata.isNotEmpty &&
             !isBeneficiaryRefused &&
             !isNotEligible &&
             !isStatusReset
