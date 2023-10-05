@@ -203,7 +203,13 @@ class MemberCard extends StatelessWidget {
                                 ),
                               );
 
-                              if ((event.state.futureTask ?? []).isNotEmpty) {
+                              final futureTaskList = event.state.futureTask;
+                              final hasMatchingTasks = futureTaskList?.any((ele) =>
+                                      ele.projectBeneficiaryClientReferenceId ==
+                                      projectBeneficiaryClientReferenceId) ??
+                                  false;
+
+                              if (hasMatchingTasks) {
                                 context.router
                                     .push(RecordPastDeliveryDetailsRoute());
                               } else {
