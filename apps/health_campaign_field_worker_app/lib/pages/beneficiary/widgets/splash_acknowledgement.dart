@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
@@ -27,8 +29,10 @@ class _SplashAcknowledgementPageState
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
           try {
-            // context.router.pop();
-            context.router.push(DoseAdministeredRoute());
+            Timer(
+              const Duration(seconds: 5),
+              () => context.router.push(DoseAdministeredRoute()),
+            );
           } catch (e) {
             print('Error during navigation: $e');
           }
