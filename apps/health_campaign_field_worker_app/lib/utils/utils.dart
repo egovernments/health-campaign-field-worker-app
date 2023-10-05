@@ -265,17 +265,17 @@ bool checkIfBeneficiaryRefused(
 }
 
 bool checkStatus(
-  List<TaskModel> tasks,
+  List<TaskModel>? tasks,
   List<Cycle>? cycles,
 ) {
-  final lastTask = tasks.last;
+  final lastTask = tasks?.last;
 
-  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+  final lastTaskCreatedTime = lastTask?.clientAuditDetails?.createdTime;
   if (lastTaskCreatedTime != null) {
     final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
     final diff = DateTime.now().difference(date);
 
-    return lastTask.status == Status.partiallyDelivered.name
+    return lastTask?.status == Status.partiallyDelivered.name
         ? true
         : diff.inHours > 24
             ? true
