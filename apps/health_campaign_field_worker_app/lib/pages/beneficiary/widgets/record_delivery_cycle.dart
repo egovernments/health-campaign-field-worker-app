@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -76,6 +75,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .toList(),
                               headerList,
                               deliverState.dose - 1,
+                              true,
                             )
                           : const SizedBox.shrink(),
                       Column(
@@ -89,6 +89,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                         pastCycles ?? [],
                                         headerList,
                                         null,
+                                        false,
                                       )
                                     : const Offstage(),
                                 SizedBox(
@@ -132,73 +133,82 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
     List<Cycle> cycles,
     List<TableHeader> headerList,
     int? selectedIndex,
+    bool isCurrentCycle,
   ) {
     final theme = DigitTheme.instance.mobileTheme;
 
-    // Create a list of widgets for each cycle
-    final widgetList = cycles
-        .map((e) => Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
-                    style: theme.textTheme.headlineMedium,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                DigitTable(
-                  selectedIndex: selectedIndex,
-                  headerList: headerList,
-                  tableData: e.deliveries!.map(
-                    (item) {
-                      final tasks = widget.taskData
-                          ?.where((element) =>
-                              element.additionalFields?.fields
-                                      .firstWhereOrNull(
-                                        (f) =>
-                                            f.key ==
-                                            AdditionalFieldsType.doseIndex
-                                                .toValue(),
-                                      )
-                                      ?.value ==
-                                  '0${item.id}' &&
-                              element.additionalFields?.fields
-                                      .firstWhereOrNull(
-                                        (c) =>
-                                            c.key ==
-                                            AdditionalFieldsType.cycleIndex
-                                                .toValue(),
-                                      )
-                                      ?.value ==
-                                  '0${e.id}')
-                          .lastOrNull;
+    final widgetList = <Widget>[];
 
-                      return TableDataRow([
-                        TableData(
-                          'Dose ${e.deliveries!.indexOf(item) + 1}',
-                          cellKey: 'dose',
-                        ),
-                        TableData(
-                          tasks?.status ?? Status.inComplete.toValue(),
-                          cellKey: 'status',
-                        ),
-                        TableData(
-                          tasks?.clientAuditDetails?.createdTime.toDateTime
-                                  .getFormattedDate() ??
-                              '--',
-                          cellKey: 'completedOn',
-                        ),
-                      ]);
-                    },
-                  ).toList(),
-                  leftColumnWidth: 130,
-                  rightColumnWidth: headerList.length * 17 * 6,
-                  height: 6 * 57,
-                ),
-              ],
-            ))
-        .toList();
+    // Iterate over the cycles list in reverse order
+    for (int i = cycles.length - 1; i >= 0; i--) {
+      final e = cycles[i];
+      widgetList.add(
+        Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                isCurrentCycle
+                    ? localizations
+                        .translate(i18.beneficiaryDetails.currentCycleLabel)
+                    : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                style: theme.textTheme.headlineMedium,
+                textAlign: TextAlign.left,
+              ),
+            ),
+            DigitTable(
+              selectedIndex: selectedIndex,
+              headerList: headerList,
+              tableData: e.deliveries!.map(
+                (item) {
+                  final tasks = widget.taskData
+                      ?.where((element) =>
+                          element.additionalFields?.fields
+                                  .firstWhereOrNull(
+                                    (f) =>
+                                        f.key ==
+                                        AdditionalFieldsType.doseIndex
+                                            .toValue(),
+                                  )
+                                  ?.value ==
+                              '0${item.id}' &&
+                          element.additionalFields?.fields
+                                  .firstWhereOrNull(
+                                    (c) =>
+                                        c.key ==
+                                        AdditionalFieldsType.cycleIndex
+                                            .toValue(),
+                                  )
+                                  ?.value ==
+                              '0${e.id}')
+                      .lastOrNull;
+
+                  return TableDataRow([
+                    TableData(
+                      'Dose ${e.deliveries!.indexOf(item) + 1}',
+                      cellKey: 'dose',
+                    ),
+                    TableData(
+                      tasks?.status ?? Status.inComplete.toValue(),
+                      cellKey: 'status',
+                    ),
+                    TableData(
+                      tasks?.clientAuditDetails?.createdTime.toDateTime
+                              .getFormattedDate() ??
+                          '--',
+                      cellKey: 'completedOn',
+                    ),
+                  ]);
+                },
+              ).toList(),
+              leftColumnWidth: 130,
+              rightColumnWidth: headerList.length * 17 * 6,
+              height: 6 * 57,
+            ),
+          ],
+        ),
+      );
+    }
 
     return Column(
       children: widgetList,

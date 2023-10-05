@@ -71,9 +71,12 @@ class DigitDobPicker extends StatelessWidget {
                     label: ageFieldLabel,
                     keyboardType: TextInputType.number,
                     hint: yearsHintLabel,
-                    suffix: Text(
-                      yearsHintLabel,
-                      textAlign: TextAlign.center,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        yearsHintLabel,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {
@@ -111,9 +114,12 @@ class DigitDobPicker extends StatelessWidget {
                     formControlName: datePickerFormControl,
                     label: '',
                     keyboardType: TextInputType.number,
-                    suffix: Text(
-                      monthsHintLabel,
-                      textAlign: TextAlign.center,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        monthsHintLabel,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     readOnly: isVerified,
                     onChanged: (formControl) {

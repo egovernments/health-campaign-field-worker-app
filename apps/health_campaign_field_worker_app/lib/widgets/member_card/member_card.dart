@@ -159,7 +159,7 @@ class MemberCard extends StatelessWidget {
                             ? i18.householdOverView
                                 .householdOverViewNotEligibleIconLabel
                             : isBeneficiaryRefused
-                                ? 'Beneficiary Refused'
+                                ? Status.beneficiaryRefused.toValue()
                                 // [TODO Need to update the localization]
                                 : i18.householdOverView
                                     .householdOverViewNotDeliveredIconLabel,
