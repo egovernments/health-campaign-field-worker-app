@@ -48,15 +48,11 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                   child: Row(children: <Widget>[
                     Flexible(
                         child: Text(
-                      labelText,
+                      labelText + (isRequired ? ' * ' : ''),
                       textAlign: TextAlign.left,
                       style: DigitTheme
                           .instance.mobileTheme.textTheme.headlineMedium,
                     )),
-                    Text(isRequired ? '*' : '',
-                        textAlign: TextAlign.left,
-                        style: DigitTheme
-                            .instance.mobileTheme.textTheme.bodyLarge),
                   ]),
                 ),
               )

@@ -42,10 +42,14 @@ class _RecordPastDeliveryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
+    int ischanges = 0;
+    bool isbtnClicked = false;
 
     return Scaffold(
       body: BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
         builder: (context, state) {
+          print(ischanges);
+
           return ReactiveFormBuilder(
             form: () => buildForm(context),
             builder: (context, form, child) => ScrollableContent(
@@ -60,6 +64,14 @@ class _RecordPastDeliveryDetailsPageState
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
                     onPressed: () async {
+                      setState(() {
+                        isbtnClicked = true;
+                      });
+
+                      form.markAllAsTouched();
+
+                      if (!form.valid) return;
+
                       final event = context.read<DeliverInterventionBloc>();
 
                       // Loop through each future task
@@ -176,36 +188,63 @@ class _RecordPastDeliveryDetailsPageState
                                     )!
                                     .value);
 
-                            return Column(
-                              children: [
-                                DigitRadioButtonList(
-                                  labelText: "${localizations.translate(
-                                    i18.deliverIntervention
-                                        .wasDosePastDeliveryDetails,
-                                  )} $doseNumber ${localizations.translate(
-                                    i18.deliverIntervention
-                                        .wasDosePastRecordDeliveryDetails,
-                                  )} ${localizations.translate(
-                                    i18.beneficiaryDetails.beneficiaryDose,
-                                  )} ${doseNumber - 1} ?",
-                                  labelStyle: theme.textTheme.displayMedium,
-                                  formControlName:
-                                      "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
-                                  valueMapper: (val) =>
-                                      localizations.translate(val.label),
-                                  options: Constants.yesNo,
-                                  isRequired: true,
-                                  onValueChange: (val) {
-                                    form
-                                        .control(
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return Column(
+                                  children: [
+                                    DigitRadioButtonList(
+                                      labelText: "${localizations.translate(
+                                        i18.deliverIntervention
+                                            .wasDosePastDeliveryDetails,
+                                      )} $doseNumber ${localizations.translate(
+                                        i18.deliverIntervention
+                                            .wasDosePastRecordDeliveryDetails,
+                                      )} ${localizations.translate(
+                                        i18.beneficiaryDetails.beneficiaryDose,
+                                      )} ${doseNumber - 1} ?",
+                                      labelStyle: theme.textTheme.displayMedium,
+                                      formControlName:
                                           "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
-                                        )
-                                        .value = val;
-                                  },
-                                ),
-                                if (entry.key != state.futureTask!.length - 1)
-                                  const Divider(), // Add Divider conditionally
-                              ],
+                                      valueMapper: (val) =>
+                                          localizations.translate(val.label),
+                                      options: Constants.yesNo,
+                                      isRequired: true,
+                                      onValueChange: (val) {
+                                        setState(() {
+                                          ischanges = ischanges + 1;
+                                        });
+
+                                        form
+                                            .control(
+                                              "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
+                                            )
+                                            .value = val;
+                                      },
+                                    ),
+                                    Offstage(
+                                      offstage: !form
+                                          .control(
+                                            "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
+                                          )
+                                          .invalid,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                          style: TextStyle(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    if (entry.key !=
+                                        state.futureTask!.length - 1)
+                                      const Divider(), // Add Divider conditionally
+                                  ],
+                                );
+                              },
                             );
                           }).toList() ??
                           []),
@@ -228,7 +267,7 @@ class _RecordPastDeliveryDetailsPageState
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([
           ...bloc.futureTask?.map(
-                (e) => FormControl<KeyValue>(),
+                (e) => FormControl<KeyValue>(validators: [Validators.required]),
               ) ??
               [],
         ]),
