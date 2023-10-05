@@ -145,65 +145,78 @@ class _BeneficiaryDetailsPageState
                         footer: BlocBuilder<DeliverInterventionBloc,
                             DeliverInterventionState>(
                           builder: (context, state) {
-                            return state.hasCycleArrived
-                                ? SizedBox(
-                                    height: 85,
-                                    child: DigitCard(
-                                      margin: const EdgeInsets.only(
-                                        left: 0,
-                                        right: 0,
-                                        top: 10,
-                                      ),
-                                      child: DigitElevatedButton(
-                                        onPressed: () async {
-                                          bloc.add(
-                                            DeliverInterventionEvent
-                                                .selectFutureCycleDose(
-                                              state.dose,
-                                              projectState.projectType!.cycles!
-                                                  .firstWhere((c) =>
-                                                      c.id == state.cycle),
-                                            ),
-                                          );
-                                          await DigitDialog.show<bool>(
-                                            context,
-                                            options: DigitDialogOptions(
-                                              titleText:
-                                                  localizations.translate(
-                                                i18.beneficiaryDetails
-                                                    .resourcesTobeDelivered,
-                                              ),
-                                              content: buildTableContent(
-                                                state,
+                            return projectState.projectType!.cycles!.isNotEmpty
+                                ? state.hasCycleArrived
+                                    ? SizedBox(
+                                        height: 85,
+                                        child: DigitCard(
+                                          margin: const EdgeInsets.only(
+                                              left: 0, right: 0, top: 10),
+                                          child: DigitElevatedButton(
+                                            onPressed: () async {
+                                              bloc.add(DeliverInterventionEvent
+                                                  .selectFutureCycleDose(
+                                                state.dose,
+                                                projectState
+                                                    .projectType!.cycles!
+                                                    .firstWhere((c) =>
+                                                        c.id == state.cycle),
+                                              ));
+                                              await DigitDialog.show<bool>(
                                                 context,
-                                                headerListResource,
-                                                variant,
-                                              ),
-                                              barrierDismissible: true,
-                                              primaryAction: DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.beneficiaryDetails
-                                                      .ctaProceed,
+                                                options: DigitDialogOptions(
+                                                  titleText: localizations
+                                                      .translate(i18
+                                                          .beneficiaryDetails
+                                                          .resourcesTobeDelivered),
+                                                  content: buildTableContent(
+                                                    state,
+                                                    context,
+                                                    headerListResource,
+                                                    variant,
+                                                  ),
+                                                  barrierDismissible: true,
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label: localizations
+                                                        .translate(i18
+                                                            .beneficiaryDetails
+                                                            .ctaProceed),
+                                                    action: (ctx) {
+                                                      Navigator.of(ctx).pop();
+                                                      router.push(
+                                                        DeliverInterventionRoute(),
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
-                                                action: (ctx) {
-                                                  Navigator.of(ctx).pop();
-                                                  router.push(
-                                                    DeliverInterventionRoute(),
-                                                  );
-                                                },
+                                              );
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
                                               ),
                                             ),
-                                          );
-                                        },
-                                        child: Center(
-                                          child: Text(
-                                            'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
                                           ),
                                         ),
-                                      ),
+                                      )
+                                    : const SizedBox.shrink()
+                                : DigitCard(
+                                    margin: const EdgeInsets.only(
+                                      top: kPadding,
                                     ),
-                                  )
-                                : const SizedBox.shrink();
+                                    child: DigitElevatedButton(
+                                      child: Center(
+                                        child: Text(localizations.translate(i18
+                                            .householdOverView
+                                            .householdOverViewActionText)),
+                                      ),
+                                      onPressed: () {
+                                        context.router
+                                            .push(DeliverInterventionRoute());
+                                      },
+                                    ),
+                                  );
                           },
                         ),
                         children: [
@@ -315,55 +328,58 @@ class _BeneficiaryDetailsPageState
                               ],
                             ),
                           ),
-                          BlocBuilder<ProjectBloc, ProjectState>(
-                            builder: (context, state) {
-                              return DigitCard(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: state.projectType?.cycles != null
-                                      ? [
-                                          BlocBuilder<DeliverInterventionBloc,
-                                              DeliverInterventionState>(
-                                            builder: (context, deliverState) {
-                                              return Column(
-                                                children: [
-                                                  (state.projectType?.cycles !=
-                                                          null)
-                                                      ? state
-                                                              .projectType!
-                                                              .cycles!
-                                                              .isNotEmpty
-                                                          ? Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(
-                                                                kPadding,
-                                                              ),
-                                                              child:
-                                                                  RecordDeliveryCycle(
-                                                                projectCycles:
-                                                                    projectState
-                                                                            .projectType
-                                                                            ?.cycles ??
-                                                                        [],
-                                                                taskData:
-                                                                    taskData ??
-                                                                        [],
-                                                              ),
-                                                            )
-                                                          : const Offstage()
-                                                      : const Offstage(),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ]
-                                      : [],
-                                ),
-                              );
-                            },
-                          ),
+                          if (projectState.projectType!.cycles!.isNotEmpty)
+                            BlocBuilder<ProjectBloc, ProjectState>(
+                              builder: (context, state) {
+                                return DigitCard(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: state.projectType?.cycles != null
+                                        ? [
+                                            BlocBuilder<DeliverInterventionBloc,
+                                                DeliverInterventionState>(
+                                              builder: (context, deliverState) {
+                                                return Column(
+                                                  children: [
+                                                    (state.projectType
+                                                                ?.cycles !=
+                                                            null)
+                                                        ? state
+                                                                .projectType!
+                                                                .cycles!
+                                                                .isNotEmpty
+                                                            ? Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                  kPadding,
+                                                                ),
+                                                                child:
+                                                                    RecordDeliveryCycle(
+                                                                  projectCycles:
+                                                                      projectState
+                                                                              .projectType
+                                                                              ?.cycles ??
+                                                                          [],
+                                                                  taskData:
+                                                                      taskData ??
+                                                                          [],
+                                                                ),
+                                                              )
+                                                            : const Offstage()
+                                                        : const Offstage(),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                                );
+                              },
+                            ),
                         ],
                       ),
                     ),

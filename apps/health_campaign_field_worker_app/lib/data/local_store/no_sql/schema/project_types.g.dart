@@ -53,6 +53,12 @@ const ProjectTypeListCycleSchema = CollectionSchema(
       id: 6,
       name: r'projectTypeId',
       type: IsarType.string,
+    ),
+    r'resources': PropertySchema(
+      id: 7,
+      name: r'resources',
+      type: IsarType.objectList,
+      target: r'ProductVariants',
     )
   },
   estimateSize: _projectTypeListCycleEstimateSize,
@@ -63,9 +69,9 @@ const ProjectTypeListCycleSchema = CollectionSchema(
   indexes: {},
   links: {},
   embeddedSchemas: {
+    r'ProductVariants': ProductVariantsSchema,
     r'Cycles': CyclesSchema,
-    r'Deliveries': DeliveriesSchema,
-    r'ProductVariants': ProductVariantsSchema
+    r'Deliveries': DeliveriesSchema
   },
   getId: _projectTypeListCycleGetId,
   getLinks: _projectTypeListCycleGetLinks,
@@ -103,6 +109,20 @@ int _projectTypeListCycleEstimateSize(
     }
   }
   bytesCount += 3 + object.projectTypeId.length * 3;
+  {
+    final list = object.resources;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[ProductVariants]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              ProductVariantsSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
   return bytesCount;
 }
 
@@ -124,6 +144,12 @@ void _projectTypeListCycleSerialize(
   writer.writeString(offsets[4], object.name);
   writer.writeString(offsets[5], object.observationStrategy);
   writer.writeString(offsets[6], object.projectTypeId);
+  writer.writeObjectList<ProductVariants>(
+    offsets[7],
+    allOffsets,
+    ProductVariantsSchema.serialize,
+    object.resources,
+  );
 }
 
 ProjectTypeListCycle _projectTypeListCycleDeserialize(
@@ -146,6 +172,12 @@ ProjectTypeListCycle _projectTypeListCycleDeserialize(
   object.name = reader.readString(offsets[4]);
   object.observationStrategy = reader.readStringOrNull(offsets[5]);
   object.projectTypeId = reader.readString(offsets[6]);
+  object.resources = reader.readObjectList<ProductVariants>(
+    offsets[7],
+    ProductVariantsSchema.deserialize,
+    allOffsets,
+    ProductVariants(),
+  );
   return object;
 }
 
@@ -175,6 +207,13 @@ P _projectTypeListCycleDeserializeProp<P>(
       return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readObjectList<ProductVariants>(
+        offset,
+        ProductVariantsSchema.deserialize,
+        allOffsets,
+        ProductVariants(),
+      )) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1285,6 +1324,113 @@ extension ProjectTypeListCycleQueryFilter on QueryBuilder<ProjectTypeListCycle,
       ));
     });
   }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'resources',
+      ));
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'resources',
+      ));
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'resources',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension ProjectTypeListCycleQueryObject on QueryBuilder<ProjectTypeListCycle,
@@ -1293,6 +1439,13 @@ extension ProjectTypeListCycleQueryObject on QueryBuilder<ProjectTypeListCycle,
       QAfterFilterCondition> cyclesElement(FilterQuery<Cycles> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'cycles');
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, ProjectTypeListCycle,
+      QAfterFilterCondition> resourcesElement(FilterQuery<ProductVariants> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'resources');
     });
   }
 }
@@ -1587,6 +1740,13 @@ extension ProjectTypeListCycleQueryProperty on QueryBuilder<
       projectTypeIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'projectTypeId');
+    });
+  }
+
+  QueryBuilder<ProjectTypeListCycle, List<ProductVariants>?, QQueryOperations>
+      resourcesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'resources');
     });
   }
 }
