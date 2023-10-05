@@ -26,7 +26,16 @@
     {
       "name": "maxRadius",
       "type": "double",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "isProximityEnabled",
+      "type": "bool",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "customAttributes": [

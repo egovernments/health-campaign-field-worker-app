@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:math' as math;
 import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -24,29 +25,41 @@ class HouseholdLocalRepository
         ),
       ],
     );
-    final results = await (selectQuery
-          ..where(
-            buildAnd(
-              [
-                if (query.clientReferenceId != null)
-                  sql.household.clientReferenceId
-                      .isIn(query.clientReferenceId!),
-                if (query.id != null)
-                  sql.household.id.equals(
-                    query.id,
-                  ),
-                if (query.tenantId != null)
-                  sql.household.tenantId.equals(
-                    query.tenantId,
-                  ),
-                if (userId != null)
-                  sql.household.auditCreatedBy.equals(
-                    userId,
-                  ),
-              ],
-            ),
-          ))
-        .get();
+
+    (selectQuery
+      ..where(
+        buildAnd(
+          [
+            if (query.clientReferenceId != null)
+              sql.household.clientReferenceId.isIn(query.clientReferenceId!),
+            if (query.id != null)
+              sql.household.id.equals(
+                query.id,
+              ),
+            if (query.tenantId != null)
+              sql.household.tenantId.equals(
+                query.tenantId,
+              ),
+            if (userId != null)
+              sql.household.auditCreatedBy.equals(
+                userId,
+              ),
+            if (query.latitude != null &&
+                query.longitude != null &&
+                query.maxRadius != null &&
+                query.isProximityEnabled == true)
+              CustomExpression<bool>('''
+        (6371393 * acos(
+            cos(${query.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
+            * cos((address.longitude * ${math.pi / 180.0}) - ${query.longitude! * math.pi / 180.0})
+            + sin(${query.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
+        )) <= ${query.maxRadius!}
+    '''),
+          ],
+        ),
+      ));
+
+    final results = await selectQuery.get();
 
     return results
         .map((e) {

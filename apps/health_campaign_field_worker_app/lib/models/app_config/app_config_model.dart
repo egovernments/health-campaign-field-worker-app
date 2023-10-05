@@ -90,6 +90,7 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
     required List<DeletionReasonOptions> householdDeletionReasonOptions,
     @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
