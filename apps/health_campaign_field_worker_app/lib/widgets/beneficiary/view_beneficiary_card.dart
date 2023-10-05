@@ -78,6 +78,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final bloc = context.read<ProjectBloc>().state;
     final validMinAge = bloc.projectType?.validMinAge;
     final validMaxAge = bloc.projectType?.validMaxAge;
+    final currentCycle = bloc.projectType?.cycles?.firstWhereOrNull(
+      (e) =>
+          (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+          (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+      // Return null when no matching cycle is found
+    );
 
     final tableData = householdMember.members.map(
       (e) {
@@ -129,9 +135,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
-// TODO need to pass the cycle
+// TODO need to pass the current cycle
 
-        final isStatusReset = checkStatus(taskdata, null);
+        final isStatusReset = checkStatus(taskdata, currentCycle);
 
         final rowTableData = [
           TableData(
@@ -297,12 +303,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     bool isBeneficiaryRefused,
     bool isStatusReset,
   ) {
-    if (isNotEligible) {
+    if (isNotEligible && !isStatusReset) {
       return 'Not Eligible';
     } else if (taskdata != null) {
       if (taskdata.isEmpty) {
         return Status.notDelivered.toValue();
-      } else if (isBeneficiaryRefused) {
+      } else if (isBeneficiaryRefused && !isStatusReset) {
         return Status.beneficiaryRefused.toValue();
       } else if (isStatusReset) {
         return Status.notDelivered.toValue();

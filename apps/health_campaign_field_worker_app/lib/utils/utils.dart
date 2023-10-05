@@ -256,32 +256,41 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.additionalFields != null &&
-      (tasks.last.additionalFields?.fields ?? []).isNotEmpty &&
-      tasks.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'taskStatus')
-              ?.value ==
-          Status.beneficiaryRefused.toValue());
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
 
 bool checkStatus(
   List<TaskModel>? tasks,
-  List<Cycle>? cycles,
+  Cycle? currentCycle,
 ) {
-  final lastTask = tasks?.last;
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    if (tasks != null && tasks.isNotEmpty) {
+      final lastTask = tasks.last;
+      final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+      if (lastTaskCreatedTime != null) {
+        final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+        final diff = DateTime.now().difference(date);
+        final isLastCycleRunning =
+            lastTaskCreatedTime >= currentCycle.startDate! &&
+                lastTaskCreatedTime <= currentCycle.endDate!;
 
-  final lastTaskCreatedTime = lastTask?.clientAuditDetails?.createdTime;
-  if (lastTaskCreatedTime != null) {
-    final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
-    final diff = DateTime.now().difference(date);
-
-    return lastTask?.status == Status.partiallyDelivered.name
-        ? true
-        : diff.inHours > 24
-            ? true
-            : false;
+        return isLastCycleRunning
+            ? lastTask.status == Status.partiallyDelivered.name
+                ? true
+                : diff.inHours >= 24
+                    ? true
+                    : false
+            : true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
