@@ -69,7 +69,12 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   onPressed: () {
                     final bloc = context.read<DeliverInterventionBloc>().state;
                     final event = context.read<DeliverInterventionBloc>();
+                    final parent = context.router.parent() as StackRouter;
 
+                    // Pop twice to navigate back to the previous screen
+                    parent
+                      ..pop()
+                      ..pop();
                     if (doseAdministered && context.mounted) {
                       // Iterate through future deliveries
 
@@ -77,12 +82,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         int doseIndex = e.id;
                         final clientReferenceId = IdGen.i.identifier;
                         final address = bloc.oldTask?.address;
-                        final parent = context.router.parent() as StackRouter;
-
-                        // Pop twice to navigate back to the previous screen
-                        parent
-                          ..pop()
-                          ..pop();
 
                         // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
                         event.add(DeliverInterventionSubmitEvent(
