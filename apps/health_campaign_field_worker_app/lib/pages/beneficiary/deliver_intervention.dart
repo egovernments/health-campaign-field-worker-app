@@ -395,6 +395,9 @@ class _DeliverInterventionPageState
                                                           cardIndex:
                                                               _controllers
                                                                   .indexOf(e),
+                                                          totalItems:
+                                                              _controllers
+                                                                  .length,
                                                           onDelete: (index) {
                                                             (form.control(
                                                               _resourceDeliveredKey,
@@ -423,7 +426,7 @@ class _DeliverInterventionPageState
                                                     addController(form);
                                                     setState(() {
                                                       _controllers.add(
-                                                        productVariants?.length,
+                                                        _controllers.length,
                                                       );
                                                     });
                                                   },
