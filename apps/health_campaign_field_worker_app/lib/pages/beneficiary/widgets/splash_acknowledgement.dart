@@ -31,7 +31,7 @@ class _SplashAcknowledgementPageState
           try {
             context.router.push(DoseAdministeredRoute());
           } catch (e) {
-            print('Error during navigation: $e');
+            rethrow;
           }
         }
       });
