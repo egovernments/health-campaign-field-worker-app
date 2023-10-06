@@ -27,6 +27,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final String? cancelText;
   final String? confirmText;
   final String? fieldHintText;
+  final void Function(FormControl<dynamic>)? onChangeOfFormControl;
 
   const DigitDateFormPicker({
     super.key,
@@ -52,6 +53,7 @@ class DigitDateFormPicker extends StatelessWidget {
     this.cancelText = 'Cancel',
     this.confirmText = 'OK',
     this.fieldHintText,
+    this.onChangeOfFormControl,
   });
 
   @override
@@ -93,6 +95,7 @@ class DigitDateFormPicker extends StatelessWidget {
                     picker.showPicker();
                   }
                 : null,
+            onChanged: onChangeOfFormControl,
           );
         },
       ),

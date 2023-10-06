@@ -82,7 +82,7 @@ class DigitTextFormField extends StatelessWidget {
                 obscureText: obscureText,
                 focusNode: focusNode,
                 keyboardType: keyboardType,
-                inputFormatters: inputFormatter,
+                inputFormatters: inputFormatters,
                 valueAccessor: valueAccessor,
                 decoration: readOnly == true
                     ? InputDecoration(

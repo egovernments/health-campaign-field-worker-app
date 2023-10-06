@@ -128,11 +128,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             years: ageInYears,
             months: ageInMonths,
           ),
-          validMinAge,
-          validMaxAge,
+          bloc.projectType,
+          (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           adverseEvents,
         );
-
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
 // TODO need to pass the current cycle
@@ -216,8 +215,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         years: ageInYears,
         months: ageInMonths,
       ),
-      validMinAge,
-      validMaxAge,
+      bloc.projectType,
+      householdMember.tasks?.last,
       householdMember.adverseEvents,
     );
 
@@ -307,16 +306,16 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       return 'Not Eligible';
     } else if (taskdata != null) {
       if (taskdata.isEmpty) {
-        return Status.notDelivered.toValue();
+        return localizations.translate(Status.notDelivered.toValue());
       } else if (isBeneficiaryRefused && !isStatusReset) {
-        return Status.beneficiaryRefused.toValue();
+        return localizations.translate(Status.beneficiaryRefused.toValue());
       } else if (isStatusReset) {
-        return Status.notDelivered.toValue();
+        return localizations.translate(Status.notDelivered.toValue());
       } else {
-        return Status.delivered.toValue();
+        return localizations.translate(Status.delivered.toValue());
       }
     } else {
-      return Status.notDelivered.toValue();
+      return localizations.translate(Status.notDelivered.toValue());
     }
   }
 
