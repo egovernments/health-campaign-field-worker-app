@@ -74,6 +74,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
                     onPressed: () {
+                      if (form.control(_doseAdministeredKey).value == null) {
+                        form
+                            .control(_doseAdministeredKey)
+                            .setErrors({'': true});
+                      }
+                      form.markAllAsTouched();
+                      if (!form.valid) return;
+
                       final bloc =
                           context.read<DeliverInterventionBloc>().state;
                       final event = context.read<DeliverInterventionBloc>();
@@ -300,7 +308,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
   FormGroup buildForm(BuildContext context) {
     return fb.group(<String, Object>{
-      _doseAdministeredKey: FormControl<KeyValue>(value: null),
+      _doseAdministeredKey: FormControl<KeyValue>(
+        value: Constants.yesNo[0],
+        validators: [Validators.required],
+      ),
     });
   }
 }
