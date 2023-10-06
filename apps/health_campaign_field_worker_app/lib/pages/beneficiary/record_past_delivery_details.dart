@@ -111,10 +111,6 @@ class _RecordPastDeliveryDetailsPageState
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
 
-                              bloc.add(HouseholdOverviewReloadEvent(
-                                projectId: context.projectId,
-                                projectBeneficiaryType: context.beneficiaryType,
-                              ));
                               event.add(DeliverInterventionSearchEvent(
                                 TaskSearchModel(
                                   projectBeneficiaryClientReferenceId: bloc
@@ -125,10 +121,11 @@ class _RecordPastDeliveryDetailsPageState
                                       .toList(),
                                 ),
                               ));
-                              Navigator.of(
-                                ctx,
-                                rootNavigator: true,
-                              ).pop();
+                              context.router.popUntilRouteWithName(
+                                SearchBeneficiaryRoute.name,
+                              );
+                              Navigator.of(ctx).pop();
+
                               router.push(
                                 BeneficiaryDetailsRoute(),
                               );
