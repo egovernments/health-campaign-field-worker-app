@@ -11,6 +11,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
   final int cardIndex;
   final FormGroup form;
+  final int totalItems;
 
   const ResourceBeneficiaryCard({
     Key? key,
@@ -18,6 +19,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.onDelete,
     required this.cardIndex,
     required this.form,
+    required this.totalItems,
   }) : super(key: key);
 
   @override
@@ -77,9 +79,9 @@ class _ResourceBeneficiaryCardState
           SizedBox(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: widget.cardIndex == 0
-                  ? const Offstage()
-                  : DigitIconButton(
+              child: (widget.cardIndex == widget.totalItems - 1 &&
+                      widget.totalItems > 1)
+                  ? DigitIconButton(
                       onPressed: () async {
                         final submit = await DigitDialog.show<bool>(
                           context,
@@ -119,7 +121,8 @@ class _ResourceBeneficiaryCardState
                         i18.deliverIntervention.resourceDeleteBeneficiary,
                       ),
                       icon: Icons.delete,
-                    ),
+                    )
+                  : const Offstage(),
             ),
           ),
         ],
