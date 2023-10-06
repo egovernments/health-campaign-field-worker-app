@@ -17,6 +17,7 @@ class DigitDobPicker extends StatelessWidget {
   final String yearsAndMonthsErrMsg;
   final String cancelText;
   final String confirmText;
+  final void Function(FormControl<dynamic>)? onChangeOfFormControl;
 
   const DigitDobPicker({
     super.key,
@@ -31,6 +32,7 @@ class DigitDobPicker extends StatelessWidget {
     required this.yearsAndMonthsErrMsg,
     this.confirmText = 'OK',
     this.cancelText = 'Cancel',
+    this.onChangeOfFormControl,
   });
 
   @override
@@ -55,6 +57,8 @@ class DigitDobPicker extends StatelessWidget {
               formControlName: datePickerFormControl,
               cancelText: cancelText,
               confirmText: confirmText,
+              onChangeOfFormControl: onChangeOfFormControl,
+              end: DateTime.now(),
             ),
             const SizedBox(height: 16),
             // Text widget to display a separator label between the date picker and age fields
@@ -67,43 +71,24 @@ class DigitDobPicker extends StatelessWidget {
                 Expanded(
                   // Text form field for entering the age in years
                   child: DigitTextFormField(
-                    maxLength: 3,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
-                    valueAccessor:
-                        DobValueAccessorYearsString(DobValueAccessor()),
-                    formControlName: datePickerFormControl,
-                    label: ageFieldLabel,
-                    keyboardType: TextInputType.number,
-                    hint: yearsHintLabel,
-                    suffix: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        yearsHintLabel,
-                        textAlign: TextAlign.center,
+                      maxLength: 3,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      valueAccessor:
+                          DobValueAccessorYearsString(DobValueAccessor()),
+                      formControlName: datePickerFormControl,
+                      label: ageFieldLabel,
+                      keyboardType: TextInputType.number,
+                      suffix: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          yearsHintLabel,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    readOnly: isVerified,
-                    onChanged: (formControl) {
-                      // Function to validate the entered age in years
-                      Map<String, dynamic>? requiredTrue(
-                          AbstractControl<dynamic> control) {
-                        DigitDOBAge age =
-                            DigitDateUtils.calculateAge(formControl.value);
-                        DateTime formValue = formControl.value;
-
-                        return formValue.isAfter(DateTime.now()) ||
-                                age.years <= 0 ||
-                                age.years > 150 ||
-                                (age.years >= 150 && age.months > 0)
-                            ? {'': true}
-                            : null;
-                      }
-
-                      formControl.setValidators([requiredTrue]);
-                    },
-                  ),
+                      readOnly: isVerified,
+                      onChanged: onChangeOfFormControl),
                 ),
                 const SizedBox(
                   width: 8,
@@ -111,41 +96,24 @@ class DigitDobPicker extends StatelessWidget {
                 Expanded(
                   // Text form field for entering the age in months
                   child: DigitTextFormField(
-                    maxLength: 2,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
-                    valueAccessor:
-                        DobValueAccessorMonthString(DobValueAccessor()),
-                    formControlName: datePickerFormControl,
-                    label: '',
-                    keyboardType: TextInputType.number,
-                    suffix: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        monthsHintLabel,
-                        textAlign: TextAlign.center,
+                      maxLength: 2,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      valueAccessor:
+                          DobValueAccessorMonthString(DobValueAccessor()),
+                      formControlName: datePickerFormControl,
+                      label: '',
+                      keyboardType: TextInputType.number,
+                      suffix: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          monthsHintLabel,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    readOnly: isVerified,
-                    onChanged: (formControl) {
-                      // Function to validate the entered age in months
-                      Map<String, dynamic>? requiredTrue(
-                          AbstractControl<dynamic> control) {
-                        DigitDOBAge age =
-                            DigitDateUtils.calculateAge(formControl.value);
-                        DateTime formValue = formControl.value;
-                        return formValue.isAfter(DateTime.now()) ||
-                                age.months <= 0 ||
-                                age.months > 11 ||
-                                (age.years >= 150 && age.months > 0)
-                            ? {'': true}
-                            : null;
-                      }
-
-                      formControl.setValidators([requiredTrue]);
-                    },
-                  ),
+                      readOnly: isVerified,
+                      onChanged: onChangeOfFormControl),
                 ),
               ],
             ),
@@ -153,7 +121,7 @@ class DigitDobPicker extends StatelessWidget {
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);
-                if (datePickerControl.invalid && form.touched) {
+                if (datePickerControl.hasErrors) {
                   return Text(
                     yearsAndMonthsErrMsg,
                     style:
@@ -175,28 +143,32 @@ class DigitDobPicker extends StatelessWidget {
 class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
   @override
   DigitDOBAge? modelToViewValue(DateTime? modelValue) {
-    if (modelValue == null) return null;
-    return DigitDateUtils.calculateAge(modelValue);
+    if (modelValue == null) {
+      return null;
+    } else {
+      return DigitDateUtils.calculateAge(modelValue);
+    }
   }
 
   @override
   DateTime? viewToModelValue(DigitDOBAge? viewValue) {
-    if (viewValue == null) return null;
-    final months = viewValue.months;
-    final days = DigitDateUtils.yearsMonthsDaysToDays(
-        viewValue.years, viewValue.months, viewValue.days);
+    if (viewValue == null || (viewValue.years == 0 && viewValue.months == 0)) {
+      return null;
+    } else {
+      final months = viewValue.months;
+      final days = DigitDateUtils.yearsMonthsDaysToDays(
+          viewValue.years, viewValue.months, viewValue.days);
 
-    final calculatedDate = DateTime.now().subtract(Duration(days: days + 1));
+      final calculatedDate = DateTime.now().subtract(Duration(days: days));
 
-    return viewValue.years < 0 || months < 0 || months > 11
-        ? DateTime(
-            viewValue.years < 0 ? DateTime.now().year + 1 : DateTime.now().year,
-            DateTime.now().month + 1,
-          )
-        : DateTime(
-            calculatedDate.year,
-            calculatedDate.month,
-          );
+      return (viewValue.years == 0 && months == 0) || months > 11
+          ? null
+          : DateTime(
+              calculatedDate.year,
+              calculatedDate.month,
+              1,
+            );
+    }
   }
 }
 
@@ -206,17 +178,19 @@ class DobValueAccessorYearsString
   final DobValueAccessor accessor;
 
   DobValueAccessorYearsString(this.accessor);
-  String existingMonth = '0';
-  String existingDays = '0';
+  String existingMonth = '';
+  String existingDays = '';
 
   @override
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
-    existingMonth = dobAge != null ? dobAge.months.toString() : '0';
-    existingDays = dobAge != null ? dobAge.days.toString() : '0';
-    return dobAge != null && dobAge.years >= 0
-        ? dobAge.years.toString()
-        : existingMonth;
+    if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
+      return null;
+    }
+
+    existingMonth = dobAge.months.toString();
+    existingDays = dobAge.days.toString();
+    return dobAge.years.toString();
   }
 
   @override
@@ -224,7 +198,7 @@ class DobValueAccessorYearsString
     final years = int.tryParse(viewValue ?? '');
 
     final dobAge = DigitDOBAge(
-        years: years ?? 0, months: int.parse(existingMonth), days: 1);
+        years: years ?? 0, months: int.tryParse(existingMonth) ?? 0, days: 1);
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -235,24 +209,28 @@ class DobValueAccessorMonthString
   final DobValueAccessor accessor;
 
   DobValueAccessorMonthString(this.accessor);
-  String existingYear = '0';
-  String existingDays = '0';
+  String existingYear = '';
+  String existingDays = '';
 
   @override
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
-    existingYear =
-        dobAge != null && dobAge.years >= 0 ? dobAge.years.toString() : '0';
-    existingDays = dobAge != null ? dobAge.days.toString() : '0';
-    int months = dobAge != null ? dobAge.months : 0;
-    return dobAge != null ? months.toString() : existingYear;
+
+    if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
+      return null;
+    }
+
+    existingYear = dobAge.years.toString();
+    existingDays = dobAge.days.toString();
+    int months = dobAge.months;
+    return months.toString();
   }
 
   @override
   DateTime? viewToModelValue(String? viewValue) {
-    final months = int.tryParse(viewValue ?? '0');
+    final months = int.tryParse(viewValue ?? '');
     final dobAge = DigitDOBAge(
-        years: int.parse(existingYear), months: months ?? 0, days: 1);
+        years: int.tryParse(existingYear) ?? 0, months: months ?? 0, days: 1);
     return accessor.viewToModelValue(dobAge);
   }
 }

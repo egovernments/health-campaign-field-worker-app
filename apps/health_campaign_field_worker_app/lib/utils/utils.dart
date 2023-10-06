@@ -264,22 +264,48 @@ bool checkEligibilityForActiveCycle(
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndAdverseEvent(
   DigitDOBAge age,
-  int? validMinMonths,
-  int? validMaxMonths,
+  ProjectType? projectType,
+  TaskModel? tasks,
   List<AdverseEventModel>? adverseEvents,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+    // Return null when no matching cycle is found
+  );
+  if (currentCycle != null &&
+      currentCycle.startDate != null &&
+      currentCycle.endDate != null) {
+    bool recordedAdverseEvent = false;
+    if ((tasks != null) && adverseEvents != null && adverseEvents.isNotEmpty) {
+      final lastTaskTime =
+          tasks.clientReferenceId == adverseEvents.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
+      recordedAdverseEvent = lastTaskTime != null &&
+          (lastTaskTime >= currentCycle.startDate! &&
+              lastTaskTime <= currentCycle.endDate!);
 
-  final recordedAdverseEvent =
-      adverseEvents != null && adverseEvents.isNotEmpty;
+      return projectType?.validMinAge != null &&
+              projectType?.validMaxAge != null
+          ? totalAgeMonths >= projectType!.validMinAge! &&
+                  totalAgeMonths <= projectType.validMaxAge!
+              ? recordedAdverseEvent
+                  ? false
+                  : true
+              : false
+          : false;
+    } else {
+      return totalAgeMonths >= projectType!.validMinAge! &&
+              totalAgeMonths <= projectType.validMaxAge!
+          ? true
+          : false;
+    }
+  }
 
-  return validMinMonths != null && validMaxMonths != null
-      ? totalAgeMonths >= validMinMonths && totalAgeMonths <= validMaxMonths
-          ? recordedAdverseEvent
-              ? false
-              : true
-          : false
-      : false;
+  return false;
 }
 
 bool checkIfBeneficiaryRefused(
@@ -302,12 +328,15 @@ bool checkStatus(
     if (tasks != null && tasks.isNotEmpty) {
       final lastTask = tasks.last;
       final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+      // final lastDose = lastTask.additionalFields?.fields.where((e) => e.key = AdditionalFieldsType.doseIndex)
       if (lastTaskCreatedTime != null) {
         final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
         final diff = DateTime.now().difference(date);
         final isLastCycleRunning =
             lastTaskCreatedTime >= currentCycle.startDate! &&
                 lastTaskCreatedTime <= currentCycle.endDate!;
+        print('isLastCycleRunning: $isLastCycleRunning');
+        print(lastTask.status == Status.partiallyDelivered.name);
 
         return isLastCycleRunning
             ? lastTask.status == Status.partiallyDelivered.name

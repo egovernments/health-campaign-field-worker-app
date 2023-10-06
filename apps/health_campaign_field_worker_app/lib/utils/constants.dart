@@ -235,7 +235,7 @@ class KeyValue {
 class RequestInfoData {
   static const String apiId = 'hcm';
   static const String ver = '.01';
-  static num ts = DateTime.now().millisecondsSinceEpoch;
+  static String ts = (DateTime.now().millisecondsSinceEpoch).toString();
   static const did = "1";
   static const key = "";
   static String? authToken;

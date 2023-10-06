@@ -18,7 +18,6 @@ import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
-import '../../widgets/action_card/action_card.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -92,14 +91,16 @@ class _BeneficiaryDetailsPageState
 
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                  .firstWhereOrNull((e) => e.key == 'DoseIndex')
-                  ?.value
-              : 0;
+                      .firstWhereOrNull((e) => e.key == 'DoseIndex')
+                      ?.value ??
+                  '0'
+              : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                  .firstWhereOrNull((e) => e.key == 'CycleIndex')
-                  ?.value
-              : 1;
+                      .firstWhereOrNull((e) => e.key == 'CycleIndex')
+                      ?.value ??
+                  '1'
+              : '1';
 
           // [TODO] Need to move this to Bloc Lisitner or consumer
           if (projectState.projectType != null) {
