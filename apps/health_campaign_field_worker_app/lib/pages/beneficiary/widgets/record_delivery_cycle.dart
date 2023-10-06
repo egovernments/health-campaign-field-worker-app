@@ -148,15 +148,18 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
       widgetList.add(
         Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                isCurrentCycle
-                    ? localizations
-                        .translate(i18.beneficiaryDetails.currentCycleLabel)
-                    : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
-                style: theme.textTheme.headlineMedium,
-                textAlign: TextAlign.left,
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  isCurrentCycle
+                      ? localizations
+                          .translate(i18.beneficiaryDetails.currentCycleLabel)
+                      : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.left,
+                ),
               ),
             ),
             DigitTable(
@@ -192,7 +195,9 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       cellKey: 'dose',
                     ),
                     TableData(
-                      tasks?.status ?? Status.inComplete.toValue(),
+                      localizations.translate(
+                        tasks?.status ?? Status.inComplete.toValue(),
+                      ),
                       cellKey: 'status',
                     ),
                     TableData(
@@ -205,8 +210,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                 },
               ).toList(),
               leftColumnWidth: 130,
-              rightColumnWidth: headerList.length * 17 * 6,
-              height: 6 * 57,
+              rightColumnWidth: headerList.length * 87,
+              height: ((e.deliveries?.length ?? 0) + 1) * 62,
             ),
           ],
         ),

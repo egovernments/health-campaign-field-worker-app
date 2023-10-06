@@ -1,14 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
@@ -17,11 +14,9 @@ import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../router/app_router.dart';
-import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
 
 class RecordPastDeliveryDetailsPage extends LocalizedStatefulWidget {
   const RecordPastDeliveryDetailsPage({
@@ -201,14 +196,13 @@ class _RecordPastDeliveryDetailsPageState
                                             .wasDosePastRecordDeliveryDetails,
                                       )} ${localizations.translate(
                                         i18.beneficiaryDetails.beneficiaryDose,
-                                      )} ${doseNumber - 1} ?",
+                                      )} ${doseNumber - 1} ? *",
                                       labelStyle: theme.textTheme.displayMedium,
                                       formControlName:
                                           "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
                                       valueMapper: (val) =>
                                           localizations.translate(val.label),
                                       options: Constants.yesNo,
-                                      isRequired: true,
                                       onValueChange: (val) {
                                         setState(() {
                                           ischanges = ischanges + 1;
