@@ -46,7 +46,6 @@ class _BeneficiaryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
-    bool hidePastDelivery = true;
 
     // Defining a list of table headers for cycle
 
@@ -151,8 +150,8 @@ class _BeneficiaryDetailsPageState
                                     ? SizedBox(
                                         height: 85,
                                         child: DigitCard(
-                                          margin: const EdgeInsets.only(
-                                              left: 0, right: 0, top: 10),
+                                          margin:
+                                              const EdgeInsets.all(kPadding),
                                           child: DigitElevatedButton(
                                             onPressed: () async {
                                               bloc.add(DeliverInterventionEvent

@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
@@ -96,24 +97,69 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: Center(
-                                      child: DigitIconButton(
-                                        iconText: isExpanded
-                                            ? localizations.translate(
-                                                i18.deliverIntervention
-                                                    .hidePastCycles,
-                                              )
-                                            : localizations.translate(
-                                                i18.deliverIntervention
-                                                    .viewPastCycles,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isExpanded = !isExpanded;
+                                              });
+                                            },
+                                            child: Text(
+                                              style: TextStyle(
+                                                fontSize: kPadding * 2,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
                                               ),
-                                        iconTextColor: DigitTheme
-                                            .instance.colorScheme.secondary,
-                                        onPressed: () {
-                                          setState(() {
-                                            isExpanded = !isExpanded;
-                                          });
-                                        },
+                                              isExpanded
+                                                  ? localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .hidePastCycles,
+                                                    )
+                                                  : localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .viewPastCycles,
+                                                    ),
+                                            ),
+                                          ),
+                                          !isExpanded
+                                              ? Icon(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  Icons.keyboard_arrow_down,
+                                                )
+                                              : Icon(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  Icons.keyboard_arrow_up,
+                                                ),
+                                        ],
                                       ),
+                                      // DigitIconButton(
+                                      //   iconText: isExpanded
+                                      //       ? localizations.translate(
+                                      //           i18.deliverIntervention
+                                      //               .hidePastCycles,
+                                      //         )
+                                      //       : localizations.translate(
+                                      //           i18.deliverIntervention
+                                      //               .viewPastCycles,
+                                      //         ),
+                                      //   iconTextColor: DigitTheme
+                                      //       .instance.colorScheme.secondary,
+                                      //   onPressed: () {
+                                      //     setState(() {
+                                      //       isExpanded = !isExpanded;
+                                      //     });
+                                      //   },
+                                      // ),
                                     ),
                                   ),
                                 ]);
