@@ -124,8 +124,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
+    final selectedProject = await localSecureStore.selectedProject;
+    final isProjectSetUpComplete = await localSecureStore
+        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    if (isOnline) {
+    /*Checks for if device is online and project data downloaded*/
+    if (isOnline && !isProjectSetUpComplete) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
@@ -513,6 +517,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
       }
+      /*Sets the bool value of projectSetup as true in local storage after all project data has been stored*/
+      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
         loading: false,

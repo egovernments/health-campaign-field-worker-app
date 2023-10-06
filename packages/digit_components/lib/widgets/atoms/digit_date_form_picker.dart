@@ -24,8 +24,8 @@ class DigitDateFormPicker extends StatelessWidget {
   final IconData? icon;
   final String? tooltipMessage;
   final EdgeInsets? padding;
-  final String? cancelText;
-  final String? confirmText;
+  final String cancelText;
+  final String confirmText;
   final String? fieldHintText;
 
   const DigitDateFormPicker({

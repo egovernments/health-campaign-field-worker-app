@@ -24,7 +24,6 @@ class DigitTextFormField extends StatelessWidget {
   final void Function(FormControl<dynamic>)? onChanged;
   final TextCapitalization textCapitalization;
   final ControlValueAccessor<dynamic, String>? valueAccessor;
-  final List<FilteringTextInputFormatter>? inputFormatter;
   final Map<String, String Function(Object control)>? validationMessages;
   final List<TextInputFormatter>? inputFormatters;
   final String? prefixText;
@@ -54,7 +53,6 @@ class DigitTextFormField extends StatelessWidget {
     this.onChanged,
     this.minLength,
     this.inputFormatters,
-    this.inputFormatter,
     this.prefixIcon,
     this.prefixText,
     this.hintText,
@@ -79,10 +77,16 @@ class DigitTextFormField extends StatelessWidget {
                 textCapitalization: textCapitalization,
                 minLines: minLines,
                 maxLines: maxLines,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: readOnly
+                        ? const DigitColors().hintGrey
+                        : DigitTheme.instance.colorScheme.onBackground),
                 obscureText: obscureText,
                 focusNode: focusNode,
                 keyboardType: keyboardType,
-                inputFormatters: inputFormatter,
+                inputFormatters: inputFormatters,
                 valueAccessor: valueAccessor,
                 decoration: readOnly == true
                     ? InputDecoration(
@@ -102,7 +106,7 @@ class DigitTextFormField extends StatelessWidget {
                             const BoxConstraints(minWidth: 0, minHeight: 0),
                         prefixStyle: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w200,
                             color: readOnly
                                 ? const DigitColors().hintGrey
                                 : DigitTheme.instance.colorScheme.onBackground),
@@ -119,7 +123,7 @@ class DigitTextFormField extends StatelessWidget {
                                       prefixText ?? '',
                                       style: TextStyle(
                                           fontSize: kIsWeb ? 15 : 16,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w200,
                                           color: readOnly
                                               ? const DigitColors().hintGrey
                                               : DigitTheme.instance.colorScheme
@@ -136,11 +140,12 @@ class DigitTextFormField extends StatelessWidget {
                         prefixIconConstraints:
                             const BoxConstraints(minWidth: 0, minHeight: 0),
                         prefixStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: readOnly
-                                ? const DigitColors().hintGrey
-                                : DigitTheme.instance.colorScheme.onBackground),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: readOnly
+                              ? const DigitColors().hintGrey
+                              : DigitTheme.instance.colorScheme.onBackground,
+                        ),
                         prefixIcon: prefixIcon ??
                             (prefixText == ''
                                 ? null
@@ -153,12 +158,13 @@ class DigitTextFormField extends StatelessWidget {
                                     child: Text(
                                       prefixText ?? '',
                                       style: TextStyle(
-                                          fontSize: kIsWeb ? 15 : 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: readOnly
-                                              ? const DigitColors().hintGrey
-                                              : DigitTheme.instance.colorScheme
-                                                  .onBackground),
+                                        fontSize: kIsWeb ? 15 : 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: readOnly
+                                            ? const DigitColors().hintGrey
+                                            : DigitTheme.instance.colorScheme
+                                                .onBackground,
+                                      ),
                                     ),
                                   )),
                         suffixIcon: suffix == null
@@ -172,9 +178,10 @@ class DigitTextFormField extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(hintText ?? '',
                   style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                      color: const DigitColors().hintGrey)),
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: const DigitColors().hintGrey,
+                  )),
             )
           ],
         ),

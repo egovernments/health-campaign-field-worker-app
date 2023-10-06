@@ -13,6 +13,9 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/address.dart';
+import '../data/repositories/oplog/oplog.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -71,10 +74,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
               providers: [
                 BlocProvider(
                   create: (context) {
+                    final isar = context.read<Isar>();
+
                     return SearchHouseholdsBloc(
                       beneficiaryType: context.beneficiaryType,
                       userUid: context.loggedInUserUuid,
                       projectId: context.projectId,
+                      addressRepository: AddressLocalRepository(
+                        context.read<LocalSqlDataStore>(),
+                        AddressOpLogManager(isar),
+                      ),
                       projectBeneficiary: context.repository<
                           ProjectBeneficiaryModel,
                           ProjectBeneficiarySearchModel>(),

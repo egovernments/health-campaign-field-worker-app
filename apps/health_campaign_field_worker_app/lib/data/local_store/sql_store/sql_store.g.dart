@@ -5205,7 +5205,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
   final int? memberCount;
   final double? latitude;
   final double? longitude;
-  final double? maxRadius;
   final String? auditCreatedBy;
   final int? auditCreatedTime;
   final int? clientCreatedTime;
@@ -5224,7 +5223,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       this.memberCount,
       this.latitude,
       this.longitude,
-      this.maxRadius,
       this.auditCreatedBy,
       this.auditCreatedTime,
       this.clientCreatedTime,
@@ -5249,8 +5247,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
       longitude: const RealType()
           .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
-      maxRadius: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}max_radius']),
       auditCreatedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
       auditCreatedTime: const IntType().mapFromDatabaseResponse(
@@ -5293,9 +5289,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
     }
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<double?>(longitude);
-    }
-    if (!nullToAbsent || maxRadius != null) {
-      map['max_radius'] = Variable<double?>(maxRadius);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy);
@@ -5349,9 +5342,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
-      maxRadius: maxRadius == null && nullToAbsent
-          ? const Value.absent()
-          : Value(maxRadius),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -5400,7 +5390,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       memberCount: serializer.fromJson<int?>(json['memberCount']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
-      maxRadius: serializer.fromJson<double?>(json['maxRadius']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
       clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
@@ -5424,7 +5413,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       'memberCount': serializer.toJson<int?>(memberCount),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
-      'maxRadius': serializer.toJson<double?>(maxRadius),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
       'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
@@ -5446,7 +5434,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           int? memberCount,
           double? latitude,
           double? longitude,
-          double? maxRadius,
           String? auditCreatedBy,
           int? auditCreatedTime,
           int? clientCreatedTime,
@@ -5465,7 +5452,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
         memberCount: memberCount ?? this.memberCount,
         latitude: latitude ?? this.latitude,
         longitude: longitude ?? this.longitude,
-        maxRadius: maxRadius ?? this.maxRadius,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
         clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
@@ -5487,7 +5473,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           ..write('memberCount: $memberCount, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
-          ..write('maxRadius: $maxRadius, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
@@ -5511,7 +5496,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       memberCount,
       latitude,
       longitude,
-      maxRadius,
       auditCreatedBy,
       auditCreatedTime,
       clientCreatedTime,
@@ -5533,7 +5517,6 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           other.memberCount == this.memberCount &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
-          other.maxRadius == this.maxRadius &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.auditCreatedTime == this.auditCreatedTime &&
           other.clientCreatedTime == this.clientCreatedTime &&
@@ -5554,7 +5537,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
   final Value<int?> memberCount;
   final Value<double?> latitude;
   final Value<double?> longitude;
-  final Value<double?> maxRadius;
   final Value<String?> auditCreatedBy;
   final Value<int?> auditCreatedTime;
   final Value<int?> clientCreatedTime;
@@ -5573,7 +5555,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.memberCount = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
-    this.maxRadius = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
@@ -5593,7 +5574,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.memberCount = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
-    this.maxRadius = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
     this.clientCreatedTime = const Value.absent(),
@@ -5613,7 +5593,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     Expression<int?>? memberCount,
     Expression<double?>? latitude,
     Expression<double?>? longitude,
-    Expression<double?>? maxRadius,
     Expression<String?>? auditCreatedBy,
     Expression<int?>? auditCreatedTime,
     Expression<int?>? clientCreatedTime,
@@ -5633,7 +5612,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       if (memberCount != null) 'member_count': memberCount,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
-      if (maxRadius != null) 'max_radius': maxRadius,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
       if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
@@ -5656,7 +5634,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       Value<int?>? memberCount,
       Value<double?>? latitude,
       Value<double?>? longitude,
-      Value<double?>? maxRadius,
       Value<String?>? auditCreatedBy,
       Value<int?>? auditCreatedTime,
       Value<int?>? clientCreatedTime,
@@ -5675,7 +5652,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       memberCount: memberCount ?? this.memberCount,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      maxRadius: maxRadius ?? this.maxRadius,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
       clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
@@ -5706,9 +5682,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     }
     if (longitude.present) {
       map['longitude'] = Variable<double?>(longitude.value);
-    }
-    if (maxRadius.present) {
-      map['max_radius'] = Variable<double?>(maxRadius.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
@@ -5759,7 +5732,6 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
           ..write('memberCount: $memberCount, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
-          ..write('maxRadius: $maxRadius, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
           ..write('clientCreatedTime: $clientCreatedTime, ')
@@ -5804,11 +5776,6 @@ class $HouseholdTable extends Household
   @override
   late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
       'longitude', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _maxRadiusMeta = const VerificationMeta('maxRadius');
-  @override
-  late final GeneratedColumn<double?> maxRadius = GeneratedColumn<double?>(
-      'max_radius', aliasedName, true,
       type: const RealType(), requiredDuringInsert: false);
   final VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
@@ -5894,7 +5861,6 @@ class $HouseholdTable extends Household
         memberCount,
         latitude,
         longitude,
-        maxRadius,
         auditCreatedBy,
         auditCreatedTime,
         clientCreatedTime,
@@ -5934,10 +5900,6 @@ class $HouseholdTable extends Household
     if (data.containsKey('longitude')) {
       context.handle(_longitudeMeta,
           longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
-    }
-    if (data.containsKey('max_radius')) {
-      context.handle(_maxRadiusMeta,
-          maxRadius.isAcceptableOrUnknown(data['max_radius']!, _maxRadiusMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(

@@ -233,6 +233,7 @@ mixin _$AppInitializationState {
   TResult when<TResult extends Object?>({
     required TResult Function() uninitialized,
     required TResult Function() loading,
+    required TResult Function() failed,
     required TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)
         initialized,
@@ -242,6 +243,7 @@ mixin _$AppInitializationState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
+    TResult? Function()? failed,
     TResult? Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -251,6 +253,7 @@ mixin _$AppInitializationState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? uninitialized,
     TResult Function()? loading,
+    TResult Function()? failed,
     TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -261,6 +264,7 @@ mixin _$AppInitializationState {
   TResult map<TResult extends Object?>({
     required TResult Function(AppUninitialized value) uninitialized,
     required TResult Function(AppInitializing value) loading,
+    required TResult Function(AppInitializationFailed value) failed,
     required TResult Function(AppInitialized value) initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -268,6 +272,7 @@ mixin _$AppInitializationState {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AppUninitialized value)? uninitialized,
     TResult? Function(AppInitializing value)? loading,
+    TResult? Function(AppInitializationFailed value)? failed,
     TResult? Function(AppInitialized value)? initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -275,6 +280,7 @@ mixin _$AppInitializationState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AppUninitialized value)? uninitialized,
     TResult Function(AppInitializing value)? loading,
+    TResult Function(AppInitializationFailed value)? failed,
     TResult Function(AppInitialized value)? initialized,
     required TResult orElse(),
   }) =>
@@ -335,6 +341,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult when<TResult extends Object?>({
     required TResult Function() uninitialized,
     required TResult Function() loading,
+    required TResult Function() failed,
     required TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)
         initialized,
@@ -347,6 +354,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
+    TResult? Function()? failed,
     TResult? Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -359,6 +367,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? uninitialized,
     TResult Function()? loading,
+    TResult Function()? failed,
     TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -375,6 +384,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult map<TResult extends Object?>({
     required TResult Function(AppUninitialized value) uninitialized,
     required TResult Function(AppInitializing value) loading,
+    required TResult Function(AppInitializationFailed value) failed,
     required TResult Function(AppInitialized value) initialized,
   }) {
     return uninitialized(this);
@@ -385,6 +395,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AppUninitialized value)? uninitialized,
     TResult? Function(AppInitializing value)? loading,
+    TResult? Function(AppInitializationFailed value)? failed,
     TResult? Function(AppInitialized value)? initialized,
   }) {
     return uninitialized?.call(this);
@@ -395,6 +406,7 @@ class _$AppUninitialized extends AppUninitialized {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AppUninitialized value)? uninitialized,
     TResult Function(AppInitializing value)? loading,
+    TResult Function(AppInitializationFailed value)? failed,
     TResult Function(AppInitialized value)? initialized,
     required TResult orElse(),
   }) {
@@ -445,6 +457,7 @@ class _$AppInitializing extends AppInitializing {
   TResult when<TResult extends Object?>({
     required TResult Function() uninitialized,
     required TResult Function() loading,
+    required TResult Function() failed,
     required TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)
         initialized,
@@ -457,6 +470,7 @@ class _$AppInitializing extends AppInitializing {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
+    TResult? Function()? failed,
     TResult? Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -469,6 +483,7 @@ class _$AppInitializing extends AppInitializing {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? uninitialized,
     TResult Function()? loading,
+    TResult Function()? failed,
     TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -485,6 +500,7 @@ class _$AppInitializing extends AppInitializing {
   TResult map<TResult extends Object?>({
     required TResult Function(AppUninitialized value) uninitialized,
     required TResult Function(AppInitializing value) loading,
+    required TResult Function(AppInitializationFailed value) failed,
     required TResult Function(AppInitialized value) initialized,
   }) {
     return loading(this);
@@ -495,6 +511,7 @@ class _$AppInitializing extends AppInitializing {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AppUninitialized value)? uninitialized,
     TResult? Function(AppInitializing value)? loading,
+    TResult? Function(AppInitializationFailed value)? failed,
     TResult? Function(AppInitialized value)? initialized,
   }) {
     return loading?.call(this);
@@ -505,6 +522,7 @@ class _$AppInitializing extends AppInitializing {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AppUninitialized value)? uninitialized,
     TResult Function(AppInitializing value)? loading,
+    TResult Function(AppInitializationFailed value)? failed,
     TResult Function(AppInitialized value)? initialized,
     required TResult orElse(),
   }) {
@@ -518,6 +536,124 @@ class _$AppInitializing extends AppInitializing {
 abstract class AppInitializing extends AppInitializationState {
   const factory AppInitializing() = _$AppInitializing;
   const AppInitializing._() : super._();
+}
+
+/// @nodoc
+abstract class _$$AppInitializationFailedCopyWith<$Res> {
+  factory _$$AppInitializationFailedCopyWith(_$AppInitializationFailed value,
+          $Res Function(_$AppInitializationFailed) then) =
+      __$$AppInitializationFailedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AppInitializationFailedCopyWithImpl<$Res>
+    extends _$AppInitializationStateCopyWithImpl<$Res,
+        _$AppInitializationFailed>
+    implements _$$AppInitializationFailedCopyWith<$Res> {
+  __$$AppInitializationFailedCopyWithImpl(_$AppInitializationFailed _value,
+      $Res Function(_$AppInitializationFailed) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AppInitializationFailed extends AppInitializationFailed {
+  const _$AppInitializationFailed() : super._();
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppInitializationFailed);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() uninitialized,
+    required TResult Function() loading,
+    required TResult Function() failed,
+    required TResult Function(AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList)
+        initialized,
+  }) {
+    return failed();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? uninitialized,
+    TResult? Function()? loading,
+    TResult? Function()? failed,
+    TResult? Function(AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList)?
+        initialized,
+  }) {
+    return failed?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? uninitialized,
+    TResult Function()? loading,
+    TResult Function()? failed,
+    TResult Function(AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList)?
+        initialized,
+    required TResult orElse(),
+  }) {
+    if (failed != null) {
+      return failed();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AppUninitialized value) uninitialized,
+    required TResult Function(AppInitializing value) loading,
+    required TResult Function(AppInitializationFailed value) failed,
+    required TResult Function(AppInitialized value) initialized,
+  }) {
+    return failed(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AppUninitialized value)? uninitialized,
+    TResult? Function(AppInitializing value)? loading,
+    TResult? Function(AppInitializationFailed value)? failed,
+    TResult? Function(AppInitialized value)? initialized,
+  }) {
+    return failed?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AppUninitialized value)? uninitialized,
+    TResult Function(AppInitializing value)? loading,
+    TResult Function(AppInitializationFailed value)? failed,
+    TResult Function(AppInitialized value)? initialized,
+    required TResult orElse(),
+  }) {
+    if (failed != null) {
+      return failed(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AppInitializationFailed extends AppInitializationState {
+  const factory AppInitializationFailed() = _$AppInitializationFailed;
+  const AppInitializationFailed._() : super._();
 }
 
 /// @nodoc
@@ -603,6 +739,7 @@ class _$AppInitialized extends AppInitialized {
   TResult when<TResult extends Object?>({
     required TResult Function() uninitialized,
     required TResult Function() loading,
+    required TResult Function() failed,
     required TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)
         initialized,
@@ -615,6 +752,7 @@ class _$AppInitialized extends AppInitialized {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
+    TResult? Function()? failed,
     TResult? Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -627,6 +765,7 @@ class _$AppInitialized extends AppInitialized {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? uninitialized,
     TResult Function()? loading,
+    TResult Function()? failed,
     TResult Function(AppConfiguration appConfiguration,
             List<ServiceRegistry> serviceRegistryList)?
         initialized,
@@ -643,6 +782,7 @@ class _$AppInitialized extends AppInitialized {
   TResult map<TResult extends Object?>({
     required TResult Function(AppUninitialized value) uninitialized,
     required TResult Function(AppInitializing value) loading,
+    required TResult Function(AppInitializationFailed value) failed,
     required TResult Function(AppInitialized value) initialized,
   }) {
     return initialized(this);
@@ -653,6 +793,7 @@ class _$AppInitialized extends AppInitialized {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AppUninitialized value)? uninitialized,
     TResult? Function(AppInitializing value)? loading,
+    TResult? Function(AppInitializationFailed value)? failed,
     TResult? Function(AppInitialized value)? initialized,
   }) {
     return initialized?.call(this);
@@ -663,6 +804,7 @@ class _$AppInitialized extends AppInitialized {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AppUninitialized value)? uninitialized,
     TResult Function(AppInitializing value)? loading,
+    TResult Function(AppInitializationFailed value)? failed,
     TResult Function(AppInitialized value)? initialized,
     required TResult orElse(),
   }) {

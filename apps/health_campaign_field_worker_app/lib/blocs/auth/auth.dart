@@ -83,7 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final actionsWrapper = await mdmsRepository
           .searchRoleActions(envConfig.variables.actionMapApiPath, {
         "roleCodes": result.userRequestModel.roles.map((e) => e.code).toList(),
-        "tenantId": "default",
+        "tenantId": envConfig.variables.tenantId,
         "actionMaster": "actions-test",
         "enabled": true,
       });

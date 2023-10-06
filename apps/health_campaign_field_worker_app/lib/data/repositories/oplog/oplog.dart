@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:isar/isar.dart';
@@ -271,6 +272,36 @@ class IndividualOpLogManager extends OpLogManager<IndividualModel> {
 
   @override
   int? getRowVersion(IndividualModel entity) => entity.rowVersion;
+}
+
+class AddressOpLogManager extends OpLogManager<AddressModel> {
+  AddressOpLogManager(super.isar);
+
+  @override
+  AddressModel applyServerGeneratedIdToEntity(
+    AddressModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) {
+    return entity;
+  }
+
+  @override
+  String getClientReferenceId(
+    AddressModel entity,
+  ) {
+    return entity.relatedClientReferenceId!;
+  }
+
+  @override
+  int? getRowVersion(AddressModel entity) {
+    return entity.rowVersion;
+  }
+
+  @override
+  String? getServerGeneratedId(AddressModel entity) {
+    return entity.relatedClientReferenceId;
+  }
 }
 
 class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {

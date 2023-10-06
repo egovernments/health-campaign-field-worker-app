@@ -98,7 +98,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                           bloc.add(
                             BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                              household: household,
+                              household: household!,
                               registrationDate: dateOfRegistration,
                             ),
                           );

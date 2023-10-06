@@ -63,6 +63,7 @@ class _IndividualDetailsPageState
                         SearchHouseholdsByHouseholdsEvent(
                           householdModel: value.householdModel,
                           projectId: context.projectId,
+                          isProximityEnabled: false,
                         ),
                       );
                   router.push(AcknowledgementRoute());
@@ -310,6 +311,8 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
+                          if(form.control(_idTypeKey).value !=
+                              'DEFAULT')
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
