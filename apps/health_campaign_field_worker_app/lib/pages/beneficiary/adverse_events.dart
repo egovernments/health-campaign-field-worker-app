@@ -61,17 +61,6 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                 builder: (context, state) {
                   final householdMemberWrapper = state.householdMemberWrapper;
 
-                  final projectBeneficiary =
-                      context.beneficiaryType != BeneficiaryType.individual
-                          ? [householdMemberWrapper.projectBeneficiaries.first]
-                          : householdMemberWrapper.projectBeneficiaries
-                              .where(
-                                (element) =>
-                                    element.beneficiaryClientReferenceId ==
-                                    state.selectedIndividual?.clientReferenceId,
-                              )
-                              .toList();
-
                   // TODO: Commenting table Data as per current requirement not required
                   /*final filteredHeaderList = [
                     TableHeader(
@@ -174,7 +163,7 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                             taskClientReferenceId:
                                                                 widget
                                                                     .tasks
-                                                                    .first
+                                                                    .last
                                                                     .clientReferenceId,
                                                             projectId: context
                                                                 .projectId,

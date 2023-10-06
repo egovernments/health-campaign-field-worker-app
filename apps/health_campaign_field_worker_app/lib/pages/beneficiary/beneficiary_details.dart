@@ -88,16 +88,17 @@ class _BeneficiaryDetailsPageState
               .toList();
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
-
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull((e) => e.key == 'DoseIndex')
+                      .firstWhereOrNull((e) =>
+                          e.key == AdditionalFieldsType.doseIndex.toValue())
                       ?.value ??
-                  '0'
+                  '1'
               : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull((e) => e.key == 'CycleIndex')
+                      .firstWhereOrNull((e) =>
+                          e.key == AdditionalFieldsType.cycleIndex.toValue())
                       ?.value ??
                   '1'
               : '1';
@@ -110,7 +111,7 @@ class _BeneficiaryDetailsPageState
                     ? int.tryParse(
                           lastDose,
                         ) ??
-                        0
+                        1
                     : 0,
                 taskData != null && taskData.isNotEmpty
                     ? int.tryParse(
@@ -152,7 +153,10 @@ class _BeneficiaryDetailsPageState
                                         height: 85,
                                         child: DigitCard(
                                           margin: const EdgeInsets.only(
-                                              left: 0, right: 0, top: 10),
+                                            left: 0,
+                                            right: 0,
+                                            top: 10,
+                                          ),
                                           child: DigitElevatedButton(
                                             onPressed: () async {
                                               bloc.add(DeliverInterventionEvent
