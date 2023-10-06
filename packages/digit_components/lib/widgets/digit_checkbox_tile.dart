@@ -22,32 +22,30 @@ class DigitCheckboxTile extends StatelessWidget {
 
     return Padding(
       padding: margin ?? const EdgeInsets.all(8.0),
-      child: Material(
-        child: InkWell(
-          onTap: () => onChanged?.call(!value),
-          child: Padding(
-            padding: padding ??
-                const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 8,
+      child: InkWell(
+        onTap: () => onChanged?.call(!value),
+        child: Padding(
+          padding: padding ??
+              const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 8,
+              ),
+          child: Row(
+            children: [
+              Icon(
+                value
+                    ? Icons.check_box_outlined
+                    : Icons.check_box_outline_blank_sharp,
+                color: theme.colorScheme.secondary,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-            child: Row(
-              children: [
-                Icon(
-                  value
-                      ? Icons.check_box_outlined
-                      : Icons.check_box_outline_blank_sharp,
-                  color: theme.colorScheme.secondary,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
