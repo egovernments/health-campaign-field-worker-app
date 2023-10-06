@@ -319,7 +319,7 @@ class _HouseholdOverviewPageState
                                                     ?.where((element) =>
                                                         element
                                                             .taskClientReferenceId ==
-                                                        taskdata.first
+                                                        taskdata.last
                                                             .clientReferenceId)
                                                     .toList()
                                                 : null;
@@ -361,6 +361,7 @@ class _HouseholdOverviewPageState
                                               isHead: isHead,
                                               individual: e,
                                               tasks: taskdata,
+                                              adverseEvents: adverseEventData,
                                               editMemberAction: () async {
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
@@ -494,7 +495,7 @@ class _HouseholdOverviewPageState
                                                             .projectType,
                                                         (taskdata ?? [])
                                                                 .isNotEmpty
-                                                            ? taskdata?.first
+                                                            ? taskdata?.last
                                                             : null,
                                                         adverseEventData,
                                                       ) &&

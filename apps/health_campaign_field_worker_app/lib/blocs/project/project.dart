@@ -441,6 +441,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           )
           .toList()
           .firstOrNull;
+      final currentRunningCycle = selectedProject?.cycles
+          ?.where(
+            (e) =>
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+            // Return null when no matching cycle is found
+          )
+          .first;
+
       final cycles = List<Cycle>.from(
         selectedProject?.cycles ?? [],
       );
@@ -452,6 +461,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final reqProjectType = selectedProject?.copyWith(cycles: cycles);
       emit(state.copyWith(
         projectType: reqProjectType,
+        selectedCycle: currentRunningCycle,
         //[TODO] need to add sorting based on order
       ));
 
@@ -545,6 +555,7 @@ class ProjectState with _$ProjectState {
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
     ProjectType? projectType,
+    Cycle? selectedCycle,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,

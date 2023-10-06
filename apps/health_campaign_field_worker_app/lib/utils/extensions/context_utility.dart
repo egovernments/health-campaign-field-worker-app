@@ -26,6 +26,19 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId => selectedProject.id;
 
+  Cycle get selectedCycle {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final selectedCycle = projectState.selectedCycle;
+
+    if (selectedCycle == null) {
+      return const Cycle();
+    }
+
+    return selectedCycle;
+  }
+
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
