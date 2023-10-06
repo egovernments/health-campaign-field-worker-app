@@ -29,10 +29,7 @@ class _SplashAcknowledgementPageState
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
           try {
-            Timer(
-              const Duration(seconds: 5),
-              () => context.router.push(DoseAdministeredRoute()),
-            );
+            context.router.push(DoseAdministeredRoute());
           } catch (e) {
             print('Error during navigation: $e');
           }
