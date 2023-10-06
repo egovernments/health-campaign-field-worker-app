@@ -109,7 +109,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             ? householdMember.adverseEvents
                 ?.where((element) =>
                     element.taskClientReferenceId ==
-                    taskdata.first.clientReferenceId)
+                    taskdata.last.clientReferenceId)
                 .toList()
             : null;
         final ageInYears = DigitDateUtils.calculateAge(

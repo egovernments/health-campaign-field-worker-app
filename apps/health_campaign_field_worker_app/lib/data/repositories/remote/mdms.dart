@@ -342,6 +342,9 @@ class MdmsRepository {
       }).toList();
       newprojectType.cycles = element.cycles?.map((e) {
         final newcycle = Cycles()
+          ..id = e.id
+          ..startDate = e.startDate
+          ..endDate = e.endDate
           ..mandatoryWaitSinceLastCycleInDays =
               e.mandatoryWaitSinceLastCycleInDays
           ..deliveries = e.deliveries?.map((ele) {

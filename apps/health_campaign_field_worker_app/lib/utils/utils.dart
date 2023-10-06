@@ -335,8 +335,6 @@ bool checkStatus(
         final isLastCycleRunning =
             lastTaskCreatedTime >= currentCycle.startDate! &&
                 lastTaskCreatedTime <= currentCycle.endDate!;
-        print('isLastCycleRunning: $isLastCycleRunning');
-        print(lastTask.status == Status.partiallyDelivered.name);
 
         return isLastCycleRunning
             ? lastTask.status == Status.partiallyDelivered.name

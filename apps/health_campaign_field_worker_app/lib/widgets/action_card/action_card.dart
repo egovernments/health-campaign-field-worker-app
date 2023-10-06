@@ -8,11 +8,24 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: items
           .map(
             (e) => DigitOutlineIconButton(
+              buttonStyle: OutlinedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: BorderSide(
+                  width: 1.0,
+                  color: theme.colorScheme.secondary,
+                ),
+                minimumSize: Size(
+                  MediaQuery.of(context).size.width / 1.25,
+                  50,
+                ),
+              ),
               icon: e.icon,
               label: e.label,
               onPressed: e.action,
