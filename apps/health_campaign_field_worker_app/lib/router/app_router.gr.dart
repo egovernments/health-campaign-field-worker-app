@@ -361,6 +361,7 @@ class _$AppRouter extends RootStackRouter {
         child: RecordPastDeliveryDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
         ),
       );
     },
@@ -1891,12 +1892,14 @@ class RecordPastDeliveryDetailsRoute
   RecordPastDeliveryDetailsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<TaskModel>? tasks,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
           path: 'record-past-delivery-details',
           args: RecordPastDeliveryDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            tasks: tasks,
           ),
         );
 
@@ -1907,15 +1910,18 @@ class RecordPastDeliveryDetailsRouteArgs {
   const RecordPastDeliveryDetailsRouteArgs({
     this.key,
     this.appLocalizations,
+    this.tasks,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final List<TaskModel>? tasks;
+
   @override
   String toString() {
-    return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
   }
 }
 

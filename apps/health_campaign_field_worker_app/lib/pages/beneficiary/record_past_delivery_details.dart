@@ -19,9 +19,12 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
 class RecordPastDeliveryDetailsPage extends LocalizedStatefulWidget {
+  final List<TaskModel>? tasks;
+
   const RecordPastDeliveryDetailsPage({
     super.key,
     super.appLocalizations,
+    this.tasks,
   });
 
   @override
@@ -40,11 +43,13 @@ class _RecordPastDeliveryDetailsPageState
     int ischanges = 0;
     bool isbtnClicked = false;
 
+    final futureTaskList = widget.tasks
+        ?.where((task) => task.status == Status.partiallyDelivered.toValue())
+        .toList();
+
     return Scaffold(
       body: BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
         builder: (context, state) {
-          print(ischanges);
-
           return ReactiveFormBuilder(
             form: () => buildForm(context),
             builder: (context, form, child) => ScrollableContent(
@@ -68,11 +73,13 @@ class _RecordPastDeliveryDetailsPageState
                       if (!form.valid) return;
 
                       final event = context.read<DeliverInterventionBloc>();
-
+// final futureTaskList = widget.tasks
+//                                   ?.where((task) =>
+//                                       task.status ==
+//                                       Status.partiallyDelivered.toValue())
+//                                   .toList();
                       // Loop through each future task
-                      for (int i = 0;
-                          i < (state.futureTask ?? []).length;
-                          i++) {
+                      for (int i = 0; i < (futureTaskList ?? []).length; i++) {
                         // Get the value of the form control for each task
 
                         final formControllValue = (form
@@ -87,7 +94,7 @@ class _RecordPastDeliveryDetailsPageState
 
                         // Create a new task with the updated status
                         final result =
-                            state.futureTask![i].copyWith(status: status);
+                            futureTaskList![i].copyWith(status: status);
 
                         // Add the updated task to the event
                         event.add(DeliverInterventionSubmitEvent(
@@ -143,7 +150,7 @@ class _RecordPastDeliveryDetailsPageState
                               ).pop();
                               router.push(
                                 AdverseEventsRoute(
-                                  tasks: [(state.futureTask ?? []).last],
+                                  tasks: [(futureTaskList ?? []).last],
                                 ),
                               );
                             },
@@ -169,7 +176,7 @@ class _RecordPastDeliveryDetailsPageState
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
-                      ...(state.futureTask?.asMap().entries.map((entry) {
+                      ...(futureTaskList?.asMap().entries.map((entry) {
                             final int doseNumber =
                                 int.parse(entry.value.additionalFields!.fields
                                     .firstWhereOrNull(
@@ -196,7 +203,7 @@ class _RecordPastDeliveryDetailsPageState
                                       )} ${doseNumber - 1} ? *",
                                       labelStyle: theme.textTheme.displayMedium,
                                       formControlName:
-                                          "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
+                                          "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                       valueMapper: (val) =>
                                           localizations.translate(val.label),
                                       options: Constants.yesNo,
@@ -207,15 +214,16 @@ class _RecordPastDeliveryDetailsPageState
 
                                         form
                                             .control(
-                                              "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
+                                              "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                             )
                                             .value = val;
                                       },
+                                      errorMessage: "hello",
                                     ),
                                     Offstage(
                                       offstage: !form
                                           .control(
-                                            "$_recordDoseAdministeredKey.${state.futureTask!.indexOf(entry.value)}",
+                                            "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                           )
                                           .invalid,
                                       child: Align(
@@ -230,8 +238,7 @@ class _RecordPastDeliveryDetailsPageState
                                         ),
                                       ),
                                     ),
-                                    if (entry.key !=
-                                        state.futureTask!.length - 1)
+                                    if (entry.key != futureTaskList.length - 1)
                                       const Divider(), // Add Divider conditionally
                                   ],
                                 );
@@ -253,11 +260,15 @@ class _RecordPastDeliveryDetailsPageState
   FormGroup buildForm(BuildContext context) {
     final bloc = context.read<DeliverInterventionBloc>().state;
 
+    final futureTaskList = widget.tasks
+        ?.where((task) => task.status == Status.partiallyDelivered.toValue())
+        .toList();
+
     // Create a form group with a FormArray of KeyValue form controls
     return fb.group(
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([
-          ...bloc.futureTask?.map(
+          ...futureTaskList?.map(
                 (e) => FormControl<KeyValue>(validators: [Validators.required]),
               ) ??
               [],

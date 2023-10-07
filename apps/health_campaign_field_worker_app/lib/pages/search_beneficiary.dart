@@ -246,13 +246,10 @@ class _SearchBeneficiaryPageState
                                       wrapper: i,
                                     ),
                                   );
+                                  searchController.clear();
 
                                   bloc.add(
-                                    SearchHouseholdsSearchByHouseholdHeadEvent(
-                                      searchText: searchController.text,
-                                      projectId: projectId,
-                                      isProximityEnabled: isProximityEnabled,
-                                    ),
+                                    const SearchHouseholdsClearEvent(),
                                   );
                                 },
                               );

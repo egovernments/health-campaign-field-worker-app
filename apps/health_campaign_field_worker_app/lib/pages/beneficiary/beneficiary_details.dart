@@ -145,7 +145,10 @@ class _BeneficiaryDetailsPageState
                         footer: BlocBuilder<DeliverInterventionBloc,
                             DeliverInterventionState>(
                           builder: (context, state) {
-                            return projectState.projectType!.cycles!.isNotEmpty
+                            final projectType = projectState.projectType;
+                            final cycles = projectType?.cycles;
+
+                            return cycles != null && cycles.isNotEmpty
                                 ? state.hasCycleArrived
                                     ? SizedBox(
                                         height: 85,
@@ -154,43 +157,47 @@ class _BeneficiaryDetailsPageState
                                               const EdgeInsets.all(kPadding),
                                           child: DigitElevatedButton(
                                             onPressed: () async {
-                                              bloc.add(DeliverInterventionEvent
-                                                  .selectFutureCycleDose(
-                                                state.dose,
-                                                projectState
-                                                    .projectType!.cycles!
-                                                    .firstWhere((c) =>
-                                                        c.id == state.cycle),
-                                              ));
-                                              await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  titleText: localizations
-                                                      .translate(i18
-                                                          .beneficiaryDetails
-                                                          .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    state,
-                                                    context,
-                                                    headerListResource,
-                                                    variant,
+                                              final selectedCycle =
+                                                  cycles.firstWhereOrNull((c) =>
+                                                      c.id == state.cycle);
+                                              if (selectedCycle != null) {
+                                                bloc.add(
+                                                  DeliverInterventionEvent
+                                                      .selectFutureCycleDose(
+                                                    state.dose,
+                                                    selectedCycle,
                                                   ),
-                                                  barrierDismissible: true,
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label: localizations
+                                                );
+                                                await DigitDialog.show<bool>(
+                                                  context,
+                                                  options: DigitDialogOptions(
+                                                    titleText: localizations
                                                         .translate(i18
                                                             .beneficiaryDetails
-                                                            .ctaProceed),
-                                                    action: (ctx) {
-                                                      Navigator.of(ctx).pop();
-                                                      router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    },
+                                                            .resourcesTobeDelivered),
+                                                    content: buildTableContent(
+                                                      state,
+                                                      context,
+                                                      headerListResource,
+                                                      variant,
+                                                    ),
+                                                    barrierDismissible: true,
+                                                    primaryAction:
+                                                        DigitDialogActions(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .beneficiaryDetails
+                                                              .ctaProceed),
+                                                      action: (ctx) {
+                                                        Navigator.of(ctx).pop();
+                                                        router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                              );
+                                                );
+                                              }
                                             },
                                             child: Center(
                                               child: Text(
@@ -202,9 +209,8 @@ class _BeneficiaryDetailsPageState
                                       )
                                     : const SizedBox.shrink()
                                 : DigitCard(
-                                    margin: const EdgeInsets.only(
-                                      top: kPadding,
-                                    ),
+                                    margin:
+                                        const EdgeInsets.only(top: kPadding),
                                     child: DigitElevatedButton(
                                       child: Center(
                                         child: Text(localizations.translate(i18
@@ -328,7 +334,8 @@ class _BeneficiaryDetailsPageState
                               ],
                             ),
                           ),
-                          if (projectState.projectType!.cycles!.isNotEmpty)
+                          if ((projectState.projectType?.cycles ?? [])
+                              .isNotEmpty)
                             BlocBuilder<ProjectBloc, ProjectState>(
                               builder: (context, state) {
                                 return DigitCard(
