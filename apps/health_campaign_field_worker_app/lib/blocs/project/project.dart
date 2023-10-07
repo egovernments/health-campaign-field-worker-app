@@ -124,12 +124,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
-    final selectedProject = await localSecureStore.selectedProject;
-    final isProjectSetUpComplete = await localSecureStore
-        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    /*Checks for if device is online and project data downloaded*/
-    if (isOnline && !isProjectSetUpComplete) {
+    if (isOnline) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
@@ -445,6 +441,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           )
           .toList()
           .firstOrNull;
+      final currentRunningCycle = selectedProject?.cycles
+          ?.where(
+            (e) =>
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+            // Return null when no matching cycle is found
+          )
+          .firstOrNull;
+
       final cycles = List<Cycle>.from(
         selectedProject?.cycles ?? [],
       );
@@ -456,6 +461,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final reqProjectType = selectedProject?.copyWith(cycles: cycles);
       emit(state.copyWith(
         projectType: reqProjectType,
+        selectedCycle: currentRunningCycle,
         //[TODO] need to add sorting based on order
       ));
 
@@ -517,8 +523,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
       }
-      /*Sets the bool value of projectSetup as true in local storage after all project data has been stored*/
-      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
         loading: false,
@@ -551,6 +555,7 @@ class ProjectState with _$ProjectState {
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
     ProjectType? projectType,
+    Cycle? selectedCycle,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,
