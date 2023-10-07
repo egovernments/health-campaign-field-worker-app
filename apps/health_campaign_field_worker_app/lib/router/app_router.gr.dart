@@ -123,6 +123,7 @@ class _$AppRouter extends RootStackRouter {
         child: AcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -1138,12 +1139,14 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
   AcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
   }) : super(
           AcknowledgementRoute.name,
           path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
           ),
         );
 
@@ -1154,15 +1157,18 @@ class AcknowledgementRouteArgs {
   const AcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
+    this.enableViewHousehold,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final bool? enableViewHousehold;
+
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

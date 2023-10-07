@@ -10,6 +10,9 @@ class DigitAcknowledgement extends StatelessWidget {
   final String actionLabel;
   final Color color;
   final bool enableBackToSearch;
+  final bool enableViewHousehold;
+  final VoidCallback? secondaryAction;
+  final String? secondaryLabel;
 
   DigitAcknowledgement.success({
     super.key,
@@ -21,6 +24,9 @@ class DigitAcknowledgement extends StatelessWidget {
     IconData? icon,
     Color? color,
     this.enableBackToSearch = true,
+    this.enableViewHousehold = false,
+    this.secondaryAction,
+    this.secondaryLabel,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -34,6 +40,9 @@ class DigitAcknowledgement extends StatelessWidget {
     IconData? icon,
     Color? color,
     this.enableBackToSearch = true,
+    this.enableViewHousehold = false,
+    this.secondaryAction,
+    this.secondaryLabel,
   })  : color = color ?? DigitTheme.instance.colors.lavaRed,
         icon = icon ?? Icons.error;
 
@@ -44,76 +53,113 @@ class DigitAcknowledgement extends StatelessWidget {
       children: [
         DigitCard(
           padding: EdgeInsets.zero,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kPadding * 2,
-                  vertical: kPadding * 4,
-                ),
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height / 3,
-                ),
-                color: color,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+          child: Column(children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPadding * 2,
+                vertical: kPadding * 4,
+              ),
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height / 3,
+              ),
+              color: color,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    textAlign: TextAlign.center,
+                    label,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                  Padding(
+                    padding: DigitTheme.instance.containerMargin,
+                    child: Icon(
+                      icon,
+                      size: 32,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                  if (subLabel != null) ...[
                     Text(
                       textAlign: TextAlign.center,
-                      label,
+                      subLabel!,
                       style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
                         color: theme.colorScheme.onPrimary,
                       ),
-                    ),
-                    Padding(
-                      padding: DigitTheme.instance.containerMargin,
-                      child: Icon(
-                        icon,
-                        size: 32,
-                        color: theme.colorScheme.onPrimary,
-                      ),
-                    ),
-                    if (subLabel != null) ...[
-                      Text(
-                        textAlign: TextAlign.center,
-                        subLabel!,
-                        style: TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.onPrimary,
-                        ),
+                    )
+                  ],
+                ],
+              ),
+            ),
+            Padding(
+              padding: DigitTheme.instance.containerMargin,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  description,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+            if (enableBackToSearch)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  kPadding,
+                  kPadding,
+                  kPadding,
+                  kPadding * 2,
+                ),
+                child: Column(
+                  children: [
+                    if (enableViewHousehold)
+                      Column(
+                        children: [
+                          DigitElevatedButton(
+                              onPressed: action,
+                              child: Text(secondaryLabel ?? "")),
+                          const SizedBox(
+                            height: kPadding,
+                          ),
+                          DigitOutLineButton(
+                            onPressed: secondaryAction,
+                            label: actionLabel,
+                            buttonStyle: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: BorderSide(
+                                width: 1.0,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              minimumSize: Size(
+                                MediaQuery.of(context).size.width / 1,
+                                50,
+                              ),
+                              shape: null,
+                            ),
+                          ),
+                        ],
                       )
-                    ],
+                    else
+                      Column(
+                        children: [
+                          DigitElevatedButton(
+                            onPressed: action,
+                            child: Text(actionLabel),
+                          ),
+                          const SizedBox(
+                            height: kPadding,
+                          ), // Add spacing between the buttons
+                        ],
+                      )
                   ],
                 ),
-              ),
-              Padding(
-                padding: DigitTheme.instance.containerMargin,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    description,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ),
-              ),
-              if (enableBackToSearch)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    kPadding,
-                    kPadding,
-                    kPadding,
-                    kPadding * 2,
-                  ),
-                  child: DigitElevatedButton(
-                    onPressed: action,
-                    child: Text(actionLabel),
-                  ),
-                )
-            ],
-          ),
+              )
+          ]),
         ),
       ],
     );
