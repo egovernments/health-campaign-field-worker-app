@@ -16,6 +16,8 @@ class DigitRadioButtonList<T> extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? labelPadding;
+  final void Function(FormControl<dynamic>)? onChangeOfFormControl;
+  final String errorMessage;
 
   const DigitRadioButtonList({
     super.key,
@@ -32,6 +34,8 @@ class DigitRadioButtonList<T> extends StatelessWidget {
     this.margin,
     this.labelPadding,
     this.labelStyle,
+    this.onChangeOfFormControl,
+    required this.errorMessage,
   });
 
   @override
@@ -85,6 +89,19 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                 );
               },
             ).toList()),
+        ReactiveFormConsumer(
+          builder: (context, form, child) {
+            final radioListControl = form.control(formControlName);
+            if (radioListControl.hasErrors) {
+              return Text(
+                errorMessage,
+                style: TextStyle(color: DigitTheme.instance.colorScheme.error),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
       ]),
     );
   }

@@ -460,6 +460,12 @@ class _HouseholdOverviewPageState
                                                                     e,
                                                               ),
                                                             );
+
+                                                        context.router
+                                                            .popUntilRouteWithName(
+                                                          SearchBeneficiaryRoute
+                                                              .name,
+                                                        );
                                                         context.router.push(
                                                           ReasonForDeletionRoute(
                                                             isHousholdDelete:
