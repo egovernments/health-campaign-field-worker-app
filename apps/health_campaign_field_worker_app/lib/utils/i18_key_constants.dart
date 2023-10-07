@@ -310,8 +310,6 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
-  String get viewHouseHoldDetailsAction =>
-      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 }
 
 class HouseholdOverView {
