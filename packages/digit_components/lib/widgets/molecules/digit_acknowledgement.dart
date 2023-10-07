@@ -153,7 +153,7 @@ class DigitAcknowledgement extends StatelessWidget {
                           ),
                           const SizedBox(
                             height: kPadding,
-                          ), // Add spacing between the buttons
+                          ),
                         ],
                       )
                   ],
