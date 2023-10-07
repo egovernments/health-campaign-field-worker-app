@@ -6,9 +6,12 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
+  final bool? enableViewHousehold;
+
   const AcknowledgementPage({
     super.key,
     super.appLocalizations,
+    this.enableViewHousehold,
   });
 
   @override
@@ -23,6 +26,15 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         action: () {
           context.router.pop();
         },
+        secondaryAction: () {
+          context.router.popUntilRouteWithName(
+            HouseholdOverviewRoute.name,
+          );
+        },
+        enableViewHousehold: widget.enableViewHousehold ?? false,
+        secondaryLabel: localizations.translate(
+          i18.householdDetails.viewHouseHoldDetailsAction,
+        ),
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(

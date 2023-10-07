@@ -192,7 +192,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         }
                       }
                       // Navigate to the AcknowledgementRoute
-                      context.router.push(AcknowledgementRoute());
+                      context.router.push(
+                        AcknowledgementRoute(enableViewHousehold: true),
+                      );
                     },
                     child: Center(
                       child: Text(
