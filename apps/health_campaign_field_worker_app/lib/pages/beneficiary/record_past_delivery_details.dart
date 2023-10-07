@@ -40,8 +40,6 @@ class _RecordPastDeliveryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
-    int ischanges = 0;
-    bool isbtnClicked = false;
 
     final futureTaskList = widget.tasks
         ?.where((task) => task.status == Status.partiallyDelivered.toValue())
@@ -64,20 +62,12 @@ class _RecordPastDeliveryDetailsPageState
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
                     onPressed: () async {
-                      setState(() {
-                        isbtnClicked = true;
-                      });
-
                       form.markAllAsTouched();
 
                       if (!form.valid) return;
 
                       final event = context.read<DeliverInterventionBloc>();
-// final futureTaskList = widget.tasks
-//                                   ?.where((task) =>
-//                                       task.status ==
-//                                       Status.partiallyDelivered.toValue())
-//                                   .toList();
+
                       // Loop through each future task
                       for (int i = 0; i < (futureTaskList ?? []).length; i++) {
                         // Get the value of the form control for each task
@@ -96,7 +86,6 @@ class _RecordPastDeliveryDetailsPageState
                         final result =
                             futureTaskList![i].copyWith(status: status);
 
-                        // Add the updated task to the event
                         event.add(DeliverInterventionSubmitEvent(
                           result,
                           true,
@@ -108,7 +97,7 @@ class _RecordPastDeliveryDetailsPageState
                         options: DigitDialogOptions(
                           titleText: i18.deliverIntervention
                               .didYouObservePreviousAdvEventsTitle,
-                          barrierDismissible: true,
+                          barrierDismissible: false,
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,
@@ -208,17 +197,12 @@ class _RecordPastDeliveryDetailsPageState
                                           localizations.translate(val.label),
                                       options: Constants.yesNo,
                                       onValueChange: (val) {
-                                        setState(() {
-                                          ischanges = ischanges + 1;
-                                        });
-
                                         form
                                             .control(
                                               "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                             )
                                             .value = val;
                                       },
-                                      errorMessage: "hello",
                                     ),
                                     Offstage(
                                       offstage: !form
@@ -258,8 +242,6 @@ class _RecordPastDeliveryDetailsPageState
   }
 
   FormGroup buildForm(BuildContext context) {
-    final bloc = context.read<DeliverInterventionBloc>().state;
-
     final futureTaskList = widget.tasks
         ?.where((task) => task.status == Status.partiallyDelivered.toValue())
         .toList();
@@ -269,7 +251,9 @@ class _RecordPastDeliveryDetailsPageState
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([
           ...futureTaskList?.map(
-                (e) => FormControl<KeyValue>(validators: [Validators.required]),
+                (e) => FormControl<KeyValue>(
+                  value: Constants.yesNo[0],
+                ),
               ) ??
               [],
         ]),

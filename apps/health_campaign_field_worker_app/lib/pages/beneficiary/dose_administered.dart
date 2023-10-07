@@ -35,7 +35,6 @@ class DoseAdministeredPage extends LocalizedStatefulWidget {
 class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   static const _doseAdministeredKey = 'doseAdministered';
   bool doseAdministered = false;
-  bool formSubmitted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,22 +73,13 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
-                    onPressed: () {
-                      //todo in progress
-                      // final bool checkProvideDose =
-                      //     (form.control(_doseAdministeredKey).value as KeyValue)
-                      //         .key;
-
-                      // final doseAdministeredValue =
-                      //     form.control(_doseAdministeredKey).value;
-
-                      // if (doseAdministeredValue != null &&
-                      //     doseAdministeredValue is KeyValue &&
-                      //     doseAdministeredValue.key == null) {
-                      //   form
-                      //       .control(_doseAdministeredKey)
-                      //       .setErrors({'': true});
-                      // }
+                    onPressed: () async {
+                      doseAdministered =
+                          (form.control(_doseAdministeredKey).value as KeyValue)
+                                      .key ==
+                                  true
+                              ? true
+                              : false;
 
                       final bloc =
                           context.read<DeliverInterventionBloc>().state;
@@ -192,7 +182,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         }
                       }
                       // Navigate to the AcknowledgementRoute
-                      context.router.push(AcknowledgementRoute());
+                      context.router.push(
+                        AcknowledgementRoute(enableViewHousehold: true),
+                      );
                     },
                     child: Center(
                       child: Text(
@@ -220,25 +212,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             localizations.translate(val.label),
                         options: Constants.yesNo,
                         isRequired: true,
-                        //TODO localisation
-                        errorMessage: "Required field",
                         onValueChange: (val) {
                           setState(() {
-                            doseAdministered = val
-                                .key; // Update doseAdministered with setState
+                            doseAdministered = val.key;
                           });
                         },
-                        // onChangeOfFormControl: (val) {
-                        //   // final value = formControl.value;
-
-                        //   setState(() {
-                        //     doseAdministered = val.value;
-                        //     // Update doseAdministered with setState
-                        //   });
-                        // print(value);
-                        // if (value == null) {
-                        //   formControl.setErrors({"errors": true});
-                        // }
                       ),
                     ],
                   ),
@@ -334,7 +312,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   FormGroup buildForm(BuildContext context) {
     return fb.group(<String, Object>{
       _doseAdministeredKey: FormControl<KeyValue>(
-        value: null,
+        value: Constants.yesNo[0],
       ),
     });
   }
