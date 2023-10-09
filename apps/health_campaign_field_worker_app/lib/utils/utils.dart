@@ -437,8 +437,6 @@ List<DeliveryModel>? fetchDeliveries(
     );
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
-    print('individualAgeInMonths');
-    print(individualAgeInMonths);
     final filteredDeliveries = deliveries.where((delivery) {
       final condition = delivery.doseCriteria?.condition;
       if (condition != null) {
