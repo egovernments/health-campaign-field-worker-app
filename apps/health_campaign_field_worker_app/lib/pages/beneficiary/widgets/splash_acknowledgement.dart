@@ -26,7 +26,7 @@ class _SplashAcknowledgementPageState
   void initState() {
     super.initState();
     if (widget.enableBackToSearch == false) {
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           try {
             context.router.push(DoseAdministeredRoute());

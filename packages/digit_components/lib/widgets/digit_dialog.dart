@@ -32,7 +32,7 @@ class DigitDialog extends StatelessWidget {
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
-          if (options.checkRecordPast == true)
+          if (options.enableRecordPast == true)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -107,7 +107,7 @@ class DigitDialogOptions {
   final Color? barrierColor;
   final bool isScrollable;
   final Key? key;
-  final bool? checkRecordPast;
+  final bool? enableRecordPast;
 
   const DigitDialogOptions({
     this.titleText,
@@ -118,7 +118,7 @@ class DigitDialogOptions {
     this.primaryAction,
     this.secondaryAction,
     this.barrierDismissible = false,
-    this.checkRecordPast = false,
+    this.enableRecordPast = false,
     this.isScrollable = false,
     this.titlePadding = const EdgeInsets.all(kPadding),
     this.contentPadding = const EdgeInsets.all(kPadding),

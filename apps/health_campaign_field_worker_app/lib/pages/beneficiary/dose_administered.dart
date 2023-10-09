@@ -181,10 +181,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                           ));
                         }
                       }
-                      final searchState =
-                          context.read<SearchHouseholdsBloc>().state;
 
-                      final i = searchState.householdMembers.elementAt(0);
+                      final overViewState =
+                          context.read<HouseholdOverviewBloc>().state;
+
+                      final i = overViewState.householdMemberWrapper;
                       final reloadState = context.read<HouseholdOverviewBloc>();
 
                       event.add(DeliverInterventionSearchEvent(
