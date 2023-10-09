@@ -61,15 +61,16 @@ class _RecordPastDeliveryDetailsPageState
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
-                    onPressed: () async {
-                      print(
-                          form.control(_recordDoseAdministeredKey) as KeyValue);
-                      if ((form.control(_recordDoseAdministeredKey) as KeyValue)
-                              .key ==
-                          null) {
-                        form
-                            .control(_recordDoseAdministeredKey)
-                            .setErrors({'': true});
+                    onPressed: () {
+                      for (int i = 0; i < (futureTaskList ?? []).length; i++) {
+                        if (form
+                                .control("$_recordDoseAdministeredKey.$i")
+                                .value ==
+                            null) {
+                          form
+                              .control("$_recordDoseAdministeredKey.$i")
+                              .setErrors({'': true});
+                        }
                       }
 
                       form.markAllAsTouched();
@@ -102,7 +103,7 @@ class _RecordPastDeliveryDetailsPageState
                           context.boundary,
                         ));
                       }
-                      await DigitDialog.show<bool>(
+                      DigitDialog.show<bool>(
                         context,
                         options: DigitDialogOptions(
                           titleText: i18.deliverIntervention
@@ -116,6 +117,11 @@ class _RecordPastDeliveryDetailsPageState
                               router.pop();
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
+
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
 
                               event.add(DeliverInterventionSearchEvent(
                                 TaskSearchModel(
@@ -213,26 +219,11 @@ class _RecordPastDeliveryDetailsPageState
                                             )
                                             .value = val;
                                       },
-                                      errorMessage: "hello",
+                                      errorMessage: localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
                                     ),
-                                    // Offstage(
-                                    //   offstage: !form
-                                    //       .control(
-                                    //         "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
-                                    //       )
-                                    //       .invalid,
-                                    //   child: Align(
-                                    //     alignment: Alignment.centerLeft,
-                                    //     child: Text(
-                                    //       localizations.translate(
-                                    //         i18.common.corecommonRequired,
-                                    //       ),
-                                    //       style: TextStyle(
-                                    //         color: theme.colorScheme.error,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
+
                                     if (entry.key != futureTaskList.length - 1)
                                       const Divider(), // Add Divider conditionally
                                   ],
