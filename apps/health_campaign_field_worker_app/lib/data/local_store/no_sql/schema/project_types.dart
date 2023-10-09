@@ -37,12 +37,17 @@ class Cycles {
   int? startDate;
   int? endDate;
   int? id;
-  @Name("deliveries")
   List<Deliveries>? deliveries;
 }
 
 @embedded
 class Deliveries {
+  @Name("doseCriteria")
+  DoseCriteria? doseCriteriaModel;
+}
+
+@embedded
+class DoseCriteria {
   String? mandatoryWaitSinceLastDeliveryInDays;
   String? deliveryStrategy;
   List<ProductVariants>? productVariants;

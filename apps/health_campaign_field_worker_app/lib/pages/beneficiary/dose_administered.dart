@@ -98,7 +98,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         // Iterate through future deliveries
 
                         for (var e in bloc.futureDeliveries!) {
-                          int doseIndex = e.id;
+                          int doseIndex = e.doseCriteria?.id ?? 0;
                           final clientReferenceId = IdGen.i.identifier;
                           final address = bloc.oldTask?.address;
                           // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
@@ -123,7 +123,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 createdBy: context.loggedInUserUuid,
                                 createdTime: context.millisecondsSinceEpoch(),
                               ),
-                              resources: e.productVariants
+                              resources: e.doseCriteria?.productVariants
                                   ?.map((variant) => TaskResourceModel(
                                         clientReferenceId: IdGen.i.identifier,
                                         taskclientReferenceId:
@@ -174,7 +174,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   ),
                                   AdditionalField(
                                     'DeliveryStrategy',
-                                    e.deliveryStrategy,
+                                    e.doseCriteria?.deliveryStrategy,
                                   ),
                                 ],
                               ),
@@ -240,68 +240,68 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         );
 
                         return DigitCard(
-                          child: Column(
-                            children: [
-                              Text(
-                                localizations.translate(
-                                  i18.beneficiaryDetails.resourcesTobeProvided,
-                                ),
-                                style: theme.textTheme.displayMedium,
-                              ),
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(
-                                    i18.beneficiaryDetails.beneficiaryAge,
-                                  ): "2",
-                                },
-                              ),
-                              const Divider(),
-                              BlocBuilder<DeliverInterventionBloc,
-                                  DeliverInterventionState>(
-                                builder: (context, deliveryState) {
-                                  List<TableDataRow> tableDataRows =
-                                      deliveryState.futureDeliveries!.map((e) {
-                                    int doseIndex = deliveryState
-                                            .futureDeliveries!
-                                            .indexOf(e) +
+                          child: BlocBuilder<DeliverInterventionBloc,
+                              DeliverInterventionState>(
+                            builder: (context, deliveryState) {
+                              List<TableDataRow> tableDataRows =
+                                  deliveryState.futureDeliveries!.map((e) {
+                                int doseIndex =
+                                    deliveryState.futureDeliveries!.indexOf(e) +
                                         deliveryState.dose +
                                         1;
 
-                                    return TableDataRow([
-                                      TableData(
-                                        'Dose $doseIndex',
-                                        cellKey: 'dose',
-                                      ),
-                                      ...e.productVariants!
-                                          .map(
-                                            (ele) => TableData(
-                                              variant!
-                                                  .where((element) =>
-                                                      element.id ==
-                                                      ele.productVariantId)
-                                                  .toList()
-                                                  .map((e) =>
-                                                      '${ele.quantity} - ${e.sku}')
-                                                  .toList()
-                                                  .join('+'),
-                                              cellKey: 'resources',
-                                            ),
-                                          )
-                                          .toList(),
-                                    ]);
-                                  }).toList();
+                                return TableDataRow([
+                                  TableData(
+                                    'Dose $doseIndex',
+                                    cellKey: 'dose',
+                                  ),
+                                  ...e.doseCriteria!.productVariants!
+                                      .map(
+                                        (ele) => TableData(
+                                          variant!
+                                              .where((element) =>
+                                                  element.id ==
+                                                  ele.productVariantId)
+                                              .toList()
+                                              .map((e) =>
+                                                  '${ele.quantity} - ${e.sku}')
+                                              .toList()
+                                              .join('+'),
+                                          cellKey: 'resources',
+                                        ),
+                                      )
+                                      .toList(),
+                                ]);
+                              }).toList();
 
-                                  return DigitTable(
+                              return Column(
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                      i18.beneficiaryDetails
+                                          .resourcesTobeProvided,
+                                    ),
+                                    style: theme.textTheme.displayMedium,
+                                  ),
+                                  DigitTableCard(
+                                    element: {
+                                      localizations.translate(
+                                        i18.beneficiaryDetails.beneficiaryAge,
+                                      ): '${deliveryState.futureDeliveries?.first.doseCriteria?.condition?.split('<=age<').first} - ${deliveryState.futureDeliveries?.first.doseCriteria?.condition?.split('<=age<').last} months',
+                                    },
+                                  ),
+                                  const Divider(),
+                                  DigitTable(
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
                                     leftColumnWidth: 130,
                                     rightColumnWidth:
                                         headerListResource.length * 17 * 6,
                                     height: (tableDataRows.length + 2) * 60,
-                                  );
-                                },
-                              ),
-                            ],
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         );
                       },

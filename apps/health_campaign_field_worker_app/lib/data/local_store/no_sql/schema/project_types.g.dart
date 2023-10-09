@@ -71,7 +71,8 @@ const ProjectTypeListCycleSchema = CollectionSchema(
   embeddedSchemas: {
     r'ProductVariants': ProductVariantsSchema,
     r'Cycles': CyclesSchema,
-    r'Deliveries': DeliveriesSchema
+    r'Deliveries': DeliveriesSchema,
+    r'DoseCriteria': DoseCriteriaSchema
   },
   getId: _projectTypeListCycleGetId,
   getLinks: _projectTypeListCycleGetLinks,
@@ -2371,6 +2372,121 @@ const DeliveriesSchema = Schema(
   name: r'Deliveries',
   id: 2357936067587297135,
   properties: {
+    r'doseCriteria': PropertySchema(
+      id: 0,
+      name: r'doseCriteria',
+      type: IsarType.object,
+      target: r'DoseCriteria',
+    )
+  },
+  estimateSize: _deliveriesEstimateSize,
+  serialize: _deliveriesSerialize,
+  deserialize: _deliveriesDeserialize,
+  deserializeProp: _deliveriesDeserializeProp,
+);
+
+int _deliveriesEstimateSize(
+  Deliveries object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.doseCriteriaModel;
+    if (value != null) {
+      bytesCount += 3 +
+          DoseCriteriaSchema.estimateSize(
+              value, allOffsets[DoseCriteria]!, allOffsets);
+    }
+  }
+  return bytesCount;
+}
+
+void _deliveriesSerialize(
+  Deliveries object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeObject<DoseCriteria>(
+    offsets[0],
+    allOffsets,
+    DoseCriteriaSchema.serialize,
+    object.doseCriteriaModel,
+  );
+}
+
+Deliveries _deliveriesDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = Deliveries();
+  object.doseCriteriaModel = reader.readObjectOrNull<DoseCriteria>(
+    offsets[0],
+    DoseCriteriaSchema.deserialize,
+    allOffsets,
+  );
+  return object;
+}
+
+P _deliveriesDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readObjectOrNull<DoseCriteria>(
+        offset,
+        DoseCriteriaSchema.deserialize,
+        allOffsets,
+      )) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension DeliveriesQueryFilter
+    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'doseCriteria',
+      ));
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'doseCriteria',
+      ));
+    });
+  }
+}
+
+extension DeliveriesQueryObject
+    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition> doseCriteriaModel(
+      FilterQuery<DoseCriteria> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'doseCriteria');
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+
+const DoseCriteriaSchema = Schema(
+  name: r'DoseCriteria',
+  id: -4142765722663167685,
+  properties: {
     r'deliveryStrategy': PropertySchema(
       id: 0,
       name: r'deliveryStrategy',
@@ -2388,14 +2504,14 @@ const DeliveriesSchema = Schema(
       target: r'ProductVariants',
     )
   },
-  estimateSize: _deliveriesEstimateSize,
-  serialize: _deliveriesSerialize,
-  deserialize: _deliveriesDeserialize,
-  deserializeProp: _deliveriesDeserializeProp,
+  estimateSize: _doseCriteriaEstimateSize,
+  serialize: _doseCriteriaSerialize,
+  deserialize: _doseCriteriaDeserialize,
+  deserializeProp: _doseCriteriaDeserializeProp,
 );
 
-int _deliveriesEstimateSize(
-  Deliveries object,
+int _doseCriteriaEstimateSize(
+  DoseCriteria object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -2429,8 +2545,8 @@ int _deliveriesEstimateSize(
   return bytesCount;
 }
 
-void _deliveriesSerialize(
-  Deliveries object,
+void _doseCriteriaSerialize(
+  DoseCriteria object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -2445,13 +2561,13 @@ void _deliveriesSerialize(
   );
 }
 
-Deliveries _deliveriesDeserialize(
+DoseCriteria _doseCriteriaDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Deliveries();
+  final object = DoseCriteria();
   object.deliveryStrategy = reader.readStringOrNull(offsets[0]);
   object.mandatoryWaitSinceLastDeliveryInDays =
       reader.readStringOrNull(offsets[1]);
@@ -2464,7 +2580,7 @@ Deliveries _deliveriesDeserialize(
   return object;
 }
 
-P _deliveriesDeserializeProp<P>(
+P _doseCriteriaDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -2487,9 +2603,9 @@ P _deliveriesDeserializeProp<P>(
   }
 }
 
-extension DeliveriesQueryFilter
-    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+extension DoseCriteriaQueryFilter
+    on QueryBuilder<DoseCriteria, DoseCriteria, QFilterCondition> {
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2498,7 +2614,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -2507,7 +2623,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -2521,7 +2637,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyGreaterThan(
     String? value, {
     bool include = false,
@@ -2537,7 +2653,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyLessThan(
     String? value, {
     bool include = false,
@@ -2553,7 +2669,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyBetween(
     String? lower,
     String? upper, {
@@ -2573,7 +2689,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -2587,7 +2703,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -2601,7 +2717,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -2612,7 +2728,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -2623,7 +2739,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2633,7 +2749,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -2643,7 +2759,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2652,7 +2768,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -2661,7 +2777,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -2675,7 +2791,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysGreaterThan(
     String? value, {
     bool include = false,
@@ -2691,7 +2807,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysLessThan(
     String? value, {
     bool include = false,
@@ -2707,7 +2823,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysBetween(
     String? lower,
     String? upper, {
@@ -2727,7 +2843,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -2741,7 +2857,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -2755,7 +2871,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysContains(String value,
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2767,7 +2883,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysMatches(String pattern,
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2779,7 +2895,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2789,7 +2905,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -2799,7 +2915,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2808,7 +2924,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -2817,7 +2933,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
@@ -2830,7 +2946,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
@@ -2843,7 +2959,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
@@ -2856,7 +2972,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsLengthLessThan(
     int length, {
     bool include = false,
@@ -2872,7 +2988,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsLengthGreaterThan(
     int length, {
     bool include = false,
@@ -2888,7 +3004,7 @@ extension DeliveriesQueryFilter
     });
   }
 
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsLengthBetween(
     int lower,
     int upper, {
@@ -2907,9 +3023,9 @@ extension DeliveriesQueryFilter
   }
 }
 
-extension DeliveriesQueryObject
-    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+extension DoseCriteriaQueryObject
+    on QueryBuilder<DoseCriteria, DoseCriteria, QFilterCondition> {
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsElement(FilterQuery<ProductVariants> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'productVariants');

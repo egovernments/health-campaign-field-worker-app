@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
+import '../../utils/utils.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -127,10 +128,12 @@ class DeliverInterventionBloc
     if (currentRunningCycle != 0) {
       if (event.lastCycle == currentRunningCycle) {
         // Calculate the length of deliveries in the current cycle
-        final deliveryLength = event.projectType.cycles!
-                .firstWhere((c) => c.id == event.lastCycle)
-                .deliveries
-                ?.length ??
+        final deliveryLength = fetchDeliveries(
+              event.projectType.cycles!
+                  .firstWhere((c) => c.id == event.lastCycle)
+                  .deliveries,
+              event.individualModel,
+            )?.length ??
             0;
         final isNotLastDose = event.lastDose < deliveryLength;
         // Get a list of past cycles
@@ -204,15 +207,16 @@ class DeliverInterventionBloc
       int currentDose = event.dose;
       Cycle? currentCycle = event.cycle;
 
-      if (currentCycle.deliveries != null) {
+      final deliveriesList =
+          fetchDeliveries(currentCycle.deliveries, event.individualModel);
+
+      if (deliveriesList != null) {
         List<DeliveryModel> futureDeliveries = [];
         // Iterate over deliveries starting from the current dose
-        for (int index = currentDose;
-            index < currentCycle.deliveries!.length;
-            index++) {
-          var delivery = currentCycle.deliveries![index];
+        for (int index = currentDose; index < deliveriesList.length; index++) {
+          var delivery = deliveriesList[index];
 
-          String? deliveryStrategy = delivery.deliveryStrategy;
+          String? deliveryStrategy = delivery.doseCriteria?.deliveryStrategy;
 
           // Check if the delivery strategy is indirect
           if (deliveryStrategy == DeliverStrategyType.indirect.toValue()) {
@@ -250,11 +254,13 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
     Cycle cycle,
+    IndividualModel? individualModel,
   ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 
   const factory DeliverInterventionEvent.setActiveCycleDose(
     int lastDose,
     int lastCycle,
+    IndividualModel? individualModel,
     ProjectType projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
 }

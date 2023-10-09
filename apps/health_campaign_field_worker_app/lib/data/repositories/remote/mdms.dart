@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -348,17 +348,22 @@ class MdmsRepository {
           ..mandatoryWaitSinceLastCycleInDays =
               e.mandatoryWaitSinceLastCycleInDays
           ..deliveries = e.deliveries?.map((ele) {
-            final newDeliveries = Deliveries()
-              ..deliveryStrategy = ele.deliveryStrategy
-              ..mandatoryWaitSinceLastDeliveryInDays =
-                  ele.mandatoryWaitSinceLastDeliveryInDays
-              ..productVariants = ele.productVariants?.map((e) {
-                final productVariants = ProductVariants()
-                  ..productVariantId = e.productVariantId
-                  ..quantity = e.quantity.toString();
+            final newDeliveries = Deliveries();
+            newDeliveries.doseCriteriaModel?.deliveryStrategy =
+                ele.doseCriteria?.deliveryStrategy;
+            newDeliveries
+                    .doseCriteriaModel?.mandatoryWaitSinceLastDeliveryInDays =
+                ele.doseCriteria?.mandatoryWaitSinceLastDeliveryInDays;
+            newDeliveries.doseCriteriaModel?.deliveryStrategy =
+                ele.doseCriteria?.deliveryStrategy;
+            newDeliveries.doseCriteriaModel?.productVariants =
+                ele.doseCriteria?.productVariants?.map((e) {
+              final productVariants = ProductVariants()
+                ..productVariantId = e.productVariantId
+                ..quantity = e.quantity.toString();
 
-                return productVariants;
-              }).toList();
+              return productVariants;
+            }).toList();
 
             return newDeliveries;
           }).toList();
