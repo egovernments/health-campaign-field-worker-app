@@ -444,8 +444,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final currentRunningCycle = selectedProject?.cycles
           ?.where(
             (e) =>
-                (e.startDate!) < 1696530700000 && (e.endDate!) > 1696703600000,
-
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
             // Return null when no matching cycle is found
           )
           .firstOrNull;
