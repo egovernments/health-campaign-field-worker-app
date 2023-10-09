@@ -446,7 +446,7 @@ List<DeliveryModel>? fetchDeliveries(
         final maxCondition = int.tryParse(parts.last);
         if (minCondition != null && maxCondition != null) {
           return individualAgeInMonths >= minCondition &&
-              individualAgeInMonths < maxCondition;
+              individualAgeInMonths <= maxCondition;
         }
       }
 
