@@ -75,22 +75,15 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
                     onPressed: () {
-                      //todo in progress
-                      // final bool checkProvideDose =
-                      //     (form.control(_doseAdministeredKey).value as KeyValue)
-                      //         .key;
+                      if (form.control(_doseAdministeredKey).value == null) {
+                        form
+                            .control(_doseAdministeredKey)
+                            .setErrors({'': true});
+                      }
 
-                      // final doseAdministeredValue =
-                      //     form.control(_doseAdministeredKey).value;
+                      form.markAllAsTouched();
 
-                      // if (doseAdministeredValue != null &&
-                      //     doseAdministeredValue is KeyValue &&
-                      //     doseAdministeredValue.key == null) {
-                      //   form
-                      //       .control(_doseAdministeredKey)
-                      //       .setErrors({'': true});
-                      // }
-
+                      if (!form.valid) return;
                       final bloc =
                           context.read<DeliverInterventionBloc>().state;
                       final event = context.read<DeliverInterventionBloc>();
@@ -222,25 +215,15 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             localizations.translate(val.label),
                         options: Constants.yesNo,
                         isRequired: true,
-                        //TODO localisation
-                        errorMessage: "Required field",
+                        errorMessage: localizations.translate(
+                          i18.common.corecommonRequired,
+                        ),
                         onValueChange: (val) {
                           setState(() {
                             doseAdministered = val
                                 .key; // Update doseAdministered with setState
                           });
                         },
-                        // onChangeOfFormControl: (val) {
-                        //   // final value = formControl.value;
-
-                        //   setState(() {
-                        //     doseAdministered = val.value;
-                        //     // Update doseAdministered with setState
-                        //   });
-                        // print(value);
-                        // if (value == null) {
-                        //   formControl.setErrors({"errors": true});
-                        // }
                       ),
                     ],
                   ),

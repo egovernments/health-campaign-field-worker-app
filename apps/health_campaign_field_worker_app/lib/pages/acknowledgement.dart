@@ -26,6 +26,15 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         action: () {
           context.router.pop();
         },
+        // secondaryAction: () {
+        //   context.router.popUntilRouteWithName(
+        //     HouseholdOverviewRoute.name,
+        //   );
+        // },
+        // enableViewHousehold: widget.enableViewHousehold ?? false,
+        // secondaryLabel: localizations.translate(
+        //   i18.householdDetails.viewHouseHoldDetailsAction,
+        // ),
         actionLabel:
             localizations.translate(i18.acknowledgementSuccess.actionLabelText),
         description: localizations.translate(

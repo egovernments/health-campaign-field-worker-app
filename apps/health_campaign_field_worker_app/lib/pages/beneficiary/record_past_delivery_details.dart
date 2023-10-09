@@ -40,8 +40,6 @@ class _RecordPastDeliveryDetailsPageState
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
     final router = context.router;
-    int ischanges = 0;
-    bool isbtnClicked = false;
 
     final futureTaskList = widget.tasks
         ?.where((task) => task.status == Status.partiallyDelivered.toValue())
@@ -63,22 +61,24 @@ class _RecordPastDeliveryDetailsPageState
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
                   child: DigitElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        isbtnClicked = true;
-                      });
+                    onPressed: () {
+                      for (int i = 0; i < (futureTaskList ?? []).length; i++) {
+                        if (form
+                                .control("$_recordDoseAdministeredKey.$i")
+                                .value ==
+                            null) {
+                          form
+                              .control("$_recordDoseAdministeredKey.$i")
+                              .setErrors({'': true});
+                        }
+                      }
 
                       form.markAllAsTouched();
 
                       if (!form.valid) return;
 
                       final event = context.read<DeliverInterventionBloc>();
-// final futureTaskList = widget.tasks
-//                                   ?.where((task) =>
-//                                       task.status ==
-//                                       Status.partiallyDelivered.toValue())
-//                                   .toList();
-                      // Loop through each future task
+
                       for (int i = 0; i < (futureTaskList ?? []).length; i++) {
                         // Get the value of the form control for each task
 
@@ -103,7 +103,7 @@ class _RecordPastDeliveryDetailsPageState
                           context.boundary,
                         ));
                       }
-                      await DigitDialog.show<bool>(
+                      DigitDialog.show<bool>(
                         context,
                         options: DigitDialogOptions(
                           titleText: i18.deliverIntervention
@@ -118,6 +118,11 @@ class _RecordPastDeliveryDetailsPageState
                               router.pop();
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
+
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
 
                               event.add(DeliverInterventionSearchEvent(
                                 TaskSearchModel(
@@ -209,36 +214,17 @@ class _RecordPastDeliveryDetailsPageState
                                           localizations.translate(val.label),
                                       options: Constants.yesNo,
                                       onValueChange: (val) {
-                                        setState(() {
-                                          ischanges = ischanges + 1;
-                                        });
-
                                         form
                                             .control(
                                               "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                             )
                                             .value = val;
                                       },
-                                      errorMessage: "hello",
-                                    ),
-                                    Offstage(
-                                      offstage: !form
-                                          .control(
-                                            "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
-                                          )
-                                          .invalid,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.common.corecommonRequired,
-                                          ),
-                                          style: TextStyle(
-                                            color: theme.colorScheme.error,
-                                          ),
-                                        ),
+                                      errorMessage: localizations.translate(
+                                        i18.common.corecommonRequired,
                                       ),
                                     ),
+
                                     if (entry.key != futureTaskList.length - 1)
                                       const Divider(), // Add Divider conditionally
                                   ],
@@ -270,7 +256,7 @@ class _RecordPastDeliveryDetailsPageState
       {
         _recordDoseAdministeredKey: FormArray<KeyValue>([
           ...futureTaskList?.map(
-                (e) => FormControl<KeyValue>(validators: [Validators.required]),
+                (e) => FormControl<KeyValue>(),
               ) ??
               [],
         ]),

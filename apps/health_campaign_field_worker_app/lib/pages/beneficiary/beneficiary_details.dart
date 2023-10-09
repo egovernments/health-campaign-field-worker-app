@@ -151,7 +151,7 @@ class _BeneficiaryDetailsPageState
                             return cycles != null && cycles.isNotEmpty
                                 ? state.hasCycleArrived
                                     ? SizedBox(
-                                        height: 85,
+                                        height: 100,
                                         child: DigitCard(
                                           margin:
                                               const EdgeInsets.all(kPadding),

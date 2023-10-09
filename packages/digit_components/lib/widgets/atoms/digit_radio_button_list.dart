@@ -77,6 +77,7 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                   onChanged: (isEnabled ?? true)
                       ? (control) {
                           final value = control.value;
+
                           if (value == null) return;
                           onValueChange?.call(value);
                         }
