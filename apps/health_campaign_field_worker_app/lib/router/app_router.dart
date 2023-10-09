@@ -16,6 +16,7 @@ import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
+import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
@@ -133,6 +134,10 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: RecordPastDeliveryDetailsPage,
               path: 'record-past-delivery-details',
+            ),
+            AutoRoute(
+              page: HouseholdAcknowledgementPage,
+              path: 'household-acknowledgement',
             ),
             AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],

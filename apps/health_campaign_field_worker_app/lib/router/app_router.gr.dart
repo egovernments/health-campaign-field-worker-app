@@ -123,7 +123,6 @@ class _$AppRouter extends RootStackRouter {
         child: AcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -363,6 +362,18 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
+        ),
+      );
+    },
+    HouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
+          orElse: () => const HouseholdAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: HouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -651,6 +662,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   RecordPastDeliveryDetailsRoute.name,
                   path: 'record-past-delivery-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  HouseholdAcknowledgementRoute.name,
+                  path: 'household-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1139,14 +1155,12 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
   AcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
-    bool? enableViewHousehold,
   }) : super(
           AcknowledgementRoute.name,
           path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            enableViewHousehold: enableViewHousehold,
           ),
         );
 
@@ -1157,18 +1171,15 @@ class AcknowledgementRouteArgs {
   const AcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
-    this.enableViewHousehold,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final bool? enableViewHousehold;
-
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1928,6 +1939,46 @@ class RecordPastDeliveryDetailsRouteArgs {
   @override
   String toString() {
     return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
+  }
+}
+
+/// generated route for
+/// [HouseholdAcknowledgementPage]
+class HouseholdAcknowledgementRoute
+    extends PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
+  HouseholdAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+  }) : super(
+          HouseholdAcknowledgementRoute.name,
+          path: 'household-acknowledgement',
+          args: HouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+        );
+
+  static const String name = 'HouseholdAcknowledgementRoute';
+}
+
+class HouseholdAcknowledgementRouteArgs {
+  const HouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

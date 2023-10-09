@@ -110,7 +110,7 @@ class _RecordPastDeliveryDetailsPageState
                               .deliverIntervention
                               .didYouObservePreviousAdvEventsTitle),
                           barrierDismissible: false,
-                          checkRecordPast: true,
+                          enableRecordPast: true,
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,
