@@ -182,28 +182,16 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         }
                       }
 
-                      final overViewState =
-                          context.read<HouseholdOverviewBloc>().state;
-
-                      final i = overViewState.householdMemberWrapper;
                       final reloadState = context.read<HouseholdOverviewBloc>();
 
-                      event.add(DeliverInterventionSearchEvent(
-                        TaskSearchModel(
-                          projectBeneficiaryClientReferenceId: reloadState
-                              .state.householdMemberWrapper.projectBeneficiaries
-                              .map((e) => e.clientReferenceId)
-                              .toList(),
-                        ),
-                      ));
-                      reloadState.add(HouseholdOverviewReloadEvent(
-                        projectId: context.projectId,
-                        projectBeneficiaryType: context.beneficiaryType,
-                      ));
-
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        reloadState.add(HouseholdOverviewReloadEvent(
+                          projectId: context.projectId,
+                          projectBeneficiaryType: context.beneficiaryType,
+                        ));
+                      });
                       context.router.popAndPush(
                         HouseholdAcknowledgementRoute(
-                          wrapper: i,
                           enableViewHousehold: true,
                         ),
                       );
@@ -316,7 +304,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     leftColumnWidth: 130,
                                     rightColumnWidth:
                                         headerListResource.length * 17 * 6,
-                                    height: (tableDataRows.length + 2) * 60,
+                                    height: (tableDataRows.length + 1) * 60,
                                   ),
                                 ],
                               );

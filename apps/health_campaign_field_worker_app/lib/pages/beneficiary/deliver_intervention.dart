@@ -107,16 +107,18 @@ class _DeliverInterventionPageState
                               ?.productVariants)
                           : projectState.projectType?.resources;
 
-                      final int numberOfDoses = (projectState
-                                  .projectType?.cycles?.isNotEmpty ==
-                              true)
-                          ? (projectState
-                                  .projectType
-                                  ?.cycles?[deliveryInterventionstate.cycle - 1]
-                                  .deliveries
-                                  ?.length) ??
-                              0
-                          : 0;
+                      final int numberOfDoses =
+                          (projectState.projectType?.cycles?.isNotEmpty == true)
+                              ? (fetchDeliveries(
+                                    projectState
+                                        .projectType
+                                        ?.cycles?[
+                                            deliveryInterventionstate.cycle - 1]
+                                        .deliveries,
+                                    state.selectedIndividual,
+                                  )?.length) ??
+                                  0
+                              : 0;
 
                       final String? getDeliveryStrategy = projectState
                                   .projectType?.cycles?.isNotEmpty ==

@@ -366,14 +366,14 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     HouseholdAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>();
+      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
+          orElse: () => const HouseholdAcknowledgementRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: HouseholdAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableViewHousehold: args.enableViewHousehold,
-          wrapper: args.wrapper,
         ),
       );
     },
@@ -1950,7 +1950,6 @@ class HouseholdAcknowledgementRoute
     Key? key,
     AppLocalizations? appLocalizations,
     bool? enableViewHousehold,
-    required HouseholdMemberWrapper wrapper,
   }) : super(
           HouseholdAcknowledgementRoute.name,
           path: 'household-acknowledgement',
@@ -1958,7 +1957,6 @@ class HouseholdAcknowledgementRoute
             key: key,
             appLocalizations: appLocalizations,
             enableViewHousehold: enableViewHousehold,
-            wrapper: wrapper,
           ),
         );
 
@@ -1970,7 +1968,6 @@ class HouseholdAcknowledgementRouteArgs {
     this.key,
     this.appLocalizations,
     this.enableViewHousehold,
-    required this.wrapper,
   });
 
   final Key? key;
@@ -1979,11 +1976,9 @@ class HouseholdAcknowledgementRouteArgs {
 
   final bool? enableViewHousehold;
 
-  final HouseholdMemberWrapper wrapper;
-
   @override
   String toString() {
-    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold, wrapper: $wrapper}';
+    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

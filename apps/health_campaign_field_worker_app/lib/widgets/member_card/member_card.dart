@@ -197,13 +197,15 @@ class MemberCard extends StatelessWidget {
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
 
-                              final event =
-                                  context.read<DeliverInterventionBloc>();
                               bloc.add(
                                 HouseholdOverviewEvent.selectedIndividual(
                                   individualModel: individual,
                                 ),
                               );
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
 
                               final futureTaskList = tasks
                                   ?.where((task) =>
