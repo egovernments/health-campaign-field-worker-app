@@ -257,7 +257,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               ).toList(),
               leftColumnWidth: 130,
               rightColumnWidth: headerList.length * 87,
-              height: ((e.deliveries?.length ?? 0) + 1) * 62,
+              height: ((e.deliveries?.length ?? 0) + 1) * 58,
             ),
           ],
         ),

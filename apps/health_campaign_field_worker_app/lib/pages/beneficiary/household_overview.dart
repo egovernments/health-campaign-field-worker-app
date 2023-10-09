@@ -361,6 +361,7 @@ class _HouseholdOverviewPageState
                                               isHead: isHead,
                                               individual: e,
                                               tasks: taskdata,
+                                              adverseEvents: adverseEventData,
                                               editMemberAction: () async {
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();

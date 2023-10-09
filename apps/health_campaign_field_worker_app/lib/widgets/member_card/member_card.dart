@@ -26,6 +26,7 @@ class MemberCard extends StatelessWidget {
   final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
   final List<TaskModel>? tasks;
+  final List<AdverseEventModel>? adverseEvents;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
   final String? projectBeneficiaryClientReferenceId;
@@ -47,6 +48,7 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
+    this.adverseEvents,
   });
 
   @override
@@ -232,7 +234,13 @@ class MemberCard extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                isNotEligible || isBeneficiaryRefused
+                (isNotEligible ||
+                        isBeneficiaryRefused ||
+                        allDosesDelivered(
+                          tasks,
+                          context.selectedCycle,
+                          adverseEvents,
+                        ))
                     ? const Offstage()
                     : DigitOutLineButton(
                         label: localizations.translate(

@@ -353,3 +353,69 @@ bool checkStatus(
     return false;
   }
 }
+
+bool recordedAdverseEvent(
+  Cycle? selectedCycle,
+  TaskModel? task,
+  List<AdverseEventModel>? adverseEvents,
+) {
+  if (selectedCycle != null &&
+      selectedCycle.startDate != null &&
+      selectedCycle.endDate != null) {
+    if ((task != null) && (adverseEvents ?? []).isNotEmpty) {
+      final lastTaskCreatedTime =
+          task.clientReferenceId == adverseEvents?.last.taskClientReferenceId
+              ? task.clientAuditDetails?.createdTime
+              : null;
+
+      return lastTaskCreatedTime != null &&
+          lastTaskCreatedTime >= selectedCycle.startDate! &&
+          lastTaskCreatedTime <= selectedCycle.endDate!;
+    }
+  }
+
+  return false;
+}
+
+bool allDosesDelivered(
+  List<TaskModel>? tasks,
+  Cycle? selectedCycle,
+  List<AdverseEventModel>? adverseEvents,
+) {
+  if (selectedCycle == null ||
+      selectedCycle.id == 0 ||
+      (selectedCycle.deliveries ?? []).isEmpty) {
+    return true;
+  } else {
+    if ((tasks ?? []).isNotEmpty) {
+      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
+          .where(
+            (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+          )
+          .first
+          .value);
+      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
+          .where(
+            (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+          )
+          .first
+          .value);
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          tasks?.last.status != Status.partiallyDelivered.toValue()) {
+        return true;
+      } else if (selectedCycle.id == lastCycle &&
+          tasks?.last.status == Status.partiallyDelivered.toValue()) {
+        return false;
+      } else if ((adverseEvents ?? []).isNotEmpty) {
+        return recordedAdverseEvent(selectedCycle, tasks?.last, adverseEvents);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+}
