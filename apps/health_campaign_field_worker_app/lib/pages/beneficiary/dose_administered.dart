@@ -187,7 +187,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                       final i = searchState.householdMembers.elementAt(0);
                       final reloadState = context.read<HouseholdOverviewBloc>();
 
-                      // Navigate to the AcknowledgementRoute
+                      event.add(DeliverInterventionSearchEvent(
+                        TaskSearchModel(
+                          projectBeneficiaryClientReferenceId: reloadState
+                              .state.householdMemberWrapper.projectBeneficiaries
+                              .map((e) => e.clientReferenceId)
+                              .toList(),
+                        ),
+                      ));
                       reloadState.add(HouseholdOverviewReloadEvent(
                         projectId: context.projectId,
                         projectBeneficiaryType: context.beneficiaryType,

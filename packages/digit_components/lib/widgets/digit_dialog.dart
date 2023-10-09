@@ -70,6 +70,23 @@ class DigitDialog extends StatelessWidget {
                 ],
               ),
             )
+          else
+            Column(
+              children: <Widget>[
+                if (options.primaryAction != null)
+                  DigitElevatedButton(
+                    onPressed: () =>
+                        options.primaryAction!.action?.call(context),
+                    child: Center(child: Text(options.primaryAction!.label)),
+                  ),
+                if (options.secondaryAction != null)
+                  TextButton(
+                    onPressed: () =>
+                        options.secondaryAction!.action?.call(context),
+                    child: Center(child: Text(options.secondaryAction!.label)),
+                  ),
+              ],
+            ),
         ],
         titlePadding: options.titlePadding,
         contentPadding: options.contentPadding,
