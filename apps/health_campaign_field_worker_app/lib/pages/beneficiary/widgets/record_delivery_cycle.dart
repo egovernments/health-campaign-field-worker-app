@@ -3,7 +3,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
@@ -17,12 +16,14 @@ import '../../../widgets/localized.dart';
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
   final List<TaskModel>? taskData;
   final List<Cycle> projectCycles;
+  final IndividualModel? individualModel;
   // ignore: prefer_typing_uninitialized_variables
 
   const RecordDeliveryCycle({
     Key? key,
     this.taskData,
     required this.projectCycles,
+    required this.individualModel,
   }) : super(key: key);
 
   @override
@@ -142,24 +143,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                                 ),
                                         ],
                                       ),
-                                      // DigitIconButton(
-                                      //   iconText: isExpanded
-                                      //       ? localizations.translate(
-                                      //           i18.deliverIntervention
-                                      //               .hidePastCycles,
-                                      //         )
-                                      //       : localizations.translate(
-                                      //           i18.deliverIntervention
-                                      //               .viewPastCycles,
-                                      //         ),
-                                      //   iconTextColor: DigitTheme
-                                      //       .instance.colorScheme.secondary,
-                                      //   onPressed: () {
-                                      //     setState(() {
-                                      //       isExpanded = !isExpanded;
-                                      //     });
-                                      //   },
-                                      // ),
                                     ),
                                   ),
                                 ]);
@@ -211,7 +194,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             DigitTable(
               selectedIndex: selectedIndex,
               headerList: headerList,
-              tableData: e.deliveries!.map(
+              tableData:
+                  fetchDeliveries(e.deliveries, widget.individualModel)!.map(
                 (item) {
                   final tasks = widget.taskData
                       ?.where((element) =>
@@ -223,7 +207,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                             .toValue(),
                                   )
                                   ?.value ==
-                              '0${item.id}' &&
+                              '0${item.doseCriteria?.id}' &&
                           element.additionalFields?.fields
                                   .firstWhereOrNull(
                                     (c) =>
@@ -237,7 +221,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Dose ${e.deliveries!.indexOf(item) + 1}',
+                      'Dose ${fetchDeliveries(e.deliveries, widget.individualModel)!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
@@ -257,7 +241,11 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               ).toList(),
               leftColumnWidth: 130,
               rightColumnWidth: headerList.length * 87,
-              height: ((e.deliveries?.length ?? 0) + 1) * 58,
+              height: ((fetchDeliveries(e.deliveries, widget.individualModel)
+                              ?.length ??
+                          0) +
+                      1) *
+                  58,
             ),
           ],
         ),

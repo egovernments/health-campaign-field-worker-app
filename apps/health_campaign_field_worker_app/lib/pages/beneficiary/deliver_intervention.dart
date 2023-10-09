@@ -96,11 +96,15 @@ class _DeliverInterventionPageState
                       List<ProductVariantsModel>? productVariants = projectState
                                   .projectType?.cycles?.isNotEmpty ==
                               true
-                          ? (projectState
-                              .projectType!
-                              .cycles![deliveryInterventionstate.cycle - 1]
-                              .deliveries?[deliveryInterventionstate.dose - 1]
-                              .productVariants)
+                          ? (fetchDeliveries(
+                              projectState
+                                  .projectType!
+                                  .cycles![deliveryInterventionstate.cycle - 1]
+                                  .deliveries,
+                              state.selectedIndividual,
+                            )?[deliveryInterventionstate.dose - 1]
+                              .doseCriteria
+                              ?.productVariants)
                           : projectState.projectType?.resources;
 
                       final int numberOfDoses = (projectState
@@ -117,13 +121,17 @@ class _DeliverInterventionPageState
                       final String? getDeliveryStrategy = projectState
                                   .projectType?.cycles?.isNotEmpty ==
                               true
-                          ? (projectState
-                              .projectType
-                              ?.cycles?[deliveryInterventionstate.cycle == 0
-                                  ? deliveryInterventionstate.cycle
-                                  : deliveryInterventionstate.cycle - 1]
-                              .deliveries?[deliveryInterventionstate.dose - 1]
-                              .deliveryStrategy)
+                          ? (fetchDeliveries(
+                              projectState
+                                  .projectType
+                                  ?.cycles?[deliveryInterventionstate.cycle == 0
+                                      ? deliveryInterventionstate.cycle
+                                      : deliveryInterventionstate.cycle - 1]
+                                  .deliveries,
+                              state.selectedIndividual,
+                            )?[deliveryInterventionstate.dose - 1]
+                              .doseCriteria
+                              ?.deliveryStrategy)
                           : DeliverStrategyType.direct.toValue();
 
                       final steps = generateSteps(numberOfDoses);

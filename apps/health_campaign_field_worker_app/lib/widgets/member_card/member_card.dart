@@ -240,6 +240,7 @@ class MemberCard extends StatelessWidget {
                           tasks,
                           context.selectedCycle,
                           adverseEvents,
+                          individual,
                         ))
                     ? const Offstage()
                     : DigitOutLineButton(

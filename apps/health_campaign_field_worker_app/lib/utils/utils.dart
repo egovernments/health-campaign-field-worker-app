@@ -1,9 +1,9 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'dart:math';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -381,10 +381,12 @@ bool allDosesDelivered(
   List<TaskModel>? tasks,
   Cycle? selectedCycle,
   List<AdverseEventModel>? adverseEvents,
+  IndividualModel? individualModel,
 ) {
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
-      (selectedCycle.deliveries ?? []).isEmpty) {
+      (fetchDeliveries(selectedCycle.deliveries, individualModel) ?? [])
+          .isEmpty) {
     return true;
   } else {
     if ((tasks ?? []).isNotEmpty) {
@@ -401,7 +403,9 @@ bool allDosesDelivered(
           .first
           .value);
       if (lastDose != null &&
-          lastDose == selectedCycle.deliveries?.length &&
+          lastDose ==
+              fetchDeliveries(selectedCycle.deliveries, individualModel)
+                  ?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           tasks?.last.status != Status.partiallyDelivered.toValue()) {
@@ -418,4 +422,39 @@ bool allDosesDelivered(
       return false;
     }
   }
+}
+
+List<DeliveryModel>? fetchDeliveries(
+  List<DeliveryModel>? deliveries,
+  IndividualModel? individualModel,
+) {
+  if (deliveries != null && individualModel != null) {
+    final individualAge = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            individualModel.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    );
+    final individualAgeInMonths =
+        individualAge.years * 12 + individualAge.months;
+    final filteredDeliveries = deliveries.where((delivery) {
+      final condition = delivery.doseCriteria?.condition;
+      if (condition != null) {
+        //[TODO: Condition need to be handled in generic way,]
+        final parts = condition.split('<=age<');
+        final minCondition = int.tryParse(parts.first);
+        final maxCondition = int.tryParse(parts.last);
+        if (minCondition != null && maxCondition != null) {
+          return individualAgeInMonths >= minCondition &&
+              individualAgeInMonths < maxCondition;
+        }
+      }
+
+      return false;
+    }).toList();
+
+    return filteredDeliveries;
+  }
+
+  return [];
 }

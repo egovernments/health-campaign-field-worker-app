@@ -106,9 +106,10 @@ class _RecordPastDeliveryDetailsPageState
                       DigitDialog.show<bool>(
                         context,
                         options: DigitDialogOptions(
-                          titleText: i18.deliverIntervention
-                              .didYouObservePreviousAdvEventsTitle,
-                          barrierDismissible: true,
+                          titleText: localizations.translate(i18
+                              .deliverIntervention
+                              .didYouObservePreviousAdvEventsTitle),
+                          barrierDismissible: false,
                           checkRecordPast: true,
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(

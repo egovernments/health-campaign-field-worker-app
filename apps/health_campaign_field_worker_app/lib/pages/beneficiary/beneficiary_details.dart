@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,25 +46,10 @@ class _BeneficiaryDetailsPageState
     final localizations = AppLocalizations.of(context);
     final router = context.router;
 
-    // Defining a list of table headers for cycle
-
-    // Defining a list of table headers for resource popup
-    final headerListResource = [
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
-        cellKey: 'dose',
-      ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
-        cellKey: 'resources',
-      ),
-    ];
-
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
-
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
               context.beneficiaryType != BeneficiaryType.individual
@@ -118,6 +102,7 @@ class _BeneficiaryDetailsPageState
                         ) ??
                         1
                     : 1,
+                state.selectedIndividual,
                 projectState.projectType!,
               ),
             );
@@ -145,12 +130,12 @@ class _BeneficiaryDetailsPageState
                         ]),
                         footer: BlocBuilder<DeliverInterventionBloc,
                             DeliverInterventionState>(
-                          builder: (context, state) {
+                          builder: (context, deliverState) {
                             final projectType = projectState.projectType;
                             final cycles = projectType?.cycles;
 
                             return cycles != null && cycles.isNotEmpty
-                                ? state.hasCycleArrived
+                                ? deliverState.hasCycleArrived
                                     ? SizedBox(
                                         height: 100,
                                         child: DigitCard(
@@ -160,13 +145,19 @@ class _BeneficiaryDetailsPageState
                                             onPressed: () async {
                                               final selectedCycle =
                                                   cycles.firstWhereOrNull((c) =>
-                                                      c.id == state.cycle);
+                                                      c.id ==
+                                                      deliverState.cycle);
                                               if (selectedCycle != null) {
                                                 bloc.add(
                                                   DeliverInterventionEvent
                                                       .selectFutureCycleDose(
-                                                    state.dose,
-                                                    selectedCycle,
+                                                    deliverState.dose,
+                                                    projectState
+                                                        .projectType!.cycles!
+                                                        .firstWhere((c) =>
+                                                            c.id ==
+                                                            deliverState.cycle),
+                                                    state.selectedIndividual,
                                                   ),
                                                 );
                                                 await DigitDialog.show<bool>(
@@ -177,10 +168,10 @@ class _BeneficiaryDetailsPageState
                                                             .beneficiaryDetails
                                                             .resourcesTobeDelivered),
                                                     content: buildTableContent(
-                                                      state,
+                                                      deliverState,
                                                       context,
-                                                      headerListResource,
                                                       variant,
+                                                      state.selectedIndividual,
                                                     ),
                                                     barrierDismissible: true,
                                                     primaryAction:
@@ -202,7 +193,7 @@ class _BeneficiaryDetailsPageState
                                             },
                                             child: Center(
                                               child: Text(
-                                                'Record Cycle ${(state.cycle == 0 ? (state.cycle + 1) : state.cycle).toString()} Dose ${(state.dose).toString()}',
+                                                'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
                                               ),
                                             ),
                                           ),
@@ -338,52 +329,57 @@ class _BeneficiaryDetailsPageState
                           if ((projectState.projectType?.cycles ?? [])
                               .isNotEmpty)
                             BlocBuilder<ProjectBloc, ProjectState>(
-                              builder: (context, state) {
+                              builder: (context, projectState) {
                                 return DigitCard(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
-                                    children: state.projectType?.cycles != null
-                                        ? [
-                                            BlocBuilder<DeliverInterventionBloc,
-                                                DeliverInterventionState>(
-                                              builder: (context, deliverState) {
-                                                return Column(
-                                                  children: [
-                                                    (state.projectType
-                                                                ?.cycles !=
-                                                            null)
-                                                        ? state
-                                                                .projectType!
-                                                                .cycles!
-                                                                .isNotEmpty
-                                                            ? Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                  kPadding,
-                                                                ),
-                                                                child:
-                                                                    RecordDeliveryCycle(
-                                                                  projectCycles:
-                                                                      projectState
-                                                                              .projectType
-                                                                              ?.cycles ??
-                                                                          [],
-                                                                  taskData:
-                                                                      taskData ??
-                                                                          [],
-                                                                ),
-                                                              )
-                                                            : const Offstage()
-                                                        : const Offstage(),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ]
-                                        : [],
+                                    children:
+                                        projectState.projectType?.cycles != null
+                                            ? [
+                                                BlocBuilder<
+                                                    DeliverInterventionBloc,
+                                                    DeliverInterventionState>(
+                                                  builder:
+                                                      (context, deliverState) {
+                                                    return Column(
+                                                      children: [
+                                                        (projectState
+                                                                    .projectType
+                                                                    ?.cycles !=
+                                                                null)
+                                                            ? projectState
+                                                                    .projectType!
+                                                                    .cycles!
+                                                                    .isNotEmpty
+                                                                ? Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                      kPadding,
+                                                                    ),
+                                                                    child:
+                                                                        RecordDeliveryCycle(
+                                                                      projectCycles:
+                                                                          projectState.projectType?.cycles ??
+                                                                              [],
+                                                                      taskData:
+                                                                          taskData ??
+                                                                              [],
+                                                                      individualModel:
+                                                                          state
+                                                                              .selectedIndividual,
+                                                                    ),
+                                                                  )
+                                                                : const Offstage()
+                                                            : const Offstage(),
+                                                      ],
+                                                    );
+                                                  },
+                                                ),
+                                              ]
+                                            : [],
                                   ),
                                 );
                               },
