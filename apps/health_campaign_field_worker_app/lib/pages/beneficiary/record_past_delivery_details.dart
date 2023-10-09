@@ -109,6 +109,7 @@ class _RecordPastDeliveryDetailsPageState
                           titleText: i18.deliverIntervention
                               .didYouObservePreviousAdvEventsTitle,
                           barrierDismissible: true,
+                          checkRecordPast: true,
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,
