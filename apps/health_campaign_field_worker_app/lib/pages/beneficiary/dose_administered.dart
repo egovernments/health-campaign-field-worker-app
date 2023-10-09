@@ -12,8 +12,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/product_variant/product_variant.dart';
+import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -21,6 +23,7 @@ import '../../utils/utils.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import 'widgets/household_acknowledgement.dart';
 
 class DoseAdministeredPage extends LocalizedStatefulWidget {
   const DoseAdministeredPage({
@@ -80,19 +83,13 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             .control(_doseAdministeredKey)
                             .setErrors({'': true});
                       }
-
                       form.markAllAsTouched();
 
                       if (!form.valid) return;
+
                       final bloc =
                           context.read<DeliverInterventionBloc>().state;
                       final event = context.read<DeliverInterventionBloc>();
-
-                      final parent = context.router.parent() as StackRouter;
-                      // Pop twice to navigate back to the previous screen
-                      parent
-                        ..pop()
-                        ..pop();
 
                       if (doseAdministered && context.mounted) {
                         // Iterate through future deliveries
@@ -184,9 +181,23 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                           ));
                         }
                       }
+                      final searchState =
+                          context.read<SearchHouseholdsBloc>().state;
+
+                      final i = searchState.householdMembers.elementAt(0);
+                      final reloadState = context.read<HouseholdOverviewBloc>();
+
                       // Navigate to the AcknowledgementRoute
-                      context.router.push(
-                        AcknowledgementRoute(enableViewHousehold: true),
+                      reloadState.add(HouseholdOverviewReloadEvent(
+                        projectId: context.projectId,
+                        projectBeneficiaryType: context.beneficiaryType,
+                      ));
+
+                      context.router.popAndPush(
+                        HouseholdAcknowledgementRoute(
+                          wrapper: i,
+                          enableViewHousehold: true,
+                        ),
                       );
                     },
                     child: Center(

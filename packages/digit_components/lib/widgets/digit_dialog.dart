@@ -33,54 +33,43 @@ class DigitDialog extends StatelessWidget {
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
           if (options.checkRecordPast == true)
-            Row(
-              children: <Widget>[
-                if (options.secondaryAction != null)
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 3,
-                    child: DigitOutLineButton(
-                      onPressed: () =>
-                          options.secondaryAction!.action?.call(context),
-                      label: options.secondaryAction!.label,
-                      buttonStyle: OutlinedButton.styleFrom(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  if (options.secondaryAction != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: DigitOutLineButton(
+                        onPressed: () =>
+                            options.secondaryAction!.action?.call(context),
+                        label: options.secondaryAction!.label,
+                        buttonStyle: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
                           side: BorderSide(
                             width: 1.0,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                           minimumSize:
-                              Size(MediaQuery.of(context).size.width / 4, 50)),
+                              Size(MediaQuery.of(context).size.width / 4, 45),
+                        ),
+                      ),
                     ),
-                  ),
-                const Spacer(),
-                if (options.primaryAction != null)
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 3,
-                    child: DigitElevatedButton(
-                      onPressed: () =>
-                          options.primaryAction!.action?.call(context),
-                      child: Center(child: Text(options.primaryAction!.label)),
-                    ),
-                  )
-              ],
+                  const Spacer(),
+                  if (options.primaryAction != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      height: 45,
+                      child: DigitElevatedButton(
+                        onPressed: () =>
+                            options.primaryAction!.action?.call(context),
+                        child:
+                            Center(child: Text(options.primaryAction!.label)),
+                      ),
+                    )
+                ],
+              ),
             )
-          else
-            Column(
-              children: <Widget>[
-                if (options.primaryAction != null)
-                  DigitElevatedButton(
-                    onPressed: () =>
-                        options.primaryAction!.action?.call(context),
-                    child: Center(child: Text(options.primaryAction!.label)),
-                  ),
-                if (options.secondaryAction != null)
-                  TextButton(
-                    onPressed: () =>
-                        options.secondaryAction!.action?.call(context),
-                    child: Center(child: Text(options.secondaryAction!.label)),
-                  ),
-              ],
-            ),
         ],
         titlePadding: options.titlePadding,
         contentPadding: options.contentPadding,
