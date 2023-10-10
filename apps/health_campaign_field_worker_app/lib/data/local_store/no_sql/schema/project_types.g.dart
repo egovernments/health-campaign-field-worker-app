@@ -2372,11 +2372,21 @@ const DeliveriesSchema = Schema(
   name: r'Deliveries',
   id: 2357936067587297135,
   properties: {
-    r'doseCriteria': PropertySchema(
+    r'deliveryStrategy': PropertySchema(
       id: 0,
+      name: r'deliveryStrategy',
+      type: IsarType.string,
+    ),
+    r'doseCriteria': PropertySchema(
+      id: 1,
       name: r'doseCriteria',
-      type: IsarType.object,
+      type: IsarType.objectList,
       target: r'DoseCriteria',
+    ),
+    r'mandatoryWaitSinceLastDeliveryInDays': PropertySchema(
+      id: 2,
+      name: r'mandatoryWaitSinceLastDeliveryInDays',
+      type: IsarType.string,
     )
   },
   estimateSize: _deliveriesEstimateSize,
@@ -2392,11 +2402,29 @@ int _deliveriesEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
-    final value = object.doseCriteriaModel;
+    final value = object.deliveryStrategy;
     if (value != null) {
-      bytesCount += 3 +
-          DoseCriteriaSchema.estimateSize(
-              value, allOffsets[DoseCriteria]!, allOffsets);
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final list = object.doseCriteriaModel;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[DoseCriteria]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              DoseCriteriaSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final value = object.mandatoryWaitSinceLastDeliveryInDays;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
     }
   }
   return bytesCount;
@@ -2408,12 +2436,14 @@ void _deliveriesSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObject<DoseCriteria>(
-    offsets[0],
+  writer.writeString(offsets[0], object.deliveryStrategy);
+  writer.writeObjectList<DoseCriteria>(
+    offsets[1],
     allOffsets,
     DoseCriteriaSchema.serialize,
     object.doseCriteriaModel,
   );
+  writer.writeString(offsets[2], object.mandatoryWaitSinceLastDeliveryInDays);
 }
 
 Deliveries _deliveriesDeserialize(
@@ -2423,11 +2453,15 @@ Deliveries _deliveriesDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Deliveries();
-  object.doseCriteriaModel = reader.readObjectOrNull<DoseCriteria>(
-    offsets[0],
+  object.deliveryStrategy = reader.readStringOrNull(offsets[0]);
+  object.doseCriteriaModel = reader.readObjectList<DoseCriteria>(
+    offsets[1],
     DoseCriteriaSchema.deserialize,
     allOffsets,
+    DoseCriteria(),
   );
+  object.mandatoryWaitSinceLastDeliveryInDays =
+      reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -2439,11 +2473,16 @@ P _deliveriesDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectOrNull<DoseCriteria>(
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
+      return (reader.readObjectList<DoseCriteria>(
         offset,
         DoseCriteriaSchema.deserialize,
         allOffsets,
+        DoseCriteria(),
       )) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -2452,160 +2491,6 @@ P _deliveriesDeserializeProp<P>(
 extension DeliveriesQueryFilter
     on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
   QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
-      doseCriteriaModelIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'doseCriteria',
-      ));
-    });
-  }
-
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
-      doseCriteriaModelIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'doseCriteria',
-      ));
-    });
-  }
-}
-
-extension DeliveriesQueryObject
-    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
-  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition> doseCriteriaModel(
-      FilterQuery<DoseCriteria> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'doseCriteria');
-    });
-  }
-}
-
-// coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
-
-const DoseCriteriaSchema = Schema(
-  name: r'DoseCriteria',
-  id: -4142765722663167685,
-  properties: {
-    r'deliveryStrategy': PropertySchema(
-      id: 0,
-      name: r'deliveryStrategy',
-      type: IsarType.string,
-    ),
-    r'mandatoryWaitSinceLastDeliveryInDays': PropertySchema(
-      id: 1,
-      name: r'mandatoryWaitSinceLastDeliveryInDays',
-      type: IsarType.string,
-    ),
-    r'productVariants': PropertySchema(
-      id: 2,
-      name: r'productVariants',
-      type: IsarType.objectList,
-      target: r'ProductVariants',
-    )
-  },
-  estimateSize: _doseCriteriaEstimateSize,
-  serialize: _doseCriteriaSerialize,
-  deserialize: _doseCriteriaDeserialize,
-  deserializeProp: _doseCriteriaDeserializeProp,
-);
-
-int _doseCriteriaEstimateSize(
-  DoseCriteria object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
-  {
-    final value = object.deliveryStrategy;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.mandatoryWaitSinceLastDeliveryInDays;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final list = object.productVariants;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[ProductVariants]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount +=
-              ProductVariantsSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
-    }
-  }
-  return bytesCount;
-}
-
-void _doseCriteriaSerialize(
-  DoseCriteria object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeString(offsets[0], object.deliveryStrategy);
-  writer.writeString(offsets[1], object.mandatoryWaitSinceLastDeliveryInDays);
-  writer.writeObjectList<ProductVariants>(
-    offsets[2],
-    allOffsets,
-    ProductVariantsSchema.serialize,
-    object.productVariants,
-  );
-}
-
-DoseCriteria _doseCriteriaDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = DoseCriteria();
-  object.deliveryStrategy = reader.readStringOrNull(offsets[0]);
-  object.mandatoryWaitSinceLastDeliveryInDays =
-      reader.readStringOrNull(offsets[1]);
-  object.productVariants = reader.readObjectList<ProductVariants>(
-    offsets[2],
-    ProductVariantsSchema.deserialize,
-    allOffsets,
-    ProductVariants(),
-  );
-  return object;
-}
-
-P _doseCriteriaDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readStringOrNull(offset)) as P;
-    case 1:
-      return (reader.readStringOrNull(offset)) as P;
-    case 2:
-      return (reader.readObjectList<ProductVariants>(
-        offset,
-        ProductVariantsSchema.deserialize,
-        allOffsets,
-        ProductVariants(),
-      )) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
-  }
-}
-
-extension DoseCriteriaQueryFilter
-    on QueryBuilder<DoseCriteria, DoseCriteria, QFilterCondition> {
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       deliveryStrategyIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2614,7 +2499,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -2623,7 +2508,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -2637,7 +2522,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyGreaterThan(
     String? value, {
     bool include = false,
@@ -2653,7 +2538,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyLessThan(
     String? value, {
     bool include = false,
@@ -2669,7 +2554,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyBetween(
     String? lower,
     String? upper, {
@@ -2689,7 +2574,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -2703,7 +2588,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -2717,7 +2602,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -2728,7 +2613,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -2739,7 +2624,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2749,7 +2634,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       deliveryStrategyIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -2759,7 +2644,114 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'doseCriteria',
+      ));
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'doseCriteria',
+      ));
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'doseCriteria',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2768,7 +2760,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -2777,7 +2769,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysEqualTo(
     String? value, {
     bool caseSensitive = true,
@@ -2791,7 +2783,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysGreaterThan(
     String? value, {
     bool include = false,
@@ -2807,7 +2799,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysLessThan(
     String? value, {
     bool include = false,
@@ -2823,7 +2815,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysBetween(
     String? lower,
     String? upper, {
@@ -2843,7 +2835,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -2857,7 +2849,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -2871,7 +2863,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysContains(String value,
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2883,7 +2875,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysMatches(String pattern,
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2895,7 +2887,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2905,7 +2897,7 @@ extension DoseCriteriaQueryFilter
     });
   }
 
-  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
       mandatoryWaitSinceLastDeliveryInDaysIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -2914,12 +2906,132 @@ extension DoseCriteriaQueryFilter
       ));
     });
   }
+}
 
+extension DeliveriesQueryObject
+    on QueryBuilder<Deliveries, Deliveries, QFilterCondition> {
+  QueryBuilder<Deliveries, Deliveries, QAfterFilterCondition>
+      doseCriteriaModelElement(FilterQuery<DoseCriteria> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'doseCriteria');
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+
+const DoseCriteriaSchema = Schema(
+  name: r'DoseCriteria',
+  id: -4142765722663167685,
+  properties: {
+    r'ProductVariants': PropertySchema(
+      id: 0,
+      name: r'ProductVariants',
+      type: IsarType.objectList,
+      target: r'ProductVariants',
+    ),
+    r'condition': PropertySchema(
+      id: 1,
+      name: r'condition',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _doseCriteriaEstimateSize,
+  serialize: _doseCriteriaSerialize,
+  deserialize: _doseCriteriaDeserialize,
+  deserializeProp: _doseCriteriaDeserializeProp,
+);
+
+int _doseCriteriaEstimateSize(
+  DoseCriteria object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final list = object.productVariants;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[ProductVariants]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              ProductVariantsSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final value = object.condition;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _doseCriteriaSerialize(
+  DoseCriteria object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeObjectList<ProductVariants>(
+    offsets[0],
+    allOffsets,
+    ProductVariantsSchema.serialize,
+    object.productVariants,
+  );
+  writer.writeString(offsets[1], object.condition);
+}
+
+DoseCriteria _doseCriteriaDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = DoseCriteria();
+  object.productVariants = reader.readObjectList<ProductVariants>(
+    offsets[0],
+    ProductVariantsSchema.deserialize,
+    allOffsets,
+    ProductVariants(),
+  );
+  object.condition = reader.readStringOrNull(offsets[1]);
+  return object;
+}
+
+P _doseCriteriaDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readObjectList<ProductVariants>(
+        offset,
+        ProductVariantsSchema.deserialize,
+        allOffsets,
+        ProductVariants(),
+      )) as P;
+    case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension DoseCriteriaQueryFilter
+    on QueryBuilder<DoseCriteria, DoseCriteria, QFilterCondition> {
   QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'productVariants',
+        property: r'ProductVariants',
       ));
     });
   }
@@ -2928,7 +3040,7 @@ extension DoseCriteriaQueryFilter
       productVariantsIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'productVariants',
+        property: r'ProductVariants',
       ));
     });
   }
@@ -2937,7 +3049,7 @@ extension DoseCriteriaQueryFilter
       productVariantsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         length,
         true,
         length,
@@ -2950,7 +3062,7 @@ extension DoseCriteriaQueryFilter
       productVariantsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         0,
         true,
         0,
@@ -2963,7 +3075,7 @@ extension DoseCriteriaQueryFilter
       productVariantsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         0,
         false,
         999999,
@@ -2979,7 +3091,7 @@ extension DoseCriteriaQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         0,
         true,
         length,
@@ -2995,7 +3107,7 @@ extension DoseCriteriaQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         length,
         include,
         999999,
@@ -3013,12 +3125,166 @@ extension DoseCriteriaQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'productVariants',
+        r'ProductVariants',
         lower,
         includeLower,
         upper,
         includeUpper,
       );
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'condition',
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'condition',
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'condition',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'condition',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'condition',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'condition',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
+      conditionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'condition',
+        value: '',
+      ));
     });
   }
 }
@@ -3028,7 +3294,7 @@ extension DoseCriteriaQueryObject
   QueryBuilder<DoseCriteria, DoseCriteria, QAfterFilterCondition>
       productVariantsElement(FilterQuery<ProductVariants> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'productVariants');
+      return query.object(q, r'ProductVariants');
     });
   }
 }

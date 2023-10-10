@@ -45,21 +45,20 @@ Widget buildTableContent(
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
         // BlocBuilder to get project data based on the current cycle and dose
-        final item = fetchDeliveries(
-          projectState.projectType!.cycles![currentCycle - 1].deliveries,
-          individualModel,
-        )![currentDose - 1];
+        final item = projectState.projectType!.cycles![currentCycle - 1]
+            .deliveries![currentDose - 1];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: [
             DigitTableCard(
+              fraction: 2.5,
               element: {
                 localizations.translate(
                   i18.beneficiaryDetails.beneficiaryAge,
                   //[TODO: Condition need to be handled in generic way,]
-                ): '${item.doseCriteria?.condition?.split('<=age<').first} - ${item.doseCriteria?.condition?.split('<=age<').last} months',
+                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} months',
               },
             ),
             // const Divider(),
@@ -68,7 +67,9 @@ Widget buildTableContent(
             DigitTable(
               headerList: headerListResource,
               tableData: [
-                ...item.doseCriteria!.productVariants!.map(
+                ...fetchProductVariant(item, individualModel)!
+                    .productVariants!
+                    .map(
                   (e) {
                     // Retrieve the SKU value for the product variant.
                     final value = variant!
@@ -81,7 +82,10 @@ Widget buildTableContent(
                       // Display the dose information in the first column if it's the first row,
                       // otherwise, display an empty cell.
 
-                      item.doseCriteria?.productVariants?.indexOf(e) == 0
+                      fetchProductVariant(item, individualModel)!
+                                  .productVariants
+                                  ?.indexOf(e) ==
+                              0
                           ? TableData(
                               'Dose ${deliverInterventionState.dose}',
                               cellKey: 'dose',
@@ -97,9 +101,13 @@ Widget buildTableContent(
                 ),
               ],
               leftColumnWidth: 130,
-              rightColumnWidth: headerListResource.length * 20 * 5,
-              height:
-                  ((item.doseCriteria?.productVariants ?? []).length + 1) * 60,
+              rightColumnWidth: headerListResource.length * 66,
+              height: ((fetchProductVariant(item, individualModel)!
+                                  .productVariants ??
+                              [])
+                          .length +
+                      1) *
+                  60,
             ),
           ],
         );

@@ -194,8 +194,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             DigitTable(
               selectedIndex: selectedIndex,
               headerList: headerList,
-              tableData:
-                  fetchDeliveries(e.deliveries, widget.individualModel)!.map(
+              tableData: e.deliveries!.map(
                 (item) {
                   final tasks = widget.taskData
                       ?.where((element) =>
@@ -207,7 +206,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                             .toValue(),
                                   )
                                   ?.value ==
-                              '0${item.doseCriteria?.id}' &&
+                              '0${item.id}' &&
                           element.additionalFields?.fields
                                   .firstWhereOrNull(
                                     (c) =>
@@ -221,7 +220,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Dose ${fetchDeliveries(e.deliveries, widget.individualModel)!.indexOf(item) + 1}',
+                      'Dose ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
@@ -241,11 +240,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               ).toList(),
               leftColumnWidth: 130,
               rightColumnWidth: headerList.length * 87,
-              height: ((fetchDeliveries(e.deliveries, widget.individualModel)
-                              ?.length ??
-                          0) +
-                      1) *
-                  58,
+              height: ((e.deliveries?.length ?? 0) + 1) * 58,
             ),
           ],
         ),

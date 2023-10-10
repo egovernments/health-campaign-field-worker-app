@@ -349,20 +349,21 @@ class MdmsRepository {
               e.mandatoryWaitSinceLastCycleInDays
           ..deliveries = e.deliveries?.map((ele) {
             final newDeliveries = Deliveries();
-            newDeliveries.doseCriteriaModel?.deliveryStrategy =
-                ele.doseCriteria?.deliveryStrategy;
-            newDeliveries
-                    .doseCriteriaModel?.mandatoryWaitSinceLastDeliveryInDays =
-                ele.doseCriteria?.mandatoryWaitSinceLastDeliveryInDays;
-            newDeliveries.doseCriteriaModel?.deliveryStrategy =
-                ele.doseCriteria?.deliveryStrategy;
-            newDeliveries.doseCriteriaModel?.productVariants =
-                ele.doseCriteria?.productVariants?.map((e) {
-              final productVariants = ProductVariants()
-                ..productVariantId = e.productVariantId
-                ..quantity = e.quantity.toString();
+            newDeliveries.deliveryStrategy = ele.deliveryStrategy;
+            newDeliveries.mandatoryWaitSinceLastDeliveryInDays =
+                ele.mandatoryWaitSinceLastDeliveryInDays;
+            newDeliveries.doseCriteriaModel = ele.doseCriteria?.map((e) {
+              final doseCriterias = DoseCriteria()
+                ..condition = e.condition
+                ..productVariants = e.productVariants?.map((p) {
+                  final productVariants = ProductVariants()
+                    ..quantity = p.quantity.toString()
+                    ..productVariantId = p.productVariantId.toString();
 
-              return productVariants;
+                  return productVariants;
+                }).toList();
+
+              return doseCriterias;
             }).toList();
 
             return newDeliveries;

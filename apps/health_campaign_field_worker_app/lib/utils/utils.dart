@@ -144,33 +144,40 @@ performBackgroundService({
 }
 
 class Coordinate {
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
 
   Coordinate(this.latitude, this.longitude);
 }
 
-double calculateDistance(Coordinate start, Coordinate end) {
+double? calculateDistance(Coordinate? start, Coordinate? end) {
   const double earthRadius = 6371.0; // Earth's radius in kilometers
 
   double toRadians(double degrees) {
     return degrees * pi / 180.0;
   }
 
-  double lat1Rad = toRadians(start.latitude);
-  double lon1Rad = toRadians(start.longitude);
-  double lat2Rad = toRadians(end.latitude);
-  double lon2Rad = toRadians(end.longitude);
+  if (start?.latitude != null &&
+      start?.longitude != null &&
+      end?.latitude != null &&
+      end?.longitude != null) {
+    double lat1Rad = toRadians(start!.latitude!);
+    double lon1Rad = toRadians(start.longitude!);
+    double lat2Rad = toRadians(end!.latitude!);
+    double lon2Rad = toRadians(end.longitude!);
 
-  double dLat = lat2Rad - lat1Rad;
-  double dLon = lon2Rad - lon1Rad;
+    double dLat = lat2Rad - lat1Rad;
+    double dLon = lon2Rad - lon1Rad;
 
-  double a = pow(sin(dLat / 2), 2) +
-      cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = earthRadius * c;
+    double a = pow(sin(dLat / 2), 2) +
+        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
 
-  return distance;
+    return distance;
+  }
+
+  return null;
 }
 
 Timer makePeriodicTimer(
@@ -292,7 +299,7 @@ bool checkEligibilityForAgeAndAdverseEvent(
               projectType?.validMaxAge != null
           ? totalAgeMonths >= projectType!.validMinAge! &&
                   totalAgeMonths <= projectType.validMaxAge!
-              ? recordedAdverseEvent
+              ? recordedAdverseEvent && !checkStatus([tasks], currentCycle)
                   ? false
                   : true
               : false
@@ -385,8 +392,7 @@ bool allDosesDelivered(
 ) {
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
-      (fetchDeliveries(selectedCycle.deliveries, individualModel) ?? [])
-          .isEmpty) {
+      (selectedCycle.deliveries ?? []).isEmpty) {
     return true;
   } else {
     if ((tasks ?? []).isNotEmpty) {
@@ -405,9 +411,7 @@ bool allDosesDelivered(
               ?.value ??
           '');
       if (lastDose != null &&
-          lastDose ==
-              fetchDeliveries(selectedCycle.deliveries, individualModel)
-                  ?.length &&
+          lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           tasks?.last.status != Status.partiallyDelivered.toValue()) {
@@ -426,11 +430,11 @@ bool allDosesDelivered(
   }
 }
 
-List<DeliveryModel>? fetchDeliveries(
-  List<DeliveryModel>? deliveries,
+DoseCriteriaModel? fetchProductVariant(
+  DeliveryModel? currentDelivery,
   IndividualModel? individualModel,
 ) {
-  if (deliveries != null && individualModel != null) {
+  if (currentDelivery != null && individualModel != null) {
     final individualAge = DigitDateUtils.calculateAge(
       DigitDateUtils.getFormattedDateToDateTime(
             individualModel.dateOfBirth!,
@@ -439,24 +443,23 @@ List<DeliveryModel>? fetchDeliveries(
     );
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
-    final filteredDeliveries = deliveries.where((delivery) {
-      final condition = delivery.doseCriteria?.condition;
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
       if (condition != null) {
-        //[TODO: Condition need to be handled in generic way,]
-        final parts = condition.split('<=age<');
-        final minCondition = int.tryParse(parts.first);
-        final maxCondition = int.tryParse(parts.last);
-        if (minCondition != null && maxCondition != null) {
-          return individualAgeInMonths >= minCondition &&
-              individualAgeInMonths <= maxCondition;
-        }
+        //{TODO: Expression package need to be parsed
+        final ageRange = condition.split("<=age<");
+        final minAge = int.parse(ageRange.first);
+        final maxAge = int.parse(ageRange.last);
+
+        return individualAgeInMonths >= minAge &&
+            individualAgeInMonths <= maxAge;
       }
 
       return false;
     }).toList();
 
-    return filteredDeliveries;
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
   }
 
-  return [];
+  return null;
 }

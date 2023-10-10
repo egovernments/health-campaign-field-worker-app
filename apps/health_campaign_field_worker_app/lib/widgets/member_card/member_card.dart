@@ -225,10 +225,19 @@ class MemberCard extends StatelessWidget {
                             },
                             child: Center(
                               child: Text(
-                                localizations.translate(
-                                  i18.householdOverView
-                                      .householdOverViewActionText,
-                                ),
+                                allDosesDelivered(
+                                  tasks,
+                                  context.selectedCycle,
+                                  adverseEvents,
+                                  individual,
+                                )
+                                    ? localizations.translate(
+                                        i18.householdOverView.viewDeliveryLabel,
+                                      )
+                                    : localizations.translate(
+                                        i18.householdOverView
+                                            .householdOverViewActionText,
+                                      ),
                               ),
                             ),
                           )
