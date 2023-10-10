@@ -98,50 +98,53 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                isExpanded = !isExpanded;
-                                              });
-                                            },
-                                            child: Text(
-                                              style: TextStyle(
-                                                fontSize: kPadding * 2,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary,
-                                              ),
-                                              isExpanded
-                                                  ? localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .hidePastCycles,
-                                                    )
-                                                  : localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .viewPastCycles,
-                                                    ),
-                                            ),
-                                          ),
-                                          !isExpanded
-                                              ? Icon(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isExpanded = !isExpanded;
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              onPressed: null,
+                                              child: Text(
+                                                style: TextStyle(
+                                                  fontSize: kPadding * 2,
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .secondary,
-                                                  Icons.keyboard_arrow_down,
-                                                )
-                                              : Icon(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                  Icons.keyboard_arrow_up,
                                                 ),
-                                        ],
+                                                isExpanded
+                                                    ? localizations.translate(
+                                                        i18.deliverIntervention
+                                                            .hidePastCycles,
+                                                      )
+                                                    : localizations.translate(
+                                                        i18.deliverIntervention
+                                                            .viewPastCycles,
+                                                      ),
+                                              ),
+                                            ),
+                                            !isExpanded
+                                                ? Icon(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                                    Icons.keyboard_arrow_down,
+                                                  )
+                                                : Icon(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                                    Icons.keyboard_arrow_up,
+                                                  ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
