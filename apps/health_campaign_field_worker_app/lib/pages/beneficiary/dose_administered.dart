@@ -15,7 +15,6 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/product_variant/product_variant.dart';
-import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -23,7 +22,6 @@ import '../../utils/utils.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import 'widgets/household_acknowledgement.dart';
 
 class DoseAdministeredPage extends LocalizedStatefulWidget {
   const DoseAdministeredPage({
@@ -44,7 +42,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
-
+    final overViewBloc = context.read<HouseholdOverviewBloc>().state;
     // Define a list of TableHeader objects for the header of a table
     final headerListResource = [
       TableHeader(
@@ -95,7 +93,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         // Iterate through future deliveries
 
                         for (var e in bloc.futureDeliveries!) {
-                          int doseIndex = e.doseCriteria?.id ?? 0;
+                          int doseIndex = e.id;
                           final clientReferenceId = IdGen.i.identifier;
                           final address = bloc.oldTask?.address;
                           // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
@@ -120,7 +118,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 createdBy: context.loggedInUserUuid,
                                 createdTime: context.millisecondsSinceEpoch(),
                               ),
-                              resources: e.doseCriteria?.productVariants
+                              resources: fetchProductVariant(
+                                e,
+                                overViewBloc.selectedIndividual,
+                              )
+                                  ?.productVariants
                                   ?.map((variant) => TaskResourceModel(
                                         clientReferenceId: IdGen.i.identifier,
                                         taskclientReferenceId:
@@ -171,7 +173,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   ),
                                   AdditionalField(
                                     'DeliveryStrategy',
-                                    e.doseCriteria?.deliveryStrategy,
+                                    e.deliveryStrategy,
                                   ),
                                 ],
                               ),
@@ -189,12 +191,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                           projectId: context.projectId,
                           projectBeneficiaryType: context.beneficiaryType,
                         ));
-                      });
-                      context.router.popAndPush(
-                        HouseholdAcknowledgementRoute(
-                          enableViewHousehold: true,
-                        ),
-                      );
+                      }).then((value) => context.router.popAndPush(
+                            HouseholdAcknowledgementRoute(
+                              enableViewHousehold: true,
+                            ),
+                          ));
                     },
                     child: Center(
                       child: Text(
@@ -262,7 +263,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     'Dose $doseIndex',
                                     cellKey: 'dose',
                                   ),
-                                  ...e.doseCriteria!.productVariants!
+                                  ...fetchProductVariant(
+                                    e,
+                                    overViewBloc.selectedIndividual,
+                                  )!
+                                      .productVariants!
                                       .map(
                                         (ele) => TableData(
                                           variant!
@@ -294,16 +299,23 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     element: {
                                       localizations.translate(
                                         i18.beneficiaryDetails.beneficiaryAge,
-                                      ): '${deliveryState.futureDeliveries?.first.doseCriteria?.condition?.split('<=age<').first} - ${deliveryState.futureDeliveries?.first.doseCriteria?.condition?.split('<=age<').last} months',
+                                      ): '${fetchProductVariant(
+                                        deliveryState.futureDeliveries?.first,
+                                        overViewBloc.selectedIndividual,
+                                      )?.condition?.split('<=age<').first} - ${fetchProductVariant(
+                                        deliveryState.futureDeliveries?.first,
+                                        overViewBloc.selectedIndividual,
+                                      )?.condition?.split('<=age<').last} months',
                                     },
                                   ),
                                   const Divider(),
                                   DigitTable(
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
-                                    leftColumnWidth: 130,
+                                    leftColumnWidth:
+                                        MediaQuery.of(context).size.width / 2.1,
                                     rightColumnWidth:
-                                        headerListResource.length * 17 * 6,
+                                        headerListResource.length * 87,
                                     height: (tableDataRows.length + 1) * 60,
                                   ),
                                 ],

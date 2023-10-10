@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
-import '../../utils/utils.dart';
 
 part 'deliver_intervention.freezed.dart';
 
@@ -128,12 +127,10 @@ class DeliverInterventionBloc
     if (currentRunningCycle != 0) {
       if (event.lastCycle == currentRunningCycle) {
         // Calculate the length of deliveries in the current cycle
-        final deliveryLength = fetchDeliveries(
-              event.projectType.cycles!
-                  .firstWhere((c) => c.id == event.lastCycle)
-                  .deliveries,
-              event.individualModel,
-            )?.length ??
+        final deliveryLength = event.projectType.cycles!
+                .firstWhere((c) => c.id == event.lastCycle)
+                .deliveries
+                ?.length ??
             0;
         final isNotLastDose = event.lastDose < deliveryLength;
         // Get a list of past cycles
@@ -207,8 +204,7 @@ class DeliverInterventionBloc
       int currentDose = event.dose;
       Cycle? currentCycle = event.cycle;
 
-      final deliveriesList =
-          fetchDeliveries(currentCycle.deliveries, event.individualModel);
+      final deliveriesList = currentCycle.deliveries;
 
       if (deliveriesList != null) {
         List<DeliveryModel> futureDeliveries = [];
@@ -216,7 +212,7 @@ class DeliverInterventionBloc
         for (int index = currentDose; index < deliveriesList.length; index++) {
           var delivery = deliveriesList[index];
 
-          String? deliveryStrategy = delivery.doseCriteria?.deliveryStrategy;
+          String? deliveryStrategy = delivery.deliveryStrategy;
 
           // Check if the delivery strategy is indirect
           if (deliveryStrategy == DeliverStrategyType.indirect.toValue()) {

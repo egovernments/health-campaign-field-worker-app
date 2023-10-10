@@ -354,6 +354,8 @@ class HouseholdOverView {
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
 
+  String get viewDeliveryLabel => 'VIEW_DELIVERY_DETAILS_LABEL';
+
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }

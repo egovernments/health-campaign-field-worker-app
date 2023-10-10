@@ -134,6 +134,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           adverseEvents,
         );
+        final isAdverseEventRecorded = recordedAdverseEvent(currentCycle,
+            (taskdata ?? []).isNotEmpty ? taskdata?.last : null, adverseEvents);
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
 // TODO need to pass the current cycle
@@ -243,8 +245,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.city,
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
-                  subtitle:
-                      '${householdMember.household.memberCount ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}',
+                  subtitle: widget.distance != null
+                      ? '${householdMember.members.length ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}'
+                      : '',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
@@ -304,7 +307,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     bool isBeneficiaryRefused,
     bool isStatusReset,
   ) {
-    if (isNotEligible && !isStatusReset) {
+    if (isNotEligible) {
       return 'Not Eligible';
     } else if (taskdata != null) {
       if (taskdata.isEmpty) {

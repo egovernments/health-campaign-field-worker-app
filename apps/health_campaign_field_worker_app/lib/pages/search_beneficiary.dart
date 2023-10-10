@@ -2,7 +2,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:location/location.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -224,12 +223,12 @@ class _SearchBeneficiaryPageState
                                   searchState.householdMembers.elementAt(index);
                               final distance = calculateDistance(
                                 Coordinate(
-                                  locationState.latitude!,
-                                  locationState.longitude!,
+                                  locationState.latitude,
+                                  locationState.longitude,
                                 ),
                                 Coordinate(
-                                  i.household.address!.latitude!,
-                                  i.household.address!.longitude!,
+                                  i.household.address?.latitude,
+                                  i.household.address?.longitude,
                                 ),
                               );
 

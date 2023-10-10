@@ -43,13 +43,18 @@ class Cycles {
 @embedded
 class Deliveries {
   @Name("doseCriteria")
-  DoseCriteria? doseCriteriaModel;
+  List<DoseCriteria>? doseCriteriaModel;
+  @Name("mandatoryWaitSinceLastDeliveryInDays")
+  String? mandatoryWaitSinceLastDeliveryInDays;
+  @Name("deliveryStrategy")
+  String? deliveryStrategy;
 }
 
 @embedded
 class DoseCriteria {
-  String? mandatoryWaitSinceLastDeliveryInDays;
-  String? deliveryStrategy;
+  @Name("condition")
+  String? condition;
+  @Name("ProductVariants")
   List<ProductVariants>? productVariants;
 }
 

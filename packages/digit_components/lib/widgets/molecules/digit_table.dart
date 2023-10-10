@@ -127,7 +127,7 @@ class DigitTable extends StatelessWidget {
     }
 
     return Container(
-        color: index % 2 == 0 ? theme.scaffoldBackgroundColor : theme.cardColor,
+        color: index % 2 == 0 ? DigitTheme.instance.colorScheme.surface : theme.cardColor,
         child: Row(children: list));
   }
 

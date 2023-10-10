@@ -496,22 +496,17 @@ class _HouseholdOverviewPageState
                                                           ?.cycles !=
                                                       null
                                                   ? !checkEligibilityForAgeAndAdverseEvent(
-                                                        DigitDOBAge(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        projectState
-                                                            .projectType,
-                                                        (taskdata ?? [])
-                                                                .isNotEmpty
-                                                            ? taskdata?.last
-                                                            : null,
-                                                        adverseEventData,
-                                                      ) &&
-                                                      !checkStatus(
-                                                        taskdata,
-                                                        currentCycle,
-                                                      )
+                                                      DigitDOBAge(
+                                                        years: ageInYears,
+                                                        months: ageInMonths,
+                                                      ),
+                                                      projectState.projectType,
+                                                      (taskdata ?? [])
+                                                              .isNotEmpty
+                                                          ? taskdata?.last
+                                                          : null,
+                                                      adverseEventData,
+                                                    )
                                                   : false,
                                               // TODO Need to handle the null check
                                               name: e.name?.givenName ?? ' - ',
