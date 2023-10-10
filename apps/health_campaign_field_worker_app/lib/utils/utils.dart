@@ -391,17 +391,19 @@ bool allDosesDelivered(
   } else {
     if ((tasks ?? []).isNotEmpty) {
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
-          .where(
-            (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-          )
-          .first
-          .value);
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
+          '');
       final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
-          .where(
-            (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
-          )
-          .first
-          .value);
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
+          '');
       if (lastDose != null &&
           lastDose ==
               fetchDeliveries(selectedCycle.deliveries, individualModel)

@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../data/repositories/local/adverse_event.dart';
 import '../../data/repositories/local/address.dart';
+import '../../data/repositories/local/adverse_event.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
@@ -274,6 +274,11 @@ class SearchHouseholdsBloc
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final adverseEvents =
+          await adverseEventDataRepository.search(AdverseEventSearchModel(
+        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
+      ));
+
       containers.add(
         HouseholdMemberWrapper(
           household: element,
@@ -281,6 +286,7 @@ class SearchHouseholdsBloc
           members: allHouseholdMembers,
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
+          adverseEvents: adverseEvents.isEmpty ? null : adverseEvents,
         ),
       );
     }
