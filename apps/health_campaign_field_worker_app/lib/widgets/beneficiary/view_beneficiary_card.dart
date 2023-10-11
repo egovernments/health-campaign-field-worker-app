@@ -45,7 +45,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  bool _isCardExpanded = false;
+  bool _isCardExpanded = true;
 
   bool get isCardExpanded => _isCardExpanded;
 

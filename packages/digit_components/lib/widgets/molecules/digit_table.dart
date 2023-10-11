@@ -63,7 +63,7 @@ class DigitTable extends StatelessWidget {
               color: surfaceColor)
           : null,
       width: leftColumnWidth,
-      height: 56,
+      height: 54,
       color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
       alignment: Alignment.centerLeft,
@@ -127,7 +127,9 @@ class DigitTable extends StatelessWidget {
     }
 
     return Container(
-        color: index % 2 == 0 ? DigitTheme.instance.colorScheme.surface : theme.cardColor,
+        color: index % 2 == 0
+            ? DigitTheme.instance.colorScheme.surface
+            : theme.cardColor,
         child: Row(children: list));
   }
 
@@ -145,7 +147,9 @@ class DigitTable extends StatelessWidget {
         decoration: BoxDecoration(
             color: selectedIndex == index
                 ? DigitTheme.instance.colorScheme.tertiary
-                : DigitTheme.instance.colorScheme.surface,
+                : index % 2 == 0
+                    ? DigitTheme.instance.colorScheme.background
+                    : DigitTheme.instance.colorScheme.surface,
             border: Border(
               left: tableCellBorder,
               right: tableCellStrongBorder,

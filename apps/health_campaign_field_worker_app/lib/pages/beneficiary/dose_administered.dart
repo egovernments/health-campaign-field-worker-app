@@ -314,9 +314,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
                                     leftColumnWidth:
-                                        MediaQuery.of(context).size.width / 2.1,
+                                        MediaQuery.of(context).size.width /
+                                            2.215,
                                     rightColumnWidth:
-                                        headerListResource.length * 87,
+                                        headerListResource.length * 88,
                                     height: (tableDataRows.length + 1) * 60,
                                   ),
                                 ],

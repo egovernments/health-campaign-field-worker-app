@@ -231,6 +231,11 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                         tasks?.status ?? Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
+                      style: TextStyle(
+                        color: tasks?.status != null
+                            ? null
+                            : DigitTheme.instance.colorScheme.error,
+                      ),
                     ),
                     TableData(
                       tasks?.clientAuditDetails?.createdTime.toDateTime

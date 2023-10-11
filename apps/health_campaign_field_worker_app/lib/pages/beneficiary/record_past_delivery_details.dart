@@ -77,32 +77,6 @@ class _RecordPastDeliveryDetailsPageState
 
                       if (!form.valid) return;
 
-                      final event = context.read<DeliverInterventionBloc>();
-
-                      for (int i = 0; i < (futureTaskList ?? []).length; i++) {
-                        // Get the value of the form control for each task
-
-                        final formControllValue = (form
-                                .control("$_recordDoseAdministeredKey.$i")
-                                .value as KeyValue)
-                            .key;
-
-                        // Determine the status based on the form control value
-                        final status = formControllValue
-                            ? Status.delivered.toValue()
-                            : Status.notDelivered.toValue();
-
-                        // Create a new task with the updated status
-                        final result =
-                            futureTaskList![i].copyWith(status: status);
-
-                        // Add the updated task to the event
-                        event.add(DeliverInterventionSubmitEvent(
-                          result,
-                          true,
-                          context.boundary,
-                        ));
-                      }
                       DigitDialog.show<bool>(
                         context,
                         options: DigitDialogOptions(
@@ -117,6 +91,37 @@ class _RecordPastDeliveryDetailsPageState
                             ),
                             action: (ctx) {
                               router.pop();
+                              final event =
+                                  context.read<DeliverInterventionBloc>();
+
+                              for (int i = 0;
+                                  i < (futureTaskList ?? []).length;
+                                  i++) {
+                                // Get the value of the form control for each task
+
+                                final formControllValue = (form
+                                        .control(
+                                          "$_recordDoseAdministeredKey.$i",
+                                        )
+                                        .value as KeyValue)
+                                    .key;
+
+                                // Determine the status based on the form control value
+                                final status = formControllValue
+                                    ? Status.delivered.toValue()
+                                    : Status.notDelivered.toValue();
+
+                                // Create a new task with the updated status
+                                final result =
+                                    futureTaskList![i].copyWith(status: status);
+
+                                // Add the updated task to the event
+                                event.add(DeliverInterventionSubmitEvent(
+                                  result,
+                                  true,
+                                  context.boundary,
+                                ));
+                              }
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
 
@@ -155,11 +160,54 @@ class _RecordPastDeliveryDetailsPageState
                                 ctx,
                                 rootNavigator: true,
                               ).pop();
-                              router.push(
-                                AdverseEventsRoute(
-                                  tasks: [(futureTaskList ?? []).last],
-                                ),
-                              );
+                              final event =
+                                  context.read<DeliverInterventionBloc>();
+
+                              for (int i = 0;
+                                  i < (futureTaskList ?? []).length;
+                                  i++) {
+                                // Get the value of the form control for each task
+
+                                final formControllValue = (form
+                                        .control(
+                                          "$_recordDoseAdministeredKey.$i",
+                                        )
+                                        .value as KeyValue)
+                                    .key;
+
+                                // Determine the status based on the form control value
+                                final status = formControllValue
+                                    ? Status.delivered.toValue()
+                                    : Status.notDelivered.toValue();
+
+                                // Create a new task with the updated status
+                                final result =
+                                    futureTaskList![i].copyWith(status: status);
+
+                                // Add the updated task to the event
+                                event.add(DeliverInterventionSubmitEvent(
+                                  result,
+                                  true,
+                                  context.boundary,
+                                ));
+                              }
+                              Future.delayed(
+                                const Duration(milliseconds: 1000),
+                                () {
+                                  final bloc =
+                                      context.read<HouseholdOverviewBloc>();
+
+                                  bloc.add(HouseholdOverviewReloadEvent(
+                                    projectId: context.projectId,
+                                    projectBeneficiaryType:
+                                        context.beneficiaryType,
+                                  ));
+                                },
+                              ).then((value) => router.push(
+                                    AdverseEventsRoute(
+                                      tasks: [(futureTaskList ?? []).last],
+                                    ),
+                                  ));
                             },
                           ),
                         ),

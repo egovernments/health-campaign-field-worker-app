@@ -245,6 +245,9 @@ class _SearchBeneficiaryPageState
                                       wrapper: i,
                                     ),
                                   );
+                                  setState(() {
+                                    isProximityEnabled = false;
+                                  });
                                   searchController.clear();
 
                                   bloc.add(

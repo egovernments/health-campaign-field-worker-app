@@ -100,14 +100,14 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              leftColumnWidth: 130,
-              rightColumnWidth: headerListResource.length * 66,
+              leftColumnWidth: 142,
+              rightColumnWidth: headerListResource.length * 72,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])
                           .length +
                       1) *
-                  60,
+                  62,
             ),
           ],
         );
