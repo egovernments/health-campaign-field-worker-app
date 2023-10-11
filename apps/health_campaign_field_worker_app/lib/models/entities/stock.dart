@@ -15,6 +15,10 @@ class StockSearchModel extends EntitySearchModel {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final List<String>? clientReferenceId;
   final List<TransactionType>? transactionType;
   final List<TransactionReason>? transactionReason;
@@ -28,6 +32,10 @@ class StockSearchModel extends EntitySearchModel {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -45,6 +53,10 @@ class StockSearchModel extends EntitySearchModel {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -65,6 +77,10 @@ class StockModel extends EntityModel {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final String? quantity;
   final String? waybillNumber;
   final String clientReferenceId;
@@ -83,6 +99,10 @@ class StockModel extends EntityModel {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.quantity,
     this.waybillNumber,
     required this.clientReferenceId,
@@ -109,6 +129,10 @@ class StockModel extends EntityModel {
       referenceIdType: Value(referenceIdType),
       transactingPartyId: Value(transactingPartyId),
       transactingPartyType: Value(transactingPartyType),
+      receiverId: Value(receiverId),
+      receiverType: Value(receiverType),
+      senderId: Value(senderId),
+      senderType: Value(senderType),
       quantity: Value(quantity),
       waybillNumber: Value(waybillNumber),
       clientReferenceId: Value(clientReferenceId),

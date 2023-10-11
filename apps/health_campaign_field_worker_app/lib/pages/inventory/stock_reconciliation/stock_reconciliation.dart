@@ -148,14 +148,9 @@ class _StockReconciliationPageState
                                             final bloc = ctx.read<
                                                 StockReconciliationBloc>();
 
-                                            final facilityId = isDistributor
-                                                ? FacilityModel(
-                                                    id: context
-                                                        .loggedInUserUuid,
-                                                  )
-                                                : form
-                                                    .control(_facilityKey)
-                                                    .value as FacilityModel;
+                                            final facilityId = form
+                                                .control(_facilityKey)
+                                                .value as FacilityModel;
 
                                             final productVariant = form
                                                 .control(_productVariantKey)

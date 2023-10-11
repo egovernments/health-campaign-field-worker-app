@@ -14,6 +14,10 @@ class Stock extends Table {
   TextColumn get referenceIdType => text().nullable()();
   TextColumn get transactingPartyId => text().nullable()();
   TextColumn get transactingPartyType => text().nullable()();
+  TextColumn get receiverId => text().nullable()();
+  TextColumn get receiverType => text().nullable()();
+  TextColumn get senderId => text().nullable()();
+  TextColumn get senderType => text().nullable()();
   TextColumn get quantity => text().nullable()();
   TextColumn get waybillNumber => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();

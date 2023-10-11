@@ -32,7 +32,7 @@ class StockDetailsPage extends LocalizedStatefulWidget {
 
 class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
-  static const _transactingPartyKey = 'transactingParty';
+  static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
@@ -40,15 +40,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
-  static const _supervisorKey = 'supervisorName';
-  bool supervisorSelected = false;
+  static const _deliveryTeamKey = 'deliveryTeam';
+  bool deliveryTeamSelected = false;
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
-      _transactingPartyKey: FormControl<FacilityModel>(
+      _secondaryPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
@@ -66,7 +66,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
-      _supervisorKey: FormControl<String>(),
+      _deliveryTeamKey: FormControl<String>(),
     });
   }
 
@@ -100,13 +100,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
             },
             builder: (context, stockState) {
               StockRecordEntryType entryType = stockState.entryType;
+
               const module = i18.stockDetails;
 
               String pageTitle;
-              String transactionPartyLabel;
               String quantityCountLabel;
               String? transactionReasonLabel;
-              TransactionType transactionType;
               TransactionReason? transactionReason;
 
               List<TransactionReason>? reasons;
@@ -114,28 +113,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               switch (entryType) {
                 case StockRecordEntryType.receipt:
                   pageTitle = module.receivedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReceived;
                   quantityCountLabel = module.quantityReceivedLabel;
-                  transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.dispatch:
                   pageTitle = module.issuedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyIssued;
                   quantityCountLabel = module.quantitySentLabel;
-                  transactionType = TransactionType.dispatched;
                   break;
                 case StockRecordEntryType.returned:
                   pageTitle = module.returnedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReturned;
                   quantityCountLabel = module.quantityReturnedLabel;
-                  transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.loss:
                   pageTitle = module.lostPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromLost;
                   quantityCountLabel = module.quantityLostLabel;
-                  transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonLost;
                   reasons = [
                     TransactionReason.lostInStorage,
@@ -144,10 +134,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   break;
                 case StockRecordEntryType.damaged:
                   pageTitle = module.damagedPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromDamaged;
                   quantityCountLabel = module.quantityDamagedLabel;
-                  transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonDamaged;
                   reasons = [
                     TransactionReason.damagedInStorage,
@@ -157,7 +144,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 case StockRecordEntryType.consumed:
                   pageTitle = module.consumedPageTitle;
                   quantityCountLabel = module.quantityConsumedLabel;
-                  transactionType = TransactionType.received;
                   break;
               }
 
@@ -185,11 +171,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
-                                    if (supervisorSelected &&
-                                        (form.control(_supervisorKey).value ==
+                                    if (deliveryTeamSelected &&
+                                        (form.control(_deliveryTeamKey).value ==
                                                 null ||
                                             form
-                                                .control(_supervisorKey)
+                                                .control(_deliveryTeamKey)
                                                 .value
                                                 .toString()
                                                 .isEmpty)) {
@@ -233,16 +219,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           break;
                                       }
 
-                                      final transactingParty =
-                                          supervisorSelected
-                                              ? FacilityModel(
-                                                  id: form
-                                                      .control(_supervisorKey)
-                                                      .value as String,
-                                                )
-                                              : form
-                                                  .control(_transactingPartyKey)
-                                                  .value as FacilityModel;
+                                      final secondaryParty = form
+                                          .control(_secondaryPartyKey)
+                                          .value as FacilityModel;
 
                                       final quantity = form
                                           .control(_transactionQuantityKey)
@@ -270,46 +249,67 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           .control(_commentsKey)
                                           .value as String?;
 
-                                      final supervisorName = form
-                                          .control(_supervisorKey)
+                                      final deliveryTeamName = form
+                                          .control(_deliveryTeamKey)
                                           .value as String?;
 
-                                      String? transactingPartyType;
+                                      String? senderId;
+                                      String? senderType;
+                                      String? receiverId;
+                                      String? receiverType;
 
-                                      final fields = transactingParty
-                                          .additionalFields?.fields;
-
-                                      if (fields != null && fields.isNotEmpty) {
-                                        final type = fields.firstWhereOrNull(
-                                          (element) => element.key == 'type',
-                                        );
-                                        final value = type?.value;
-                                        if (value != null &&
-                                            value is String &&
-                                            value.isNotEmpty &&
-                                            !isDistributor) {
-                                          transactingPartyType = value;
-                                        }
-                                      }
-
-                                      transactingPartyType ??=
-                                          isDistributor ? 'STAFF' : 'WAREHOUSE';
-                                      String? teamCode =
+                                      final primaryType =
                                           BlocProvider.of<RecordStockBloc>(
                                         context,
-                                      ).state.teamCode;
+                                      ).state.primaryType;
+
+                                      final primaryId =
+                                          BlocProvider.of<RecordStockBloc>(
+                                        context,
+                                      ).state.primaryId;
+
+                                      switch (entryType) {
+                                        case StockRecordEntryType.receipt:
+                                        case StockRecordEntryType.loss:
+                                        case StockRecordEntryType.damaged:
+                                        case StockRecordEntryType.consumed:
+                                          if (deliveryTeamSelected) {
+                                            senderId = deliveryTeamName;
+                                            senderType = "STAFF";
+                                          } else {
+                                            senderId = secondaryParty.id;
+                                            senderType = "WAREHOUSE";
+                                          }
+                                          receiverId = primaryId;
+                                          receiverType = primaryType;
+
+                                          break;
+                                        case StockRecordEntryType.dispatch:
+                                        case StockRecordEntryType.returned:
+                                          if (deliveryTeamSelected) {
+                                            receiverId = deliveryTeamName;
+                                            receiverType = "STAFF";
+                                          } else {
+                                            receiverId = secondaryParty.id;
+                                            receiverType = "WAREHOUSE";
+                                          }
+                                          senderId = primaryId;
+                                          senderType = primaryType;
+                                          break;
+                                      }
+
                                       final stockModel = StockModel(
                                         clientReferenceId: IdGen.i.identifier,
                                         productVariantId: productVariant.id,
-                                        transactingPartyId: transactingParty.id,
-                                        transactingPartyType:
-                                            transactingPartyType,
-                                        transactionType: transactionType,
                                         transactionReason: transactionReason,
                                         referenceId: stockState.projectId,
                                         referenceIdType: 'PROJECT',
                                         quantity: quantity.toString(),
                                         waybillNumber: waybillNumber,
+                                        receiverId: receiverId,
+                                        receiverType: receiverType,
+                                        senderId: senderId,
+                                        senderType: senderType,
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
                                           createdTime:
@@ -340,15 +340,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       'comments',
                                                       comments,
                                                     ),
-                                                  if (teamCode != null)
+                                                  if (deliveryTeamName != null)
                                                     AdditionalField(
-                                                      'teamCode',
-                                                      teamCode ?? 0,
-                                                    ),
-                                                  if (supervisorName != null)
-                                                    AdditionalField(
-                                                      'supervisorName',
-                                                      supervisorName,
+                                                      'deliveryTeam',
+                                                      deliveryTeamName,
                                                     ),
                                                   if (hasLocationData) ...[
                                                     AdditionalField('lat', lat),
@@ -485,7 +480,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     padding: EdgeInsets.all(8.0),
                                     child: Icon(Icons.search),
                                   ),
-                                  formControlName: _transactingPartyKey,
+                                  formControlName: _secondaryPartyKey,
                                   readOnly: true,
                                   onTap: () async {
                                     final parent =
@@ -498,15 +493,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     );
 
                                     if (facility == null) return;
-                                    form.control(_transactingPartyKey).value =
+                                    form.control(_secondaryPartyKey).value =
                                         facility;
-                                    if (facility.id == 'Supervisor') {
+                                    if (facility.id == 'Delivery Team') {
                                       setState(() {
-                                        supervisorSelected = true;
+                                        deliveryTeamSelected = true;
                                       });
                                     } else {
                                       setState(() {
-                                        supervisorSelected = false;
+                                        deliveryTeamSelected = false;
                                       });
                                     }
                                   },
@@ -514,14 +509,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               },
                             ),
                             Visibility(
-                              visible: supervisorSelected,
+                              visible: deliveryTeamSelected,
                               child: DigitTextFormField(
                                 label: localizations.translate(
-                                  i18.stockDetails.supervisorCodeLabel,
+                                  i18.stockReconciliationDetails.teamCodeLabel,
                                 ),
-                                isRequired: supervisorSelected,
+                                isRequired: deliveryTeamSelected,
                                 maxLines: 3,
-                                formControlName: _supervisorKey,
+                                formControlName: _deliveryTeamKey,
                               ),
                             ),
                             DigitTextFormField(

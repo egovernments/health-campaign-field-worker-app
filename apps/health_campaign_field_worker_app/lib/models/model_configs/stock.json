@@ -43,6 +43,26 @@
       "includeForQuery": true
     },
     {
+      "name": "receiverId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "receiverType",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "senderId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "senderType",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "quantity",
       "type": "String"
     },
@@ -85,4 +105,3 @@
   ],
   "isEnum": false
 }
-

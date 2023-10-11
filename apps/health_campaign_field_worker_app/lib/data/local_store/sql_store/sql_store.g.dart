@@ -12585,6 +12585,10 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final String? quantity;
   final String? waybillNumber;
   final String? auditCreatedBy;
@@ -12606,6 +12610,10 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.referenceIdType,
       this.transactingPartyId,
       this.transactingPartyType,
+      this.receiverId,
+      this.receiverType,
+      this.senderId,
+      this.senderType,
       this.quantity,
       this.waybillNumber,
       this.auditCreatedBy,
@@ -12637,6 +12645,14 @@ class StockData extends DataClass implements Insertable<StockData> {
           data['${effectivePrefix}transacting_party_id']),
       transactingPartyType: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}transacting_party_type']),
+      receiverId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}receiver_id']),
+      receiverType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}receiver_type']),
+      senderId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sender_id']),
+      senderType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sender_type']),
       quantity: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}quantity']),
       waybillNumber: const StringType()
@@ -12690,6 +12706,18 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || transactingPartyType != null) {
       map['transacting_party_type'] = Variable<String?>(transactingPartyType);
+    }
+    if (!nullToAbsent || receiverId != null) {
+      map['receiver_id'] = Variable<String?>(receiverId);
+    }
+    if (!nullToAbsent || receiverType != null) {
+      map['receiver_type'] = Variable<String?>(receiverType);
+    }
+    if (!nullToAbsent || senderId != null) {
+      map['sender_id'] = Variable<String?>(senderId);
+    }
+    if (!nullToAbsent || senderType != null) {
+      map['sender_type'] = Variable<String?>(senderType);
     }
     if (!nullToAbsent || quantity != null) {
       map['quantity'] = Variable<String?>(quantity);
@@ -12756,6 +12784,18 @@ class StockData extends DataClass implements Insertable<StockData> {
       transactingPartyType: transactingPartyType == null && nullToAbsent
           ? const Value.absent()
           : Value(transactingPartyType),
+      receiverId: receiverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiverId),
+      receiverType: receiverType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiverType),
+      senderId: senderId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderId),
+      senderType: senderType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderType),
       quantity: quantity == null && nullToAbsent
           ? const Value.absent()
           : Value(quantity),
@@ -12807,6 +12847,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           serializer.fromJson<String?>(json['transactingPartyId']),
       transactingPartyType:
           serializer.fromJson<String?>(json['transactingPartyType']),
+      receiverId: serializer.fromJson<String?>(json['receiverId']),
+      receiverType: serializer.fromJson<String?>(json['receiverType']),
+      senderId: serializer.fromJson<String?>(json['senderId']),
+      senderType: serializer.fromJson<String?>(json['senderType']),
       quantity: serializer.fromJson<String?>(json['quantity']),
       waybillNumber: serializer.fromJson<String?>(json['waybillNumber']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -12835,6 +12879,10 @@ class StockData extends DataClass implements Insertable<StockData> {
       'referenceIdType': serializer.toJson<String?>(referenceIdType),
       'transactingPartyId': serializer.toJson<String?>(transactingPartyId),
       'transactingPartyType': serializer.toJson<String?>(transactingPartyType),
+      'receiverId': serializer.toJson<String?>(receiverId),
+      'receiverType': serializer.toJson<String?>(receiverType),
+      'senderId': serializer.toJson<String?>(senderId),
+      'senderType': serializer.toJson<String?>(senderType),
       'quantity': serializer.toJson<String?>(quantity),
       'waybillNumber': serializer.toJson<String?>(waybillNumber),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -12860,6 +12908,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           String? referenceIdType,
           String? transactingPartyId,
           String? transactingPartyType,
+          String? receiverId,
+          String? receiverType,
+          String? senderId,
+          String? senderType,
           String? quantity,
           String? waybillNumber,
           String? auditCreatedBy,
@@ -12881,6 +12933,10 @@ class StockData extends DataClass implements Insertable<StockData> {
         referenceIdType: referenceIdType ?? this.referenceIdType,
         transactingPartyId: transactingPartyId ?? this.transactingPartyId,
         transactingPartyType: transactingPartyType ?? this.transactingPartyType,
+        receiverId: receiverId ?? this.receiverId,
+        receiverType: receiverType ?? this.receiverType,
+        senderId: senderId ?? this.senderId,
+        senderType: senderType ?? this.senderType,
         quantity: quantity ?? this.quantity,
         waybillNumber: waybillNumber ?? this.waybillNumber,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -12905,6 +12961,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('referenceIdType: $referenceIdType, ')
           ..write('transactingPartyId: $transactingPartyId, ')
           ..write('transactingPartyType: $transactingPartyType, ')
+          ..write('receiverId: $receiverId, ')
+          ..write('receiverType: $receiverType, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderType: $senderType, ')
           ..write('quantity: $quantity, ')
           ..write('waybillNumber: $waybillNumber, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -12922,27 +12982,32 @@ class StockData extends DataClass implements Insertable<StockData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      tenantId,
-      facilityId,
-      productVariantId,
-      referenceId,
-      referenceIdType,
-      transactingPartyId,
-      transactingPartyType,
-      quantity,
-      waybillNumber,
-      auditCreatedBy,
-      auditCreatedTime,
-      auditModifiedBy,
-      auditModifiedTime,
-      clientReferenceId,
-      isDeleted,
-      rowVersion,
-      transactionType,
-      transactionReason,
-      additionalFields);
+  int get hashCode => Object.hashAll([
+        id,
+        tenantId,
+        facilityId,
+        productVariantId,
+        referenceId,
+        referenceIdType,
+        transactingPartyId,
+        transactingPartyType,
+        receiverId,
+        receiverType,
+        senderId,
+        senderType,
+        quantity,
+        waybillNumber,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion,
+        transactionType,
+        transactionReason,
+        additionalFields
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -12955,6 +13020,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.referenceIdType == this.referenceIdType &&
           other.transactingPartyId == this.transactingPartyId &&
           other.transactingPartyType == this.transactingPartyType &&
+          other.receiverId == this.receiverId &&
+          other.receiverType == this.receiverType &&
+          other.senderId == this.senderId &&
+          other.senderType == this.senderType &&
           other.quantity == this.quantity &&
           other.waybillNumber == this.waybillNumber &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -12978,6 +13047,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> referenceIdType;
   final Value<String?> transactingPartyId;
   final Value<String?> transactingPartyType;
+  final Value<String?> receiverId;
+  final Value<String?> receiverType;
+  final Value<String?> senderId;
+  final Value<String?> senderType;
   final Value<String?> quantity;
   final Value<String?> waybillNumber;
   final Value<String?> auditCreatedBy;
@@ -12999,6 +13072,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.referenceIdType = const Value.absent(),
     this.transactingPartyId = const Value.absent(),
     this.transactingPartyType = const Value.absent(),
+    this.receiverId = const Value.absent(),
+    this.receiverType = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderType = const Value.absent(),
     this.quantity = const Value.absent(),
     this.waybillNumber = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -13021,6 +13098,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.referenceIdType = const Value.absent(),
     this.transactingPartyId = const Value.absent(),
     this.transactingPartyType = const Value.absent(),
+    this.receiverId = const Value.absent(),
+    this.receiverType = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderType = const Value.absent(),
     this.quantity = const Value.absent(),
     this.waybillNumber = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -13043,6 +13124,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String?>? referenceIdType,
     Expression<String?>? transactingPartyId,
     Expression<String?>? transactingPartyType,
+    Expression<String?>? receiverId,
+    Expression<String?>? receiverType,
+    Expression<String?>? senderId,
+    Expression<String?>? senderType,
     Expression<String?>? quantity,
     Expression<String?>? waybillNumber,
     Expression<String?>? auditCreatedBy,
@@ -13067,6 +13152,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
         'transacting_party_id': transactingPartyId,
       if (transactingPartyType != null)
         'transacting_party_type': transactingPartyType,
+      if (receiverId != null) 'receiver_id': receiverId,
+      if (receiverType != null) 'receiver_type': receiverType,
+      if (senderId != null) 'sender_id': senderId,
+      if (senderType != null) 'sender_type': senderType,
       if (quantity != null) 'quantity': quantity,
       if (waybillNumber != null) 'waybill_number': waybillNumber,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -13091,6 +13180,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? referenceIdType,
       Value<String?>? transactingPartyId,
       Value<String?>? transactingPartyType,
+      Value<String?>? receiverId,
+      Value<String?>? receiverType,
+      Value<String?>? senderId,
+      Value<String?>? senderType,
       Value<String?>? quantity,
       Value<String?>? waybillNumber,
       Value<String?>? auditCreatedBy,
@@ -13112,6 +13205,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
       referenceIdType: referenceIdType ?? this.referenceIdType,
       transactingPartyId: transactingPartyId ?? this.transactingPartyId,
       transactingPartyType: transactingPartyType ?? this.transactingPartyType,
+      receiverId: receiverId ?? this.receiverId,
+      receiverType: receiverType ?? this.receiverType,
+      senderId: senderId ?? this.senderId,
+      senderType: senderType ?? this.senderType,
       quantity: quantity ?? this.quantity,
       waybillNumber: waybillNumber ?? this.waybillNumber,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -13154,6 +13251,18 @@ class StockCompanion extends UpdateCompanion<StockData> {
     if (transactingPartyType.present) {
       map['transacting_party_type'] =
           Variable<String?>(transactingPartyType.value);
+    }
+    if (receiverId.present) {
+      map['receiver_id'] = Variable<String?>(receiverId.value);
+    }
+    if (receiverType.present) {
+      map['receiver_type'] = Variable<String?>(receiverType.value);
+    }
+    if (senderId.present) {
+      map['sender_id'] = Variable<String?>(senderId.value);
+    }
+    if (senderType.present) {
+      map['sender_type'] = Variable<String?>(senderType.value);
     }
     if (quantity.present) {
       map['quantity'] = Variable<String?>(quantity.value);
@@ -13209,6 +13318,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('referenceIdType: $referenceIdType, ')
           ..write('transactingPartyId: $transactingPartyId, ')
           ..write('transactingPartyType: $transactingPartyType, ')
+          ..write('receiverId: $receiverId, ')
+          ..write('receiverType: $receiverType, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderType: $senderType, ')
           ..write('quantity: $quantity, ')
           ..write('waybillNumber: $waybillNumber, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -13276,6 +13389,27 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<String?> transactingPartyType =
       GeneratedColumn<String?>('transacting_party_type', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _receiverIdMeta = const VerificationMeta('receiverId');
+  @override
+  late final GeneratedColumn<String?> receiverId = GeneratedColumn<String?>(
+      'receiver_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _receiverTypeMeta =
+      const VerificationMeta('receiverType');
+  @override
+  late final GeneratedColumn<String?> receiverType = GeneratedColumn<String?>(
+      'receiver_type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _senderIdMeta = const VerificationMeta('senderId');
+  @override
+  late final GeneratedColumn<String?> senderId = GeneratedColumn<String?>(
+      'sender_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _senderTypeMeta = const VerificationMeta('senderType');
+  @override
+  late final GeneratedColumn<String?> senderType = GeneratedColumn<String?>(
+      'sender_type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _quantityMeta = const VerificationMeta('quantity');
   @override
   late final GeneratedColumn<String?> quantity = GeneratedColumn<String?>(
@@ -13362,6 +13496,10 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         referenceIdType,
         transactingPartyId,
         transactingPartyType,
+        receiverId,
+        receiverType,
+        senderId,
+        senderType,
         quantity,
         waybillNumber,
         auditCreatedBy,
@@ -13426,6 +13564,28 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _transactingPartyTypeMeta,
           transactingPartyType.isAcceptableOrUnknown(
               data['transacting_party_type']!, _transactingPartyTypeMeta));
+    }
+    if (data.containsKey('receiver_id')) {
+      context.handle(
+          _receiverIdMeta,
+          receiverId.isAcceptableOrUnknown(
+              data['receiver_id']!, _receiverIdMeta));
+    }
+    if (data.containsKey('receiver_type')) {
+      context.handle(
+          _receiverTypeMeta,
+          receiverType.isAcceptableOrUnknown(
+              data['receiver_type']!, _receiverTypeMeta));
+    }
+    if (data.containsKey('sender_id')) {
+      context.handle(_senderIdMeta,
+          senderId.isAcceptableOrUnknown(data['sender_id']!, _senderIdMeta));
+    }
+    if (data.containsKey('sender_type')) {
+      context.handle(
+          _senderTypeMeta,
+          senderType.isAcceptableOrUnknown(
+              data['sender_type']!, _senderTypeMeta));
     }
     if (data.containsKey('quantity')) {
       context.handle(_quantityMeta,

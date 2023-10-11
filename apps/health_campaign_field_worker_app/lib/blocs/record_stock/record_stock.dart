@@ -56,8 +56,9 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
         emit(
           value.copyWith(
             dateOfRecord: event.dateOfRecord,
-            teamCode: event.teamCode,
             facilityModel: event.facilityModel,
+            primaryType: event.primaryType,
+            primaryId: event.primaryId,
           ),
         );
       },
@@ -90,7 +91,6 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
         final dateOfRecord = value.dateOfRecord;
         final facilityModel = value.facilityModel;
         final stockModel = value.stockModel;
-        final teamCode = value.teamCode;
 
         if (dateOfRecord == null) {
           throw const InvalidRecordStockStateException(
@@ -151,7 +151,8 @@ class RecordStockEvent with _$RecordStockEvent {
 
   const factory RecordStockEvent.saveTransactionDetails({
     required DateTime dateOfRecord,
-    required String teamCode,
+    required String primaryType,
+    required String primaryId,
     FacilityModel? facilityModel,
   }) = RecordStockSaveTransactionDetailsEvent;
 }
@@ -164,7 +165,8 @@ class RecordStockState with _$RecordStockState {
     required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
-    String? teamCode,
+    String? primaryType,
+    String? primaryId,
     StockModel? stockModel,
   }) = RecordStockCreateState;
 
@@ -173,7 +175,8 @@ class RecordStockState with _$RecordStockState {
     required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
-    String? teamCode,
+    String? primaryType,
+    String? primaryId,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
 }
