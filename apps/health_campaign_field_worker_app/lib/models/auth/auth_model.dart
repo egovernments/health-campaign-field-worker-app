@@ -63,28 +63,3 @@ class UserRoleModel with _$UserRoleModel {
   factory UserRoleModel.fromJson(Map<String, dynamic> json) =>
       _$UserRoleModelFromJson(json);
 }
-
-/* 
-
-Commenting the below code as we have made Roles's as dynamic
-enum UserRoleCodeEnum {
-  @JsonValue('REGISTRAR')
-  registrar,
-  @JsonValue('WAREHOUSE_MANAGER')
-  warehouseManager,
-  @JsonValue('SYSTEM_ADMINISTRATOR')
-  systemAdministrator,
-  @JsonValue('SUPERVISOR')
-  supervisor,
-  @JsonValue('DISTRIBUTOR')
-  distributor,
-  @JsonValue('NATIONAL_SUPERVISOR')
-  nationalSupervisor,
-  @JsonValue('PROVINCIAL_SUPERVISOR')
-  provincialSupervisor,
-  @JsonValue('DISTRICT_SUPERVISOR')
-  districtSupervisor,
-  @JsonValue('FIELD_SUPERVISOR')
-  fieldSupervisor,
-}
-/*

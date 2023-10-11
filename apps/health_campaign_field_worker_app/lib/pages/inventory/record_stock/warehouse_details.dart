@@ -6,6 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
+import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -29,6 +30,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
+  static const _teamCodeKey = 'teamCode';
+
+  bool deliveryTeamSelected = false;
+  String? receiverType;
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
@@ -36,12 +41,31 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           value: context.boundary.name,
         ),
         _warehouseKey: FormControl<FacilityModel>(
-          validators: [Validators.required],
+          //[TODO]: WAREHOUSE_MANAGER need to make in enum
+          validators: context.loggedInUserRoles
+                  .where(
+                    (role) => role.code == "WAREHOUSE_MANAGER",
+                  )
+                  .toList()
+                  .isNotEmpty
+              ? [Validators.required]
+              : [],
+        ),
+        _teamCodeKey: FormControl<String>(
+          validators: deliveryTeamSelected ? [Validators.required] : [],
         ),
       });
 
   @override
   Widget build(BuildContext context) {
+    //[TODO]: WAREHOUSE_MANAGER need to make in enum
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == "WAREHOUSE_MANAGER",
+        )
+        .toList()
+        .isNotEmpty;
+
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
         final selectedProject = projectState.selectedProject;
@@ -55,7 +79,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         return BlocConsumer<FacilityBloc, FacilityState>(
           listener: (context, state) {
             state.whenOrNull(
-              empty: () => NoFacilitiesAssignedDialog.show(context),
+              empty: () => deliveryTeamSelected
+                  ? false
+                  : NoFacilitiesAssignedDialog.show(context),
             );
           },
           builder: (ctx, facilityState) {
@@ -70,7 +96,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   FocusScope.of(context).unfocus();
                 },
                 child: ReactiveFormBuilder(
-                  form: buildForm,
+                  form: () => buildForm(),
                   builder: (context, form, child) {
                     return ScrollableContent(
                       header: const Column(children: [
@@ -101,11 +127,21 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         final facility = form
                                             .control(_warehouseKey)
                                             .value as FacilityModel;
+                                        final teamCode =
+                                            form.control(_teamCodeKey).value;
 
                                         context.read<RecordStockBloc>().add(
-                                              RecordStockSaveWarehouseDetailsEvent(
+                                              RecordStockSaveTransactionDetailsEvent(
                                                 dateOfRecord: dateOfRecord,
                                                 facilityModel: facility,
+                                                primaryId: facility.id ==
+                                                        "Delivery Team"
+                                                    ? teamCode
+                                                    : facility.id,
+                                                primaryType:
+                                                    deliveryTeamSelected
+                                                        ? "STAFF"
+                                                        : "WAREHOUSE",
                                               ),
                                             );
                                         context.router.push(
@@ -132,9 +168,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                localizations.translate(
-                                  i18.warehouseDetails.warehouseDetailsLabel,
-                                ),
+                                deliveryTeamSelected
+                                    ? localizations.translate(
+                                        i18.stockDetails.transactionDetails,
+                                      )
+                                    : localizations.translate(
+                                        i18.warehouseDetails
+                                            .warehouseDetailsLabel,
+                                      ),
                                 style: theme.textTheme.displayMedium,
                               ),
                               Column(children: [
@@ -158,7 +199,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 valueAccessor: FacilityValueAccessor(
                                   facilities,
                                 ),
-                                isRequired: true,
+                                isRequired: isWareHouseMgr,
                                 label: localizations.translate(
                                   i18.stockReconciliationDetails.facilityLabel,
                                 ),
@@ -180,8 +221,26 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
                                   if (facility == null) return;
                                   form.control(_warehouseKey).value = facility;
+                                  if (facility.id == 'Delivery Team') {
+                                    setState(() {
+                                      deliveryTeamSelected = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      deliveryTeamSelected = false;
+                                    });
+                                  }
                                 },
                               ),
+                              if (deliveryTeamSelected)
+                                DigitTextFormField(
+                                  label: localizations.translate(
+                                    i18.stockReconciliationDetails
+                                        .teamCodeLabel,
+                                  ),
+                                  formControlName: _teamCodeKey,
+                                  isRequired: deliveryTeamSelected,
+                                ),
                             ],
                           ),
                         ),

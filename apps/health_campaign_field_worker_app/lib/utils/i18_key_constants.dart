@@ -423,6 +423,8 @@ class StockDetails {
   /// Page Title Keys
   String get receivedPageTitle => 'RECEIVED_STOCK_DETAILS';
 
+  String get transactionDetails => 'STOCK_TRANSACTION_DETAILS';
+
   String get issuedPageTitle => 'ISSUED_STOCK_DETAILS';
 
   String get returnedPageTitle => 'RETURNED_STOCK_DETAILS';
@@ -482,6 +484,7 @@ class StockDetails {
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
 
   String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
+  String get teamCodeRequired => 'STOCK_DETAILS_TEAM_CODE_IS_REQUIRED';
 }
 
 class StockReconciliationDetails {
@@ -535,6 +538,7 @@ class StockReconciliationDetails {
   String get noProjectSelected => 'NO_PROJECT_SELECTED';
 
   String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
+  String get teamCodeLabel => 'STOCK_TEAM_CODE_LABEL';
 }
 
 class ManageStock {
