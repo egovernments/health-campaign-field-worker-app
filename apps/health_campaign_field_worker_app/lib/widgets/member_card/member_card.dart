@@ -226,11 +226,13 @@ class MemberCard extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 allDosesDelivered(
-                                  tasks,
-                                  context.selectedCycle,
-                                  adverseEvents,
-                                  individual,
-                                )
+                                          tasks,
+                                          context.selectedCycle,
+                                          adverseEvents,
+                                          individual,
+                                        ) &&
+                                        !checkStatus(
+                                            tasks, context.selectedCycle)
                                     ? localizations.translate(
                                         i18.householdOverView.viewDeliveryLabel,
                                       )
@@ -247,12 +249,13 @@ class MemberCard extends StatelessWidget {
                 ),
                 (isNotEligible ||
                         isBeneficiaryRefused ||
-                        allDosesDelivered(
-                          tasks,
-                          context.selectedCycle,
-                          adverseEvents,
-                          individual,
-                        ))
+                        (allDosesDelivered(
+                              tasks,
+                              context.selectedCycle,
+                              adverseEvents,
+                              individual,
+                            ) &&
+                            !checkStatus(tasks, context.selectedCycle)))
                     ? const Offstage()
                     : DigitOutLineButton(
                         label: localizations.translate(

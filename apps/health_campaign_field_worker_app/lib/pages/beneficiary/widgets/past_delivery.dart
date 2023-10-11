@@ -107,7 +107,7 @@ Widget buildTableContent(
                               [])
                           .length +
                       1) *
-                  62,
+                  60,
             ),
           ],
         );

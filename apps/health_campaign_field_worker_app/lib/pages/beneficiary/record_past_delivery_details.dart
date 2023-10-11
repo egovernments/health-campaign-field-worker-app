@@ -143,6 +143,10 @@ class _RecordPastDeliveryDetailsPageState
                               context.router.popUntilRouteWithName(
                                 SearchBeneficiaryRoute.name,
                               );
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
                               Navigator.of(ctx).pop();
 
                               router.push(
@@ -156,12 +160,10 @@ class _RecordPastDeliveryDetailsPageState
                             ),
                             action: (ctx) {
                               router.pop();
-                              Navigator.of(
-                                ctx,
-                                rootNavigator: true,
-                              ).pop();
                               final event =
                                   context.read<DeliverInterventionBloc>();
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
 
                               for (int i = 0;
                                   i < (futureTaskList ?? []).length;
@@ -191,23 +193,19 @@ class _RecordPastDeliveryDetailsPageState
                                   context.boundary,
                                 ));
                               }
-                              Future.delayed(
-                                const Duration(milliseconds: 1000),
-                                () {
-                                  final bloc =
-                                      context.read<HouseholdOverviewBloc>();
-
-                                  bloc.add(HouseholdOverviewReloadEvent(
-                                    projectId: context.projectId,
-                                    projectBeneficiaryType:
-                                        context.beneficiaryType,
-                                  ));
-                                },
-                              ).then((value) => router.push(
-                                    AdverseEventsRoute(
-                                      tasks: [(futureTaskList ?? []).last],
-                                    ),
-                                  ));
+                              context.router.popUntilRouteWithName(
+                                SearchBeneficiaryRoute.name,
+                              );
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+                              Navigator.of(ctx).pop();
+                              router.push(
+                                AdverseEventsRoute(
+                                  tasks: [(futureTaskList ?? []).last],
+                                ),
+                              );
                             },
                           ),
                         ),

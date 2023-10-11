@@ -229,7 +229,7 @@ class _DeliverInterventionPageState
                                                         label: localizations
                                                             .translate(
                                                           i18.common
-                                                              .coreCommonGoback,
+                                                              .coreCommonCancel,
                                                         ),
                                                         action: (context) =>
                                                             Navigator.of(
