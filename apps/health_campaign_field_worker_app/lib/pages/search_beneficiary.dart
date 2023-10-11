@@ -67,27 +67,6 @@ class _SearchBeneficiaryPageState
                               ),
                             ),
                           ),
-                          // BeneficiaryStatisticsCard(
-                          //   beneficiaryStatistics:
-                          //       BeneficiaryStatisticsWrapperModel(
-                          //     beneficiaryStatisticsList: [
-                          //       BeneficiaryStatisticsModel(
-                          //         title: searchState.registeredHouseholds
-                          //             .toString(),
-                          //         content: localizations.translate(
-                          //           '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
-                          //         ),
-                          //       ),
-                          //       BeneficiaryStatisticsModel(
-                          //         title: searchState.deliveredInterventions
-                          //             .toString(),
-                          //         content: localizations.translate(
-                          //           '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfResourcesDelivered}',
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           BlocBuilder<LocationBloc, LocationState>(
                             builder: (context, locationState) {
                               return Column(
