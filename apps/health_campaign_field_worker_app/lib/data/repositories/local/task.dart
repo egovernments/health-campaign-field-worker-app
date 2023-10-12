@@ -111,116 +111,146 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           ])))
         .get();
 
-    return results
-        .map((e) {
-          final task = e.readTableOrNull(sql.task);
-          final resources = e.readTableOrNull(sql.taskResource);
-          final address = e.readTableOrNull(sql.address);
-          if (task == null) return null;
+    final tasksMap = <String, TaskModel>{};
 
-          return TaskModel(
-            id: task.id,
-            createdBy: task.createdBy,
-            clientReferenceId: task.clientReferenceId,
-            rowVersion: task.rowVersion,
-            tenantId: task.tenantId,
-            isDeleted: task.isDeleted,
-            projectId: task.projectId,
-            projectBeneficiaryId: task.projectBeneficiaryId,
-            projectBeneficiaryClientReferenceId:
-                task.projectBeneficiaryClientReferenceId,
-            createdDate: task.createdDate,
-            additionalFields: task.additionalFields == null
-                ? null
-                : Mapper.fromJson<TaskAdditionalFields>(
-                    task.additionalFields!,
-                  ),
-            address: address == null
-                ? null
-                : AddressModel(
-                    id: address.id,
-                    relatedClientReferenceId: task.clientReferenceId,
-                    tenantId: address.tenantId,
-                    doorNo: address.doorNo,
-                    latitude: address.latitude,
-                    longitude: address.longitude,
-                    landmark: address.landmark,
-                    locationAccuracy: address.locationAccuracy,
-                    addressLine1: address.addressLine1,
-                    addressLine2: address.addressLine2,
-                    city: address.city,
-                    pincode: address.pincode,
-                    type: address.type,
-                    locality: address.localityBoundaryCode != null
-                        ? LocalityModel(
-                            code: address.localityBoundaryCode!,
-                            name: address.localityBoundaryName,
-                          )
-                        : null,
-                    rowVersion: address.rowVersion,
-                    auditDetails: (task.auditCreatedBy != null &&
-                            task.auditCreatedTime != null)
-                        ? AuditDetails(
-                            createdBy: task.auditCreatedBy!,
-                            createdTime: task.auditCreatedTime!,
-                            lastModifiedBy: task.auditModifiedBy,
-                            lastModifiedTime: task.auditModifiedTime,
-                          )
-                        : null,
-                    clientAuditDetails: (task.clientCreatedBy != null &&
-                            task.clientCreatedTime != null)
-                        ? ClientAuditDetails(
-                            createdBy: task.clientCreatedBy!,
-                            createdTime: task.clientCreatedTime!,
-                            lastModifiedBy: task.clientModifiedBy,
-                            lastModifiedTime: task.clientModifiedTime,
-                          )
-                        : null,
-                  ),
-            status: task.status,
-            auditDetails:
-                (task.auditCreatedBy != null && task.auditCreatedTime != null)
-                    ? AuditDetails(
-                        createdBy: task.auditCreatedBy!,
-                        createdTime: task.auditCreatedTime!,
-                        lastModifiedBy: task.auditModifiedBy,
-                        lastModifiedTime: task.auditModifiedTime,
-                      )
-                    : null,
-            clientAuditDetails:
-                (task.clientCreatedBy != null && task.clientCreatedTime != null)
-                    ? ClientAuditDetails(
-                        createdBy: task.clientCreatedBy!,
-                        createdTime: task.clientCreatedTime!,
-                        lastModifiedBy: task.clientModifiedBy,
-                        lastModifiedTime: task.clientModifiedTime,
-                      )
-                    : null,
-            resources: resources == null
-                ? null
-                : [
-                    TaskResourceModel(
-                      taskclientReferenceId: task.clientReferenceId,
-                      clientReferenceId: resources.clientReferenceId,
-                      id: resources.id,
-                      productVariantId: resources.productVariantId,
-                      taskId: resources.taskId,
-                      deliveryComment: resources.deliveryComment,
-                      quantity: resources.quantity,
-                      rowVersion: resources.rowVersion,
-                      auditDetails: AuditDetails(
-                        createdBy: resources.auditCreatedBy!,
-                        createdTime: resources.auditCreatedTime!,
-                        lastModifiedBy: resources.auditModifiedBy,
-                        lastModifiedTime: resources.auditModifiedTime,
-                      ),
+    for (final e in results) {
+      final task = e.readTableOrNull(sql.task);
+      final resources = e.readTableOrNull(sql.taskResource);
+      final address = e.readTableOrNull(sql.address);
+
+      if (task == null) continue;
+
+      // Check if the task is already in the map
+      if (tasksMap.containsKey(task.clientReferenceId)) {
+        // If it is, add the resource to the existing task's resources
+        tasksMap[task.clientReferenceId]!.resources?.add(
+              TaskResourceModel(
+                taskclientReferenceId: task.clientReferenceId,
+                clientReferenceId: resources!.clientReferenceId,
+                id: resources.id,
+                productVariantId: resources.productVariantId,
+                tenantId: task.tenantId,
+                taskId: resources.taskId,
+                deliveryComment: resources.deliveryComment,
+                quantity: resources.quantity,
+                rowVersion: resources.rowVersion,
+                auditDetails: AuditDetails(
+                  createdBy: resources.auditCreatedBy!,
+                  createdTime: resources.auditCreatedTime!,
+                  lastModifiedBy: resources.auditModifiedBy,
+                  lastModifiedTime: resources.auditModifiedTime,
+                ),
+              ),
+            );
+      } else {
+        // If it's not, create a new task and add it to the map
+        tasksMap[task.clientReferenceId] = TaskModel(
+          id: task.id,
+          createdBy: task.createdBy,
+          clientReferenceId: task.clientReferenceId,
+          rowVersion: task.rowVersion,
+          tenantId: task.tenantId,
+          isDeleted: task.isDeleted,
+          projectId: task.projectId,
+          projectBeneficiaryId: task.projectBeneficiaryId,
+          projectBeneficiaryClientReferenceId:
+              task.projectBeneficiaryClientReferenceId,
+          createdDate: task.createdDate,
+          additionalFields: task.additionalFields == null
+              ? null
+              : Mapper.fromJson<TaskAdditionalFields>(
+                  task.additionalFields!,
+                ),
+          address: address == null
+              ? null
+              : AddressModel(
+                  id: address.id,
+                  relatedClientReferenceId: task.clientReferenceId,
+                  tenantId: address.tenantId,
+                  doorNo: address.doorNo,
+                  latitude: address.latitude,
+                  longitude: address.longitude,
+                  landmark: address.landmark,
+                  locationAccuracy: address.locationAccuracy,
+                  addressLine1: address.addressLine1,
+                  addressLine2: address.addressLine2,
+                  city: address.city,
+                  pincode: address.pincode,
+                  type: address.type,
+                  locality: address.localityBoundaryCode != null
+                      ? LocalityModel(
+                          code: address.localityBoundaryCode!,
+                          name: address.localityBoundaryName,
+                        )
+                      : null,
+                  rowVersion: address.rowVersion,
+                  auditDetails: (task.auditCreatedBy != null &&
+                          task.auditCreatedTime != null)
+                      ? AuditDetails(
+                          createdBy: task.auditCreatedBy!,
+                          createdTime: task.auditCreatedTime!,
+                          lastModifiedBy: task.auditModifiedBy,
+                          lastModifiedTime: task.auditModifiedTime,
+                        )
+                      : null,
+                  clientAuditDetails: (task.clientCreatedBy != null &&
+                          task.clientCreatedTime != null)
+                      ? ClientAuditDetails(
+                          createdBy: task.clientCreatedBy!,
+                          createdTime: task.clientCreatedTime!,
+                          lastModifiedBy: task.clientModifiedBy,
+                          lastModifiedTime: task.clientModifiedTime,
+                        )
+                      : null,
+                ),
+          status: task.status,
+          auditDetails:
+              (task.auditCreatedBy != null && task.auditCreatedTime != null)
+                  ? AuditDetails(
+                      createdBy: task.auditCreatedBy!,
+                      createdTime: task.auditCreatedTime!,
+                      lastModifiedBy: task.auditModifiedBy,
+                      lastModifiedTime: task.auditModifiedTime,
+                    )
+                  : null,
+          clientAuditDetails:
+              (task.clientCreatedBy != null && task.clientCreatedTime != null)
+                  ? ClientAuditDetails(
+                      createdBy: task.clientCreatedBy!,
+                      createdTime: task.clientCreatedTime!,
+                      lastModifiedBy: task.clientModifiedBy,
+                      lastModifiedTime: task.clientModifiedTime,
+                    )
+                  : null,
+          resources: resources == null
+              ? null
+              : [
+                  TaskResourceModel(
+                    taskclientReferenceId: task.clientReferenceId,
+                    clientReferenceId: resources.clientReferenceId,
+                    id: resources.id,
+                    tenantId: task.tenantId,
+                    productVariantId: resources.productVariantId,
+                    taskId: resources.taskId,
+                    deliveryComment: resources.deliveryComment,
+                    quantity: resources.quantity,
+                    rowVersion: resources.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: resources.auditCreatedBy!,
+                      createdTime: resources.auditCreatedTime!,
+                      lastModifiedBy: resources.auditModifiedBy,
+                      lastModifiedTime: resources.auditModifiedTime,
                     ),
-                  ],
-          );
-        })
-        .whereNotNull()
-        .where((element) => element.isDeleted != true)
-        .toList();
+                  ),
+                ],
+        );
+      }
+    }
+
+    // Convert the map values to a list of tasks
+    final uniqueTasks = tasksMap.values.toList();
+
+    return uniqueTasks.where((element) => element.isDeleted != true).toList();
   }
 
   @override

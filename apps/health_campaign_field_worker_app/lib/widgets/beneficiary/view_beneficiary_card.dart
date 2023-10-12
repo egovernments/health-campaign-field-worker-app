@@ -134,8 +134,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           adverseEvents,
         );
-        final isAdverseEventRecorded = recordedAdverseEvent(currentCycle,
-            (taskdata ?? []).isNotEmpty ? taskdata?.last : null, adverseEvents);
+        final isAdverseEventRecorded = recordedAdverseEvent(
+          currentCycle,
+          (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
+          adverseEvents,
+        );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
 // TODO need to pass the current cycle
@@ -185,7 +188,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'age',
           ),
           TableData(
-            e.gender?.name ?? '',
+            e.gender?.name ?? '--',
             cellKey: 'gender',
           ),
         ];
@@ -246,8 +249,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle: widget.distance != null
-                      ? '${householdMember.members.length ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}'
-                      : '',
+                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}  \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts from the location)'}'
+                      : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
@@ -276,7 +279,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               headerList: filteredHeaderList,
               tableData: tableData,
               leftColumnWidth: 130,
-              rightColumnWidth: filteredHeaderList.length * 17 * 6,
+              rightColumnWidth: filteredHeaderList.length * 98,
               height: householdMember.members.length <= 5
                   ? (householdMember.members.length + 1) * 57
                   : 6 * 57,

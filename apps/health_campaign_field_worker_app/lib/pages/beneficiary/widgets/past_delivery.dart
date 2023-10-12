@@ -38,9 +38,15 @@ Widget buildTableContent(
     ),
   ];
 
-  return SizedBox(
+  return Container(
+    padding: const EdgeInsets.only(
+      left: 8.0,
+      bottom: 8.0,
+      right: 8.0,
+      top: 4.0,
+    ),
     // [TODO - need to set the height of the card based on the number of items]
-    height: 280,
+    height: 260,
     width: 500,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
@@ -53,6 +59,8 @@ Widget buildTableContent(
           // mainAxisSize: MainAxisSize.min,
           children: [
             DigitTableCard(
+              topPadding: const EdgeInsets.only(top: 0.0),
+              padding: const EdgeInsets.only(bottom: 4.0),
               fraction: 2.5,
               element: {
                 localizations.translate(
@@ -61,8 +69,7 @@ Widget buildTableContent(
                 ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} months',
               },
             ),
-            // const Divider(),
-
+            const Divider(),
             // Build the DigitTable with the data
             DigitTable(
               headerList: headerListResource,
@@ -77,6 +84,7 @@ Widget buildTableContent(
                           (element) => element.id == e.productVariantId,
                         )
                         .sku;
+                    final quantity = e.quantity;
 
                     return TableDataRow([
                       // Display the dose information in the first column if it's the first row,
@@ -93,15 +101,15 @@ Widget buildTableContent(
                           : TableData(''),
                       // Display the SKU value in the second column.
                       TableData(
-                        localizations.translate(value.toString()),
+                        '$quantity - ${localizations.translate(value.toString())}',
                         cellKey: 'resources',
                       ),
                     ]);
                   },
                 ),
               ],
-              leftColumnWidth: 142,
-              rightColumnWidth: headerListResource.length * 72,
+              leftColumnWidth: MediaQuery.of(context).size.width / 2.8,
+              rightColumnWidth: headerListResource.length * 65,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

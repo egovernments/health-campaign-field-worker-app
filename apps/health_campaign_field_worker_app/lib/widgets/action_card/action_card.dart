@@ -21,7 +21,9 @@ class ActionCard extends StatelessWidget {
                   backgroundColor: Colors.white,
                   side: BorderSide(
                     width: 1.0,
-                    color: theme.colorScheme.secondary,
+                    color: e.action != null
+                        ? theme.colorScheme.secondary
+                        : theme.colorScheme.outline,
                   ),
                   minimumSize: Size(
                     MediaQuery.of(context).size.width / 1.25,

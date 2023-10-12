@@ -53,6 +53,8 @@ class Common {
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
+  String get coreCommonNA => 'CORE_COMMON_NA';
+
   String get coreCommonProfile => 'CORE_COMMON_PROFILE';
 
   String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
@@ -85,6 +87,8 @@ class Common {
 
   String get coreCommonNo => 'CORE_COMMON_NO';
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
+
+  String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 }
 
 class Login {

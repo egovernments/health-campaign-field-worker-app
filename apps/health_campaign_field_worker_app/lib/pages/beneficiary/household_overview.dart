@@ -29,6 +29,13 @@ class _HouseholdOverviewPageState
     extends LocalizedState<HouseholdOverviewPage> {
   @override
   void initState() {
+    final bloc = context.read<HouseholdOverviewBloc>();
+    bloc.add(
+      HouseholdOverviewReloadEvent(
+        projectId: context.projectId,
+        projectBeneficiaryType: context.beneficiaryType,
+      ),
+    );
     super.initState();
   }
 

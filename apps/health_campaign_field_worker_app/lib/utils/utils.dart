@@ -143,6 +143,17 @@ performBackgroundService({
   }
 }
 
+String maskString(String input) {
+  // Define the character to use for masking (e.g., "*")
+  const maskingChar = '*';
+
+  // Create a new string with the same length as the input string
+  final maskedString =
+      List<String>.generate(input.length, (index) => maskingChar).join();
+
+  return maskedString;
+}
+
 class Coordinate {
   final double? latitude;
   final double? longitude;

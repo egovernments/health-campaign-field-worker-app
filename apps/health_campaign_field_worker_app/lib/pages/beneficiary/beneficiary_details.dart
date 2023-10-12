@@ -163,6 +163,9 @@ class _BeneficiaryDetailsPageState
                                                 await DigitDialog.show<bool>(
                                                   context,
                                                   options: DigitDialogOptions(
+                                                    dialogPadding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .beneficiaryDetails
@@ -237,45 +240,46 @@ class _BeneficiaryDetailsPageState
                                 ),
                                 DigitTableCard(
                                   element: {
-                                    localizations.translate(i18
-                                            .householdOverView
-                                            .householdOverViewHouseholdHeadLabel):
-                                        householdMemberWrapper.headOfHousehold
-                                                .name?.givenName ??
-                                            '',
+                                    localizations.translate(
+                                      i18.common.coreCommonName,
+                                    ): state.selectedIndividual?.name
+                                            ?.givenName ??
+                                        '--',
                                     localizations.translate(
                                       i18.deliverIntervention.idTypeText,
                                     ): () {
-                                      final identifiers = householdMemberWrapper
-                                          .headOfHousehold.identifiers;
+                                      final identifiers =
+                                          state.selectedIndividual?.identifiers;
                                       if (identifiers == null ||
                                           identifiers.isEmpty) {
-                                        return '';
+                                        return '--';
                                       }
 
                                       return identifiers.first.identifierType ??
-                                          '';
+                                          '--';
                                     }(),
                                     localizations.translate(
                                       i18.deliverIntervention.idNumberText,
                                     ): () {
-                                      final identifiers = householdMemberWrapper
-                                          .headOfHousehold.identifiers;
+                                      final identifiers =
+                                          state.selectedIndividual?.identifiers;
                                       if (identifiers == null ||
                                           identifiers.isEmpty) {
-                                        return '';
+                                        return '--';
                                       }
 
-                                      return identifiers.first.identifierId ??
-                                          '';
+                                      return maskString(identifiers
+                                              .first.identifierId
+                                              .toString()) ??
+                                          '--';
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,
                                     ): () {
-                                      final dob = householdMemberWrapper
-                                          .headOfHousehold.dateOfBirth;
+                                      final dob =
+                                          state.selectedIndividual?.dateOfBirth;
                                       if (dob == null || dob.isEmpty) {
-                                        return '';
+                                        return '--';
                                       }
 
                                       final int years =
@@ -299,14 +303,13 @@ class _BeneficiaryDetailsPageState
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonGender,
-                                    ): householdMemberWrapper.headOfHousehold
-                                            .gender?.name.sentenceCase ??
-                                        '',
+                                    ): state.selectedIndividual?.gender?.name
+                                            .sentenceCase ??
+                                        '--',
                                     localizations.translate(
                                       i18.common.coreCommonMobileNumber,
-                                    ): householdMemberWrapper
-                                            .headOfHousehold.mobileNumber ??
-                                        '',
+                                    ): state.selectedIndividual?.mobileNumber ??
+                                        '--',
                                     localizations.translate(i18
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {

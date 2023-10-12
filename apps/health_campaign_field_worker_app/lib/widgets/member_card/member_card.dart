@@ -232,7 +232,9 @@ class MemberCard extends StatelessWidget {
                                           individual,
                                         ) &&
                                         !checkStatus(
-                                            tasks, context.selectedCycle)
+                                          tasks,
+                                          context.selectedCycle,
+                                        )
                                     ? localizations.translate(
                                         i18.householdOverView.viewDeliveryLabel,
                                       )
@@ -362,7 +364,10 @@ class MemberCard extends StatelessWidget {
                                     backgroundColor: Colors.white,
                                     side: BorderSide(
                                       width: 1.0,
-                                      color: theme.colorScheme.secondary,
+                                      color: tasks != null &&
+                                              (tasks ?? []).isNotEmpty
+                                          ? theme.colorScheme.secondary
+                                          : theme.colorScheme.outline,
                                     ),
                                     minimumSize: Size(
                                       MediaQuery.of(context).size.width / 1.25,

@@ -125,6 +125,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   ?.productVariants
                                   ?.map((variant) => TaskResourceModel(
                                         clientReferenceId: IdGen.i.identifier,
+                                        tenantId: envConfig.variables.tenantId,
                                         taskclientReferenceId:
                                             clientReferenceId,
                                         quantity: variant.quantity.toString(),
@@ -257,32 +258,29 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     deliveryState.futureDeliveries!.indexOf(e) +
                                         deliveryState.dose +
                                         1;
+                                List<String> skus = fetchProductVariant(
+                                  e,
+                                  overViewBloc.selectedIndividual,
+                                )!
+                                    .productVariants!
+                                    .map((ele) {
+                                  final pv = variant!.firstWhere(
+                                    (element) =>
+                                        element.id == ele.productVariantId,
+                                  );
+
+                                  return '${ele.quantity} - ${pv.sku.toString()}';
+                                }).toList();
 
                                 return TableDataRow([
                                   TableData(
                                     'Dose $doseIndex',
                                     cellKey: 'dose',
                                   ),
-                                  ...fetchProductVariant(
-                                    e,
-                                    overViewBloc.selectedIndividual,
-                                  )!
-                                      .productVariants!
-                                      .map(
-                                        (ele) => TableData(
-                                          variant!
-                                              .where((element) =>
-                                                  element.id ==
-                                                  ele.productVariantId)
-                                              .toList()
-                                              .map((e) =>
-                                                  '${ele.quantity} - ${e.sku}')
-                                              .toList()
-                                              .join('+'),
-                                          cellKey: 'resources',
-                                        ),
-                                      )
-                                      .toList(),
+                                  TableData(
+                                    skus.join(' + '),
+                                    cellKey: 'resources',
+                                  ),
                                 ]);
                               }).toList();
 
@@ -296,6 +294,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     style: theme.textTheme.displayMedium,
                                   ),
                                   DigitTableCard(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    topPadding: const EdgeInsets.only(top: 4.0),
                                     element: {
                                       localizations.translate(
                                         i18.beneficiaryDetails.beneficiaryAge,
@@ -317,7 +317,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         MediaQuery.of(context).size.width /
                                             2.215,
                                     rightColumnWidth:
-                                        headerListResource.length * 88,
+                                        headerListResource.length * 78,
                                     height: (tableDataRows.length + 1) * 60,
                                   ),
                                 ],

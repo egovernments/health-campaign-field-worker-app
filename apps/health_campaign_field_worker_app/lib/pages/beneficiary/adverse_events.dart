@@ -108,7 +108,9 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                         body: state.loading
                             ? const Center(child: CircularProgressIndicator())
                             : ScrollableContent(
-                                header: const BackNavigationHelpHeaderWidget(),
+                                header: const BackNavigationHelpHeaderWidget(
+                                  showHelp: false,
+                                ),
                                 footer: SizedBox(
                                   height: 100,
                                   child: DigitCard(
@@ -391,7 +393,8 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               localizations.translate(
-                                                i18.common.corecommonRequired,
+                                                i18.common
+                                                    .coreCommonRequiredItems,
                                               ),
                                               style: TextStyle(
                                                 color: theme.colorScheme.error,
