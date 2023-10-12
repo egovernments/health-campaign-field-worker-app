@@ -86,7 +86,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           },
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
-                  fetched: (_, facilities) => facilities,
+                  fetched: (facilities, _) => facilities,
                 ) ??
                 [];
 
