@@ -4673,7 +4673,6 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (value) {
       case "INDIVIDUAL": return BeneficiaryType.individual;
       case "HOUSEHOLD": return BeneficiaryType.household;
-      case "PRODUCT": return BeneficiaryType.product;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4682,7 +4681,6 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (self) {
       case BeneficiaryType.individual: return "INDIVIDUAL";
       case BeneficiaryType.household: return "HOUSEHOLD";
-      case BeneficiaryType.product: return "PRODUCT";
     }
   }
 }
@@ -4781,9 +4779,13 @@ class StatusMapper extends EnumMapper<Status> {
     switch (value) {
       case "DELIVERED": return Status.delivered;
       case "NOT_DELIVERED": return Status.notDelivered;
+      case "VISITED": return Status.visited;
+      case "NOT_VISITED": return Status.notVisited;
       case "BENEFICIARY_REFUSED": return Status.beneficiaryRefused;
-      case "PARTIALLY_DELIVERED": return Status.partiallyDelivered;
+      case "ADMINISTERED_SUCCESS": return Status.administeredSuccess;
+      case "ADMINISTERED_FAILED": return Status.administeredFailed;
       case "IN_COMPLETE": return Status.inComplete;
+      case "TO_ADMINISTER": return Status.toAdminister;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4792,9 +4794,13 @@ class StatusMapper extends EnumMapper<Status> {
     switch (self) {
       case Status.delivered: return "DELIVERED";
       case Status.notDelivered: return "NOT_DELIVERED";
+      case Status.visited: return "VISITED";
+      case Status.notVisited: return "NOT_VISITED";
       case Status.beneficiaryRefused: return "BENEFICIARY_REFUSED";
-      case Status.partiallyDelivered: return "PARTIALLY_DELIVERED";
+      case Status.administeredSuccess: return "ADMINISTERED_SUCCESS";
+      case Status.administeredFailed: return "ADMINISTERED_FAILED";
       case Status.inComplete: return "IN_COMPLETE";
+      case Status.toAdminister: return "TO_ADMINISTER";
     }
   }
 }

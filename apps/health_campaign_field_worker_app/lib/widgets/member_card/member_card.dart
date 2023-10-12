@@ -209,8 +209,7 @@ class MemberCard extends StatelessWidget {
 
                               final futureTaskList = tasks
                                   ?.where((task) =>
-                                      task.status ==
-                                      Status.partiallyDelivered.toValue())
+                                      task.status == Status.delivered.toValue())
                                   .toList();
 
                               if ((futureTaskList ?? []).isNotEmpty) {

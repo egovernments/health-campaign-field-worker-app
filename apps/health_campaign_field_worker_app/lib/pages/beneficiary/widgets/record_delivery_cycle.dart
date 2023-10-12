@@ -197,8 +197,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             DigitTable(
               selectedIndex: selectedIndex,
               headerList: headerList,
-              tableData: e.deliveries!.map(
-                (item) {
+              tableData: e.deliveries!.mapIndexed(
+                (index, item) {
                   final tasks = widget.taskData
                       ?.where((element) =>
                           element.additionalFields?.fields
@@ -228,13 +228,19 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                     ),
                     TableData(
                       localizations.translate(
-                        tasks?.status ?? Status.inComplete.toValue(),
+                        index == selectedIndex
+                            ? Status.toAdminister.toValue()
+                            : tasks?.status ?? Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
                       style: TextStyle(
-                        color: tasks?.status != null
+                        color: index == selectedIndex
                             ? null
-                            : DigitTheme.instance.colorScheme.error,
+                            : tasks?.status != null
+                                ? null
+                                : DigitTheme.instance.colorScheme.error,
+                        fontWeight:
+                            index == selectedIndex ? FontWeight.w700 : null,
                       ),
                     ),
                     TableData(
@@ -246,8 +252,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                   ]);
                 },
               ).toList(),
-              leftColumnWidth: 130,
-              rightColumnWidth: headerList.length * 87,
+              leftColumnWidth: 103,
+              rightColumnWidth: headerList.length * 68,
               height: ((e.deliveries?.length ?? 0) + 1) * 58,
             ),
           ],

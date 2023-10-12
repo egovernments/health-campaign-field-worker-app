@@ -223,6 +223,7 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+  String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
 }
 
 class IndividualDetails {

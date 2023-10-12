@@ -249,14 +249,14 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle: widget.distance != null
-                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}  \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts from the location)'}'
+                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}  \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
                       : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused
-                          ? Status.delivered.toValue()
-                          : Status.notDelivered.toValue()
+                          ? Status.visited.toValue()
+                          : Status.notVisited.toValue()
                       : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
@@ -280,9 +280,14 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               tableData: tableData,
               leftColumnWidth: 130,
               rightColumnWidth: filteredHeaderList.length * 98,
-              height: householdMember.members.length <= 5
-                  ? (householdMember.members.length + 1) * 57
-                  : 6 * 57,
+              height: householdMember.members.length == 1
+                  ? 60 * 2
+                  : householdMember.members.length <= 4
+                      ? (householdMember.members.length + 1) * 58
+                      : 5 * 60,
+              scrollPhysics: householdMember.members.length <= 4
+                  ? const NeverScrollableScrollPhysics()
+                  : const ClampingScrollPhysics(),
             ),
           ),
           Container(
@@ -314,16 +319,16 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       return 'Not Eligible';
     } else if (taskdata != null) {
       if (taskdata.isEmpty) {
-        return localizations.translate(Status.notDelivered.toValue());
+        return localizations.translate(Status.notVisited.toValue());
       } else if (isBeneficiaryRefused && !isStatusReset) {
         return localizations.translate(Status.beneficiaryRefused.toValue());
       } else if (isStatusReset) {
-        return localizations.translate(Status.notDelivered.toValue());
+        return localizations.translate(Status.notVisited.toValue());
       } else {
-        return localizations.translate(Status.delivered.toValue());
+        return localizations.translate(Status.visited.toValue());
       }
     } else {
-      return localizations.translate(Status.notDelivered.toValue());
+      return localizations.translate(Status.notVisited.toValue());
     }
   }
 

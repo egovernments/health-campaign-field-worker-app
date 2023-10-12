@@ -165,7 +165,8 @@ class _BeneficiaryDetailsPageState
                                                   options: DigitDialogOptions(
                                                     dialogPadding:
                                                         const EdgeInsets.all(
-                                                            8.0),
+                                                      8.0,
+                                                    ),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .beneficiaryDetails
