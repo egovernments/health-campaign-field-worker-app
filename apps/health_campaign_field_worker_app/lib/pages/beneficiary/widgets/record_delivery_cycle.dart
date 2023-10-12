@@ -252,9 +252,9 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                   ]);
                 },
               ).toList(),
-              leftColumnWidth: 103,
-              rightColumnWidth: headerList.length * 68,
-              height: ((e.deliveries?.length ?? 0) + 1) * 58,
+              leftColumnWidth: 110,
+              rightColumnWidth: headerList.length * 73.5,
+              height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
             ),
           ],
         ),

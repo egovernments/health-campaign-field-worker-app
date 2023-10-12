@@ -223,6 +223,12 @@ class _BeneficiaryDetailsPageState
                         ),
                         children: [
                           DigitCard(
+                            padding: const EdgeInsets.only(
+                              left: 16.0,
+                              top: 16,
+                              bottom: 4,
+                              right: 4,
+                            ),
                             child: Column(
                               children: [
                                 Row(
