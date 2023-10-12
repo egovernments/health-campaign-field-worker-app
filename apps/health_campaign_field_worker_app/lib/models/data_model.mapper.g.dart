@@ -3166,7 +3166,7 @@ extension StockSearchModelMapperExtension  on StockSearchModel {
 
 abstract class StockSearchModelCopyWith<$R> {
   factory StockSearchModelCopyWith(StockSearchModel value, Then<StockSearchModel, $R> then) = _StockSearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? tenantId, String? facilityId, String? productVariantId, String? referenceId, String? referenceIdType, String? transactingPartyId, String? transactingPartyType, String? receiverId, String? receiverType, String? senderId, String? senderType, List<String>? clientReferenceId, List<TransactionType>? transactionType, List<TransactionReason>? transactionReason, String? boundaryCode});
+  $R call({String? id, String? tenantId, String? facilityId, String? productVariantId, String? referenceId, String? referenceIdType, String? transactingPartyId, String? transactingPartyType, String? receiverId, String? receiverType, String? senderId, String? senderType, List<String>? clientReferenceId, List<dynamic>? transactionType, List<TransactionReason>? transactionReason, String? boundaryCode});
   $R apply(StockSearchModel Function(StockSearchModel) transform);
 }
 
@@ -3205,7 +3205,7 @@ abstract class StockModelCopyWith<$R> {
   StockAdditionalFieldsCopyWith<$R>? get additionalFields;
   AuditDetailsCopyWith<$R>? get auditDetails;
   ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({StockAdditionalFields? additionalFields, String? id, String? tenantId, String? facilityId, String? productVariantId, String? referenceId, String? referenceIdType, String? transactingPartyId, String? transactingPartyType, String? quantity, String? waybillNumber, String? receiverId, String? receiverType, String? senderId, String? senderType, String? clientReferenceId, int? rowVersion, TransactionType? transactionType, TransactionReason? transactionReason, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R call({StockAdditionalFields? additionalFields, String? id, String? tenantId, String? facilityId, String? productVariantId, String? referenceId, String? referenceIdType, String? transactingPartyId, String? transactingPartyType, String? quantity, String? waybillNumber, String? receiverId, String? receiverType, String? senderId, String? senderType, String? clientReferenceId, int? rowVersion, String? transactionType, TransactionReason? transactionReason, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
   $R apply(StockModel Function(StockModel) transform);
 }
 

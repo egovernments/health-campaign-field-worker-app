@@ -86,7 +86,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           },
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
-                  fetched: (facilities, _) => facilities,
+                  fetched: (_, facilities) => facilities,
                 ) ??
                 [];
 
@@ -199,7 +199,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 valueAccessor: FacilityValueAccessor(
                                   facilities,
                                 ),
-                                isRequired: isWareHouseMgr,
+                                isRequired: true,
                                 label: localizations.translate(
                                   i18.stockReconciliationDetails.facilityLabel,
                                 ),

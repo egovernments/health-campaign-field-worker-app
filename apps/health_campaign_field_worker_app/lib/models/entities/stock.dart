@@ -22,7 +22,7 @@ class StockSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final List<TransactionType>? transactionType;
   final List<TransactionReason>? transactionReason;
-  
+
   StockSearchModel({
     this.id,
     this.tenantId,
@@ -41,7 +41,7 @@ class StockSearchModel extends EntitySearchModel {
     this.transactionReason,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   StockSearchModel.ignoreDeleted({
@@ -61,12 +61,11 @@ class StockSearchModel extends EntitySearchModel {
     this.transactionType,
     this.transactionReason,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class StockModel extends EntityModel {
-
   static const schemaName = 'Stock';
 
   final String? id;
@@ -109,9 +108,10 @@ class StockModel extends EntityModel {
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   StockCompanion get companion {
     return StockCompanion(
@@ -143,7 +143,7 @@ class StockModel extends EntityModel {
       rowVersion: Value(rowVersion),
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
-      );
+    );
   }
 }
 

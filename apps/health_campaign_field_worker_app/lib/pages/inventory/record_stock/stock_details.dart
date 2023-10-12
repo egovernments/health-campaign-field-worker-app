@@ -103,6 +103,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               String quantityCountLabel;
               String? transactionReasonLabel;
               TransactionReason? transactionReason;
+              TransactionType transactionType;
 
               List<TransactionReason>? reasons;
 
@@ -110,19 +111,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 case StockRecordEntryType.receipt:
                   pageTitle = module.receivedPageTitle;
                   quantityCountLabel = module.quantityReceivedLabel;
+                  transactionType = TransactionType.received;
+
                   break;
                 case StockRecordEntryType.dispatch:
                   pageTitle = module.issuedPageTitle;
                   quantityCountLabel = module.quantitySentLabel;
+                  transactionType = TransactionType.dispatched;
+
                   break;
                 case StockRecordEntryType.returned:
                   pageTitle = module.returnedPageTitle;
                   quantityCountLabel = module.quantityReturnedLabel;
+                  transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.loss:
                   pageTitle = module.lostPageTitle;
                   quantityCountLabel = module.quantityLostLabel;
                   transactionReasonLabel = module.transactionReasonLost;
+                  transactionType = TransactionType.dispatched;
+
                   reasons = [
                     TransactionReason.lostInStorage,
                     TransactionReason.lostInTransit,
@@ -132,6 +140,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   pageTitle = module.damagedPageTitle;
                   quantityCountLabel = module.quantityDamagedLabel;
                   transactionReasonLabel = module.transactionReasonDamaged;
+                  transactionType = TransactionType.dispatched;
+
                   reasons = [
                     TransactionReason.damagedInStorage,
                     TransactionReason.damagedInTransit,
@@ -293,6 +303,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         clientReferenceId: IdGen.i.identifier,
                                         productVariantId: productVariant.id,
                                         transactionReason: transactionReason,
+                                        transactionType: transactionType,
                                         referenceId: stockState.projectId,
                                         referenceIdType: 'PROJECT',
                                         quantity: quantity.toString(),

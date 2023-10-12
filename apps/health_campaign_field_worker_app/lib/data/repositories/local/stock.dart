@@ -16,7 +16,9 @@ class StockLocalRepository
     bool createOpLog = true,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    final stockCompanion = entity.companion;
+    final stockCompanion = entity.companion.copyWith(
+      transactionType: Value(entity.companion.transactionType.value),
+    );
     await sql.batch((batch) {
       batch.insert(sql.stock, stockCompanion);
     });
