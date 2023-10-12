@@ -131,6 +131,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         quantity: variant.quantity.toString(),
                                         productVariantId:
                                             variant.productVariantId,
+                                        isDelivered: true,
                                         auditDetails: AuditDetails(
                                           createdBy: context.loggedInUserUuid,
                                           createdTime:
@@ -313,11 +314,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   DigitTable(
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
-                                    leftColumnWidth:
+                                    columnWidth:
                                         MediaQuery.of(context).size.width /
-                                            2.215,
-                                    rightColumnWidth:
-                                        headerListResource.length * 82,
+                                            2.18,
                                     height: (tableDataRows.length + 1) * 59.5,
                                   ),
                                 ],

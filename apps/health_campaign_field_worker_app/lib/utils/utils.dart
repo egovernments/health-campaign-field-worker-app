@@ -357,7 +357,8 @@ bool checkStatus(
         return isLastCycleRunning
             ? lastTask.status == Status.delivered.name
                 ? true
-                : diff.inHours >= 24
+                : diff.inHours >=
+                        24 //[TODO: Need to move gap between doses to config
                     ? true
                     : false
             : true;

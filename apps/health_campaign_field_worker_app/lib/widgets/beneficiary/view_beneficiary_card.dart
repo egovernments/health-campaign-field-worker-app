@@ -278,10 +278,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             child: DigitTable(
               headerList: filteredHeaderList,
               tableData: tableData,
-              leftColumnWidth: 130,
-              rightColumnWidth: filteredHeaderList.length * 98,
+              columnWidth: 130,
               height: householdMember.members.length == 1
-                  ? 60 * 2
+                  ? 61 * 2
                   : householdMember.members.length <= 4
                       ? (householdMember.members.length + 1) * 58
                       : 5 * 60,

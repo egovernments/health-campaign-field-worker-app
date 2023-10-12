@@ -179,8 +179,8 @@ class _RecordPastDeliveryDetailsPageState
 
                                 // Determine the status based on the form control value
                                 final status = formControllValue
-                                    ? Status.delivered.toValue()
-                                    : Status.notDelivered.toValue();
+                                    ? Status.administeredSuccess.toValue()
+                                    : Status.administeredFailed.toValue();
 
                                 // Create a new task with the updated status
                                 final result =

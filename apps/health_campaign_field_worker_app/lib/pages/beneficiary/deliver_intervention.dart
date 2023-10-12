@@ -569,6 +569,7 @@ class _DeliverInterventionPageState
                 taskclientReferenceId: clientReferenceId,
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
+                isDelivered: true,
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
