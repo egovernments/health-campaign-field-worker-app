@@ -248,15 +248,28 @@ class _BeneficiaryDetailsPageState
                                 DigitTableCard(
                                   element: {
                                     localizations.translate(
-                                      i18.common.coreCommonName,
-                                    ): state.selectedIndividual?.name
-                                            ?.givenName ??
-                                        '--',
+                                      context.beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? i18.householdOverView
+                                              .householdOverViewHouseholdHeadLabel
+                                          : i18.common.coreCommonName,
+                                    ): context.beneficiaryType !=
+                                            BeneficiaryType.individual
+                                        ? householdMemberWrapper
+                                            .headOfHousehold.name?.givenName
+                                        : state.selectedIndividual?.name
+                                                ?.givenName ??
+                                            '--',
                                     localizations.translate(
                                       i18.deliverIntervention.idTypeText,
                                     ): () {
                                       final identifiers =
-                                          state.selectedIndividual?.identifiers;
+                                          context.beneficiaryType !=
+                                                  BeneficiaryType.individual
+                                              ? householdMemberWrapper
+                                                  .headOfHousehold.identifiers
+                                              : state.selectedIndividual
+                                                  ?.identifiers;
                                       if (identifiers == null ||
                                           identifiers.isEmpty) {
                                         return '--';
@@ -269,7 +282,12 @@ class _BeneficiaryDetailsPageState
                                       i18.deliverIntervention.idNumberText,
                                     ): () {
                                       final identifiers =
-                                          state.selectedIndividual?.identifiers;
+                                          context.beneficiaryType !=
+                                                  BeneficiaryType.individual
+                                              ? householdMemberWrapper
+                                                  .headOfHousehold.identifiers
+                                              : state.selectedIndividual
+                                                  ?.identifiers;
                                       if (identifiers == null ||
                                           identifiers.isEmpty) {
                                         return '--';
@@ -283,8 +301,12 @@ class _BeneficiaryDetailsPageState
                                     localizations.translate(
                                       i18.common.coreCommonAge,
                                     ): () {
-                                      final dob =
-                                          state.selectedIndividual?.dateOfBirth;
+                                      final dob = context.beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? householdMemberWrapper
+                                              .headOfHousehold.dateOfBirth
+                                          : state
+                                              .selectedIndividual?.dateOfBirth;
                                       if (dob == null || dob.isEmpty) {
                                         return '--';
                                       }
@@ -310,13 +332,22 @@ class _BeneficiaryDetailsPageState
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonGender,
-                                    ): state.selectedIndividual?.gender?.name
-                                            .sentenceCase ??
-                                        '--',
+                                    ): context.beneficiaryType !=
+                                            BeneficiaryType.individual
+                                        ? householdMemberWrapper.headOfHousehold
+                                            .gender?.name.sentenceCase
+                                        : state.selectedIndividual?.gender?.name
+                                                .sentenceCase ??
+                                            '--',
                                     localizations.translate(
                                       i18.common.coreCommonMobileNumber,
-                                    ): state.selectedIndividual?.mobileNumber ??
-                                        '--',
+                                    ): context.beneficiaryType !=
+                                            BeneficiaryType.individual
+                                        ? householdMemberWrapper
+                                            .headOfHousehold.mobileNumber
+                                        : state.selectedIndividual
+                                                ?.mobileNumber ??
+                                            '--',
                                     localizations.translate(i18
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {
