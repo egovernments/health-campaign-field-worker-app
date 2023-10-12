@@ -143,6 +143,17 @@ performBackgroundService({
   }
 }
 
+String maskString(String input) {
+  // Define the character to use for masking (e.g., "*")
+  const maskingChar = '*';
+
+  // Create a new string with the same length as the input string
+  final maskedString =
+      List<String>.generate(input.length, (index) => maskingChar).join();
+
+  return maskedString;
+}
+
 class Coordinate {
   final double? latitude;
   final double? longitude;
@@ -344,7 +355,7 @@ bool checkStatus(
                 lastTaskCreatedTime <= currentCycle.endDate!;
 
         return isLastCycleRunning
-            ? lastTask.status == Status.partiallyDelivered.name
+            ? lastTask.status == Status.delivered.name
                 ? true
                 : diff.inHours >= 24
                     ? true
@@ -414,10 +425,10 @@ bool allDosesDelivered(
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.partiallyDelivered.toValue()) {
+          tasks?.last.status != Status.delivered.toValue()) {
         return true;
       } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.partiallyDelivered.toValue()) {
+          tasks?.last.status == Status.delivered.toValue()) {
         return false;
       } else if ((adverseEvents ?? []).isNotEmpty) {
         return recordedAdverseEvent(selectedCycle, tasks?.last, adverseEvents);

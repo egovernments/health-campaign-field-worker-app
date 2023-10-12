@@ -10,16 +10,32 @@
       "value": "NOT_DELIVERED"
     },
     {
+      "name": "Visited",
+      "value": "VISITED"
+    },
+    {
+      "name": "Not Visited",
+      "value": "NOT_VISITED"
+    },
+    {
       "name": "Beneficiary Refused",
       "value": "BENEFICIARY_REFUSED"
     },
     {
-      "name": "Partially Delivered",
-      "value": "PARTIALLY_DELIVERED"
+      "name": "Administered Success",
+      "value": "ADMINISTERED_SUCCESS"
+    },
+    {
+      "name": "Administered Failed",
+      "value": "ADMINISTERED_FAILED"
     },
     {
       "name": "In Complete",
       "value": "IN_COMPLETE"
+    },
+    {
+      "name": "To Administer",
+      "value": "TO_ADMINISTER"
     }
   ],
   "isEnum": true

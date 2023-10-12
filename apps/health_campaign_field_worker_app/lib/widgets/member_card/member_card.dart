@@ -209,8 +209,7 @@ class MemberCard extends StatelessWidget {
 
                               final futureTaskList = tasks
                                   ?.where((task) =>
-                                      task.status ==
-                                      Status.partiallyDelivered.toValue())
+                                      task.status == Status.delivered.toValue())
                                   .toList();
 
                               if ((futureTaskList ?? []).isNotEmpty) {
@@ -226,11 +225,15 @@ class MemberCard extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 allDosesDelivered(
-                                  tasks,
-                                  context.selectedCycle,
-                                  adverseEvents,
-                                  individual,
-                                )
+                                          tasks,
+                                          context.selectedCycle,
+                                          adverseEvents,
+                                          individual,
+                                        ) &&
+                                        !checkStatus(
+                                          tasks,
+                                          context.selectedCycle,
+                                        )
                                     ? localizations.translate(
                                         i18.householdOverView.viewDeliveryLabel,
                                       )
@@ -247,12 +250,13 @@ class MemberCard extends StatelessWidget {
                 ),
                 (isNotEligible ||
                         isBeneficiaryRefused ||
-                        allDosesDelivered(
-                          tasks,
-                          context.selectedCycle,
-                          adverseEvents,
-                          individual,
-                        ))
+                        (allDosesDelivered(
+                              tasks,
+                              context.selectedCycle,
+                              adverseEvents,
+                              individual,
+                            ) &&
+                            !checkStatus(tasks, context.selectedCycle)))
                     ? const Offstage()
                     : DigitOutLineButton(
                         label: localizations.translate(
@@ -359,7 +363,10 @@ class MemberCard extends StatelessWidget {
                                     backgroundColor: Colors.white,
                                     side: BorderSide(
                                       width: 1.0,
-                                      color: theme.colorScheme.secondary,
+                                      color: tasks != null &&
+                                              (tasks ?? []).isNotEmpty
+                                          ? theme.colorScheme.secondary
+                                          : theme.colorScheme.outline,
                                     ),
                                     minimumSize: Size(
                                       MediaQuery.of(context).size.width / 1.25,

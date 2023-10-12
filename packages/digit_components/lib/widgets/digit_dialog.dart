@@ -27,7 +27,12 @@ class DigitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: options.title,
+        title: Padding(
+          padding: options.dialogPadding != null
+              ? options.dialogPadding!
+              : const EdgeInsets.all(0),
+          child: options.title,
+        ),
         content: options.content,
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -74,10 +79,15 @@ class DigitDialog extends StatelessWidget {
             Column(
               children: <Widget>[
                 if (options.primaryAction != null)
-                  DigitElevatedButton(
-                    onPressed: () =>
-                        options.primaryAction!.action?.call(context),
-                    child: Center(child: Text(options.primaryAction!.label)),
+                  Padding(
+                    padding: options.dialogPadding != null
+                        ? options.dialogPadding!
+                        : const EdgeInsets.all(0),
+                    child: DigitElevatedButton(
+                      onPressed: () =>
+                          options.primaryAction!.action?.call(context),
+                      child: Center(child: Text(options.primaryAction!.label)),
+                    ),
                   ),
                 if (options.secondaryAction != null)
                   TextButton(
@@ -108,6 +118,7 @@ class DigitDialogOptions {
   final bool isScrollable;
   final Key? key;
   final bool? enableRecordPast;
+  final EdgeInsets? dialogPadding;
 
   const DigitDialogOptions({
     this.titleText,
@@ -124,6 +135,7 @@ class DigitDialogOptions {
     this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
     this.key,
+    this.dialogPadding,
   })  : _titleWidget = title,
         _contentWidget = content;
 

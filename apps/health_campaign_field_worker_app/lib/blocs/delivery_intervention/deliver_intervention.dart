@@ -93,7 +93,7 @@ class DeliverInterventionBloc
                       )
                       .value ==
                   DeliverStrategyType.indirect.toValue() &&
-              element.status == Status.partiallyDelivered.toValue())
+              element.status == Status.delivered.toValue())
           .toList();
 
       if (tasks.isNotEmpty) {

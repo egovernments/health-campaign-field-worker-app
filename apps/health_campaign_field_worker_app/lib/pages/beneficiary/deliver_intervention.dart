@@ -229,7 +229,7 @@ class _DeliverInterventionPageState
                                                         label: localizations
                                                             .translate(
                                                           i18.common
-                                                              .coreCommonGoback,
+                                                              .coreCommonCancel,
                                                         ),
                                                         action: (context) =>
                                                             Navigator.of(
@@ -321,7 +321,9 @@ class _DeliverInterventionPageState
                                       },
                                     ),
                                     header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(),
+                                      BackNavigationHelpHeaderWidget(
+                                        showHelp: false,
+                                      ),
                                     ]),
                                     children: [
                                       Column(
@@ -356,13 +358,14 @@ class _DeliverInterventionPageState
                                                       deliveryInterventionstate
                                                               .dose -
                                                           1,
+                                                  stepRadius: 12.5,
                                                   steps: steps,
                                                   maxStepReached: 3,
                                                   lineLength:
                                                       MediaQuery.of(context)
                                                               .size
                                                               .width /
-                                                          5,
+                                                          steps.length,
                                                 ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
@@ -567,6 +570,7 @@ class _DeliverInterventionPageState
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
                 taskId: task?.id,
+                tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
                 quantity: (((form.control(_quantityDistributedKey) as FormArray)
                         .value)?[productvariantList.indexOf(e)])
@@ -585,7 +589,7 @@ class _DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.delivered.toValue(),
+      status: Status.administeredSuccess.toValue(),
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
