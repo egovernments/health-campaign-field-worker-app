@@ -9,6 +9,7 @@ class LabeledField extends StatelessWidget {
   final EdgeInsets? padding;
   final bool preferToolTipBelow;
   final TooltipTriggerMode tooltipTriggerMode;
+  final TextStyle? textStyle;
 
   const LabeledField({
     super.key,
@@ -20,6 +21,7 @@ class LabeledField extends StatelessWidget {
     this.padding,
     this.preferToolTipBelow = false,
     this.tooltipTriggerMode = TooltipTriggerMode.tap,
+    this.textStyle,
   });
 
   @override
