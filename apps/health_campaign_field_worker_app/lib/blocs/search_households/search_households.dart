@@ -8,8 +8,7 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../../data/repositories/local/address.dart';
 import '../../data/repositories/local/adverse_event.dart';
-import '../../data/repositories/local/project_beneficiary.dart';
-import '../../data/repositories/local/task.dart';
+
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
@@ -56,28 +55,6 @@ class SearchHouseholdsBloc
     on(_handleClear);
     on(_handleSearchByHousehold);
     on(_handleInitialize);
-
-    if (projectBeneficiary is ProjectBeneficiaryLocalRepository) {
-      (projectBeneficiary as ProjectBeneficiaryLocalRepository).listenToChanges(
-        query: ProjectBeneficiarySearchModel(
-          projectId: projectId,
-        ),
-        listener: (data) {
-          add(const SearchHouseholdsInitializedEvent());
-        },
-      );
-    }
-
-    if (taskDataRepository is TaskLocalRepository) {
-      (taskDataRepository as TaskLocalRepository).listenToChanges(
-        query: TaskSearchModel(
-          projectId: projectId,
-        ),
-        listener: (data) {
-          add(const SearchHouseholdsInitializedEvent());
-        },
-      );
-    }
 
     if (adverseEventDataRepository is AdverseEventLocalRepository) {
       (adverseEventDataRepository as AdverseEventLocalRepository)
