@@ -85,6 +85,7 @@ class _RecordPastDeliveryDetailsPageState
                               .didYouObservePreviousAdvEventsTitle),
                           barrierDismissible: false,
                           enableRecordPast: true,
+                          dialogPadding: const EdgeInsets.all(8.0),
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,

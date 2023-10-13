@@ -188,7 +188,7 @@ class MemberCard extends StatelessWidget {
                           i18.householdOverView
                               .householdOverViewDeliveredIconLabel,
                         ),
-                        iconSize: 14,
+                        iconSize: 20,
                         iconTextColor:
                             DigitTheme.instance.colorScheme.onSurfaceVariant,
                         iconColor:
