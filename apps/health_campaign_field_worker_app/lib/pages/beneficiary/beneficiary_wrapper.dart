@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/adverse_events/adverse_events.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
+import '../../models/entities/adverse_event.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
@@ -43,6 +45,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
     final service = context.repository<ServiceModel, ServiceSearchModel>();
+    final adverseEvent =
+        context.repository<AdverseEventModel, AdverseEventSearchModel>();
 
     return MultiBlocProvider(
       providers: [
@@ -68,6 +72,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             householdMemberRepository: householdMember,
             projectBeneficiaryRepository: projectBeneficiary,
             taskDataRepository: task,
+            adverseEventDataRepository: adverseEvent,
           ),
         ),
         BlocProvider(
@@ -76,6 +81,14 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               isEditing: isEditing,
             ),
             taskRepository: task,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => AdverseEventsBloc(
+            AdverseEventsState(
+              isEditing: isEditing,
+            ),
+            adverseEventRepository: adverseEvent,
           ),
         ),
       ],
@@ -94,7 +107,21 @@ class BeneficiaryWrapperPage extends StatelessWidget {
                     .map((e) => e.clientReferenceId)
                     .toList(),
               ))),
-            child: const AutoRouter(),
+            child: BlocProvider(
+              lazy: false,
+              create: (_) => AdverseEventsBloc(
+                AdverseEventsState(
+                  isEditing: isEditing,
+                ),
+                adverseEventRepository: adverseEvent,
+              )..add(AdverseEventsSearchEvent(AdverseEventSearchModel(
+                  taskClientReferenceId: houseHoldOverviewState
+                      .householdMemberWrapper.tasks
+                      ?.map((e) => e.clientReferenceId)
+                      .toList(),
+                ))),
+              child: const AutoRouter(),
+            ),
           );
         },
       ),

@@ -12,7 +12,7 @@ class DigitDateFormPicker extends StatelessWidget {
 
   final ValueChanged<DateTime?>? onChangeOfDate;
   final String formControlName;
-  final bool? isEnabled;
+  final bool isEnabled;
   final String? requiredMessage;
   final String? Function(DateTime?)? validator;
   final AutovalidateMode? autoValidation;
@@ -27,6 +27,7 @@ class DigitDateFormPicker extends StatelessWidget {
   final String cancelText;
   final String confirmText;
   final String? fieldHintText;
+  final void Function(FormControl<dynamic>)? onChangeOfFormControl;
 
   const DigitDateFormPicker({
     super.key,
@@ -52,6 +53,7 @@ class DigitDateFormPicker extends StatelessWidget {
     this.cancelText = 'Cancel',
     this.confirmText = 'OK',
     this.fieldHintText,
+    this.onChangeOfFormControl,
   });
 
   @override
@@ -70,29 +72,49 @@ class DigitDateFormPicker extends StatelessWidget {
         confirmText: confirmText,
         fieldHintText: fieldHintText,
         builder: (context, picker, child) {
-          return ReactiveTextField(
-            style: TextStyle(
-              color: isEnabled == true
-                  ? DigitTheme.instance.colorScheme.onBackground
-                  : DigitTheme.instance.colorScheme.shadow,
+          return Container(
+            color: !isEnabled ? const DigitColors().seaShellGray : null,
+            child: ReactiveTextField(
+              style: TextStyle(
+                color: isEnabled == true
+                    ? DigitTheme.instance.colorScheme.onBackground
+                    : DigitTheme.instance.colorScheme.shadow,
+              ),
+              formControlName: formControlName,
+              validationMessages: validationMessages,
+              readOnly: true,
+              valueAccessor: DateTimeValueAccessor(
+                dateTimeFormat: DateFormat('dd MMM yyyy'),
+              ),
+              decoration: isEnabled
+                  ? InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
+                      suffixIcon: const Icon(
+                        Icons.date_range,
+                        size: 25,
+                      ),
+                      label: hint == null ? null : Text(hint!),
+                    )
+                  : InputDecoration(
+                      enabledBorder: DigitTheme
+                          .instance.inputDecorationTheme.disabledBorder,
+                      fillColor: DigitTheme.instance.colors.cloudGray,
+                      focusedBorder: DigitTheme
+                          .instance.inputDecorationTheme.disabledBorder,
+                      focusColor: DigitTheme.instance.colors.cloudGray,
+                      suffixIcon: const Icon(
+                        Icons.date_range,
+                        size: 25,
+                      ),
+                    ),
+              enableInteractiveSelection: isEnabled ?? true,
+              onTap: isEnabled == true
+                  ? (control) {
+                      picker.showPicker();
+                    }
+                  : null,
+              onChanged: onChangeOfFormControl,
             ),
-            formControlName: formControlName,
-            validationMessages: validationMessages,
-            readOnly: true,
-            valueAccessor: DateTimeValueAccessor(
-              dateTimeFormat: DateFormat('dd MMM yyyy'),
-            ),
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(16, 12, 0, 12),
-              suffixIcon: const Icon(Icons.date_range),
-              label: hint == null ? null : Text(hint!),
-            ),
-            enableInteractiveSelection: isEnabled ?? true,
-            onTap: isEnabled == true
-                ? (control) {
-                    picker.showPicker();
-                  }
-                : null,
           );
         },
       ),

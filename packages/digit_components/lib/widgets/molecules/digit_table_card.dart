@@ -8,6 +8,7 @@ class DigitTableCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double gap;
   final num fraction;
+  final EdgeInsetsGeometry? topPadding;
 
   const DigitTableCard({
     super.key,
@@ -17,20 +18,21 @@ class DigitTableCard extends StatelessWidget {
     this.padding,
     this.gap = 0,
     this.fraction = 2,
+    this.topPadding,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: topPadding ?? const EdgeInsets.only(top: 16),
       child: Container(
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding: padding ?? const EdgeInsets.only(right: 8, bottom: 16),
+          padding: padding ?? const EdgeInsets.only(bottom: 16),
           child: Column(
             children: element.keys
                 .map((e) => Container(

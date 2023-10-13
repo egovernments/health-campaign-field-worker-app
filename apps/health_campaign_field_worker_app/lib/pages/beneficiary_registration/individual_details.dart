@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
@@ -82,9 +83,11 @@ class _IndividualDetailsPageState
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
                     onPressed: () async {
+                      if (form.control(_dobKey).value == null) {
+                        form.control(_dobKey).setErrors({'': true});
+                      }
                       final userId = context.loggedInUserUuid;
                       final projectId = context.projectId;
-
                       form.markAllAsTouched();
                       if (!form.valid) return;
                       FocusManager.instance.primaryFocus?.unfocus();
@@ -361,6 +364,23 @@ class _IndividualDetailsPageState
                             yearsAndMonthsErrMsg: localizations.translate(
                               i18.individualDetails.yearsAndMonthsErrorText,
                             ),
+                            onChangeOfFormControl: (formControl) {
+                              // Handle changes to the control's value here
+                              final value = formControl.value;
+                              if (value == null) {
+                                formControl.setErrors({'': true});
+                              } else {
+                                DigitDOBAge age =
+                                    DigitDateUtils.calculateAge(value);
+                                if ((age.years == 0 && age.months == 0) ||
+                                    age.months > 11 ||
+                                    (age.years >= 150 && age.months > 0)) {
+                                  formControl.setErrors({'': true});
+                                } else {
+                                  formControl.removeError('');
+                                }
+                              }
+                            },
                           ),
                           BlocBuilder<AppInitializationBloc,
                               AppInitializationState>(

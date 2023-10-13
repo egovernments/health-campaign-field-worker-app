@@ -9,9 +9,15 @@ import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/beneficiary/adverse_events.dart';
+import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
+import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
+import '../pages/beneficiary/record_past_delivery_details.dart';
+import '../pages/beneficiary/widgets/household_acknowledgement.dart';
+import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
@@ -44,11 +50,12 @@ import '../pages/inventory/reports/report_selection.dart';
 import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/profile.dart';
 import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-import '../pages/profile.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -101,16 +108,41 @@ part 'app_router.gr.dart';
               initial: true,
             ),
             AutoRoute(
+              page: BeneficiaryDetailsPage,
+              path: 'beneficiary-details',
+            ),
+            AutoRoute(
               page: DeliverInterventionPage,
               path: 'deliver-intervention',
+            ),
+            AutoRoute<List<TaskModel>>(
+              page: AdverseEventsPage,
+              path: 'adverse-events',
+            ),
+            AutoRoute(
+              page: DoseAdministeredPage,
+              path: 'dose-administered',
+            ),
+            AutoRoute(
+              page: SplashAcknowledgementPage,
+              path: 'splash-acknowledgement',
             ),
             AutoRoute(
               page: ReasonForDeletionPage,
               path: 'reason-for-deletion',
             ),
+            AutoRoute(
+              page: RecordPastDeliveryDetailsPage,
+              path: 'record-past-delivery-details',
+            ),
+            AutoRoute(
+              page: HouseholdAcknowledgementPage,
+              path: 'household-acknowledgement',
+            ),
             AutoRoute(page: ChecklistViewPage, path: 'view'),
           ],
         ),
+
         AutoRoute(page: ChecklistWrapperPage, path: 'checklist', children: [
           AutoRoute(
             page: ChecklistPage,
@@ -122,6 +154,7 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
+
         AutoRoute(
           page: ComplaintsAcknowledgementPage,
           path: 'complaints-acknowledgement',

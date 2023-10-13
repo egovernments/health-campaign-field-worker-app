@@ -20,9 +20,7 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
-
 import '../data/local_store/sql_store/sql_store.dart';
-import '../models/auth/auth_model.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -33,7 +31,6 @@ import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/progress_bar/beneficiary_progress.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({

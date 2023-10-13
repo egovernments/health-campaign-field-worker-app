@@ -5,6 +5,7 @@ const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
 const searchBeneficiary = SearchBeneficiary();
+const beneficiaryDetails = BeneficiaryDetails();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
@@ -12,6 +13,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
+const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -53,6 +55,8 @@ class Common {
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
+  String get coreCommonNA => 'CORE_COMMON_NA';
+
   String get coreCommonProfile => 'CORE_COMMON_PROFILE';
 
   String get coreCommonLogout => 'CORE_COMMON_LOGOUT';
@@ -80,6 +84,13 @@ class Common {
   String get coreCommonSkip => 'CORE_COMMON_SKIP';
 
   String get coreCommonNext => 'CORE_COMMON_NEXT';
+
+  String get coreCommonYes => 'CORE_COMMON_YES';
+
+  String get coreCommonNo => 'CORE_COMMON_NO';
+  String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
+
+  String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 }
 
 class Login {
@@ -181,6 +192,9 @@ class SearchBeneficiary {
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
@@ -200,6 +214,34 @@ class SearchBeneficiary {
   String get monthsAbbr => 'MONTHS_ABBR';
 
   String get proximityLabel => 'PROXIMITY_LABEL';
+}
+
+class BeneficiaryDetails {
+  const BeneficiaryDetails();
+
+  String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabelText =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabel =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
+  String get beneficiarysDetailsDeleteIconLabel =>
+      'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+  String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
+
+  String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get ctaProceed => 'PROCEED';
+  String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+  String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+  String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+  String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
+  String get beneficiaryDeliveryStrategy =>
+      'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
+  String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
+  String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+  String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
 }
 
 class IndividualDetails {
@@ -291,6 +333,8 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get viewHouseHoldDetailsAction =>
+      'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 }
 
 class HouseholdOverView {
@@ -322,6 +366,9 @@ class HouseholdOverView {
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
+  String get householdOverViewNotEligibleIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL';
+
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
@@ -329,6 +376,8 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
+
+  String get viewDeliveryLabel => 'VIEW_DELIVERY_DETAILS_LABEL';
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
@@ -358,12 +407,22 @@ class MemberCard {
 
   String get deliverDetailsMonthsText =>
       'MEMBER_CARD_DELIVER_DETAILS_MONTHS_TEXT';
+
+  String get unableToDeliverLabel => 'MEMBER_CARD_UNABLE_TO_DELIVER_LABEL';
+
+  String get beneficiaryRefusedLabel => 'MEMBER_CARD_BENEFICIARY_REFUSED_LABEL';
+
+  String get recordAdverseEventsLabel =>
+      'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
+  String get deliverInterventionResourceLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_LABEL';
 
   String get dateOfRegistrationLabel =>
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
@@ -393,7 +452,52 @@ class DeliverIntervention {
 
   String get dialogContent => 'DELIVER_INTERVENTION_DIALOG_CONTENT';
 
+  String get didYouObserveAdvEventsTitle =>
+      'DID_YOU_OBSERVE_ADVERSE_EVENTS_TITLE';
+  String get didYouObservePreviousAdvEventsTitle =>
+      'DID_YOU_OBSERVE_PREVIOUS_ADVERSE_EVENTS_TITLE';
+
   String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+  String get resourceAddBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_ADD_RESOURCE';
+  String get resourceDeleteBeneficiary =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_RESOURCE';
+  String get resourceDeleteBeneficiaryDialogTitle =>
+      'DELIVER_INTERVENTION_RESOURCE_DIALOG_TITLE';
+  String get resourceDeleteBeneficiaryPrimaryActionLabel =>
+      'DELIVER_INTERVENTION_RESOURCE_DELETE_PRIMARY_ACTION_LABEL';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get dose => 'DELIVER_INTERVENTION_DOSE';
+  String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
+  String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
+  String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+  String get recordPastDeliveryDeatils =>
+      'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
+  String get wasDosePastDeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_DOSE_DELIVERY_DETAILS';
+  //[todo] need to change the 24
+  String get wasDosePastRecordDeliveryDetails =>
+      'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
+}
+
+class AdverseEvents {
+  const AdverseEvents();
+
+  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get sideEffectsLabel => 'SIDE_EFFECTS_LABEL';
+
+  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
+
+  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
+
+  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
+
+  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
+
+  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
 }
 
 class ProjectSelection {

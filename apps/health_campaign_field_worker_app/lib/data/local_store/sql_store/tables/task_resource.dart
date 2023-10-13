@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 
 class TaskResource extends Table {
   TextColumn get clientReferenceId => text()();
+  TextColumn get taskclientReferenceId => text()();
   TextColumn get taskId => text().nullable()();
   TextColumn get id => text().nullable()();
   TextColumn get productVariantId => text().nullable()();

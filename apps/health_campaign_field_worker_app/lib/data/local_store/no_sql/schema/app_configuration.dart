@@ -66,6 +66,9 @@ class AppConfiguration {
 
   @Name('FIREBASE_CONFIG')
   FirebaseConfig? firebaseConfig;
+
+  @Name('symptomsTypes')
+  late List<SymptomsTypes>? symptomsTypes;
 }
 
 @embedded
@@ -172,4 +175,11 @@ class CallSupportList {
 class FirebaseConfig {
   bool? enableCrashlytics;
   bool? enableAnalytics;
+}
+
+@embedded
+class SymptomsTypes {
+  late String code;
+  late String name;
+  late bool active;
 }

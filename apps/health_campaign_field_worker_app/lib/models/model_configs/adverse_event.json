@@ -1,0 +1,45 @@
+{
+  "name": "adverse_event",
+  "createRepository": true,
+  "isSearchResponsePlural": true,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "taskClientReferenceId",
+      "type": "String",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "projectId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "taskClientReferenceId",
+      "type": "String"
+    },
+    {
+      "name": "reAttempts",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
+      "name": "symptoms",
+      "type": "String",
+      "isList": true,
+      "includeForQuery": true,
+      "includeForEntity": true,
+      "includeForTable": true
+    }
+  ],
+  "isEnum": false
+}
