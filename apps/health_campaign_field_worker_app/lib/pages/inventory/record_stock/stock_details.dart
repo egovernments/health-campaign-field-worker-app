@@ -172,6 +172,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
+
                                     if (deliveryTeamSelected &&
                                         (form.control(_deliveryTeamKey).value ==
                                                 null ||

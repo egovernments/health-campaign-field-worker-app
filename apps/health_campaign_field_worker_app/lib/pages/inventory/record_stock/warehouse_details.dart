@@ -51,6 +51,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
               : [],
         ),
         _teamCodeKey: FormControl<String>(
+          value: isDistributor || deliveryTeamSelected
+              ? context.loggedInUserUuid
+              : "",
           validators: isDistributor ? [Validators.required] : [],
         ),
       });
@@ -151,10 +154,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                         "Delivery Team"
                                                     ? teamCode
                                                     : facility.id,
-                                                primaryType:
-                                                    deliveryTeamSelected
-                                                        ? "STAFF"
-                                                        : "WAREHOUSE",
+                                                primaryType: isDistributor ||
+                                                        deliveryTeamSelected
+                                                    ? "STAFF"
+                                                    : "WAREHOUSE",
                                               ),
                                             );
 
@@ -250,7 +253,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     }
                                   },
                                 ),
-                              if (isDistributor)
+                              if (isDistributor ||
+                                  isWareHouseMgr && deliveryTeamSelected)
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18.stockReconciliationDetails
