@@ -310,7 +310,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     final resourcesCompanions = entity.resources?.map((e) {
           return e
-              .copyWith(clientReferenceId: entity.clientReferenceId)
+              .copyWith(
+                clientReferenceId: entity.clientReferenceId,
+                taskclientReferenceId: entity.clientReferenceId,
+              )
               .companion;
         }).toList() ??
         [];

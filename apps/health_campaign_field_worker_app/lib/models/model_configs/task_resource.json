@@ -14,7 +14,7 @@
       "name": "taskclientReferenceId",
       "type": "String",
       "includeForQuery": false,
-      "nullable": false,
+      "nullable": true,
       "includeForEntity": true,
       "includeForTable": true
     },
