@@ -38,6 +38,14 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   bool doseAdministered = false;
   bool formSubmitted = false;
 
+  final clickedStatus = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    clickedStatus.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -74,136 +82,181 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                 height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      if (form.control(_doseAdministeredKey).value == null) {
-                        form
-                            .control(_doseAdministeredKey)
-                            .setErrors({'': true});
-                      }
-                      form.markAllAsTouched();
+                  child: ValueListenableBuilder(
+                    valueListenable: clickedStatus,
+                    builder: (context, bool isClicked, _) {
+                      return DigitElevatedButton(
+                        onPressed: isClicked
+                            ? null
+                            : () {
+                                if (form.control(_doseAdministeredKey).value ==
+                                    null) {
+                                  clickedStatus.value = false;
+                                  form
+                                      .control(_doseAdministeredKey)
+                                      .setErrors({'': true});
+                                }
+                                form.markAllAsTouched();
 
-                      if (!form.valid) return;
+                                if (!form.valid)
+                                  return;
+                                else {
+                                  clickedStatus.value = true;
+                                  final bloc = context
+                                      .read<DeliverInterventionBloc>()
+                                      .state;
+                                  final event =
+                                      context.read<DeliverInterventionBloc>();
 
-                      final bloc =
-                          context.read<DeliverInterventionBloc>().state;
-                      final event = context.read<DeliverInterventionBloc>();
+                                  if (doseAdministered && context.mounted) {
+                                    // Iterate through future deliveries
 
-                      if (doseAdministered && context.mounted) {
-                        // Iterate through future deliveries
-
-                        for (var e in bloc.futureDeliveries!) {
-                          int doseIndex = e.id;
-                          final clientReferenceId = IdGen.i.identifier;
-                          final address = bloc.oldTask?.address;
-                          // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
-                          event.add(DeliverInterventionSubmitEvent(
-                            TaskModel(
-                              projectId: context.projectId,
-                              address: address?.copyWith(
-                                relatedClientReferenceId: clientReferenceId,
-                                id: null,
-                              ),
-                              status: Status.delivered.toValue(),
-                              clientReferenceId: clientReferenceId,
-                              projectBeneficiaryClientReferenceId: bloc
-                                  .oldTask?.projectBeneficiaryClientReferenceId,
-                              tenantId: envConfig.variables.tenantId,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: context.loggedInUserUuid,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              clientAuditDetails: ClientAuditDetails(
-                                createdBy: context.loggedInUserUuid,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              resources: fetchProductVariant(
-                                e,
-                                overViewBloc.selectedIndividual,
-                              )
-                                  ?.productVariants
-                                  ?.map((variant) => TaskResourceModel(
-                                        clientReferenceId: IdGen.i.identifier,
-                                        tenantId: envConfig.variables.tenantId,
-                                        taskclientReferenceId:
-                                            clientReferenceId,
-                                        quantity: variant.quantity.toString(),
-                                        productVariantId:
-                                            variant.productVariantId,
-                                        isDelivered: true,
-                                        auditDetails: AuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
+                                    for (var e in bloc.futureDeliveries!) {
+                                      int doseIndex = e.id;
+                                      final clientReferenceId =
+                                          IdGen.i.identifier;
+                                      final address = bloc.oldTask?.address;
+                                      // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
+                                      event.add(DeliverInterventionSubmitEvent(
+                                        TaskModel(
+                                          projectId: context.projectId,
+                                          address: address?.copyWith(
+                                            relatedClientReferenceId:
+                                                clientReferenceId,
+                                            id: null,
+                                          ),
+                                          status: Status.delivered.toValue(),
+                                          clientReferenceId: clientReferenceId,
+                                          projectBeneficiaryClientReferenceId: bloc
+                                              .oldTask
+                                              ?.projectBeneficiaryClientReferenceId,
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          rowVersion: 1,
+                                          auditDetails: AuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          resources: fetchProductVariant(
+                                            e,
+                                            overViewBloc.selectedIndividual,
+                                          )
+                                              ?.productVariants
+                                              ?.map((variant) =>
+                                                  TaskResourceModel(
+                                                    clientReferenceId:
+                                                        IdGen.i.identifier,
+                                                    tenantId: envConfig
+                                                        .variables.tenantId,
+                                                    taskclientReferenceId:
+                                                        clientReferenceId,
+                                                    quantity: variant.quantity
+                                                        .toString(),
+                                                    productVariantId: variant
+                                                        .productVariantId,
+                                                    isDelivered: true,
+                                                    auditDetails: AuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          additionalFields:
+                                              TaskAdditionalFields(
+                                            version: 1,
+                                            fields: [
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfDelivery
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfAdministration
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfVerification
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType.cycleIndex
+                                                    .toValue(),
+                                                "0${bloc.cycle}",
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType.doseIndex
+                                                    .toValue(),
+                                                "0$doseIndex",
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .deliveryStrategy
+                                                    .toValue(),
+                                                e.deliveryStrategy,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        clientAuditDetails: ClientAuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
+                                        false,
+                                        context.boundary,
+                                      ));
+                                    }
+                                  }
+
+                                  final reloadState =
+                                      context.read<HouseholdOverviewBloc>();
+
+                                  Future.delayed(
+                                    const Duration(milliseconds: 1000),
+                                    () {
+                                      reloadState
+                                          .add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
+                                    },
+                                  ).then((value) => context.router.popAndPush(
+                                        HouseholdAcknowledgementRoute(
+                                          enableViewHousehold: true,
                                         ),
-                                      ))
-                                  .toList(),
-                              additionalFields: TaskAdditionalFields(
-                                version: 1,
-                                fields: [
-                                  AdditionalField(
-                                    'DateOfDelivery',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'DateOfAdministration',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'DateOfVerification',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'CycleIndex',
-                                    "0${bloc.cycle}",
-                                  ),
-                                  AdditionalField(
-                                    'DoseIndex',
-                                    "0$doseIndex",
-                                  ),
-                                  AdditionalField(
-                                    'DeliveryStrategy',
-                                    e.deliveryStrategy,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            false,
-                            context.boundary,
-                          ));
-                        }
-                      }
-
-                      final reloadState = context.read<HouseholdOverviewBloc>();
-
-                      Future.delayed(const Duration(milliseconds: 1000), () {
-                        reloadState.add(HouseholdOverviewReloadEvent(
-                          projectId: context.projectId,
-                          projectBeneficiaryType: context.beneficiaryType,
-                        ));
-                      }).then((value) => context.router.popAndPush(
-                            HouseholdAcknowledgementRoute(
-                              enableViewHousehold: true,
-                            ),
-                          ));
+                                      ));
+                                }
+                              },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(i18.common.coreCommonNext),
+                          ),
+                        ),
+                      );
                     },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonNext),
-                      ),
-                    ),
                   ),
                 ),
               ),

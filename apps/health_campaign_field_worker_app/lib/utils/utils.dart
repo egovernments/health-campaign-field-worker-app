@@ -270,7 +270,8 @@ bool checkEligibilityForActiveCycle(
 ) {
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              .firstWhereOrNull(
+                  (e) => e.key == AdditionalFieldsType.cycleIndex.toValue())
               ?.value ??
           '1'
       : '1';

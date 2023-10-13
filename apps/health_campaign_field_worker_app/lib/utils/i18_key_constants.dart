@@ -177,6 +177,9 @@ class SearchBeneficiary {
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
