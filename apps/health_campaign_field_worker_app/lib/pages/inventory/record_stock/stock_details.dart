@@ -73,11 +73,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    //[TODO]: WAREHOUSE_MANAGER need to make in enum
 
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == "WAREHOUSE_MANAGER",
+          (role) => role.code == Roles.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;

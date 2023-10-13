@@ -43,6 +43,7 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
+export 'entities/roles.dart';
 
 abstract class DataModel {
   final String? boundaryCode;

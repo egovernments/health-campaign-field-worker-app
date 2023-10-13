@@ -26,6 +26,7 @@ import 'entities/project_product_variant.dart';
 import 'entities/project_resource.dart';
 import 'entities/project_staff.dart';
 import 'entities/project_type.dart';
+import 'entities/roles.dart';
 import 'entities/service.dart';
 import 'entities/service_attributes.dart';
 import 'entities/service_definition.dart';
@@ -169,6 +170,7 @@ var _mappers = <BaseMapper>{
   DataOperationMapper._(),
   ApiOperationMapper._(),
   PgrServiceApplicationStatusMapper._(),
+  RolesMapper._(),
   // custom mappers
 };
 
@@ -4770,6 +4772,29 @@ class PgrServiceApplicationStatusMapper extends EnumMapper<PgrServiceApplication
 }
 
 extension PgrServiceApplicationStatusMapperExtension on PgrServiceApplicationStatus {
+  dynamic toValue() => Mapper.toValue(this);
+}
+
+class RolesMapper extends EnumMapper<Roles> {
+  RolesMapper._();
+
+  @override  Roles decode(dynamic value) {
+    switch (value) {
+      case "WAREHOUSE_MANAGER": return Roles.warehouseManager;
+      case "DISTRIBUTOR": return Roles.distributor;
+      default: throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override  dynamic encode(Roles self) {
+    switch (self) {
+      case Roles.warehouseManager: return "WAREHOUSE_MANAGER";
+      case Roles.distributor: return "DISTRIBUTOR";
+    }
+  }
+}
+
+extension RolesMapperExtension on Roles {
   dynamic toValue() => Mapper.toValue(this);
 }
 

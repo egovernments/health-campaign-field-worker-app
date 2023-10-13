@@ -423,6 +423,8 @@ class StockDetails {
   /// Page Title Keys
   String get receivedPageTitle => 'RECEIVED_STOCK_DETAILS';
 
+  String get transactionDetailsLabel => 'TRANSACTION_DETAILS_LABEL';
+
   String get transactionDetails => 'STOCK_TRANSACTION_DETAILS';
 
   String get issuedPageTitle => 'ISSUED_STOCK_DETAILS';

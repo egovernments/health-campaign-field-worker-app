@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -33,18 +34,16 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _teamCodeKey = 'teamCode';
 
   bool deliveryTeamSelected = false;
-  String? receiverType;
 
-  FormGroup buildForm() => fb.group(<String, Object>{
+  FormGroup buildForm(bool isDistributor) => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
           value: context.boundary.name,
         ),
         _warehouseKey: FormControl<FacilityModel>(
-          //[TODO]: WAREHOUSE_MANAGER need to make in enum
           validators: context.loggedInUserRoles
                   .where(
-                    (role) => role.code == "WAREHOUSE_MANAGER",
+                    (role) => role.code == Roles.warehouseManager.toValue(),
                   )
                   .toList()
                   .isNotEmpty
@@ -52,16 +51,22 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
               : [],
         ),
         _teamCodeKey: FormControl<String>(
-          validators: deliveryTeamSelected ? [Validators.required] : [],
+          validators: isDistributor ? [Validators.required] : [],
         ),
       });
 
   @override
   Widget build(BuildContext context) {
-    //[TODO]: WAREHOUSE_MANAGER need to make in enum
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == "WAREHOUSE_MANAGER",
+          (role) => role.code == Roles.warehouseManager.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == Roles.distributor.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -96,7 +101,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   FocusScope.of(context).unfocus();
                 },
                 child: ReactiveFormBuilder(
-                  form: () => buildForm(),
+                  form: () => buildForm(isDistributor),
                   builder: (context, form, child) {
                     return ScrollableContent(
                       header: const Column(children: [
@@ -124,16 +129,24 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             .control(_dateOfEntryKey)
                                             .value as DateTime;
 
-                                        final facility = form
-                                            .control(_warehouseKey)
-                                            .value as FacilityModel;
+                                        final facility = isWareHouseMgr
+                                            ? form.control(_warehouseKey).value
+                                                as FacilityModel
+                                            : FacilityModel(
+                                                id: "Delivery Team",
+                                              );
+
                                         final teamCode =
                                             form.control(_teamCodeKey).value;
 
                                         context.read<RecordStockBloc>().add(
                                               RecordStockSaveTransactionDetailsEvent(
                                                 dateOfRecord: dateOfRecord,
-                                                facilityModel: facility,
+                                                facilityModel: isWareHouseMgr
+                                                    ? facility
+                                                    : FacilityModel(
+                                                        id: "Delivery Team",
+                                                      ),
                                                 primaryId: facility.id ==
                                                         "Delivery Team"
                                                     ? teamCode
@@ -144,6 +157,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                         : "WAREHOUSE",
                                               ),
                                             );
+
                                         context.router.push(
                                           StockDetailsRoute(),
                                         );
@@ -168,9 +182,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                deliveryTeamSelected
+                                isDistributor
                                     ? localizations.translate(
-                                        i18.stockDetails.transactionDetails,
+                                        i18.stockDetails
+                                            .transactionDetailsLabel,
                                       )
                                     : localizations.translate(
                                         i18.warehouseDetails
@@ -195,51 +210,54 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                 ),
                               ]),
-                              DigitTextFormField(
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
-                                isRequired: true,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
-                                ),
-                                suffix: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                                formControlName: _warehouseKey,
-                                readOnly: true,
-                                onTap: () async {
-                                  final parent =
-                                      context.router.parent() as StackRouter;
-                                  final facility =
-                                      await parent.push<FacilityModel>(
-                                    FacilitySelectionRoute(
-                                      facilities: facilities,
-                                    ),
-                                  );
+                              if (isWareHouseMgr)
+                                DigitTextFormField(
+                                  valueAccessor: FacilityValueAccessor(
+                                    facilities,
+                                  ),
+                                  isRequired: isWareHouseMgr,
+                                  label: localizations.translate(
+                                    i18.stockReconciliationDetails
+                                        .facilityLabel,
+                                  ),
+                                  suffix: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.search),
+                                  ),
+                                  formControlName: _warehouseKey,
+                                  readOnly: true,
+                                  onTap: () async {
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    final facility =
+                                        await parent.push<FacilityModel>(
+                                      FacilitySelectionRoute(
+                                        facilities: facilities,
+                                      ),
+                                    );
 
-                                  if (facility == null) return;
-                                  form.control(_warehouseKey).value = facility;
-                                  if (facility.id == 'Delivery Team') {
-                                    setState(() {
-                                      deliveryTeamSelected = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      deliveryTeamSelected = false;
-                                    });
-                                  }
-                                },
-                              ),
-                              if (deliveryTeamSelected)
+                                    if (facility == null) return;
+                                    form.control(_warehouseKey).value =
+                                        facility;
+                                    if (facility.id == 'Delivery Team') {
+                                      setState(() {
+                                        deliveryTeamSelected = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        deliveryTeamSelected = false;
+                                      });
+                                    }
+                                  },
+                                ),
+                              if (isDistributor)
                                 DigitTextFormField(
                                   label: localizations.translate(
                                     i18.stockReconciliationDetails
                                         .teamCodeLabel,
                                   ),
                                   formControlName: _teamCodeKey,
-                                  isRequired: deliveryTeamSelected,
+                                  isRequired: true,
                                 ),
                             ],
                           ),
