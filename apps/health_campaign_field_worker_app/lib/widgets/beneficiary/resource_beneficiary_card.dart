@@ -33,7 +33,7 @@ class _ResourceBeneficiaryCardState
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.background,
+        color: DigitTheme.instance.colorScheme.surface,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,

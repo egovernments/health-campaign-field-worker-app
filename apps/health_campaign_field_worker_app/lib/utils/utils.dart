@@ -270,7 +270,8 @@ bool checkEligibilityForActiveCycle(
 ) {
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              .firstWhereOrNull(
+                  (e) => e.key == AdditionalFieldsType.cycleIndex.toValue())
               ?.value ??
           '1'
       : '1';
@@ -357,7 +358,8 @@ bool checkStatus(
         return isLastCycleRunning
             ? lastTask.status == Status.delivered.name
                 ? true
-                : diff.inHours >= 24
+                : diff.inHours >=
+                        24 //[TODO: Need to move gap between doses to config
                     ? true
                     : false
             : true;

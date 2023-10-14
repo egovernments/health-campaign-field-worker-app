@@ -108,14 +108,13 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              leftColumnWidth: MediaQuery.of(context).size.width / 2.9,
-              rightColumnWidth: headerListResource.length * 64,
+              columnWidth: 140,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])
                           .length +
                       1) *
-                  60,
+                  59.5,
             ),
           ],
         );

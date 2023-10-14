@@ -49,6 +49,8 @@ class Common {
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
+  String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
+
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
@@ -128,6 +130,19 @@ class Checklist {
   String get checklistdate => 'CHECKLIST_DATE';
 
   String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
+
+  String get notSelectedKey => 'NOT_SELECTED';
+
+  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
+
+  String get checklistBackDialogDescription =>
+      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
+
+  String get checklistBackDialogPrimaryAction =>
+      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
+
+  String get checklistBackDialogSecondaryAction =>
+      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 }
 
 class ForgotPassword {
@@ -176,6 +191,9 @@ class SearchBeneficiary {
   const SearchBeneficiary();
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
+
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
 
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 

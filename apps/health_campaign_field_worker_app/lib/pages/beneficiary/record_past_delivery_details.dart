@@ -85,6 +85,7 @@ class _RecordPastDeliveryDetailsPageState
                               .didYouObservePreviousAdvEventsTitle),
                           barrierDismissible: false,
                           enableRecordPast: true,
+                          dialogPadding: const EdgeInsets.all(8.0),
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,
@@ -179,8 +180,8 @@ class _RecordPastDeliveryDetailsPageState
 
                                 // Determine the status based on the form control value
                                 final status = formControllValue
-                                    ? Status.delivered.toValue()
-                                    : Status.notDelivered.toValue();
+                                    ? Status.administeredSuccess.toValue()
+                                    : Status.administeredFailed.toValue();
 
                                 // Create a new task with the updated status
                                 final result =

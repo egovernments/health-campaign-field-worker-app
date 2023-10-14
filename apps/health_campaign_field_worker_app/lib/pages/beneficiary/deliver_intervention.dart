@@ -569,6 +569,7 @@ class _DeliverInterventionPageState
                 taskclientReferenceId: clientReferenceId,
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
+                isDelivered: true,
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
@@ -594,27 +595,27 @@ class _DeliverInterventionPageState
         version: task.additionalFields?.version ?? 1,
         fields: [
           AdditionalField(
-            'DateOfDelivery',
+            AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'DateOfAdministration',
+            AdditionalFieldsType.dateOfAdministration.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'DateOfVerification',
+            AdditionalFieldsType.dateOfVerification.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'CycleIndex',
+            AdditionalFieldsType.cycleIndex.toValue(),
             "0${cycle ?? 1}",
           ),
           AdditionalField(
-            'DoseIndex',
+            AdditionalFieldsType.doseIndex.toValue(),
             "0${dose ?? 1}",
           ),
           AdditionalField(
-            'DeliveryStrategy',
+            AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
         ],

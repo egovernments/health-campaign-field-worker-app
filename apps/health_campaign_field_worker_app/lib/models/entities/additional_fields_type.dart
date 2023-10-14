@@ -4,7 +4,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum AdditionalFieldsType {
   @MappableValue("DeliveryStrategy") deliveryStrategy,
-  @MappableValue("CycleIndex") cycleIndex,
-  @MappableValue("DoseIndex") doseIndex,
+  @MappableValue("cycleIndex") cycleIndex,
+  @MappableValue("doseIndex") doseIndex,
+  @MappableValue("dateOfVerification") dateOfVerification,
+  @MappableValue("dateOfAdministration") dateOfAdministration,
+  @MappableValue("dateOfDelivery") dateOfDelivery,
   ;
 }

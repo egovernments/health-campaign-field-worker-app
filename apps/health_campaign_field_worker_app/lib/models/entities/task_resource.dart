@@ -31,7 +31,7 @@ class TaskResourceModel extends EntityModel {
   static const schemaName = 'TaskResource';
 
   final String clientReferenceId;
-  final String taskclientReferenceId;
+  final String? taskclientReferenceId;
   final String? taskId;
   final String? id;
   final String? productVariantId;
@@ -45,7 +45,7 @@ class TaskResourceModel extends EntityModel {
   TaskResourceModel({
     this.additionalFields,
     required this.clientReferenceId,
-    required this.taskclientReferenceId,
+    this.taskclientReferenceId,
     this.taskId,
     this.id,
     this.productVariantId,

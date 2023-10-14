@@ -20206,7 +20206,7 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
 class TaskResourceData extends DataClass
     implements Insertable<TaskResourceData> {
   final String clientReferenceId;
-  final String taskclientReferenceId;
+  final String? taskclientReferenceId;
   final String? taskId;
   final String? id;
   final String? productVariantId;
@@ -20227,7 +20227,7 @@ class TaskResourceData extends DataClass
   final String? additionalFields;
   TaskResourceData(
       {required this.clientReferenceId,
-      required this.taskclientReferenceId,
+      this.taskclientReferenceId,
       this.taskId,
       this.id,
       this.productVariantId,
@@ -20253,7 +20253,7 @@ class TaskResourceData extends DataClass
       clientReferenceId: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_reference_id'])!,
       taskclientReferenceId: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}taskclient_reference_id'])!,
+          data['${effectivePrefix}taskclient_reference_id']),
       taskId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}task_id']),
       id: const StringType()
@@ -20296,7 +20296,9 @@ class TaskResourceData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['client_reference_id'] = Variable<String>(clientReferenceId);
-    map['taskclient_reference_id'] = Variable<String>(taskclientReferenceId);
+    if (!nullToAbsent || taskclientReferenceId != null) {
+      map['taskclient_reference_id'] = Variable<String?>(taskclientReferenceId);
+    }
     if (!nullToAbsent || taskId != null) {
       map['task_id'] = Variable<String?>(taskId);
     }
@@ -20357,7 +20359,9 @@ class TaskResourceData extends DataClass
   TaskResourceCompanion toCompanion(bool nullToAbsent) {
     return TaskResourceCompanion(
       clientReferenceId: Value(clientReferenceId),
-      taskclientReferenceId: Value(taskclientReferenceId),
+      taskclientReferenceId: taskclientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskclientReferenceId),
       taskId:
           taskId == null && nullToAbsent ? const Value.absent() : Value(taskId),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
@@ -20418,7 +20422,7 @@ class TaskResourceData extends DataClass
     return TaskResourceData(
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       taskclientReferenceId:
-          serializer.fromJson<String>(json['taskclientReferenceId']),
+          serializer.fromJson<String?>(json['taskclientReferenceId']),
       taskId: serializer.fromJson<String?>(json['taskId']),
       id: serializer.fromJson<String?>(json['id']),
       productVariantId: serializer.fromJson<String?>(json['productVariantId']),
@@ -20444,7 +20448,8 @@ class TaskResourceData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
-      'taskclientReferenceId': serializer.toJson<String>(taskclientReferenceId),
+      'taskclientReferenceId':
+          serializer.toJson<String?>(taskclientReferenceId),
       'taskId': serializer.toJson<String?>(taskId),
       'id': serializer.toJson<String?>(id),
       'productVariantId': serializer.toJson<String?>(productVariantId),
@@ -20587,7 +20592,7 @@ class TaskResourceData extends DataClass
 
 class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String> clientReferenceId;
-  final Value<String> taskclientReferenceId;
+  final Value<String?> taskclientReferenceId;
   final Value<String?> taskId;
   final Value<String?> id;
   final Value<String?> productVariantId;
@@ -20630,7 +20635,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   });
   TaskResourceCompanion.insert({
     required String clientReferenceId,
-    required String taskclientReferenceId,
+    this.taskclientReferenceId = const Value.absent(),
     this.taskId = const Value.absent(),
     this.id = const Value.absent(),
     this.productVariantId = const Value.absent(),
@@ -20649,11 +20654,10 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
-  })  : clientReferenceId = Value(clientReferenceId),
-        taskclientReferenceId = Value(taskclientReferenceId);
+  }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<TaskResourceData> custom({
     Expression<String>? clientReferenceId,
-    Expression<String>? taskclientReferenceId,
+    Expression<String?>? taskclientReferenceId,
     Expression<String?>? taskId,
     Expression<String?>? id,
     Expression<String?>? productVariantId,
@@ -20701,7 +20705,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
 
   TaskResourceCompanion copyWith(
       {Value<String>? clientReferenceId,
-      Value<String>? taskclientReferenceId,
+      Value<String?>? taskclientReferenceId,
       Value<String?>? taskId,
       Value<String?>? id,
       Value<String?>? productVariantId,
@@ -20753,7 +20757,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     }
     if (taskclientReferenceId.present) {
       map['taskclient_reference_id'] =
-          Variable<String>(taskclientReferenceId.value);
+          Variable<String?>(taskclientReferenceId.value);
     }
     if (taskId.present) {
       map['task_id'] = Variable<String?>(taskId.value);
@@ -20856,8 +20860,8 @@ class $TaskResourceTable extends TaskResource
       const VerificationMeta('taskclientReferenceId');
   @override
   late final GeneratedColumn<String?> taskclientReferenceId =
-      GeneratedColumn<String?>('taskclient_reference_id', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+      GeneratedColumn<String?>('taskclient_reference_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
   @override
   late final GeneratedColumn<String?> taskId = GeneratedColumn<String?>(
@@ -21010,8 +21014,6 @@ class $TaskResourceTable extends TaskResource
           _taskclientReferenceIdMeta,
           taskclientReferenceId.isAcceptableOrUnknown(
               data['taskclient_reference_id']!, _taskclientReferenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_taskclientReferenceIdMeta);
     }
     if (data.containsKey('task_id')) {
       context.handle(_taskIdMeta,

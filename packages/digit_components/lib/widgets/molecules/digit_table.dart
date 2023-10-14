@@ -8,8 +8,7 @@ class DigitTable extends StatelessWidget {
   final double columnRowFixedHeight = 52.0;
   final List<TableHeader> headerList;
   final List<TableDataRow> tableData;
-  final double leftColumnWidth;
-  final double rightColumnWidth;
+  final double columnWidth;
   final double? height;
   final int? selectedIndex;
   final ScrollPhysics? scrollPhysics;
@@ -17,8 +16,7 @@ class DigitTable extends StatelessWidget {
     Key? key,
     required this.headerList,
     required this.tableData,
-    required this.leftColumnWidth,
-    required this.rightColumnWidth,
+    required this.columnWidth,
     this.height,
     this.selectedIndex,
     this.scrollPhysics,
@@ -62,7 +60,7 @@ class DigitTable extends StatelessWidget {
               ),
               color: surfaceColor)
           : null,
-      width: leftColumnWidth,
+      width: columnWidth,
       height: 54,
       color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
@@ -91,7 +89,7 @@ class DigitTable extends StatelessWidget {
   Widget _generateColumnRow(BuildContext context, int index, String input,
       {TextStyle? style}) {
     return Container(
-      width: leftColumnWidth,
+      width: columnWidth,
       height: tableData[index].tableRow.first.label.length > 28
           ? columnRowIncreasedHeight(index)
           : columnRowFixedHeight,
@@ -154,7 +152,7 @@ class DigitTable extends StatelessWidget {
               left: tableCellBorder,
               right: tableCellStrongBorder,
             )),
-        width: leftColumnWidth,
+        width: columnWidth,
         height: tableData[index].tableRow.first.label.length > 28
             ? columnRowIncreasedHeight(index)
             : columnRowFixedHeight,
@@ -178,8 +176,8 @@ class DigitTable extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(4.0)),
         ),
         child: HorizontalDataTable(
-          leftHandSideColumnWidth: leftColumnWidth,
-          rightHandSideColumnWidth: rightColumnWidth,
+          leftHandSideColumnWidth: columnWidth,
+          rightHandSideColumnWidth: columnWidth * (headerList.length - 1),
           isFixedHeader: true,
           headerWidgets: _getTitleWidget(theme),
           leftSideItemBuilder: _generateFirstColumnRow,

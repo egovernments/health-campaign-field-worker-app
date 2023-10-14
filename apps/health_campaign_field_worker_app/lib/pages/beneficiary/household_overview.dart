@@ -543,7 +543,7 @@ class _HouseholdOverviewPageState
                                                               DateTime.now(),
                                                         ).months) ??
                                                   0,
-                                              gender: e.gender?.name ?? ' - ',
+                                              gender: e.gender?.name,
                                               isBeneficiaryRefused:
                                                   isBeneficiaryRefused &&
                                                       !checkStatus(
@@ -608,7 +608,7 @@ class _HouseholdOverviewPageState
                                         i18.householdOverView
                                             .householdOverViewAddActionText,
                                       ),
-                                      icon: Icons.add,
+                                      icon: Icons.add_circle,
                                     ),
                                   ),
                                 ],

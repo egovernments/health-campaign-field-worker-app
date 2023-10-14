@@ -236,9 +236,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.status != null
-                                ? null
-                                : DigitTheme.instance.colorScheme.error,
+                            : tasks?.status == Status.administeredSuccess.toValue() ? DigitTheme.instance.colorScheme.onSurfaceVariant
+                            : DigitTheme.instance.colorScheme.error,
                         fontWeight:
                             index == selectedIndex ? FontWeight.w700 : null,
                       ),
@@ -252,9 +251,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                   ]);
                 },
               ).toList(),
-              leftColumnWidth: 103,
-              rightColumnWidth: headerList.length * 68,
-              height: ((e.deliveries?.length ?? 0) + 1) * 58,
+              columnWidth: 115,
+              height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
             ),
           ],
         ),
