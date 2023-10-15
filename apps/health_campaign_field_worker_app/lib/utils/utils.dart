@@ -407,11 +407,9 @@ bool allDosesDelivered(
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
       (selectedCycle.deliveries ?? []).isEmpty) {
-    print('allDosesDelivered IF');
     return true;
   } else {
     if ((tasks ?? []).isNotEmpty) {
-      print('allDosesDelivered 2');
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
                 (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
@@ -431,21 +429,16 @@ bool allDosesDelivered(
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           tasks?.last.status != Status.delivered.toValue()) {
-        print('allDosesDelivered 3');
         return true;
       } else if (selectedCycle.id == lastCycle &&
           tasks?.last.status == Status.delivered.toValue()) {
-        print('allDosesDelivered 4');
         return false;
       } else if ((sideEffects ?? []).isNotEmpty) {
-        print('allDosesDelivered 5');
         return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
       } else {
-        print('allDosesDelivered 6');
         return false;
       }
     } else {
-      print('allDosesDelivered 7');
       return false;
     }
   }
