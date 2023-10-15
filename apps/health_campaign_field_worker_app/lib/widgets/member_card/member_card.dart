@@ -315,8 +315,6 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
-                                      final taskClientRefId =
-                                          IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
@@ -325,7 +323,7 @@ class MemberCard extends StatelessWidget {
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
-                                                    taskClientRefId,
+                                                    IdGen.i.identifier,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
                                                 rowVersion: 1,
