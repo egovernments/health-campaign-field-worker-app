@@ -290,8 +290,13 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           );
         }
 
-        await super.create(entity);
+        await super.create(
+          entity,
+        );
       }
+      await super.create(
+        entity,
+      );
     });
   }
 

@@ -56,21 +56,6 @@ class MemberCard extends StatelessWidget {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
 
-    print('ALL DOSES DELIVERED');
-    print(allDosesDelivered(
-      tasks,
-      context.selectedCycle,
-      sideEffects,
-      individual,
-    ));
-    print('CHECK STATUS');
-    print(
-      !checkStatus(
-        tasks,
-        context.selectedCycle,
-      ),
-    );
-
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.background,
@@ -330,6 +315,8 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
+                                      final taskClientRefId =
+                                          IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
@@ -338,7 +325,7 @@ class MemberCard extends StatelessWidget {
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
-                                                    IdGen.i.identifier,
+                                                    taskClientRefId,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
                                                 rowVersion: 1,
@@ -374,6 +361,8 @@ class MemberCard extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
+                                                address:
+                                                    individual.address?.first,
                                               ),
                                               false,
                                               context.boundary,
