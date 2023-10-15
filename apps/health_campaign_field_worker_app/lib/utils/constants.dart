@@ -54,10 +54,12 @@ import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
 
 class Constants {
-  late Isar _isar;
+  late Future<Isar> _isar;
   late String _version;
   static final Constants _instance = Constants._();
-  Constants._();
+  Constants._() {
+    _isar = openIsar();
+  }
   factory Constants() {
     return _instance;
   }
@@ -69,8 +71,30 @@ class Constants {
     return _version;
   }
 
-  Isar get isar {
+  Future<Isar> get isar {
     return _isar;
+  }
+
+  Future<Isar> openIsar() async {
+    if (Isar.instanceNames.isEmpty) {
+      final directory = await getApplicationDocumentsDirectory();
+
+      return await Isar.open(
+        [
+          ServiceRegistrySchema,
+          LocalizationWrapperSchema,
+          AppConfigurationSchema,
+          OpLogSchema,
+          ProjectTypeListCycleSchema,
+          RowVersionListSchema,
+        ],
+        name: 'HCM',
+        inspector: true,
+        directory: directory.path,
+      );
+    } else {
+      return await Future.value(Isar.getInstance());
+    }
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
@@ -129,19 +153,15 @@ class Constants {
   }
 
   Future<void> _initializeIsar(version) async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open(
-      [
-        ServiceRegistrySchema,
-        LocalizationWrapperSchema,
-        AppConfigurationSchema,
-        OpLogSchema,
-        RowVersionListSchema,
-        ProjectTypeListCycleSchema,
-      ],
-      directory: dir.path,
-      name: 'HCM',
-    );
+    _isar = Constants().isar;
+
+    final isar = await _isar;
+    final appConfigs = await isar.appConfigurations.where().findAll();
+    final config = appConfigs.firstOrNull;
+
+    final enableCrashlytics =
+        config?.firebaseConfig?.enableCrashlytics ?? false;
+
     _version = version;
   }
 

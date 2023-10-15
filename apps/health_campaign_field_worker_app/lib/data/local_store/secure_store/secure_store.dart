@@ -15,6 +15,8 @@ class LocalSecureStore {
   static const backgroundServiceKey = 'backgroundServiceKey';
   static const boundaryRefetchInKey = 'boundaryRefetchInKey';
   static const actionsListkey = 'actionsListkey';
+  static const isAppInActiveKey = 'isAppInActiveKey';
+  static const manualSyncKey = 'manualSyncKey';
 
   final storage = const FlutterSecureStorage();
 
@@ -102,6 +104,14 @@ class LocalSecureStore {
     );
   }
 
+  // Note TO the app  as Trigger Manual Sync or Not
+  Future<void> setManualSyncTrigger(bool isManualSync) async {
+    await storage.write(
+      key: manualSyncKey,
+      value: isManualSync.toString(),
+    );
+  }
+
   Future<void> setAuthCredentials(AuthModel model) async {
     await storage.write(key: accessTokenKey, value: model.accessToken);
     await storage.write(key: refreshTokenKey, value: model.refreshToken);
@@ -131,6 +141,11 @@ class LocalSecureStore {
 
   Future<void> setHasAppRunBefore(bool hasRunBefore) async {
     await storage.write(key: hasAppRunBeforeKey, value: '$hasRunBefore');
+  }
+
+  // Note TO the app is in closed state or not
+  Future<void> setAppInActive(bool isRunning) async {
+    await storage.write(key: isAppInActiveKey, value: isRunning.toString());
   }
 
   Future<bool> get hasAppRunBefore async {

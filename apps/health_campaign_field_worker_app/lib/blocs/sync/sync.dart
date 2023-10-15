@@ -105,6 +105,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       );
       emit(const SyncCompletedState());
     } on SyncError catch (error) {
+      print(error);
+      print("--------ERROR-----");
       if (error is SyncDownError) {
         emit(const DownSyncFailedState());
       } else {

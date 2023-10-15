@@ -367,7 +367,7 @@ bool checkStatus(
         return false;
       }
     } else {
-      return false;
+      return true;
     }
   } else {
     return false;

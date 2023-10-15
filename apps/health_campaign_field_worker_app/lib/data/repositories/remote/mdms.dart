@@ -374,7 +374,7 @@ class MdmsRepository {
       newProjectTypeList.add(newprojectType);
     }
 
-    return await isar.writeTxn(() async {
+    await isar.writeTxn(() async {
       await isar.projectTypeListCycles.putAll(newProjectTypeList);
     });
   }
