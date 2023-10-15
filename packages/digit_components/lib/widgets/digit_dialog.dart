@@ -21,7 +21,6 @@ class DigitDialog extends StatelessWidget {
       builder: (context) => WillPopScope(
         onWillPop: () async {
           // Handle the back button press here
-          // You can show a confirmation dialog or take other actions.
           // If you want to prevent dismissal, return false.
           bool canPop = options.barrierDismissible;
           /* Add your logic here */;
