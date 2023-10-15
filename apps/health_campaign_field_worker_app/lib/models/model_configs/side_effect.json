@@ -1,5 +1,5 @@
 {
-  "name": "adverse_event",
+  "name": "side_effect",
   "createRepository": true,
   "isSearchResponsePlural": true,
   "attributes": [

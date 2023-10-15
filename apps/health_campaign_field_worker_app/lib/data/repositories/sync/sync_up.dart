@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
-import 'remote_type.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
@@ -10,6 +9,7 @@ import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
 import '../remote/pgr_service.dart';
+import 'remote_type.dart';
 
 class PerformSyncUp {
   static FutureOr<void> syncUp({
@@ -131,7 +131,7 @@ class PerformSyncUp {
                   );
                 }
 
-                if (updatedEntity is AdverseEventModel) {
+                if (updatedEntity is SideEffectModel) {
                   updatedEntity = updatedEntity.copyWith(id: serverGeneratedId);
                 }
 

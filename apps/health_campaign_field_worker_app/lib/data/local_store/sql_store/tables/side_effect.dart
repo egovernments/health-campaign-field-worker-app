@@ -3,7 +3,7 @@
 import 'package:drift/drift.dart';
 
 
-class AdverseEvent extends Table {
+class SideEffect extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get taskClientReferenceId => text().nullable()();

@@ -94,20 +94,20 @@ class _$LocationEventCopyWithImpl<$Res, $Val extends LocationEvent>
 }
 
 /// @nodoc
-abstract class _$$LoadLocationEventImplCopyWith<$Res> {
-  factory _$$LoadLocationEventImplCopyWith(_$LoadLocationEventImpl value,
-          $Res Function(_$LoadLocationEventImpl) then) =
-      __$$LoadLocationEventImplCopyWithImpl<$Res>;
+abstract class _$$LoadLocationEventCopyWith<$Res> {
+  factory _$$LoadLocationEventCopyWith(
+          _$LoadLocationEvent value, $Res Function(_$LoadLocationEvent) then) =
+      __$$LoadLocationEventCopyWithImpl<$Res>;
   @useResult
   $Res call({int retry});
 }
 
 /// @nodoc
-class __$$LoadLocationEventImplCopyWithImpl<$Res>
-    extends _$LocationEventCopyWithImpl<$Res, _$LoadLocationEventImpl>
-    implements _$$LoadLocationEventImplCopyWith<$Res> {
-  __$$LoadLocationEventImplCopyWithImpl(_$LoadLocationEventImpl _value,
-      $Res Function(_$LoadLocationEventImpl) _then)
+class __$$LoadLocationEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$LoadLocationEvent>
+    implements _$$LoadLocationEventCopyWith<$Res> {
+  __$$LoadLocationEventCopyWithImpl(
+      _$LoadLocationEvent _value, $Res Function(_$LoadLocationEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -115,7 +115,7 @@ class __$$LoadLocationEventImplCopyWithImpl<$Res>
   $Res call({
     Object? retry = null,
   }) {
-    return _then(_$LoadLocationEventImpl(
+    return _then(_$LoadLocationEvent(
       retry: null == retry
           ? _value.retry
           : retry // ignore: cast_nullable_to_non_nullable
@@ -126,8 +126,8 @@ class __$$LoadLocationEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadLocationEventImpl implements LoadLocationEvent {
-  const _$LoadLocationEventImpl({this.retry = 5});
+class _$LoadLocationEvent implements LoadLocationEvent {
+  const _$LoadLocationEvent({this.retry = 5});
 
   @override
   @JsonKey()
@@ -142,7 +142,7 @@ class _$LoadLocationEventImpl implements LoadLocationEvent {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadLocationEventImpl &&
+            other is _$LoadLocationEvent &&
             (identical(other.retry, retry) || other.retry == retry));
   }
 
@@ -152,9 +152,8 @@ class _$LoadLocationEventImpl implements LoadLocationEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadLocationEventImplCopyWith<_$LoadLocationEventImpl> get copyWith =>
-      __$$LoadLocationEventImplCopyWithImpl<_$LoadLocationEventImpl>(
-          this, _$identity);
+  _$$LoadLocationEventCopyWith<_$LoadLocationEvent> get copyWith =>
+      __$$LoadLocationEventCopyWithImpl<_$LoadLocationEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -239,29 +238,29 @@ class _$LoadLocationEventImpl implements LoadLocationEvent {
 }
 
 abstract class LoadLocationEvent implements LocationEvent {
-  const factory LoadLocationEvent({final int retry}) = _$LoadLocationEventImpl;
+  const factory LoadLocationEvent({final int retry}) = _$LoadLocationEvent;
 
   int get retry;
   @JsonKey(ignore: true)
-  _$$LoadLocationEventImplCopyWith<_$LoadLocationEventImpl> get copyWith =>
+  _$$LoadLocationEventCopyWith<_$LoadLocationEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ListenLocationEventImplCopyWith<$Res> {
-  factory _$$ListenLocationEventImplCopyWith(_$ListenLocationEventImpl value,
-          $Res Function(_$ListenLocationEventImpl) then) =
-      __$$ListenLocationEventImplCopyWithImpl<$Res>;
+abstract class _$$ListenLocationEventCopyWith<$Res> {
+  factory _$$ListenLocationEventCopyWith(_$ListenLocationEvent value,
+          $Res Function(_$ListenLocationEvent) then) =
+      __$$ListenLocationEventCopyWithImpl<$Res>;
   @useResult
   $Res call({int retry});
 }
 
 /// @nodoc
-class __$$ListenLocationEventImplCopyWithImpl<$Res>
-    extends _$LocationEventCopyWithImpl<$Res, _$ListenLocationEventImpl>
-    implements _$$ListenLocationEventImplCopyWith<$Res> {
-  __$$ListenLocationEventImplCopyWithImpl(_$ListenLocationEventImpl _value,
-      $Res Function(_$ListenLocationEventImpl) _then)
+class __$$ListenLocationEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$ListenLocationEvent>
+    implements _$$ListenLocationEventCopyWith<$Res> {
+  __$$ListenLocationEventCopyWithImpl(
+      _$ListenLocationEvent _value, $Res Function(_$ListenLocationEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -269,7 +268,7 @@ class __$$ListenLocationEventImplCopyWithImpl<$Res>
   $Res call({
     Object? retry = null,
   }) {
-    return _then(_$ListenLocationEventImpl(
+    return _then(_$ListenLocationEvent(
       retry: null == retry
           ? _value.retry
           : retry // ignore: cast_nullable_to_non_nullable
@@ -280,8 +279,8 @@ class __$$ListenLocationEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ListenLocationEventImpl implements ListenLocationEvent {
-  const _$ListenLocationEventImpl({this.retry = 5});
+class _$ListenLocationEvent implements ListenLocationEvent {
+  const _$ListenLocationEvent({this.retry = 5});
 
   @override
   @JsonKey()
@@ -296,7 +295,7 @@ class _$ListenLocationEventImpl implements ListenLocationEvent {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ListenLocationEventImpl &&
+            other is _$ListenLocationEvent &&
             (identical(other.retry, retry) || other.retry == retry));
   }
 
@@ -306,8 +305,8 @@ class _$ListenLocationEventImpl implements ListenLocationEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ListenLocationEventImplCopyWith<_$ListenLocationEventImpl> get copyWith =>
-      __$$ListenLocationEventImplCopyWithImpl<_$ListenLocationEventImpl>(
+  _$$ListenLocationEventCopyWith<_$ListenLocationEvent> get copyWith =>
+      __$$ListenLocationEventCopyWithImpl<_$ListenLocationEvent>(
           this, _$identity);
 
   @override
@@ -393,32 +392,31 @@ class _$ListenLocationEventImpl implements ListenLocationEvent {
 }
 
 abstract class ListenLocationEvent implements LocationEvent {
-  const factory ListenLocationEvent({final int retry}) =
-      _$ListenLocationEventImpl;
+  const factory ListenLocationEvent({final int retry}) = _$ListenLocationEvent;
 
   int get retry;
   @JsonKey(ignore: true)
-  _$$ListenLocationEventImplCopyWith<_$ListenLocationEventImpl> get copyWith =>
+  _$$ListenLocationEventCopyWith<_$ListenLocationEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RequestLocationServiceEventImplCopyWith<$Res> {
-  factory _$$RequestLocationServiceEventImplCopyWith(
-          _$RequestLocationServiceEventImpl value,
-          $Res Function(_$RequestLocationServiceEventImpl) then) =
-      __$$RequestLocationServiceEventImplCopyWithImpl<$Res>;
+abstract class _$$RequestLocationServiceEventCopyWith<$Res> {
+  factory _$$RequestLocationServiceEventCopyWith(
+          _$RequestLocationServiceEvent value,
+          $Res Function(_$RequestLocationServiceEvent) then) =
+      __$$RequestLocationServiceEventCopyWithImpl<$Res>;
   @useResult
   $Res call({int retry});
 }
 
 /// @nodoc
-class __$$RequestLocationServiceEventImplCopyWithImpl<$Res>
-    extends _$LocationEventCopyWithImpl<$Res, _$RequestLocationServiceEventImpl>
-    implements _$$RequestLocationServiceEventImplCopyWith<$Res> {
-  __$$RequestLocationServiceEventImplCopyWithImpl(
-      _$RequestLocationServiceEventImpl _value,
-      $Res Function(_$RequestLocationServiceEventImpl) _then)
+class __$$RequestLocationServiceEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$RequestLocationServiceEvent>
+    implements _$$RequestLocationServiceEventCopyWith<$Res> {
+  __$$RequestLocationServiceEventCopyWithImpl(
+      _$RequestLocationServiceEvent _value,
+      $Res Function(_$RequestLocationServiceEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -426,7 +424,7 @@ class __$$RequestLocationServiceEventImplCopyWithImpl<$Res>
   $Res call({
     Object? retry = null,
   }) {
-    return _then(_$RequestLocationServiceEventImpl(
+    return _then(_$RequestLocationServiceEvent(
       retry: null == retry
           ? _value.retry
           : retry // ignore: cast_nullable_to_non_nullable
@@ -437,8 +435,8 @@ class __$$RequestLocationServiceEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RequestLocationServiceEventImpl implements RequestLocationServiceEvent {
-  const _$RequestLocationServiceEventImpl({this.retry = 5});
+class _$RequestLocationServiceEvent implements RequestLocationServiceEvent {
+  const _$RequestLocationServiceEvent({this.retry = 5});
 
   @override
   @JsonKey()
@@ -453,7 +451,7 @@ class _$RequestLocationServiceEventImpl implements RequestLocationServiceEvent {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RequestLocationServiceEventImpl &&
+            other is _$RequestLocationServiceEvent &&
             (identical(other.retry, retry) || other.retry == retry));
   }
 
@@ -463,9 +461,9 @@ class _$RequestLocationServiceEventImpl implements RequestLocationServiceEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RequestLocationServiceEventImplCopyWith<_$RequestLocationServiceEventImpl>
-      get copyWith => __$$RequestLocationServiceEventImplCopyWithImpl<
-          _$RequestLocationServiceEventImpl>(this, _$identity);
+  _$$RequestLocationServiceEventCopyWith<_$RequestLocationServiceEvent>
+      get copyWith => __$$RequestLocationServiceEventCopyWithImpl<
+          _$RequestLocationServiceEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -551,32 +549,31 @@ class _$RequestLocationServiceEventImpl implements RequestLocationServiceEvent {
 
 abstract class RequestLocationServiceEvent implements LocationEvent {
   const factory RequestLocationServiceEvent({final int retry}) =
-      _$RequestLocationServiceEventImpl;
+      _$RequestLocationServiceEvent;
 
   int get retry;
   @JsonKey(ignore: true)
-  _$$RequestLocationServiceEventImplCopyWith<_$RequestLocationServiceEventImpl>
+  _$$RequestLocationServiceEventCopyWith<_$RequestLocationServiceEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RequestLocationPermissionEventImplCopyWith<$Res> {
-  factory _$$RequestLocationPermissionEventImplCopyWith(
-          _$RequestLocationPermissionEventImpl value,
-          $Res Function(_$RequestLocationPermissionEventImpl) then) =
-      __$$RequestLocationPermissionEventImplCopyWithImpl<$Res>;
+abstract class _$$RequestLocationPermissionEventCopyWith<$Res> {
+  factory _$$RequestLocationPermissionEventCopyWith(
+          _$RequestLocationPermissionEvent value,
+          $Res Function(_$RequestLocationPermissionEvent) then) =
+      __$$RequestLocationPermissionEventCopyWithImpl<$Res>;
   @useResult
   $Res call({int retry});
 }
 
 /// @nodoc
-class __$$RequestLocationPermissionEventImplCopyWithImpl<$Res>
-    extends _$LocationEventCopyWithImpl<$Res,
-        _$RequestLocationPermissionEventImpl>
-    implements _$$RequestLocationPermissionEventImplCopyWith<$Res> {
-  __$$RequestLocationPermissionEventImplCopyWithImpl(
-      _$RequestLocationPermissionEventImpl _value,
-      $Res Function(_$RequestLocationPermissionEventImpl) _then)
+class __$$RequestLocationPermissionEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$RequestLocationPermissionEvent>
+    implements _$$RequestLocationPermissionEventCopyWith<$Res> {
+  __$$RequestLocationPermissionEventCopyWithImpl(
+      _$RequestLocationPermissionEvent _value,
+      $Res Function(_$RequestLocationPermissionEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -584,7 +581,7 @@ class __$$RequestLocationPermissionEventImplCopyWithImpl<$Res>
   $Res call({
     Object? retry = null,
   }) {
-    return _then(_$RequestLocationPermissionEventImpl(
+    return _then(_$RequestLocationPermissionEvent(
       retry: null == retry
           ? _value.retry
           : retry // ignore: cast_nullable_to_non_nullable
@@ -595,9 +592,9 @@ class __$$RequestLocationPermissionEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RequestLocationPermissionEventImpl
+class _$RequestLocationPermissionEvent
     implements RequestLocationPermissionEvent {
-  const _$RequestLocationPermissionEventImpl({this.retry = 1});
+  const _$RequestLocationPermissionEvent({this.retry = 1});
 
   @override
   @JsonKey()
@@ -612,7 +609,7 @@ class _$RequestLocationPermissionEventImpl
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RequestLocationPermissionEventImpl &&
+            other is _$RequestLocationPermissionEvent &&
             (identical(other.retry, retry) || other.retry == retry));
   }
 
@@ -622,10 +619,9 @@ class _$RequestLocationPermissionEventImpl
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RequestLocationPermissionEventImplCopyWith<
-          _$RequestLocationPermissionEventImpl>
-      get copyWith => __$$RequestLocationPermissionEventImplCopyWithImpl<
-          _$RequestLocationPermissionEventImpl>(this, _$identity);
+  _$$RequestLocationPermissionEventCopyWith<_$RequestLocationPermissionEvent>
+      get copyWith => __$$RequestLocationPermissionEventCopyWithImpl<
+          _$RequestLocationPermissionEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -711,32 +707,29 @@ class _$RequestLocationPermissionEventImpl
 
 abstract class RequestLocationPermissionEvent implements LocationEvent {
   const factory RequestLocationPermissionEvent({final int retry}) =
-      _$RequestLocationPermissionEventImpl;
+      _$RequestLocationPermissionEvent;
 
   int get retry;
   @JsonKey(ignore: true)
-  _$$RequestLocationPermissionEventImplCopyWith<
-          _$RequestLocationPermissionEventImpl>
+  _$$RequestLocationPermissionEventCopyWith<_$RequestLocationPermissionEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$LocationSetLatLngEventImplCopyWith<$Res> {
-  factory _$$LocationSetLatLngEventImplCopyWith(
-          _$LocationSetLatLngEventImpl value,
-          $Res Function(_$LocationSetLatLngEventImpl) then) =
-      __$$LocationSetLatLngEventImplCopyWithImpl<$Res>;
+abstract class _$$LocationSetLatLngEventCopyWith<$Res> {
+  factory _$$LocationSetLatLngEventCopyWith(_$LocationSetLatLngEvent value,
+          $Res Function(_$LocationSetLatLngEvent) then) =
+      __$$LocationSetLatLngEventCopyWithImpl<$Res>;
   @useResult
   $Res call({LocationData locationData});
 }
 
 /// @nodoc
-class __$$LocationSetLatLngEventImplCopyWithImpl<$Res>
-    extends _$LocationEventCopyWithImpl<$Res, _$LocationSetLatLngEventImpl>
-    implements _$$LocationSetLatLngEventImplCopyWith<$Res> {
-  __$$LocationSetLatLngEventImplCopyWithImpl(
-      _$LocationSetLatLngEventImpl _value,
-      $Res Function(_$LocationSetLatLngEventImpl) _then)
+class __$$LocationSetLatLngEventCopyWithImpl<$Res>
+    extends _$LocationEventCopyWithImpl<$Res, _$LocationSetLatLngEvent>
+    implements _$$LocationSetLatLngEventCopyWith<$Res> {
+  __$$LocationSetLatLngEventCopyWithImpl(_$LocationSetLatLngEvent _value,
+      $Res Function(_$LocationSetLatLngEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -744,7 +737,7 @@ class __$$LocationSetLatLngEventImplCopyWithImpl<$Res>
   $Res call({
     Object? locationData = null,
   }) {
-    return _then(_$LocationSetLatLngEventImpl(
+    return _then(_$LocationSetLatLngEvent(
       locationData: null == locationData
           ? _value.locationData
           : locationData // ignore: cast_nullable_to_non_nullable
@@ -755,8 +748,8 @@ class __$$LocationSetLatLngEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LocationSetLatLngEventImpl implements LocationSetLatLngEvent {
-  const _$LocationSetLatLngEventImpl({required this.locationData});
+class _$LocationSetLatLngEvent implements LocationSetLatLngEvent {
+  const _$LocationSetLatLngEvent({required this.locationData});
 
   @override
   final LocationData locationData;
@@ -770,7 +763,7 @@ class _$LocationSetLatLngEventImpl implements LocationSetLatLngEvent {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LocationSetLatLngEventImpl &&
+            other is _$LocationSetLatLngEvent &&
             (identical(other.locationData, locationData) ||
                 other.locationData == locationData));
   }
@@ -781,9 +774,9 @@ class _$LocationSetLatLngEventImpl implements LocationSetLatLngEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LocationSetLatLngEventImplCopyWith<_$LocationSetLatLngEventImpl>
-      get copyWith => __$$LocationSetLatLngEventImplCopyWithImpl<
-          _$LocationSetLatLngEventImpl>(this, _$identity);
+  _$$LocationSetLatLngEventCopyWith<_$LocationSetLatLngEvent> get copyWith =>
+      __$$LocationSetLatLngEventCopyWithImpl<_$LocationSetLatLngEvent>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -869,13 +862,12 @@ class _$LocationSetLatLngEventImpl implements LocationSetLatLngEvent {
 
 abstract class LocationSetLatLngEvent implements LocationEvent {
   const factory LocationSetLatLngEvent(
-          {required final LocationData locationData}) =
-      _$LocationSetLatLngEventImpl;
+      {required final LocationData locationData}) = _$LocationSetLatLngEvent;
 
   LocationData get locationData;
   @JsonKey(ignore: true)
-  _$$LocationSetLatLngEventImplCopyWith<_$LocationSetLatLngEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$LocationSetLatLngEventCopyWith<_$LocationSetLatLngEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -957,11 +949,11 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
 }
 
 /// @nodoc
-abstract class _$$LocationStateImplCopyWith<$Res>
+abstract class _$$_LocationStateCopyWith<$Res>
     implements $LocationStateCopyWith<$Res> {
-  factory _$$LocationStateImplCopyWith(
-          _$LocationStateImpl value, $Res Function(_$LocationStateImpl) then) =
-      __$$LocationStateImplCopyWithImpl<$Res>;
+  factory _$$_LocationStateCopyWith(
+          _$_LocationState value, $Res Function(_$_LocationState) then) =
+      __$$_LocationStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -974,11 +966,11 @@ abstract class _$$LocationStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$LocationStateImplCopyWithImpl<$Res>
-    extends _$LocationStateCopyWithImpl<$Res, _$LocationStateImpl>
-    implements _$$LocationStateImplCopyWith<$Res> {
-  __$$LocationStateImplCopyWithImpl(
-      _$LocationStateImpl _value, $Res Function(_$LocationStateImpl) _then)
+class __$$_LocationStateCopyWithImpl<$Res>
+    extends _$LocationStateCopyWithImpl<$Res, _$_LocationState>
+    implements _$$_LocationStateCopyWith<$Res> {
+  __$$_LocationStateCopyWithImpl(
+      _$_LocationState _value, $Res Function(_$_LocationState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -991,7 +983,7 @@ class __$$LocationStateImplCopyWithImpl<$Res>
     Object? serviceEnabled = null,
     Object? loading = null,
   }) {
-    return _then(_$LocationStateImpl(
+    return _then(_$_LocationState(
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -1020,8 +1012,8 @@ class __$$LocationStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LocationStateImpl extends _LocationState {
-  const _$LocationStateImpl(
+class _$_LocationState extends _LocationState {
+  const _$_LocationState(
       {this.latitude,
       this.longitude,
       this.accuracy,
@@ -1055,7 +1047,7 @@ class _$LocationStateImpl extends _LocationState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LocationStateImpl &&
+            other is _$_LocationState &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -1082,8 +1074,8 @@ class _$LocationStateImpl extends _LocationState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LocationStateImplCopyWith<_$LocationStateImpl> get copyWith =>
-      __$$LocationStateImplCopyWithImpl<_$LocationStateImpl>(this, _$identity);
+  _$$_LocationStateCopyWith<_$_LocationState> get copyWith =>
+      __$$_LocationStateCopyWithImpl<_$_LocationState>(this, _$identity);
 }
 
 abstract class _LocationState extends LocationState {
@@ -1093,7 +1085,7 @@ abstract class _LocationState extends LocationState {
       final double? accuracy,
       final dynamic hasPermissions,
       final bool serviceEnabled,
-      final bool loading}) = _$LocationStateImpl;
+      final bool loading}) = _$_LocationState;
   const _LocationState._() : super._();
 
   @override
@@ -1110,6 +1102,6 @@ abstract class _LocationState extends LocationState {
   bool get loading;
   @override
   @JsonKey(ignore: true)
-  _$$LocationStateImplCopyWith<_$LocationStateImpl> get copyWith =>
+  _$$_LocationStateCopyWith<_$_LocationState> get copyWith =>
       throw _privateConstructorUsedError;
 }

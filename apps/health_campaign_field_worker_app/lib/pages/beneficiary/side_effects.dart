@@ -4,11 +4,11 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/adverse_events/adverse_events.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/product_variant/product_variant.dart';
+import '../../blocs/side_effects/side_effects.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
@@ -19,11 +19,11 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
-class AdverseEventsPage extends LocalizedStatefulWidget {
+class SideEffectsPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final List<TaskModel> tasks;
 
-  const AdverseEventsPage({
+  const SideEffectsPage({
     super.key,
     super.appLocalizations,
     required this.tasks,
@@ -31,10 +31,10 @@ class AdverseEventsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<AdverseEventsPage> createState() => _AdverseEventsPageState();
+  State<SideEffectsPage> createState() => _SideEffectsPageState();
 }
 
-class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
+class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
   bool stateChanged = false;
@@ -100,23 +100,13 @@ class _AdverseEventsPageState extends LocalizedState<AdverseEventsPage> {
                                                   final List<String> symptoms =
                                                       [];
 
-                                                  for (int i = 0;
-                                                      i < symptomsValues.length;
-                                                      i++) {
-                                                    if (symptomsValues[i]) {
-                                                      symptoms.add(
-                                                        symptomsTypes[i],
-                                                      );
-                                                    }
-                                                  }
-
                                                   final clientReferenceId =
                                                       IdGen.i.identifier;
                                                   context
-                                                      .read<AdverseEventsBloc>()
+                                                      .read<SideEffectsBloc>()
                                                       .add(
-                                                        AdverseEventsSubmitEvent(
-                                                          AdverseEventModel(
+                                                        SideEffectsSubmitEvent(
+                                                          SideEffectModel(
                                                             id: null,
                                                             taskClientReferenceId:
                                                                 widget

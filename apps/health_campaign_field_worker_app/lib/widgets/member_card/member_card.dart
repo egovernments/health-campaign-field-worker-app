@@ -26,7 +26,7 @@ class MemberCard extends StatelessWidget {
   final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
   final List<TaskModel>? tasks;
-  final List<AdverseEventModel>? adverseEvents;
+  final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
   final String? projectBeneficiaryClientReferenceId;
@@ -48,13 +48,28 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
-    this.adverseEvents,
+    this.sideEffects,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
+
+    print('ALL DOSES DELIVERED');
+    print(allDosesDelivered(
+      tasks,
+      context.selectedCycle,
+      sideEffects,
+      individual,
+    ));
+    print('CHECK STATUS');
+    print(
+      !checkStatus(
+        tasks,
+        context.selectedCycle,
+      ),
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -244,7 +259,7 @@ class MemberCard extends StatelessWidget {
                                   allDosesDelivered(
                                             tasks,
                                             context.selectedCycle,
-                                            adverseEvents,
+                                            sideEffects,
                                             individual,
                                           ) &&
                                           !checkStatus(
@@ -271,7 +286,7 @@ class MemberCard extends StatelessWidget {
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
-                                adverseEvents,
+                                sideEffects,
                                 individual,
                               ) &&
                               !checkStatus(tasks, context.selectedCycle)))
@@ -404,7 +419,7 @@ class MemberCard extends StatelessWidget {
                                               rootNavigator: true,
                                             ).pop();
                                             await context.router.push(
-                                              AdverseEventsRoute(
+                                              SideEffectsRoute(
                                                 tasks: tasks!,
                                               ),
                                             );

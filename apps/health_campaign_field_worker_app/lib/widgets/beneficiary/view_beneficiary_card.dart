@@ -105,8 +105,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 element.projectBeneficiaryClientReferenceId ==
                 projectBeneficiary.first.clientReferenceId)
             .toList();
-        final adverseEvents = taskdata != null && taskdata.isNotEmpty
-            ? householdMember.adverseEvents
+        final sideEffects = taskdata != null && taskdata.isNotEmpty
+            ? householdMember.sideEffects
                 ?.where((element) =>
                     element.taskClientReferenceId ==
                     taskdata.last.clientReferenceId)
@@ -125,19 +125,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               DateTime.now(),
         ).months;
 
-        final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
             years: ageInYears,
             months: ageInMonths,
           ),
           bloc.projectType,
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
-          adverseEvents,
+          sideEffects,
         );
-        final isAdverseEventRecorded = recordedAdverseEvent(
+        final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
-          adverseEvents,
+          sideEffects,
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
@@ -217,14 +217,14 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           DateTime.now(),
     ).months;
 
-    final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
       DigitDOBAge(
         years: ageInYears,
         months: ageInMonths,
       ),
       bloc.projectType,
       householdMember.tasks?.last,
-      householdMember.adverseEvents,
+      householdMember.sideEffects,
     );
 
     final isBeneficiaryRefused =

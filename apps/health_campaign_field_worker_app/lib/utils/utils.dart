@@ -271,7 +271,8 @@ bool checkEligibilityForActiveCycle(
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
               .firstWhereOrNull(
-                  (e) => e.key == AdditionalFieldsType.cycleIndex.toValue())
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
               ?.value ??
           '1'
       : '1';
@@ -281,11 +282,11 @@ bool checkEligibilityForActiveCycle(
 
 /*Check for if the individual falls on the valid age category*/
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
-bool checkEligibilityForAgeAndAdverseEvent(
+bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,
   ProjectType? projectType,
   TaskModel? tasks,
-  List<AdverseEventModel>? adverseEvents,
+  List<SideEffectModel>? sideEffects,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
@@ -297,13 +298,13 @@ bool checkEligibilityForAgeAndAdverseEvent(
   if (currentCycle != null &&
       currentCycle.startDate != null &&
       currentCycle.endDate != null) {
-    bool recordedAdverseEvent = false;
-    if ((tasks != null) && adverseEvents != null && adverseEvents.isNotEmpty) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
-          tasks.clientReferenceId == adverseEvents.last.taskClientReferenceId
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
               ? tasks.clientAuditDetails?.createdTime
               : null;
-      recordedAdverseEvent = lastTaskTime != null &&
+      recordedSideEffect = lastTaskTime != null &&
           (lastTaskTime >= currentCycle.startDate! &&
               lastTaskTime <= currentCycle.endDate!);
 
@@ -311,7 +312,7 @@ bool checkEligibilityForAgeAndAdverseEvent(
               projectType?.validMaxAge != null
           ? totalAgeMonths >= projectType!.validMinAge! &&
                   totalAgeMonths <= projectType.validMaxAge!
-              ? recordedAdverseEvent && !checkStatus([tasks], currentCycle)
+              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
                   ? false
                   : true
               : false
@@ -374,17 +375,17 @@ bool checkStatus(
   }
 }
 
-bool recordedAdverseEvent(
+bool recordedSideEffect(
   Cycle? selectedCycle,
   TaskModel? task,
-  List<AdverseEventModel>? adverseEvents,
+  List<SideEffectModel>? sideEffects,
 ) {
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
-    if ((task != null) && (adverseEvents ?? []).isNotEmpty) {
+    if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
-          task.clientReferenceId == adverseEvents?.last.taskClientReferenceId
+          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
               ? task.clientAuditDetails?.createdTime
               : null;
 
@@ -400,15 +401,17 @@ bool recordedAdverseEvent(
 bool allDosesDelivered(
   List<TaskModel>? tasks,
   Cycle? selectedCycle,
-  List<AdverseEventModel>? adverseEvents,
+  List<SideEffectModel>? sideEffects,
   IndividualModel? individualModel,
 ) {
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
       (selectedCycle.deliveries ?? []).isEmpty) {
+    print('allDosesDelivered IF');
     return true;
   } else {
     if ((tasks ?? []).isNotEmpty) {
+      print('allDosesDelivered 2');
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
                 (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
@@ -428,16 +431,21 @@ bool allDosesDelivered(
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
           tasks?.last.status != Status.delivered.toValue()) {
+        print('allDosesDelivered 3');
         return true;
       } else if (selectedCycle.id == lastCycle &&
           tasks?.last.status == Status.delivered.toValue()) {
+        print('allDosesDelivered 4');
         return false;
-      } else if ((adverseEvents ?? []).isNotEmpty) {
-        return recordedAdverseEvent(selectedCycle, tasks?.last, adverseEvents);
+      } else if ((sideEffects ?? []).isNotEmpty) {
+        print('allDosesDelivered 5');
+        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
       } else {
+        print('allDosesDelivered 6');
         return false;
       }
     } else {
+      print('allDosesDelivered 7');
       return false;
     }
   }

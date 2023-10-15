@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:digit_components/digit_components.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'tables/adverse_event.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -38,6 +37,7 @@ import 'tables/project_type.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
+import 'tables/side_effect.dart';
 import 'tables/stock.dart';
 import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
@@ -49,7 +49,6 @@ part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
   Address,
-  AdverseEvent,
   Name,
   Boundary,
   Document,
@@ -72,6 +71,7 @@ part 'sql_store.g.dart';
   Target,
   Task,
   TaskResource,
+  SideEffect,
   Service,
   ServiceAttributes,
   ServiceDefinition,
