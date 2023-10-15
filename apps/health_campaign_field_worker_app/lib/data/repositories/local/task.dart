@@ -289,9 +289,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             mode: InsertMode.insertOrReplace,
           );
         }
-
-        await super.create(entity);
       }
+
+      await super.create(
+        entity,
+      );
     });
   }
 

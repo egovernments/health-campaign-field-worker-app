@@ -56,21 +56,6 @@ class MemberCard extends StatelessWidget {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
 
-    print('ALL DOSES DELIVERED');
-    print(allDosesDelivered(
-      tasks,
-      context.selectedCycle,
-      sideEffects,
-      individual,
-    ));
-    print('CHECK STATUS');
-    print(
-      !checkStatus(
-        tasks,
-        context.selectedCycle,
-      ),
-    );
-
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.background,
@@ -374,6 +359,8 @@ class MemberCard extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
+                                                address:
+                                                    individual.address?.first,
                                               ),
                                               false,
                                               context.boundary,
