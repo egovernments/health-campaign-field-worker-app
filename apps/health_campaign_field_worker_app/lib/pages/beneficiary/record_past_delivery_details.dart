@@ -203,7 +203,7 @@ class _RecordPastDeliveryDetailsPageState
                               ));
                               Navigator.of(ctx).pop();
                               router.push(
-                                AdverseEventsRoute(
+                                SideEffectsRoute(
                                   tasks: [(futureTaskList ?? []).last],
                                 ),
                               );

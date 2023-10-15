@@ -306,11 +306,11 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    AdverseEventsRoute.name: (routeData) {
-      final args = routeData.argsAs<AdverseEventsRouteArgs>();
+    SideEffectsRoute.name: (routeData) {
+      final args = routeData.argsAs<SideEffectsRouteArgs>();
       return MaterialPageX<List<TaskModel>>(
         routeData: routeData,
-        child: AdverseEventsPage(
+        child: SideEffectsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -640,8 +640,8 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
-                  AdverseEventsRoute.name,
-                  path: 'adverse-events',
+                  SideEffectsRoute.name,
+                  path: 'side-effects',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1746,17 +1746,17 @@ class DeliverInterventionRouteArgs {
 }
 
 /// generated route for
-/// [AdverseEventsPage]
-class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
-  AdverseEventsRoute({
+/// [SideEffectsPage]
+class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
+  SideEffectsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
     required List<TaskModel> tasks,
     bool isEditing = false,
   }) : super(
-          AdverseEventsRoute.name,
-          path: 'adverse-events',
-          args: AdverseEventsRouteArgs(
+          SideEffectsRoute.name,
+          path: 'side-effects',
+          args: SideEffectsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             tasks: tasks,
@@ -1764,11 +1764,11 @@ class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
           ),
         );
 
-  static const String name = 'AdverseEventsRoute';
+  static const String name = 'SideEffectsRoute';
 }
 
-class AdverseEventsRouteArgs {
-  const AdverseEventsRouteArgs({
+class SideEffectsRouteArgs {
+  const SideEffectsRouteArgs({
     this.key,
     this.appLocalizations,
     required this.tasks,
@@ -1785,7 +1785,7 @@ class AdverseEventsRouteArgs {
 
   @override
   String toString() {
-    return 'AdverseEventsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
   }
 }
 

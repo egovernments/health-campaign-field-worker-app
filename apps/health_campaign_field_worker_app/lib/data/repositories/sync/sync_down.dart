@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 
+import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
 import '../remote/pgr_service.dart';
-import './remote_type.dart';
 
 class PerformSyncDown {
   static FutureOr<void> syncDown({
@@ -419,10 +419,10 @@ class PerformSyncDown {
 
             break;
 
-          case DataModelType.adverseEvent:
-            responseEntities = await remote.search(AdverseEventSearchModel(
+          case DataModelType.sideEffect:
+            responseEntities = await remote.search(SideEffectSearchModel(
               clientReferenceId: entities
-                  .whereType<AdverseEventModel>()
+                  .whereType<SideEffectModel>()
                   .map((e) => e.clientReferenceId)
                   .whereNotNull()
                   .toList(),
@@ -431,13 +431,13 @@ class PerformSyncDown {
 
             for (var element in typeGroupedEntity.value) {
               if (element.id == null) return;
-              final adverseEventModel = element.entity as AdverseEventModel;
+              final sideEffectModel = element.entity as SideEffectModel;
               var responseEntity = responseEntities
-                  .whereType<AdverseEventModel>()
+                  .whereType<SideEffectModel>()
                   .firstWhereOrNull(
                     (e) =>
                         e.clientReferenceId ==
-                        adverseEventModel.clientReferenceId,
+                        sideEffectModel.clientReferenceId,
                   );
 
               final serverGeneratedId = responseEntity?.id;
@@ -445,7 +445,7 @@ class PerformSyncDown {
               if (serverGeneratedId != null) {
                 local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: adverseEventModel.clientReferenceId,
+                    clientReferenceId: sideEffectModel.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,

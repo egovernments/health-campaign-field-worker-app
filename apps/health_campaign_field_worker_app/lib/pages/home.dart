@@ -449,6 +449,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   LocalRepository<HouseholdMemberModel,
                       HouseholdMemberSearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
               context.read<LocalRepository<StockModel, StockSearchModel>>(),
               context.read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               context.read<
@@ -469,6 +471,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   RemoteRepository<HouseholdMemberModel,
                       HouseholdMemberSearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context.read<
+                  RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
               context.read<RemoteRepository<StockModel, StockSearchModel>>(),
               context
                   .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
