@@ -100,6 +100,16 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                   final List<String> symptoms =
                                                       [];
 
+                                                  for (int i = 0;
+                                                      i < symptomsValues.length;
+                                                      i++) {
+                                                    if (symptomsValues[i]) {
+                                                      symptoms.add(
+                                                        symptomsTypes[i],
+                                                      );
+                                                    }
+                                                  }
+
                                                   final clientReferenceId =
                                                       IdGen.i.identifier;
                                                   context
