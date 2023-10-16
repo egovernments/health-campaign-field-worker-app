@@ -471,6 +471,7 @@ class DeliverIntervention {
   String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+  String get cycle => 'DELIVERY_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
@@ -478,6 +479,9 @@ class DeliverIntervention {
   //[todo] need to change the 24
   String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
+  String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
+  String get resourceDeliveredValidation =>
+      'RESOURCE_DELIVERED_CANNOT_BE_EMPTY';
 }
 
 class AdverseEvents {

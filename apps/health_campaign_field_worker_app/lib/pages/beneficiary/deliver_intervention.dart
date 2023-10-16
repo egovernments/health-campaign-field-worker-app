@@ -118,9 +118,10 @@ class _DeliverInterventionPageState
                               0
                           : 0;
 
-                      final String? getDeliveryStrategy = projectState
-                                  .projectType?.cycles?.isNotEmpty ==
-                              true
+                      final String? getDeliveryStrategy = (projectState
+                                      .projectType?.cycles ??
+                                  [])
+                              .isNotEmpty
                           ? (projectState
                               .projectType
                               ?.cycles?[deliveryInterventionstate.cycle == 0
@@ -175,7 +176,9 @@ class _DeliverInterventionPageState
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
-                                                      'Resources delivered cannot be empty',
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .resourceDeliveredValidation),
                                                       true,
                                                       theme,
                                                     ),
@@ -189,7 +192,9 @@ class _DeliverInterventionPageState
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
-                                                      'Resources quantity cannot be 0',
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .resourceCannotBeZero),
                                                       true,
                                                       theme,
                                                     ),
@@ -649,8 +654,9 @@ class _DeliverInterventionPageState
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
-        value: 'Cycle ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
-            .toString(),
+        value:
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
@@ -671,7 +677,6 @@ class _DeliverInterventionPageState
                                 .elementAt(_controllers.indexOf(e))
                                 .productVariantId,
                       )
-                    // variants[_controllers.indexOf(e)]
                     : null,
               )),
         ],
