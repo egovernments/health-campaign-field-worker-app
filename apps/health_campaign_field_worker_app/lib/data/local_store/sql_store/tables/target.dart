@@ -10,6 +10,7 @@ class Target extends Table {
   RealColumn get totalNo => real().nullable()();
   RealColumn get targetNo => real().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
+  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();

@@ -66,7 +66,7 @@ class PerformSyncDown {
         final entities = operationGroupedEntity.value.map((e) {
           final serverGeneratedId = e.serverGeneratedId;
           final rowVersion = e.rowVersion;
-          if (serverGeneratedId != null) {
+          if (serverGeneratedId != null && !e.nonRecoverableError) {
             return local.opLogManager.applyServerGeneratedIdToEntity(
               e.entity,
               serverGeneratedId,

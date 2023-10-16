@@ -64,6 +64,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? projectId;
   final String? beneficiaryId;
   final String? beneficiaryClientReferenceId;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -76,6 +77,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.projectId,
     this.beneficiaryId,
     this.beneficiaryClientReferenceId,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -104,6 +106,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),
       beneficiaryClientReferenceId: Value(beneficiaryClientReferenceId),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

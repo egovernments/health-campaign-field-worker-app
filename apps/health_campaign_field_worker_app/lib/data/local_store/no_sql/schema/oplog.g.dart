@@ -49,44 +49,49 @@ const OpLogSchema = CollectionSchema(
       type: IsarType.string,
       enumMap: _OpLogentityTypeEnumValueMap,
     ),
-    r'operation': PropertySchema(
+    r'nonRecoverableError': PropertySchema(
       id: 6,
+      name: r'nonRecoverableError',
+      type: IsarType.bool,
+    ),
+    r'operation': PropertySchema(
+      id: 7,
       name: r'operation',
       type: IsarType.string,
       enumMap: _OpLogoperationEnumValueMap,
     ),
     r'rowVersion': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'rowVersion',
       type: IsarType.long,
     ),
     r'serverGeneratedId': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'serverGeneratedId',
       type: IsarType.string,
     ),
     r'syncDownRetryCount': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'syncDownRetryCount',
       type: IsarType.long,
     ),
     r'syncedDown': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'syncedDown',
       type: IsarType.bool,
     ),
     r'syncedDownOn': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'syncedDownOn',
       type: IsarType.dateTime,
     ),
     r'syncedUp': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'syncedUp',
       type: IsarType.bool,
     ),
     r'syncedUpOn': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'syncedUpOn',
       type: IsarType.dateTime,
     )
@@ -155,14 +160,15 @@ void _opLogSerialize(
   writer.writeString(offsets[3], object.createdBy);
   writer.writeString(offsets[4], object.entityString);
   writer.writeString(offsets[5], object.entityType.name);
-  writer.writeString(offsets[6], object.operation.name);
-  writer.writeLong(offsets[7], object.rowVersion);
-  writer.writeString(offsets[8], object.serverGeneratedId);
-  writer.writeLong(offsets[9], object.syncDownRetryCount);
-  writer.writeBool(offsets[10], object.syncedDown);
-  writer.writeDateTime(offsets[11], object.syncedDownOn);
-  writer.writeBool(offsets[12], object.syncedUp);
-  writer.writeDateTime(offsets[13], object.syncedUpOn);
+  writer.writeBool(offsets[6], object.nonRecoverableError);
+  writer.writeString(offsets[7], object.operation.name);
+  writer.writeLong(offsets[8], object.rowVersion);
+  writer.writeString(offsets[9], object.serverGeneratedId);
+  writer.writeLong(offsets[10], object.syncDownRetryCount);
+  writer.writeBool(offsets[11], object.syncedDown);
+  writer.writeDateTime(offsets[12], object.syncedDownOn);
+  writer.writeBool(offsets[13], object.syncedUp);
+  writer.writeDateTime(offsets[14], object.syncedUpOn);
 }
 
 OpLog _opLogDeserialize(
@@ -187,16 +193,17 @@ OpLog _opLogDeserialize(
       _OpLogentityTypeValueEnumMap[reader.readStringOrNull(offsets[5])] ??
           DataModelType.user;
   object.id = id;
+  object.nonRecoverableError = reader.readBool(offsets[6]);
   object.operation =
-      _OpLogoperationValueEnumMap[reader.readStringOrNull(offsets[6])] ??
+      _OpLogoperationValueEnumMap[reader.readStringOrNull(offsets[7])] ??
           DataOperation.create;
-  object.rowVersion = reader.readLong(offsets[7]);
-  object.serverGeneratedId = reader.readStringOrNull(offsets[8]);
-  object.syncDownRetryCount = reader.readLong(offsets[9]);
-  object.syncedDown = reader.readBool(offsets[10]);
-  object.syncedDownOn = reader.readDateTimeOrNull(offsets[11]);
-  object.syncedUp = reader.readBool(offsets[12]);
-  object.syncedUpOn = reader.readDateTimeOrNull(offsets[13]);
+  object.rowVersion = reader.readLong(offsets[8]);
+  object.serverGeneratedId = reader.readStringOrNull(offsets[9]);
+  object.syncDownRetryCount = reader.readLong(offsets[10]);
+  object.syncedDown = reader.readBool(offsets[11]);
+  object.syncedDownOn = reader.readDateTimeOrNull(offsets[12]);
+  object.syncedUp = reader.readBool(offsets[13]);
+  object.syncedUpOn = reader.readDateTimeOrNull(offsets[14]);
   return object;
 }
 
@@ -227,21 +234,23 @@ P _opLogDeserializeProp<P>(
       return (_OpLogentityTypeValueEnumMap[reader.readStringOrNull(offset)] ??
           DataModelType.user) as P;
     case 6:
+      return (reader.readBool(offset)) as P;
+    case 7:
       return (_OpLogoperationValueEnumMap[reader.readStringOrNull(offset)] ??
           DataOperation.create) as P;
-    case 7:
-      return (reader.readLong(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
-    case 9:
       return (reader.readLong(offset)) as P;
+    case 9:
+      return (reader.readStringOrNull(offset)) as P;
     case 10:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 11:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 12:
       return (reader.readBool(offset)) as P;
+    case 12:
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 13:
+      return (reader.readBool(offset)) as P;
+    case 14:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1136,6 +1145,16 @@ extension OpLogQueryFilter on QueryBuilder<OpLog, OpLog, QFilterCondition> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterFilterCondition> nonRecoverableErrorEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nonRecoverableError',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterFilterCondition> operationEqualTo(
     DataOperation value, {
     bool caseSensitive = true,
@@ -1753,6 +1772,18 @@ extension OpLogQuerySortBy on QueryBuilder<OpLog, OpLog, QSortBy> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByNonRecoverableError() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonRecoverableError', Sort.asc);
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByNonRecoverableErrorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonRecoverableError', Sort.desc);
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterSortBy> sortByOperation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'operation', Sort.asc);
@@ -1923,6 +1954,18 @@ extension OpLogQuerySortThenBy on QueryBuilder<OpLog, OpLog, QSortThenBy> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByNonRecoverableError() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonRecoverableError', Sort.asc);
+    });
+  }
+
+  QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByNonRecoverableErrorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonRecoverableError', Sort.desc);
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QAfterSortBy> thenByOperation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'operation', Sort.asc);
@@ -2056,6 +2099,12 @@ extension OpLogQueryWhereDistinct on QueryBuilder<OpLog, OpLog, QDistinct> {
     });
   }
 
+  QueryBuilder<OpLog, OpLog, QDistinct> distinctByNonRecoverableError() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nonRecoverableError');
+    });
+  }
+
   QueryBuilder<OpLog, OpLog, QDistinct> distinctByOperation(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2149,6 +2198,12 @@ extension OpLogQueryProperty on QueryBuilder<OpLog, OpLog, QQueryProperty> {
   QueryBuilder<OpLog, DataModelType, QQueryOperations> entityTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'entityType');
+    });
+  }
+
+  QueryBuilder<OpLog, bool, QQueryOperations> nonRecoverableErrorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nonRecoverableError');
     });
   }
 

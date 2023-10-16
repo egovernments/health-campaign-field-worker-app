@@ -46,6 +46,7 @@ class ProductModel extends EntityModel {
   final String? type;
   final String? name;
   final String? manufacturer;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -57,6 +58,7 @@ class ProductModel extends EntityModel {
     this.type,
     this.name,
     this.manufacturer,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -80,6 +82,7 @@ class ProductModel extends EntityModel {
       type: Value(type),
       name: Value(name),
       manufacturer: Value(manufacturer),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

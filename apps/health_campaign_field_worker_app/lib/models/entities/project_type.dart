@@ -37,6 +37,7 @@ class ProjectTypeModel extends EntityModel {
   final String? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -52,6 +53,7 @@ class ProjectTypeModel extends EntityModel {
     this.beneficiaryType,
     this.eligibilityCriteria,
     this.taskProcedure,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -79,6 +81,7 @@ class ProjectTypeModel extends EntityModel {
       beneficiaryType: Value(beneficiaryType),
       eligibilityCriteria: Value(eligibilityCriteria?.toString()),
       taskProcedure: Value(taskProcedure?.toString()),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

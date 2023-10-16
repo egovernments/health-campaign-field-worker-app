@@ -25,7 +25,7 @@ import 'utils.dart';
 import 'package:battery_plus/battery_plus.dart';
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
-late Dio _dio;
+Dio _dio = DioClient().dio;
 Future<Isar> isarFuture = Constants().isar;
 
 Future<void> initializeService(dio, isar) async {
@@ -105,12 +105,11 @@ void onStart(ServiceInstance service) async {
   }
   await envConfig.initialize();
 
-  _dio = DioClient().dio;
-  final _isar = await isarFuture;
+  final isar = await isarFuture;
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
 
-  final appConfiguration = await _isar.appConfigurations.where().findAll();
+  final appConfiguration = await isar.appConfigurations.where().findAll();
   final interval =
       appConfiguration.first.backgroundServiceConfig?.serviceInterval;
   final frequencyCount =
@@ -133,7 +132,7 @@ void onStart(ServiceInstance service) async {
               FlutterLocalNotificationsPlugin();
           if (frequencyCount != null) {
             final serviceRegistryList =
-                await _isar.serviceRegistrys.where().findAll();
+                await isar.serviceRegistrys.where().findAll();
             if (serviceRegistryList.isNotEmpty) {
               final bandwidthPath = serviceRegistryList
                   .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
@@ -184,7 +183,7 @@ void onStart(ServiceInstance service) async {
                 ),
               ).performSync(
                 localRepositories:
-                    Constants.getLocalRepositories(_sql, _isar).toList(),
+                    Constants.getLocalRepositories(_sql, isar).toList(),
                 remoteRepositories: Constants.getRemoteRepositories(
                   _dio,
                   getActionMap(serviceRegistryList),
@@ -196,12 +195,12 @@ void onStart(ServiceInstance service) async {
               print(isSyncCompleted);
               print("-----SYNC Completed-----");
               i++;
-              // final isAppInActive =
-              //     await LocalSecureStore.instance.isAppInActive;
+              final isAppInActive =
+                  await LocalSecureStore.instance.isAppInActive;
 
-              // if (isSyncCompleted && i >= 2 && isAppInActive) {
-              //   service.stopSelf();
-              // }
+              if (isSyncCompleted && i >= 2 && isAppInActive) {
+                service.stopSelf();
+              }
             }
           }
         }

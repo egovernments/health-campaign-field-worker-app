@@ -38,6 +38,7 @@ class TaskResourceModel extends EntityModel {
   final String? quantity;
   final bool? isDelivered;
   final String? deliveryComment;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final TaskResourceAdditionalFields? additionalFields;
@@ -52,6 +53,7 @@ class TaskResourceModel extends EntityModel {
     this.quantity,
     this.isDelivered,
     this.deliveryComment,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
@@ -78,6 +80,7 @@ class TaskResourceModel extends EntityModel {
       quantity: Value(quantity),
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );

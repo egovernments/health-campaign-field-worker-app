@@ -68,6 +68,11 @@ class Variables {
     '$_connectTimeoutValue',
   );
 
+  static const _dumpErrorApi = EnvEntry(
+    'DUMP_ERROR_PATH',
+    'error-handler/handle-error',
+  );
+
   static const _sendTimeout = EnvEntry(
     'SEND_TIMEOUT',
     '$_connectTimeoutValue',
@@ -113,6 +118,10 @@ class Variables {
   String get tenantId => useFallbackValues
       ? _tenantId.value
       : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+
+  String get dumpErrorApiPath => useFallbackValues
+      ? _dumpErrorApi.value
+      : _dotEnv.get(_dumpErrorApi.key, fallback: _dumpErrorApi.value);
 
   int get connectTimeout => useFallbackValues
       ? int.tryParse(_connectTimeout.value) ?? _connectTimeoutValue

@@ -50,6 +50,7 @@ class AdverseEventModel extends EntityModel {
   final String? taskClientReferenceId;
   final int? reAttempts;
   final List<String>? symptoms;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -62,6 +63,7 @@ class AdverseEventModel extends EntityModel {
     this.taskClientReferenceId,
     this.reAttempts,
     this.symptoms,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -86,6 +88,7 @@ class AdverseEventModel extends EntityModel {
       taskClientReferenceId: Value(taskClientReferenceId),
       reAttempts: Value(reAttempts),
       symptoms: Value(symptoms?.toString()),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
