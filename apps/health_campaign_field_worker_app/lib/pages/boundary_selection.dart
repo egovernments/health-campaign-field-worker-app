@@ -88,6 +88,8 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                         ),
                                       );
                                   formControls[label]?.updateValue(value);
+                                  // Call the resetChildDropdowns function when a parent dropdown is selected
+                                  resetChildDropdowns(label, state);
                                 },
                                 valueMapper: (value) {
                                   return value.name ?? value.code ?? 'No Value';
@@ -134,13 +136,23 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
     );
   }
 
+  void resetChildDropdowns(String parentLabel, BoundaryState state) {
+    final labelList = state.selectedBoundaryMap.keys.toList();
+    final parentIndex = labelList.indexOf(parentLabel);
+
+    for (int i = parentIndex + 1; i < labelList.length; i++) {
+      final label = labelList[i];
+      formControls[label]?.updateValue(null);
+    }
+  }
+
   FormGroup buildForm(BoundaryState state) {
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
 
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
-        validators: [Validators.required],
+        validators: label == labelList.first ? [Validators.required] : [],
         value: state.selectedBoundaryMap[label],
       );
     }
