@@ -5,72 +5,87 @@ import 'package:overlay_builder/overlay_builder.dart';
 class DigitWalkthrough extends StatefulWidget {
   final Widget child;
   final String? title;
+  final String skipLabel;
+  final String nextLabel;
   final GlobalKey<OverlayWidgetState> overlayWidget;
   final TextAlign titleAlignment;
   final String description;
+  final VoidCallback onTap;
 
-  const DigitWalkthrough(
-      {super.key,
-      required this.child,
-      required this.overlayWidget,
-      this.title,
-      required this.titleAlignment,
-      required this.description});
+  final VoidCallback onSkip;
+  final double widgetHeight;
+
+  const DigitWalkthrough({
+    super.key,
+    required this.child,
+    required this.overlayWidget,
+    this.title,
+    required this.titleAlignment,
+    required this.description,
+    required this.onTap,
+    required this.onSkip,
+    required this.widgetHeight,
+    required this.skipLabel,
+    required this.nextLabel,
+  });
 
   @override
-  State<DigitWalkthrough> createState() => _DigitWalkthroughState();
+  State<DigitWalkthrough> createState() => DigitWalkthroughState();
 }
 
-class _DigitWalkthroughState extends State<DigitWalkthrough> {
-  final _overlayFullscreen = GlobalKey<OverlayWidgetState>();
-  bool showOverlay = false;
-  late double childHeight;
-  late Offset position;
-
-  _DigitWalkthroughState({this.position = Offset.zero, this.childHeight = 0.0});
-  OverlayWidgetState? get overlayWidgetController {
-    return widget.overlayWidget.currentState;
-  }
+class DigitWalkthroughState extends State<DigitWalkthrough> {
+  bool showROverlay = false;
+  double childHeight = 0.0;
+  double childWidth = 0.0;
+  Offset position = Offset.zero;
 
   OverlayWidgetState? get overlayFullscreenController {
-    return _overlayFullscreen.currentState;
+    return widget.overlayWidget.currentState;
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initOffsetsPositions();
     });
   }
 
   void initOffsetsPositions() {
-    Offset position = ((widget.child.key as GlobalKey)
-            .currentContext
-            ?.findRenderObject() as RenderBox)
-        .localToGlobal(Offset.zero);
-    this.childHeight =
-        (widget.child.key as GlobalKey).currentContext!.size!.height;
+    Offset position =
+        ((widget.overlayWidget).currentContext?.findRenderObject() as RenderBox)
+            .localToGlobal(Offset.zero);
+    childHeight = (widget.overlayWidget).currentContext!.size!.height / 2;
+    childWidth = (widget.overlayWidget).currentContext!.size!.width;
+
     this.position = position;
   }
 
-  void onTap() {
-    setState(() {
-      showOverlay = !showOverlay;
-    });
-    overlayWidgetController?.toggle();
+  void onButtonTap() {
     overlayFullscreenController?.toggle();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnchoredOverlay(
-        showOverlay: showOverlay,
-        description: widget.description,
-        paramKey: widget.overlayWidget,
-        onTap: onTap,
-        position: position,
-        childHeight: childHeight,
-        child: widget.child);
+    return SizedBox(
+      height: widget.widgetHeight,
+      child: GestureDetector(
+          onTap: () => initOffsetsPositions(),
+          child: AnchoredOverlay(
+              showOverlay: showROverlay,
+              description: widget.description,
+              paramKey: widget.overlayWidget,
+              onTap: widget.onTap,
+              onSkip: widget.onSkip,
+              position: position,
+              childHeight: childHeight,
+              childWidth: childWidth,
+              skipLabel: widget.skipLabel,
+              nextLabel: widget.nextLabel,
+              child: IgnorePointer(
+                ignoring: showROverlay,
+                child: widget.child,
+              ))),
+    );
   }
 }

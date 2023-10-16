@@ -116,7 +116,7 @@ class _StockReconciliationPageState
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
-                            header: Column(children: const [
+                            header: const Column(children: [
                               BackNavigationHelpHeaderWidget(),
                             ]),
                             footer: SizedBox(
@@ -182,6 +182,17 @@ class _StockReconciliationPageState
                                                 createdBy:
                                                     context.loggedInUserUuid,
                                                 createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy:
+                                                    context.loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    context.loggedInUserUuid,
+                                                lastModifiedTime: context
                                                     .millisecondsSinceEpoch(),
                                               ),
                                             );

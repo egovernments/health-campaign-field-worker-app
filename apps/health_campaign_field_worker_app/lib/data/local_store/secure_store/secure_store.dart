@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
+import '../../../models/role_actions/role_actions_model.dart';
 
 class LocalSecureStore {
   static const accessTokenKey = 'accessTokenKey';
@@ -11,6 +12,9 @@ class LocalSecureStore {
   static const userObjectKey = 'userObject';
   static const selectedProjectKey = 'selectedProject';
   static const hasAppRunBeforeKey = 'hasAppRunBefore';
+  static const backgroundServiceKey = 'backgroundServiceKey';
+  static const boundaryRefetchInKey = 'boundaryRefetchInKey';
+  static const actionsListkey = 'actionsListkey';
 
   final storage = const FlutterSecureStorage();
 
@@ -25,6 +29,17 @@ class LocalSecureStore {
 
   Future<String?> get refreshToken {
     return storage.read(key: refreshTokenKey);
+  }
+
+  Future<bool> get isBackgroundSerivceRunning async {
+    final hasRun = await storage.read(key: backgroundServiceKey);
+
+    switch (hasRun) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
   }
 
   Future<UserRequestModel?> get userRequestModel async {
@@ -53,6 +68,33 @@ class LocalSecureStore {
     }
   }
 
+  Future<RoleActionsWrapperModel?> get savedActions async {
+    final actionsListString = await storage.read(key: actionsListkey);
+    if (actionsListString == null) return null;
+
+    try {
+      final actions = Mapper.fromMap<RoleActionsWrapperModel>(json.decode(
+        actionsListString,
+      ));
+
+      return actions;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<bool> get boundaryRefetched async {
+    final isboundaryRefetchRequired =
+        await storage.read(key: boundaryRefetchInKey);
+
+    switch (isboundaryRefetchRequired) {
+      case 'true':
+        return false;
+      default:
+        return true;
+    }
+  }
+
   Future<void> setSelectedProject(ProjectModel projectModel) async {
     await storage.write(
       key: selectedProjectKey,
@@ -67,6 +109,24 @@ class LocalSecureStore {
       key: userObjectKey,
       value: json.encode(model.userRequestModel),
     );
+  }
+
+  Future<void> setBoundaryRefetch(bool isboundaryRefetch) async {
+    await storage.write(
+      key: boundaryRefetchInKey,
+      value: isboundaryRefetch.toString(),
+    );
+  }
+
+  Future<void> setRoleActions(RoleActionsWrapperModel actions) async {
+    await storage.write(
+      key: actionsListkey,
+      value: actions.toString(),
+    );
+  }
+
+  Future<void> setBackgroundService(bool isRunning) async {
+    await storage.write(key: backgroundServiceKey, value: isRunning.toString());
   }
 
   Future<void> setHasAppRunBefore(bool hasRunBefore) async {
@@ -86,5 +146,25 @@ class LocalSecureStore {
 
   Future<void> deleteAll() async {
     await storage.deleteAll();
+  }
+
+  /*Sets the bool value of project setup as true once project data is downloaded*/
+  Future<void> setProjectSetUpComplete(String key, bool value) async {
+    await storage.write(
+      key: key,
+      value: value.toString(),
+    );
+  }
+
+  /*Checks for project data loaded or not*/
+  Future<bool> isProjectSetUpComplete(String projectId) async {
+    final isProjectSetUpComplete = await storage.read(key: projectId);
+
+    switch (isProjectSetUpComplete) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
   }
 }

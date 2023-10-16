@@ -29,7 +29,18 @@ class DeliverInterventionBloc
     emit(state.copyWith(loading: true));
     try {
       if (event.isEditing) {
-        await taskRepository.update(event.task);
+        await taskRepository.update(event.task.copyWith(
+          clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
+                      null &&
+                  event.task.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: event.task.clientAuditDetails!.createdBy,
+                  createdTime: event.task.clientAuditDetails!.createdTime,
+                  lastModifiedBy: event.task.clientAuditDetails!.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
+        ));
       } else {
         final code = event.boundaryModel.code;
         final name = event.boundaryModel.name;
@@ -57,9 +68,14 @@ class DeliverInterventionBloc
   ) async {
     emit(state.copyWith(loading: true));
     try {
-      final List<TaskModel> tasks =
-          await taskRepository.search(event.taskSearch);
-      if (tasks.isNotEmpty) emit(state.copyWith(task: tasks.first));
+      final List<TaskModel> tasks = await taskRepository.search(
+        event.taskSearch,
+      );
+      if (tasks.isNotEmpty) {
+        emit(state.copyWith(tasks: tasks));
+      } else {
+        emit(state.copyWith(tasks: null));
+      }
     } catch (error) {
       rethrow;
     } finally {
@@ -86,6 +102,6 @@ class DeliverInterventionState with _$DeliverInterventionState {
   const factory DeliverInterventionState({
     @Default(false) bool loading,
     @Default(false) bool isEditing,
-    TaskModel? task,
+    List<TaskModel>? tasks,
   }) = _DeliverInterventionState;
 }

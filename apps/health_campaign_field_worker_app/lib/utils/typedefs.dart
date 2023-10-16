@@ -1,8 +1,11 @@
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
+import '../models/entities/user.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
+typedef AddressDataRepository
+    = DataRepository<AddressModel, AddressSearchModel>;
 typedef HouseholdDataRepository
     = DataRepository<HouseholdModel, HouseholdSearchModel>;
 typedef HouseholdMemberDataRepository
@@ -37,3 +40,5 @@ typedef ServiceDataRepository
     = DataRepository<ServiceModel, ServiceSearchModel>;
 typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
+
+typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;

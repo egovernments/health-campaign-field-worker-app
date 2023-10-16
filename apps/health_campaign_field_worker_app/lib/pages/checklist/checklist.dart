@@ -7,7 +7,6 @@ import 'package:recase/recase.dart';
 import '../../blocs/auth/auth.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
-import '../../models/auth/auth_model.dart';
 import '../../models/entities/service.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -32,7 +31,7 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         children: [
@@ -66,7 +65,7 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                           orElse: () => const Offstage(),
                           authenticated: (res) {
                             List<String> roles = res.userModel.roles
-                                .map((e) => e.code.name.snakeCase.toUpperCase())
+                                .map((e) => e.code.snakeCase.toUpperCase())
                                 .toList();
 
                             final values = value.serviceDefinitionList.where(
@@ -146,8 +145,6 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                             );
                           },
                         );
-
-                        return Offstage();
                       },
                     ),
                   ],

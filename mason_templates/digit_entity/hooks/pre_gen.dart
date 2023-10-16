@@ -28,6 +28,38 @@ void run(HookContext context) {
         nullable: true,
       ),
       AttributeModel(
+        name: 'clientCreatedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'clientModifiedBy',
+        type: 'String',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'clientCreatedBy',
+        type: 'String',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
+        name: 'clientModifiedTime',
+        type: 'int',
+        includeForQuery: false,
+        includeForEntity: false,
+        includeForTable: true,
+        nullable: true,
+      ),
+      AttributeModel(
         name: 'auditModifiedBy',
         type: 'String',
         includeForQuery: false,
@@ -112,8 +144,9 @@ void run(HookContext context) {
       AttributeModel(
         name: 'isDeleted',
         type: 'bool',
-        includeForQuery: true,
-        includeForEntity: true,
+        defaultValue: "false",
+        includeForQuery: false,
+        includeForEntity: false,
         nullable: true,
       ),
     );
@@ -149,7 +182,9 @@ void run(HookContext context) {
       final columnType = _getSqlColumnType(e.type);
       return e.copyWith(type: type, columnType: columnType);
     }),
-    ...model.customAttributes.where((element) => element.isEnum),
+    ...model.customAttributes.where(
+      (element) => element.isEnum && element.includeForTable,
+    ),
   ];
 
   final references = [

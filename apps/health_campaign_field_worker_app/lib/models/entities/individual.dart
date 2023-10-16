@@ -11,7 +11,6 @@ class IndividualSearchModel extends EntitySearchModel {
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final NameSearchModel? name;
   final Gender? gender;
   final List<IdentifierSearchModel>? identifiers;
@@ -21,12 +20,24 @@ class IndividualSearchModel extends EntitySearchModel {
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.name,
     this.gender,
     this.identifiers,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  IndividualSearchModel.ignoreDeleted({
+    this.id,
+    this.dateOfBirth,
+    this.clientReferenceId,
+    this.tenantId,
+    this.name,
+    this.gender,
+    this.identifiers,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -45,7 +56,6 @@ class IndividualModel extends EntityModel {
   final String? photo;
   final String clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final NameModel? name;
   final BloodGroup? bloodGroup;
@@ -67,14 +77,14 @@ class IndividualModel extends EntityModel {
     this.photo,
     required this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.name,
     this.bloodGroup,
     this.address,
     this.gender,
     this.identifiers,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   IndividualCompanion get companion {
@@ -82,8 +92,13 @@ class IndividualModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),
@@ -95,7 +110,6 @@ class IndividualModel extends EntityModel {
       photo: Value(photo),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),

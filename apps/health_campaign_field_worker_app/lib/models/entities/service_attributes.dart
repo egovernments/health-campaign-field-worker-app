@@ -9,14 +9,20 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class ServiceAttributesSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ServiceAttributesSearchModel.ignoreDeleted({
+    this.clientReferenceId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -31,7 +37,6 @@ class ServiceAttributesModel extends EntityModel {
   final dynamic? additionalDetails;
   final String clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
 
@@ -44,9 +49,9 @@ class ServiceAttributesModel extends EntityModel {
     this.additionalDetails,
     required this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   ServiceAttributesCompanion get companion {
@@ -54,8 +59,13 @@ class ServiceAttributesModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
@@ -63,7 +73,6 @@ class ServiceAttributesModel extends EntityModel {
       additionalDetails: Value(additionalDetails),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

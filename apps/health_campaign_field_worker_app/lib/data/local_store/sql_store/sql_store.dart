@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../../../models/entities/address_type.dart';
+import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/entities/transaction_reason.dart';
@@ -41,6 +42,7 @@ import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
+import 'tables/user.dart';
 
 part 'sql_store.g.dart';
 
@@ -75,19 +77,20 @@ part 'sql_store.g.dart';
   Locality,
   PgrService,
   PgrComplainant,
+  User,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
 
-      return NativeDatabase(file);
+      return NativeDatabase(file, logStatements: true, setup: (data) {});
     });
   }
 
@@ -117,6 +120,38 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
             AppLogger.instance.info('Applying migration $from to $to');
             await m.addColumn(address, address.localityBoundaryName);
             await m.addColumn(address, address.localityBoundaryCode);
+          } catch (e) {
+            AppLogger.instance.error(
+              title: 'migration',
+              message: e.toString(),
+            );
+          }
+        }
+        if (from < 4) {
+          // Create table for PgrService
+          try {
+            allTables.forEach((e) async {
+              late final GeneratedColumn<int?> clientModifiedTime =
+                  GeneratedColumn<int?>(
+                'client_modified_time',
+                e.aliasedName,
+                true,
+                type: const IntType(),
+                requiredDuringInsert: false,
+              );
+
+              late final GeneratedColumn<int?> clientCreatedTime =
+                  GeneratedColumn<int?>(
+                'client_created_time',
+                e.aliasedName,
+                true,
+                type: const IntType(),
+                requiredDuringInsert: false,
+              );
+              AppLogger.instance.info('Applying migration $from to $to');
+              await m.addColumn(e, clientCreatedTime);
+              await m.addColumn(e, clientModifiedTime);
+            });
           } catch (e) {
             AppLogger.instance.error(
               title: 'migration',

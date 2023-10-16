@@ -1,22 +1,25 @@
 import 'dart:async';
-
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
+import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/address.dart';
+import '../data/repositories/oplog/oplog.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 class AuthenticatedPageWrapper extends StatelessWidget {
   AuthenticatedPageWrapper({Key? key}) : super(key: key);
@@ -45,7 +48,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     final boundaryName = selectedBoundary.name ??
                         selectedBoundary.code ??
-                        'No boundary name';
+                        AppLocalizations.of(context).translate(
+                          i18.projectSelection.onProjectMapped,
+                        );
 
                     final theme = Theme.of(context);
 
@@ -67,9 +72,16 @@ class AuthenticatedPageWrapper extends StatelessWidget {
               providers: [
                 BlocProvider(
                   create: (context) {
+                    final isar = context.read<Isar>();
+
                     return SearchHouseholdsBloc(
+                      beneficiaryType: context.beneficiaryType,
                       userUid: context.loggedInUserUuid,
                       projectId: context.projectId,
+                      addressRepository: AddressLocalRepository(
+                        context.read<LocalSqlDataStore>(),
+                        AddressOpLogManager(isar),
+                      ),
                       projectBeneficiary: context.repository<
                           ProjectBeneficiaryModel,
                           ProjectBeneficiarySearchModel>(),
@@ -92,8 +104,13 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                     final bloc = SyncBloc(
                       isar: isar,
                       networkManager: context.read(),
-                    )..add(SyncRefreshEvent(userId));
+                    );
 
+                    if (!bloc.isClosed) {
+                      bloc.add(SyncRefreshEvent(userId));
+                    }
+/* Every time when the user changes the screen 
+ this will refresh the data of sync count */
                     isar.opLogs
                         .filter()
                         .createdByEqualTo(userId)
@@ -101,27 +118,61 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         .watch()
                         .listen(
                       (event) {
-                        bloc.add(
-                          SyncRefreshEvent(
-                            userId,
-                            event.where((element) {
-                              switch (element.entityType) {
-                                case DataModelType.household:
-                                case DataModelType.individual:
-                                case DataModelType.task:
-                                case DataModelType.householdMember:
-                                case DataModelType.projectBeneficiary:
-                                case DataModelType.stock:
-                                case DataModelType.stockReconciliation:
-                                case DataModelType.service:
-                                case DataModelType.complaints:
-                                  return true;
-                                default:
-                                  return false;
-                              }
-                            }).length,
-                          ),
-                        );
+                        if (!bloc.isClosed) {
+                          bloc.add(
+                            SyncRefreshEvent(
+                              userId,
+                              event.where((element) {
+                                switch (element.entityType) {
+                                  case DataModelType.household:
+                                  case DataModelType.individual:
+                                  case DataModelType.householdMember:
+                                  case DataModelType.projectBeneficiary:
+                                  case DataModelType.task:
+                                  case DataModelType.stock:
+                                  case DataModelType.stockReconciliation:
+                                  case DataModelType.service:
+                                  case DataModelType.complaints:
+                                    return true;
+                                  default:
+                                    return false;
+                                }
+                              }).length,
+                            ),
+                          );
+                        }
+                      },
+                    );
+
+                    isar.opLogs
+                        .filter()
+                        .createdByEqualTo(userId)
+                        .syncedUpEqualTo(true)
+                        .syncedDownEqualTo(false)
+                        .watch()
+                        .listen(
+                      (event) {
+                        if (!bloc.isClosed) {
+                          bloc.add(
+                            SyncRefreshEvent(
+                              userId,
+                              event.where((element) {
+                                switch (element.entityType) {
+                                  case DataModelType.household:
+                                  case DataModelType.individual:
+                                  case DataModelType.projectBeneficiary:
+                                  case DataModelType.task:
+                                  case DataModelType.stock:
+                                  case DataModelType.stockReconciliation:
+                                  case DataModelType.complaints:
+                                    return true;
+                                  default:
+                                    return false;
+                                }
+                              }).length,
+                            ),
+                          );
+                        }
                       },
                     );
 

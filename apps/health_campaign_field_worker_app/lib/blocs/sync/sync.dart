@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/oplog.dart';
 import '../../data/network_manager.dart';
+import '../../models/bandwidth/bandwidth_model.dart';
 import '../../models/data_model.dart';
 
 part 'sync.freezed.dart';
@@ -39,26 +40,45 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     emit(const SyncState.loading());
     try {
       length ??= (await isar.opLogs
-              .filter()
-              .createdByEqualTo(event.createdBy)
-              .syncedUpEqualTo(false)
-              .findAll())
-          .where((element) {
-        switch (element.entityType) {
-          case DataModelType.household:
-          case DataModelType.individual:
-          case DataModelType.householdMember:
-          case DataModelType.projectBeneficiary:
-          case DataModelType.task:
-          case DataModelType.stock:
-          case DataModelType.stockReconciliation:
-          case DataModelType.service:
-          case DataModelType.complaints:
-            return true;
-          default:
-            return false;
-        }
-      }).length;
+                  .filter()
+                  .createdByEqualTo(event.createdBy)
+                  .syncedUpEqualTo(false)
+                  .findAll())
+              .where((element) {
+            switch (element.entityType) {
+              case DataModelType.household:
+              case DataModelType.individual:
+              case DataModelType.householdMember:
+              case DataModelType.projectBeneficiary:
+              case DataModelType.task:
+              case DataModelType.stock:
+              case DataModelType.stockReconciliation:
+              case DataModelType.service:
+              case DataModelType.complaints:
+                return true;
+              default:
+                return false;
+            }
+          }).length +
+          (await isar.opLogs
+                  .filter()
+                  .createdByEqualTo(event.createdBy)
+                  .syncedDownEqualTo(false)
+                  .findAll())
+              .where((element) {
+            switch (element.entityType) {
+              case DataModelType.household:
+              case DataModelType.individual:
+              case DataModelType.projectBeneficiary:
+              case DataModelType.task:
+              case DataModelType.stock:
+              case DataModelType.stockReconciliation:
+              case DataModelType.complaints:
+                return true;
+              default:
+                return false;
+            }
+          }).length;
     } catch (_) {
       rethrow;
     } finally {
@@ -71,13 +91,25 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     SyncEmitter emit,
   ) async {
     try {
+      final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+        'userId': event.userId,
+        'batchSize': 5,
+      });
       emit(const SyncInProgressState());
       await networkManager.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
-        userId: event.userId,
+        bandwidthModel: bandwidthModel,
       );
       emit(const SyncCompletedState());
+    } on SyncError catch (error) {
+      if (error is SyncDownError) {
+        emit(const DownSyncFailedState());
+      } else {
+        emit(const UpSyncFailedState());
+      }
+
+      rethrow;
     } catch (error) {
       emit(const SyncFailedState());
       rethrow;
@@ -111,4 +143,8 @@ class SyncState with _$SyncState {
   const factory SyncState.completedSync() = SyncCompletedState;
 
   const factory SyncState.failedSync() = SyncFailedState;
+
+  const factory SyncState.failedDownSync() = DownSyncFailedState;
+
+  const factory SyncState.failedUpSync() = UpSyncFailedState;
 }

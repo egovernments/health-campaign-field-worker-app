@@ -9,14 +9,20 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  final bool? isDeleted;
   
   TaskResourceSearchModel({
     this.id,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  TaskResourceSearchModel.ignoreDeleted({
+    this.id,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
@@ -32,7 +38,6 @@ class TaskResourceModel extends EntityModel {
   final bool? isDelivered;
   final String? deliveryComment;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final TaskResourceAdditionalFields? additionalFields;
 
@@ -46,9 +51,9 @@ class TaskResourceModel extends EntityModel {
     this.isDelivered,
     this.deliveryComment,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   TaskResourceCompanion get companion {
@@ -56,8 +61,13 @@ class TaskResourceModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       clientReferenceId: Value(clientReferenceId),
       taskId: Value(taskId),
       id: Value(id),
@@ -66,7 +76,6 @@ class TaskResourceModel extends EntityModel {
       isDelivered: Value(isDelivered),
       deliveryComment: Value(deliveryComment),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }

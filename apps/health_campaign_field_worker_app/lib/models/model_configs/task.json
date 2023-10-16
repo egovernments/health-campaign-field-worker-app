@@ -21,7 +21,14 @@
     {
       "name": "projectBeneficiaryClientReferenceId",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "projectBeneficiaryClientReferenceId",
+      "type": "String"
     },
     {
       "name": "createdBy",

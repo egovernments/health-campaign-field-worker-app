@@ -21,7 +21,31 @@
     {
       "name": "beneficiaryClientReferenceId",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "beneficiaryClientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
+      "name": "beneficiaryRegistrationDateLte",
+      "type": "DateTime",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "beneficiaryRegistrationDateGte",
+      "type": "DateTime",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "dateTimeAttributes": [

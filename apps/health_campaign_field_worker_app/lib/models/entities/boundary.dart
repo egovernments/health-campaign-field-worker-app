@@ -8,6 +8,7 @@ import '../data_model.dart';
 class BoundarySearchModel extends EntitySearchModel {
   final String? boundaryType;
   final String? tenantId;
+  @override
   final bool? isDeleted;
   final String? code;
 
@@ -30,6 +31,7 @@ class BoundaryModel extends EntityModel {
   final String? longitude;
   final String? materializedPath;
   final String? tenantId;
+  @override
   final bool? isDeleted;
   final int? rowVersion;
   final List<BoundaryModel> children;

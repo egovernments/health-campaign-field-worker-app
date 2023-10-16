@@ -27,6 +27,7 @@ export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
 export 'entities/service.dart';
+export 'entities/beneficiary_type.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
 export 'entities/status.dart';
@@ -37,23 +38,31 @@ export 'entities/task.dart';
 export 'entities/task_resource.dart';
 export 'entities/transaction_reason.dart';
 export 'entities/transaction_type.dart';
+export 'entities/user.dart';
 export 'oplog/oplog_entry.dart';
+export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'pgr_complaints/pgr_address.dart';
 
-@MappableClass()
 abstract class DataModel {
   final String? boundaryCode;
+  final bool? isDeleted;
 
-  const DataModel({this.boundaryCode});
+  const DataModel({
+    this.boundaryCode,
+    this.isDeleted,
+  });
 }
 
 @MappableClass()
 abstract class EntityModel extends DataModel {
   final AuditDetails? auditDetails;
-
-  const EntityModel({this.auditDetails});
+  final ClientAuditDetails? clientAuditDetails;
+  const EntityModel({
+    this.auditDetails,
+    this.clientAuditDetails,
+    super.isDeleted = false,
+  });
 }
 
 @MappableClass(ignoreNull: true)
@@ -65,7 +74,15 @@ abstract class EntitySearchModel extends DataModel {
     super.boundaryCode,
     this.auditDetails,
     this.additionalFields,
+    super.isDeleted = false,
   });
+
+  @MappableConstructor()
+  const EntitySearchModel.ignoreDeleted({
+    super.boundaryCode,
+    this.auditDetails,
+    this.additionalFields,
+  }) : super(isDeleted: false);
 }
 
 @MappableClass()
@@ -90,6 +107,22 @@ class AdditionalField {
 }
 
 @MappableClass()
+class ClientAuditDetails {
+  final int createdTime;
+  final int? lastModifiedTime;
+  final String createdBy;
+  final String lastModifiedBy;
+
+  ClientAuditDetails({
+    required this.createdBy,
+    required this.createdTime,
+    String? lastModifiedBy,
+    int? lastModifiedTime,
+  })  : lastModifiedBy = lastModifiedBy ?? createdBy,
+        lastModifiedTime = lastModifiedTime ?? createdTime;
+}
+
+@MappableClass()
 class AuditDetails {
   final String createdBy;
   final String lastModifiedBy;
@@ -108,6 +141,7 @@ class AuditDetails {
 enum DataModelType {
   user,
   facility,
+  address,
   household,
   householdMember,
   individual,

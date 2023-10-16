@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/record_stock/record_stock.dart';
 import '../../router/app_router.dart';
@@ -23,7 +24,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         children: [
@@ -45,10 +46,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               Column(children: [
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordstockReceiptLabel),
+                      .translate(i18.manageStock.recordStockReceiptLabel),
                   description: localizations
-                      .translate(i18.manageStock.recordstockReceiptDescription),
-                  prefixIcon: Icons.login,
+                      .translate(i18.manageStock.recordStockReceiptDescription),
+                  prefixIcon: Icons.file_download_outlined,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
                     RecordStockWrapperRoute(
@@ -58,10 +59,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordstockIssuedLabel),
+                      .translate(i18.manageStock.recordStockIssuedLabel),
                   description: localizations
-                      .translate(i18.manageStock.recordstockIssuedtDescription),
-                  prefixIcon: Icons.logout,
+                      .translate(i18.manageStock.recordStockIssuedDescription),
+                  prefixIcon: Icons.file_upload_outlined,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
                     RecordStockWrapperRoute(
@@ -71,9 +72,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordstockReturnedLabel),
+                      .translate(i18.manageStock.recordStockReturnedLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordstockReturnedtDescription,
+                    i18.manageStock.recordStockReturnedDescription,
                   ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
@@ -85,9 +86,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordstockDamagedLabel),
+                      .translate(i18.manageStock.recordStockDamagedLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordstockDamagedDescription,
+                    i18.manageStock.recordStockDamagedDescription,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
@@ -99,9 +100,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordstockLossLabel),
+                      .translate(i18.manageStock.recordStockLossLabel),
                   description: localizations.translate(
-                    i18.manageStock.recordstockDamagedDescription,
+                    i18.manageStock.recordStockDamagedDescription,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,

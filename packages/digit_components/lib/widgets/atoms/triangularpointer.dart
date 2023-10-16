@@ -40,7 +40,7 @@ class TriangularClipper extends CustomClipper<Path> {
 
 class TriangularBorder extends ShapeBorder {
   @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.only();
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.only();
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) => Path();
