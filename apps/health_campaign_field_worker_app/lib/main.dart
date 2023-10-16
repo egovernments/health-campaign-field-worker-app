@@ -23,9 +23,6 @@ late Dio _dio;
 late Isar _isar;
 int i = 0;
 
-final LocalSqlDataStore _sql = LocalSqlDataStore();
-late Dio _dio;
-int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,24 +52,6 @@ void main() async {
     client: _dio,
     sql: _sql,
   ));
-}
-
-class AppLifecycleObserver extends WidgetsBindingObserver {
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.paused) {
-      final localSecureStore = LocalSecureStore.instance;
-      // await localSecureStore.setAppInActive(true);
-      // Stop the background service when the app is terminated
-    } else if (state == AppLifecycleState.resumed) {
-      // Stop the background service when the app is terminated
-
-      final localSecureStore = LocalSecureStore.instance;
-      // await localSecureStore.setAppInActive(false);
-    }
-  }
 }
 
 class AppLifecycleObserver extends WidgetsBindingObserver {

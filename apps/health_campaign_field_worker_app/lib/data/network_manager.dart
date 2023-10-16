@@ -142,34 +142,6 @@ Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
   return items;
 }
 
-FutureOr<List<EntityModel>> filterEntitybyBandwidth(
-  int batchSize,
-  List<EntityModel> entities,
-) async {
-  final List<EntityModel> items = [];
-  final int size = batchSize < entities.length ? batchSize : entities.length;
-
-  for (var i = 0; i < size; i++) {
-    items.add(entities[i]);
-  }
-
-  return items;
-}
-
-Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
-  int batchSize,
-  List<OpLogEntry<EntityModel>> entities,
-) async {
-  final List<OpLogEntry<EntityModel>> items = [];
-  final int size = batchSize < entities.length ? batchSize : entities.length;
-
-  for (var i = 0; i < size; i++) {
-    items.add(entities[i]);
-  }
-
-  return items;
-}
-
 class NetworkManagerConfiguration {
   final PersistenceConfiguration persistenceConfig;
 

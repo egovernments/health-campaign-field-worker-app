@@ -378,17 +378,4 @@ class MdmsRepository {
       await isar.projectTypeListCycles.putAll(newProjectTypeList);
     });
   }
-
-  Future<RoleActionsWrapperModel> searchRoleActions(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
-    try {
-      final Response response = await _client.post(apiEndPoint, data: body);
-
-      return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
-    } catch (_) {
-      rethrow;
-    }
-  }
 }
