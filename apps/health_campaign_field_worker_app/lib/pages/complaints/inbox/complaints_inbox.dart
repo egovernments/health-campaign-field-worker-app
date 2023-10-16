@@ -356,7 +356,12 @@ class _ComplaintsInboxItem extends StatelessWidget {
                         complaint: item,
                       ));
                     },
-                    style: OutlinedButton.styleFrom(),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        width: 1.0,
+                        color: theme.colorScheme.secondary,
+                      ),
+                    ),
                     child: Text(
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                       style: TextStyle(

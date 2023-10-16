@@ -6,12 +6,9 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
-  final bool? enableViewHousehold;
-
   const AcknowledgementPage({
     super.key,
     super.appLocalizations,
-    this.enableViewHousehold,
   });
 
   @override
