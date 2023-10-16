@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../data/repositories/local/adverse_event.dart';
 import '../../data/repositories/local/address.dart';
 import '../../data/repositories/local/side_effect.dart';
 import '../../models/data_model.dart';
@@ -59,18 +58,6 @@ class SearchHouseholdsBloc
     if (sideEffectDataRepository is SideEffectLocalRepository) {
       (sideEffectDataRepository as SideEffectLocalRepository).listenToChanges(
         query: SideEffectSearchModel(
-          projectId: projectId,
-        ),
-        listener: (data) {
-          add(const SearchHouseholdsInitializedEvent());
-        },
-      );
-    }
-
-    if (adverseEventDataRepository is AdverseEventLocalRepository) {
-      (adverseEventDataRepository as AdverseEventLocalRepository)
-          .listenToChanges(
-        query: AdverseEventSearchModel(
           projectId: projectId,
         ),
         listener: (data) {

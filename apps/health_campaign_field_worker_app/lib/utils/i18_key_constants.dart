@@ -13,7 +13,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
-
+const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -91,6 +91,26 @@ class Common {
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
+}
+
+class AdverseEvents {
+  const AdverseEvents();
+
+  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
+
+  String get sideEffectsLabel => 'SIDE_EFFECTS_LABEL';
+
+  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
+
+  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
+
+  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
+
+  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
+
+  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
+
+  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
 }
 
 class Login {
@@ -480,6 +500,8 @@ class DeliverIntervention {
   String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
+
+  String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
 }
 
 class ProjectSelection {
