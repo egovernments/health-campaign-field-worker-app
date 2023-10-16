@@ -5,5 +5,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 enum Status {
   @MappableValue("DELIVERED") delivered,
   @MappableValue("NOT_DELIVERED") notDelivered,
+  @MappableValue("VISITED") visited,
+  @MappableValue("NOT_VISITED") notVisited,
+  @MappableValue("BENEFICIARY_REFUSED") beneficiaryRefused,
+  @MappableValue("ADMINISTERED_SUCCESS") administeredSuccess,
+  @MappableValue("ADMINISTERED_FAILED") administeredFailed,
+  @MappableValue("IN_COMPLETE") inComplete,
+  @MappableValue("TO_ADMINISTER") toAdminister,
   ;
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -8,8 +8,10 @@ import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
+import '../../../models/project_type/project_type_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
+import '../../local_store/no_sql/schema/project_types.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
 
@@ -269,11 +271,35 @@ class MdmsRepository {
       appConfiguration.complaintTypes = complaintTypesList;
       appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     });
+    appConfiguration.symptomsTypes =
+        result.symptomsTypes?.symptomsTypeList?.map((e) {
+      final symptomTypes = SymptomsTypes()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return symptomTypes;
+    }).toList();
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);
       await isar.rowVersionLists.putAll(rowVersionList);
     });
+  }
+
+  Future<ProjectTypePrimaryWrapper> searchProjectType(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      return ProjectTypePrimaryWrapper.fromJson(
+        json.decode(response.toString())['MdmsRes'],
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<RoleActionsWrapperModel> searchRoleActions(
@@ -287,5 +313,69 @@ class MdmsRepository {
     } catch (_) {
       rethrow;
     }
+  }
+
+  FutureOr<void> writeToProjectTypeDB(
+    ProjectTypePrimaryWrapper result,
+    Isar isar,
+  ) async {
+    final List<ProjectTypeListCycle> newProjectTypeList = [];
+    final data = result.projectTypeWrapper?.projectTypes;
+    if (data != null && data.isNotEmpty) {
+      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
+    }
+    for (final element in data ?? <ProjectType>[]) {
+      final newprojectType = ProjectTypeListCycle();
+
+      newprojectType.projectTypeId = element.id;
+      newprojectType.code = element.code;
+      newprojectType.group = element.group;
+      newprojectType.name = element.name;
+      newprojectType.beneficiaryType = element.beneficiaryType;
+      newprojectType.observationStrategy = element.observationStrategy;
+      newprojectType.resources = element.resources?.map((e) {
+        final productVariants = ProductVariants()
+          ..productVariantId = e.productVariantId
+          ..quantity = e.quantity.toString();
+
+        return productVariants;
+      }).toList();
+      newprojectType.cycles = element.cycles?.map((e) {
+        final newcycle = Cycles()
+          ..id = e.id
+          ..startDate = e.startDate
+          ..endDate = e.endDate
+          ..mandatoryWaitSinceLastCycleInDays =
+              e.mandatoryWaitSinceLastCycleInDays
+          ..deliveries = e.deliveries?.map((ele) {
+            final newDeliveries = Deliveries();
+            newDeliveries.deliveryStrategy = ele.deliveryStrategy;
+            newDeliveries.mandatoryWaitSinceLastDeliveryInDays =
+                ele.mandatoryWaitSinceLastDeliveryInDays;
+            newDeliveries.doseCriteriaModel = ele.doseCriteria?.map((e) {
+              final doseCriterias = DoseCriteria()
+                ..condition = e.condition
+                ..productVariants = e.productVariants?.map((p) {
+                  final productVariants = ProductVariants()
+                    ..quantity = p.quantity.toString()
+                    ..productVariantId = p.productVariantId.toString();
+
+                  return productVariants;
+                }).toList();
+
+              return doseCriterias;
+            }).toList();
+
+            return newDeliveries;
+          }).toList();
+
+        return newcycle;
+      }).toList();
+      newProjectTypeList.add(newprojectType);
+    }
+
+    await isar.writeTxn(() async {
+      await isar.projectTypeListCycles.putAll(newProjectTypeList);
+    });
   }
 }

@@ -9,10 +9,10 @@ import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -27,6 +27,7 @@ import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/side_effect.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
@@ -46,16 +47,19 @@ import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
+import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
 
 class Constants {
-  late Isar _isar;
+  late Future<Isar> _isar;
   late String _version;
   static final Constants _instance = Constants._();
-  Constants._();
+  Constants._() {
+    _isar = openIsar();
+  }
   factory Constants() {
     return _instance;
   }
@@ -67,8 +71,30 @@ class Constants {
     return _version;
   }
 
-  Isar get isar {
+  Future<Isar> get isar {
     return _isar;
+  }
+
+  Future<Isar> openIsar() async {
+    if (Isar.instanceNames.isEmpty) {
+      final directory = await getApplicationDocumentsDirectory();
+
+      return await Isar.open(
+        [
+          ServiceRegistrySchema,
+          LocalizationWrapperSchema,
+          AppConfigurationSchema,
+          OpLogSchema,
+          ProjectTypeListCycleSchema,
+          RowVersionListSchema,
+        ],
+        name: 'HCM',
+        inspector: true,
+        directory: directory.path,
+      );
+    } else {
+      return await Future.value(Isar.getInstance());
+    }
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
@@ -94,6 +120,7 @@ class Constants {
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),
@@ -126,18 +153,15 @@ class Constants {
   }
 
   Future<void> _initializeIsar(version) async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open(
-      [
-        ServiceRegistrySchema,
-        LocalizationWrapperSchema,
-        AppConfigurationSchema,
-        OpLogSchema,
-        RowVersionListSchema,
-      ],
-      directory: dir.path,
-      name: 'HCM',
-    );
+    _isar = Constants().isar;
+
+    final isar = await _isar;
+    final appConfigs = await isar.appConfigurations.where().findAll();
+    final config = appConfigs.firstOrNull;
+
+    final enableCrashlytics =
+        config?.firebaseConfig?.enableCrashlytics ?? false;
+
     _version = version;
   }
 
@@ -190,6 +214,8 @@ class Constants {
           IndividualRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.sideEffect)
+          SideEffectRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -210,15 +236,26 @@ class Constants {
 
     return actionResult ?? '';
   }
+
+  static List<KeyValue> yesNo = [
+    KeyValue('CORE_COMMON_YES', true),
+    KeyValue('CORE_COMMON_NO', false),
+  ];
 }
 
 /// By using this key, we can push pages without context
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
+class KeyValue {
+  String label;
+  dynamic key;
+  KeyValue(this.label, this.key);
+}
+
 class RequestInfoData {
   static const String apiId = 'hcm';
   static const String ver = '.01';
-  static num ts = DateTime.now().millisecondsSinceEpoch;
+  static String ts = (DateTime.now().millisecondsSinceEpoch).toString();
   static const did = "1";
   static const key = "";
   static String? authToken;

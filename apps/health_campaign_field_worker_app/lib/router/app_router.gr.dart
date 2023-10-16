@@ -283,6 +283,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BeneficiaryDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
+          orElse: () => const BeneficiaryDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     DeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<DeliverInterventionRouteArgs>(
           orElse: () => const DeliverInterventionRouteArgs());
@@ -295,6 +306,41 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SideEffectsRoute.name: (routeData) {
+      final args = routeData.argsAs<SideEffectsRouteArgs>();
+      return MaterialPageX<List<TaskModel>>(
+        routeData: routeData,
+        child: SideEffectsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    DoseAdministeredRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredRouteArgs>(
+          orElse: () => const DoseAdministeredRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SplashAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SplashAcknowledgementRouteArgs>(
+          orElse: () => const SplashAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SplashAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableBackToSearch: args.enableBackToSearch,
+        ),
+      );
+    },
     ReasonForDeletionRoute.name: (routeData) {
       final args = routeData.argsAs<ReasonForDeletionRouteArgs>(
           orElse: () => const ReasonForDeletionRouteArgs());
@@ -304,6 +350,30 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHousholdDelete: args.isHousholdDelete,
+        ),
+      );
+    },
+    RecordPastDeliveryDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<RecordPastDeliveryDetailsRouteArgs>(
+          orElse: () => const RecordPastDeliveryDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: RecordPastDeliveryDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
+        ),
+      );
+    },
+    HouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
+          orElse: () => const HouseholdAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: HouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -560,13 +630,43 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
+                  BeneficiaryDetailsRoute.name,
+                  path: 'beneficiary-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
                   DeliverInterventionRoute.name,
                   path: 'deliver-intervention',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
+                  SideEffectsRoute.name,
+                  path: 'side-effects',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  DoseAdministeredRoute.name,
+                  path: 'dose-administered',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SplashAcknowledgementRoute.name,
+                  path: 'splash-acknowledgement',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
                   ReasonForDeletionRoute.name,
                   path: 'reason-for-deletion',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  RecordPastDeliveryDetailsRoute.name,
+                  path: 'record-past-delivery-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  HouseholdAcknowledgementRoute.name,
+                  path: 'household-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1571,6 +1671,41 @@ class HouseholdOverviewRouteArgs {
 }
 
 /// generated route for
+/// [BeneficiaryDetailsPage]
+class BeneficiaryDetailsRoute
+    extends PageRouteInfo<BeneficiaryDetailsRouteArgs> {
+  BeneficiaryDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          BeneficiaryDetailsRoute.name,
+          path: 'beneficiary-details',
+          args: BeneficiaryDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'BeneficiaryDetailsRoute';
+}
+
+class BeneficiaryDetailsRouteArgs {
+  const BeneficiaryDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [DeliverInterventionPage]
 class DeliverInterventionRoute
     extends PageRouteInfo<DeliverInterventionRouteArgs> {
@@ -1611,6 +1746,124 @@ class DeliverInterventionRouteArgs {
 }
 
 /// generated route for
+/// [SideEffectsPage]
+class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
+  SideEffectsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required List<TaskModel> tasks,
+    bool isEditing = false,
+  }) : super(
+          SideEffectsRoute.name,
+          path: 'side-effects',
+          args: SideEffectsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            tasks: tasks,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'SideEffectsRoute';
+}
+
+class SideEffectsRouteArgs {
+  const SideEffectsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.tasks,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final List<TaskModel> tasks;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredPage]
+class DoseAdministeredRoute extends PageRouteInfo<DoseAdministeredRouteArgs> {
+  DoseAdministeredRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          DoseAdministeredRoute.name,
+          path: 'dose-administered',
+          args: DoseAdministeredRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'DoseAdministeredRoute';
+}
+
+class DoseAdministeredRouteArgs {
+  const DoseAdministeredRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SplashAcknowledgementPage]
+class SplashAcknowledgementRoute
+    extends PageRouteInfo<SplashAcknowledgementRouteArgs> {
+  SplashAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableBackToSearch,
+  }) : super(
+          SplashAcknowledgementRoute.name,
+          path: 'splash-acknowledgement',
+          args: SplashAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableBackToSearch: enableBackToSearch,
+          ),
+        );
+
+  static const String name = 'SplashAcknowledgementRoute';
+}
+
+class SplashAcknowledgementRouteArgs {
+  const SplashAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableBackToSearch,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableBackToSearch;
+
+  @override
+  String toString() {
+    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
+  }
+}
+
+/// generated route for
 /// [ReasonForDeletionPage]
 class ReasonForDeletionRoute extends PageRouteInfo<ReasonForDeletionRouteArgs> {
   ReasonForDeletionRoute({
@@ -1646,6 +1899,86 @@ class ReasonForDeletionRouteArgs {
   @override
   String toString() {
     return 'ReasonForDeletionRouteArgs{key: $key, appLocalizations: $appLocalizations, isHousholdDelete: $isHousholdDelete}';
+  }
+}
+
+/// generated route for
+/// [RecordPastDeliveryDetailsPage]
+class RecordPastDeliveryDetailsRoute
+    extends PageRouteInfo<RecordPastDeliveryDetailsRouteArgs> {
+  RecordPastDeliveryDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<TaskModel>? tasks,
+  }) : super(
+          RecordPastDeliveryDetailsRoute.name,
+          path: 'record-past-delivery-details',
+          args: RecordPastDeliveryDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            tasks: tasks,
+          ),
+        );
+
+  static const String name = 'RecordPastDeliveryDetailsRoute';
+}
+
+class RecordPastDeliveryDetailsRouteArgs {
+  const RecordPastDeliveryDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.tasks,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final List<TaskModel>? tasks;
+
+  @override
+  String toString() {
+    return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
+  }
+}
+
+/// generated route for
+/// [HouseholdAcknowledgementPage]
+class HouseholdAcknowledgementRoute
+    extends PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
+  HouseholdAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+  }) : super(
+          HouseholdAcknowledgementRoute.name,
+          path: 'household-acknowledgement',
+          args: HouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+        );
+
+  static const String name = 'HouseholdAcknowledgementRoute';
+}
+
+class HouseholdAcknowledgementRouteArgs {
+  const HouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

@@ -3,11 +3,14 @@ library models;
 import 'package:dart_mappable/dart_mappable.dart';
 
 export 'data_model.mapper.g.dart';
+export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
 export 'entities/attributes.dart';
+export 'entities/beneficiary_type.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
+export 'entities/deliver_strategy_type.dart';
 export 'entities/document.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
@@ -27,9 +30,9 @@ export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
 export 'entities/service.dart';
-export 'entities/beneficiary_type.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
+export 'entities/side_effect.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
@@ -157,11 +160,12 @@ enum DataModelType {
   stock,
   stockReconciliation,
   task,
+  sideEffect,
   serviceDefinition,
   service,
   complaints,
   attributes,
   boundary,
   serviceAttributes,
-  locality
+  locality,
 }

@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitRadioButtonList<T> extends StatelessWidget {
   final String labelText;
+  final TextStyle? labelStyle;
   final bool isRequired;
   final String formControlName;
   final String Function(T value) valueMapper;
@@ -15,6 +16,8 @@ class DigitRadioButtonList<T> extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? labelPadding;
+  final void Function(FormControl<dynamic>)? onChangeOfFormControl;
+  final String errorMessage;
 
   const DigitRadioButtonList({
     super.key,
@@ -30,6 +33,9 @@ class DigitRadioButtonList<T> extends StatelessWidget {
     this.contentPadding,
     this.margin,
     this.labelPadding,
+    this.labelStyle,
+    this.onChangeOfFormControl,
+    required this.errorMessage,
   });
 
   @override
@@ -44,16 +50,13 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Row(children: <Widget>[
-                    Text(
-                      labelText,
+                    Flexible(
+                        child: Text(
+                      labelText + (isRequired ? ' * ' : ''),
                       textAlign: TextAlign.left,
-                      style:
-                          DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
-                    ),
-                    Text(isRequired ? '*' : '',
-                        textAlign: TextAlign.left,
-                        style: DigitTheme
-                            .instance.mobileTheme.textTheme.bodyLarge),
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.headlineMedium,
+                    )),
                   ]),
                 ),
               )
@@ -74,6 +77,7 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                   onChanged: (isEnabled ?? true)
                       ? (control) {
                           final value = control.value;
+
                           if (value == null) return;
                           onValueChange?.call(value);
                         }
@@ -86,6 +90,19 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                 );
               },
             ).toList()),
+        ReactiveFormConsumer(
+          builder: (context, form, child) {
+            final radioListControl = form.control(formControlName);
+            if (radioListControl.hasErrors) {
+              return Text(
+                errorMessage,
+                style: TextStyle(color: DigitTheme.instance.colorScheme.error),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
       ]),
     );
   }
