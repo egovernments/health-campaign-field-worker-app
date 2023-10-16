@@ -30,6 +30,7 @@ class PgrComplainantModel extends EntityModel {
   final String tenantId;
   final String? uuid;
   final bool active;
+  @override
   final bool isDeleted;
   final int rowVersion;
 
@@ -125,6 +126,7 @@ class PgrServiceModel extends EntityModel {
   final String? accountId;
   final PgrServiceApplicationStatus applicationStatus;
   final String? source;
+  @override
   final bool isDeleted;
   final int rowVersion;
   final PgrAddressModel address;

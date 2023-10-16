@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
@@ -110,7 +109,7 @@ class PgrServiceLocalRepository
           ..where(
             buildAnd(
               [
-                if(userId != null)
+                if (userId != null)
                   sql.pgrService.auditCreatedBy.equals(userId),
                 if (query.tenantId != null)
                   sql.pgrService.tenantId.equals(query.tenantId),

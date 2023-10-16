@@ -1,0 +1,102 @@
+@startuml
+actor User                             as user
+collections "User Interface"           as ui
+
+participant "Sync Bloc"                as syncBloc
+participant "Network Manager"          as nm
+
+box "Data Repository" #EEEEFF
+    entity "Local Repository"          as local
+    entity "Remote Repository"         as remote
+end box
+
+database OpLog                         as oplog
+database SQLite                        as sqlite
+
+autoactivate on
+
+group "Data creation"
+    user -> ui: Submit action
+    ui -> nm: Get repository
+    return Local repository
+
+    ui -> local: Create data
+    local -> oplog: Create oplog entry
+    return Success
+    local -> sqlite: Persist data
+    return Success
+    return
+    return Success
+end
+
+group "Manual Sync"
+    user -> ui: Sync now
+    ui -> syncBloc: SyncSyncUpEvent
+    syncBloc -> nm: performSync
+
+
+    group "Sync down"
+        nm -> local: getItemsToBeSyncedDown
+        local -> oplog: getPendingDownSync
+        return List<OpLogEntry>
+        return List<OpLogEntry>
+
+        nm -> nm: Group OpLogEntries by type
+
+        loop "Entries in group"
+            nm -> remote: Bulk Search by Client Reference IDs
+            return nm: Remote entities with Server Generated IDs
+
+            nm -> local: Update server generated ID in OpLog
+            local -> oplog: Update server generated ID and additional IDs
+            return Success
+            return Success
+
+            nm -> local: Update server generated ID in SQLite
+            local -> SQLite: Update server generated ID
+            return Success
+            return Success
+        end
+
+        return Success
+    end
+
+    group "Sync Up"
+
+        nm -> local: getItemsToBeSyncedUp
+        local -> oplog: getPendingUpSync
+        return List<OpLogEntry>
+        return List<OpLogEntry>
+
+        nm -> nm: Group OpLogEntries by type and data operation
+
+        loop "Entries in group"
+
+            note over nm: Before processing further\nwe need to inject Server\nGenerated IDs to request ID
+
+            alt CREATE
+                nm -> remote: Bulk create
+                return Success
+            else UPDATE
+                nm -> remote: Bulk update
+                return Success
+            else DELETE
+                nm -> remote: Bulk delete
+                return Success
+            else SINGLE_CREATE
+                nm -> remote: Single create
+                return Success
+            end
+
+            return
+        end
+
+    end
+    return  Success
+    return
+    return Success
+end
+
+autoactivate off
+
+@enduml

@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_annotation_target
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_config_model.freezed.dart';
@@ -49,7 +47,8 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
     @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-        final AppConfigSecondaryWrapperModel? appConfig,
+    final AppConfigSecondaryWrapperModel? appConfig,
+    @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -71,6 +70,18 @@ class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
 }
 
 @freezed
+class RowVersionWrapperModel with _$RowVersionWrapperModel {
+  const factory RowVersionWrapperModel({
+    @JsonKey(name: 'ROW_VERSIONS') List<RowVersions>? rowVersionslist,
+  }) = _RowVersionWrapperModel;
+
+  factory RowVersionWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$RowVersionWrapperModelFromJson(json);
+}
+
+@freezed
 class AppConfig with _$AppConfig {
   factory AppConfig({
     @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
@@ -79,23 +90,29 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
     @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
     @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+    required List<BandWidthBatchSize> bandWidthBatchSize,
+    @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+    BackgroundServiceConfig? backgroundServiceConfig,
     @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions>
-            householdMemberDeletionReasonOptions,
+    required List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
     @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-        required List<GenderOptions> genderOptions,
+    required List<GenderOptions> genderOptions,
     @JsonKey(name: 'CHECKLIST_TYPES')
-        required List<CheckListTypes> checklistTypes,
+    required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-        required List<IdTypeOptions> idTypeOptions,
+    required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-        required List<DeliveryCommentOptions> deliveryCommentOptions,
+    required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
-        required BackendInterface backendInterface,
+    required BackendInterface backendInterface,
+    @JsonKey(name: 'CALL_SUPPORT')
+    required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
-        required List<TransportTypes> transportTypes,
+    required List<TransportTypes> transportTypes,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -111,6 +128,17 @@ class IdTypeOptions with _$IdTypeOptions {
 
   factory IdTypeOptions.fromJson(Map<String, dynamic> json) =>
       _$IdTypeOptionsFromJson(json);
+}
+
+@freezed
+class BandWidthBatchSize with _$BandWidthBatchSize {
+  factory BandWidthBatchSize({
+    @JsonKey(name: 'MIN_RANGE') required double minRange,
+    @JsonKey(name: 'MAX_RANGE') required double maxRange,
+    @JsonKey(name: 'BATCH_SIZE') required int batchSize,
+  }) = _BandWidthBatchSize;
+  factory BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
+      _$BandWidthBatchSizeFromJson(json);
 }
 
 @freezed
@@ -144,6 +172,18 @@ class GenderOptions with _$GenderOptions {
 
   factory GenderOptions.fromJson(Map<String, dynamic> json) =>
       _$GenderOptionsFromJson(json);
+}
+
+@freezed
+class BackgroundServiceConfig with _$BackgroundServiceConfig {
+  factory BackgroundServiceConfig({
+    @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF') required int batteryPercentCutOff,
+    @JsonKey(name: 'SERVICE_INTERVAL') required int serviceInterval,
+    @JsonKey(name: 'API_CONCURRENCY') required int apiConcurrency,
+  }) = _BackgroundServiceConfig;
+
+  factory BackgroundServiceConfig.fromJson(Map<String, dynamic> json) =>
+      _$BackgroundServiceConfigFromJson(json);
 }
 
 @freezed
@@ -211,6 +251,17 @@ class CheckListTypes with _$CheckListTypes {
 }
 
 @freezed
+class CallSupportList with _$CallSupportList {
+  factory CallSupportList({
+    required String name,
+    required String code,
+  }) = _CallSupportList;
+
+  factory CallSupportList.fromJson(Map<String, dynamic> json) =>
+      _$CallSupportListFromJson(json);
+}
+
+@freezed
 class TransportTypes with _$TransportTypes {
   factory TransportTypes({
     required String name,
@@ -219,4 +270,14 @@ class TransportTypes with _$TransportTypes {
 
   factory TransportTypes.fromJson(Map<String, dynamic> json) =>
       _$TransportTypesFromJson(json);
+}
+
+@freezed
+class RowVersions with _$RowVersions {
+  factory RowVersions({
+    required String module,
+    required String version,
+  }) = _RowVersions;
+  factory RowVersions.fromJson(Map<String, dynamic> json) =>
+      _$RowVersionsFromJson(json);
 }

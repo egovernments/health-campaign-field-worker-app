@@ -88,6 +88,11 @@ class Variables {
     'default',
   );
 
+  static const _actionMapUrl = EnvEntry(
+    'ACTIONS_API_PATH',
+    'access/v1/actions/mdms/_get',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -100,6 +105,10 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+  String get actionMapApiPath => useFallbackValues
+      ? _actionMapUrl.value
+      : _dotEnv.get(_actionMapUrl.key, fallback: _actionMapUrl.value);
 
   String get tenantId => useFallbackValues
       ? _tenantId.value

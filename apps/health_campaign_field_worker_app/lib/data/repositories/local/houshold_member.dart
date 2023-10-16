@@ -62,6 +62,24 @@ class HouseholdMemberLocalRepository
             isDeleted: householdMember.isDeleted,
             tenantId: householdMember.tenantId,
             rowVersion: householdMember.rowVersion,
+            auditDetails: (householdMember.auditCreatedBy != null &&
+                    householdMember.auditCreatedTime != null)
+                ? AuditDetails(
+                    createdBy: householdMember.auditCreatedBy!,
+                    createdTime: householdMember.auditCreatedTime!,
+                    lastModifiedBy: householdMember.auditModifiedBy,
+                    lastModifiedTime: householdMember.auditModifiedTime,
+                  )
+                : null,
+            clientAuditDetails: (householdMember.clientCreatedBy != null &&
+                    householdMember.clientCreatedTime != null)
+                ? ClientAuditDetails(
+                    createdBy: householdMember.clientCreatedBy!,
+                    createdTime: householdMember.clientCreatedTime!,
+                    lastModifiedBy: householdMember.clientModifiedBy,
+                    lastModifiedTime: householdMember.clientModifiedTime,
+                  )
+                : null,
             clientReferenceId: householdMember.clientReferenceId,
           );
         })
@@ -106,10 +124,19 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
+      clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
+              entity.clientAuditDetails?.createdTime != null)
+          ? ClientAuditDetails(
+              createdBy: entity.clientAuditDetails!.createdBy,
+              createdTime: entity.clientAuditDetails!.createdTime,
+              lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            )
+          : null,
       rowVersion: entity.rowVersion.increment,
     );
     await sql.batch((batch) {

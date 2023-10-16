@@ -39,6 +39,10 @@ class OpLog {
   late bool syncedDown;
 
   late List<AdditionalId> additionalIds;
+
+  late int rowVersion;
+
+  late int syncDownRetryCount;
 }
 
 @embedded

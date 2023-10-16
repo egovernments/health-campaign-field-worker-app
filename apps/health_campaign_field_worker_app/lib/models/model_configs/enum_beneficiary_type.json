@@ -1,0 +1,14 @@
+{
+    "name": "BeneficiaryType",
+    "enumValues": [
+      {
+        "name": "individual",
+        "value": "INDIVIDUAL"
+      },
+      {
+        "name": "household",
+        "value": "HOUSEHOLD"
+      }
+    ],
+    "isEnum": true
+  }

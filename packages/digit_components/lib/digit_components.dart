@@ -1,6 +1,6 @@
 library digit_components;
 
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 export 'blocs/location/location.dart';
 export 'theme/theme.dart';
@@ -14,6 +14,6 @@ class DigitUi {
   const DigitUi._internal();
 
   Future<void> initThemeComponents() async {
-    GoogleFonts.config.allowRuntimeFetching = false;
+    // GoogleFonts.config.allowRuntimeFetching = false;
   }
 }

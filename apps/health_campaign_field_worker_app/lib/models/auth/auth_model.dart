@@ -44,6 +44,7 @@ class UserRequestModel with _$UserRequestModel {
     bool? active,
     String? tenantId,
     String? permanentCity,
+    String? gender,
     @Default([]) List<UserRoleModel> roles,
   }) = _UserRequestModel;
 
@@ -55,7 +56,7 @@ class UserRequestModel with _$UserRequestModel {
 class UserRoleModel with _$UserRoleModel {
   const factory UserRoleModel({
     required String name,
-    required UserRoleCodeEnum code,
+    required String code,
     String? tenantId,
   }) = _UserRoleModel;
 
@@ -63,6 +64,9 @@ class UserRoleModel with _$UserRoleModel {
       _$UserRoleModelFromJson(json);
 }
 
+/* 
+
+Commenting the below code as we have made Roles's as dynamic
 enum UserRoleCodeEnum {
   @JsonValue('REGISTRAR')
   registrar,
@@ -83,3 +87,4 @@ enum UserRoleCodeEnum {
   @JsonValue('FIELD_SUPERVISOR')
   fieldSupervisor,
 }
+*/

@@ -1,9 +1,9 @@
 home="$PWD"
 
 dart pub global activate mason_cli
-dart pub global activate melos 2.9.0
+dart pub global activate melos
 
-melos run  hooks:build-runner
+melos run generate-hooks
 
 mason add digit_entity --path ./mason_templates/digit_entity -g
 mason add freezed_bloc --path ./mason_templates/freezed_bloc -g

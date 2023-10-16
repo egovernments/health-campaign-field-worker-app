@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:path/path.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -48,6 +49,19 @@ class ServiceLocalRepository
       tenantId: entity.tenantId,
       isDeleted: entity.isDeleted,
       rowVersion: entity.rowVersion,
+      additionalFields: ServiceAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            'clientCreatedTime',
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+          AdditionalField(
+            'clientCreatedBy',
+            entity.auditDetails?.createdBy,
+          ),
+        ],
+      ),
       auditDetails: entity.auditDetails,
       attributes: entity.attributes?.map((e) {
         return e.dataType == 'Number'

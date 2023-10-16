@@ -4,13 +4,17 @@ class DigitIconTile extends StatelessWidget {
   final String title;
   final Widget? content;
   final IconData? icon;
+  final ImageIcon? imageIcon;
   final VoidCallback onPressed;
+  final bool? selected;
 
   const DigitIconTile({
     super.key,
     required this.title,
     this.content,
     this.icon,
+    this.imageIcon,
+    this.selected,
     required this.onPressed,
   });
 
@@ -18,10 +22,12 @@ class DigitIconTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       minVerticalPadding: 16,
-      leading: Icon(
-        icon,
-        color: Theme.of(context).colorScheme.shadow,
-      ),
+      selected: selected ?? false,
+      leading: imageIcon ??
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.shadow,
+          ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

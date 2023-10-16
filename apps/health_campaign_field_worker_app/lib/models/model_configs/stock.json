@@ -56,13 +56,31 @@
       "name": "transactionType",
       "type": "transactionType",
       "isEnum": true,
-      "includeForQuery": true
+      "includeForQuery": false
     },
     {
       "name": "transactionReason",
       "type": "transactionReason",
       "isEnum": true,
-      "includeForQuery": true
+      "includeForQuery": false
+    },
+    {
+      "name": "transactionType",
+      "type": "transactionType",
+      "isEnum": true,
+      "isList": true,
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "transactionReason",
+      "type": "transactionReason",
+      "isEnum": true,
+      "isList": true,
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "isEnum": false

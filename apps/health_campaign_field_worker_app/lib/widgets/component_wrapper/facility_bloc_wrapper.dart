@@ -33,7 +33,6 @@ class FacilityBlocWrapper extends StatelessWidget {
                 projectId: selectedProject.id,
               ),
             ),
-          lazy: false,
           child: child,
         );
       },

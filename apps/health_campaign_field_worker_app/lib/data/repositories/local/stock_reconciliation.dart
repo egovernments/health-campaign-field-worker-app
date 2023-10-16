@@ -28,24 +28,33 @@ class StockReconciliationLocalRepository extends LocalRepository<
   ]) async {
     final selectQuery = sql.select(sql.stockReconciliation).join([]);
     final results = await (selectQuery
-          ..where(buildAnd([
-            if (query.clientReferenceId != null)
-              sql.stockReconciliation.id.equals(
-                query.id,
-              ),
-            if (query.productVariantId != null)
-              sql.stockReconciliation.productVariantId.equals(
-                query.productVariantId!,
-              ),
-            if (query.facilityId != null)
-              sql.stockReconciliation.facilityId.equals(
-                query.facilityId!,
-              ),
-            if (userId != null)
-              sql.stockReconciliation.auditCreatedBy.equals(
-                userId,
-              ),
-          ])))
+          ..where(
+            buildAnd(
+              [
+                if (query.facilityId != null)
+                  sql.stockReconciliation.facilityId.equals(query.facilityId),
+                if (query.productVariantId != null)
+                  sql.stockReconciliation.productVariantId
+                      .equals(query.productVariantId),
+                if (query.clientReferenceId != null)
+                  sql.stockReconciliation.id.equals(
+                    query.id,
+                  ),
+                if (query.productVariantId != null)
+                  sql.stockReconciliation.productVariantId.equals(
+                    query.productVariantId!,
+                  ),
+                if (query.facilityId != null)
+                  sql.stockReconciliation.facilityId.equals(
+                    query.facilityId!,
+                  ),
+                if (userId != null)
+                  sql.stockReconciliation.auditCreatedBy.equals(
+                    userId,
+                  ),
+              ],
+            ),
+          ))
         .get();
 
     return results.map((e) {
@@ -63,6 +72,11 @@ class StockReconciliationLocalRepository extends LocalRepository<
         commentsOnReconciliation: data.commentsOnReconciliation,
         dateOfReconciliation: data.dateOfReconciliation,
         clientReferenceId: data.clientReferenceId,
+        additionalFields: data.additionalFields == null
+            ? null
+            : Mapper.fromJson<StockReconciliationAdditionalFields>(
+                data.additionalFields!,
+              ),
         isDeleted: data.isDeleted,
         rowVersion: data.rowVersion,
       );

@@ -22,7 +22,7 @@ class DigitToast {
       child: Container(
         color: options.isError
             ? options.theme.colorScheme.error
-            : options.theme.colorScheme.surfaceVariant,
+            : options.theme.colorScheme.onSurfaceVariant,
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,

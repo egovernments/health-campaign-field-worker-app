@@ -47,7 +47,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
             ComplaintsRegistrationBloc, ComplaintsRegistrationState>(
           builder: (context, state) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(

@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +14,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -47,6 +54,7 @@ import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -72,9 +80,41 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       builder: (context, state) {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
-          return const Offstage();
+          return MaterialApp(
+            theme: DigitTheme.instance.mobileTheme,
+            home: Scaffold(
+              appBar: AppBar(),
+              body: state.maybeWhen(
+                orElse: () => const Center(
+                  child: Text('Unable to initialize the application'),
+                ),
+                /*Returns Loading state while app initialization is in progress*/
+                loading: () => const Center(
+                  child: Text('Loading'),
+                ),
+                /*Returns No Internet Connection warning if its failed to initialize after all retries
+                  and shows a button to close the app*/
+                failed: () => ScrollableContent(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  footer: DigitCard(
+                    child: DigitElevatedButton(
+                      onPressed: () => exit(0),
+                      child: const Center(
+                        child: Text('Close'),
+                      ),
+                    ),
+                  ),
+                  children: const [
+                    Center(
+                      child: Text('Internet not available. Try later.'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
-
         final remote = _getRemoteRepositories(dio, actionMap);
         final local = _getLocalRepositories(sql, isar);
 
@@ -401,6 +441,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
             create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.user)
+          RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
+            create: (_) => UserRemoteRepository(
               dio,
               actionMap: actions,
             ),

@@ -5,10 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
+import '../../blocs/service/service.dart';
+import '../../blocs/service_definition/service_definition.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
 import '../../models/entities/project_beneficiary.dart';
+import '../../models/entities/service.dart';
+import '../../models/entities/service_definition.dart';
 import '../../models/entities/task.dart';
 import '../../utils/extensions/extensions.dart';
 
@@ -36,9 +40,24 @@ class BeneficiaryWrapperPage extends StatelessWidget {
 
     final projectBeneficiary = context
         .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>();
+    final serviceDefinition = context
+        .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
+    final service = context.repository<ServiceModel, ServiceSearchModel>();
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => ServiceBloc(
+            const ServiceEmptyState(),
+            serviceDataRepository: service,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ServiceDefinitionBloc(
+            const ServiceDefinitionEmptyState(),
+            serviceDefinitionDataRepository: serviceDefinition,
+          )..add(const ServiceDefinitionFetchEvent()),
+        ),
         BlocProvider(
           create: (_) => HouseholdOverviewBloc(
             HouseholdOverviewState(
@@ -71,9 +90,9 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               taskRepository: task,
             )..add(DeliverInterventionSearchEvent(TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
-                    .householdMemberWrapper
-                    .projectBeneficiary
-                    .clientReferenceId,
+                    .householdMemberWrapper.projectBeneficiaries
+                    .map((e) => e.clientReferenceId)
+                    .toList(),
               ))),
             child: const AutoRouter(),
           );

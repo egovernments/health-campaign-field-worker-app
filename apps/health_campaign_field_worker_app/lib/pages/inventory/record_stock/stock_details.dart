@@ -47,9 +47,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _transactingPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _transactionQuantityKey: FormControl<String>(validators: [
+      _transactionQuantityKey: FormControl<int>(validators: [
         Validators.number,
         Validators.required,
+        Validators.min(0),
+        Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(),
@@ -138,12 +140,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               }
 
               transactionReasonLabel ??= '';
+              debugPrint(transactionPartyLabel);
 
               return ReactiveFormBuilder(
                 form: _form,
                 builder: (context, form, child) {
                   return ScrollableContent(
-                    header: Column(children: const [
+                    header: const Column(children: [
                       BackNavigationHelpHeaderWidget(),
                     ]),
                     footer: SizedBox(
@@ -161,7 +164,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
-                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
 
                                     final bloc =
                                         context.read<RecordStockBloc>();
@@ -195,7 +199,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     final quantity = form
                                         .control(_transactionQuantityKey)
-                                        .value as String;
+                                        .value;
 
                                     final waybillNumber = form
                                         .control(_waybillNumberKey)
@@ -253,6 +257,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       auditDetails: AuditDetails(
                                         createdBy: context.loggedInUserUuid,
                                         createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
                                             context.millisecondsSinceEpoch(),
                                       ),
                                       additionalFields: [
@@ -374,7 +387,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       menuItems: productVariants,
                                       validationMessages: {
                                         'required': (object) =>
-                                            'Field is required',
+                                            '${module.selectProductLabel}_IS_REQUIRED',
                                       },
                                     );
                                   },
@@ -406,8 +419,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     facilities,
                                   ),
                                   label: localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .facilityLabel,
+                                    '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
                                   ),
                                   isRequired: true,
                                   suffix: const Padding(
@@ -440,6 +452,17 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 decimal: true,
                               ),
                               isRequired: true,
+                              validationMessages: {
+                                "number": (object) => localizations.translate(
+                                      '${quantityCountLabel}_ERROR',
+                                    ),
+                                "max": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MAX_ERROR',
+                                    ),
+                                "min": (object) => localizations.translate(
+                                      '${quantityCountLabel}_MIN_ERROR',
+                                    ),
+                              },
                               label: localizations.translate(
                                 quantityCountLabel,
                               ),
@@ -456,6 +479,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     .quantityOfProductIndicatedOnWaybillLabel,
                               ),
                               formControlName: _waybillQuantityKey,
+                              validationMessages: {
+                                "number": (object) => localizations.translate(
+                                      '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
+                                    ),
+                              },
                             ),
                             BlocBuilder<AppInitializationBloc,
                                 AppInitializationState>(

@@ -1,14 +1,13 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  enable-experiment:
-    - records
   exclude:
     - build/**
     - "**/*.gr.dart"
     - "**/*.freezed.dart"
   errors:
     invalid_annotation_target: ignore
+    unrelated_type_equality_checks: error
   plugins:
     - dart_code_metrics
 

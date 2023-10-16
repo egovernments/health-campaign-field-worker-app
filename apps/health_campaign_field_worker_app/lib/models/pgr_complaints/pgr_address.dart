@@ -24,6 +24,7 @@ class PgrAddressModel extends EntityModel {
   final LocalityModel? locality;
   final GeoLocation? geoLocation;
   final Map<String, dynamic>? additionDetails;
+  @override
   final bool? isDeleted;
   final int? rowVersion;
 

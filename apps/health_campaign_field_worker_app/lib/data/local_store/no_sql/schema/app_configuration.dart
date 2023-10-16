@@ -15,6 +15,9 @@ class AppConfiguration {
   @Name("SYNC_METHOD")
   late String? syncMethod;
 
+  @Name("PROXIMITY_SEARCH_RANGE")
+  late double? maxRadius;
+
   @Name("SYNC_TRIGGER")
   late String? syncTrigger;
 
@@ -37,6 +40,12 @@ class AppConfiguration {
   @Name('CHECKLIST_TYPES')
   late List<ChecklistTypes>? checklistTypes;
 
+  @Name('BACKGROUND_SERVICE_CONFIG')
+  late BackgroundServiceConfig? backgroundServiceConfig;
+
+  @Name('BANDWIDTH_BATCH_SIZE')
+  late List<BandwidthBatchSize>? bandwidthBatchSize;
+
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
 
@@ -49,8 +58,14 @@ class AppConfiguration {
   @Name('COMPLAINT_TYPES')
   late List<ComplaintTypes>? complaintTypes;
 
+  @Name('CALL_SUPPORT')
+  late List<CallSupportList>? callSupportOptions;
+
   @Name("TENANT_ID")
   late String? tenantId;
+
+  @Name('FIREBASE_CONFIG')
+  FirebaseConfig? firebaseConfig;
 }
 
 @embedded
@@ -84,6 +99,16 @@ class DeliveryCommentOptions {
 }
 
 @embedded
+class BandwidthBatchSize {
+  @Name("MAX_RANGE")
+  late double maxRange;
+  @Name("MIN_RANGE")
+  late double minRange;
+  @Name("BATCH_SIZE")
+  late int batchSize;
+}
+
+@embedded
 class Interfaces {
   late String type;
   late String name;
@@ -114,6 +139,18 @@ class ComplaintTypes {
 }
 
 @embedded
+class BackgroundServiceConfig {
+  @Name("BATTERY_PERCENT_CUT_OFF")
+  late int? batteryPercentCutOff;
+
+  @Name("SERVICE_INTERVAL")
+  late int? serviceInterval;
+
+  @Name("API_CONCURRENCY")
+  late int? apiConcurrency;
+}
+
+@embedded
 class HouseholdDeletionReasonOptions {
   late String name;
   late String code;
@@ -123,4 +160,16 @@ class HouseholdDeletionReasonOptions {
 class HouseholdMemberDeletionReasonOptions {
   late String name;
   late String code;
+}
+
+@embedded
+class CallSupportList {
+  late String name;
+  late String code;
+}
+
+@embedded
+class FirebaseConfig {
+  bool? enableCrashlytics;
+  bool? enableAnalytics;
 }

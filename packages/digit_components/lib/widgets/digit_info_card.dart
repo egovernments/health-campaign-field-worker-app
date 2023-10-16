@@ -6,20 +6,23 @@ class DigitInfoCard extends StatelessWidget {
   final String description;
   final Color? backgroundColor;
   final IconData? icon;
+  final TextStyle? titleStyle;
   final Color? iconColor;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
+  final TextStyle? descStyle;
 
-  const DigitInfoCard({
-    super.key,
-    required this.title,
-    required this.description,
-    this.backgroundColor,
-    this.iconColor,
-    this.icon,
-    this.padding,
-    this.margin,
-  });
+  const DigitInfoCard(
+      {super.key,
+      required this.title,
+      required this.description,
+      this.titleStyle,
+      this.backgroundColor,
+      this.iconColor,
+      this.icon,
+      this.padding,
+      this.margin,
+      this.descStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,7 @@ class DigitInfoCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: theme.textTheme.headlineMedium,
+                  style: titleStyle ?? theme.textTheme.headlineMedium,
                 ),
               )
             ],
@@ -59,7 +62,7 @@ class DigitInfoCard extends StatelessWidget {
             padding: const EdgeInsets.all(kPadding),
             child: Text(
               description,
-              style: theme.textTheme.bodyLarge,
+              style: descStyle ?? theme.textTheme.bodyLarge,
               textAlign: TextAlign.start,
             ),
           )

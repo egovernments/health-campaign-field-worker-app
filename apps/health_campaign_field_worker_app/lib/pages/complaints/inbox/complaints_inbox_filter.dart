@@ -81,8 +81,8 @@ class _ComplaintsInboxFilterPageState
                             padding: EdgeInsets.zero,
                           ),
                           onPressed: () => context.router.pop(),
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               Icon(Icons.close),
                             ],
                           ),
@@ -119,8 +119,8 @@ class _ComplaintsInboxFilterPageState
                                   color: theme.colorScheme.outline,
                                 ),
                               ),
-                              child: Column(
-                                children: const [
+                              child: const Column(
+                                children: [
                                   Icon(Icons.autorenew),
                                 ],
                               ),
@@ -189,8 +189,12 @@ class _ComplaintsInboxFilterPageState
                                 ComplaintInboxFilterComplaintsEvent(
                                   complaintAssignedTo: assignedTo,
                                   currentUserName: userBloc.state.whenOrNull(
-                                    authenticated:
-                                        (accessToken, refreshToken, userModel) {
+                                    authenticated: (
+                                      accessToken,
+                                      refreshToken,
+                                      userModel,
+                                      actions,
+                                    ) {
                                       return userModel.name;
                                     },
                                   ),

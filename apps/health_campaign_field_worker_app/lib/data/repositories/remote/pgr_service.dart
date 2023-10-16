@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
+import '../../../utils/environment_config.dart';
 
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';

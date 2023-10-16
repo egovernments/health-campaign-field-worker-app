@@ -8,9 +8,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 
+import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/remote/mdms.dart';
+import '../../models/app_config/app_config_model.dart';
+import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -22,6 +27,7 @@ typedef ProjectEmitter = Emitter<ProjectState>;
 class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
   final Isar isar;
+  final MdmsRepository mdmsRepository;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -89,6 +95,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectResourceRemoteRepository,
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
+    required this.mdmsRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -114,8 +121,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
+    final selectedProject = await localSecureStore.selectedProject;
+    final isProjectSetUpComplete = await localSecureStore
+        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    if (isOnline) {
+    /*Checks for if device is online and project data downloaded*/
+    if (isOnline && !isProjectSetUpComplete) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
@@ -126,10 +137,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
-    List<ProjectStaffModel> projectStaffList =
-        await projectStaffRemoteRepository.search(
-      ProjectStaffSearchModel(staffId: uuid),
-    );
+    List<ProjectStaffModel> projectStaffList;
+    try {
+      projectStaffList = await projectStaffRemoteRepository.search(
+        ProjectStaffSearchModel(staffId: uuid),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          loading: false,
+          syncError: ProjectSyncErrorType.projectStaff,
+        ),
+      );
+
+      return;
+    }
 
     projectStaffList.removeDuplicates((e) => e.id);
 
@@ -138,6 +160,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         projects: [],
         loading: false,
         selectedProject: null,
+        syncError: null,
       ));
 
       return;
@@ -151,12 +174,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         createOpLog: false,
       );
 
-      final staffProjects = await projectRemoteRepository.search(
-        ProjectSearchModel(
-          id: projectStaff.projectId,
-          tenantId: projectStaff.tenantId,
-        ),
-      );
+      List<ProjectModel> staffProjects;
+      try {
+        staffProjects = await projectRemoteRepository.search(
+          ProjectSearchModel(
+            id: projectStaff.projectId,
+            tenantId: projectStaff.tenantId,
+          ),
+        );
+      } catch (_) {
+        emit(state.copyWith(
+          loading: false,
+          syncError: ProjectSyncErrorType.project,
+        ));
+
+        return;
+      }
 
       projects.addAll(staffProjects);
     }
@@ -171,16 +204,47 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-      await _loadProjectFacilities(projects);
-      await _loadProductVariants(projects);
-      await _loadServiceDefinition(projects);
+      try {
+        await _loadProjectFacilities(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.projectFacilities,
+          ),
+        );
+      }
+      try {
+        await _loadProductVariants(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.productVariants,
+          ),
+        );
+      }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
     }
 
     emit(ProjectState(
       projects: projects,
       loading: false,
-      selectedProject: projects.length == 1 ? projects.first : null,
+      syncError: null,
     ));
+
+    if (projects.length == 1) {
+      add(ProjectSelectProjectEvent(projects.first));
+    }
   }
 
   FutureOr<void> _loadOffline(ProjectEmitter emit) async {
@@ -236,11 +300,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     final configs = await isar.appConfigurations.where().findAll();
     final userObject = await localSecureStore.userRequestModel;
     List<String> codes = [];
-    for (var elements in userObject!.roles) {
+    for (UserRoleModel elements in userObject!.roles) {
       configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
         for (final project in projects) {
           codes.add(
-            '${project.name}.$element.${elements.code.name.snakeCase.toUpperCase()}',
+            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
           );
         }
       });
@@ -292,21 +356,100 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     ProjectSelectProjectEvent event,
     ProjectEmitter emit,
   ) async {
-    emit(state.copyWith(loading: true));
+    emit(state.copyWith(loading: true, syncError: null));
 
-    final List<BoundaryModel> boundaries =
-        await boundaryRemoteRepository.search(
-      BoundarySearchModel(
-        boundaryType: event.model.address?.boundaryType,
-        code: event.model.address?.boundaryCode.toString(),
-      ),
-    );
+    List<BoundaryModel> boundaries;
+    try {
+      final configResult = await mdmsRepository.searchAppConfig(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'module-version',
+                masterDetails: [
+                  MdmsMasterDetailModel('ROW_VERSIONS'),
+                ],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
 
-    await boundaryLocalRepository.bulkCreate(boundaries);
-    await localSecureStore.setSelectedProject(event.model);
+      final rowversionList = await isar.rowVersionLists
+          .filter()
+          .moduleEqualTo('egov-location')
+          .findAll();
+
+      final serverVersion = configResult.rowVersions?.rowVersionslist
+          ?.where(
+            (element) => element.module == 'egov-location',
+          )
+          .toList()
+          .firstOrNull
+          ?.version;
+      final boundaryRefetched = await localSecureStore.boundaryRefetched;
+
+      if (rowversionList.firstOrNull?.version != serverVersion ||
+          boundaryRefetched) {
+        boundaries = await boundaryRemoteRepository.search(
+          BoundarySearchModel(
+            boundaryType: event.model.address?.boundaryType,
+            code: event.model.address?.boundary,
+          ),
+        );
+        await boundaryLocalRepository.bulkCreate(boundaries);
+        await localSecureStore.setSelectedProject(event.model);
+        await localSecureStore.setBoundaryRefetch(false);
+        final List<RowVersionList> rowVersionList = [];
+
+        final data = (configResult).rowVersions?.rowVersionslist;
+
+        for (final element in data ?? <app_configuration.RowVersions>[]) {
+          final rowVersion = RowVersionList();
+          rowVersion.module = element.module;
+          rowVersion.version = element.version;
+          rowVersionList.add(rowVersion);
+        }
+        await isar.writeTxn(() async {
+          await isar.rowVersionLists.clear();
+
+          await isar.rowVersionLists.putAll(rowVersionList);
+        });
+      } else {
+        boundaries = await boundaryLocalRepository.search(
+          BoundarySearchModel(
+            boundaryType: event.model.address?.boundaryType,
+            code: event.model.address?.boundary,
+          ),
+        );
+        if (boundaries.isEmpty) {
+          boundaries = await boundaryRemoteRepository.search(
+            BoundarySearchModel(
+              boundaryType: event.model.address?.boundaryType,
+              code: event.model.address?.boundary,
+            ),
+          );
+        }
+        await boundaryLocalRepository.bulkCreate(boundaries);
+        await localSecureStore.setSelectedProject(event.model);
+      }
+      /*Sets the bool value of projectSetup as true in local storage after all project data has been stored*/
+      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
+    } catch (_) {
+      emit(state.copyWith(
+        loading: false,
+        syncError: ProjectSyncErrorType.boundary,
+      ));
+
+      return;
+    }
+
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,
+      syncError: null,
     ));
   }
 }
@@ -327,6 +470,7 @@ class ProjectState with _$ProjectState {
     @Default([]) List<ProjectModel> projects,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
+    ProjectSyncErrorType? syncError,
   }) = _ProjectState;
 
   bool get isEmpty => projects.isEmpty;
@@ -334,4 +478,13 @@ class ProjectState with _$ProjectState {
   bool get isNotEmpty => !isEmpty;
 
   bool get hasSelectedProject => selectedProject != null;
+}
+
+enum ProjectSyncErrorType {
+  projectStaff,
+  project,
+  projectFacilities,
+  productVariants,
+  serviceDefinitions,
+  boundary
 }

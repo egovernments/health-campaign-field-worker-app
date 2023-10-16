@@ -12,7 +12,6 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   final String? userId;
   final String? projectId;
   final String? tenantId;
-  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -22,10 +21,10 @@ class ProjectStaffSearchModel extends EntitySearchModel {
     this.userId,
     this.projectId,
     this.tenantId,
-    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
+    super.isDeleted,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -33,6 +32,24 @@ class ProjectStaffSearchModel extends EntitySearchModel {
       ? null
       : DateTime.fromMillisecondsSinceEpoch(endDate),
    super();
+
+  @MappableConstructor()
+  ProjectStaffSearchModel.ignoreDeleted({
+    this.id,
+    this.staffId,
+    this.userId,
+    this.projectId,
+    this.tenantId,
+    int? startDate,
+    int? endDate,
+    super.boundaryCode,
+  }): startDateTime = startDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super(isDeleted: false);
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
   
@@ -52,7 +69,6 @@ class ProjectStaffModel extends EntityModel {
   final String? projectId;
   final String? channel;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
@@ -66,11 +82,11 @@ class ProjectStaffModel extends EntityModel {
     this.projectId,
     this.channel,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -90,15 +106,19 @@ class ProjectStaffModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       staffId: Value(staffId),
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),

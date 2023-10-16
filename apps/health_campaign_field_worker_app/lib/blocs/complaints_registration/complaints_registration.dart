@@ -1,6 +1,5 @@
 // GENERATED using mason_cli
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

@@ -84,7 +84,9 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     LocationStateEmitter emit,
   ) async {
     location.onLocationChanged.listen((locationData) {
-      add(LocationSetLatLngEvent(locationData: locationData));
+      if (!isClosed) {
+        add(LocationSetLatLngEvent(locationData: locationData));
+      }
     });
   }
 

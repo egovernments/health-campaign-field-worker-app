@@ -8,55 +8,62 @@ class DigitListView extends StatelessWidget {
   final IconData? sufixIcon;
   final VoidCallback? onPressed;
 
-  const DigitListView(
-      {super.key,
-      this.prefixIcon,
-      required this.title,
-      this.description,
-      this.sufixIcon,
-      this.onPressed});
+  const DigitListView({
+    super.key,
+    this.prefixIcon,
+    required this.title,
+    this.description,
+    this.sufixIcon,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return DigitCard(
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-                width: MediaQuery.of(context).size.width - 100,
-                child: Column(
+      onPressed: onPressed,
+      padding: const EdgeInsets.symmetric(
+        horizontal: kPadding,
+        vertical: kPadding * 2,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          prefixIcon,
-                          color: theme.colorScheme.secondary,
-                          size: 24,
-                        ),
-                        const SizedBox(
-                          width: 14,
-                        ),
-                        Text(
-                          title,
-                          style: theme.textTheme.headlineMedium,
-                        ),
-                      ],
+                    Icon(
+                      prefixIcon,
+                      color: theme.colorScheme.secondary,
+                      size: 24,
                     ),
-                    Offstage(
-                      offstage: description == null,
-                      child: Text(description!),
+                    const SizedBox(width: kPadding * 2),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: theme.textTheme.headlineMedium,
+                      ),
                     ),
                   ],
-                )),
-            Icon(
-              sufixIcon,
-              color: theme.colorScheme.secondary,
-              size: 36,
+                ),
+                if (description != null) ...[
+                  const SizedBox(height: kPadding),
+                  Text(description!),
+                ],
+              ],
             ),
-          ],
-        ));
+          ),
+          Icon(
+            sufixIcon,
+            color: theme.colorScheme.secondary,
+            size: 36,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -12,14 +12,26 @@ class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
   {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
   {{/includeForQuery}}{{/dateTimeAttributes}}
   {{name.pascalCase()}}SearchModel({
-    {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}},
+    {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}},
+    {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}this.{{name.camelCase()}},
+    {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}int? {{name.camelCase()}},
+    {{/includeForQuery}}{{/dateTimeAttributes}}super.boundaryCode,
+    super.isDeleted,
+  }): {{#dateTimeAttributes}}{{#includeForQuery}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
+  {{/includeForQuery}}{{/dateTimeAttributes}} super();
+
+  @MappableConstructor()
+  {{name.pascalCase()}}SearchModel.ignoreDeleted({
+    {{#attributes}}{{#includeForQuery}}this.{{name.camelCase()}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}},
     {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}this.{{name.camelCase()}},
     {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}int? {{name.camelCase()}},
     {{/includeForQuery}}{{/dateTimeAttributes}}super.boundaryCode,
   }): {{#dateTimeAttributes}}{{#includeForQuery}}{{name.camelCase()}}Time = {{name.camelCase()}} == null
-      ? null
+  ? null
       : DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
-  {{/includeForQuery}}{{/dateTimeAttributes}} super();{{#dateTimeAttributes}}{{#includeForQuery}}
+  {{/includeForQuery}}{{/dateTimeAttributes}} super(isDeleted: false);{{#dateTimeAttributes}}{{#includeForQuery}}
 
   int? get {{name}} => {{name}}Time?.millisecondsSinceEpoch;
   {{/includeForQuery}}{{/dateTimeAttributes}}
@@ -31,16 +43,17 @@ class {{name.pascalCase()}}Model extends EntityModel {
   static const schemaName = '{{name.pascalCase()}}';
 
   {{#attributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/includeForEntity}}{{/attributes}}{{#customAttributes}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
-  {{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
+  {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{#includeForEntity}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}Model{{/isEnum}}{{#isList}}>{{/isList}}{{#nullable}}?{{/nullable}} {{name.camelCase()}};
+  {{/includeForEntity}}{{/customAttributes}}{{#dateTimeAttributes}}final {{type}}{{#nullable}}?{{/nullable}} {{name.camelCase()}}Time;
   {{/dateTimeAttributes}}final {{name.pascalCase()}}AdditionalFields? additionalFields;
 
   {{name.pascalCase()}}Model({
     this.additionalFields,
-    {{#attributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
-    {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
-    {{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
-    {{/dateTimeAttributes}}super.auditDetails,
+    {{#attributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}},
+    {{/includeForEntity}}{{/attributes}}{{#customAttributes}}{{#includeForEntity}}{{^nullable}}required {{/nullable}}this.{{name.camelCase()}},
+    {{/includeForEntity}}{{/customAttributes}}{{#dateTimeAttributes}}{{^nullable}}required {{/nullable}}int{{#nullable}}?{{/nullable}} {{name.camelCase()}},
+    {{/dateTimeAttributes}}super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): {{#dateTimeAttributes}}{{name.camelCase()}}Time = {{#nullable}}{{name.camelCase()}} == null
           ? null
           : {{/nullable}}DateTime.fromMillisecondsSinceEpoch({{name.camelCase()}}),
@@ -56,8 +69,13 @@ class {{name.pascalCase()}}Model extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       {{#sqlAttributes}}{{#includeForEntity}}{{#includeForTable}}{{name.camelCase()}}: Value({{name.camelCase()}}{{#isList}}{{#nullable}}?{{/nullable}}.toString(){{/isList}}),
       {{/includeForTable}}{{/includeForEntity}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}{{name}}: Value({{name}}{{#nullable}}?{{/nullable}}.{{pkName}}),
     {{/references}}{{/referenceAttributes}});

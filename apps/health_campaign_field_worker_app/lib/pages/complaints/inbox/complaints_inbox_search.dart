@@ -49,8 +49,8 @@ class _ComplaintsInboxSearchPageState
                             padding: EdgeInsets.zero,
                           ),
                           onPressed: () => context.router.pop(),
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               Icon(Icons.close),
                             ],
                           ),

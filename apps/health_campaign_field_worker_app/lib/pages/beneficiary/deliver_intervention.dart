@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,23 @@ class _DeliverInterventionPageState
         builder: (context, state) {
           final householdMemberWrapper = state.householdMemberWrapper;
 
+          final projectBeneficiary =
+              context.beneficiaryType != BeneficiaryType.individual
+                  ? [householdMemberWrapper.projectBeneficiaries.first]
+                  : householdMemberWrapper.projectBeneficiaries
+                      .where(
+                        (element) =>
+                            element.beneficiaryClientReferenceId ==
+                            state.selectedIndividual?.clientReferenceId,
+                      )
+                      .toList();
+
+          final taskData = state.householdMemberWrapper.tasks
+              ?.where((element) =>
+                  element.projectBeneficiaryClientReferenceId ==
+                  projectBeneficiary.first.clientReferenceId)
+              .toList();
+
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
@@ -59,7 +77,7 @@ class _DeliverInterventionPageState
                     form: () => buildForm(context),
                     builder: (context, form, child) {
                       return ScrollableContent(
-                        header: Column(children: const [
+                        header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
                         footer: DigitCard(
@@ -79,90 +97,108 @@ class _DeliverInterventionPageState
                                     i18.deliverIntervention.dialogContent,
                                   ),
                                   primaryAction: DigitDialogActions(
-                                    label: localizations
-                                        .translate(i18.common.coreCommonSubmit),
+                                    label: localizations.translate(
+                                      i18.common.coreCommonSubmit,
+                                    ),
                                     action: (ctx) {
-                                      final clientReferenceId =
-                                          state.householdMemberWrapper.task ==
-                                                  null
+                                      final clientReferenceId = taskData != null
+                                          ? taskData.isEmpty
                                               ? IdGen.i.identifier
-                                              : state.householdMemberWrapper
-                                                  .task!.clientReferenceId;
+                                              : taskData.first.clientReferenceId
+                                          : IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
                                             DeliverInterventionSubmitEvent(
                                               TaskModel(
-                                                id: householdMemberWrapper
-                                                    .task?.id,
+                                                id: taskData != null
+                                                    ? taskData.isEmpty
+                                                        ? null
+                                                        : taskData.first.id
+                                                    : null,
                                                 clientReferenceId:
                                                     clientReferenceId,
                                                 projectBeneficiaryClientReferenceId:
-                                                    householdMemberWrapper
-                                                        .projectBeneficiary
+                                                    projectBeneficiary.first
                                                         .clientReferenceId,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
-                                                rowVersion:
-                                                    householdMemberWrapper
-                                                            .task?.rowVersion ??
-                                                        1,
+                                                rowVersion: taskData != null
+                                                    ? taskData.isEmpty
+                                                        ? 1
+                                                        : taskData
+                                                            .first.rowVersion
+                                                    : 1,
                                                 projectId: context.projectId,
                                                 status: Status.delivered.name,
                                                 createdDate: context
                                                     .millisecondsSinceEpoch(),
                                                 resources: [
                                                   TaskResourceModel(
-                                                    id: householdMemberWrapper
-                                                        .task
-                                                        ?.resources
-                                                        ?.first
-                                                        .id,
-                                                    taskId:
-                                                        householdMemberWrapper
-                                                            .task?.id,
+                                                    id: taskData != null
+                                                        ? taskData.isNotEmpty
+                                                            ? taskData
+                                                                .first
+                                                                .resources
+                                                                ?.first
+                                                                .id
+                                                            : null
+                                                        : null,
+                                                    taskId: taskData != null
+                                                        ? taskData.isNotEmpty
+                                                            ? taskData.first.id
+                                                            : null
+                                                        : null,
                                                     clientReferenceId:
                                                         clientReferenceId,
-                                                    rowVersion:
-                                                        householdMemberWrapper
-                                                                .task
-                                                                ?.resources
+                                                    rowVersion: taskData != null
+                                                        ? taskData.isEmpty
+                                                            ? 1
+                                                            : taskData
+                                                                .first
+                                                                .resources
                                                                 ?.first
-                                                                .rowVersion ??
-                                                            1,
+                                                                .rowVersion
+                                                        : 1,
                                                     isDelivered: true,
                                                     tenantId: envConfig
                                                         .variables.tenantId,
                                                     quantity: form
                                                         .control(
-                                                          'quantityDistributed',
+                                                          _quantityDistributedKey,
                                                         )
                                                         .value
                                                         .toString(),
                                                     productVariantId: (form
                                                                 .control(
-                                                                  'resourceDelivered',
+                                                                  _resourceDeliveredKey,
                                                                 )
                                                                 .value
                                                             as ProductVariantModel)
                                                         .id,
                                                     deliveryComment: form
                                                         .control(
-                                                          'deliveryComment',
+                                                          _deliveryCommentKey,
                                                         )
                                                         .value,
                                                     auditDetails: AuditDetails(
                                                       createdBy: context
                                                           .loggedInUserUuid,
-                                                      createdTime:
-                                                          householdMemberWrapper
-                                                                  .task
-                                                                  ?.resources
-                                                                  ?.first
-                                                                  .auditDetails
-                                                                  ?.createdTime ??
-                                                              context
-                                                                  .millisecondsSinceEpoch(),
+                                                      createdTime: taskData !=
+                                                              null
+                                                          ? taskData.isNotEmpty
+                                                              ? taskData
+                                                                      .first
+                                                                      .resources
+                                                                      ?.first
+                                                                      .auditDetails
+                                                                      ?.createdTime ??
+                                                                  context
+                                                                      .millisecondsSinceEpoch()
+                                                              : context
+                                                                  .millisecondsSinceEpoch()
+                                                          : context
+                                                              .millisecondsSinceEpoch(),
                                                       lastModifiedBy: context
                                                           .loggedInUserUuid,
                                                       lastModifiedTime: context
@@ -175,45 +211,63 @@ class _DeliverInterventionPageState
                                                     ?.copyWith(
                                                   relatedClientReferenceId:
                                                       clientReferenceId,
-                                                  id: state
-                                                      .householdMemberWrapper
-                                                      .task
-                                                      ?.address
-                                                      ?.id,
+                                                  id: null,
                                                 ),
+                                                clientAuditDetails: taskData
+                                                            ?.first
+                                                            .clientAuditDetails ==
+                                                        null
+                                                    ? ClientAuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      )
+                                                    : ClientAuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: taskData!
+                                                            .first
+                                                            .clientAuditDetails!
+                                                            .createdTime,
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
                                                 auditDetails: AuditDetails(
                                                   createdBy:
                                                       context.loggedInUserUuid,
-                                                  createdTime:
-                                                      householdMemberWrapper
-                                                              .task
-                                                              ?.address
-                                                              ?.auditDetails
-                                                              ?.createdTime ??
-                                                          context
-                                                              .millisecondsSinceEpoch(),
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
                                                   lastModifiedBy:
                                                       context.loggedInUserUuid,
                                                   lastModifiedTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
                                               ),
-                                              state.householdMemberWrapper
-                                                          .task ==
-                                                      null
+                                              taskData == null
                                                   ? false
-                                                  : true,
+                                                  : taskData.isEmpty
+                                                      ? false
+                                                      : true,
                                               context.boundary,
                                             ),
                                           );
-
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop(true);
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop(true);
                                     },
                                   ),
                                   secondaryAction: DigitDialogActions(
-                                    label: localizations
-                                        .translate(i18.common.coreCommonCancel),
+                                    label: localizations.translate(
+                                      i18.common.coreCommonCancel,
+                                    ),
                                     action: (context) => Navigator.of(
                                       context,
                                       rootNavigator: true,
@@ -227,13 +281,15 @@ class _DeliverInterventionPageState
                                 parent
                                   ..pop()
                                   ..pop();
+
                                 router.push(AcknowledgementRoute());
                               }
                             },
                             child: Center(
                               child: Text(
-                                localizations
-                                    .translate(i18.common.coreCommonSubmit),
+                                localizations.translate(
+                                  i18.common.coreCommonSubmit,
+                                ),
                               ),
                             ),
                           ),
@@ -262,9 +318,8 @@ class _DeliverInterventionPageState
                                     localizations.translate(i18
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {
-                                      final date = householdMemberWrapper
-                                          .projectBeneficiary
-                                          .dateOfRegistration;
+                                      final date = projectBeneficiary
+                                          .first.dateOfRegistration;
 
                                       final registrationDate =
                                           DateTime.fromMillisecondsSinceEpoch(
@@ -330,10 +385,24 @@ class _DeliverInterventionPageState
                                         return '';
                                       }
 
-                                      final date =
-                                          DateFormat('dd/MM/yyyy').parse(dob);
+                                      final int years =
+                                          DigitDateUtils.calculateAge(
+                                        DigitDateUtils
+                                                .getFormattedDateToDateTime(
+                                              dob,
+                                            ) ??
+                                            DateTime.now(),
+                                      ).years;
+                                      final int months =
+                                          DigitDateUtils.calculateAge(
+                                        DigitDateUtils
+                                                .getFormattedDateToDateTime(
+                                              dob,
+                                            ) ??
+                                            DateTime.now(),
+                                      ).months;
 
-                                      return date.age.toString();
+                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonGender,
@@ -349,6 +418,24 @@ class _DeliverInterventionPageState
                                 ),
                                 DigitTableCard(
                                   element: {
+                                    state.selectedIndividual != null
+                                            ? localizations.translate(
+                                                i18.deliverIntervention
+                                                    .heightLabelText,
+                                              )
+                                            : '':
+                                        state.selectedIndividual != null
+                                            ? state
+                                                .selectedIndividual
+                                                ?.additionalFields
+                                                ?.fields
+                                                .first
+                                                .value
+                                            : '',
+                                  },
+                                ),
+                                DigitTableCard(
+                                  element: {
                                     localizations.translate(
                                       i18.deliverIntervention.memberCountText,
                                     ): householdMemberWrapper
@@ -359,9 +446,9 @@ class _DeliverInterventionPageState
                                 const DigitDivider(),
                                 DigitTableCard(
                                   element: {
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .noOfResourcesForDelivery): () {
+                                    localizations.translate(
+                                      '${i18.deliverIntervention.noOfResourcesForDelivery}_${context.beneficiaryType}',
+                                    ): () {
                                       final count = householdMemberWrapper
                                               .household.memberCount ??
                                           householdMemberWrapper.members.length;
@@ -377,9 +464,8 @@ class _DeliverInterventionPageState
                                     return productState.maybeWhen(
                                       orElse: () => const Offstage(),
                                       fetched: (productVariants) {
-                                        final productVariantId = state
-                                            .householdMemberWrapper
-                                            .task
+                                        final productVariantId = taskData
+                                            ?.firstOrNull
                                             ?.resources
                                             ?.firstOrNull
                                             ?.productVariantId;
@@ -414,7 +500,10 @@ class _DeliverInterventionPageState
                                           menuItems: productVariants,
                                           validationMessages: {
                                             'required': (object) =>
-                                                'Field is required',
+                                                localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .resourceDeliveredError,
+                                                ),
                                           },
                                           formControlName:
                                               _resourceDeliveredKey,
@@ -477,21 +566,34 @@ class _DeliverInterventionPageState
   FormGroup buildForm(BuildContext context) {
     final state = context.read<HouseholdOverviewBloc>().state;
 
+    final projectBeneficiary =
+        context.beneficiaryType != BeneficiaryType.individual
+            ? [state.householdMemberWrapper.projectBeneficiaries.first]
+            : state.householdMemberWrapper.projectBeneficiaries
+                .where(
+                  (element) =>
+                      element.beneficiaryClientReferenceId ==
+                      state.selectedIndividual?.clientReferenceId,
+                )
+                .toList();
+    final taskData = state.householdMemberWrapper.tasks
+        ?.where((element) =>
+            element.projectBeneficiaryClientReferenceId ==
+            projectBeneficiary.first.clientReferenceId)
+        .toList();
+
     return fb.group(<String, Object>{
       _resourceDeliveredKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _quantityDistributedKey: FormControl<int>(
-        value: state.householdMemberWrapper.task?.resources?.first.quantity !=
-                null
-            ? int.tryParse(
-                state.householdMemberWrapper.task!.resources!.first.quantity!,
-              )
+        value: taskData?.firstOrNull?.resources?.firstOrNull?.quantity != null
+            ? int.tryParse(taskData!.first.resources!.first.quantity!)
             : 1,
+        validators: [Validators.required],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value:
-            state.householdMemberWrapper.task?.resources?.first.deliveryComment,
+        value: taskData?.firstOrNull?.resources?.firstOrNull?.deliveryComment,
       ),
     });
   }

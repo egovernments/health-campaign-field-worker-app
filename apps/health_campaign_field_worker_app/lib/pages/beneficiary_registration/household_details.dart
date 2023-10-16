@@ -1,9 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
@@ -39,7 +42,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           builder: (context, registrationState) {
             return ScrollableContent(
-              header: Column(children: const [
+              header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
@@ -76,9 +79,19 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             tenantId: envConfig.variables.tenantId,
                             clientReferenceId: IdGen.i.identifier,
                             rowVersion: 1,
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy: context.loggedInUserUuid,
+                              createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: context.loggedInUserUuid,
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                            ),
                             auditDetails: AuditDetails(
                               createdBy: context.loggedInUserUuid,
                               createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: context.loggedInUserUuid,
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
                             ),
                           );
 
@@ -107,13 +120,68 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           var household = householdModel.copyWith(
                             memberCount: memberCount,
                             address: addressModel,
+                            clientAuditDetails: (householdModel
+                                            .clientAuditDetails?.createdBy !=
+                                        null &&
+                                    householdModel
+                                            .clientAuditDetails?.createdTime !=
+                                        null)
+                                ? ClientAuditDetails(
+                                    createdBy: householdModel
+                                        .clientAuditDetails!.createdBy,
+                                    createdTime: householdModel
+                                        .clientAuditDetails!.createdTime,
+                                    lastModifiedBy: householdModel
+                                        .clientAuditDetails!.lastModifiedBy,
+                                    lastModifiedTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  )
+                                : null,
                             rowVersion: householdModel.rowVersion,
                           );
 
                           bloc.add(
                             BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
-                              household: household,
-                              addressModel: addressModel,
+                              household: household.copyWith(
+                                clientAuditDetails: (addressModel
+                                                .clientAuditDetails
+                                                ?.createdBy !=
+                                            null &&
+                                        addressModel.clientAuditDetails
+                                                ?.createdTime !=
+                                            null)
+                                    ? ClientAuditDetails(
+                                        createdBy: addressModel
+                                            .clientAuditDetails!.createdBy,
+                                        createdTime: addressModel
+                                            .clientAuditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
+                              ),
+                              addressModel: addressModel.copyWith(
+                                clientAuditDetails: (addressModel
+                                                .clientAuditDetails
+                                                ?.createdBy !=
+                                            null &&
+                                        addressModel.clientAuditDetails
+                                                ?.createdTime !=
+                                            null)
+                                    ? ClientAuditDetails(
+                                        createdBy: addressModel
+                                            .clientAuditDetails!.createdBy,
+                                        createdTime: addressModel
+                                            .clientAuditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
+                              ),
                             ),
                           );
 

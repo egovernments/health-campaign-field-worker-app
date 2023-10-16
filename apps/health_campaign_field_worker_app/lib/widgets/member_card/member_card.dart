@@ -1,15 +1,23 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
+import '../../models/entities/beneficiary_type.dart';
+import '../../models/entities/individual.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../action_card/action_card.dart';
 
 class MemberCard extends StatelessWidget {
   final String name;
   final String gender;
-  final int age;
+  final int? years;
+  final int? months;
   final bool isHead;
+  final IndividualModel individual;
   final bool isDelivered;
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
@@ -18,10 +26,12 @@ class MemberCard extends StatelessWidget {
 
   const MemberCard({
     super.key,
+    required this.individual,
     required this.name,
     required this.gender,
-    required this.age,
+    this.years,
     this.isHead = false,
+    this.months = 0,
     required this.localizations,
     required this.isDelivered,
     required this.setAsHeadAction,
@@ -32,6 +42,7 @@ class MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final beneficiaryType = context.beneficiaryType;
 
     return Container(
       decoration: BoxDecoration(
@@ -46,145 +57,160 @@ class MemberCard extends StatelessWidget {
       ),
       margin: DigitTheme.instance.containerMargin,
       padding: const EdgeInsets.all(8),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2.5,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: Text(
                     name,
                     style: theme.textTheme.headlineMedium,
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: DigitTheme.instance.containerMargin,
-                        child: Text(
-                          localizations.translate(gender),
-                          style: theme.textTheme.bodyMedium,
-                        ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3.5,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: DigitIconButton(
+                    onPressed: () => DigitActionDialog.show(
+                      context,
+                      widget: ActionCard(
+                        items: [
+                          ActionCardModel(
+                            icon: Icons.person,
+                            label: localizations.translate(
+                              i18.memberCard.assignAsHouseholdhead,
+                            ),
+                            action: isHead ? null : setAsHeadAction,
+                          ),
+                          ActionCardModel(
+                            icon: Icons.edit,
+                            label: localizations.translate(
+                              i18.memberCard.editIndividualDetails,
+                            ),
+                            action: editMemberAction,
+                          ),
+                          ActionCardModel(
+                            icon: Icons.delete,
+                            label: localizations.translate(
+                              i18.memberCard.deleteIndividualActionText,
+                            ),
+                            action: isHead ? null : deleteMemberAction,
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Text(
-                          " | $age ${localizations.translate(i18.memberCard.deliverDetailsYearText)}",
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
+                    ),
+                    iconText: localizations.translate(
+                      i18.memberCard.editDetails,
+                    ),
+                    icon: Icons.edit,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: Row(
+              children: [
+                Container(
+                  margin: DigitTheme.instance.containerMargin,
+                  child: Text(
+                    localizations.translate(gender),
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    " | ${years ?? '-'} ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${months ?? '-'} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 3.5,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
+          ),
+          Offstage(
+            offstage: beneficiaryType != BeneficiaryType.individual,
+            child: !isDelivered
+                ? Align(
+                    alignment: Alignment.centerLeft,
                     child: DigitIconButton(
-                      onPressed: () => DigitActionDialog.show(
-                        context,
-                        widget: ActionCard(
-                          items: [
-                            ActionCardModel(
-                              icon: Icons.person,
-                              label: localizations.translate(
-                                i18.memberCard.assignAsHouseholdhead,
-                              ),
-                              action: isHead ? null : setAsHeadAction,
+                      icon: Icons.info_rounded,
+                      iconText: localizations.translate(
+                        i18.householdOverView
+                            .householdOverViewNotDeliveredIconLabel,
+                      ),
+                      iconTextColor: theme.colorScheme.error,
+                      iconColor: theme.colorScheme.error,
+                    ),
+                  )
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: DigitIconButton(
+                      icon: Icons.check_circle,
+                      iconText: localizations.translate(
+                        i18.householdOverView
+                            .householdOverViewDeliveredIconLabel,
+                      ),
+                      iconTextColor:
+                          DigitTheme.instance.colorScheme.onSurfaceVariant,
+                      iconColor:
+                          DigitTheme.instance.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+          ),
+          Offstage(
+            offstage: beneficiaryType != BeneficiaryType.individual,
+            child: !isDelivered
+                ? DigitElevatedButton(
+                    onPressed: () async {
+                      context.read<HouseholdOverviewBloc>().add(
+                            HouseholdOverviewEvent.selectedIndividual(
+                              individualModel: individual,
                             ),
-                            ActionCardModel(
-                              icon: Icons.edit,
-                              label: localizations.translate(
-                                i18.memberCard.editIndividualDetails,
-                              ),
-                              action: editMemberAction,
-                            ),
-                            ActionCardModel(
-                              icon: Icons.delete,
-                              label: localizations.translate(
-                                i18.memberCard.deleteIndividualActionText,
-                              ),
-                              action: isHead ? null : deleteMemberAction,
-                            ),
-                          ],
+                          );
+                      await context.router.push(DeliverInterventionRoute());
+                    },
+                    child: Center(
+                      child: Text(
+                        localizations.translate(
+                          i18.householdOverView.householdOverViewActionText,
                         ),
                       ),
-                      iconText: localizations.translate(
-                        i18.memberCard.editDetails,
-                      ),
-                      icon: Icons.edit,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-          ],
-        ),
-        Offstage(
-          offstage: true,
-          child: !isDelivered
-              ? Align(
-                  alignment: Alignment.centerLeft,
-                  child: DigitIconButton(
-                    icon: Icons.info_rounded,
-                    iconText: localizations.translate(i18.householdOverView
-                        .householdOverViewNotDeliveredIconLabel),
-                    iconTextColor: theme.errorColor,
-                    iconColor: theme.errorColor,
-                  ),
-                )
-              : Align(
-                  alignment: Alignment.centerLeft,
-                  child: DigitIconButton(
-                    icon: Icons.check_circle,
-                    iconText: localizations.translate(
-                      i18.householdOverView.householdOverViewDeliveredIconLabel,
-                    ),
-                    iconTextColor:
-                        DigitTheme.instance.colorScheme.onSurfaceVariant,
-                    iconColor: DigitTheme.instance.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-        ),
-        Offstage(
-          offstage: true,
-          child: isDelivered
-              ? DigitElevatedButton(
-                  onPressed: () {
-                    // TODO: Complete implementation
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations.translate(
-                        i18.memberCard.deliverInterventionSubmitLabel,
-                      ),
-                    ),
-                  ),
-                )
-              : SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: DigitOutLineButton(
-                    label: localizations
-                        .translate(i18.memberCard.deliverDetailsUpdateLabel),
-                    onPressed: () {
-                      // TODO: Complete implementation
+                  )
+                : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                    builder: (ctx, state) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: DigitOutLineButton(
+                          label: localizations.translate(
+                            i18.memberCard.deliverDetailsUpdateLabel,
+                          ),
+                          onPressed: () async {
+                            context.read<HouseholdOverviewBloc>().add(
+                                  HouseholdOverviewEvent.selectedIndividual(
+                                    individualModel: individual,
+                                  ),
+                                );
+                            await context.router
+                                .push(DeliverInterventionRoute());
+                          },
+                        ),
+                      );
                     },
                   ),
-                ),
-        ),
-      ]),
+          ),
+        ],
+      ),
     );
   }
 }

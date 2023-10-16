@@ -72,8 +72,8 @@ class _ComplaintsDetailsPageState
                   i18.complaints.raisedForMyself;
 
               return ScrollableContent(
-                header: Column(
-                  children: const [
+                header: const Column(
+                  children: [
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),

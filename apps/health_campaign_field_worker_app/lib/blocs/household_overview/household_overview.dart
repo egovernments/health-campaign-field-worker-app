@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
@@ -106,8 +107,13 @@ class HouseholdOverviewBloc
 
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
-        beneficiaryClientReferenceId: resultHousehold.clientReferenceId,
+        beneficiaryClientReferenceId:
+            event.projectBeneficiaryType == BeneficiaryType.individual
+                ? individualIds
+                : [resultHousehold.clientReferenceId],
         projectId: event.projectId,
+
+        // [TODO] Need to pass as a  based on Beneficiary Type
       ),
     );
 
@@ -119,7 +125,7 @@ class HouseholdOverviewBloc
 
     final tasks = await taskDataRepository.search(TaskSearchModel(
       projectBeneficiaryClientReferenceId:
-          projectBeneficiaries.first.clientReferenceId,
+          projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
     ));
 
     emit(
@@ -128,8 +134,8 @@ class HouseholdOverviewBloc
           household: resultHousehold,
           headOfHousehold: head,
           members: individuals,
-          task: tasks.isEmpty ? null : tasks.first,
-          projectBeneficiary: projectBeneficiaries.first,
+          tasks: tasks.isEmpty ? null : tasks,
+          projectBeneficiaries: projectBeneficiaries,
         ),
         loading: false,
       ),
@@ -185,11 +191,23 @@ class HouseholdOverviewBloc
       await householdMemberRepository.delete(
         i.copyWith(
           rowVersion: i.rowVersion,
+          clientAuditDetails: (i.clientAuditDetails?.createdBy != null &&
+                  i.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: i.clientAuditDetails!.createdBy,
+                  createdTime: i.clientAuditDetails!.createdTime,
+                  lastModifiedBy: i.clientAuditDetails!.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }
 
-    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
+    add(HouseholdOverviewReloadEvent(
+      projectId: event.projectId,
+      projectBeneficiaryType: event.projectBeneficiaryType,
+    ));
   }
 
   FutureOr<void> _handleSetAsHead(
@@ -229,11 +247,23 @@ class HouseholdOverviewBloc
       await householdMemberRepository.update(
         element.copyWith(
           rowVersion: element.rowVersion,
+          clientAuditDetails: (element.clientAuditDetails?.createdBy != null &&
+                  element.clientAuditDetails?.createdTime != null)
+              ? ClientAuditDetails(
+                  createdBy: element.clientAuditDetails!.createdBy,
+                  createdTime: element.clientAuditDetails!.createdTime,
+                  lastModifiedBy: element.clientAuditDetails?.lastModifiedBy,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )
+              : null,
         ),
       );
     }
 
-    add(HouseholdOverviewReloadEvent(projectId: event.projectId));
+    add(HouseholdOverviewReloadEvent(
+      projectId: event.projectId,
+      projectBeneficiaryType: event.projectBeneficiaryType,
+    ));
   }
 }
 
@@ -244,18 +274,21 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required HouseholdModel householdModel,
     required List<IndividualModel> members,
     required ProjectBeneficiaryModel projectBeneficiaryModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteHouseholdEvent;
 
   const factory HouseholdOverviewEvent.deleteIndividual({
     required String projectId,
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewDeleteIndividualEvent;
 
   const factory HouseholdOverviewEvent.setAsHead({
     required String projectId,
     required IndividualModel individualModel,
     required HouseholdModel householdModel,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewSetAsHeadEvent;
 
   const factory HouseholdOverviewEvent.selectedIndividual({
@@ -264,6 +297,7 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
 
   const factory HouseholdOverviewEvent.reload({
     required String projectId,
+    required BeneficiaryType projectBeneficiaryType,
   }) = HouseholdOverviewReloadEvent;
 }
 
