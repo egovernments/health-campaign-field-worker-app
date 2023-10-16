@@ -224,6 +224,12 @@ class _ComplaintsDetailsPageState
                             isRequired: true,
                             isEnabled: false,
                             initialDate: DateTime.now(),
+                            confirmText: localizations.translate(
+                              i18.common.coreCommonOk,
+                            ),
+                            cancelText: localizations.translate(
+                              i18.common.coreCommonCancel,
+                            ),
                           ),
                           DigitTextFormField(
                             formControlName: _administrativeArea,

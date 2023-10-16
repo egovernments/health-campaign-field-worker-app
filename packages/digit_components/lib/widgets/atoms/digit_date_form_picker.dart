@@ -50,8 +50,8 @@ class DigitDateFormPicker extends StatelessWidget {
     this.tooltipMessage,
     this.icon,
     this.padding,
-    this.cancelText = 'Cancel',
-    this.confirmText = 'OK',
+    required this.cancelText,
+    required this.confirmText,
     this.fieldHintText,
     this.onChangeOfFormControl,
   });

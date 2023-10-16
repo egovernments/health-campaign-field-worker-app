@@ -376,6 +376,14 @@ class _DeliverInterventionPageState
                                                     i18.householdDetails
                                                         .dateOfRegistrationLabel,
                                                   ),
+                                                  confirmText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonOk,
+                                                  ),
+                                                  cancelText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
                                                   isRequired: false,
                                                 ),
                                               ],

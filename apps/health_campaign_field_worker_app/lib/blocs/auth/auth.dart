@@ -98,9 +98,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           actionsWrapper: actionsWrapper,
         ),
       );
-      print("--Role actions---");
     } on DioError catch (error) {
-      print(error);
       emit(const AuthErrorState());
       emit(const AuthUnauthenticatedState());
 
