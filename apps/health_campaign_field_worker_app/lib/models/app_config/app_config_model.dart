@@ -45,13 +45,6 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
       _$MdmsMasterDetailModelFromJson(json);
 }
 
-// class MdmsFilterModel with _$MdmsFilterModel {
-//   const factory MdmsFilterModel(String filter) = _MdmsFilterModel;
-
-//   factory MdmsFilterModel.fromJson(Map<String, dynamic> json) =>
-//       _$MdmsFilterModelFromJson(json);
-// }
-
 @freezed
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({

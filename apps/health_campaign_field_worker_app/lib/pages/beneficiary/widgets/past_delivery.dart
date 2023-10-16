@@ -40,14 +40,14 @@ Widget buildTableContent(
 
   return Container(
     padding: const EdgeInsets.only(
-      left: 8.0,
-      bottom: 8.0,
-      right: 8.0,
-      top: 4.0,
+      left: kPadding,
+      bottom: kPadding,
+      right: kPadding,
+      top: kPadding / 2,
     ),
     // [TODO - need to set the height of the card based on the number of items]
-    height: 260,
-    width: 500,
+    height: MediaQuery.of(context).size.height / 2.6,
+    width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
         // BlocBuilder to get project data based on the current cycle and dose
@@ -60,7 +60,7 @@ Widget buildTableContent(
           children: [
             DigitTableCard(
               topPadding: const EdgeInsets.only(top: 0.0),
-              padding: const EdgeInsets.only(bottom: 4.0),
+              padding: const EdgeInsets.only(bottom: kPadding / 2),
               fraction: 2.5,
               element: {
                 localizations.translate(

@@ -67,7 +67,6 @@ class AppConfiguration {
   @Name('FIREBASE_CONFIG')
   FirebaseConfig? firebaseConfig;
 
-  @Name('symptomsTypes')
   late List<SymptomsTypes>? symptomsTypes;
 }
 
