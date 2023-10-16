@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -348,17 +348,23 @@ class MdmsRepository {
           ..mandatoryWaitSinceLastCycleInDays =
               e.mandatoryWaitSinceLastCycleInDays
           ..deliveries = e.deliveries?.map((ele) {
-            final newDeliveries = Deliveries()
-              ..deliveryStrategy = ele.deliveryStrategy
-              ..mandatoryWaitSinceLastDeliveryInDays =
-                  ele.mandatoryWaitSinceLastDeliveryInDays
-              ..productVariants = ele.productVariants?.map((e) {
-                final productVariants = ProductVariants()
-                  ..productVariantId = e.productVariantId
-                  ..quantity = e.quantity.toString();
+            final newDeliveries = Deliveries();
+            newDeliveries.deliveryStrategy = ele.deliveryStrategy;
+            newDeliveries.mandatoryWaitSinceLastDeliveryInDays =
+                ele.mandatoryWaitSinceLastDeliveryInDays;
+            newDeliveries.doseCriteriaModel = ele.doseCriteria?.map((e) {
+              final doseCriterias = DoseCriteria()
+                ..condition = e.condition
+                ..productVariants = e.productVariants?.map((p) {
+                  final productVariants = ProductVariants()
+                    ..quantity = p.quantity.toString()
+                    ..productVariantId = p.productVariantId.toString();
 
-                return productVariants;
-              }).toList();
+                  return productVariants;
+                }).toList();
+
+              return doseCriterias;
+            }).toList();
 
             return newDeliveries;
           }).toList();
@@ -368,7 +374,7 @@ class MdmsRepository {
       newProjectTypeList.add(newprojectType);
     }
 
-    return await isar.writeTxn(() async {
+    await isar.writeTxn(() async {
       await isar.projectTypeListCycles.putAll(newProjectTypeList);
     });
   }

@@ -90,22 +90,37 @@ Map<String, dynamic> _$$_CycleToJson(_$_Cycle instance) => <String, dynamic>{
 
 _$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
     _$_DeliveryModel(
+      doseCriteria: (json['doseCriteria'] as List<dynamic>?)
+          ?.map((e) => DoseCriteriaModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       mandatoryWaitSinceLastDeliveryInDays:
           json['mandatoryWaitSinceLastDeliveryInDays'] as String?,
-      productVariants: (json['ProductVariants'] as List<dynamic>?)
-          ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
       deliveryStrategy: json['deliveryStrategy'] as String?,
       id: json['id'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
     <String, dynamic>{
+      'doseCriteria': instance.doseCriteria,
       'mandatoryWaitSinceLastDeliveryInDays':
           instance.mandatoryWaitSinceLastDeliveryInDays,
-      'ProductVariants': instance.productVariants,
       'deliveryStrategy': instance.deliveryStrategy,
       'id': instance.id,
+    };
+
+_$_DoseCriteriaModel _$$_DoseCriteriaModelFromJson(Map<String, dynamic> json) =>
+    _$_DoseCriteriaModel(
+      condition: json['condition'] as String?,
+      productVariants: (json['ProductVariants'] as List<dynamic>?)
+          ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$_DoseCriteriaModelToJson(
+        _$_DoseCriteriaModel instance) =>
+    <String, dynamic>{
+      'condition': instance.condition,
+      'ProductVariants': instance.productVariants,
     };
 
 _$_ProductVariantsModel _$$_ProductVariantsModelFromJson(

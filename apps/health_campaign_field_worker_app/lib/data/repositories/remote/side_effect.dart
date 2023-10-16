@@ -3,14 +3,14 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class AdverseEventRemoteRepository extends RemoteRepository<AdverseEventModel, AdverseEventSearchModel> {
-  AdverseEventRemoteRepository(
+class SideEffectRemoteRepository extends RemoteRepository<SideEffectModel, SideEffectSearchModel> {
+  SideEffectRemoteRepository(
     super.dio, {
     required super.actionMap,
-    super.entityName = 'AdverseEvent',
+    super.entityName = 'SideEffect',
     super.isSearchResponsePlural = true,
   });
 
   @override
-  DataModelType get type => DataModelType.adverseEvent;
+  DataModelType get type => DataModelType.sideEffect;
 }

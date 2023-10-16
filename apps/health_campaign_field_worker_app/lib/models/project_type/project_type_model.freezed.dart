@@ -944,11 +944,10 @@ DeliveryModel _$DeliveryModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DeliveryModel {
+  List<DoseCriteriaModel>? get doseCriteria =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
   String? get mandatoryWaitSinceLastDeliveryInDays =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'ProductVariants')
-  List<ProductVariantsModel>? get productVariants =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'deliveryStrategy')
   String? get deliveryStrategy => throw _privateConstructorUsedError;
@@ -967,10 +966,9 @@ abstract class $DeliveryModelCopyWith<$Res> {
       _$DeliveryModelCopyWithImpl<$Res, DeliveryModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
+      {List<DoseCriteriaModel>? doseCriteria,
+      @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
           String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'ProductVariants')
-          List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
           String? deliveryStrategy,
       int id});
@@ -989,21 +987,21 @@ class _$DeliveryModelCopyWithImpl<$Res, $Val extends DeliveryModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? doseCriteria = freezed,
     Object? mandatoryWaitSinceLastDeliveryInDays = freezed,
-    Object? productVariants = freezed,
     Object? deliveryStrategy = freezed,
     Object? id = null,
   }) {
     return _then(_value.copyWith(
+      doseCriteria: freezed == doseCriteria
+          ? _value.doseCriteria
+          : doseCriteria // ignore: cast_nullable_to_non_nullable
+              as List<DoseCriteriaModel>?,
       mandatoryWaitSinceLastDeliveryInDays: freezed ==
               mandatoryWaitSinceLastDeliveryInDays
           ? _value.mandatoryWaitSinceLastDeliveryInDays
           : mandatoryWaitSinceLastDeliveryInDays // ignore: cast_nullable_to_non_nullable
               as String?,
-      productVariants: freezed == productVariants
-          ? _value.productVariants
-          : productVariants // ignore: cast_nullable_to_non_nullable
-              as List<ProductVariantsModel>?,
       deliveryStrategy: freezed == deliveryStrategy
           ? _value.deliveryStrategy
           : deliveryStrategy // ignore: cast_nullable_to_non_nullable
@@ -1025,10 +1023,9 @@ abstract class _$$_DeliveryModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
+      {List<DoseCriteriaModel>? doseCriteria,
+      @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
           String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'ProductVariants')
-          List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
           String? deliveryStrategy,
       int id});
@@ -1045,21 +1042,21 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? doseCriteria = freezed,
     Object? mandatoryWaitSinceLastDeliveryInDays = freezed,
-    Object? productVariants = freezed,
     Object? deliveryStrategy = freezed,
     Object? id = null,
   }) {
     return _then(_$_DeliveryModel(
+      doseCriteria: freezed == doseCriteria
+          ? _value._doseCriteria
+          : doseCriteria // ignore: cast_nullable_to_non_nullable
+              as List<DoseCriteriaModel>?,
       mandatoryWaitSinceLastDeliveryInDays: freezed ==
               mandatoryWaitSinceLastDeliveryInDays
           ? _value.mandatoryWaitSinceLastDeliveryInDays
           : mandatoryWaitSinceLastDeliveryInDays // ignore: cast_nullable_to_non_nullable
               as String?,
-      productVariants: freezed == productVariants
-          ? _value._productVariants
-          : productVariants // ignore: cast_nullable_to_non_nullable
-              as List<ProductVariantsModel>?,
       deliveryStrategy: freezed == deliveryStrategy
           ? _value.deliveryStrategy
           : deliveryStrategy // ignore: cast_nullable_to_non_nullable
@@ -1076,31 +1073,29 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DeliveryModel implements _DeliveryModel {
   const _$_DeliveryModel(
-      {@JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
+      {final List<DoseCriteriaModel>? doseCriteria,
+      @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
           this.mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'ProductVariants')
-          final List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
           this.deliveryStrategy,
       this.id = 0})
-      : _productVariants = productVariants;
+      : _doseCriteria = doseCriteria;
 
   factory _$_DeliveryModel.fromJson(Map<String, dynamic> json) =>
       _$$_DeliveryModelFromJson(json);
 
+  final List<DoseCriteriaModel>? _doseCriteria;
   @override
-  @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-  final String? mandatoryWaitSinceLastDeliveryInDays;
-  final List<ProductVariantsModel>? _productVariants;
-  @override
-  @JsonKey(name: 'ProductVariants')
-  List<ProductVariantsModel>? get productVariants {
-    final value = _productVariants;
+  List<DoseCriteriaModel>? get doseCriteria {
+    final value = _doseCriteria;
     if (value == null) return null;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
+  final String? mandatoryWaitSinceLastDeliveryInDays;
   @override
   @JsonKey(name: 'deliveryStrategy')
   final String? deliveryStrategy;
@@ -1110,7 +1105,7 @@ class _$_DeliveryModel implements _DeliveryModel {
 
   @override
   String toString() {
-    return 'DeliveryModel(mandatoryWaitSinceLastDeliveryInDays: $mandatoryWaitSinceLastDeliveryInDays, productVariants: $productVariants, deliveryStrategy: $deliveryStrategy, id: $id)';
+    return 'DeliveryModel(doseCriteria: $doseCriteria, mandatoryWaitSinceLastDeliveryInDays: $mandatoryWaitSinceLastDeliveryInDays, deliveryStrategy: $deliveryStrategy, id: $id)';
   }
 
   @override
@@ -1118,12 +1113,12 @@ class _$_DeliveryModel implements _DeliveryModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DeliveryModel &&
+            const DeepCollectionEquality()
+                .equals(other._doseCriteria, _doseCriteria) &&
             (identical(other.mandatoryWaitSinceLastDeliveryInDays,
                     mandatoryWaitSinceLastDeliveryInDays) ||
                 other.mandatoryWaitSinceLastDeliveryInDays ==
                     mandatoryWaitSinceLastDeliveryInDays) &&
-            const DeepCollectionEquality()
-                .equals(other._productVariants, _productVariants) &&
             (identical(other.deliveryStrategy, deliveryStrategy) ||
                 other.deliveryStrategy == deliveryStrategy) &&
             (identical(other.id, id) || other.id == id));
@@ -1133,8 +1128,8 @@ class _$_DeliveryModel implements _DeliveryModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(_doseCriteria),
       mandatoryWaitSinceLastDeliveryInDays,
-      const DeepCollectionEquality().hash(_productVariants),
       deliveryStrategy,
       id);
 
@@ -1154,10 +1149,9 @@ class _$_DeliveryModel implements _DeliveryModel {
 
 abstract class _DeliveryModel implements DeliveryModel {
   const factory _DeliveryModel(
-      {@JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
+      {final List<DoseCriteriaModel>? doseCriteria,
+      @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
           final String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'ProductVariants')
-          final List<ProductVariantsModel>? productVariants,
       @JsonKey(name: 'deliveryStrategy')
           final String? deliveryStrategy,
       final int id}) = _$_DeliveryModel;
@@ -1166,11 +1160,10 @@ abstract class _DeliveryModel implements DeliveryModel {
       _$_DeliveryModel.fromJson;
 
   @override
+  List<DoseCriteriaModel>? get doseCriteria;
+  @override
   @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
   String? get mandatoryWaitSinceLastDeliveryInDays;
-  @override
-  @JsonKey(name: 'ProductVariants')
-  List<ProductVariantsModel>? get productVariants;
   @override
   @JsonKey(name: 'deliveryStrategy')
   String? get deliveryStrategy;
@@ -1179,6 +1172,193 @@ abstract class _DeliveryModel implements DeliveryModel {
   @override
   @JsonKey(ignore: true)
   _$$_DeliveryModelCopyWith<_$_DeliveryModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+DoseCriteriaModel _$DoseCriteriaModelFromJson(Map<String, dynamic> json) {
+  return _DoseCriteriaModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DoseCriteriaModel {
+  @JsonKey(name: 'condition')
+  String? get condition => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ProductVariants')
+  List<ProductVariantsModel>? get productVariants =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DoseCriteriaModelCopyWith<DoseCriteriaModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DoseCriteriaModelCopyWith<$Res> {
+  factory $DoseCriteriaModelCopyWith(
+          DoseCriteriaModel value, $Res Function(DoseCriteriaModel) then) =
+      _$DoseCriteriaModelCopyWithImpl<$Res, DoseCriteriaModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'condition')
+          String? condition,
+      @JsonKey(name: 'ProductVariants')
+          List<ProductVariantsModel>? productVariants});
+}
+
+/// @nodoc
+class _$DoseCriteriaModelCopyWithImpl<$Res, $Val extends DoseCriteriaModel>
+    implements $DoseCriteriaModelCopyWith<$Res> {
+  _$DoseCriteriaModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = freezed,
+    Object? productVariants = freezed,
+  }) {
+    return _then(_value.copyWith(
+      condition: freezed == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String?,
+      productVariants: freezed == productVariants
+          ? _value.productVariants
+          : productVariants // ignore: cast_nullable_to_non_nullable
+              as List<ProductVariantsModel>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_DoseCriteriaModelCopyWith<$Res>
+    implements $DoseCriteriaModelCopyWith<$Res> {
+  factory _$$_DoseCriteriaModelCopyWith(_$_DoseCriteriaModel value,
+          $Res Function(_$_DoseCriteriaModel) then) =
+      __$$_DoseCriteriaModelCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'condition')
+          String? condition,
+      @JsonKey(name: 'ProductVariants')
+          List<ProductVariantsModel>? productVariants});
+}
+
+/// @nodoc
+class __$$_DoseCriteriaModelCopyWithImpl<$Res>
+    extends _$DoseCriteriaModelCopyWithImpl<$Res, _$_DoseCriteriaModel>
+    implements _$$_DoseCriteriaModelCopyWith<$Res> {
+  __$$_DoseCriteriaModelCopyWithImpl(
+      _$_DoseCriteriaModel _value, $Res Function(_$_DoseCriteriaModel) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? condition = freezed,
+    Object? productVariants = freezed,
+  }) {
+    return _then(_$_DoseCriteriaModel(
+      condition: freezed == condition
+          ? _value.condition
+          : condition // ignore: cast_nullable_to_non_nullable
+              as String?,
+      productVariants: freezed == productVariants
+          ? _value._productVariants
+          : productVariants // ignore: cast_nullable_to_non_nullable
+              as List<ProductVariantsModel>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_DoseCriteriaModel implements _DoseCriteriaModel {
+  const _$_DoseCriteriaModel(
+      {@JsonKey(name: 'condition')
+          this.condition,
+      @JsonKey(name: 'ProductVariants')
+          final List<ProductVariantsModel>? productVariants})
+      : _productVariants = productVariants;
+
+  factory _$_DoseCriteriaModel.fromJson(Map<String, dynamic> json) =>
+      _$$_DoseCriteriaModelFromJson(json);
+
+  @override
+  @JsonKey(name: 'condition')
+  final String? condition;
+  final List<ProductVariantsModel>? _productVariants;
+  @override
+  @JsonKey(name: 'ProductVariants')
+  List<ProductVariantsModel>? get productVariants {
+    final value = _productVariants;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'DoseCriteriaModel(condition: $condition, productVariants: $productVariants)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_DoseCriteriaModel &&
+            (identical(other.condition, condition) ||
+                other.condition == condition) &&
+            const DeepCollectionEquality()
+                .equals(other._productVariants, _productVariants));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, condition,
+      const DeepCollectionEquality().hash(_productVariants));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DoseCriteriaModelCopyWith<_$_DoseCriteriaModel> get copyWith =>
+      __$$_DoseCriteriaModelCopyWithImpl<_$_DoseCriteriaModel>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_DoseCriteriaModelToJson(
+      this,
+    );
+  }
+}
+
+abstract class _DoseCriteriaModel implements DoseCriteriaModel {
+  const factory _DoseCriteriaModel(
+          {@JsonKey(name: 'condition')
+              final String? condition,
+          @JsonKey(name: 'ProductVariants')
+              final List<ProductVariantsModel>? productVariants}) =
+      _$_DoseCriteriaModel;
+
+  factory _DoseCriteriaModel.fromJson(Map<String, dynamic> json) =
+      _$_DoseCriteriaModel.fromJson;
+
+  @override
+  @JsonKey(name: 'condition')
+  String? get condition;
+  @override
+  @JsonKey(name: 'ProductVariants')
+  List<ProductVariantsModel>? get productVariants;
+  @override
+  @JsonKey(ignore: true)
+  _$$_DoseCriteriaModelCopyWith<_$_DoseCriteriaModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

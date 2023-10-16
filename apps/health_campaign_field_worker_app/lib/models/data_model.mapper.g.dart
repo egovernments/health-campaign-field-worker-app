@@ -32,6 +32,7 @@ import 'entities/project_type.dart';
 import 'entities/service.dart';
 import 'entities/service_attributes.dart';
 import 'entities/service_definition.dart';
+import 'entities/side_effect.dart';
 import 'entities/status.dart';
 import 'entities/stock.dart';
 import 'entities/stock_reconciliation.dart';
@@ -129,6 +130,9 @@ var _mappers = <BaseMapper>{
   ServiceDefinitionSearchModelMapper._(),
   ServiceDefinitionModelMapper._(),
   ServiceDefinitionAdditionalFieldsMapper._(),
+  SideEffectSearchModelMapper._(),
+  SideEffectModelMapper._(),
+  SideEffectAdditionalFieldsMapper._(),
   StockSearchModelMapper._(),
   StockModelMapper._(),
   StockAdditionalFieldsMapper._(),
@@ -216,6 +220,7 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is ServiceModel) { return ServiceModelMapper._().encode(v); }
     else if (v is ServiceAttributesModel) { return ServiceAttributesModelMapper._().encode(v); }
     else if (v is ServiceDefinitionModel) { return ServiceDefinitionModelMapper._().encode(v); }
+    else if (v is SideEffectModel) { return SideEffectModelMapper._().encode(v); }
     else if (v is StockModel) { return StockModelMapper._().encode(v); }
     else if (v is StockReconciliationModel) { return StockReconciliationModelMapper._().encode(v); }
     else if (v is TargetModel) { return TargetModelMapper._().encode(v); }
@@ -308,6 +313,7 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is ServiceSearchModel) { return ServiceSearchModelMapper._().encode(v); }
     else if (v is ServiceAttributesSearchModel) { return ServiceAttributesSearchModelMapper._().encode(v); }
     else if (v is ServiceDefinitionSearchModel) { return ServiceDefinitionSearchModelMapper._().encode(v); }
+    else if (v is SideEffectSearchModel) { return SideEffectSearchModelMapper._().encode(v); }
     else if (v is StockSearchModel) { return StockSearchModelMapper._().encode(v); }
     else if (v is StockReconciliationSearchModel) { return StockReconciliationSearchModelMapper._().encode(v); }
     else if (v is TargetSearchModel) { return TargetSearchModelMapper._().encode(v); }
@@ -363,6 +369,7 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is ServiceAdditionalFields) { return ServiceAdditionalFieldsMapper._().encode(v); }
     else if (v is ServiceAttributesAdditionalFields) { return ServiceAttributesAdditionalFieldsMapper._().encode(v); }
     else if (v is ServiceDefinitionAdditionalFields) { return ServiceDefinitionAdditionalFieldsMapper._().encode(v); }
+    else if (v is SideEffectAdditionalFields) { return SideEffectAdditionalFieldsMapper._().encode(v); }
     else if (v is StockAdditionalFields) { return StockAdditionalFieldsMapper._().encode(v); }
     else if (v is StockReconciliationAdditionalFields) { return StockReconciliationAdditionalFieldsMapper._().encode(v); }
     else if (v is TargetAdditionalFields) { return TargetAdditionalFieldsMapper._().encode(v); }
@@ -3267,6 +3274,122 @@ class _ServiceDefinitionAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<Se
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(ServiceDefinitionAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
+class SideEffectSearchModelMapper extends BaseMapper<SideEffectSearchModel> {
+  SideEffectSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  SideEffectSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  SideEffectSearchModel fromMap(Map<String, dynamic> map) => SideEffectSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), taskClientReferenceId: Mapper.i.$getOpt(map, 'taskClientReferenceId'), projectId: Mapper.i.$getOpt(map, 'projectId'), reAttempts: Mapper.i.$getOpt(map, 'reAttempts'), symptoms: Mapper.i.$getOpt(map, 'symptoms'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+
+  @override Function get encoder => (SideEffectSearchModel v) => encode(v);
+  dynamic encode(SideEffectSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(SideEffectSearchModel s) => {if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.taskClientReferenceId, 'taskClientReferenceId') != null) 'taskClientReferenceId': Mapper.i.$enc(s.taskClientReferenceId, 'taskClientReferenceId'), if (Mapper.i.$enc(s.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(s.projectId, 'projectId'), if (Mapper.i.$enc(s.reAttempts, 'reAttempts') != null) 'reAttempts': Mapper.i.$enc(s.reAttempts, 'reAttempts'), if (Mapper.i.$enc(s.symptoms, 'symptoms') != null) 'symptoms': Mapper.i.$enc(s.symptoms, 'symptoms'), if (Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(s.boundaryCode, 'boundaryCode')};
+
+  @override String stringify(SideEffectSearchModel self) => 'SideEffectSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, taskClientReferenceId: ${Mapper.asString(self.taskClientReferenceId)}, projectId: ${Mapper.asString(self.projectId)}, reAttempts: ${Mapper.asString(self.reAttempts)}, symptoms: ${Mapper.asString(self.symptoms)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)})';
+  @override int hash(SideEffectSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.taskClientReferenceId) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.reAttempts) ^ Mapper.hash(self.symptoms) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId);
+  @override bool equals(SideEffectSearchModel self, SideEffectSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.taskClientReferenceId, other.taskClientReferenceId) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.reAttempts, other.reAttempts) && Mapper.isEqual(self.symptoms, other.symptoms) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId);
+
+  @override Function get typeFactory => (f) => f<SideEffectSearchModel>();
+}
+
+extension SideEffectSearchModelMapperExtension  on SideEffectSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  SideEffectSearchModelCopyWith<SideEffectSearchModel> get copyWith => SideEffectSearchModelCopyWith(this, $identity);
+}
+
+abstract class SideEffectSearchModelCopyWith<$R> {
+  factory SideEffectSearchModelCopyWith(SideEffectSearchModel value, Then<SideEffectSearchModel, $R> then) = _SideEffectSearchModelCopyWithImpl<$R>;
+  $R call({String? id, List<String>? taskClientReferenceId, String? projectId, int? reAttempts, List<String>? symptoms, List<String>? clientReferenceId, String? tenantId, String? boundaryCode});
+  $R apply(SideEffectSearchModel Function(SideEffectSearchModel) transform);
+}
+
+class _SideEffectSearchModelCopyWithImpl<$R> extends BaseCopyWith<SideEffectSearchModel, $R> implements SideEffectSearchModelCopyWith<$R> {
+  _SideEffectSearchModelCopyWithImpl(SideEffectSearchModel value, Then<SideEffectSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? taskClientReferenceId = $none, Object? projectId = $none, Object? reAttempts = $none, Object? symptoms = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? boundaryCode = $none}) => $then(SideEffectSearchModel.ignoreDeleted(id: or(id, $value.id), taskClientReferenceId: or(taskClientReferenceId, $value.taskClientReferenceId), projectId: or(projectId, $value.projectId), reAttempts: or(reAttempts, $value.reAttempts), symptoms: or(symptoms, $value.symptoms), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+}
+
+class SideEffectModelMapper extends BaseMapper<SideEffectModel> {
+  SideEffectModelMapper._();
+
+  @override Function get decoder => decode;
+  SideEffectModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  SideEffectModel fromMap(Map<String, dynamic> map) => SideEffectModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), taskClientReferenceId: Mapper.i.$getOpt(map, 'taskClientReferenceId'), reAttempts: Mapper.i.$getOpt(map, 'reAttempts'), symptoms: Mapper.i.$getOpt(map, 'symptoms'), clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (SideEffectModel v) => encode(v);
+  dynamic encode(SideEffectModel v) => toMap(v);
+  Map<String, dynamic> toMap(SideEffectModel s) => {if (Mapper.i.$enc(s.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(s.additionalFields, 'additionalFields'), if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(s.projectId, 'projectId'), if (Mapper.i.$enc(s.taskClientReferenceId, 'taskClientReferenceId') != null) 'taskClientReferenceId': Mapper.i.$enc(s.taskClientReferenceId, 'taskClientReferenceId'), if (Mapper.i.$enc(s.reAttempts, 'reAttempts') != null) 'reAttempts': Mapper.i.$enc(s.reAttempts, 'reAttempts'), if (Mapper.i.$enc(s.symptoms, 'symptoms') != null) 'symptoms': Mapper.i.$enc(s.symptoms, 'symptoms'), 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(s.rowVersion, 'rowVersion'), if (Mapper.i.$enc(s.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(s.auditDetails, 'auditDetails'), if (Mapper.i.$enc(s.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(s.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(s.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(s.isDeleted, 'isDeleted')};
+
+  @override String stringify(SideEffectModel self) => 'SideEffectModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, taskClientReferenceId: ${Mapper.asString(self.taskClientReferenceId)}, reAttempts: ${Mapper.asString(self.reAttempts)}, symptoms: ${Mapper.asString(self.symptoms)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(SideEffectModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.taskClientReferenceId) ^ Mapper.hash(self.reAttempts) ^ Mapper.hash(self.symptoms) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(SideEffectModel self, SideEffectModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.taskClientReferenceId, other.taskClientReferenceId) && Mapper.isEqual(self.reAttempts, other.reAttempts) && Mapper.isEqual(self.symptoms, other.symptoms) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<SideEffectModel>();
+}
+
+extension SideEffectModelMapperExtension  on SideEffectModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  SideEffectModelCopyWith<SideEffectModel> get copyWith => SideEffectModelCopyWith(this, $identity);
+}
+
+abstract class SideEffectModelCopyWith<$R> {
+  factory SideEffectModelCopyWith(SideEffectModel value, Then<SideEffectModel, $R> then) = _SideEffectModelCopyWithImpl<$R>;
+  SideEffectAdditionalFieldsCopyWith<$R>? get additionalFields;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
+  $R call({SideEffectAdditionalFields? additionalFields, String? id, String? projectId, String? taskClientReferenceId, int? reAttempts, List<String>? symptoms, String? clientReferenceId, String? tenantId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R apply(SideEffectModel Function(SideEffectModel) transform);
+}
+
+class _SideEffectModelCopyWithImpl<$R> extends BaseCopyWith<SideEffectModel, $R> implements SideEffectModelCopyWith<$R> {
+  _SideEffectModelCopyWithImpl(SideEffectModel value, Then<SideEffectModel, $R> then) : super(value, then);
+
+  @override SideEffectAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? SideEffectAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? projectId = $none, Object? taskClientReferenceId = $none, Object? reAttempts = $none, Object? symptoms = $none, String? clientReferenceId, Object? tenantId = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(SideEffectModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), projectId: or(projectId, $value.projectId), taskClientReferenceId: or(taskClientReferenceId, $value.taskClientReferenceId), reAttempts: or(reAttempts, $value.reAttempts), symptoms: or(symptoms, $value.symptoms), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class SideEffectAdditionalFieldsMapper extends BaseMapper<SideEffectAdditionalFields> {
+  SideEffectAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  SideEffectAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  SideEffectAdditionalFields fromMap(Map<String, dynamic> map) => SideEffectAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'SideEffect', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
+
+  @override Function get encoder => (SideEffectAdditionalFields v) => encode(v);
+  dynamic encode(SideEffectAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(SideEffectAdditionalFields s) => {'schema': Mapper.i.$enc(s.schema, 'schema'), 'version': Mapper.i.$enc(s.version, 'version'), 'fields': Mapper.i.$enc(s.fields, 'fields')};
+
+  @override String stringify(SideEffectAdditionalFields self) => 'SideEffectAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
+  @override int hash(SideEffectAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
+  @override bool equals(SideEffectAdditionalFields self, SideEffectAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
+
+  @override Function get typeFactory => (f) => f<SideEffectAdditionalFields>();
+}
+
+extension SideEffectAdditionalFieldsMapperExtension  on SideEffectAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  SideEffectAdditionalFieldsCopyWith<SideEffectAdditionalFields> get copyWith => SideEffectAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class SideEffectAdditionalFieldsCopyWith<$R> {
+  factory SideEffectAdditionalFieldsCopyWith(SideEffectAdditionalFields value, Then<SideEffectAdditionalFields, $R> then) = _SideEffectAdditionalFieldsCopyWithImpl<$R>;
+  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  $R apply(SideEffectAdditionalFields Function(SideEffectAdditionalFields) transform);
+}
+
+class _SideEffectAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<SideEffectAdditionalFields, $R> implements SideEffectAdditionalFieldsCopyWith<$R> {
+  _SideEffectAdditionalFieldsCopyWithImpl(SideEffectAdditionalFields value, Then<SideEffectAdditionalFields, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
+  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(SideEffectAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
+}
+
 class StockSearchModelMapper extends BaseMapper<StockSearchModel> {
   StockSearchModelMapper._();
 
@@ -3776,11 +3899,11 @@ class TaskResourceModelMapper extends BaseMapper<TaskResourceModel> {
 
   @override Function get decoder => decode;
   TaskResourceModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  TaskResourceModel fromMap(Map<String, dynamic> map) => TaskResourceModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), taskclientReferenceId: Mapper.i.$get(map, 'taskclientReferenceId'), taskId: Mapper.i.$getOpt(map, 'taskId'), id: Mapper.i.$getOpt(map, 'id'), productVariantId: Mapper.i.$getOpt(map, 'productVariantId'), quantity: Mapper.i.$getOpt(map, 'quantity'), isDelivered: Mapper.i.$getOpt(map, 'isDelivered'), deliveryComment: Mapper.i.$getOpt(map, 'deliveryComment'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+  TaskResourceModel fromMap(Map<String, dynamic> map) => TaskResourceModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), taskclientReferenceId: Mapper.i.$getOpt(map, 'taskclientReferenceId'), taskId: Mapper.i.$getOpt(map, 'taskId'), id: Mapper.i.$getOpt(map, 'id'), productVariantId: Mapper.i.$getOpt(map, 'productVariantId'), quantity: Mapper.i.$getOpt(map, 'quantity'), isDelivered: Mapper.i.$getOpt(map, 'isDelivered'), deliveryComment: Mapper.i.$getOpt(map, 'deliveryComment'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
 
   @override Function get encoder => (TaskResourceModel v) => encode(v);
   dynamic encode(TaskResourceModel v) => toMap(v);
-  Map<String, dynamic> toMap(TaskResourceModel t) => {if (Mapper.i.$enc(t.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(t.additionalFields, 'additionalFields'), 'clientReferenceId': Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId'), 'taskclientReferenceId': Mapper.i.$enc(t.taskclientReferenceId, 'taskclientReferenceId'), if (Mapper.i.$enc(t.taskId, 'taskId') != null) 'taskId': Mapper.i.$enc(t.taskId, 'taskId'), if (Mapper.i.$enc(t.id, 'id') != null) 'id': Mapper.i.$enc(t.id, 'id'), if (Mapper.i.$enc(t.productVariantId, 'productVariantId') != null) 'productVariantId': Mapper.i.$enc(t.productVariantId, 'productVariantId'), if (Mapper.i.$enc(t.quantity, 'quantity') != null) 'quantity': Mapper.i.$enc(t.quantity, 'quantity'), if (Mapper.i.$enc(t.isDelivered, 'isDelivered') != null) 'isDelivered': Mapper.i.$enc(t.isDelivered, 'isDelivered'), if (Mapper.i.$enc(t.deliveryComment, 'deliveryComment') != null) 'deliveryComment': Mapper.i.$enc(t.deliveryComment, 'deliveryComment'), if (Mapper.i.$enc(t.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(t.tenantId, 'tenantId'), if (Mapper.i.$enc(t.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(t.rowVersion, 'rowVersion'), if (Mapper.i.$enc(t.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(t.auditDetails, 'auditDetails'), if (Mapper.i.$enc(t.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(t.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(t.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(t.isDeleted, 'isDeleted')};
+  Map<String, dynamic> toMap(TaskResourceModel t) => {if (Mapper.i.$enc(t.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(t.additionalFields, 'additionalFields'), 'clientReferenceId': Mapper.i.$enc(t.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(t.taskclientReferenceId, 'taskclientReferenceId') != null) 'taskclientReferenceId': Mapper.i.$enc(t.taskclientReferenceId, 'taskclientReferenceId'), if (Mapper.i.$enc(t.taskId, 'taskId') != null) 'taskId': Mapper.i.$enc(t.taskId, 'taskId'), if (Mapper.i.$enc(t.id, 'id') != null) 'id': Mapper.i.$enc(t.id, 'id'), if (Mapper.i.$enc(t.productVariantId, 'productVariantId') != null) 'productVariantId': Mapper.i.$enc(t.productVariantId, 'productVariantId'), if (Mapper.i.$enc(t.quantity, 'quantity') != null) 'quantity': Mapper.i.$enc(t.quantity, 'quantity'), if (Mapper.i.$enc(t.isDelivered, 'isDelivered') != null) 'isDelivered': Mapper.i.$enc(t.isDelivered, 'isDelivered'), if (Mapper.i.$enc(t.deliveryComment, 'deliveryComment') != null) 'deliveryComment': Mapper.i.$enc(t.deliveryComment, 'deliveryComment'), if (Mapper.i.$enc(t.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(t.tenantId, 'tenantId'), if (Mapper.i.$enc(t.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(t.rowVersion, 'rowVersion'), if (Mapper.i.$enc(t.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(t.auditDetails, 'auditDetails'), if (Mapper.i.$enc(t.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(t.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(t.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(t.isDeleted, 'isDeleted')};
 
   @override String stringify(TaskResourceModel self) => 'TaskResourceModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, taskclientReferenceId: ${Mapper.asString(self.taskclientReferenceId)}, taskId: ${Mapper.asString(self.taskId)}, id: ${Mapper.asString(self.id)}, productVariantId: ${Mapper.asString(self.productVariantId)}, quantity: ${Mapper.asString(self.quantity)}, isDelivered: ${Mapper.asString(self.isDelivered)}, deliveryComment: ${Mapper.asString(self.deliveryComment)}, tenantId: ${Mapper.asString(self.tenantId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
   @override int hash(TaskResourceModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.taskclientReferenceId) ^ Mapper.hash(self.taskId) ^ Mapper.hash(self.id) ^ Mapper.hash(self.productVariantId) ^ Mapper.hash(self.quantity) ^ Mapper.hash(self.isDelivered) ^ Mapper.hash(self.deliveryComment) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
@@ -3810,7 +3933,7 @@ class _TaskResourceModelCopyWithImpl<$R> extends BaseCopyWith<TaskResourceModel,
   @override TaskResourceAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? TaskResourceAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
   @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
   @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, String? clientReferenceId, String? taskclientReferenceId, Object? taskId = $none, Object? id = $none, Object? productVariantId = $none, Object? quantity = $none, Object? isDelivered = $none, Object? deliveryComment = $none, Object? tenantId = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(TaskResourceModel(additionalFields: or(additionalFields, $value.additionalFields), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, taskclientReferenceId: taskclientReferenceId ?? $value.taskclientReferenceId, taskId: or(taskId, $value.taskId), id: or(id, $value.id), productVariantId: or(productVariantId, $value.productVariantId), quantity: or(quantity, $value.quantity), isDelivered: or(isDelivered, $value.isDelivered), deliveryComment: or(deliveryComment, $value.deliveryComment), tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+  @override $R call({Object? additionalFields = $none, String? clientReferenceId, Object? taskclientReferenceId = $none, Object? taskId = $none, Object? id = $none, Object? productVariantId = $none, Object? quantity = $none, Object? isDelivered = $none, Object? deliveryComment = $none, Object? tenantId = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(TaskResourceModel(additionalFields: or(additionalFields, $value.additionalFields), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, taskclientReferenceId: or(taskclientReferenceId, $value.taskclientReferenceId), taskId: or(taskId, $value.taskId), id: or(id, $value.id), productVariantId: or(productVariantId, $value.productVariantId), quantity: or(quantity, $value.quantity), isDelivered: or(isDelivered, $value.isDelivered), deliveryComment: or(deliveryComment, $value.deliveryComment), tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
 }
 
 class TaskResourceAdditionalFieldsMapper extends BaseMapper<TaskResourceAdditionalFields> {
@@ -4622,8 +4745,11 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
   @override  AdditionalFieldsType decode(dynamic value) {
     switch (value) {
       case "DeliveryStrategy": return AdditionalFieldsType.deliveryStrategy;
-      case "CycleIndex": return AdditionalFieldsType.cycleIndex;
-      case "DoseIndex": return AdditionalFieldsType.doseIndex;
+      case "cycleIndex": return AdditionalFieldsType.cycleIndex;
+      case "doseIndex": return AdditionalFieldsType.doseIndex;
+      case "dateOfVerification": return AdditionalFieldsType.dateOfVerification;
+      case "dateOfAdministration": return AdditionalFieldsType.dateOfAdministration;
+      case "dateOfDelivery": return AdditionalFieldsType.dateOfDelivery;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4631,8 +4757,11 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
   @override  dynamic encode(AdditionalFieldsType self) {
     switch (self) {
       case AdditionalFieldsType.deliveryStrategy: return "DeliveryStrategy";
-      case AdditionalFieldsType.cycleIndex: return "CycleIndex";
-      case AdditionalFieldsType.doseIndex: return "DoseIndex";
+      case AdditionalFieldsType.cycleIndex: return "cycleIndex";
+      case AdditionalFieldsType.doseIndex: return "doseIndex";
+      case AdditionalFieldsType.dateOfVerification: return "dateOfVerification";
+      case AdditionalFieldsType.dateOfAdministration: return "dateOfAdministration";
+      case AdditionalFieldsType.dateOfDelivery: return "dateOfDelivery";
     }
   }
 }
@@ -4673,7 +4802,6 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (value) {
       case "INDIVIDUAL": return BeneficiaryType.individual;
       case "HOUSEHOLD": return BeneficiaryType.household;
-      case "PRODUCT": return BeneficiaryType.product;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4682,7 +4810,6 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (self) {
       case BeneficiaryType.individual: return "INDIVIDUAL";
       case BeneficiaryType.household: return "HOUSEHOLD";
-      case BeneficiaryType.product: return "PRODUCT";
     }
   }
 }
@@ -4781,9 +4908,13 @@ class StatusMapper extends EnumMapper<Status> {
     switch (value) {
       case "DELIVERED": return Status.delivered;
       case "NOT_DELIVERED": return Status.notDelivered;
+      case "VISITED": return Status.visited;
+      case "NOT_VISITED": return Status.notVisited;
       case "BENEFICIARY_REFUSED": return Status.beneficiaryRefused;
-      case "PARTIALLY_DELIVERED": return Status.partiallyDelivered;
+      case "ADMINISTERED_SUCCESS": return Status.administeredSuccess;
+      case "ADMINISTERED_FAILED": return Status.administeredFailed;
       case "IN_COMPLETE": return Status.inComplete;
+      case "TO_ADMINISTER": return Status.toAdminister;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4792,9 +4923,13 @@ class StatusMapper extends EnumMapper<Status> {
     switch (self) {
       case Status.delivered: return "DELIVERED";
       case Status.notDelivered: return "NOT_DELIVERED";
+      case Status.visited: return "VISITED";
+      case Status.notVisited: return "NOT_VISITED";
       case Status.beneficiaryRefused: return "BENEFICIARY_REFUSED";
-      case Status.partiallyDelivered: return "PARTIALLY_DELIVERED";
+      case Status.administeredSuccess: return "ADMINISTERED_SUCCESS";
+      case Status.administeredFailed: return "ADMINISTERED_FAILED";
       case Status.inComplete: return "IN_COMPLETE";
+      case Status.toAdminister: return "TO_ADMINISTER";
     }
   }
 }

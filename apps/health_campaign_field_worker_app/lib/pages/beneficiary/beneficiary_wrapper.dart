@@ -8,13 +8,14 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
-import '../../models/entities/adverse_event.dart';
+import '../../blocs/side_effects/side_effects.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/service.dart';
 import '../../models/entities/service_definition.dart';
+import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
 import '../../utils/extensions/extensions.dart';
 
@@ -45,8 +46,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
     final service = context.repository<ServiceModel, ServiceSearchModel>();
-    final adverseEvent =
-        context.repository<AdverseEventModel, AdverseEventSearchModel>();
+    final sideEffect =
+        context.repository<SideEffectModel, SideEffectSearchModel>();
 
     return MultiBlocProvider(
       providers: [
@@ -72,7 +73,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             householdMemberRepository: householdMember,
             projectBeneficiaryRepository: projectBeneficiary,
             taskDataRepository: task,
-            adverseEventDataRepository: adverseEvent,
+            sideEffectDataRepository: sideEffect,
           ),
         ),
         BlocProvider(
@@ -84,11 +85,11 @@ class BeneficiaryWrapperPage extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (_) => AdverseEventsBloc(
-            AdverseEventsState(
+          create: (_) => SideEffectsBloc(
+            SideEffectsState(
               isEditing: isEditing,
             ),
-            adverseEventRepository: adverseEvent,
+            sideEffectRepository: sideEffect,
           ),
         ),
       ],
@@ -109,12 +110,12 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               ))),
             child: BlocProvider(
               lazy: false,
-              create: (_) => AdverseEventsBloc(
-                AdverseEventsState(
+              create: (_) => SideEffectsBloc(
+                SideEffectsState(
                   isEditing: isEditing,
                 ),
-                adverseEventRepository: adverseEvent,
-              )..add(AdverseEventsSearchEvent(AdverseEventSearchModel(
+                sideEffectRepository: sideEffect,
+              )..add(SideEffectsSearchEvent(SideEffectSearchModel(
                   taskClientReferenceId: houseHoldOverviewState
                       .householdMemberWrapper.tasks
                       ?.map((e) => e.clientReferenceId)

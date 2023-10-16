@@ -3,7 +3,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
@@ -17,12 +16,14 @@ import '../../../widgets/localized.dart';
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
   final List<TaskModel>? taskData;
   final List<Cycle> projectCycles;
+  final IndividualModel? individualModel;
   // ignore: prefer_typing_uninitialized_variables
 
   const RecordDeliveryCycle({
     Key? key,
     this.taskData,
     required this.projectCycles,
+    required this.individualModel,
   }) : super(key: key);
 
   @override
@@ -97,69 +98,54 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                isExpanded = !isExpanded;
-                                              });
-                                            },
-                                            child: Text(
-                                              style: TextStyle(
-                                                fontSize: kPadding * 2,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary,
-                                              ),
-                                              isExpanded
-                                                  ? localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .hidePastCycles,
-                                                    )
-                                                  : localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .viewPastCycles,
-                                                    ),
-                                            ),
-                                          ),
-                                          !isExpanded
-                                              ? Icon(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isExpanded = !isExpanded;
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              onPressed: null,
+                                              child: Text(
+                                                style: TextStyle(
+                                                  fontSize: kPadding * 2,
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .secondary,
-                                                  Icons.keyboard_arrow_down,
-                                                )
-                                              : Icon(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                  Icons.keyboard_arrow_up,
                                                 ),
-                                        ],
+                                                isExpanded
+                                                    ? localizations.translate(
+                                                        i18.deliverIntervention
+                                                            .hidePastCycles,
+                                                      )
+                                                    : localizations.translate(
+                                                        i18.deliverIntervention
+                                                            .viewPastCycles,
+                                                      ),
+                                              ),
+                                            ),
+                                            !isExpanded
+                                                ? Icon(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                                    Icons.keyboard_arrow_down,
+                                                  )
+                                                : Icon(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                                    Icons.keyboard_arrow_up,
+                                                  ),
+                                          ],
+                                        ),
                                       ),
-                                      // DigitIconButton(
-                                      //   iconText: isExpanded
-                                      //       ? localizations.translate(
-                                      //           i18.deliverIntervention
-                                      //               .hidePastCycles,
-                                      //         )
-                                      //       : localizations.translate(
-                                      //           i18.deliverIntervention
-                                      //               .viewPastCycles,
-                                      //         ),
-                                      //   iconTextColor: DigitTheme
-                                      //       .instance.colorScheme.secondary,
-                                      //   onPressed: () {
-                                      //     setState(() {
-                                      //       isExpanded = !isExpanded;
-                                      //     });
-                                      //   },
-                                      // ),
                                     ),
                                   ),
                                 ]);
@@ -211,8 +197,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             DigitTable(
               selectedIndex: selectedIndex,
               headerList: headerList,
-              tableData: e.deliveries!.map(
-                (item) {
+              tableData: e.deliveries!.mapIndexed(
+                (index, item) {
                   final tasks = widget.taskData
                       ?.where((element) =>
                           element.additionalFields?.fields
@@ -242,22 +228,44 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                     ),
                     TableData(
                       localizations.translate(
-                        tasks?.status ?? Status.inComplete.toValue(),
+                        index == selectedIndex
+                            ? Status.toAdminister.toValue()
+                            : tasks?.status ?? Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
+                      style: TextStyle(
+                        color: index == selectedIndex
+                            ? null
+                            : tasks?.status ==
+                                    Status.administeredSuccess.toValue()
+                                ? DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant
+                                : DigitTheme.instance.colorScheme.error,
+                        fontWeight:
+                            index == selectedIndex ? FontWeight.w700 : null,
+                      ),
                     ),
                     TableData(
-                      tasks?.clientAuditDetails?.createdTime.toDateTime
-                              .getFormattedDate() ??
-                          '--',
+                      tasks?.status == Status.administeredFailed.toValue() ||
+                              (tasks?.additionalFields?.fields
+                                      .where((e) =>
+                                          e.key ==
+                                          AdditionalFieldsType.deliveryStrategy
+                                              .toValue())
+                                      .firstOrNull
+                                      ?.value ==
+                                  DeliverStrategyType.indirect.toValue())
+                          ? ' -- '
+                          : tasks?.clientAuditDetails?.createdTime.toDateTime
+                                  .getFormattedDate() ??
+                              ' -- ',
                       cellKey: 'completedOn',
                     ),
                   ]);
                 },
               ).toList(),
-              leftColumnWidth: 130,
-              rightColumnWidth: headerList.length * 87,
-              height: ((e.deliveries?.length ?? 0) + 1) * 62,
+              columnWidth: 115,
+              height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
             ),
           ],
         ),

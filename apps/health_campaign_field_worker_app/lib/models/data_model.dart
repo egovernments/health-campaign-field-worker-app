@@ -11,6 +11,7 @@ export 'entities/attributes.dart';
 export 'entities/beneficiary_type.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
+export 'entities/deliver_strategy_type.dart';
 export 'entities/document.dart';
 export 'entities/deliver_strategy_type.dart';
 export 'entities/facility.dart';
@@ -33,6 +34,7 @@ export 'entities/project_type.dart';
 export 'entities/service.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
+export 'entities/side_effect.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
@@ -160,7 +162,7 @@ enum DataModelType {
   stock,
   stockReconciliation,
   task,
-  adverseEvent,
+  sideEffect,
   serviceDefinition,
   service,
   complaints,

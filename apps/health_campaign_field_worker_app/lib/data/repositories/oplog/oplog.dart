@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:isar/isar.dart';
@@ -94,7 +93,15 @@ abstract class OpLogManager<T extends EntityModel> {
         .entityTypeEqualTo(type)
         .findAll();
 
-    oplogs = oplogs.sortedBy((element) => element.createdAt);
+    oplogs = oplogs
+        .sortedBy((element) => element.createdAt)
+        .where(
+          (element) =>
+              element.entityType != DataModelType.householdMember &&
+              element.entityType != DataModelType.service,
+          // Added Memeber and service so that we don't get the respose from the server
+        )
+        .toList();
 
     return oplogs.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
@@ -452,12 +459,12 @@ class TaskOpLogManager extends OpLogManager<TaskModel> {
   int? getRowVersion(TaskModel entity) => entity.rowVersion;
 }
 
-class AdverseEventOpLogManager extends OpLogManager<AdverseEventModel> {
-  AdverseEventOpLogManager(super.isar);
+class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
+  SideEffectOpLogManager(super.isar);
 
   @override
-  AdverseEventModel applyServerGeneratedIdToEntity(
-    AdverseEventModel entity,
+  SideEffectModel applyServerGeneratedIdToEntity(
+    SideEffectModel entity,
     String serverGeneratedId,
     int rowVersion,
   ) =>
@@ -467,14 +474,14 @@ class AdverseEventOpLogManager extends OpLogManager<AdverseEventModel> {
       );
 
   @override
-  String getClientReferenceId(AdverseEventModel entity) =>
+  String getClientReferenceId(SideEffectModel entity) =>
       entity.clientReferenceId;
 
   @override
-  String? getServerGeneratedId(AdverseEventModel entity) => entity.id;
+  String? getServerGeneratedId(SideEffectModel entity) => entity.id;
 
   @override
-  int? getRowVersion(AdverseEventModel entity) => entity.rowVersion;
+  int? getRowVersion(SideEffectModel entity) => entity.rowVersion;
 }
 
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {

@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../models/data_model.dart';
@@ -37,11 +38,19 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   bool doseAdministered = false;
   bool formSubmitted = false;
 
+  final clickedStatus = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    clickedStatus.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context);
-
+    final overViewBloc = context.read<HouseholdOverviewBloc>().state;
     // Define a list of TableHeader objects for the header of a table
     final headerListResource = [
       TableHeader(
@@ -73,134 +82,181 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                 height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      //todo in progress
-                      // final bool checkProvideDose =
-                      //     (form.control(_doseAdministeredKey).value as KeyValue)
-                      //         .key;
+                  child: ValueListenableBuilder(
+                    valueListenable: clickedStatus,
+                    builder: (context, bool isClicked, _) {
+                      return DigitElevatedButton(
+                        onPressed: isClicked
+                            ? null
+                            : () {
+                                if (form.control(_doseAdministeredKey).value ==
+                                    null) {
+                                  clickedStatus.value = false;
+                                  form
+                                      .control(_doseAdministeredKey)
+                                      .setErrors({'': true});
+                                }
+                                form.markAllAsTouched();
 
-                      // final doseAdministeredValue =
-                      //     form.control(_doseAdministeredKey).value;
+                                if (!form.valid)
+                                  return;
+                                else {
+                                  clickedStatus.value = true;
+                                  final bloc = context
+                                      .read<DeliverInterventionBloc>()
+                                      .state;
+                                  final event =
+                                      context.read<DeliverInterventionBloc>();
 
-                      // if (doseAdministeredValue != null &&
-                      //     doseAdministeredValue is KeyValue &&
-                      //     doseAdministeredValue.key == null) {
-                      //   form
-                      //       .control(_doseAdministeredKey)
-                      //       .setErrors({'': true});
-                      // }
+                                  if (doseAdministered && context.mounted) {
+                                    // Iterate through future deliveries
 
-                      final bloc =
-                          context.read<DeliverInterventionBloc>().state;
-                      final event = context.read<DeliverInterventionBloc>();
-
-                      final parent = context.router.parent() as StackRouter;
-                      // Pop twice to navigate back to the previous screen
-                      parent
-                        ..pop()
-                        ..pop();
-
-                      if (doseAdministered && context.mounted) {
-                        // Iterate through future deliveries
-
-                        for (var e in bloc.futureDeliveries!) {
-                          int doseIndex = e.id;
-                          final clientReferenceId = IdGen.i.identifier;
-                          final address = bloc.oldTask?.address;
-                          // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
-                          event.add(DeliverInterventionSubmitEvent(
-                            TaskModel(
-                              projectId: context.projectId,
-                              address: address?.copyWith(
-                                relatedClientReferenceId: clientReferenceId,
-                                id: null,
-                              ),
-                              status: Status.partiallyDelivered.toValue(),
-                              clientReferenceId: clientReferenceId,
-                              projectBeneficiaryClientReferenceId: bloc
-                                  .oldTask?.projectBeneficiaryClientReferenceId,
-                              tenantId: envConfig.variables.tenantId,
-                              rowVersion: 1,
-                              auditDetails: AuditDetails(
-                                createdBy: context.loggedInUserUuid,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              clientAuditDetails: ClientAuditDetails(
-                                createdBy: context.loggedInUserUuid,
-                                createdTime: context.millisecondsSinceEpoch(),
-                              ),
-                              resources: e.productVariants
-                                  ?.map((variant) => TaskResourceModel(
-                                        clientReferenceId: IdGen.i.identifier,
-                                        taskclientReferenceId:
-                                            clientReferenceId,
-                                        quantity: variant.quantity.toString(),
-                                        productVariantId:
-                                            variant.productVariantId,
-                                        auditDetails: AuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
+                                    for (var e in bloc.futureDeliveries!) {
+                                      int doseIndex = e.id;
+                                      final clientReferenceId =
+                                          IdGen.i.identifier;
+                                      final address = bloc.oldTask?.address;
+                                      // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
+                                      event.add(DeliverInterventionSubmitEvent(
+                                        TaskModel(
+                                          projectId: context.projectId,
+                                          address: address?.copyWith(
+                                            relatedClientReferenceId:
+                                                clientReferenceId,
+                                            id: null,
+                                          ),
+                                          status: Status.delivered.toValue(),
+                                          clientReferenceId: clientReferenceId,
+                                          projectBeneficiaryClientReferenceId: bloc
+                                              .oldTask
+                                              ?.projectBeneficiaryClientReferenceId,
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          rowVersion: 1,
+                                          auditDetails: AuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          resources: fetchProductVariant(
+                                            e,
+                                            overViewBloc.selectedIndividual,
+                                          )
+                                              ?.productVariants
+                                              ?.map((variant) =>
+                                                  TaskResourceModel(
+                                                    clientReferenceId:
+                                                        IdGen.i.identifier,
+                                                    tenantId: envConfig
+                                                        .variables.tenantId,
+                                                    taskclientReferenceId:
+                                                        clientReferenceId,
+                                                    quantity: variant.quantity
+                                                        .toString(),
+                                                    productVariantId: variant
+                                                        .productVariantId,
+                                                    isDelivered: true,
+                                                    auditDetails: AuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          additionalFields:
+                                              TaskAdditionalFields(
+                                            version: 1,
+                                            fields: [
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfDelivery
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfAdministration
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .dateOfVerification
+                                                    .toValue(),
+                                                DateTime.now()
+                                                    .millisecondsSinceEpoch
+                                                    .toString(),
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType.cycleIndex
+                                                    .toValue(),
+                                                "0${bloc.cycle}",
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType.doseIndex
+                                                    .toValue(),
+                                                "0$doseIndex",
+                                              ),
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .deliveryStrategy
+                                                    .toValue(),
+                                                e.deliveryStrategy,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        clientAuditDetails: ClientAuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
+                                        false,
+                                        context.boundary,
+                                      ));
+                                    }
+                                  }
+
+                                  final reloadState =
+                                      context.read<HouseholdOverviewBloc>();
+
+                                  Future.delayed(
+                                    const Duration(milliseconds: 1000),
+                                    () {
+                                      reloadState
+                                          .add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
+                                    },
+                                  ).then((value) => context.router.popAndPush(
+                                        HouseholdAcknowledgementRoute(
+                                          enableViewHousehold: true,
                                         ),
-                                      ))
-                                  .toList(),
-                              additionalFields: TaskAdditionalFields(
-                                version: 1,
-                                fields: [
-                                  AdditionalField(
-                                    'DateOfDelivery',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'DateOfAdministration',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'DateOfVerification',
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString(),
-                                  ),
-                                  AdditionalField(
-                                    'CycleIndex',
-                                    "0${bloc.cycle}",
-                                  ),
-                                  AdditionalField(
-                                    'DoseIndex',
-                                    "0$doseIndex",
-                                  ),
-                                  AdditionalField(
-                                    'DeliveryStrategy',
-                                    e.deliveryStrategy,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            false,
-                            context.boundary,
-                          ));
-                        }
-                      }
-                      // Navigate to the AcknowledgementRoute
-                      context.router.push(
-                        AcknowledgementRoute(enableViewHousehold: true),
+                                      ));
+                                }
+                              },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(i18.common.coreCommonNext),
+                          ),
+                        ),
                       );
                     },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonNext),
-                      ),
-                    ),
                   ),
                 ),
               ),
@@ -222,25 +278,15 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             localizations.translate(val.label),
                         options: Constants.yesNo,
                         isRequired: true,
-                        //TODO localisation
-                        errorMessage: "Required field",
+                        errorMessage: localizations.translate(
+                          i18.common.corecommonRequired,
+                        ),
                         onValueChange: (val) {
                           setState(() {
                             doseAdministered = val
                                 .key; // Update doseAdministered with setState
                           });
                         },
-                        // onChangeOfFormControl: (val) {
-                        //   // final value = formControl.value;
-
-                        //   setState(() {
-                        //     doseAdministered = val.value;
-                        //     // Update doseAdministered with setState
-                        //   });
-                        // print(value);
-                        // if (value == null) {
-                        //   formControl.setErrors({"errors": true});
-                        // }
                       ),
                     ],
                   ),
@@ -257,68 +303,78 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         );
 
                         return DigitCard(
-                          child: Column(
-                            children: [
-                              Text(
-                                localizations.translate(
-                                  i18.beneficiaryDetails.resourcesTobeProvided,
-                                ),
-                                style: theme.textTheme.displayMedium,
-                              ),
-                              DigitTableCard(
-                                element: {
-                                  localizations.translate(
-                                    i18.beneficiaryDetails.beneficiaryAge,
-                                  ): "2",
-                                },
-                              ),
-                              const Divider(),
-                              BlocBuilder<DeliverInterventionBloc,
-                                  DeliverInterventionState>(
-                                builder: (context, deliveryState) {
-                                  List<TableDataRow> tableDataRows =
-                                      deliveryState.futureDeliveries!.map((e) {
-                                    int doseIndex = deliveryState
-                                            .futureDeliveries!
-                                            .indexOf(e) +
+                          child: BlocBuilder<DeliverInterventionBloc,
+                              DeliverInterventionState>(
+                            builder: (context, deliveryState) {
+                              List<TableDataRow> tableDataRows =
+                                  deliveryState.futureDeliveries!.map((e) {
+                                int doseIndex =
+                                    deliveryState.futureDeliveries!.indexOf(e) +
                                         deliveryState.dose +
                                         1;
+                                List<String> skus = fetchProductVariant(
+                                  e,
+                                  overViewBloc.selectedIndividual,
+                                )!
+                                    .productVariants!
+                                    .map((ele) {
+                                  final pv = variant!.firstWhere(
+                                    (element) =>
+                                        element.id == ele.productVariantId,
+                                  );
 
-                                    return TableDataRow([
-                                      TableData(
-                                        'Dose $doseIndex',
-                                        cellKey: 'dose',
-                                      ),
-                                      ...e.productVariants!
-                                          .map(
-                                            (ele) => TableData(
-                                              variant!
-                                                  .where((element) =>
-                                                      element.id ==
-                                                      ele.productVariantId)
-                                                  .toList()
-                                                  .map((e) =>
-                                                      '${ele.quantity} - ${e.sku}')
-                                                  .toList()
-                                                  .join('+'),
-                                              cellKey: 'resources',
-                                            ),
-                                          )
-                                          .toList(),
-                                    ]);
-                                  }).toList();
+                                  return '${ele.quantity} - ${pv.sku.toString()}';
+                                }).toList();
 
-                                  return DigitTable(
+                                return TableDataRow([
+                                  TableData(
+                                    'Dose $doseIndex',
+                                    cellKey: 'dose',
+                                  ),
+                                  TableData(
+                                    skus.join(' + '),
+                                    cellKey: 'resources',
+                                  ),
+                                ]);
+                              }).toList();
+
+                              return Column(
+                                children: [
+                                  Text(
+                                    localizations.translate(
+                                      i18.beneficiaryDetails
+                                          .resourcesTobeProvided,
+                                    ),
+                                    style: theme.textTheme.displayMedium,
+                                  ),
+                                  DigitTableCard(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    topPadding: const EdgeInsets.only(top: 4.0),
+                                    element: {
+                                      localizations.translate(
+                                        i18.beneficiaryDetails.beneficiaryAge,
+                                      ): '${fetchProductVariant(
+                                        deliveryState.futureDeliveries?.first,
+                                        overViewBloc.selectedIndividual,
+                                      )?.condition?.split('<=age<').first} - ${fetchProductVariant(
+                                        deliveryState.futureDeliveries?.first,
+                                        overViewBloc.selectedIndividual,
+                                      )?.condition?.split('<=age<').last} months',
+                                    },
+                                    //[TODO:: Need to parse <=age< as an Expression
+                                  ),
+                                  const Divider(),
+                                  DigitTable(
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
-                                    leftColumnWidth: 130,
-                                    rightColumnWidth:
-                                        headerListResource.length * 17 * 6,
-                                    height: (tableDataRows.length + 2) * 60,
-                                  );
-                                },
-                              ),
-                            ],
+                                    columnWidth:
+                                        MediaQuery.of(context).size.width /
+                                            2.18,
+                                    height: (tableDataRows.length + 1) * 59.5,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         );
                       },

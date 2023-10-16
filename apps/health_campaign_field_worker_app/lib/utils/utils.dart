@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -143,34 +145,52 @@ performBackgroundService({
   }
 }
 
+String maskString(String input) {
+  // Define the character to use for masking (e.g., "*")
+  const maskingChar = '*';
+
+  // Create a new string with the same length as the input string
+  final maskedString =
+      List<String>.generate(input.length, (index) => maskingChar).join();
+
+  return maskedString;
+}
+
 class Coordinate {
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
 
   Coordinate(this.latitude, this.longitude);
 }
 
-double calculateDistance(Coordinate start, Coordinate end) {
+double? calculateDistance(Coordinate? start, Coordinate? end) {
   const double earthRadius = 6371.0; // Earth's radius in kilometers
 
   double toRadians(double degrees) {
     return degrees * pi / 180.0;
   }
 
-  double lat1Rad = toRadians(start.latitude);
-  double lon1Rad = toRadians(start.longitude);
-  double lat2Rad = toRadians(end.latitude);
-  double lon2Rad = toRadians(end.longitude);
+  if (start?.latitude != null &&
+      start?.longitude != null &&
+      end?.latitude != null &&
+      end?.longitude != null) {
+    double lat1Rad = toRadians(start!.latitude!);
+    double lon1Rad = toRadians(start.longitude!);
+    double lat2Rad = toRadians(end!.latitude!);
+    double lon2Rad = toRadians(end.longitude!);
 
-  double dLat = lat2Rad - lat1Rad;
-  double dLon = lon2Rad - lon1Rad;
+    double dLat = lat2Rad - lat1Rad;
+    double dLon = lon2Rad - lon1Rad;
 
-  double a = pow(sin(dLat / 2), 2) +
-      cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = earthRadius * c;
+    double a = pow(sin(dLat / 2), 2) +
+        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
 
-  return distance;
+    return distance;
+  }
+
+  return null;
 }
 
 Timer makePeriodicTimer(
@@ -252,7 +272,9 @@ bool checkEligibilityForActiveCycle(
 ) {
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
-              .firstWhereOrNull((e) => e.key == 'CycleIndex')
+              .firstWhereOrNull(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
               ?.value ??
           '1'
       : '1';
@@ -262,11 +284,11 @@ bool checkEligibilityForActiveCycle(
 
 /*Check for if the individual falls on the valid age category*/
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
-bool checkEligibilityForAgeAndAdverseEvent(
+bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,
   ProjectType? projectType,
   TaskModel? tasks,
-  List<AdverseEventModel>? adverseEvents,
+  List<SideEffectModel>? sideEffects,
 ) {
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
@@ -278,13 +300,13 @@ bool checkEligibilityForAgeAndAdverseEvent(
   if (currentCycle != null &&
       currentCycle.startDate != null &&
       currentCycle.endDate != null) {
-    bool recordedAdverseEvent = false;
-    if ((tasks != null) && adverseEvents != null && adverseEvents.isNotEmpty) {
+    bool recordedSideEffect = false;
+    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
-          tasks.clientReferenceId == adverseEvents.last.taskClientReferenceId
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
               ? tasks.clientAuditDetails?.createdTime
               : null;
-      recordedAdverseEvent = lastTaskTime != null &&
+      recordedSideEffect = lastTaskTime != null &&
           (lastTaskTime >= currentCycle.startDate! &&
               lastTaskTime <= currentCycle.endDate!);
 
@@ -292,7 +314,7 @@ bool checkEligibilityForAgeAndAdverseEvent(
               projectType?.validMaxAge != null
           ? totalAgeMonths >= projectType!.validMinAge! &&
                   totalAgeMonths <= projectType.validMaxAge!
-              ? recordedAdverseEvent
+              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
                   ? false
                   : true
               : false
@@ -337,9 +359,10 @@ bool checkStatus(
                 lastTaskCreatedTime <= currentCycle.endDate!;
 
         return isLastCycleRunning
-            ? lastTask.status == Status.partiallyDelivered.name
+            ? lastTask.status == Status.delivered.name
                 ? true
-                : diff.inHours >= 24
+                : diff.inHours >=
+                        24 //[TODO: Need to move gap between doses to config
                     ? true
                     : false
             : true;
@@ -347,9 +370,112 @@ bool checkStatus(
         return false;
       }
     } else {
-      return false;
+      return true;
     }
   } else {
     return false;
   }
+}
+
+bool recordedSideEffect(
+  Cycle? selectedCycle,
+  TaskModel? task,
+  List<SideEffectModel>? sideEffects,
+) {
+  if (selectedCycle != null &&
+      selectedCycle.startDate != null &&
+      selectedCycle.endDate != null) {
+    if ((task != null) && (sideEffects ?? []).isNotEmpty) {
+      final lastTaskCreatedTime =
+          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
+              ? task.clientAuditDetails?.createdTime
+              : null;
+
+      return lastTaskCreatedTime != null &&
+          lastTaskCreatedTime >= selectedCycle.startDate! &&
+          lastTaskCreatedTime <= selectedCycle.endDate!;
+    }
+  }
+
+  return false;
+}
+
+bool allDosesDelivered(
+  List<TaskModel>? tasks,
+  Cycle? selectedCycle,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel? individualModel,
+) {
+  if (selectedCycle == null ||
+      selectedCycle.id == 0 ||
+      (selectedCycle.deliveries ?? []).isEmpty) {
+    return true;
+  } else {
+    if ((tasks ?? []).isNotEmpty) {
+      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          tasks?.last.status != Status.delivered.toValue()) {
+        return true;
+      } else if (selectedCycle.id == lastCycle &&
+          tasks?.last.status == Status.delivered.toValue()) {
+        return false;
+      } else if ((sideEffects ?? []).isNotEmpty) {
+        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+}
+
+DoseCriteriaModel? fetchProductVariant(
+  DeliveryModel? currentDelivery,
+  IndividualModel? individualModel,
+) {
+  if (currentDelivery != null && individualModel != null) {
+    final individualAge = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            individualModel.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    );
+    final individualAgeInMonths =
+        individualAge.years * 12 + individualAge.months;
+    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+      final condition = criteria.condition;
+      if (condition != null) {
+        //{TODO: Expression package need to be parsed
+        final ageRange = condition.split("<=age<");
+        final minAge = int.parse(ageRange.first);
+        final maxAge = int.parse(ageRange.last);
+
+        return individualAgeInMonths >= minAge &&
+            individualAgeInMonths <= maxAge;
+      }
+
+      return false;
+    }).toList();
+
+    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+  }
+
+  return null;
 }

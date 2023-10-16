@@ -2,15 +2,13 @@
 
 import 'package:drift/drift.dart';
 
-class TaskResource extends Table {
-  TextColumn get clientReferenceId => text()();
-  TextColumn get taskclientReferenceId => text().nullable()();
-  TextColumn get taskId => text().nullable()();
+
+class SideEffect extends Table {
   TextColumn get id => text().nullable()();
-  TextColumn get productVariantId => text().nullable()();
-  TextColumn get quantity => text().nullable()();
-  BoolColumn get isDelivered => boolean().nullable()();
-  TextColumn get deliveryComment => text().nullable()();
+  TextColumn get projectId => text().nullable()();
+  TextColumn get taskClientReferenceId => text().nullable()();
+  IntColumn get reAttempts => integer().nullable()();
+  TextColumn get symptoms => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
@@ -19,16 +17,13 @@ class TaskResource extends Table {
   IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
+  TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted =>
-      boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-
+  
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => {
-        clientReferenceId,
-        auditCreatedBy,
-      };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

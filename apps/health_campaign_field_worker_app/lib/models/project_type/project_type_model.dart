@@ -58,16 +58,27 @@ class Cycle with _$Cycle {
 @freezed
 class DeliveryModel with _$DeliveryModel {
   const factory DeliveryModel({
+    List<DoseCriteriaModel>? doseCriteria,
     @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
     String? mandatoryWaitSinceLastDeliveryInDays,
-    @JsonKey(name: 'ProductVariants')
-    List<ProductVariantsModel>? productVariants,
     @JsonKey(name: 'deliveryStrategy') String? deliveryStrategy,
     @Default(0) int id,
   }) = _DeliveryModel;
 
   factory DeliveryModel.fromJson(Map<String, dynamic> json) =>
       _$DeliveryModelFromJson(json);
+}
+
+@freezed
+class DoseCriteriaModel with _$DoseCriteriaModel {
+  const factory DoseCriteriaModel({
+    @JsonKey(name: 'condition') String? condition,
+    @JsonKey(name: 'ProductVariants')
+    List<ProductVariantsModel>? productVariants,
+  }) = _DoseCriteriaModel;
+
+  factory DoseCriteriaModel.fromJson(Map<String, dynamic> json) =>
+      _$DoseCriteriaModelFromJson(json);
 }
 
 @freezed

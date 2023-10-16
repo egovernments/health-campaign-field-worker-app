@@ -93,7 +93,7 @@ class DeliverInterventionBloc
                       )
                       .value ==
                   DeliverStrategyType.indirect.toValue() &&
-              element.status == Status.partiallyDelivered.toValue())
+              element.status == Status.delivered.toValue())
           .toList();
 
       if (tasks.isNotEmpty) {
@@ -204,13 +204,13 @@ class DeliverInterventionBloc
       int currentDose = event.dose;
       Cycle? currentCycle = event.cycle;
 
-      if (currentCycle.deliveries != null) {
+      final deliveriesList = currentCycle.deliveries;
+
+      if (deliveriesList != null) {
         List<DeliveryModel> futureDeliveries = [];
         // Iterate over deliveries starting from the current dose
-        for (int index = currentDose;
-            index < currentCycle.deliveries!.length;
-            index++) {
-          var delivery = currentCycle.deliveries![index];
+        for (int index = currentDose; index < deliveriesList.length; index++) {
+          var delivery = deliveriesList[index];
 
           String? deliveryStrategy = delivery.deliveryStrategy;
 
@@ -250,11 +250,13 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
     Cycle cycle,
+    IndividualModel? individualModel,
   ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 
   const factory DeliverInterventionEvent.setActiveCycleDose(
     int lastDose,
     int lastCycle,
+    IndividualModel? individualModel,
     ProjectType projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
 }

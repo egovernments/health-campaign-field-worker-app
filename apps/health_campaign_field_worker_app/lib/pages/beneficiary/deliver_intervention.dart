@@ -96,11 +96,15 @@ class _DeliverInterventionPageState
                       List<ProductVariantsModel>? productVariants = projectState
                                   .projectType?.cycles?.isNotEmpty ==
                               true
-                          ? (projectState
-                              .projectType!
-                              .cycles![deliveryInterventionstate.cycle - 1]
-                              .deliveries?[deliveryInterventionstate.dose - 1]
-                              .productVariants)
+                          ? (fetchProductVariant(
+                              projectState
+                                  .projectType!
+                                  .cycles![deliveryInterventionstate.cycle - 1]
+                                  .deliveries?[deliveryInterventionstate
+                                      .dose -
+                                  1],
+                              state.selectedIndividual,
+                            )?.productVariants)
                           : projectState.projectType?.resources;
 
                       final int numberOfDoses = (projectState
@@ -114,9 +118,10 @@ class _DeliverInterventionPageState
                               0
                           : 0;
 
-                      final String? getDeliveryStrategy = projectState
-                                  .projectType?.cycles?.isNotEmpty ==
-                              true
+                      final String? getDeliveryStrategy = (projectState
+                                      .projectType?.cycles ??
+                                  [])
+                              .isNotEmpty
                           ? (projectState
                               .projectType
                               ?.cycles?[deliveryInterventionstate.cycle == 0
@@ -171,7 +176,9 @@ class _DeliverInterventionPageState
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
-                                                      'Resources delivered cannot be empty',
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .resourceDeliveredValidation),
                                                       true,
                                                       theme,
                                                     ),
@@ -185,7 +192,9 @@ class _DeliverInterventionPageState
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
-                                                      'Resources quantity cannot be 0',
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .resourceCannotBeZero),
                                                       true,
                                                       theme,
                                                     ),
@@ -225,7 +234,7 @@ class _DeliverInterventionPageState
                                                         label: localizations
                                                             .translate(
                                                           i18.common
-                                                              .coreCommonGoback,
+                                                              .coreCommonCancel,
                                                         ),
                                                         action: (context) =>
                                                             Navigator.of(
@@ -317,7 +326,9 @@ class _DeliverInterventionPageState
                                       },
                                     ),
                                     header: const Column(children: [
-                                      BackNavigationHelpHeaderWidget(),
+                                      BackNavigationHelpHeaderWidget(
+                                        showHelp: false,
+                                      ),
                                     ]),
                                     children: [
                                       Column(
@@ -352,13 +363,14 @@ class _DeliverInterventionPageState
                                                       deliveryInterventionstate
                                                               .dose -
                                                           1,
+                                                  stepRadius: 12.5,
                                                   steps: steps,
                                                   maxStepReached: 3,
                                                   lineLength:
                                                       MediaQuery.of(context)
                                                               .size
                                                               .width /
-                                                          5,
+                                                          steps.length,
                                                 ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
@@ -368,6 +380,14 @@ class _DeliverInterventionPageState
                                                       localizations.translate(
                                                     i18.householdDetails
                                                         .dateOfRegistrationLabel,
+                                                  ),
+                                                  confirmText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonOk,
+                                                  ),
+                                                  cancelText:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
                                                   ),
                                                   isRequired: false,
                                                 ),
@@ -562,7 +582,9 @@ class _DeliverInterventionPageState
                 taskclientReferenceId: clientReferenceId,
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
+                isDelivered: true,
                 taskId: task?.id,
+                tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
                 quantity: (((form.control(_quantityDistributedKey) as FormArray)
                         .value)?[productvariantList.indexOf(e)])
@@ -581,32 +603,32 @@ class _DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.delivered.toValue(),
+      status: Status.administeredSuccess.toValue(),
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
           AdditionalField(
-            'DateOfDelivery',
+            AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'DateOfAdministration',
+            AdditionalFieldsType.dateOfAdministration.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'DateOfVerification',
+            AdditionalFieldsType.dateOfVerification.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            'CycleIndex',
+            AdditionalFieldsType.cycleIndex.toValue(),
             "0${cycle ?? 1}",
           ),
           AdditionalField(
-            'DoseIndex',
+            AdditionalFieldsType.doseIndex.toValue(),
             "0${dose ?? 1}",
           ),
           AdditionalField(
-            'DeliveryStrategy',
+            AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
         ],
@@ -632,8 +654,9 @@ class _DeliverInterventionPageState
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
-        value: 'Cycle ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
-            .toString(),
+        value:
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
@@ -654,7 +677,6 @@ class _DeliverInterventionPageState
                                 .elementAt(_controllers.indexOf(e))
                                 .productVariantId,
                       )
-                    // variants[_controllers.indexOf(e)]
                     : null,
               )),
         ],

@@ -26,10 +26,9 @@ import 'package:battery_plus/battery_plus.dart';
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
+Future<Isar> isarFuture = Constants().isar;
 
-Future<void> initializeService(
-  dio,
-) async {
+Future<void> initializeService(dio, isar) async {
   if (Isar.getInstance('HCM') == null) {
     final info = await PackageInfo.fromPlatform();
     await Constants().initialize(info.version);
@@ -107,17 +106,18 @@ void onStart(ServiceInstance service) async {
   await envConfig.initialize();
 
   _dio = DioClient().dio;
+  final _isar = await isarFuture;
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
 
-  final appConfiguration =
-      await Constants().isar.appConfigurations.where().findAll();
+  final appConfiguration = await _isar.appConfigurations.where().findAll();
   final interval =
       appConfiguration.first.backgroundServiceConfig?.serviceInterval;
   final frequencyCount =
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
 
   if (interval != null) {
+    int i = 0;
     makePeriodicTimer(
       Duration(seconds: interval),
       (timer) async {
@@ -133,7 +133,7 @@ void onStart(ServiceInstance service) async {
               FlutterLocalNotificationsPlugin();
           if (frequencyCount != null) {
             final serviceRegistryList =
-                await Constants().isar.serviceRegistrys.where().findAll();
+                await _isar.serviceRegistrys.where().findAll();
             if (serviceRegistryList.isNotEmpty) {
               final bandwidthPath = serviceRegistryList
                   .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
@@ -178,14 +178,13 @@ void onStart(ServiceInstance service) async {
                   ),
                 ),
               );
-              const NetworkManager(
+              final isSyncCompleted = await const NetworkManager(
                 configuration: NetworkManagerConfiguration(
                   persistenceConfig: PersistenceConfiguration.offlineFirst,
                 ),
               ).performSync(
                 localRepositories:
-                    Constants.getLocalRepositories(_sql, Constants().isar)
-                        .toList(),
+                    Constants.getLocalRepositories(_sql, _isar).toList(),
                 remoteRepositories: Constants.getRemoteRepositories(
                   _dio,
                   getActionMap(serviceRegistryList),
@@ -193,6 +192,16 @@ void onStart(ServiceInstance service) async {
                 bandwidthModel: bandwidthModel,
                 service: service,
               );
+
+              print(isSyncCompleted);
+              print("-----SYNC Completed-----");
+              i++;
+              // final isAppInActive =
+              //     await LocalSecureStore.instance.isAppInActive;
+
+              // if (isSyncCompleted && i >= 2 && isAppInActive) {
+              //   service.stopSelf();
+              // }
             }
           }
         }

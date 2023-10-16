@@ -17,7 +17,19 @@ class DigitOutLineButton extends StatelessWidget {
     final theme = Theme.of(context);
     return OutlinedButton(
       onPressed: onPressed,
-      style: buttonStyle,
+      style: onPressed != null
+          ? buttonStyle
+          : OutlinedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: BorderSide(
+                width: 1.0,
+                color: theme.colorScheme.outline,
+              ),
+              minimumSize: Size(
+                MediaQuery.of(context).size.width / 1.25,
+                50,
+              ),
+            ),
       child: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15),
         child: Text(

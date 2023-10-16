@@ -307,11 +307,11 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    AdverseEventsRoute.name: (routeData) {
-      final args = routeData.argsAs<AdverseEventsRouteArgs>();
+    SideEffectsRoute.name: (routeData) {
+      final args = routeData.argsAs<SideEffectsRouteArgs>();
       return MaterialPageX<List<TaskModel>>(
         routeData: routeData,
-        child: AdverseEventsPage(
+        child: SideEffectsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -363,6 +363,18 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
+        ),
+      );
+    },
+    HouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
+          orElse: () => const HouseholdAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: HouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
         ),
       );
     },
@@ -629,8 +641,8 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
-                  AdverseEventsRoute.name,
-                  path: 'adverse-events',
+                  SideEffectsRoute.name,
+                  path: 'side-effects',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -651,6 +663,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   RecordPastDeliveryDetailsRoute.name,
                   path: 'record-past-delivery-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  HouseholdAcknowledgementRoute.name,
+                  path: 'household-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1735,17 +1752,17 @@ class DeliverInterventionRouteArgs {
 }
 
 /// generated route for
-/// [AdverseEventsPage]
-class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
-  AdverseEventsRoute({
+/// [SideEffectsPage]
+class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
+  SideEffectsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
     required List<TaskModel> tasks,
     bool isEditing = false,
   }) : super(
-          AdverseEventsRoute.name,
-          path: 'adverse-events',
-          args: AdverseEventsRouteArgs(
+          SideEffectsRoute.name,
+          path: 'side-effects',
+          args: SideEffectsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             tasks: tasks,
@@ -1753,11 +1770,11 @@ class AdverseEventsRoute extends PageRouteInfo<AdverseEventsRouteArgs> {
           ),
         );
 
-  static const String name = 'AdverseEventsRoute';
+  static const String name = 'SideEffectsRoute';
 }
 
-class AdverseEventsRouteArgs {
-  const AdverseEventsRouteArgs({
+class SideEffectsRouteArgs {
+  const SideEffectsRouteArgs({
     this.key,
     this.appLocalizations,
     required this.tasks,
@@ -1774,7 +1791,7 @@ class AdverseEventsRouteArgs {
 
   @override
   String toString() {
-    return 'AdverseEventsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
   }
 }
 
@@ -1928,6 +1945,46 @@ class RecordPastDeliveryDetailsRouteArgs {
   @override
   String toString() {
     return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
+  }
+}
+
+/// generated route for
+/// [HouseholdAcknowledgementPage]
+class HouseholdAcknowledgementRoute
+    extends PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
+  HouseholdAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+  }) : super(
+          HouseholdAcknowledgementRoute.name,
+          path: 'household-acknowledgement',
+          args: HouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+        );
+
+  static const String name = 'HouseholdAcknowledgementRoute';
+}
+
+class HouseholdAcknowledgementRouteArgs {
+  const HouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

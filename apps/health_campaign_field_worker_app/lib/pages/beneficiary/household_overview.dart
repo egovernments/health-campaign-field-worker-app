@@ -29,6 +29,13 @@ class _HouseholdOverviewPageState
     extends LocalizedState<HouseholdOverviewPage> {
   @override
   void initState() {
+    final bloc = context.read<HouseholdOverviewBloc>();
+    bloc.add(
+      HouseholdOverviewReloadEvent(
+        projectId: context.projectId,
+        projectBeneficiaryType: context.beneficiaryType,
+      ),
+    );
     super.initState();
   }
 
@@ -211,12 +218,14 @@ class _HouseholdOverviewPageState
                                         alignment: Alignment.centerLeft,
                                         child: DigitIconButton(
                                           icon: state.tasks?.first.status ==
-                                                  Status.delivered.toValue()
+                                                  Status.administeredSuccess
+                                                      .toValue()
                                               ? Icons.check_circle
                                               : Icons.info_rounded,
                                           iconText: localizations.translate(
                                             state.tasks?.first.status ==
-                                                    Status.delivered.toValue()
+                                                    Status.administeredSuccess
+                                                        .toValue()
                                                 ? i18.householdOverView
                                                     .householdOverViewDeliveredIconLabel
                                                 : i18.householdOverView
@@ -224,7 +233,8 @@ class _HouseholdOverviewPageState
                                           ),
                                           iconTextColor:
                                               state.tasks?.first.status ==
-                                                      Status.delivered.toValue()
+                                                      Status.administeredSuccess
+                                                          .toValue()
                                                   ? DigitTheme
                                                       .instance
                                                       .colorScheme
@@ -233,7 +243,8 @@ class _HouseholdOverviewPageState
                                                       .colorScheme.error,
                                           iconColor:
                                               state.tasks?.first.status ==
-                                                      Status.delivered.toValue()
+                                                      Status.administeredSuccess
+                                                          .toValue()
                                                   ? DigitTheme
                                                       .instance
                                                       .colorScheme
@@ -311,11 +322,11 @@ class _HouseholdOverviewPageState
                                                     projectBeneficiary.first
                                                         .clientReferenceId)
                                                 .toList();
-                                            final adverseEventData = taskdata !=
+                                            final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty
                                                 ? state.householdMemberWrapper
-                                                    .adverseEvents
+                                                    .sideEffects
                                                     ?.where((element) =>
                                                         element
                                                             .taskClientReferenceId ==
@@ -361,6 +372,7 @@ class _HouseholdOverviewPageState
                                               isHead: isHead,
                                               individual: e,
                                               tasks: taskdata,
+                                              sideEffects: sideEffectData,
                                               editMemberAction: () async {
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
@@ -494,23 +506,18 @@ class _HouseholdOverviewPageState
                                                           .projectType
                                                           ?.cycles !=
                                                       null
-                                                  ? !checkEligibilityForAgeAndAdverseEvent(
-                                                        DigitDOBAge(
-                                                          years: ageInYears,
-                                                          months: ageInMonths,
-                                                        ),
-                                                        projectState
-                                                            .projectType,
-                                                        (taskdata ?? [])
-                                                                .isNotEmpty
-                                                            ? taskdata?.last
-                                                            : null,
-                                                        adverseEventData,
-                                                      ) &&
-                                                      !checkStatus(
-                                                        taskdata,
-                                                        currentCycle,
-                                                      )
+                                                  ? !checkEligibilityForAgeAndSideEffect(
+                                                      DigitDOBAge(
+                                                        years: ageInYears,
+                                                        months: ageInMonths,
+                                                      ),
+                                                      projectState.projectType,
+                                                      (taskdata ?? [])
+                                                              .isNotEmpty
+                                                          ? taskdata?.last
+                                                          : null,
+                                                      sideEffectData,
+                                                    )
                                                   : false,
                                               // TODO Need to handle the null check
                                               name: e.name?.givenName ?? ' - ',
@@ -536,7 +543,7 @@ class _HouseholdOverviewPageState
                                                               DateTime.now(),
                                                         ).months) ??
                                                   0,
-                                              gender: e.gender?.name ?? ' - ',
+                                              gender: e.gender?.name,
                                               isBeneficiaryRefused:
                                                   isBeneficiaryRefused &&
                                                       !checkStatus(
@@ -601,7 +608,7 @@ class _HouseholdOverviewPageState
                                         i18.householdOverView
                                             .householdOverViewAddActionText,
                                       ),
-                                      icon: Icons.add,
+                                      icon: Icons.add_circle,
                                     ),
                                   ),
                                 ],
@@ -621,7 +628,8 @@ class _HouseholdOverviewPageState
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: state.tasks?.first.status == Status.delivered.toValue()
+                  child: state.tasks?.first.status ==
+                          Status.administeredSuccess.toValue()
                       ? DigitOutLineButton(
                           label: localizations.translate(
                             i18.memberCard.deliverDetailsUpdateLabel,

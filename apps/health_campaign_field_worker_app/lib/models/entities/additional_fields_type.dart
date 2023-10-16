@@ -5,9 +5,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 enum AdditionalFieldsType {
   @MappableValue("DeliveryStrategy")
   deliveryStrategy,
-  @MappableValue("CycleIndex")
+  @MappableValue("cycleIndex")
   cycleIndex,
-  @MappableValue("DoseIndex")
+  @MappableValue("doseIndex")
   doseIndex,
+  @MappableValue("dateOfVerification")
+  dateOfVerification,
+  @MappableValue("dateOfAdministration")
+  dateOfAdministration,
+  @MappableValue("dateOfDelivery")
+  dateOfDelivery,
   ;
 }

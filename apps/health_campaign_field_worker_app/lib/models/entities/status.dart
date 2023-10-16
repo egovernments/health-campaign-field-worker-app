@@ -7,11 +7,19 @@ enum Status {
   delivered,
   @MappableValue("NOT_DELIVERED")
   notDelivered,
+  @MappableValue("VISITED")
+  visited,
+  @MappableValue("NOT_VISITED")
+  notVisited,
   @MappableValue("BENEFICIARY_REFUSED")
   beneficiaryRefused,
-  @MappableValue("PARTIALLY_DELIVERED")
-  partiallyDelivered,
+  @MappableValue("ADMINISTERED_SUCCESS")
+  administeredSuccess,
+  @MappableValue("ADMINISTERED_FAILED")
+  administeredFailed,
   @MappableValue("IN_COMPLETE")
   inComplete,
+  @MappableValue("TO_ADMINISTER")
+  toAdminister,
   ;
 }

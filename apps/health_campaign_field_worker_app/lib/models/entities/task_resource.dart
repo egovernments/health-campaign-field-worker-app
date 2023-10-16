@@ -9,29 +9,28 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-  
+
   TaskResourceSearchModel({
     this.id,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   TaskResourceSearchModel.ignoreDeleted({
     this.id,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel {
-
   static const schemaName = 'TaskResource';
 
   final String clientReferenceId;
-  final String taskclientReferenceId;
+  final String? taskclientReferenceId;
   final String? taskId;
   final String? id;
   final String? productVariantId;
@@ -45,7 +44,7 @@ class TaskResourceModel extends EntityModel {
   TaskResourceModel({
     this.additionalFields,
     required this.clientReferenceId,
-    required this.taskclientReferenceId,
+    this.taskclientReferenceId,
     this.taskId,
     this.id,
     this.productVariantId,
@@ -54,9 +53,10 @@ class TaskResourceModel extends EntityModel {
     this.deliveryComment,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -80,7 +80,7 @@ class TaskResourceModel extends EntityModel {
       deliveryComment: Value(deliveryComment),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 

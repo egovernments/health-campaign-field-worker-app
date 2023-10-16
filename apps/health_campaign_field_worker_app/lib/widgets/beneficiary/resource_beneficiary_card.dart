@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/product_variant/product_variant.dart';
-import '../localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../localized.dart';
 
 class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final void Function(int) onDelete;
@@ -33,7 +33,7 @@ class _ResourceBeneficiaryCardState
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.background,
+        color: DigitTheme.instance.colorScheme.surface,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,
@@ -52,9 +52,9 @@ class _ResourceBeneficiaryCardState
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
                   return DigitReactiveDropdown(
-                    label: localizations.translate(
+                    label: '${localizations.translate(
                       i18.deliverIntervention.resourceDeliveredLabel,
-                    ),
+                    )}*',
                     menuItems: productVariants,
                     formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {

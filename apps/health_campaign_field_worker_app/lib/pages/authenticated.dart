@@ -56,14 +56,28 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     final theme = Theme.of(context);
 
-                    return TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onPrimary,
-                      ),
-                      onPressed: () {
+                    return GestureDetector(
+                      onTap: () {
                         ctx.router.navigate(const BoundarySelectionRoute());
                       },
-                      child: Text(boundaryName),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: theme.colorScheme.surface,
+                              padding: EdgeInsets.zero,
+                            ),
+                            onPressed: () {
+                              ctx.router
+                                  .navigate(const BoundarySelectionRoute());
+                            },
+                            child: Text(boundaryName),
+                            // child: Text(boundaryName),
+                          ),
+                          const Icon(Icons.arrow_drop_down_outlined),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -95,8 +109,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           .repository<IndividualModel, IndividualSearchModel>(),
                       taskDataRepository:
                           context.repository<TaskModel, TaskSearchModel>(),
-                      adverseEventDataRepository: context.repository<
-                          AdverseEventModel, AdverseEventSearchModel>(),
+                      sideEffectDataRepository: context
+                          .repository<SideEffectModel, SideEffectSearchModel>(),
                     )..add(const SearchHouseholdsClearEvent());
                   },
                 ),
@@ -137,7 +151,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.stockReconciliation:
                                   case DataModelType.service:
                                   case DataModelType.complaints:
-                                  case DataModelType.adverseEvent:
+                                  case DataModelType.sideEffect:
                                     return true;
                                   default:
                                     return false;
@@ -170,7 +184,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.stock:
                                   case DataModelType.stockReconciliation:
                                   case DataModelType.complaints:
-                                  case DataModelType.adverseEvent:
+                                  case DataModelType.sideEffect:
                                     return true;
                                   default:
                                     return false;

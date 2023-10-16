@@ -13,7 +13,7 @@ const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
-const adverseEvents = AdverseEvents();
+
 const projectSelection = ProjectSelection();
 const warehouseDetails = WarehouseDetails();
 const stockDetails = StockDetails();
@@ -49,9 +49,13 @@ class Common {
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
+  String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
+
   String get corecommonclose => 'CORE_COMMON_CLOSE';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
+
+  String get coreCommonNA => 'CORE_COMMON_NA';
 
   String get coreCommonProfile => 'CORE_COMMON_PROFILE';
 
@@ -85,6 +89,8 @@ class Common {
 
   String get coreCommonNo => 'CORE_COMMON_NO';
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
+
+  String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 }
 
 class Login {
@@ -124,6 +130,19 @@ class Checklist {
   String get checklistdate => 'CHECKLIST_DATE';
 
   String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
+
+  String get notSelectedKey => 'NOT_SELECTED';
+
+  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
+
+  String get checklistBackDialogDescription =>
+      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
+
+  String get checklistBackDialogPrimaryAction =>
+      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
+
+  String get checklistBackDialogSecondaryAction =>
+      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 }
 
 class ForgotPassword {
@@ -173,6 +192,9 @@ class SearchBeneficiary {
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
@@ -219,6 +241,7 @@ class BeneficiaryDetails {
       'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+  String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
 }
 
 class IndividualDetails {
@@ -354,6 +377,8 @@ class HouseholdOverView {
 
   String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
 
+  String get viewDeliveryLabel => 'VIEW_DELIVERY_DETAILS_LABEL';
+
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }
@@ -446,6 +471,7 @@ class DeliverIntervention {
   String get hidePastCycles => 'DELIVER_INTERVENTION_HIDE_PAST_CYCLES';
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
+  String get cycle => 'DELIVERY_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
@@ -453,26 +479,7 @@ class DeliverIntervention {
   //[todo] need to change the 24
   String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
-}
-
-class AdverseEvents {
-  const AdverseEvents();
-
-  String get adverseEventsLabel => 'ADVERSE_EVENTS_LABEL';
-
-  String get sideEffectsLabel => 'SIDE_EFFECTS_LABEL';
-
-  String get selectSymptomsLabel => 'SELECT_SYMPTOMS_LABEL';
-
-  String get resourceHeaderLabel => 'RESOURCE_HEADER_LABEL';
-
-  String get resourceCountHeaderLabel => 'RESOURCE_COUNT_HEADER_LABEL';
-
-  String get resourcesAdministeredLabel => 'RESOURCES_ADMINISTERED_LABEL';
-
-  String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
-
-  String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
+  String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 }
 
 class ProjectSelection {

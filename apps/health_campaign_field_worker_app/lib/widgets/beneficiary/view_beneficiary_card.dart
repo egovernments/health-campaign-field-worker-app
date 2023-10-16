@@ -45,7 +45,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  bool _isCardExpanded = false;
+  bool _isCardExpanded = true;
 
   bool get isCardExpanded => _isCardExpanded;
 
@@ -105,8 +105,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 element.projectBeneficiaryClientReferenceId ==
                 projectBeneficiary.first.clientReferenceId)
             .toList();
-        final adverseEvents = taskdata != null && taskdata.isNotEmpty
-            ? householdMember.adverseEvents
+        final sideEffects = taskdata != null && taskdata.isNotEmpty
+            ? householdMember.sideEffects
                 ?.where((element) =>
                     element.taskClientReferenceId ==
                     taskdata.last.clientReferenceId)
@@ -125,14 +125,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               DateTime.now(),
         ).months;
 
-        final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
             years: ageInYears,
             months: ageInMonths,
           ),
           bloc.projectType,
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
-          adverseEvents,
+          sideEffects,
+        );
+        final isSideEffectRecorded = recordedSideEffect(
+          currentCycle,
+          (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
+          sideEffects,
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
 
@@ -183,7 +188,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'age',
           ),
           TableData(
-            e.gender?.name ?? '',
+            e.gender?.name ?? '--',
             cellKey: 'gender',
           ),
         ];
@@ -212,14 +217,14 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           DateTime.now(),
     ).months;
 
-    final isNotEligible = !checkEligibilityForAgeAndAdverseEvent(
+    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
       DigitDOBAge(
         years: ageInYears,
         months: ageInMonths,
       ),
       bloc.projectType,
       householdMember.tasks?.last,
-      householdMember.adverseEvents,
+      householdMember.sideEffects,
     );
 
     final isBeneficiaryRefused =
@@ -243,14 +248,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.city,
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
-                  subtitle:
-                      '${householdMember.household.memberCount ?? 1} Members \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts)'}',
+                  subtitle: widget.distance != null
+                      ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}  \n ${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                      : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused
-                          ? Status.delivered.toValue()
-                          : Status.notDelivered.toValue()
+                          ? Status.visited.toValue()
+                          : Status.notVisited.toValue()
                       : null,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
@@ -272,11 +278,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             child: DigitTable(
               headerList: filteredHeaderList,
               tableData: tableData,
-              leftColumnWidth: 130,
-              rightColumnWidth: filteredHeaderList.length * 17 * 6,
-              height: householdMember.members.length <= 5
-                  ? (householdMember.members.length + 1) * 57
-                  : 6 * 57,
+              columnWidth: 130,
+              height: householdMember.members.length == 1
+                  ? 61 * 2
+                  : householdMember.members.length <= 4
+                      ? (householdMember.members.length + 1) * 58
+                      : 5 * 60,
+              scrollPhysics: householdMember.members.length <= 4
+                  ? const NeverScrollableScrollPhysics()
+                  : const ClampingScrollPhysics(),
             ),
           ),
           Container(
@@ -304,20 +314,20 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     bool isBeneficiaryRefused,
     bool isStatusReset,
   ) {
-    if (isNotEligible && !isStatusReset) {
+    if (isNotEligible) {
       return 'Not Eligible';
     } else if (taskdata != null) {
       if (taskdata.isEmpty) {
-        return localizations.translate(Status.notDelivered.toValue());
+        return localizations.translate(Status.notVisited.toValue());
       } else if (isBeneficiaryRefused && !isStatusReset) {
         return localizations.translate(Status.beneficiaryRefused.toValue());
       } else if (isStatusReset) {
-        return localizations.translate(Status.notDelivered.toValue());
+        return localizations.translate(Status.notVisited.toValue());
       } else {
-        return localizations.translate(Status.delivered.toValue());
+        return localizations.translate(Status.visited.toValue());
       }
     } else {
-      return localizations.translate(Status.notDelivered.toValue());
+      return localizations.translate(Status.notVisited.toValue());
     }
   }
 
