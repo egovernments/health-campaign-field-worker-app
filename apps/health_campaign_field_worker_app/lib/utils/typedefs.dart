@@ -1,5 +1,6 @@
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
+import '../models/entities/user.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;

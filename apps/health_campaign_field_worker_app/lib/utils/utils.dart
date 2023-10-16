@@ -1,482 +1,293 @@
-library app_utils;
-
-import 'dart:async';
-import 'dart:math';
-
 import 'package:collection/collection.dart';
-import 'dart:math';
-
-import 'package:collection/collection.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:drift/drift.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:uuid/uuid.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
-import '../blocs/search_households/search_households.dart';
-import '../data/local_store/secure_store/secure_store.dart';
+import '../blocs/app_initialization/app_initialization.dart';
+import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
+import '../data/local_store/no_sql/schema/oplog.dart';
+import '../data/local_store/no_sql/schema/project_types.dart';
+import '../data/local_store/no_sql/schema/row_versions.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/boundary.dart';
+import '../data/repositories/local/facility.dart';
+import '../data/repositories/local/household.dart';
+import '../data/repositories/local/houshold_member.dart';
+import '../data/repositories/local/individual.dart';
+import '../data/repositories/local/pgr_service.dart';
+import '../data/repositories/local/product_variant.dart';
+import '../data/repositories/local/project.dart';
+import '../data/repositories/local/project_beneficiary.dart';
+import '../data/repositories/local/project_facility.dart';
+import '../data/repositories/local/project_resource.dart';
+import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/service.dart';
+import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/side_effect.dart';
+import '../data/repositories/local/stock.dart';
+import '../data/repositories/local/stock_reconciliation.dart';
+import '../data/repositories/local/task.dart';
+import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/boundary.dart';
+import '../data/repositories/remote/facility.dart';
+import '../data/repositories/remote/household.dart';
+import '../data/repositories/remote/household_member.dart';
+import '../data/repositories/remote/individual.dart';
+import '../data/repositories/remote/pgr_service.dart';
+import '../data/repositories/remote/product_variant.dart';
+import '../data/repositories/remote/project_beneficiary.dart';
+import '../data/repositories/remote/project_facility.dart';
+import '../data/repositories/remote/project_product_variant.dart';
+import '../data/repositories/remote/project_resource.dart';
+import '../data/repositories/remote/project_staff.dart';
+import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/service.dart';
+import '../data/repositories/remote/service_definition.dart';
+import '../data/repositories/remote/side_effect.dart';
+import '../data/repositories/remote/stock.dart';
+import '../data/repositories/remote/stock_reconciliation.dart';
+import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
-import '../models/project_type/project_type_model.dart';
 
-export 'app_exception.dart';
-export 'constants.dart';
-export 'extensions/extensions.dart';
-
-Expression<bool> buildAnd(Iterable<Expression<bool?>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value & element);
-
-  return result.equals(true);
-}
-
-Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value | element);
-
-  return result.equals(true);
-}
-
-class IdGen {
-  static const IdGen _instance = IdGen._internal();
-
-  static IdGen get instance => _instance;
-
-  /// Shorthand for [instance]
-  static IdGen get i => instance;
-
-  final Uuid uuid;
-
-  const IdGen._internal() : uuid = const Uuid();
-
-  String get identifier => uuid.v1();
-}
-
-class CustomValidator {
-  /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(AbstractControl<dynamic> control) {
-    return control.value == null || control.value.toString().length >= 2
-        ? null
-        : {'Min2 characters Required': true};
+class Constants {
+  late Future<Isar> _isar;
+  late String _version;
+  static final Constants _instance = Constants._();
+  Constants._() {
+    _isar = openIsar();
+  }
+  factory Constants() {
+    return _instance;
+  }
+  Future initialize(version) async {
+    await _initializeIsar(version);
   }
 
-  static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
+  String get version {
+    return _version;
+  }
+
+  Future<Isar> get isar {
+    return _isar;
+  }
+
+  Future<Isar> openIsar() async {
+    if (Isar.instanceNames.isEmpty) {
+      final directory = await getApplicationDocumentsDirectory();
+
+      return await Isar.open(
+        [
+          ServiceRegistrySchema,
+          LocalizationWrapperSchema,
+          AppConfigurationSchema,
+          OpLogSchema,
+          ProjectTypeListCycleSchema,
+          RowVersionListSchema,
+        ],
+        name: 'HCM',
+        inspector: true,
+        directory: directory.path,
+      );
+    } else {
+      return await Future.value(Isar.getInstance());
+    }
+  }
+
+  static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const String projectSearchApiPath = '/project/v1/_search';
+
+  static List<LocalRepository> getLocalRepositories(
+    LocalSqlDataStore sql,
+    Isar isar,
   ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return null;
-    }
-
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
-
-    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
-
-    return {'mobileNumber': true};
+    return [
+      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
+      FacilityLocalRepository(sql, FacilityOpLogManager(isar)),
+      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
+      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
+      ProjectBeneficiaryLocalRepository(
+        sql,
+        ProjectBeneficiaryOpLogManager(
+          isar,
+        ),
+      ),
+      ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
+      ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
+      ),
+      ServiceDefinitionLocalRepository(
+        sql,
+        ServiceDefinitionOpLogManager(isar),
+      ),
+      ServiceLocalRepository(
+        sql,
+        ServiceOpLogManager(isar),
+      ),
+      ProjectResourceLocalRepository(
+        sql,
+        ProjectResourceOpLogManager(isar),
+      ),
+      ProductVariantLocalRepository(
+        sql,
+        ProductVariantOpLogManager(isar),
+      ),
+      BoundaryLocalRepository(
+        sql,
+        BoundaryOpLogManager(isar),
+      ),
+      PgrServiceLocalRepository(
+        sql,
+        PgrServiceOpLogManager(isar),
+      ),
+    ];
   }
 
-  static Map<String, dynamic>? validStockCount(
-    AbstractControl<dynamic> control,
+  Future<void> _initializeIsar(version) async {
+    _isar = Constants().isar;
+
+    final isar = await _isar;
+    final appConfigs = await isar.appConfigurations.where().findAll();
+    final config = appConfigs.firstOrNull;
+
+    final enableCrashlytics =
+        config?.firebaseConfig?.enableCrashlytics ?? false;
+
+    _version = version;
+  }
+
+  static List<RemoteRepository> getRemoteRepositories(
+    Dio dio,
+    Map<DataModelType, Map<ApiOperation, String>> actionMap,
   ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return {'required': true};
-    }
-
-    var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 0) {
-      return {'min': true};
-    } else if (parsed > 10000) {
-      return {'max': true};
-    }
-
-    return null;
-  }
-}
-
-setBgRunning(bool isBgRunning) async {
-  final localSecureStore = LocalSecureStore.instance;
-  await localSecureStore.setBackgroundService(isBgRunning);
-}
-
-performBackgroundService({
-  BuildContext? context,
-  required bool stopService,
-  required bool isBackground,
-}) async {
-  final connectivityResult = await (Connectivity().checkConnectivity());
-
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
-  final service = FlutterBackgroundService();
-  var isRunning = await service.isRunning();
-
-  if (stopService) {
-    if (isRunning) {
-      if (!isBackground && context != null) {
-        if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
-        }
-      }
-    }
-  } else {
-    if (!isRunning && isOnline) {
-      service.startService();
-      if (context != null) {
-        DigitToast.show(
-          context!,
-          options: DigitToastOptions(
-            'Background Service stated',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
-      }
-    }
-  }
-}
-
-String maskString(String input) {
-  // Define the character to use for masking (e.g., "*")
-  const maskingChar = '*';
-
-  // Create a new string with the same length as the input string
-  final maskedString =
-      List<String>.generate(input.length, (index) => maskingChar).join();
-
-  return maskedString;
-}
-
-class Coordinate {
-  final double? latitude;
-  final double? longitude;
-
-  Coordinate(this.latitude, this.longitude);
-}
-
-double? calculateDistance(Coordinate? start, Coordinate? end) {
-  const double earthRadius = 6371.0; // Earth's radius in kilometers
-
-  double toRadians(double degrees) {
-    return degrees * pi / 180.0;
-  }
-
-  if (start?.latitude != null &&
-      start?.longitude != null &&
-      end?.latitude != null &&
-      end?.longitude != null) {
-    double lat1Rad = toRadians(start!.latitude!);
-    double lon1Rad = toRadians(start.longitude!);
-    double lat2Rad = toRadians(end!.latitude!);
-    double lon2Rad = toRadians(end.longitude!);
-
-    double dLat = lat2Rad - lat1Rad;
-    double dLon = lon2Rad - lon1Rad;
-
-    double a = pow(sin(dLat / 2), 2) +
-        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double distance = earthRadius * c;
-
-    return distance;
-  }
-
-  return null;
-}
-
-Timer makePeriodicTimer(
-  Duration duration,
-  void Function(Timer timer) callback, {
-  bool fireNow = false,
-}) {
-  var timer = Timer.periodic(duration, callback);
-  if (fireNow) {
-    callback(timer);
-  }
-
-  return timer;
-}
-
-final requestData = {
-  "data": [
-    {
-      "id": 1,
-      "name": "John Doe",
-      "age": 30,
-      "email": "johndoe@example.com",
-      "address": {
-        "street": "123 Main Street",
-        "city": "New York",
-        "state": "NY",
-        "zipcode": "10001",
-      },
-      "orders": [
-        {
-          "id": 101,
-          "product": "Widget A",
-          "quantity": 2,
-          "price": 10.99,
-        },
-        {
-          "id": 102,
-          "product": "Widget B",
-          "quantity": 1,
-          "price": 19.99,
-        },
-      ],
-    },
-    {
-      "id": 2,
-      "name": "Jane Smith",
-      "age": 25,
-      "email": "janesmith@example.com",
-      "address": {
-        "street": "456 Elm Street",
-        "city": "Los Angeles",
-        "state": "CA",
-        "zipcode": "90001",
-      },
-      "orders": [
-        {
-          "id": 201,
-          "product": "Widget C",
-          "quantity": 3,
-          "price": 15.99,
-        },
-        {
-          "id": 202,
-          "product": "Widget D",
-          "quantity": 2,
-          "price": 12.99,
-        },
-      ],
-    },
-    // ... Repeat the above structure to reach approximately 100KB in size
-  ],
-};
-
-/// This checks for if the active cycle is a new cycle or its the past cycle,
-/// If the active cycle is same as past cycle then all validations for tracking delivery applies, else validations do not get applied
-bool checkEligibilityForActiveCycle(
-  int activeCycle,
-  HouseholdMemberWrapper householdWrapper,
-) {
-  final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
-      ? householdWrapper.tasks?.last.additionalFields?.fields
-              .firstWhereOrNull(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-              )
-              ?.value ??
-          '1'
-      : '1';
-
-  return (activeCycle == int.parse(pastCycle));
-}
-
-/*Check for if the individual falls on the valid age category*/
-///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
-bool checkEligibilityForAgeAndSideEffect(
-  DigitDOBAge age,
-  ProjectType? projectType,
-  TaskModel? tasks,
-  List<SideEffectModel>? sideEffects,
-) {
-  int totalAgeMonths = age.years * 12 + age.months;
-  final currentCycle = projectType?.cycles?.firstWhereOrNull(
-    (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-    // Return null when no matching cycle is found
-  );
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    bool recordedSideEffect = false;
-    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
-      final lastTaskTime =
-          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
-              ? tasks.clientAuditDetails?.createdTime
-              : null;
-      recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
-
-      return projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
-              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
-                  ? false
-                  : true
-              : false
-          : false;
-    } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
-          ? true
-          : false;
-    }
-  }
-
-  return false;
-}
-
-bool checkIfBeneficiaryRefused(
-  List<TaskModel>? tasks,
-) {
-  final isBeneficiaryRefused = (tasks != null &&
-      (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
-
-  return isBeneficiaryRefused;
-}
-
-bool checkStatus(
-  List<TaskModel>? tasks,
-  Cycle? currentCycle,
-) {
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    if (tasks != null && tasks.isNotEmpty) {
-      final lastTask = tasks.last;
-      final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
-      // final lastDose = lastTask.additionalFields?.fields.where((e) => e.key = AdditionalFieldsType.doseIndex)
-      if (lastTaskCreatedTime != null) {
-        final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
-        final diff = DateTime.now().difference(date);
-        final isLastCycleRunning =
-            lastTaskCreatedTime >= currentCycle.startDate! &&
-                lastTaskCreatedTime <= currentCycle.endDate!;
-
-        return isLastCycleRunning
-            ? lastTask.status == Status.delivered.name
-                ? true
-                : diff.inHours >=
-                        24 //[TODO: Need to move gap between doses to config
-                    ? true
-                    : false
-            : true;
-      } else {
-        return false;
-      }
-    } else {
-      return true;
-    }
-  } else {
-    return false;
-  }
-}
-
-bool recordedSideEffect(
-  Cycle? selectedCycle,
-  TaskModel? task,
-  List<SideEffectModel>? sideEffects,
-) {
-  if (selectedCycle != null &&
-      selectedCycle.startDate != null &&
-      selectedCycle.endDate != null) {
-    if ((task != null) && (sideEffects ?? []).isNotEmpty) {
-      final lastTaskCreatedTime =
-          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
-              ? task.clientAuditDetails?.createdTime
-              : null;
-
-      return lastTaskCreatedTime != null &&
-          lastTaskCreatedTime >= selectedCycle.startDate! &&
-          lastTaskCreatedTime <= selectedCycle.endDate!;
-    }
-  }
-
-  return false;
-}
-
-bool allDosesDelivered(
-  List<TaskModel>? tasks,
-  Cycle? selectedCycle,
-  List<SideEffectModel>? sideEffects,
-  IndividualModel? individualModel,
-) {
-  if (selectedCycle == null ||
-      selectedCycle.id == 0 ||
-      (selectedCycle.deliveries ?? []).isEmpty) {
-    return true;
-  } else {
-    if ((tasks ?? []).isNotEmpty) {
-      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-              )
-              .firstOrNull
-              ?.value ??
-          '');
-      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
-              )
-              .firstOrNull
-              ?.value ??
-          '');
-      if (lastDose != null &&
-          lastDose == selectedCycle.deliveries?.length &&
-          lastCycle != null &&
-          lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.delivered.toValue()) {
-        return true;
-      } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.delivered.toValue()) {
-        return false;
-      } else if ((sideEffects ?? []).isNotEmpty) {
-        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-}
-
-DoseCriteriaModel? fetchProductVariant(
-  DeliveryModel? currentDelivery,
-  IndividualModel? individualModel,
-) {
-  if (currentDelivery != null && individualModel != null) {
-    final individualAge = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            individualModel.dateOfBirth!,
-          ) ??
-          DateTime.now(),
-    );
-    final individualAgeInMonths =
-        individualAge.years * 12 + individualAge.months;
-    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final condition = criteria.condition;
-      if (condition != null) {
-        //{TODO: Expression package need to be parsed
-        final ageRange = condition.split("<=age<");
-        final minAge = int.parse(ageRange.first);
-        final maxAge = int.parse(ageRange.last);
-
-        return individualAgeInMonths >= minAge &&
-            individualAgeInMonths <= maxAge;
+    final remoteRepositories = <RemoteRepository>[];
+    for (final value in DataModelType.values) {
+      if (!actionMap.containsKey(value)) {
+        continue;
       }
 
-      return false;
-    }).toList();
+      final actions = actionMap[value]!;
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+      remoteRepositories.addAll([
+        if (value == DataModelType.facility)
+          FacilityRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.household)
+          HouseholdRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectBeneficiary)
+          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.complaints)
+          PgrServiceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.productVariant)
+          ProductVariantRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.boundary)
+          BoundaryRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.serviceDefinition)
+          ServiceDefinitionRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectResource)
+          ProjectResourceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.service)
+          ServiceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stockReconciliation)
+          StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.task)
+          TaskRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stock)
+          StockRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectType)
+          ProjectTypeRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectStaff)
+          ProjectStaffRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectProductVariant)
+          ProjectProductVariantRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectFacility)
+          ProjectFacilityRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.individual)
+          IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.householdMember)
+          HouseholdMemberRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.sideEffect)
+          SideEffectRemoteRepository(dio, actionMap: actions),
+      ]);
+    }
+
+    return remoteRepositories;
   }
 
-  return null;
+  static String getEndPoint({
+    required AppInitialized state,
+    required String service,
+    required String action,
+    required String entityName,
+  }) {
+    final actionResult = state.serviceRegistryList
+        .firstWhereOrNull((element) => element.service == service)
+        ?.actions
+        .firstWhereOrNull((element) => element.entityName == entityName)
+        ?.path;
+
+    return actionResult ?? '';
+  }
+
+  static List<KeyValue> yesNo = [
+    KeyValue('CORE_COMMON_YES', true),
+    KeyValue('CORE_COMMON_NO', false),
+  ];
+}
+
+/// By using this key, we can push pages without context
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+class KeyValue {
+  String label;
+  dynamic key;
+  KeyValue(this.label, this.key);
+}
+
+class RequestInfoData {
+  static const String apiId = 'hcm';
+  static const String ver = '.01';
+  static String ts = (DateTime.now().millisecondsSinceEpoch).toString();
+  static const did = "1";
+  static const key = "";
+  static String? authToken;
+}
+
+class Modules {
+  static const String localizationModule = "LOCALIZATION_MODULE";
+}
+
+class EntityPlurals {
+  static String getPluralForEntityName(String entity) {
+    switch (entity) {
+      case 'Beneficiary':
+        return 'Beneficiaries';
+      case 'ProjectBeneficiary':
+        return 'ProjectBeneficiaries';
+      case 'Address':
+        return 'Addresses';
+      case 'Facility':
+        return 'Facilities';
+      case 'ProjectFacility':
+        return 'ProjectFacilities';
+      case 'Project':
+        return 'Projects';
+      case 'Stock':
+        return 'Stock';
+      case 'StockReconciliation':
+        return 'StockReconciliation';
+      case 'User':
+        return 'user';
+      default:
+        return '${entity}s';
+    }
+  }
 }

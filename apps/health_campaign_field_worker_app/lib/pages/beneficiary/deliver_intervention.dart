@@ -652,6 +652,22 @@ class _DeliverInterventionPageState
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
+    final projectBeneficiary =
+        context.beneficiaryType != BeneficiaryType.individual
+            ? [state.householdMemberWrapper.projectBeneficiaries.first]
+            : state.householdMemberWrapper.projectBeneficiaries
+                .where(
+                  (element) =>
+                      element.beneficiaryClientReferenceId ==
+                      state.selectedIndividual?.clientReferenceId,
+                )
+                .toList();
+    final taskData = state.householdMemberWrapper.tasks
+        ?.where((element) =>
+            element.projectBeneficiaryClientReferenceId ==
+            projectBeneficiary.first.clientReferenceId)
+        .toList();
+
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
         value:

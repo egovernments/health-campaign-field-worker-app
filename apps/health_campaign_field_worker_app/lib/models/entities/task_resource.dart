@@ -9,7 +9,6 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
-
   TaskResourceSearchModel({
     this.id,
     this.tenantId,

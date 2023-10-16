@@ -20,6 +20,7 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
+
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import '../../../models/data_model.mapper.g.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -377,5 +377,18 @@ class MdmsRepository {
     await isar.writeTxn(() async {
       await isar.projectTypeListCycles.putAll(newProjectTypeList);
     });
+  }
+
+  Future<RoleActionsWrapperModel> searchRoleActions(
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
+    try {
+      final Response response = await _client.post(apiEndPoint, data: body);
+
+      return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
+    } catch (_) {
+      rethrow;
+    }
   }
 }

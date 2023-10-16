@@ -55,7 +55,7 @@ import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-
+import '../pages/profile.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -154,7 +154,6 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-
         AutoRoute(
           page: ComplaintsAcknowledgementPage,
           path: 'complaints-acknowledgement',

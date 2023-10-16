@@ -32,6 +32,7 @@ export 'entities/project_resource.dart';
 export 'entities/project_staff.dart';
 export 'entities/project_type.dart';
 export 'entities/service.dart';
+export 'entities/beneficiary_type.dart';
 export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
 export 'entities/side_effect.dart';

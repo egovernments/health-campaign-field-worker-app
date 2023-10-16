@@ -314,36 +314,36 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
-                          if(form.control(_idTypeKey).value !=
-                              'DEFAULT')
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ReactiveFormConsumer(
-                                builder: (context, formGroup, child) {
-                                  return DigitTextFormField(
-                                    readOnly: form.control(_idTypeKey).value ==
-                                        'DEFAULT',
-                                    isRequired: form
-                                        .control(_idNumberKey)
-                                        .validators
-                                        .isNotEmpty,
-                                    formControlName: _idNumberKey,
-                                    label: localizations.translate(
-                                      i18.individualDetails.idNumberLabelText,
-                                    ),
-                                    validationMessages: {
-                                      'required': (object) =>
-                                          localizations.translate(
-                                            '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                          ),
-                                    },
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
+                          if (form.control(_idTypeKey).value != 'DEFAULT')
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ReactiveFormConsumer(
+                                  builder: (context, formGroup, child) {
+                                    return DigitTextFormField(
+                                      readOnly:
+                                          form.control(_idTypeKey).value ==
+                                              'DEFAULT',
+                                      isRequired: form
+                                          .control(_idNumberKey)
+                                          .validators
+                                          .isNotEmpty,
+                                      formControlName: _idNumberKey,
+                                      label: localizations.translate(
+                                        i18.individualDetails.idNumberLabelText,
+                                      ),
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                            ),
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            ),
                           DigitDobPicker(
                             datePickerFormControl: _dobKey,
                             datePickerLabel: localizations.translate(

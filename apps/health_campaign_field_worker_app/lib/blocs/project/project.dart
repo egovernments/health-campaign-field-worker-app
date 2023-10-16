@@ -124,8 +124,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
+    final selectedProject = await localSecureStore.selectedProject;
+    final isProjectSetUpComplete = await localSecureStore
+        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    if (isOnline) {
+    /*Checks for if device is online and project data downloaded*/
+    if (isOnline && !isProjectSetUpComplete) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
