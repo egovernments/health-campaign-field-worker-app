@@ -107,7 +107,7 @@ class DigitDateFormPicker extends StatelessWidget {
                         size: 25,
                       ),
                     ),
-              enableInteractiveSelection: isEnabled ?? true,
+              enableInteractiveSelection: isEnabled,
               onTap: isEnabled == true
                   ? (control) {
                       picker.showPicker();

@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-
 class TaskResource extends Table {
   TextColumn get clientReferenceId => text()();
   TextColumn get taskclientReferenceId => text().nullable()();
@@ -21,11 +20,15 @@ class TaskResource extends Table {
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  
+
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { clientReferenceId, auditCreatedBy,  };
+  Set<Column> get primaryKey => {
+        clientReferenceId,
+        auditCreatedBy,
+      };
 }

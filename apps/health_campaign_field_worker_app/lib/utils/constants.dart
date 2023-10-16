@@ -13,6 +13,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -255,7 +256,7 @@ class KeyValue {
 class RequestInfoData {
   static const String apiId = 'hcm';
   static const String ver = '.01';
-  static String ts = (DateTime.now().millisecondsSinceEpoch).toString();
+  static num ts = DateTime.now().millisecondsSinceEpoch;
   static const did = "1";
   static const key = "";
   static String? authToken;
