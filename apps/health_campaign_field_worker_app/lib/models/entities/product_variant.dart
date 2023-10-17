@@ -43,6 +43,7 @@ class ProductVariantModel extends EntityModel {
   final String? productId;
   final String? sku;
   final String? variation;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final ProductVariantAdditionalFields? additionalFields;
@@ -53,6 +54,7 @@ class ProductVariantModel extends EntityModel {
     this.productId,
     this.sku,
     this.variation,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
@@ -75,6 +77,7 @@ class ProductVariantModel extends EntityModel {
       productId: Value(productId),
       sku: Value(sku),
       variation: Value(variation),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );

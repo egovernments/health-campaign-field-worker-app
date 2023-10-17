@@ -34,6 +34,7 @@ class DocumentModel extends EntityModel {
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -45,6 +46,7 @@ class DocumentModel extends EntityModel {
     this.documentType,
     this.fileStoreId,
     this.documentUid,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -68,6 +70,7 @@ class DocumentModel extends EntityModel {
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),
       documentUid: Value(documentUid),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

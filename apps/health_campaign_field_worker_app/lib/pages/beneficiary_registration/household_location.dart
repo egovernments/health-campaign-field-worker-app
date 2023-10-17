@@ -104,10 +104,22 @@ class _HouseholdLocationPageState
                                 isHeadOfHousehold,
                               ) {
                                 var addressModel = AddressModel(
-                                  addressLine1: addressLine1,
-                                  addressLine2: addressLine2,
-                                  landmark: landmark,
-                                  pincode: postalCode,
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
+                                      ? landmark
+                                      : null,
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value ??
                                       locationState.latitude,
@@ -152,11 +164,23 @@ class _HouseholdLocationPageState
                                 loading,
                               ) {
                                 var addressModel = address.copyWith(
-                                  addressLine1: addressLine1,
-                                  addressLine2: addressLine2,
-                                  landmark: landmark,
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
+                                      ? landmark
+                                      : null,
                                   locality: address.locality,
-                                  pincode: postalCode,
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value,
                                   longitude: form.control(_lngKey).value,
@@ -218,6 +242,11 @@ class _HouseholdLocationPageState
                                   .householdAddressLine1LabelText,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _addressLine2Key,
@@ -226,6 +255,11 @@ class _HouseholdLocationPageState
                                   .householdAddressLine2LabelText,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _landmarkKey,
@@ -233,6 +267,11 @@ class _HouseholdLocationPageState
                               i18.householdLocation.landmarkFormLabel,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             keyboardType: TextInputType.text,
@@ -241,6 +280,11 @@ class _HouseholdLocationPageState
                               i18.householdLocation.postalCodeFormLabel,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                         ]),
                         const SizedBox(height: 16),

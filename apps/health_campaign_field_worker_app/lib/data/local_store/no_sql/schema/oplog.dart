@@ -43,6 +43,8 @@ class OpLog {
   late int rowVersion;
 
   late int syncDownRetryCount;
+
+  late bool nonRecoverableError;
 }
 
 @embedded

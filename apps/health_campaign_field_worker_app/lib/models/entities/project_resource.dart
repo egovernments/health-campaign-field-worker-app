@@ -35,6 +35,7 @@ class ProjectResourceModel extends EntityModel {
 
   final String? id;
   final String? projectId;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final ProjectProductVariantModel resource;
@@ -44,6 +45,7 @@ class ProjectResourceModel extends EntityModel {
     this.additionalFields,
     this.id,
     this.projectId,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     required this.resource,
@@ -65,6 +67,7 @@ class ProjectResourceModel extends EntityModel {
       isDeleted: Value(isDeleted),
       id: Value(id),
       projectId: Value(projectId),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       resource: Value(resource.productVariantId),

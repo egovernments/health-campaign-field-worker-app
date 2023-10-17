@@ -11,6 +11,7 @@ class HouseholdMember extends Table {
   TextColumn get individualClientReferenceId => text().nullable()();
   BoolColumn get isHeadOfHousehold => boolean()();
   TextColumn get auditCreatedBy => text().nullable()();
+  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();

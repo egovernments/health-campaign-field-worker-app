@@ -1,4 +1,4 @@
-analyzer:
+nonRecoverableErroranalyzer:
   exclude:
     - "**/__brick__/**"
     - build/**

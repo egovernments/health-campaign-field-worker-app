@@ -68,6 +68,7 @@ class ProjectStaffModel extends EntityModel {
   final String? userId;
   final String? projectId;
   final String? channel;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final DateTime? startDateTime;
@@ -81,6 +82,7 @@ class ProjectStaffModel extends EntityModel {
     this.userId,
     this.projectId,
     this.channel,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     int? startDate,
@@ -118,6 +120,7 @@ class ProjectStaffModel extends EntityModel {
       userId: Value(userId),
       projectId: Value(projectId),
       channel: Value(channel),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),

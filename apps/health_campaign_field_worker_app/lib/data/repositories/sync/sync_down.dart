@@ -8,6 +8,7 @@ import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
+
 import '../remote/pgr_service.dart';
 
 class PerformSyncDown {
@@ -27,7 +28,6 @@ class PerformSyncDown {
       throw Exception('Sync down is not valid for online only configuration');
     }
 
-// Get the pending sync down entries
     final futures = await Future.wait(
       localRepositories
           .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
@@ -37,11 +37,9 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where(
-          (element) =>
-              element.type != DataModelType.householdMember &&
-              element.type != DataModelType.service,
-        )
+        .where((element) =>
+            element.type != DataModelType.householdMember &&
+            element.type != DataModelType.service)
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -66,7 +64,7 @@ class PerformSyncDown {
         final entities = operationGroupedEntity.value.map((e) {
           final serverGeneratedId = e.serverGeneratedId;
           final rowVersion = e.rowVersion;
-          if (serverGeneratedId != null) {
+          if (serverGeneratedId != null && !e.nonRecoverableError) {
             return local.opLogManager.applyServerGeneratedIdToEntity(
               e.entity,
               serverGeneratedId,
@@ -90,7 +88,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as HouseholdModel;
               final responseEntity =
@@ -117,11 +115,21 @@ class PerformSyncDown {
                     ],
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
+                    nonRecoverableError: element.nonRecoverableError,
                   ),
                 );
               } else {
-                await local.opLogManager
+                final bool markAsNonRecoverable = await local.opLogManager
                     .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
@@ -137,7 +145,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as IndividualModel;
               final responseEntity = responseEntities
@@ -181,6 +189,7 @@ class PerformSyncDown {
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
                     additionalIds: [
                       if (identifierAdditionalIds != null)
                         ...identifierAdditionalIds,
@@ -191,12 +200,67 @@ class PerformSyncDown {
                   ),
                 );
               } else {
-                await local.opLogManager
+                final bool markAsNonRecoverable = await local.opLogManager
                     .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
             break;
+
+          case DataModelType.sideEffect:
+            responseEntities = await remote.search(SideEffectSearchModel(
+              clientReferenceId: entities
+                  .whereType<SideEffectModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as SideEffectModel;
+              var responseEntity = responseEntities
+                  .whereType<SideEffectModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
           case DataModelType.projectBeneficiary:
             responseEntities =
                 await remote.search(ProjectBeneficiarySearchModel(
@@ -208,7 +272,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as ProjectBeneficiaryModel;
               final responseEntity = responseEntities
@@ -228,13 +292,21 @@ class PerformSyncDown {
                   ),
                 );
               } else {
-                await local.opLogManager
+                final bool markAsNonRecoverable = await local.opLogManager
                     .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
             break;
-
           case DataModelType.task:
             responseEntities = await remote.search(TaskSearchModel(
               clientReferenceId: entities
@@ -245,7 +317,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final taskModel = element.entity as TaskModel;
               var responseEntity =
@@ -256,8 +328,9 @@ class PerformSyncDown {
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
+
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: taskModel.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
@@ -277,6 +350,18 @@ class PerformSyncDown {
                     rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(taskModel.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    taskModel.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
@@ -293,7 +378,7 @@ class PerformSyncDown {
               ),
             );
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as StockModel;
               final responseEntity =
@@ -303,8 +388,9 @@ class PerformSyncDown {
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
+
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
@@ -312,6 +398,18 @@ class PerformSyncDown {
                     rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
@@ -327,7 +425,7 @@ class PerformSyncDown {
                   .toList(),
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as StockReconciliationModel;
               final responseEntity = responseEntities
@@ -338,8 +436,9 @@ class PerformSyncDown {
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
+
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
@@ -347,6 +446,18 @@ class PerformSyncDown {
                     rowVersion: rowVersion,
                   ),
                 );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
@@ -394,7 +505,7 @@ class PerformSyncDown {
                     ))
                 .toList();
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as PgrServiceModel;
               final responseEntity = responseEntities
@@ -405,47 +516,11 @@ class PerformSyncDown {
 
               final serverGeneratedId = responseEntity?.serviceRequestId;
               final rowVersion = responseEntity?.rowVersion;
+
               if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
+                await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          case DataModelType.sideEffect:
-            responseEntities = await remote.search(SideEffectSearchModel(
-              clientReferenceId: entities
-                  .whereType<SideEffectModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final sideEffectModel = element.entity as SideEffectModel;
-              var responseEntity = responseEntities
-                  .whereType<SideEffectModel>()
-                  .firstWhereOrNull(
-                    (e) =>
-                        e.clientReferenceId ==
-                        sideEffectModel.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: sideEffectModel.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,

@@ -70,6 +70,28 @@ class LocalSecureStore {
     }
   }
 
+  Future<bool> get isAppInActive async {
+    final hasRun = await storage.read(key: isAppInActiveKey);
+
+    switch (hasRun) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  Future<bool> get isManualSyncRunning async {
+    final hasRun = await storage.read(key: manualSyncKey);
+
+    switch (hasRun) {
+      case 'true':
+        return true;
+      default:
+        return false;
+    }
+  }
+
   Future<RoleActionsWrapperModel?> get savedActions async {
     final actionsListString = await storage.read(key: actionsListkey);
     if (actionsListString == null) return null;

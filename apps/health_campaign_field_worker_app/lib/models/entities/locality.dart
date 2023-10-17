@@ -35,6 +35,7 @@ class LocalityModel extends EntityModel {
 
   final String code;
   final String? name;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final LocalityAdditionalFields? additionalFields;
@@ -43,6 +44,7 @@ class LocalityModel extends EntityModel {
     this.additionalFields,
     required this.code,
     this.name,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
@@ -63,6 +65,7 @@ class LocalityModel extends EntityModel {
       isDeleted: Value(isDeleted),
       code: Value(code),
       name: Value(name),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );

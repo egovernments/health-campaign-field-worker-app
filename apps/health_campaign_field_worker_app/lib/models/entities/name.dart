@@ -44,6 +44,7 @@ class NameModel extends EntityModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final NameAdditionalFields? additionalFields;
@@ -55,6 +56,7 @@ class NameModel extends EntityModel {
     this.givenName,
     this.familyName,
     this.otherNames,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
@@ -78,6 +80,7 @@ class NameModel extends EntityModel {
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );

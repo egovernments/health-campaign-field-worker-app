@@ -54,6 +54,7 @@ class IndividualModel extends EntityModel {
   final String? fatherName;
   final String? husbandName;
   final String? photo;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -75,6 +76,7 @@ class IndividualModel extends EntityModel {
     this.fatherName,
     this.husbandName,
     this.photo,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -108,6 +110,7 @@ class IndividualModel extends EntityModel {
       fatherName: Value(fatherName),
       husbandName: Value(husbandName),
       photo: Value(photo),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

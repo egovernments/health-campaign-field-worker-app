@@ -102,6 +102,7 @@ class TaskModel extends EntityModel {
   final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -122,6 +123,7 @@ class TaskModel extends EntityModel {
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -184,6 +186,7 @@ class TaskModel extends EntityModel {
       projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
       createdBy: Value(createdBy),
       status: Value(status),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

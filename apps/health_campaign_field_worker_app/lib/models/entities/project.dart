@@ -86,6 +86,7 @@ class ProjectModel extends EntityModel {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final AddressModel? address;
@@ -108,6 +109,7 @@ class ProjectModel extends EntityModel {
     this.description,
     this.referenceId,
     this.projectHierarchy,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     this.address,
@@ -154,6 +156,7 @@ class ProjectModel extends EntityModel {
       description: Value(description),
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
