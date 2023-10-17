@@ -104,10 +104,22 @@ class _HouseholdLocationPageState
                                 isHeadOfHousehold,
                               ) {
                                 var addressModel = AddressModel(
-                                  addressLine1: addressLine1,
-                                  addressLine2: addressLine2,
-                                  landmark: landmark,
-                                  pincode: postalCode,
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
+                                      ? landmark
+                                      : null,
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value ??
                                       locationState.latitude,
