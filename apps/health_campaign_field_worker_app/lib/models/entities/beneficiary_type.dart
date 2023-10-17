@@ -7,6 +7,5 @@ enum BeneficiaryType {
   individual,
   @MappableValue("HOUSEHOLD")
   household,
-  @MappableValue("PRODUCT")
-  product,
+  ;
 }

@@ -1363,6 +1363,7 @@ mixin _$SearchHouseholdsState {
       throw _privateConstructorUsedError;
   int get registeredHouseholds => throw _privateConstructorUsedError;
   int get deliveredInterventions => throw _privateConstructorUsedError;
+  int get sideEffectsObserved => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchHouseholdsStateCopyWith<SearchHouseholdsState> get copyWith =>
@@ -1380,7 +1381,8 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       String? searchQuery,
       List<HouseholdMemberWrapper> householdMembers,
       int registeredHouseholds,
-      int deliveredInterventions});
+      int deliveredInterventions,
+      int sideEffectsObserved});
 }
 
 /// @nodoc
@@ -1402,6 +1404,7 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
     Object? householdMembers = null,
     Object? registeredHouseholds = null,
     Object? deliveredInterventions = null,
+    Object? sideEffectsObserved = null,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1424,6 +1427,10 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.deliveredInterventions
           : deliveredInterventions // ignore: cast_nullable_to_non_nullable
               as int,
+      sideEffectsObserved: null == sideEffectsObserved
+          ? _value.sideEffectsObserved
+          : sideEffectsObserved // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -1441,7 +1448,8 @@ abstract class _$$_SearchHouseholdsStateCopyWith<$Res>
       String? searchQuery,
       List<HouseholdMemberWrapper> householdMembers,
       int registeredHouseholds,
-      int deliveredInterventions});
+      int deliveredInterventions,
+      int sideEffectsObserved});
 }
 
 /// @nodoc
@@ -1460,6 +1468,7 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
     Object? householdMembers = null,
     Object? registeredHouseholds = null,
     Object? deliveredInterventions = null,
+    Object? sideEffectsObserved = null,
   }) {
     return _then(_$_SearchHouseholdsState(
       loading: null == loading
@@ -1482,6 +1491,10 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
           ? _value.deliveredInterventions
           : deliveredInterventions // ignore: cast_nullable_to_non_nullable
               as int,
+      sideEffectsObserved: null == sideEffectsObserved
+          ? _value.sideEffectsObserved
+          : sideEffectsObserved // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -1494,7 +1507,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
       this.searchQuery,
       final List<HouseholdMemberWrapper> householdMembers = const [],
       this.registeredHouseholds = 0,
-      this.deliveredInterventions = 0})
+      this.deliveredInterventions = 0,
+      this.sideEffectsObserved = 0})
       : _householdMembers = householdMembers,
         super._();
 
@@ -1517,10 +1531,13 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   @override
   @JsonKey()
   final int deliveredInterventions;
+  @override
+  @JsonKey()
+  final int sideEffectsObserved;
 
   @override
   String toString() {
-    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, householdMembers: $householdMembers, registeredHouseholds: $registeredHouseholds, deliveredInterventions: $deliveredInterventions)';
+    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, householdMembers: $householdMembers, registeredHouseholds: $registeredHouseholds, deliveredInterventions: $deliveredInterventions, sideEffectsObserved: $sideEffectsObserved)';
   }
 
   @override
@@ -1536,7 +1553,9 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
             (identical(other.registeredHouseholds, registeredHouseholds) ||
                 other.registeredHouseholds == registeredHouseholds) &&
             (identical(other.deliveredInterventions, deliveredInterventions) ||
-                other.deliveredInterventions == deliveredInterventions));
+                other.deliveredInterventions == deliveredInterventions) &&
+            (identical(other.sideEffectsObserved, sideEffectsObserved) ||
+                other.sideEffectsObserved == sideEffectsObserved));
   }
 
   @override
@@ -1546,7 +1565,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
       searchQuery,
       const DeepCollectionEquality().hash(_householdMembers),
       registeredHouseholds,
-      deliveredInterventions);
+      deliveredInterventions,
+      sideEffectsObserved);
 
   @JsonKey(ignore: true)
   @override
@@ -1562,7 +1582,8 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
       final String? searchQuery,
       final List<HouseholdMemberWrapper> householdMembers,
       final int registeredHouseholds,
-      final int deliveredInterventions}) = _$_SearchHouseholdsState;
+      final int deliveredInterventions,
+      final int sideEffectsObserved}) = _$_SearchHouseholdsState;
   const _SearchHouseholdsState._() : super._();
 
   @override
@@ -1575,6 +1596,8 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   int get registeredHouseholds;
   @override
   int get deliveredInterventions;
+  @override
+  int get sideEffectsObserved;
   @override
   @JsonKey(ignore: true)
   _$$_SearchHouseholdsStateCopyWith<_$_SearchHouseholdsState> get copyWith =>
@@ -1590,6 +1613,7 @@ mixin _$HouseholdMemberWrapper {
       throw _privateConstructorUsedError;
   double? get distance => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
+  List<SideEffectModel>? get sideEffects => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HouseholdMemberWrapperCopyWith<HouseholdMemberWrapper> get copyWith =>
@@ -1608,7 +1632,8 @@ abstract class $HouseholdMemberWrapperCopyWith<$Res> {
       List<IndividualModel> members,
       List<ProjectBeneficiaryModel> projectBeneficiaries,
       double? distance,
-      List<TaskModel>? tasks});
+      List<TaskModel>? tasks,
+      List<SideEffectModel>? sideEffects});
 }
 
 /// @nodoc
@@ -1631,6 +1656,7 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
     Object? projectBeneficiaries = null,
     Object? distance = freezed,
     Object? tasks = freezed,
+    Object? sideEffects = freezed,
   }) {
     return _then(_value.copyWith(
       household: null == household
@@ -1657,6 +1683,10 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
           ? _value.tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
+      sideEffects: freezed == sideEffects
+          ? _value.sideEffects
+          : sideEffects // ignore: cast_nullable_to_non_nullable
+              as List<SideEffectModel>?,
     ) as $Val);
   }
 }
@@ -1675,7 +1705,8 @@ abstract class _$$_HouseholdMemberWrapperCopyWith<$Res>
       List<IndividualModel> members,
       List<ProjectBeneficiaryModel> projectBeneficiaries,
       double? distance,
-      List<TaskModel>? tasks});
+      List<TaskModel>? tasks,
+      List<SideEffectModel>? sideEffects});
 }
 
 /// @nodoc
@@ -1696,6 +1727,7 @@ class __$$_HouseholdMemberWrapperCopyWithImpl<$Res>
     Object? projectBeneficiaries = null,
     Object? distance = freezed,
     Object? tasks = freezed,
+    Object? sideEffects = freezed,
   }) {
     return _then(_$_HouseholdMemberWrapper(
       household: null == household
@@ -1722,6 +1754,10 @@ class __$$_HouseholdMemberWrapperCopyWithImpl<$Res>
           ? _value._tasks
           : tasks // ignore: cast_nullable_to_non_nullable
               as List<TaskModel>?,
+      sideEffects: freezed == sideEffects
+          ? _value._sideEffects
+          : sideEffects // ignore: cast_nullable_to_non_nullable
+              as List<SideEffectModel>?,
     ));
   }
 }
@@ -1735,10 +1771,12 @@ class _$_HouseholdMemberWrapper implements _HouseholdMemberWrapper {
       required final List<IndividualModel> members,
       required final List<ProjectBeneficiaryModel> projectBeneficiaries,
       this.distance,
-      final List<TaskModel>? tasks})
+      final List<TaskModel>? tasks,
+      final List<SideEffectModel>? sideEffects})
       : _members = members,
         _projectBeneficiaries = projectBeneficiaries,
-        _tasks = tasks;
+        _tasks = tasks,
+        _sideEffects = sideEffects;
 
   @override
   final HouseholdModel household;
@@ -1769,9 +1807,18 @@ class _$_HouseholdMemberWrapper implements _HouseholdMemberWrapper {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<SideEffectModel>? _sideEffects;
+  @override
+  List<SideEffectModel>? get sideEffects {
+    final value = _sideEffects;
+    if (value == null) return null;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks)';
+    return 'HouseholdMemberWrapper(household: $household, headOfHousehold: $headOfHousehold, members: $members, projectBeneficiaries: $projectBeneficiaries, distance: $distance, tasks: $tasks, sideEffects: $sideEffects)';
   }
 
   @override
@@ -1788,7 +1835,9 @@ class _$_HouseholdMemberWrapper implements _HouseholdMemberWrapper {
                 .equals(other._projectBeneficiaries, _projectBeneficiaries) &&
             (identical(other.distance, distance) ||
                 other.distance == distance) &&
-            const DeepCollectionEquality().equals(other._tasks, _tasks));
+            const DeepCollectionEquality().equals(other._tasks, _tasks) &&
+            const DeepCollectionEquality()
+                .equals(other._sideEffects, _sideEffects));
   }
 
   @override
@@ -1799,7 +1848,8 @@ class _$_HouseholdMemberWrapper implements _HouseholdMemberWrapper {
       const DeepCollectionEquality().hash(_members),
       const DeepCollectionEquality().hash(_projectBeneficiaries),
       distance,
-      const DeepCollectionEquality().hash(_tasks));
+      const DeepCollectionEquality().hash(_tasks),
+      const DeepCollectionEquality().hash(_sideEffects));
 
   @JsonKey(ignore: true)
   @override
@@ -1816,7 +1866,8 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
       required final List<IndividualModel> members,
       required final List<ProjectBeneficiaryModel> projectBeneficiaries,
       final double? distance,
-      final List<TaskModel>? tasks}) = _$_HouseholdMemberWrapper;
+      final List<TaskModel>? tasks,
+      final List<SideEffectModel>? sideEffects}) = _$_HouseholdMemberWrapper;
 
   @override
   HouseholdModel get household;
@@ -1830,6 +1881,8 @@ abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   double? get distance;
   @override
   List<TaskModel>? get tasks;
+  @override
+  List<SideEffectModel>? get sideEffects;
   @override
   @JsonKey(ignore: true)
   _$$_HouseholdMemberWrapperCopyWith<_$_HouseholdMemberWrapper> get copyWith =>

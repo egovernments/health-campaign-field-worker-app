@@ -4,6 +4,7 @@ class DigitIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? iconText;
   final IconData? icon;
+  final double? iconSize;
   final ImageIcon? imageIcon;
   final Color? iconColor;
   final Color? iconTextColor;
@@ -13,6 +14,7 @@ class DigitIconButton extends StatelessWidget {
     this.onPressed,
     this.iconText,
     this.icon,
+    this.iconSize,
     this.imageIcon,
     this.iconColor,
     this.iconTextColor,
@@ -34,6 +36,7 @@ class DigitIconButton extends StatelessWidget {
             child: imageIcon ??
                 Icon(
                   icon,
+                  size: iconSize,
                   color: iconColor ?? theme.colorScheme.secondary,
                 ),
           ),

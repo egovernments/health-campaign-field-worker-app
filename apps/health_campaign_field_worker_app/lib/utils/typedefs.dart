@@ -42,3 +42,5 @@ typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
 
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
+typedef SideEffectDataRepository
+    = DataRepository<SideEffectModel, SideEffectSearchModel>;

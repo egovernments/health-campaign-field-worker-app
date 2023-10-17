@@ -13,7 +13,7 @@ class DigitColors {
   Color get white => const Color(0xFFFFFFFF);
   Color get alabasterWhite => const Color(0xFFFAFAFA);
   Color get quillGray => const Color(0xFFD6D5D4);
-  Color get paleRose => const Color(0xFFEFC7C1);
+  Color get paleRose => const Color(0xFFFBD6C3);
   Color get paleLeafGreen => const Color(0xFFBAD6C9);
   Color get tropicalBlue => const Color(0xFFC7E0F1);
   Color get bonePink => const Color(0xFFE6D7D0);

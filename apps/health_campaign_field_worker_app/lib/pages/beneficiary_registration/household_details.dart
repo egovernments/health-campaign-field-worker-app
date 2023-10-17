@@ -102,7 +102,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                           bloc.add(
                             BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                              household: household,
+                              household: household!,
                               registrationDate: dateOfRegistration,
                             ),
                           );
@@ -222,6 +222,12 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             i18.householdDetails.dateOfRegistrationLabel,
                           ),
                           isRequired: false,
+                          confirmText: localizations.translate(
+                            i18.common.coreCommonOk,
+                          ),
+                          cancelText: localizations.translate(
+                            i18.common.coreCommonCancel,
+                          ),
                         ),
                         DigitIntegerFormPicker(
                           minimum: 1,

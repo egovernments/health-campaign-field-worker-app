@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../symptoms_types/symptoms_types_model.dart';
+
 part 'app_config_model.freezed.dart';
 part 'app_config_model.g.dart';
 
@@ -49,6 +51,8 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
     @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
     final AppConfigSecondaryWrapperModel? appConfig,
     @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
+    @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+    final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(

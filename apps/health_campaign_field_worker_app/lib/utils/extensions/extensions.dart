@@ -11,6 +11,7 @@ import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../app_exception.dart';
 
 // Importing the file 'context_utility.dart' with a 'part' directive.
