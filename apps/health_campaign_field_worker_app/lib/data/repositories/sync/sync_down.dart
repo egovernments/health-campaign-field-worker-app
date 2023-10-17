@@ -98,7 +98,6 @@ class PerformSyncDown<D extends EntityModel, R extends EntitySearchModel> {
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
-
               if (serverGeneratedId != null) {
                 final addressAdditionalId = responseEntity?.address?.id == null
                     ? null
@@ -157,7 +156,6 @@ class PerformSyncDown<D extends EntityModel, R extends EntitySearchModel> {
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
-
               if (serverGeneratedId != null) {
                 final identifierAdditionalIds = responseEntity?.identifiers
                     ?.map((e) {
@@ -284,7 +282,6 @@ class PerformSyncDown<D extends EntityModel, R extends EntitySearchModel> {
                   );
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
-
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(

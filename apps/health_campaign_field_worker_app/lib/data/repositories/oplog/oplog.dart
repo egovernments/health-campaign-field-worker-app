@@ -119,7 +119,15 @@ abstract class OpLogManager<T extends EntityModel> {
         .entityTypeEqualTo(type)
         .findAll();
 
-    oplogs = oplogs.sortedBy((element) => element.createdAt);
+    oplogs = oplogs
+        .sortedBy((element) => element.createdAt)
+        .where(
+          (element) =>
+              element.entityType != DataModelType.householdMember &&
+              element.entityType != DataModelType.service,
+          // Added Memeber and service so that we don't get the respose from the server
+        )
+        .toList();
 
     return oplogs.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
