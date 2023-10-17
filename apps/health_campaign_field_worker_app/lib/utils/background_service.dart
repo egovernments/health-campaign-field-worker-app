@@ -192,8 +192,6 @@ void onStart(ServiceInstance service) async {
                 service: service,
               );
 
-              print(isSyncCompleted);
-              print("-----SYNC Completed-----");
               i++;
               final isAppInActive =
                   await LocalSecureStore.instance.isAppInActive;

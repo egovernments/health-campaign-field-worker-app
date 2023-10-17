@@ -478,6 +478,12 @@ class DeliverIntervention {
   //[todo] need to change the 24
   String get wasDosePastRecordDeliveryDetails =>
       'DELIVER_INTERVENTION_PAST_RECORD_DOSE_DELIVERY_DETAILS';
+
+  String get cycle => 'DELIVERY_CYCLE';
+
+  String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
+
+  String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
 }
 
 class AdverseEvents {
