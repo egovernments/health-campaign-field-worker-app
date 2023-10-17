@@ -11,7 +11,7 @@ import '../oplog/oplog.dart';
 
 import '../remote/pgr_service.dart';
 
-class PerformSyncDown<D extends EntityModel, R extends EntitySearchModel> {
+class PerformSyncDown {
   static FutureOr<void> syncDown({
     required BandwidthModel bandwidthModel,
     required List<LocalRepository> localRepositories,
