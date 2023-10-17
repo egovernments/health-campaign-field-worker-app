@@ -146,6 +146,11 @@ class _ComplaintsLocationPageState
                                   .householdAddressLine1LabelText,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _addressLine2Key,
@@ -154,6 +159,11 @@ class _ComplaintsLocationPageState
                                   .householdAddressLine2LabelText,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _landmarkKey,
@@ -161,6 +171,11 @@ class _ComplaintsLocationPageState
                               i18.householdLocation.landmarkFormLabel,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                           DigitTextFormField(
                             keyboardType: TextInputType.text,
@@ -169,6 +184,11 @@ class _ComplaintsLocationPageState
                               i18.householdLocation.postalCodeFormLabel,
                             ),
                             maxLength: 64,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.common.min2CharsRequired,
+                                  ),
+                            },
                           ),
                         ]),
                         const SizedBox(height: 16),

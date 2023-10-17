@@ -4,9 +4,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'dart:math';
-
-import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -57,10 +54,14 @@ class IdGen {
 
 class CustomValidator {
   /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(AbstractControl<dynamic> control) {
-    return control.value == null || control.value.toString().length >= 2
+  static Map<String, dynamic>? requiredMin(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().length >= 2 ||
+            control.value.toString().trim().isEmpty
         ? null
-        : {'Min2 characters Required': true};
+        : {'required': true};
   }
 
   static Map<String, dynamic>? validMobileNumber(
