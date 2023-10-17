@@ -1,0 +1,14 @@
+{
+  "name": "DeliverStrategyType",
+  "enumValues": [
+    {
+      "name": "Indirect",
+      "value": "INDIRECT"
+    },
+    {
+      "name": "Direct",
+      "value": "DIRECT"
+    }
+  ],
+  "isEnum": true
+}

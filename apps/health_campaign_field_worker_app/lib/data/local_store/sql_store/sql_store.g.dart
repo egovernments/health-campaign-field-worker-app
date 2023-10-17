@@ -19363,6 +19363,7 @@ class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
 class TaskResourceData extends DataClass
     implements Insertable<TaskResourceData> {
   final String clientReferenceId;
+  final String? taskclientReferenceId;
   final String? taskId;
   final String? id;
   final String? productVariantId;
@@ -19383,6 +19384,7 @@ class TaskResourceData extends DataClass
   final String? additionalFields;
   TaskResourceData(
       {required this.clientReferenceId,
+      this.taskclientReferenceId,
       this.taskId,
       this.id,
       this.productVariantId,
@@ -19407,6 +19409,8 @@ class TaskResourceData extends DataClass
     return TaskResourceData(
       clientReferenceId: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}client_reference_id'])!,
+      taskclientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}taskclient_reference_id']),
       taskId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}task_id']),
       id: const StringType()
@@ -19449,6 +19453,9 @@ class TaskResourceData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || taskclientReferenceId != null) {
+      map['taskclient_reference_id'] = Variable<String?>(taskclientReferenceId);
+    }
     if (!nullToAbsent || taskId != null) {
       map['task_id'] = Variable<String?>(taskId);
     }
@@ -19509,6 +19516,9 @@ class TaskResourceData extends DataClass
   TaskResourceCompanion toCompanion(bool nullToAbsent) {
     return TaskResourceCompanion(
       clientReferenceId: Value(clientReferenceId),
+      taskclientReferenceId: taskclientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskclientReferenceId),
       taskId:
           taskId == null && nullToAbsent ? const Value.absent() : Value(taskId),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
@@ -19568,6 +19578,8 @@ class TaskResourceData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TaskResourceData(
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      taskclientReferenceId:
+          serializer.fromJson<String?>(json['taskclientReferenceId']),
       taskId: serializer.fromJson<String?>(json['taskId']),
       id: serializer.fromJson<String?>(json['id']),
       productVariantId: serializer.fromJson<String?>(json['productVariantId']),
@@ -19593,6 +19605,8 @@ class TaskResourceData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'taskclientReferenceId':
+          serializer.toJson<String?>(taskclientReferenceId),
       'taskId': serializer.toJson<String?>(taskId),
       'id': serializer.toJson<String?>(id),
       'productVariantId': serializer.toJson<String?>(productVariantId),
@@ -19616,6 +19630,7 @@ class TaskResourceData extends DataClass
 
   TaskResourceData copyWith(
           {String? clientReferenceId,
+          String? taskclientReferenceId,
           String? taskId,
           String? id,
           String? productVariantId,
@@ -19636,6 +19651,8 @@ class TaskResourceData extends DataClass
           String? additionalFields}) =>
       TaskResourceData(
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        taskclientReferenceId:
+            taskclientReferenceId ?? this.taskclientReferenceId,
         taskId: taskId ?? this.taskId,
         id: id ?? this.id,
         productVariantId: productVariantId ?? this.productVariantId,
@@ -19659,6 +19676,7 @@ class TaskResourceData extends DataClass
   String toString() {
     return (StringBuffer('TaskResourceData(')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
           ..write('taskId: $taskId, ')
           ..write('id: $id, ')
           ..write('productVariantId: $productVariantId, ')
@@ -19684,6 +19702,7 @@ class TaskResourceData extends DataClass
   @override
   int get hashCode => Object.hash(
       clientReferenceId,
+      taskclientReferenceId,
       taskId,
       id,
       productVariantId,
@@ -19707,6 +19726,7 @@ class TaskResourceData extends DataClass
       identical(this, other) ||
       (other is TaskResourceData &&
           other.clientReferenceId == this.clientReferenceId &&
+          other.taskclientReferenceId == this.taskclientReferenceId &&
           other.taskId == this.taskId &&
           other.id == this.id &&
           other.productVariantId == this.productVariantId &&
@@ -19729,6 +19749,7 @@ class TaskResourceData extends DataClass
 
 class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String> clientReferenceId;
+  final Value<String?> taskclientReferenceId;
   final Value<String?> taskId;
   final Value<String?> id;
   final Value<String?> productVariantId;
@@ -19749,6 +19770,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   final Value<String?> additionalFields;
   const TaskResourceCompanion({
     this.clientReferenceId = const Value.absent(),
+    this.taskclientReferenceId = const Value.absent(),
     this.taskId = const Value.absent(),
     this.id = const Value.absent(),
     this.productVariantId = const Value.absent(),
@@ -19770,6 +19792,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   });
   TaskResourceCompanion.insert({
     required String clientReferenceId,
+    this.taskclientReferenceId = const Value.absent(),
     this.taskId = const Value.absent(),
     this.id = const Value.absent(),
     this.productVariantId = const Value.absent(),
@@ -19791,6 +19814,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<TaskResourceData> custom({
     Expression<String>? clientReferenceId,
+    Expression<String?>? taskclientReferenceId,
     Expression<String?>? taskId,
     Expression<String?>? id,
     Expression<String?>? productVariantId,
@@ -19812,6 +19836,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   }) {
     return RawValuesInsertable({
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (taskclientReferenceId != null)
+        'taskclient_reference_id': taskclientReferenceId,
       if (taskId != null) 'task_id': taskId,
       if (id != null) 'id': id,
       if (productVariantId != null) 'product_variant_id': productVariantId,
@@ -19836,6 +19862,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
 
   TaskResourceCompanion copyWith(
       {Value<String>? clientReferenceId,
+      Value<String?>? taskclientReferenceId,
       Value<String?>? taskId,
       Value<String?>? id,
       Value<String?>? productVariantId,
@@ -19856,6 +19883,8 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
       Value<String?>? additionalFields}) {
     return TaskResourceCompanion(
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      taskclientReferenceId:
+          taskclientReferenceId ?? this.taskclientReferenceId,
       taskId: taskId ?? this.taskId,
       id: id ?? this.id,
       productVariantId: productVariantId ?? this.productVariantId,
@@ -19882,6 +19911,10 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
     final map = <String, Expression>{};
     if (clientReferenceId.present) {
       map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (taskclientReferenceId.present) {
+      map['taskclient_reference_id'] =
+          Variable<String?>(taskclientReferenceId.value);
     }
     if (taskId.present) {
       map['task_id'] = Variable<String?>(taskId.value);
@@ -19944,6 +19977,7 @@ class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
   String toString() {
     return (StringBuffer('TaskResourceCompanion(')
           ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
           ..write('taskId: $taskId, ')
           ..write('id: $id, ')
           ..write('productVariantId: $productVariantId, ')
@@ -19979,6 +20013,12 @@ class $TaskResourceTable extends TaskResource
   late final GeneratedColumn<String?> clientReferenceId =
       GeneratedColumn<String?>('client_reference_id', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _taskclientReferenceIdMeta =
+      const VerificationMeta('taskclientReferenceId');
+  @override
+  late final GeneratedColumn<String?> taskclientReferenceId =
+      GeneratedColumn<String?>('taskclient_reference_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
   @override
   late final GeneratedColumn<String?> taskId = GeneratedColumn<String?>(
@@ -20089,6 +20129,7 @@ class $TaskResourceTable extends TaskResource
   @override
   List<GeneratedColumn> get $columns => [
         clientReferenceId,
+        taskclientReferenceId,
         taskId,
         id,
         productVariantId,
@@ -20124,6 +20165,12 @@ class $TaskResourceTable extends TaskResource
               data['client_reference_id']!, _clientReferenceIdMeta));
     } else if (isInserting) {
       context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('taskclient_reference_id')) {
+      context.handle(
+          _taskclientReferenceIdMeta,
+          taskclientReferenceId.isAcceptableOrUnknown(
+              data['taskclient_reference_id']!, _taskclientReferenceIdMeta));
     }
     if (data.containsKey('task_id')) {
       context.handle(_taskIdMeta,
@@ -20236,6 +20283,847 @@ class $TaskResourceTable extends TaskResource
   @override
   $TaskResourceTable createAlias(String alias) {
     return $TaskResourceTable(attachedDatabase, alias);
+  }
+}
+
+class SideEffectData extends DataClass implements Insertable<SideEffectData> {
+  final String? id;
+  final String? projectId;
+  final String? taskClientReferenceId;
+  final int? reAttempts;
+  final String? symptoms;
+  final String? auditCreatedBy;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  SideEffectData(
+      {this.id,
+      this.projectId,
+      this.taskClientReferenceId,
+      this.reAttempts,
+      this.symptoms,
+      this.auditCreatedBy,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  factory SideEffectData.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return SideEffectData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      projectId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
+      taskClientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}task_client_reference_id']),
+      reAttempts: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}re_attempts']),
+      symptoms: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}symptoms']),
+      auditCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
+      auditCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_reference_id'])!,
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
+      rowVersion: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String?>(projectId);
+    }
+    if (!nullToAbsent || taskClientReferenceId != null) {
+      map['task_client_reference_id'] =
+          Variable<String?>(taskClientReferenceId);
+    }
+    if (!nullToAbsent || reAttempts != null) {
+      map['re_attempts'] = Variable<int?>(reAttempts);
+    }
+    if (!nullToAbsent || symptoms != null) {
+      map['symptoms'] = Variable<String?>(symptoms);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String?>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool?>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    return map;
+  }
+
+  SideEffectCompanion toCompanion(bool nullToAbsent) {
+    return SideEffectCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskClientReferenceId),
+      reAttempts: reAttempts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reAttempts),
+      symptoms: symptoms == null && nullToAbsent
+          ? const Value.absent()
+          : Value(symptoms),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory SideEffectData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SideEffectData(
+      id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      taskClientReferenceId:
+          serializer.fromJson<String?>(json['taskClientReferenceId']),
+      reAttempts: serializer.fromJson<int?>(json['reAttempts']),
+      symptoms: serializer.fromJson<String?>(json['symptoms']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
+      'taskClientReferenceId':
+          serializer.toJson<String?>(taskClientReferenceId),
+      'reAttempts': serializer.toJson<int?>(reAttempts),
+      'symptoms': serializer.toJson<String?>(symptoms),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  SideEffectData copyWith(
+          {String? id,
+          String? projectId,
+          String? taskClientReferenceId,
+          int? reAttempts,
+          String? symptoms,
+          String? auditCreatedBy,
+          int? auditCreatedTime,
+          int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
+          int? clientModifiedTime,
+          String? auditModifiedBy,
+          int? auditModifiedTime,
+          String? clientReferenceId,
+          String? tenantId,
+          bool? isDeleted,
+          int? rowVersion,
+          String? additionalFields}) =>
+      SideEffectData(
+        id: id ?? this.id,
+        projectId: projectId ?? this.projectId,
+        taskClientReferenceId:
+            taskClientReferenceId ?? this.taskClientReferenceId,
+        reAttempts: reAttempts ?? this.reAttempts,
+        symptoms: symptoms ?? this.symptoms,
+        auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+        auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId ?? this.tenantId,
+        isDeleted: isDeleted ?? this.isDeleted,
+        rowVersion: rowVersion ?? this.rowVersion,
+        additionalFields: additionalFields ?? this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('SideEffectData(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      projectId,
+      taskClientReferenceId,
+      reAttempts,
+      symptoms,
+      auditCreatedBy,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SideEffectData &&
+          other.id == this.id &&
+          other.projectId == this.projectId &&
+          other.taskClientReferenceId == this.taskClientReferenceId &&
+          other.reAttempts == this.reAttempts &&
+          other.symptoms == this.symptoms &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
+  final Value<String?> id;
+  final Value<String?> projectId;
+  final Value<String?> taskClientReferenceId;
+  final Value<int?> reAttempts;
+  final Value<String?> symptoms;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  const SideEffectCompanion({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  });
+  SideEffectCompanion.insert({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<SideEffectData> custom({
+    Expression<String?>? id,
+    Expression<String?>? projectId,
+    Expression<String?>? taskClientReferenceId,
+    Expression<int?>? reAttempts,
+    Expression<String?>? symptoms,
+    Expression<String?>? auditCreatedBy,
+    Expression<int?>? auditCreatedTime,
+    Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
+    Expression<int?>? clientModifiedTime,
+    Expression<String?>? auditModifiedBy,
+    Expression<int?>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String?>? tenantId,
+    Expression<bool?>? isDeleted,
+    Expression<int?>? rowVersion,
+    Expression<String?>? additionalFields,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
+      if (taskClientReferenceId != null)
+        'task_client_reference_id': taskClientReferenceId,
+      if (reAttempts != null) 're_attempts': reAttempts,
+      if (symptoms != null) 'symptoms': symptoms,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+    });
+  }
+
+  SideEffectCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? projectId,
+      Value<String?>? taskClientReferenceId,
+      Value<int?>? reAttempts,
+      Value<String?>? symptoms,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields}) {
+    return SideEffectCompanion(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      taskClientReferenceId:
+          taskClientReferenceId ?? this.taskClientReferenceId,
+      reAttempts: reAttempts ?? this.reAttempts,
+      symptoms: symptoms ?? this.symptoms,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String?>(projectId.value);
+    }
+    if (taskClientReferenceId.present) {
+      map['task_client_reference_id'] =
+          Variable<String?>(taskClientReferenceId.value);
+    }
+    if (reAttempts.present) {
+      map['re_attempts'] = Variable<int?>(reAttempts.value);
+    }
+    if (symptoms.present) {
+      map['symptoms'] = Variable<String?>(symptoms.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String?>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool?>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int?>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SideEffectCompanion(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SideEffectTable extends SideEffect
+    with TableInfo<$SideEffectTable, SideEffectData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SideEffectTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectIdMeta = const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
+      'project_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _taskClientReferenceIdMeta =
+      const VerificationMeta('taskClientReferenceId');
+  @override
+  late final GeneratedColumn<String?> taskClientReferenceId =
+      GeneratedColumn<String?>('task_client_reference_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _reAttemptsMeta = const VerificationMeta('reAttempts');
+  @override
+  late final GeneratedColumn<int?> reAttempts = GeneratedColumn<int?>(
+      're_attempts', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _symptomsMeta = const VerificationMeta('symptoms');
+  @override
+  late final GeneratedColumn<String?> symptoms = GeneratedColumn<String?>(
+      'symptoms', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String?> auditCreatedBy = GeneratedColumn<String?>(
+      'audit_created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
+      'audit_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
+      'client_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int?> clientModifiedTime = GeneratedColumn<int?>(
+      'client_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String?> auditModifiedBy =
+      GeneratedColumn<String?>('audit_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
+      'audit_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String?> clientReferenceId =
+      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
+      'row_version', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        projectId,
+        taskClientReferenceId,
+        reAttempts,
+        symptoms,
+        auditCreatedBy,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? 'side_effect';
+  @override
+  String get actualTableName => 'side_effect';
+  @override
+  VerificationContext validateIntegrity(Insertable<SideEffectData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('task_client_reference_id')) {
+      context.handle(
+          _taskClientReferenceIdMeta,
+          taskClientReferenceId.isAcceptableOrUnknown(
+              data['task_client_reference_id']!, _taskClientReferenceIdMeta));
+    }
+    if (data.containsKey('re_attempts')) {
+      context.handle(
+          _reAttemptsMeta,
+          reAttempts.isAcceptableOrUnknown(
+              data['re_attempts']!, _reAttemptsMeta));
+    }
+    if (data.containsKey('symptoms')) {
+      context.handle(_symptomsMeta,
+          symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  SideEffectData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return SideEffectData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $SideEffectTable createAlias(String alias) {
+    return $SideEffectTable(attachedDatabase, alias);
   }
 }
 
@@ -27781,6 +28669,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $TargetTable target = $TargetTable(this);
   late final $TaskTable task = $TaskTable(this);
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
+  late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ServiceTable service = $ServiceTable(this);
   late final $ServiceAttributesTable serviceAttributes =
       $ServiceAttributesTable(this);
@@ -27818,6 +28707,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         target,
         task,
         taskResource,
+        sideEffect,
         service,
         serviceAttributes,
         serviceDefinition,

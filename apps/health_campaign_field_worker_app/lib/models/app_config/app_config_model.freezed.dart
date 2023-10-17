@@ -658,6 +658,9 @@ mixin _$AppConfigPrimaryWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+  SymptomsTypesSecondaryWrapperModel? get symptomsTypes =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -677,10 +680,13 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
           AppConfigSecondaryWrapperModel? appConfig,
       @JsonKey(name: 'module-version')
-          RowVersionWrapperModel? rowVersions});
+          RowVersionWrapperModel? rowVersions,
+      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+          SymptomsTypesSecondaryWrapperModel? symptomsTypes});
 
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
 }
 
 /// @nodoc
@@ -699,6 +705,7 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
   $Res call({
     Object? appConfig = freezed,
     Object? rowVersions = freezed,
+    Object? symptomsTypes = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: freezed == appConfig
@@ -709,6 +716,10 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
+      symptomsTypes: freezed == symptomsTypes
+          ? _value.symptomsTypes
+          : symptomsTypes // ignore: cast_nullable_to_non_nullable
+              as SymptomsTypesSecondaryWrapperModel?,
     ) as $Val);
   }
 
@@ -736,6 +747,19 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(rowVersions: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes {
+    if (_value.symptomsTypes == null) {
+      return null;
+    }
+
+    return $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>(
+        _value.symptomsTypes!, (value) {
+      return _then(_value.copyWith(symptomsTypes: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -751,12 +775,16 @@ abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
           AppConfigSecondaryWrapperModel? appConfig,
       @JsonKey(name: 'module-version')
-          RowVersionWrapperModel? rowVersions});
+          RowVersionWrapperModel? rowVersions,
+      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+          SymptomsTypesSecondaryWrapperModel? symptomsTypes});
 
   @override
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
   @override
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
+  @override
+  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
 }
 
 /// @nodoc
@@ -774,6 +802,7 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? appConfig = freezed,
     Object? rowVersions = freezed,
+    Object? symptomsTypes = freezed,
   }) {
     return _then(_$_AppConfigPrimaryWrapperModel(
       appConfig: freezed == appConfig
@@ -784,6 +813,10 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
+      symptomsTypes: freezed == symptomsTypes
+          ? _value.symptomsTypes
+          : symptomsTypes // ignore: cast_nullable_to_non_nullable
+              as SymptomsTypesSecondaryWrapperModel?,
     ));
   }
 }
@@ -793,7 +826,8 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
 class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   const _$_AppConfigPrimaryWrapperModel(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
-      @JsonKey(name: 'module-version') this.rowVersions});
+      @JsonKey(name: 'module-version') this.rowVersions,
+      @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes});
 
   factory _$_AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =>
       _$$_AppConfigPrimaryWrapperModelFromJson(json);
@@ -804,10 +838,13 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   @override
   @JsonKey(name: 'module-version')
   final RowVersionWrapperModel? rowVersions;
+  @override
+  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+  final SymptomsTypesSecondaryWrapperModel? symptomsTypes;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions)';
+    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes)';
   }
 
   @override
@@ -818,12 +855,15 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
             (identical(other.appConfig, appConfig) ||
                 other.appConfig == appConfig) &&
             (identical(other.rowVersions, rowVersions) ||
-                other.rowVersions == rowVersions));
+                other.rowVersions == rowVersions) &&
+            (identical(other.symptomsTypes, symptomsTypes) ||
+                other.symptomsTypes == symptomsTypes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, appConfig, rowVersions);
+  int get hashCode =>
+      Object.hash(runtimeType, appConfig, rowVersions, symptomsTypes);
 
   @JsonKey(ignore: true)
   @override
@@ -846,7 +886,9 @@ abstract class _AppConfigPrimaryWrapperModel
           {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
               final AppConfigSecondaryWrapperModel? appConfig,
           @JsonKey(name: 'module-version')
-              final RowVersionWrapperModel? rowVersions}) =
+              final RowVersionWrapperModel? rowVersions,
+          @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+              final SymptomsTypesSecondaryWrapperModel? symptomsTypes}) =
       _$_AppConfigPrimaryWrapperModel;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -858,6 +900,9 @@ abstract class _AppConfigPrimaryWrapperModel
   @override
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions;
+  @override
+  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
+  SymptomsTypesSecondaryWrapperModel? get symptomsTypes;
   @override
   @JsonKey(ignore: true)
   _$$_AppConfigPrimaryWrapperModelCopyWith<_$_AppConfigPrimaryWrapperModel>

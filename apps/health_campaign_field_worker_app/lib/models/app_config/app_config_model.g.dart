@@ -71,6 +71,10 @@ _$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
           ? null
           : RowVersionWrapperModel.fromJson(
               json['module-version'] as Map<String, dynamic>),
+      symptomsTypes: json['HCM-SYMPTOMS-TYPES'] == null
+          ? null
+          : SymptomsTypesSecondaryWrapperModel.fromJson(
+              json['HCM-SYMPTOMS-TYPES'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
@@ -78,6 +82,7 @@ Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
     <String, dynamic>{
       'HCM-FIELD-APP-CONFIG': instance.appConfig,
       'module-version': instance.rowVersions,
+      'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
     };
 
 _$_AppConfigSecondaryWrapperModel _$$_AppConfigSecondaryWrapperModelFromJson(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
@@ -10,6 +11,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showBackNavigation;
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
+  final VoidCallback? handleback;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
@@ -17,6 +19,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,
+    this.handleback,
   });
 
   @override
@@ -37,7 +40,10 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         foregroundColor: theme.colorScheme.onBackground,
                         padding: EdgeInsets.zero,
                       ),
-                      onPressed: () => context.router.pop(),
+                      onPressed: () {
+                        context.router.pop();
+                        handleback != null ? handleback!() : null;
+                      },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
                         AppLocalizations.of(context).translate(
@@ -69,15 +75,20 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
           ),
           SizedBox(width: showHelp ? 16 : 0),
           if (showHelp)
-            TextButton.icon(
+            TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               onPressed: helpClicked,
-              icon: const Icon(Icons.help_outline_outlined),
-              label: Text(
-                AppLocalizations.of(context).translate(
-                  i18.common.coreCommonHelp,
-                ),
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    AppLocalizations.of(context)
+                        .translate(i18.common.coreCommonHelp),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Icon(
+                    Icons.help_outline_outlined,
+                  ), // Add the icon to the right
+                ],
               ),
             ),
         ],

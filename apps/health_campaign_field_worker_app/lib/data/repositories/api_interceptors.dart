@@ -27,7 +27,7 @@ class AuthTokenInterceptor extends Interceptor {
         "RequestInfo": RequestInfoModel(
           apiId: RequestInfoData.apiId,
           ver: RequestInfoData.ver,
-          ts: RequestInfoData.ts,
+          ts: DateTime.now().millisecondsSinceEpoch,
           action: options.path.split('/').last,
           did: RequestInfoData.did,
           key: "1",

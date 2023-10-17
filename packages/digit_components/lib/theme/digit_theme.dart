@@ -151,7 +151,7 @@ class DigitTheme {
               0,
             ),
           ),
-          borderSide: BorderSide(color: colors.cloudGray, width: 2),
+          borderSide: BorderSide(color: colors.cloudGray, width: 1),
         ),
         contentPadding: const EdgeInsets.all(12),
         isDense: true,

@@ -1,6 +1,7 @@
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:easy_stepper/easy_stepper.dart';
+import 'package:flutter/cupertino.dart';
 
 class DigitStepper extends StatelessWidget {
   final int activeStep;
@@ -174,9 +175,9 @@ class DigitStepper extends StatelessWidget {
             (index) => EasyStep(
                   customTitle: Container(
                     margin:
-                        steps[index].titleMargin ?? const EdgeInsets.all(2.0),
+                        steps[index].titleMargin ?? const EdgeInsets.all(0.0),
                     padding:
-                        steps[index].titlePadding ?? const EdgeInsets.all(2.0),
+                        steps[index].titlePadding ?? const EdgeInsets.all(0.0),
                     width: steps[index].titleWidth ?? 5,
                     child: Text(
                       steps[index].title,
@@ -184,11 +185,7 @@ class DigitStepper extends StatelessWidget {
                           ?.apply(
                               color: DigitTheme.instance.colorScheme.onSurface),
                       softWrap: true,
-                      textAlign: index != 0 && index != steps.length - 1
-                          ? TextAlign.center
-                          : index == 0
-                              ? TextAlign.right
-                              : TextAlign.left,
+                      textAlign: TextAlign.center,
                       maxLines: 4,
                     ),
                   ),

@@ -37,6 +37,7 @@ import 'tables/project_type.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
+import 'tables/side_effect.dart';
 import 'tables/stock.dart';
 import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
@@ -70,6 +71,7 @@ part 'sql_store.g.dart';
   Target,
   Task,
   TaskResource,
+  SideEffect,
   Service,
   ServiceAttributes,
   ServiceDefinition,

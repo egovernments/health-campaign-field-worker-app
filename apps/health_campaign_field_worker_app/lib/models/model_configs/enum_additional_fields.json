@@ -1,0 +1,30 @@
+{
+  "name": "AdditionalFieldsType",
+  "enumValues": [
+    {
+      "name": "DeliveryStrategy",
+      "value": "DeliveryStrategy"
+    },
+    {
+      "name": "CycleIndex",
+      "value": "cycleIndex"
+    },
+    {
+      "name": "DoseIndex",
+      "value": "doseIndex"
+    },
+    {
+      "name": "DateOfVerification",
+      "value": "dateOfVerification"
+    },
+    {
+      "name": "DateOfAdministration",
+      "value": "dateOfAdministration"
+    },
+    {
+      "name": "DateOfDelivery",
+      "value": "dateOfDelivery"
+    }
+  ],
+  "isEnum": true
+}

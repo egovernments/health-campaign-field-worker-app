@@ -11,6 +11,14 @@
       "includeForTable": true
     },
     {
+      "name": "taskclientReferenceId",
+      "type": "String",
+      "includeForQuery": false,
+      "nullable": true,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
       "name": "taskId",
       "type": "String",
       "nullable": true,

@@ -29,6 +29,7 @@ import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/side_effect.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
@@ -51,6 +52,7 @@ import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
+import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
@@ -201,6 +203,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
+        create: (_) => SideEffectLocalRepository(
+          sql,
+          SideEffectOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -448,6 +457,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.sideEffect)
+          RepositoryProvider<
+              RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
+            create: (_) => SideEffectRemoteRepository(
               dio,
               actionMap: actions,
             ),

@@ -17,7 +17,7 @@ class BoundarySelectionPage extends StatefulWidget {
 
 class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
   bool shouldPop = false;
-  static const _selectedBoundaryKey = 'boundary';
+  Map<String, FormControl<BoundaryModel>> formControls = {};
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                 final labelList = state.selectedBoundaryMap.keys.toList();
 
                 return ReactiveFormBuilder(
-                  form: () => buildForm(),
+                  form: () => buildForm(state),
                   builder: (context, form, child) => Column(
                     children: [
                       Expanded(
@@ -75,11 +75,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                 horizontal: kPadding * 2,
                               ),
                               child: DigitDropdown<BoundaryModel>(
-                                initialValue: state.selectedBoundaryMap.entries
-                                    .firstWhereOrNull(
-                                      (element) => element.key == label,
-                                    )
-                                    ?.value,
+                                initialValue: formControls[label]?.value,
                                 label: label,
                                 menuItems: filteredItems,
                                 onChanged: (value) {
@@ -91,11 +87,14 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                           selectedBoundary: value,
                                         ),
                                       );
+                                  formControls[label]?.updateValue(value);
+                                  // Call the resetChildDropdowns function when a parent dropdown is selected
+                                  resetChildDropdowns(label, state);
                                 },
                                 valueMapper: (value) {
                                   return value.name ?? value.code ?? 'No Value';
                                 },
-                                formControlName: _selectedBoundaryKey,
+                                formControlName: label,
                               ),
                             );
                           },
@@ -137,14 +136,27 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
     );
   }
 
-  FormGroup buildForm() {
-    return fb.group(<String, Object>{
-      _selectedBoundaryKey: FormControl<BoundaryModel>(
-        validators: [
-          Validators.required,
-        ],
-        value: null,
-      ),
-    });
+  void resetChildDropdowns(String parentLabel, BoundaryState state) {
+    final labelList = state.selectedBoundaryMap.keys.toList();
+    final parentIndex = labelList.indexOf(parentLabel);
+
+    for (int i = parentIndex + 1; i < labelList.length; i++) {
+      final label = labelList[i];
+      formControls[label]?.updateValue(null);
+    }
+  }
+
+  FormGroup buildForm(BoundaryState state) {
+    formControls = {};
+    final labelList = state.selectedBoundaryMap.keys.toList();
+
+    for (final label in labelList) {
+      formControls[label] = FormControl<BoundaryModel>(
+        validators: label == labelList.first ? [Validators.required] : [],
+        value: state.selectedBoundaryMap[label],
+      );
+    }
+
+    return fb.group(formControls);
   }
 }

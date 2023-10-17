@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
@@ -17,6 +18,7 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
@@ -110,6 +112,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: true,
       projects: [],
       selectedProject: null,
+      projectType: null,
     ));
 
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -167,7 +170,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     List<ProjectModel> projects = [];
-
+    ProjectType? projectType;
     for (final projectStaff in projectStaffList) {
       await projectStaffLocalRepository.create(
         projectStaff,
@@ -234,12 +237,51 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
+      // TODO [Need to optimize the code]
+      try {
+        final projectTypes = await mdmsRepository.searchProjectType(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-PROJECT-TYPES',
+                  masterDetails: [MdmsMasterDetailModel('projectTypes')],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+
+        await mdmsRepository.writeToProjectTypeDB(
+          projectTypes,
+          isar,
+        );
+        emit(state.copyWith(
+          projectType: projectTypes.projectTypeWrapper?.projectTypes
+              .where((element) => element.id == projects.first.projectTypeId)
+              .toList()
+              .firstOrNull,
+        ));
+      } catch (_) {}
     }
 
     emit(ProjectState(
       projects: projects,
       loading: false,
       syncError: null,
+      projectType: projectType,
     ));
 
     if (projects.length == 1) {
@@ -376,6 +418,51 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         ).toJson(),
       );
+      final projectType = await mdmsRepository.searchProjectType(
+        envConfig.variables.mdmsApiPath,
+        MdmsRequestModel(
+          mdmsCriteria: MdmsCriteriaModel(
+            tenantId: envConfig.variables.tenantId,
+            moduleDetails: [
+              const MdmsModuleDetailModel(
+                moduleName: 'HCM-PROJECT-TYPES',
+                masterDetails: [MdmsMasterDetailModel('projectTypes')],
+              ),
+            ],
+          ),
+        ).toJson(),
+      );
+
+      await mdmsRepository.writeToProjectTypeDB(
+        projectType,
+        isar,
+      );
+
+      final selectedProject = projectType.projectTypeWrapper?.projectTypes
+          .where(
+            (element) => element.id == event.model.projectTypeId,
+          )
+          .toList()
+          .firstOrNull;
+      final currentRunningCycle = selectedProject?.cycles
+          ?.where(
+            (e) =>
+                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+            // Return null when no matching cycle is found
+          )
+          .firstOrNull;
+
+      final cycles = List<Cycle>.from(
+        selectedProject?.cycles ?? [],
+      );
+      cycles.sort((a, b) => a.id.compareTo(b.id));
+
+      final reqProjectType = selectedProject?.copyWith(cycles: cycles);
+      emit(state.copyWith(
+        projectType: reqProjectType,
+        selectedCycle: currentRunningCycle,
+      ));
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -435,8 +522,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
       }
-      /*Sets the bool value of projectSetup as true in local storage after all project data has been stored*/
-      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
         loading: false,
@@ -468,6 +553,8 @@ class ProjectState with _$ProjectState {
 
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
+    ProjectType? projectType,
+    Cycle? selectedCycle,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,

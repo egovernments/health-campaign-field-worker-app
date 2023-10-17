@@ -7,11 +7,10 @@ import 'package:location/location.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_households.dart';
-import '../models/beneficiary_statistics/beneficiary_statistics_model.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
-import '../widgets/beneficiary/beneficiary_statistics_card.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -60,32 +59,16 @@ class _SearchBeneficiaryPageState
                               alignment: Alignment.topLeft,
                               child: Text(
                                 localizations.translate(
-                                  i18.searchBeneficiary.statisticsLabelText,
+                                  context.beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? i18
+                                          .searchBeneficiary.statisticsLabelText
+                                      : i18.searchBeneficiary
+                                          .searchIndividualLabelText,
                                 ),
                                 style: theme.textTheme.displayMedium,
                                 textAlign: TextAlign.center,
                               ),
-                            ),
-                          ),
-                          BeneficiaryStatisticsCard(
-                            beneficiaryStatistics:
-                                BeneficiaryStatisticsWrapperModel(
-                              beneficiaryStatisticsList: [
-                                BeneficiaryStatisticsModel(
-                                  title: searchState.registeredHouseholds
-                                      .toString(),
-                                  content: localizations.translate(
-                                    '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfHouseholdsRegistered}',
-                                  ),
-                                ),
-                                BeneficiaryStatisticsModel(
-                                  title: searchState.deliveredInterventions
-                                      .toString(),
-                                  content: localizations.translate(
-                                    '${context.beneficiaryType.name.toUpperCase()}_${i18.searchBeneficiary.noOfResourcesDelivered}',
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
                           BlocBuilder<LocationBloc, LocationState>(
@@ -224,12 +207,12 @@ class _SearchBeneficiaryPageState
                                   searchState.householdMembers.elementAt(index);
                               final distance = calculateDistance(
                                 Coordinate(
-                                  locationState.latitude!,
-                                  locationState.longitude!,
+                                  locationState.latitude,
+                                  locationState.longitude,
                                 ),
                                 Coordinate(
-                                  i.household.address!.latitude!,
-                                  i.household.address!.longitude!,
+                                  i.household.address?.latitude,
+                                  i.household.address?.longitude,
                                 ),
                               );
 
@@ -246,13 +229,13 @@ class _SearchBeneficiaryPageState
                                       wrapper: i,
                                     ),
                                   );
+                                  setState(() {
+                                    isProximityEnabled = false;
+                                  });
+                                  searchController.clear();
 
                                   bloc.add(
-                                    SearchHouseholdsSearchByHouseholdHeadEvent(
-                                      searchText: searchController.text,
-                                      projectId: projectId,
-                                      isProximityEnabled: isProximityEnabled,
-                                    ),
+                                    const SearchHouseholdsClearEvent(),
                                   );
                                 },
                               );
