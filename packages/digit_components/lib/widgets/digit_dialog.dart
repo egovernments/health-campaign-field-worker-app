@@ -18,9 +18,18 @@ class DigitDialog extends StatelessWidget {
       barrierDismissible: options.barrierDismissible,
       barrierColor: options.barrierColor ??
           DigitTheme.instance.colors.black.withOpacity(0.7),
-      builder: (context) => DigitDialog(
-        key: options.key,
-        options: options,
+      builder: (context) => WillPopScope(
+        onWillPop: () async {
+          // Handle the back button press here
+          // If you want to prevent dismissal, return false.
+          bool canPop = options.barrierDismissible;
+          /* Add your logic here */;
+          return canPop;
+        },
+        child: DigitDialog(
+          key: options.key,
+          options: options,
+        ),
       ),
     );
   }

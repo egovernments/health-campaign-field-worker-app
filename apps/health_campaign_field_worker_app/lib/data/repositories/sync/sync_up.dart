@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
-import 'remote_type.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
+import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
-import '../../network_manager.dart';
 import '../oplog/oplog.dart';
 import '../remote/pgr_service.dart';
+import 'remote_type.dart';
 
 class PerformSyncUp {
   static FutureOr<void> syncUp({
@@ -21,6 +21,95 @@ class PerformSyncUp {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+
+    List<EntityModel> getEntityModel(
+      List<OpLogEntry<EntityModel>> opLogList,
+      LocalRepository<EntityModel, EntitySearchModel> local,
+    ) {
+      return opLogList
+          .map((e) {
+            final oplogEntryEntity = e.entity;
+
+            final serverGeneratedId = e.serverGeneratedId;
+            final rowVersion = e.rowVersion;
+            if (serverGeneratedId != null) {
+              var updatedEntity =
+                  local.opLogManager.applyServerGeneratedIdToEntity(
+                oplogEntryEntity,
+                serverGeneratedId,
+                rowVersion,
+              );
+
+              if (updatedEntity is HouseholdModel) {
+                final addressId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == householdAddressIdKey;
+                  },
+                )?.id;
+
+                updatedEntity = updatedEntity.copyWith(
+                  address: updatedEntity.address?.copyWith(
+                    id: updatedEntity.address?.id ?? addressId,
+                  ),
+                );
+              }
+
+              if (updatedEntity is IndividualModel) {
+                final identifierId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == individualIdentifierIdKey;
+                  },
+                )?.id;
+
+                final addressId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == individualAddressIdKey;
+                  },
+                )?.id;
+
+                updatedEntity = updatedEntity.copyWith(
+                  identifiers: updatedEntity.identifiers?.map((e) {
+                    return e.copyWith(
+                      id: e.id ?? identifierId,
+                    );
+                  }).toList(),
+                  address: updatedEntity.address?.map((e) {
+                    return e.copyWith(
+                      id: e.id ?? addressId,
+                    );
+                  }).toList(),
+                );
+              }
+
+              if (updatedEntity is TaskModel) {
+                final resourceId = e.additionalIds
+                    .firstWhereOrNull(
+                      (element) => element.idType == taskResourceIdKey,
+                    )
+                    ?.id;
+
+                updatedEntity = updatedEntity.copyWith(
+                  resources: updatedEntity.resources?.map((e) {
+                    if (resourceId != null) {
+                      return e.copyWith(
+                        taskId: serverGeneratedId,
+                        id: e.id ?? resourceId,
+                      );
+                    }
+
+                    return e.copyWith(taskId: serverGeneratedId);
+                  }).toList(),
+                );
+              }
+
+              return updatedEntity;
+            }
+
+            return oplogEntryEntity;
+          })
+          .whereNotNull()
+          .toList();
+    }
 
     final futures = await Future.wait(
       localRepositories
@@ -55,203 +144,167 @@ class PerformSyncUp {
       );
 
       for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value
-            .map((e) {
-              final oplogEntryEntity = e.entity;
-
-              final serverGeneratedId = e.serverGeneratedId;
-              final rowVersion = e.rowVersion;
-              if (serverGeneratedId != null) {
-                var updatedEntity =
-                    local.opLogManager.applyServerGeneratedIdToEntity(
-                  oplogEntryEntity,
-                  serverGeneratedId,
-                  rowVersion,
-                );
-
-                if (updatedEntity is HouseholdModel) {
-                  final addressId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == householdAddressIdKey;
-                    },
-                  )?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    address: updatedEntity.address?.copyWith(
-                      id: updatedEntity.address?.id ?? addressId,
-                    ),
-                  );
-                }
-
-                if (updatedEntity is IndividualModel) {
-                  final identifierId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == individualIdentifierIdKey;
-                    },
-                  )?.id;
-
-                  final addressId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == individualAddressIdKey;
-                    },
-                  )?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    identifiers: updatedEntity.identifiers?.map((e) {
-                      return e.copyWith(
-                        id: e.id ?? identifierId,
-                      );
-                    }).toList(),
-                    address: updatedEntity.address?.map((e) {
-                      return e.copyWith(
-                        id: e.id ?? addressId,
-                      );
-                    }).toList(),
-                  );
-                }
-
-                if (updatedEntity is TaskModel) {
-                  final resourceId = e.additionalIds
-                      .firstWhereOrNull(
-                        (element) => element.idType == taskResourceIdKey,
-                      )
-                      ?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    resources: updatedEntity.resources?.map((e) {
-                      if (resourceId != null) {
-                        return e.copyWith(
-                          taskId: serverGeneratedId,
-                          id: e.id ?? resourceId,
-                        );
-                      }
-
-                      return e.copyWith(taskId: serverGeneratedId);
-                    }).toList(),
-                  );
-                }
-
-                if (updatedEntity is AdverseEventModel) {
-                  updatedEntity = updatedEntity.copyWith(id: serverGeneratedId);
-                }
-
-                return updatedEntity;
-              }
-
-              return oplogEntryEntity;
-            })
-            .whereNotNull()
+        // [returns list of oplogs whose nonRecoverableError is false and syncedup is false]
+        final opLogList = operationGroupedEntity.value
+            .where(
+              (element) => !element.nonRecoverableError && !element.syncedUp,
+            )
+            .toList();
+        // [returns list of oplogs whose nonRecoverableError is true]
+        final opLogErrorList = operationGroupedEntity.value
+            .where((element) => element.nonRecoverableError)
             .toList();
 
-        if (operationGroupedEntity.key == DataOperation.create) {
-          await Future.delayed(const Duration(seconds: 1));
+        // [returns list of oplogs whose nonRecoverableError is false and retry count is equal to configured value]
+        final nonRecoverableErrorList = operationGroupedEntity.value
+            .where((element) =>
+                !element.nonRecoverableError &&
+                element.syncDownRetryCount >=
+                    envConfig.variables.syncDownRetryCount)
+            .toList();
 
-          switch (typeGroupedEntity.key) {
-            case DataModelType.complaints:
-              for (final entity in entities) {
-                if (remote is PgrServiceRemoteRepository &&
-                    entity is PgrServiceModel) {
-                  final response = await remote.create(entity);
-                  final responseData = response.data;
-                  if (responseData is! Map<String, dynamic>) {
-                    AppLogger.instance.error(
-                      title: 'NetworkManager : PgrServiceRemoteRepository',
-                      message: responseData,
-                      stackTrace: StackTrace.current,
-                    );
-                    continue;
-                  }
+        final List<List<OpLogEntry<EntityModel>>> listOfBatchedOpLogList =
+            opLogList.slices(bandwidthModel.batchSize).toList();
 
-                  PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
-                  PgrComplaintResponseModel pgrComplaintModel;
-                  try {
-                    pgrServiceCreateResponseModel =
-                        Mapper.fromMap<PgrServiceCreateResponseModel>(
-                      responseData,
-                    );
-                    pgrComplaintModel =
-                        pgrServiceCreateResponseModel.serviceWrappers.first;
-                  } catch (e) {
-                    rethrow;
-                  }
+        final List<List<OpLogEntry<EntityModel>>> listOfBatchedOpLogErrorList =
+            opLogErrorList.slices(bandwidthModel.batchSize).toList();
 
-                  final service = pgrComplaintModel.service;
-                  final serviceRequestId = service.serviceRequestId;
+        final List<List<OpLogEntry<EntityModel>>>
+            listOfBatchedNonRecoverableErrorList =
+            nonRecoverableErrorList.slices(bandwidthModel.batchSize).toList();
 
-                  if (serviceRequestId == null || serviceRequestId.isEmpty) {
-                    AppLogger.instance.error(
-                      title: 'NetworkManager : PgrServiceRemoteRepository',
-                      message: 'Service Request ID is null',
-                      stackTrace: StackTrace.current,
-                    );
-                    continue;
-                  }
-
-                  await local.markSyncedUp(
-                    clientReferenceId: entity.clientReferenceId,
-                  );
-
-                  await local.opLogManager.updateServerGeneratedIds(
-                    model: UpdateServerGeneratedIdModel(
-                      clientReferenceId: entity.clientReferenceId,
-                      serverGeneratedId: serviceRequestId,
-                      dataOperation: operationGroupedEntity.key,
-                    ),
-                  );
-
-                  await local.update(
-                    entity.copyWith(
-                      serviceRequestId: serviceRequestId,
-                      id: service.id,
-                      applicationStatus: service.applicationStatus,
-                      accountId: service.accountId,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-              break;
-            default:
-              final List<EntityModel> items = await filterEntitybyBandwidth(
-                bandwidthModel.batchSize,
-                entities,
+        if (listOfBatchedNonRecoverableErrorList.isNotEmpty) {
+          for (final sublist in listOfBatchedNonRecoverableErrorList) {
+            final nonRecoverableErrorEntities = getEntityModel(sublist, local);
+            await remote.dumpError(
+              nonRecoverableErrorEntities,
+              operationGroupedEntity.key,
+            );
+            for (final syncedEntity in sublist) {
+              if (syncedEntity.type == DataModelType.complaints) continue;
+              await local.markSyncedUp(
+                entry: syncedEntity,
+                nonRecoverableError: syncedEntity.nonRecoverableError,
+                clientReferenceId: syncedEntity.clientReferenceId,
+                id: syncedEntity.id,
               );
-              if (entities.isNotEmpty) {
-                if (items.isNotEmpty) {
-                  await remote.bulkCreate(items);
-                }
-              }
-          }
-        } else if (operationGroupedEntity.key == DataOperation.update) {
-          final List<EntityModel> items = await filterEntitybyBandwidth(
-            bandwidthModel.batchSize,
-            entities,
-          );
-          if (entities.isNotEmpty) {
-            if (items.isNotEmpty) {
-              await remote.bulkUpdate(items);
             }
           }
-        } else if (operationGroupedEntity.key == DataOperation.delete) {
-          final List<EntityModel> items = await filterEntitybyBandwidth(
-            bandwidthModel.batchSize,
-            entities,
-          );
-          await remote.bulkDelete(items);
-        }
-        if (operationGroupedEntity.key == DataOperation.singleCreate) {
-          for (var element in entities) {
-            await remote.singleCreate(element);
-          }
         }
 
-        final items = await filterOpLogByBandwidth(
-          bandwidthModel.batchSize,
-          operationGroupedEntity.value,
-        );
-        for (final syncedEntity in items) {
-          if (syncedEntity.type == DataModelType.complaints) continue;
-          await local.markSyncedUp(entry: syncedEntity);
+        if (listOfBatchedOpLogErrorList.isNotEmpty) {
+          for (final sublist in listOfBatchedOpLogErrorList) {
+            final errorEntities = getEntityModel(sublist, local);
+            await remote.dumpError(
+              errorEntities,
+              operationGroupedEntity.key,
+            );
+            for (final syncedEntity in sublist) {
+              await local.markSyncedUp(
+                entry: syncedEntity,
+                nonRecoverableError: syncedEntity.nonRecoverableError,
+                clientReferenceId: syncedEntity.clientReferenceId,
+                id: syncedEntity.id,
+              );
+            }
+          }
+        }
+        if (listOfBatchedOpLogList.isNotEmpty) {
+          for (final sublist in listOfBatchedOpLogList) {
+            final entities = getEntityModel(sublist, local);
+            if (operationGroupedEntity.key == DataOperation.create) {
+              switch (typeGroupedEntity.key) {
+                case DataModelType.complaints:
+                  for (final entity in entities) {
+                    if (remote is PgrServiceRemoteRepository &&
+                        entity is PgrServiceModel) {
+                      final response = await remote.create(entity);
+                      final responseData = response.data;
+                      if (responseData is! Map<String, dynamic>) {
+                        AppLogger.instance.error(
+                          title: 'NetworkManager : PgrServiceRemoteRepository',
+                          message: responseData,
+                          stackTrace: StackTrace.current,
+                        );
+                        continue;
+                      }
+
+                      PgrServiceCreateResponseModel
+                          pgrServiceCreateResponseModel;
+                      PgrComplaintResponseModel pgrComplaintModel;
+                      try {
+                        pgrServiceCreateResponseModel =
+                            Mapper.fromMap<PgrServiceCreateResponseModel>(
+                          responseData,
+                        );
+                        pgrComplaintModel =
+                            pgrServiceCreateResponseModel.serviceWrappers.first;
+                      } catch (e) {
+                        rethrow;
+                      }
+
+                      final service = pgrComplaintModel.service;
+                      final serviceRequestId = service.serviceRequestId;
+
+                      if (serviceRequestId == null ||
+                          serviceRequestId.isEmpty) {
+                        AppLogger.instance.error(
+                          title: 'NetworkManager : PgrServiceRemoteRepository',
+                          message: 'Service Request ID is null',
+                          stackTrace: StackTrace.current,
+                        );
+                        continue;
+                      }
+
+                      await local.markSyncedUp(
+                        clientReferenceId: entity.clientReferenceId,
+                        nonRecoverableError: entity.nonRecoverableError,
+                      );
+
+                      await local.opLogManager.updateServerGeneratedIds(
+                        model: UpdateServerGeneratedIdModel(
+                          clientReferenceId: entity.clientReferenceId,
+                          serverGeneratedId: serviceRequestId,
+                          dataOperation: operationGroupedEntity.key,
+                          rowVersion: entity.rowVersion,
+                        ),
+                      );
+
+                      await local.update(
+                        entity.copyWith(
+                          serviceRequestId: serviceRequestId,
+                          id: service.id,
+                          applicationStatus: service.applicationStatus,
+                          accountId: service.accountId,
+                        ),
+                        createOpLog: false,
+                      );
+                    }
+                  }
+                  break;
+                default:
+                  await remote.bulkCreate(entities);
+              }
+            } else if (operationGroupedEntity.key == DataOperation.update) {
+              await remote.bulkUpdate(entities);
+            } else if (operationGroupedEntity.key == DataOperation.delete) {
+              await remote.bulkDelete(entities);
+            }
+            if (operationGroupedEntity.key == DataOperation.singleCreate) {
+              for (var element in entities) {
+                await remote.singleCreate(element);
+              }
+            }
+            for (final syncedEntity in sublist) {
+              if (syncedEntity.type == DataModelType.complaints) continue;
+              await local.markSyncedUp(
+                entry: syncedEntity,
+                id: syncedEntity.id,
+                nonRecoverableError: syncedEntity.nonRecoverableError,
+                clientReferenceId: syncedEntity.clientReferenceId,
+              );
+            }
+          }
         }
       }
     }

@@ -14,7 +14,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/adverse_event.dart';
+import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -29,11 +29,11 @@ import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/side_effect.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
-import '../data/repositories/remote/adverse_event.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
@@ -52,6 +52,7 @@ import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
+import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
@@ -205,10 +206,10 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<AdverseEventModel, AdverseEventSearchModel>>(
-        create: (_) => AdverseEventLocalRepository(
+          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
+        create: (_) => SideEffectLocalRepository(
           sql,
-          AdverseEventOpLogManager(isar),
+          SideEffectOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -460,10 +461,10 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.adverseEvent)
+        if (value == DataModelType.sideEffect)
           RepositoryProvider<
-              RemoteRepository<AdverseEventModel, AdverseEventSearchModel>>(
-            create: (_) => AdverseEventRemoteRepository(
+              RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
+            create: (_) => SideEffectRemoteRepository(
               dio,
               actionMap: actions,
             ),

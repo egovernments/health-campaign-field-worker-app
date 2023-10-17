@@ -203,7 +203,7 @@ class _RecordPastDeliveryDetailsPageState
                               ));
                               Navigator.of(ctx).pop();
                               router.push(
-                                AdverseEventsRoute(
+                                SideEffectsRoute(
                                   tasks: [(futureTaskList ?? []).last],
                                 ),
                               );
@@ -232,14 +232,14 @@ class _RecordPastDeliveryDetailsPageState
                       ),
                       ...(futureTaskList?.asMap().entries.map((entry) {
                             final int doseNumber =
-                                int.parse(entry.value.additionalFields!.fields
+                                int.parse(entry.value.additionalFields?.fields
                                     .firstWhereOrNull(
                                       (ele) =>
                                           ele.key ==
                                           AdditionalFieldsType.doseIndex
                                               .toValue(),
-                                    )!
-                                    .value);
+                                    )
+                                    ?.value);
 
                             return StatefulBuilder(
                               builder: (context, setState) {

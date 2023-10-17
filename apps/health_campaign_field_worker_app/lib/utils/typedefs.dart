@@ -1,6 +1,6 @@
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
-import '../models/entities/adverse_event.dart';
+import '../models/entities/user.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
@@ -42,5 +42,5 @@ typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
 
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
-typedef AdverseEventDataRepository
-    = DataRepository<AdverseEventModel, AdverseEventSearchModel>;
+typedef SideEffectDataRepository
+    = DataRepository<SideEffectModel, SideEffectSearchModel>;

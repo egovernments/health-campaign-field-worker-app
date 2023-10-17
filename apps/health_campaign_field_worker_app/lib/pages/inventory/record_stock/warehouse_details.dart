@@ -145,6 +145,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     i18.warehouseDetails.dateOfReceipt,
                                   ),
                                   isRequired: false,
+                                  confirmText: localizations.translate(
+                                    i18.common.coreCommonOk,
+                                  ),
+                                  cancelText: localizations.translate(
+                                    i18.common.coreCommonCancel,
+                                  ),
                                 ),
                                 DigitTextFormField(
                                   readOnly: true,

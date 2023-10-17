@@ -9,13 +9,13 @@ import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
-import '../pages/beneficiary/adverse_events.dart';
 import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
+import '../pages/beneficiary/side_effects.dart';
 import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
@@ -55,7 +55,7 @@ import '../pages/project_selection.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-
+import '../pages/profile.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -116,8 +116,8 @@ part 'app_router.gr.dart';
               path: 'deliver-intervention',
             ),
             AutoRoute<List<TaskModel>>(
-              page: AdverseEventsPage,
-              path: 'adverse-events',
+              page: SideEffectsPage,
+              path: 'side-effects',
             ),
             AutoRoute(
               page: DoseAdministeredPage,
@@ -154,7 +154,6 @@ part 'app_router.gr.dart';
         ]),
 
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
-
         AutoRoute(
           page: ComplaintsAcknowledgementPage,
           path: 'complaints-acknowledgement',

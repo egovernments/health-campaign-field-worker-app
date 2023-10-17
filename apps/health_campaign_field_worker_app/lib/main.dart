@@ -1,18 +1,18 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:isar/isar.dart';
-
 import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
+import 'firebase_options.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
@@ -60,11 +60,15 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     final localSecureStore = LocalSecureStore.instance;
     if (state == AppLifecycleState.paused) {
-      await localSecureStore.setAppInActive(true);
+      setBgRunning(true);
       // Stop the background service when the app is terminated
     } else if (state == AppLifecycleState.resumed) {
       // Stop the background service when the app is terminated
-      await localSecureStore.setAppInActive(false);
+      setBgRunning(false);
+      final isRunning = await FlutterBackgroundService().isRunning();
+      final localSecureStore = LocalSecureStore.instance,
+          isBgRunning = await localSecureStore.isBackgroundSerivceRunning;
+      if (!isRunning && isBgRunning) {}
     }
   }
 }

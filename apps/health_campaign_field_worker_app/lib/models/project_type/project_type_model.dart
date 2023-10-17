@@ -7,7 +7,7 @@ part 'project_type_model.g.dart';
 class ProjectTypePrimaryWrapper with _$ProjectTypePrimaryWrapper {
   const factory ProjectTypePrimaryWrapper({
     @JsonKey(name: "HCM-PROJECT-TYPES")
-        final ProjectTypesSecondaryModel? projectTypeWrapper,
+    final ProjectTypesSecondaryModel? projectTypeWrapper,
   }) = _ProjectTypePrimaryWrapper;
 
   factory ProjectTypePrimaryWrapper.fromJson(Map<String, dynamic> json) =>
@@ -60,11 +60,9 @@ class DeliveryModel with _$DeliveryModel {
   const factory DeliveryModel({
     List<DoseCriteriaModel>? doseCriteria,
     @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-        String? mandatoryWaitSinceLastDeliveryInDays,
-    @JsonKey(name: 'deliveryStrategy')
-        String? deliveryStrategy,
-    @Default(0)
-        int id,
+    String? mandatoryWaitSinceLastDeliveryInDays,
+    @JsonKey(name: 'deliveryStrategy') String? deliveryStrategy,
+    @Default(0) int id,
   }) = _DeliveryModel;
 
   factory DeliveryModel.fromJson(Map<String, dynamic> json) =>
@@ -74,10 +72,9 @@ class DeliveryModel with _$DeliveryModel {
 @freezed
 class DoseCriteriaModel with _$DoseCriteriaModel {
   const factory DoseCriteriaModel({
-    @JsonKey(name: 'condition')
-        String? condition,
+    @JsonKey(name: 'condition') String? condition,
     @JsonKey(name: 'ProductVariants')
-        List<ProductVariantsModel>? productVariants,
+    List<ProductVariantsModel>? productVariants,
   }) = _DoseCriteriaModel;
 
   factory DoseCriteriaModel.fromJson(Map<String, dynamic> json) =>

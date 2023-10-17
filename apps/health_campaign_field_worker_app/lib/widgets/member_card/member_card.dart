@@ -26,7 +26,7 @@ class MemberCard extends StatelessWidget {
   final VoidCallback deleteMemberAction;
   final AppLocalizations localizations;
   final List<TaskModel>? tasks;
-  final List<AdverseEventModel>? adverseEvents;
+  final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
   final String? projectBeneficiaryClientReferenceId;
@@ -48,7 +48,7 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
-    this.adverseEvents,
+    this.sideEffects,
   });
 
   @override
@@ -244,7 +244,7 @@ class MemberCard extends StatelessWidget {
                                   allDosesDelivered(
                                             tasks,
                                             context.selectedCycle,
-                                            adverseEvents,
+                                            sideEffects,
                                             individual,
                                           ) &&
                                           !checkStatus(
@@ -271,7 +271,7 @@ class MemberCard extends StatelessWidget {
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
-                                adverseEvents,
+                                sideEffects,
                                 individual,
                               ) &&
                               !checkStatus(tasks, context.selectedCycle)))
@@ -359,6 +359,8 @@ class MemberCard extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
+                                                address:
+                                                    individual.address?.first,
                                               ),
                                               false,
                                               context.boundary,
@@ -404,7 +406,7 @@ class MemberCard extends StatelessWidget {
                                               rootNavigator: true,
                                             ).pop();
                                             await context.router.push(
-                                              AdverseEventsRoute(
+                                              SideEffectsRoute(
                                                 tasks: tasks!,
                                               ),
                                             );

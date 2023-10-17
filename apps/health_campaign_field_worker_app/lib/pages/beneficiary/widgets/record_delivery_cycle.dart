@@ -236,16 +236,29 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.status == Status.administeredSuccess.toValue() ? DigitTheme.instance.colorScheme.onSurfaceVariant
-                            : DigitTheme.instance.colorScheme.error,
+                            : tasks?.status ==
+                                    Status.administeredSuccess.toValue()
+                                ? DigitTheme
+                                    .instance.colorScheme.onSurfaceVariant
+                                : DigitTheme.instance.colorScheme.error,
                         fontWeight:
                             index == selectedIndex ? FontWeight.w700 : null,
                       ),
                     ),
                     TableData(
-                      tasks?.clientAuditDetails?.createdTime.toDateTime
-                              .getFormattedDate() ??
-                          '--',
+                      tasks?.status == Status.administeredFailed.toValue() ||
+                              (tasks?.additionalFields?.fields
+                                      .where((e) =>
+                                          e.key ==
+                                          AdditionalFieldsType.deliveryStrategy
+                                              .toValue())
+                                      .firstOrNull
+                                      ?.value ==
+                                  DeliverStrategyType.indirect.toValue())
+                          ? ' -- '
+                          : tasks?.clientAuditDetails?.createdTime.toDateTime
+                                  .getFormattedDate() ??
+                              ' -- ',
                       cellKey: 'completedOn',
                     ),
                   ]);

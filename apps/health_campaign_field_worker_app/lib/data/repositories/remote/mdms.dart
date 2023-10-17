@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import '../../../models/data_model.mapper.g.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';

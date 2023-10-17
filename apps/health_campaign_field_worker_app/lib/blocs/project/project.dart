@@ -124,8 +124,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final isOnline = connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile;
+    final selectedProject = await localSecureStore.selectedProject;
+    final isProjectSetUpComplete = await localSecureStore
+        .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
 
-    if (isOnline) {
+    /*Checks for if device is online and project data downloaded*/
+    if (isOnline && !isProjectSetUpComplete) {
       await _loadOnline(emit);
     } else {
       await _loadOffline(emit);
@@ -264,7 +268,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           projectTypes,
           isar,
         );
-// Todo[Need to remove this hardcoded id before creating PR]
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) => element.id == projects.first.projectTypeId)
@@ -453,16 +456,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       final cycles = List<Cycle>.from(
         selectedProject?.cycles ?? [],
       );
-      // for (var e in cycles) {
-      //   e.deliveries?.sort((c, d) => c.id.compareTo(d.id));
-      // }
       cycles.sort((a, b) => a.id.compareTo(b.id));
 
       final reqProjectType = selectedProject?.copyWith(cycles: cycles);
       emit(state.copyWith(
         projectType: reqProjectType,
         selectedCycle: currentRunningCycle,
-        //[TODO] need to add sorting based on order
       ));
 
       final rowversionList = await isar.rowVersionLists

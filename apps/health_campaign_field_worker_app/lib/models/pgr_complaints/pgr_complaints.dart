@@ -172,6 +172,8 @@ class PgrServiceModel extends EntityModel {
       additionalFields: Value(additionalDetail),
     );
   }
+
+  bool? get nonRecoverableError => null;
 }
 
 @MappableClass(ignoreNull: true)

@@ -21,7 +21,7 @@ class HouseholdOverviewBloc
   final HouseholdMemberDataRepository householdMemberRepository;
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
   final TaskDataRepository taskDataRepository;
-  final AdverseEventDataRepository adverseEventDataRepository;
+  final SideEffectDataRepository sideEffectDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -30,7 +30,7 @@ class HouseholdOverviewBloc
     required this.individualRepository,
     required this.householdMemberRepository,
     required this.taskDataRepository,
-    required this.adverseEventDataRepository,
+    required this.sideEffectDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -154,8 +154,8 @@ class HouseholdOverviewBloc
     ));
 
     // Search for adverse events associated with tasks.
-    final adverseEvents =
-        await adverseEventDataRepository.search(AdverseEventSearchModel(
+    final sideEffects =
+        await sideEffectDataRepository.search(SideEffectSearchModel(
       taskClientReferenceId:
           tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
     ));
@@ -169,7 +169,7 @@ class HouseholdOverviewBloc
           members: individuals,
           tasks: tasks.isEmpty ? null : tasks,
           projectBeneficiaries: projectBeneficiaries,
-          adverseEvents: adverseEvents,
+          sideEffects: sideEffects,
         ),
         loading: false,
       ),

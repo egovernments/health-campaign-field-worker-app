@@ -6,7 +6,7 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class AdverseEventSearchModel extends EntitySearchModel {
+class SideEffectSearchModel extends EntitySearchModel {
   final String? id;
   final List<String>? taskClientReferenceId;
   final String? projectId;
@@ -15,7 +15,7 @@ class AdverseEventSearchModel extends EntitySearchModel {
   final List<String>? clientReferenceId;
   final String? tenantId;
   
-  AdverseEventSearchModel({
+  SideEffectSearchModel({
     this.id,
     this.taskClientReferenceId,
     this.projectId,
@@ -28,7 +28,7 @@ class AdverseEventSearchModel extends EntitySearchModel {
   }):  super();
 
   @MappableConstructor()
-  AdverseEventSearchModel.ignoreDeleted({
+  SideEffectSearchModel.ignoreDeleted({
     this.id,
     this.taskClientReferenceId,
     this.projectId,
@@ -41,9 +41,9 @@ class AdverseEventSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AdverseEventModel extends EntityModel {
+class SideEffectModel extends EntityModel {
 
-  static const schemaName = 'AdverseEvent';
+  static const schemaName = 'SideEffect';
 
   final String? id;
   final String? projectId;
@@ -54,9 +54,9 @@ class AdverseEventModel extends EntityModel {
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
-  final AdverseEventAdditionalFields? additionalFields;
+  final SideEffectAdditionalFields? additionalFields;
 
-  AdverseEventModel({
+  SideEffectModel({
     this.additionalFields,
     this.id,
     this.projectId,
@@ -71,8 +71,8 @@ class AdverseEventModel extends EntityModel {
     super.isDeleted = false,
   }): super();
 
-  AdverseEventCompanion get companion {
-    return AdverseEventCompanion(
+  SideEffectCompanion get companion {
+    return SideEffectCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
@@ -97,9 +97,9 @@ class AdverseEventModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AdverseEventAdditionalFields extends AdditionalFields {
-  AdverseEventAdditionalFields({
-    super.schema = 'AdverseEvent',
+class SideEffectAdditionalFields extends AdditionalFields {
+  SideEffectAdditionalFields({
+    super.schema = 'SideEffect',
     required super.version,
     super.fields,
   });

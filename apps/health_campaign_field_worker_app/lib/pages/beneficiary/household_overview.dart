@@ -322,11 +322,11 @@ class _HouseholdOverviewPageState
                                                     projectBeneficiary.first
                                                         .clientReferenceId)
                                                 .toList();
-                                            final adverseEventData = taskdata !=
+                                            final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty
                                                 ? state.householdMemberWrapper
-                                                    .adverseEvents
+                                                    .sideEffects
                                                     ?.where((element) =>
                                                         element
                                                             .taskClientReferenceId ==
@@ -372,7 +372,7 @@ class _HouseholdOverviewPageState
                                               isHead: isHead,
                                               individual: e,
                                               tasks: taskdata,
-                                              adverseEvents: adverseEventData,
+                                              sideEffects: sideEffectData,
                                               editMemberAction: () async {
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
@@ -506,7 +506,7 @@ class _HouseholdOverviewPageState
                                                           .projectType
                                                           ?.cycles !=
                                                       null
-                                                  ? !checkEligibilityForAgeAndAdverseEvent(
+                                                  ? !checkEligibilityForAgeAndSideEffect(
                                                       DigitDOBAge(
                                                         years: ageInYears,
                                                         months: ageInMonths,
@@ -516,7 +516,7 @@ class _HouseholdOverviewPageState
                                                               .isNotEmpty
                                                           ? taskdata?.last
                                                           : null,
-                                                      adverseEventData,
+                                                      sideEffectData,
                                                     )
                                                   : false,
                                               // TODO Need to handle the null check

@@ -45,22 +45,14 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
       _$MdmsMasterDetailModelFromJson(json);
 }
 
-// class MdmsFilterModel with _$MdmsFilterModel {
-//   const factory MdmsFilterModel(String filter) = _MdmsFilterModel;
-
-//   factory MdmsFilterModel.fromJson(Map<String, dynamic> json) =>
-//       _$MdmsFilterModelFromJson(json);
-// }
-
 @freezed
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
     @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-        final AppConfigSecondaryWrapperModel? appConfig,
-    @JsonKey(name: 'module-version')
-        final RowVersionWrapperModel? rowVersions,
+    final AppConfigSecondaryWrapperModel? appConfig,
+    @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
     @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-        final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+    final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -96,43 +88,35 @@ class RowVersionWrapperModel with _$RowVersionWrapperModel {
 @freezed
 class AppConfig with _$AppConfig {
   factory AppConfig({
-    @JsonKey(name: 'NETWORK_DETECTION')
-        required String networkDetection,
-    @JsonKey(name: 'PERSISTENCE_MODE')
-        required String persistenceMode,
-    @JsonKey(name: 'SYNC_METHOD')
-        required String syncMethod,
-    @JsonKey(name: 'SYNC_TRIGGER')
-        required String syncTrigger,
-    @JsonKey(name: 'LANGUAGES')
-        required List<Languages> languages,
-    @JsonKey(name: 'TENANT_ID')
-        final String? tenantId,
-    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-        final double? maxRadius,
+    @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
+    @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
+    @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
+    @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
+    @JsonKey(name: 'LANGUAGES') required List<Languages> languages,
+    @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
     @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    required List<DeletionReasonOptions> householdDeletionReasonOptions,
     @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-        required List<BandWidthBatchSize> bandWidthBatchSize,
+    required List<BandWidthBatchSize> bandWidthBatchSize,
     @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-        BackgroundServiceConfig? backgroundServiceConfig,
+    BackgroundServiceConfig? backgroundServiceConfig,
     @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions>
-            householdMemberDeletionReasonOptions,
+    required List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
     @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-        required List<GenderOptions> genderOptions,
+    required List<GenderOptions> genderOptions,
     @JsonKey(name: 'CHECKLIST_TYPES')
-        required List<CheckListTypes> checklistTypes,
+    required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-        required List<IdTypeOptions> idTypeOptions,
+    required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-        required List<DeliveryCommentOptions> deliveryCommentOptions,
+    required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
-        required BackendInterface backendInterface,
+    required BackendInterface backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
-        required List<CallSupportList>? callSupportOptions,
+    required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
-        required List<TransportTypes> transportTypes,
+    required List<TransportTypes> transportTypes,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

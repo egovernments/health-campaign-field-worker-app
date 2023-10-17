@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:drift/drift.dart';
-
-import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
+import '../../../models/data_model.dart';
+
 import '../../local_store/sql_store/sql_store.dart';
 import '../oplog/oplog.dart';
 
