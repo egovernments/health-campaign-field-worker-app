@@ -164,11 +164,23 @@ class _HouseholdLocationPageState
                                 loading,
                               ) {
                                 var addressModel = address.copyWith(
-                                  addressLine1: addressLine1,
-                                  addressLine2: addressLine2,
-                                  landmark: landmark,
+                                  addressLine1: addressLine1 != null &&
+                                          addressLine1.trim().isNotEmpty
+                                      ? addressLine1
+                                      : null,
+                                  addressLine2: addressLine2 != null &&
+                                          addressLine2.trim().isNotEmpty
+                                      ? addressLine2
+                                      : null,
+                                  landmark: landmark != null &&
+                                          landmark.trim().isNotEmpty
+                                      ? landmark
+                                      : null,
                                   locality: address.locality,
-                                  pincode: postalCode,
+                                  pincode: postalCode != null &&
+                                          postalCode.trim().isNotEmpty
+                                      ? postalCode
+                                      : null,
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value,
                                   longitude: form.control(_lngKey).value,
