@@ -40,6 +40,7 @@ class ServiceDefinitionModel extends EntityModel {
   final String? tenantId;
   final String? code;
   final bool? isActive;
+  final bool? nonRecoverableError;
   final int? rowVersion;
   final List<AttributesModel>? attributes;
   final ServiceDefinitionAdditionalFields? additionalFields;
@@ -50,6 +51,7 @@ class ServiceDefinitionModel extends EntityModel {
     this.tenantId,
     this.code,
     this.isActive,
+    this.nonRecoverableError = false,
     this.rowVersion,
     this.attributes,
     super.auditDetails,super.clientAuditDetails,
@@ -72,6 +74,7 @@ class ServiceDefinitionModel extends EntityModel {
       tenantId: Value(tenantId),
       code: Value(code),
       isActive: Value(isActive),
+      nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
       );
   }

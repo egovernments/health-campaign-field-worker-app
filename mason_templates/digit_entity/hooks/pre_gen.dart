@@ -20,6 +20,15 @@ void run(HookContext context) {
         nullable: true,
       ),
       AttributeModel(
+        name: 'nonRecoverableError',
+        type: 'bool',
+        includeForQuery: false,
+        includeForEntity: true,
+        includeForTable: true,
+        nullable: true,
+        defaultValue: 'false',
+      ),
+      AttributeModel(
         name: 'auditCreatedTime',
         type: 'int',
         includeForQuery: false,

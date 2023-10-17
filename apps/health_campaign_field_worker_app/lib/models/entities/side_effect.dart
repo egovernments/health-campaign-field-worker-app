@@ -14,7 +14,7 @@ class SideEffectSearchModel extends EntitySearchModel {
   final List<String>? symptoms;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   SideEffectSearchModel({
     this.id,
     this.taskClientReferenceId,
@@ -25,7 +25,7 @@ class SideEffectSearchModel extends EntitySearchModel {
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   SideEffectSearchModel.ignoreDeleted({
@@ -37,12 +37,11 @@ class SideEffectSearchModel extends EntitySearchModel {
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class SideEffectModel extends EntityModel {
-
   static const schemaName = 'SideEffect';
 
   final String? id;
@@ -50,6 +49,7 @@ class SideEffectModel extends EntityModel {
   final String? taskClientReferenceId;
   final int? reAttempts;
   final List<String>? symptoms;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -62,12 +62,14 @@ class SideEffectModel extends EntityModel {
     this.taskClientReferenceId,
     this.reAttempts,
     this.symptoms,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   SideEffectCompanion get companion {
     return SideEffectCompanion(
@@ -86,10 +88,11 @@ class SideEffectModel extends EntityModel {
       taskClientReferenceId: Value(taskClientReferenceId),
       reAttempts: Value(reAttempts),
       symptoms: Value(symptoms?.toString()),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 

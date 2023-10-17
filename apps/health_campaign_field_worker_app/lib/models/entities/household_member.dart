@@ -54,6 +54,7 @@ class HouseholdMemberModel extends EntityModel {
   final String? individualId;
   final String? individualClientReferenceId;
   final bool isHeadOfHousehold;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -67,6 +68,7 @@ class HouseholdMemberModel extends EntityModel {
     this.individualId,
     this.individualClientReferenceId,
     required this.isHeadOfHousehold,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -92,6 +94,7 @@ class HouseholdMemberModel extends EntityModel {
       individualId: Value(individualId),
       individualClientReferenceId: Value(individualClientReferenceId),
       isHeadOfHousehold: Value(isHeadOfHousehold),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

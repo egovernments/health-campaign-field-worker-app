@@ -8,6 +8,7 @@ class ProjectFacility extends Table {
   TextColumn get facilityId => text()();
   TextColumn get projectId => text()();
   TextColumn get auditCreatedBy => text().nullable()();
+  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();

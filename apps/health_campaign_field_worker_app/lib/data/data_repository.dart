@@ -209,6 +209,58 @@ abstract class RemoteRepository<D extends EntityModel,
     );
   }
 
+  FutureOr<Response> dumpError(
+    List<EntityModel> entities,
+    DataOperation operation,
+  ) async {
+    return executeFuture(
+      future: () async {
+        String url = "";
+
+        if (operation == DataOperation.create) {
+          url = bulkCreatePath;
+        } else if (operation == DataOperation.update) {
+          url = bulkUpdatePath;
+        } else if (operation == DataOperation.delete) {
+          url = bulkDeletePath;
+        } else if (operation == DataOperation.singleCreate) {
+          url = createPath;
+        } else if (operation == DataOperation.singleCreate) {
+          url = searchPath;
+        }
+
+        return await dio.post(
+          envConfig.variables.dumpErrorApiPath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            'errorDetail': {
+              "apiDetails": {
+                "id": null,
+                "url": url,
+                "contentType": null,
+                "methodType": null,
+                "requestBody": _getMap(entities).toString(),
+                "requestHeaders": null,
+                "additionalDetails": null,
+              },
+              "errors": [
+                {
+                  "exception": null,
+                  "type": "NON_RECOVERABLE",
+                  "errorCode": null,
+                  "errorMessage": "UPLOAD_ERROR_FROM_APP",
+                  "additionalDetails": null,
+                },
+              ],
+            },
+          },
+        );
+      },
+    );
+  }
+
   FutureOr<Response> bulkDelete(List<EntityModel> entities) async {
     return executeFuture(
       future: () async {
@@ -353,11 +405,13 @@ abstract class LocalRepository<D extends EntityModel,
     OpLogEntry<D>? entry,
     String? clientReferenceId,
     int? id,
+    bool? nonRecoverableError,
   }) async {
     return opLogManager.markSyncUp(
       entry: entry,
       clientReferenceId: clientReferenceId,
       id: id,
+      nonRecoverableError: nonRecoverableError,
     );
   }
 }

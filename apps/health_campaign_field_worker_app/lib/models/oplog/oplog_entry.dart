@@ -21,6 +21,7 @@ class OpLogEntry<T extends EntityModel> {
   final List<AdditionalId> additionalIds;
   final int syncDownRetryCount;
   final int rowVersion;
+  final bool nonRecoverableError;
 
   const OpLogEntry(
     this.entity,
@@ -38,6 +39,7 @@ class OpLogEntry<T extends EntityModel> {
     this.additionalIds = const [],
     this.syncDownRetryCount = 0,
     this.rowVersion = 1,
+    this.nonRecoverableError = false,
   });
 
   static OpLogEntry<T> fromOpLog<T extends EntityModel>(OpLog e) {
@@ -50,6 +52,7 @@ class OpLogEntry<T extends EntityModel> {
       serverGeneratedId: e.serverGeneratedId,
       id: e.id,
       clientReferenceId: e.clientReferenceId,
+      nonRecoverableError: e.nonRecoverableError,
       syncedDown: e.syncedDown,
       syncedDownOn: e.syncedDownOn,
       syncedUp: e.syncedUp,
@@ -74,6 +77,7 @@ class OpLogEntry<T extends EntityModel> {
       ..createdBy = createdBy
       ..createdAt = createdAt
       ..syncedUp = syncedUp
+      ..nonRecoverableError = nonRecoverableError
       ..additionalIds = additionalIds
           .map((e) => o.AdditionalId()
             ..id = e.id

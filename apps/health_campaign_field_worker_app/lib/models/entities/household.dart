@@ -52,6 +52,7 @@ class HouseholdModel extends EntityModel {
   final int? memberCount;
   final double? latitude;
   final double? longitude;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -64,6 +65,7 @@ class HouseholdModel extends EntityModel {
     this.memberCount,
     this.latitude,
     this.longitude,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -88,6 +90,7 @@ class HouseholdModel extends EntityModel {
       memberCount: Value(memberCount),
       latitude: Value(latitude),
       longitude: Value(longitude),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

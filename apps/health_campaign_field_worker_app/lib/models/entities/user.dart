@@ -66,6 +66,7 @@ class UserModel extends EntityModel {
   final String? tenantId;
   final List<String>? uuid;
   final String? createdDate;
+  final bool? nonRecoverableError;
   final int? rowVersion;
   final UserAdditionalFields? additionalFields;
 
@@ -104,6 +105,7 @@ class UserModel extends EntityModel {
     this.tenantId,
     this.uuid,
     this.createdDate,
+    this.nonRecoverableError = false,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
@@ -154,6 +156,7 @@ class UserModel extends EntityModel {
       tenantId: Value(tenantId),
       uuid: Value(uuid?.toString()),
       createdDate: Value(createdDate),
+      nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
       );
   }

@@ -60,6 +60,7 @@ class StockReconciliationModel extends EntityModel {
   final int? physicalCount;
   final int? calculatedCount;
   final String? commentsOnReconciliation;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
   final DateTime dateOfReconciliationTime;
@@ -76,6 +77,7 @@ class StockReconciliationModel extends EntityModel {
     this.physicalCount,
     this.calculatedCount,
     this.commentsOnReconciliation,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.rowVersion,
     required int dateOfReconciliation,
@@ -108,6 +110,7 @@ class StockReconciliationModel extends EntityModel {
       physicalCount: Value(physicalCount),
       calculatedCount: Value(calculatedCount),
       commentsOnReconciliation: Value(commentsOnReconciliation),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       rowVersion: Value(rowVersion),
       dateOfReconciliation: Value(dateOfReconciliation),
