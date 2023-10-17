@@ -31,6 +31,7 @@ class TargetModel extends EntityModel {
   final String? clientReferenceId;
   final double? totalNo;
   final double? targetNo;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final BeneficiaryType? beneficiaryType;
@@ -42,6 +43,7 @@ class TargetModel extends EntityModel {
     this.clientReferenceId,
     this.totalNo,
     this.targetNo,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     this.beneficiaryType,
@@ -65,6 +67,7 @@ class TargetModel extends EntityModel {
       clientReferenceId: Value(clientReferenceId),
       totalNo: Value(totalNo),
       targetNo: Value(targetNo),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       beneficiaryType: Value(beneficiaryType),

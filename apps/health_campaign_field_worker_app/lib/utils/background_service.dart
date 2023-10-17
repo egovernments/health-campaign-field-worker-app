@@ -193,15 +193,13 @@ void onStart(ServiceInstance service) async {
                 service: service,
               );
 
-              print(isSyncCompleted);
-              print("-----SYNC Completed-----");
               i++;
-              // final isAppInActive =
-              //     await LocalSecureStore.instance.isAppInActive;
+              final isAppInActive =
+                  await LocalSecureStore.instance.isAppInActive;
 
-              // if (isSyncCompleted && i >= 2 && isAppInActive) {
-              //   service.stopSelf();
-              // }
+              if (isSyncCompleted && i >= 2 && isAppInActive) {
+                service.stopSelf();
+              }
             }
           }
         }

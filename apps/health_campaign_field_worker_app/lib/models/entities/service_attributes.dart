@@ -35,6 +35,7 @@ class ServiceAttributesModel extends EntityModel {
   final String? dataType;
   final String? referenceId;
   final dynamic? additionalDetails;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
@@ -47,6 +48,7 @@ class ServiceAttributesModel extends EntityModel {
     this.dataType,
     this.referenceId,
     this.additionalDetails,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
@@ -71,6 +73,7 @@ class ServiceAttributesModel extends EntityModel {
       dataType: Value(dataType),
       referenceId: Value(referenceId),
       additionalDetails: Value(additionalDetails),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

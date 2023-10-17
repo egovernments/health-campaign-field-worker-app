@@ -49,6 +49,7 @@ class ServiceModel extends EntityModel {
   final String? accountId;
   final String? additionalDetails;
   final String? createdAt;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final List<ServiceAttributesModel>? attributes;
@@ -63,6 +64,7 @@ class ServiceModel extends EntityModel {
     this.accountId,
     this.additionalDetails,
     this.createdAt,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     this.attributes,
@@ -89,6 +91,7 @@ class ServiceModel extends EntityModel {
       accountId: Value(accountId),
       additionalDetails: Value(additionalDetails),
       createdAt: Value(createdAt),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );

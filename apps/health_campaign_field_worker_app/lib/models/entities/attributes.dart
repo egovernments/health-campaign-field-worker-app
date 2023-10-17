@@ -61,6 +61,7 @@ class AttributesModel extends EntityModel {
   final bool? required;
   final String? regex;
   final int? order;
+  final bool? nonRecoverableError;
   final int? rowVersion;
   final AttributesAdditionalFields? additionalFields;
 
@@ -76,6 +77,7 @@ class AttributesModel extends EntityModel {
     this.required,
     this.regex,
     this.order,
+    this.nonRecoverableError = false,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
@@ -103,6 +105,7 @@ class AttributesModel extends EntityModel {
       required: Value(required),
       regex: Value(regex),
       order: Value(order),
+      nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
       );
   }

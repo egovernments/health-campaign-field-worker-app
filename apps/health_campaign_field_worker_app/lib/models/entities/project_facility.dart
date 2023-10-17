@@ -39,6 +39,7 @@ class ProjectFacilityModel extends EntityModel {
   final String id;
   final String facilityId;
   final String projectId;
+  final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
   final ProjectFacilityAdditionalFields? additionalFields;
@@ -48,6 +49,7 @@ class ProjectFacilityModel extends EntityModel {
     required this.id,
     required this.facilityId,
     required this.projectId,
+    this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
@@ -69,6 +71,7 @@ class ProjectFacilityModel extends EntityModel {
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );
