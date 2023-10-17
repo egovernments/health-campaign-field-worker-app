@@ -91,6 +91,8 @@ class Common {
   String get coreCommonGoback => 'CORE_COMMON_GO_BACK';
 
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
+
+  String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 }
 
 class AdverseEvents {
