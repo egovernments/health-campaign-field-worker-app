@@ -125,6 +125,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get loginError => 'LOGIN_ERROR';
 }
 
 class Checklist {

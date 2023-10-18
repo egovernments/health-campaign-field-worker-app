@@ -320,11 +320,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItems = <HomeItemCard>[
       HomeItemCard(
-        icon: Icons.menu_book,
-        label: i18.home.myCheckList,
-        onPressed: () => context.router.push(ChecklistWrapperRoute()),
-      ),
-      HomeItemCard(
         icon: Icons.all_inbox,
         label: i18.home.beneficiaryLabel,
         onPressed: () async {
@@ -336,10 +331,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         },
       ),
       HomeItemCard(
-        icon: Icons.announcement,
-        label: i18.home.fileComplaint,
-        onPressed: () =>
-            context.router.push(const ComplaintsInboxWrapperRoute()),
+        icon: Icons.store_mall_directory,
+        label: i18.home.manageStockLabel,
+        onPressed: () => context.router.push(ManageStocksRoute()),
       ),
       HomeItemCard(
         icon: Icons.menu_book,
@@ -352,9 +346,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         onPressed: () => context.router.push(ChecklistWrapperRoute()),
       ),
       HomeItemCard(
-        icon: Icons.store_mall_directory,
-        label: i18.home.manageStockLabel,
-        onPressed: () => context.router.push(ManageStocksRoute()),
+        icon: Icons.menu_book,
+        label: i18.home.myCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
+      HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.fileComplaint,
+        onPressed: () =>
+            context.router.push(const ComplaintsInboxWrapperRoute()),
       ),
       HomeItemCard(
         icon: Icons.sync_alt,
