@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:397617237644:android:65f82dc21b1ad4d0f6b5a9",
+        "mobilesdk_app_id": "1:397617237644:android:7b211b726b058468f6b5a9",
         "android_client_info": {
-          "package_name": "org.egov.salama"
+          "package_name": "org.egov.qa.smc"
         }
       },
       "oauth_client": [
@@ -31,10 +31,82 @@
               "client_type": 3
             },
             {
-              "client_id": "397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com",
+              "client_id": "397617237644-23nom2dql1m51jmb2vfgcue720q2qfme.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "org.egov.salama"
+                "bundle_id": "org.egov.healthCampaignFieldWorkerApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:6aedcd1aef3d8565f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.training.smc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-23nom2dql1m51jmb2vfgcue720q2qfme.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.healthCampaignFieldWorkerApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397617237644:android:816d126813b37b48f6b5a9",
+        "android_client_info": {
+          "package_name": "org.egov.salama.smc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzE5f156_ia7HumLb1fDg8A-88uhmQ68Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397617237644-vm0a9h30netd799gtt69kh6c7qbipp2b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "397617237644-23nom2dql1m51jmb2vfgcue720q2qfme.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.egov.healthCampaignFieldWorkerApp"
               }
             }
           ]
