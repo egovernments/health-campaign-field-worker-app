@@ -413,20 +413,81 @@ class SearchHouseholdsBloc
         .map((e) => e.clientReferenceId)
         .toList();
 
-    // Search for individual results using the extracted IDs and search text.
-    final List<IndividualModel> indResults = await individual.search(
+    // Search for individual results using the extracted IDs and search text in first name.
+    final firstNameClientRefResults = await individual.search(
       IndividualSearchModel(
         clientReferenceId: indIds,
-        name: NameSearchModel(givenName: event.searchText.trim()),
+        name: NameSearchModel(
+          givenName: event.searchText.trim(),
+        ),
       ),
     );
 
-    // Search for individual results based on the search text only.
-    final List<IndividualModel> results = await individual.search(
+    // Search for individual results using the extracted IDs and search text in last name.
+    final lastNameClientRefResults = await individual.search(
       IndividualSearchModel(
-        name: NameSearchModel(givenName: event.searchText.trim()),
+        clientReferenceId: indIds,
+        name: NameSearchModel(
+          familyName: event.searchText.trim(),
+        ),
       ),
     );
+
+    Set<String> uniqueClientRefIds = {};
+
+    for (final obj in firstNameClientRefResults) {
+      uniqueClientRefIds.add(obj.clientReferenceId);
+    }
+
+    for (final obj in lastNameClientRefResults) {
+      uniqueClientRefIds.add(obj.clientReferenceId);
+    }
+
+    // filter unique results
+    final List<IndividualModel> indResults = [
+      ...firstNameClientRefResults,
+      ...lastNameClientRefResults,
+    ]
+        .where((obj) =>
+            uniqueClientRefIds.contains(obj.clientReferenceId) &&
+            obj.auditDetails?.createdBy == userUid)
+        .toList();
+
+    // Search for individual results based on the search text only.
+    final firstNameResults = await individual.search(
+      IndividualSearchModel(
+        name: NameSearchModel(
+          givenName: event.searchText.trim(),
+        ),
+      ),
+    );
+
+    final lastNameResults = await individual.search(
+      IndividualSearchModel(
+        name: NameSearchModel(
+          familyName: event.searchText.trim(),
+        ),
+      ),
+    );
+
+    Set<String> uniqueIds = {};
+
+    for (final obj in firstNameResults) {
+      uniqueIds.add(obj.clientReferenceId);
+    }
+
+    for (final obj in lastNameResults) {
+      uniqueIds.add(obj.clientReferenceId);
+    }
+
+    List<IndividualModel> results = [
+      ...firstNameResults,
+      ...lastNameResults,
+    ]
+        .where((obj) =>
+            uniqueIds.contains(obj.clientReferenceId) &&
+            obj.auditDetails?.createdBy == userUid)
+        .toList();
 
     // Initialize a list to store household members.
     final householdMembers = <HouseholdMemberModel>[];

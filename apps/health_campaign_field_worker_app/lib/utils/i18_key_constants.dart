@@ -207,6 +207,8 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+
+  String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {
@@ -273,6 +275,10 @@ class IndividualDetails {
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
+  String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
@@ -308,6 +314,14 @@ class IndividualDetails {
   String get monthsErrorText => 'ERR_MONTHS';
 
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
+
+  String get firstNameIsRequiredError => 'FIRST_NAME_REQUIRED_ERROR_MESSAGE';
+
+  String get firstNameLengthError => 'FIRST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
 }
 
 class HouseholdLocation {

@@ -70,8 +70,8 @@ class IndividualLocalRepository
                   query.name!.givenName!,
                 ),
               if (query.name?.familyName != null)
-                sql.name.familyName.equals(
-                  query.name!.familyName,
+                sql.name.familyName.contains(
+                  query.name!.familyName!,
                 ),
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(

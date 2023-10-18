@@ -39,8 +39,6 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedCycle;
   }
 
-
-
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
@@ -110,6 +108,7 @@ extension ContextUtilityExtensions on BuildContext {
       switch (role.code) {
         case "REGISTRAR":
         case "DISTRIBUTOR":
+        case "COMMUNITY_DISTRIBUTOR":
           return true;
         default:
           break;

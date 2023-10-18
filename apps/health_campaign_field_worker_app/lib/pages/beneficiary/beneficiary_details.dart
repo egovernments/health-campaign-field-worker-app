@@ -252,8 +252,10 @@ class _BeneficiaryDetailsPageState
                                       ? householdMemberWrapper
                                           .headOfHousehold.name?.givenName
                                       : state.selectedIndividual?.name
-                                              ?.givenName ??
-                                          '--',
+                                                  ?.givenName !=
+                                              null
+                                          ? '${householdMemberWrapper.headOfHousehold.name?.givenName ?? ''} ${householdMemberWrapper.headOfHousehold.name?.familyName ?? ''}'
+                                          : '--',
                                   localizations.translate(
                                     i18.deliverIntervention.idTypeText,
                                   ): () {

@@ -34,8 +34,7 @@ class DoseAdministeredPage extends LocalizedStatefulWidget {
 }
 
 class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
-  static const _doseAdministeredKey = 'doseAdministered';
-  bool doseAdministered = false;
+  bool doseAdministered = true;
   bool formSubmitted = false;
 
   final clickedStatus = ValueNotifier<bool>(false);
@@ -89,13 +88,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         onPressed: isClicked
                             ? null
                             : () {
-                                if (form.control(_doseAdministeredKey).value ==
-                                    null) {
-                                  clickedStatus.value = false;
-                                  form
-                                      .control(_doseAdministeredKey)
-                                      .setErrors({'': true});
-                                }
                                 form.markAllAsTouched();
 
                                 if (!form.valid)
@@ -270,24 +262,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
-                      DigitRadioButtonList<KeyValue>(
-                        labelStyle: DigitTheme
-                            .instance.mobileTheme.textTheme.headlineSmall,
-                        formControlName: _doseAdministeredKey,
-                        valueMapper: (val) =>
-                            localizations.translate(val.label),
-                        options: Constants.yesNo,
-                        isRequired: true,
-                        errorMessage: localizations.translate(
-                          i18.common.corecommonRequired,
-                        ),
-                        onValueChange: (val) {
-                          setState(() {
-                            doseAdministered = val
-                                .key; // Update doseAdministered with setState
-                          });
-                        },
-                      ),
                     ],
                   ),
                 ),
@@ -390,10 +364,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   }
 
   FormGroup buildForm(BuildContext context) {
-    return fb.group(<String, Object>{
-      _doseAdministeredKey: FormControl<KeyValue>(
-        value: null,
-      ),
-    });
+    return fb.group(<String, Object>{});
   }
 }

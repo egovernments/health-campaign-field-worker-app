@@ -74,11 +74,19 @@ class DigitDialog extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3,
                       height: 45,
-                      child: DigitElevatedButton(
+                      child: DigitOutLineButton(
                         onPressed: () =>
                             options.primaryAction!.action?.call(context),
-                        child:
-                            Center(child: Text(options.primaryAction!.label)),
+                        label: options.primaryAction!.label,
+                        buttonStyle: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                            width: 1.0,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width / 4, 45),
+                        ),
                       ),
                     )
                 ],

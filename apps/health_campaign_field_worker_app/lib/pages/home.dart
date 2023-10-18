@@ -347,6 +347,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         onPressed: () => context.router.push(StockReconciliationRoute()),
       ),
       HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.warehouseManagerCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
+      HomeItemCard(
         icon: Icons.store_mall_directory,
         label: i18.home.manageStockLabel,
         onPressed: () => context.router.push(ManageStocksRoute()),
@@ -424,14 +429,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
     ];
 
-    homeItems
+    return homeItems
         .where((element) => state.actionsWrapper.actions
             .map((e) => e.displayName)
             .toList()
             .contains(element.label))
         .toList();
-
-    return homeItems;
   }
 
   void _attemptSyncUp(BuildContext context) {

@@ -441,22 +441,6 @@ class _DeliverInterventionPageState
                                                           },
                                                         ))
                                                     .toList(),
-                                                DigitIconButton(
-                                                  onPressed: () async {
-                                                    addController(form);
-                                                    setState(() {
-                                                      _controllers.add(
-                                                        _controllers.length,
-                                                      );
-                                                    });
-                                                  },
-                                                  icon: Icons.add,
-                                                  iconText:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .resourceAddBeneficiary,
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
