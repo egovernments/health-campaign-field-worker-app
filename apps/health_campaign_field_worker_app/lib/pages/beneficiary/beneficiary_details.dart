@@ -257,42 +257,6 @@ class _BeneficiaryDetailsPageState
                                           ? '${householdMemberWrapper.headOfHousehold.name?.givenName ?? ''} ${householdMemberWrapper.headOfHousehold.name?.familyName ?? ''}'
                                           : '--',
                                   localizations.translate(
-                                    i18.deliverIntervention.idTypeText,
-                                  ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '--';
-                                    }
-
-                                    return identifiers.first.identifierType ??
-                                        '--';
-                                  }(),
-                                  localizations.translate(
-                                    i18.deliverIntervention.idNumberText,
-                                  ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '--';
-                                    }
-
-                                    return maskString(identifiers
-                                            .first.identifierId
-                                            .toString()) ??
-                                        '--';
-                                  }(),
-                                  localizations.translate(
                                     i18.common.coreCommonAge,
                                   ): () {
                                     final dob = context.beneficiaryType !=
