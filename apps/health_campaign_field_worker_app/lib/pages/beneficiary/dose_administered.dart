@@ -302,7 +302,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
                                 return TableDataRow([
                                   TableData(
-                                    'Dose $doseIndex',
+                                    '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} $doseIndex',
                                     cellKey: 'dose',
                                   ),
                                   TableData(

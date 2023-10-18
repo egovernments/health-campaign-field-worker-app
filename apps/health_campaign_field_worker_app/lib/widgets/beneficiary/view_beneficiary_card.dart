@@ -150,7 +150,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             [
               e.name?.givenName,
               e.name?.familyName,
-            ].whereNotNull().join('-'),
+            ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
           TableData(
@@ -261,7 +261,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
-                  ].whereNotNull().join(''),
+                  ].whereNotNull().join(' '),
                 ),
               ),
               Flexible(

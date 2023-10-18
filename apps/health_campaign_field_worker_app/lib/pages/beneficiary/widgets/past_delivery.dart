@@ -95,7 +95,7 @@ Widget buildTableContent(
                                   ?.indexOf(e) ==
                               0
                           ? TableData(
-                              'Dose ${deliverInterventionState.dose}',
+                              '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
                           : TableData(''),
