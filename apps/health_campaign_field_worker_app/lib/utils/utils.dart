@@ -117,34 +117,9 @@ performBackgroundService({
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
-  if (stopService) {
-    if (isRunning) {
-      if (!isBackground && context != null) {
-        if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
-        }
-      }
-    }
-  } else {
+  if (!stopService) {
     if (!isRunning && isOnline) {
       service.startService();
-      if (context != null) {
-        DigitToast.show(
-          context!,
-          options: DigitToastOptions(
-            'Background Service stated',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
-      }
     }
   }
 }

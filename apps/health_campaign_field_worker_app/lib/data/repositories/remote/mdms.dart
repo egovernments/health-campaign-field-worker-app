@@ -322,7 +322,7 @@ class MdmsRepository {
     final List<ProjectTypeListCycle> newProjectTypeList = [];
     final data = result.projectTypeWrapper?.projectTypes;
     if (data != null && data.isNotEmpty) {
-      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
+      await isar.writeTxn(() async => await isar.projectTypeListCycles.clear());
     }
     for (final element in data ?? <ProjectType>[]) {
       final newprojectType = ProjectTypeListCycle();
