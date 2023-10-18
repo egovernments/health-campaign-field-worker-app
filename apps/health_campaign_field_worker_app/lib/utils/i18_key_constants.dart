@@ -31,6 +31,8 @@ class Common {
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
 
+  String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
+
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
   String get coreCommonName => 'CORE_COMMON_NAME';
@@ -259,6 +261,7 @@ class BeneficiaryDetails {
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryDeliveryText => 'DELIVERY';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';

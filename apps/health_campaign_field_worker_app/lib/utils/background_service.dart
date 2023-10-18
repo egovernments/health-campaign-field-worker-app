@@ -121,6 +121,10 @@ void onStart(ServiceInstance service) async {
     makePeriodicTimer(
       Duration(seconds: interval),
       (timer) async {
+        service.invoke('serviceRunning', {
+          "enablesManualSync": false,
+        });
+
         var battery = Battery();
         final int batteryPercent = await battery.batteryLevel;
         if (batteryPercent <=
@@ -131,7 +135,9 @@ void onStart(ServiceInstance service) async {
           final FlutterLocalNotificationsPlugin
               flutterLocalNotificationsPlugin =
               FlutterLocalNotificationsPlugin();
-          if (frequencyCount != null) {
+          final isManualSyncRunning =
+              await LocalSecureStore.instance.isManualSyncRunning;
+          if (frequencyCount != null && !isManualSyncRunning) {
             final serviceRegistryList =
                 await _isar.serviceRegistrys.where().findAll();
             if (serviceRegistryList.isNotEmpty) {
@@ -203,6 +209,9 @@ void onStart(ServiceInstance service) async {
             }
           }
         }
+        service.invoke('serviceRunning', {
+          "enablesManualSync": true,
+        });
       },
       fireNow: true,
     );
