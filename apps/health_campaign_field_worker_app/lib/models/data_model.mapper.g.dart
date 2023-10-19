@@ -28,6 +28,7 @@ import 'entities/project_product_variant.dart';
 import 'entities/project_resource.dart';
 import 'entities/project_staff.dart';
 import 'entities/project_type.dart';
+import 'entities/referral.dart';
 import 'entities/service.dart';
 import 'entities/service_attributes.dart';
 import 'entities/service_definition.dart';
@@ -117,6 +118,9 @@ var _mappers = <BaseMapper>{
   ProjectTypeSearchModelMapper._(),
   ProjectTypeModelMapper._(),
   ProjectTypeAdditionalFieldsMapper._(),
+  ReferralSearchModelMapper._(),
+  ReferralModelMapper._(),
+  ReferralAdditionalFieldsMapper._(),
   ServiceSearchModelMapper._(),
   ServiceModelMapper._(),
   ServiceAdditionalFieldsMapper._(),
@@ -212,6 +216,7 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is ProjectResourceModel) { return ProjectResourceModelMapper._().encode(v); }
     else if (v is ProjectStaffModel) { return ProjectStaffModelMapper._().encode(v); }
     else if (v is ProjectTypeModel) { return ProjectTypeModelMapper._().encode(v); }
+    else if (v is ReferralModel) { return ReferralModelMapper._().encode(v); }
     else if (v is ServiceModel) { return ServiceModelMapper._().encode(v); }
     else if (v is ServiceAttributesModel) { return ServiceAttributesModelMapper._().encode(v); }
     else if (v is ServiceDefinitionModel) { return ServiceDefinitionModelMapper._().encode(v); }
@@ -304,6 +309,7 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is ProjectResourceSearchModel) { return ProjectResourceSearchModelMapper._().encode(v); }
     else if (v is ProjectStaffSearchModel) { return ProjectStaffSearchModelMapper._().encode(v); }
     else if (v is ProjectTypeSearchModel) { return ProjectTypeSearchModelMapper._().encode(v); }
+    else if (v is ReferralSearchModel) { return ReferralSearchModelMapper._().encode(v); }
     else if (v is ServiceSearchModel) { return ServiceSearchModelMapper._().encode(v); }
     else if (v is ServiceAttributesSearchModel) { return ServiceAttributesSearchModelMapper._().encode(v); }
     else if (v is ServiceDefinitionSearchModel) { return ServiceDefinitionSearchModelMapper._().encode(v); }
@@ -359,6 +365,7 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is ProjectResourceAdditionalFields) { return ProjectResourceAdditionalFieldsMapper._().encode(v); }
     else if (v is ProjectStaffAdditionalFields) { return ProjectStaffAdditionalFieldsMapper._().encode(v); }
     else if (v is ProjectTypeAdditionalFields) { return ProjectTypeAdditionalFieldsMapper._().encode(v); }
+    else if (v is ReferralAdditionalFields) { return ReferralAdditionalFieldsMapper._().encode(v); }
     else if (v is ServiceAdditionalFields) { return ServiceAdditionalFieldsMapper._().encode(v); }
     else if (v is ServiceAttributesAdditionalFields) { return ServiceAttributesAdditionalFieldsMapper._().encode(v); }
     else if (v is ServiceDefinitionAdditionalFields) { return ServiceDefinitionAdditionalFieldsMapper._().encode(v); }
@@ -2799,6 +2806,122 @@ class _ProjectTypeAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<ProjectT
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(ProjectTypeAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
+class ReferralSearchModelMapper extends BaseMapper<ReferralSearchModel> {
+  ReferralSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  ReferralSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  ReferralSearchModel fromMap(Map<String, dynamic> map) => ReferralSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), projectBeneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'projectBeneficiaryClientReferenceId'), projectId: Mapper.i.$getOpt(map, 'projectId'), referrerId: Mapper.i.$getOpt(map, 'referrerId'), recipientType: Mapper.i.$getOpt(map, 'recipientType'), recipientId: Mapper.i.$getOpt(map, 'recipientId'), reasons: Mapper.i.$getOpt(map, 'reasons'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
+
+  @override Function get encoder => (ReferralSearchModel v) => encode(v);
+  dynamic encode(ReferralSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(ReferralSearchModel r) => {if (Mapper.i.$enc(r.id, 'id') != null) 'id': Mapper.i.$enc(r.id, 'id'), if (Mapper.i.$enc(r.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId') != null) 'projectBeneficiaryClientReferenceId': Mapper.i.$enc(r.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId'), if (Mapper.i.$enc(r.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(r.projectId, 'projectId'), if (Mapper.i.$enc(r.referrerId, 'referrerId') != null) 'referrerId': Mapper.i.$enc(r.referrerId, 'referrerId'), if (Mapper.i.$enc(r.recipientType, 'recipientType') != null) 'recipientType': Mapper.i.$enc(r.recipientType, 'recipientType'), if (Mapper.i.$enc(r.recipientId, 'recipientId') != null) 'recipientId': Mapper.i.$enc(r.recipientId, 'recipientId'), if (Mapper.i.$enc(r.reasons, 'reasons') != null) 'reasons': Mapper.i.$enc(r.reasons, 'reasons'), if (Mapper.i.$enc(r.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(r.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(r.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(r.tenantId, 'tenantId'), if (Mapper.i.$enc(r.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(r.boundaryCode, 'boundaryCode')};
+
+  @override String stringify(ReferralSearchModel self) => 'ReferralSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, projectBeneficiaryClientReferenceId: ${Mapper.asString(self.projectBeneficiaryClientReferenceId)}, projectId: ${Mapper.asString(self.projectId)}, referrerId: ${Mapper.asString(self.referrerId)}, recipientType: ${Mapper.asString(self.recipientType)}, recipientId: ${Mapper.asString(self.recipientId)}, reasons: ${Mapper.asString(self.reasons)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)})';
+  @override int hash(ReferralSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectBeneficiaryClientReferenceId) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.referrerId) ^ Mapper.hash(self.recipientType) ^ Mapper.hash(self.recipientId) ^ Mapper.hash(self.reasons) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId);
+  @override bool equals(ReferralSearchModel self, ReferralSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectBeneficiaryClientReferenceId, other.projectBeneficiaryClientReferenceId) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.referrerId, other.referrerId) && Mapper.isEqual(self.recipientType, other.recipientType) && Mapper.isEqual(self.recipientId, other.recipientId) && Mapper.isEqual(self.reasons, other.reasons) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId);
+
+  @override Function get typeFactory => (f) => f<ReferralSearchModel>();
+}
+
+extension ReferralSearchModelMapperExtension  on ReferralSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ReferralSearchModelCopyWith<ReferralSearchModel> get copyWith => ReferralSearchModelCopyWith(this, $identity);
+}
+
+abstract class ReferralSearchModelCopyWith<$R> {
+  factory ReferralSearchModelCopyWith(ReferralSearchModel value, Then<ReferralSearchModel, $R> then) = _ReferralSearchModelCopyWithImpl<$R>;
+  $R call({String? id, List<String>? projectBeneficiaryClientReferenceId, String? projectId, String? referrerId, String? recipientType, String? recipientId, List<String>? reasons, List<String>? clientReferenceId, String? tenantId, String? boundaryCode});
+  $R apply(ReferralSearchModel Function(ReferralSearchModel) transform);
+}
+
+class _ReferralSearchModelCopyWithImpl<$R> extends BaseCopyWith<ReferralSearchModel, $R> implements ReferralSearchModelCopyWith<$R> {
+  _ReferralSearchModelCopyWithImpl(ReferralSearchModel value, Then<ReferralSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? projectBeneficiaryClientReferenceId = $none, Object? projectId = $none, Object? referrerId = $none, Object? recipientType = $none, Object? recipientId = $none, Object? reasons = $none, Object? clientReferenceId = $none, Object? tenantId = $none, Object? boundaryCode = $none}) => $then(ReferralSearchModel.ignoreDeleted(id: or(id, $value.id), projectBeneficiaryClientReferenceId: or(projectBeneficiaryClientReferenceId, $value.projectBeneficiaryClientReferenceId), projectId: or(projectId, $value.projectId), referrerId: or(referrerId, $value.referrerId), recipientType: or(recipientType, $value.recipientType), recipientId: or(recipientId, $value.recipientId), reasons: or(reasons, $value.reasons), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), tenantId: or(tenantId, $value.tenantId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
+}
+
+class ReferralModelMapper extends BaseMapper<ReferralModel> {
+  ReferralModelMapper._();
+
+  @override Function get decoder => decode;
+  ReferralModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  ReferralModel fromMap(Map<String, dynamic> map) => ReferralModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), projectId: Mapper.i.$getOpt(map, 'projectId'), projectBeneficiaryClientReferenceId: Mapper.i.$getOpt(map, 'projectBeneficiaryClientReferenceId'), referrerId: Mapper.i.$getOpt(map, 'referrerId'), recipientType: Mapper.i.$getOpt(map, 'recipientType'), recipientId: Mapper.i.$getOpt(map, 'recipientId'), reasons: Mapper.i.$getOpt(map, 'reasons'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (ReferralModel v) => encode(v);
+  dynamic encode(ReferralModel v) => toMap(v);
+  Map<String, dynamic> toMap(ReferralModel r) => {if (Mapper.i.$enc(r.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(r.additionalFields, 'additionalFields'), if (Mapper.i.$enc(r.id, 'id') != null) 'id': Mapper.i.$enc(r.id, 'id'), if (Mapper.i.$enc(r.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(r.projectId, 'projectId'), if (Mapper.i.$enc(r.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId') != null) 'projectBeneficiaryClientReferenceId': Mapper.i.$enc(r.projectBeneficiaryClientReferenceId, 'projectBeneficiaryClientReferenceId'), if (Mapper.i.$enc(r.referrerId, 'referrerId') != null) 'referrerId': Mapper.i.$enc(r.referrerId, 'referrerId'), if (Mapper.i.$enc(r.recipientType, 'recipientType') != null) 'recipientType': Mapper.i.$enc(r.recipientType, 'recipientType'), if (Mapper.i.$enc(r.recipientId, 'recipientId') != null) 'recipientId': Mapper.i.$enc(r.recipientId, 'recipientId'), if (Mapper.i.$enc(r.reasons, 'reasons') != null) 'reasons': Mapper.i.$enc(r.reasons, 'reasons'), if (Mapper.i.$enc(r.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(r.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(r.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(r.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(r.tenantId, 'tenantId'), if (Mapper.i.$enc(r.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(r.rowVersion, 'rowVersion'), if (Mapper.i.$enc(r.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(r.auditDetails, 'auditDetails'), if (Mapper.i.$enc(r.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(r.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(r.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(r.isDeleted, 'isDeleted')};
+
+  @override String stringify(ReferralModel self) => 'ReferralModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, projectId: ${Mapper.asString(self.projectId)}, projectBeneficiaryClientReferenceId: ${Mapper.asString(self.projectBeneficiaryClientReferenceId)}, referrerId: ${Mapper.asString(self.referrerId)}, recipientType: ${Mapper.asString(self.recipientType)}, recipientId: ${Mapper.asString(self.recipientId)}, reasons: ${Mapper.asString(self.reasons)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, tenantId: ${Mapper.asString(self.tenantId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(ReferralModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.projectBeneficiaryClientReferenceId) ^ Mapper.hash(self.referrerId) ^ Mapper.hash(self.recipientType) ^ Mapper.hash(self.recipientId) ^ Mapper.hash(self.reasons) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(ReferralModel self, ReferralModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.projectBeneficiaryClientReferenceId, other.projectBeneficiaryClientReferenceId) && Mapper.isEqual(self.referrerId, other.referrerId) && Mapper.isEqual(self.recipientType, other.recipientType) && Mapper.isEqual(self.recipientId, other.recipientId) && Mapper.isEqual(self.reasons, other.reasons) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<ReferralModel>();
+}
+
+extension ReferralModelMapperExtension  on ReferralModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ReferralModelCopyWith<ReferralModel> get copyWith => ReferralModelCopyWith(this, $identity);
+}
+
+abstract class ReferralModelCopyWith<$R> {
+  factory ReferralModelCopyWith(ReferralModel value, Then<ReferralModel, $R> then) = _ReferralModelCopyWithImpl<$R>;
+  ReferralAdditionalFieldsCopyWith<$R>? get additionalFields;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
+  $R call({ReferralAdditionalFields? additionalFields, String? id, String? projectId, String? projectBeneficiaryClientReferenceId, String? referrerId, String? recipientType, String? recipientId, List<String>? reasons, bool? nonRecoverableError, String? clientReferenceId, String? tenantId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R apply(ReferralModel Function(ReferralModel) transform);
+}
+
+class _ReferralModelCopyWithImpl<$R> extends BaseCopyWith<ReferralModel, $R> implements ReferralModelCopyWith<$R> {
+  _ReferralModelCopyWithImpl(ReferralModel value, Then<ReferralModel, $R> then) : super(value, then);
+
+  @override ReferralAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? ReferralAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? projectId = $none, Object? projectBeneficiaryClientReferenceId = $none, Object? referrerId = $none, Object? recipientType = $none, Object? recipientId = $none, Object? reasons = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? tenantId = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(ReferralModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), projectId: or(projectId, $value.projectId), projectBeneficiaryClientReferenceId: or(projectBeneficiaryClientReferenceId, $value.projectBeneficiaryClientReferenceId), referrerId: or(referrerId, $value.referrerId), recipientType: or(recipientType, $value.recipientType), recipientId: or(recipientId, $value.recipientId), reasons: or(reasons, $value.reasons), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class ReferralAdditionalFieldsMapper extends BaseMapper<ReferralAdditionalFields> {
+  ReferralAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  ReferralAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  ReferralAdditionalFields fromMap(Map<String, dynamic> map) => ReferralAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'Referral', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
+
+  @override Function get encoder => (ReferralAdditionalFields v) => encode(v);
+  dynamic encode(ReferralAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(ReferralAdditionalFields r) => {'schema': Mapper.i.$enc(r.schema, 'schema'), 'version': Mapper.i.$enc(r.version, 'version'), 'fields': Mapper.i.$enc(r.fields, 'fields')};
+
+  @override String stringify(ReferralAdditionalFields self) => 'ReferralAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
+  @override int hash(ReferralAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
+  @override bool equals(ReferralAdditionalFields self, ReferralAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
+
+  @override Function get typeFactory => (f) => f<ReferralAdditionalFields>();
+}
+
+extension ReferralAdditionalFieldsMapperExtension  on ReferralAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  ReferralAdditionalFieldsCopyWith<ReferralAdditionalFields> get copyWith => ReferralAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class ReferralAdditionalFieldsCopyWith<$R> {
+  factory ReferralAdditionalFieldsCopyWith(ReferralAdditionalFields value, Then<ReferralAdditionalFields, $R> then) = _ReferralAdditionalFieldsCopyWithImpl<$R>;
+  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  $R apply(ReferralAdditionalFields Function(ReferralAdditionalFields) transform);
+}
+
+class _ReferralAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<ReferralAdditionalFields, $R> implements ReferralAdditionalFieldsCopyWith<$R> {
+  _ReferralAdditionalFieldsCopyWithImpl(ReferralAdditionalFields value, Then<ReferralAdditionalFields, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
+  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(ReferralAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
+}
+
 class ServiceSearchModelMapper extends BaseMapper<ServiceSearchModel> {
   ServiceSearchModelMapper._();
 
@@ -4792,6 +4915,7 @@ class StatusMapper extends EnumMapper<Status> {
       case "VISITED": return Status.visited;
       case "NOT_VISITED": return Status.notVisited;
       case "BENEFICIARY_REFUSED": return Status.beneficiaryRefused;
+      case "BENEFICIARY_REFERRED": return Status.beneficiaryReferred;
       case "ADMINISTERED_SUCCESS": return Status.administeredSuccess;
       case "ADMINISTERED_FAILED": return Status.administeredFailed;
       case "IN_COMPLETE": return Status.inComplete;
@@ -4807,6 +4931,7 @@ class StatusMapper extends EnumMapper<Status> {
       case Status.visited: return "VISITED";
       case Status.notVisited: return "NOT_VISITED";
       case Status.beneficiaryRefused: return "BENEFICIARY_REFUSED";
+      case Status.beneficiaryReferred: return "BENEFICIARY_REFERRED";
       case Status.administeredSuccess: return "ADMINISTERED_SUCCESS";
       case Status.administeredFailed: return "ADMINISTERED_FAILED";
       case Status.inComplete: return "IN_COMPLETE";

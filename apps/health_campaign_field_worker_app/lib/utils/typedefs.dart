@@ -1,6 +1,5 @@
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
-import '../models/entities/user.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
@@ -44,3 +43,5 @@ typedef PgrServiceDataRepository
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
 typedef SideEffectDataRepository
     = DataRepository<SideEffectModel, SideEffectSearchModel>;
+typedef ReferralDataRepository
+    = DataRepository<ReferralModel, ReferralSearchModel>;

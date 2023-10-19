@@ -163,13 +163,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           ),
           TableData(
             getTableCellText(
-              StatusKeys(
-                isNotEligible,
-                isBeneficiaryRefused,
-                isBeneficiaryReferred,
-                isStatusReset,
-              ),
+              isNotEligible,
               taskdata,
+              isBeneficiaryRefused,
+              isBeneficiaryReferred,
+              isStatusReset,
             ),
             cellKey: 'delivery',
             style: TextStyle(
@@ -321,19 +319,22 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   }
 
   String getTableCellText(
-    StatusKeys statusKeys,
-    List<TaskModel>? taskData,
+    bool isNotEligible,
+    List<TaskModel>? taskdata,
+    bool isBeneficiaryRefused,
+    bool isBeneficiaryReferred,
+    bool isStatusReset,
   ) {
-    if (statusKeys.isNotEligible) {
+    if (isNotEligible) {
       return 'Not Eligible';
-    } else if (statusKeys.isBeneficiaryReferred) {
+    } else if (isBeneficiaryReferred) {
       return localizations.translate(Status.beneficiaryReferred.toValue());
-    } else if (taskData != null) {
-      if (taskData.isEmpty) {
+    } else if (taskdata != null) {
+      if (taskdata.isEmpty) {
         return localizations.translate(Status.notVisited.toValue());
-      } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
+      } else if (isBeneficiaryRefused && !isStatusReset) {
         return localizations.translate(Status.beneficiaryRefused.toValue());
-      } else if (statusKeys.isStatusReset) {
+      } else if (isStatusReset) {
         return localizations.translate(Status.notVisited.toValue());
       } else {
         return localizations.translate(Status.visited.toValue());

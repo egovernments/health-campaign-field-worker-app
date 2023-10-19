@@ -137,8 +137,14 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
-    r'symptomsTypes': PropertySchema(
+    r'referralReasons': PropertySchema(
       id: 21,
+      name: r'referralReasons',
+      type: IsarType.objectList,
+      target: r'ReferralReasons',
+    ),
+    r'symptomsTypes': PropertySchema(
+      id: 22,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -169,7 +175,8 @@ const AppConfigurationSchema = CollectionSchema(
     r'ComplaintTypes': ComplaintTypesSchema,
     r'CallSupportList': CallSupportListSchema,
     r'FirebaseConfig': FirebaseConfigSchema,
-    r'SymptomsTypes': SymptomsTypesSchema
+    r'SymptomsTypes': SymptomsTypesSchema,
+    r'ReferralReasons': ReferralReasonsSchema
   },
   getId: _appConfigurationGetId,
   getLinks: _appConfigurationGetLinks,
@@ -406,6 +413,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.referralReasons;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[ReferralReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              ReferralReasonsSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.symptomsTypes;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -524,8 +545,14 @@ void _appConfigurationSerialize(
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
-  writer.writeObjectList<SymptomsTypes>(
+  writer.writeObjectList<ReferralReasons>(
     offsets[21],
+    allOffsets,
+    ReferralReasonsSchema.serialize,
+    object.referralReasons,
+  );
+  writer.writeObjectList<SymptomsTypes>(
+    offsets[22],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -637,8 +664,14 @@ AppConfiguration _appConfigurationDeserialize(
     TransportTypes(),
   );
   object.id = id;
-  object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
+  object.referralReasons = reader.readObjectList<ReferralReasons>(
     offsets[21],
+    ReferralReasonsSchema.deserialize,
+    allOffsets,
+    ReferralReasons(),
+  );
+  object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
+    offsets[22],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -768,6 +801,13 @@ P _appConfigurationDeserializeProp<P>(
         TransportTypes(),
       )) as P;
     case 21:
+      return (reader.readObjectList<ReferralReasons>(
+        offset,
+        ReferralReasonsSchema.deserialize,
+        allOffsets,
+        ReferralReasons(),
+      )) as P;
+    case 22:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3122,6 +3162,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'referralReasons',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'referralReasons',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'referralReasons',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       symptomsTypesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -3335,6 +3482,13 @@ extension AppConfigurationQueryObject
       transportTypesElement(FilterQuery<TransportTypes> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'TRANSPORT_TYPES');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      referralReasonsElement(FilterQuery<ReferralReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'referralReasons');
     });
   }
 
@@ -3734,6 +3888,13 @@ extension AppConfigurationQueryProperty
       transportTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'TRANSPORT_TYPES');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<ReferralReasons>?, QQueryOperations>
+      referralReasonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'referralReasons');
     });
   }
 
@@ -9044,3 +9205,373 @@ extension SymptomsTypesQueryFilter
 
 extension SymptomsTypesQueryObject
     on QueryBuilder<SymptomsTypes, SymptomsTypes, QFilterCondition> {}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+
+const ReferralReasonsSchema = Schema(
+  name: r'ReferralReasons',
+  id: 3398817133439165056,
+  properties: {
+    r'active': PropertySchema(
+      id: 0,
+      name: r'active',
+      type: IsarType.bool,
+    ),
+    r'code': PropertySchema(
+      id: 1,
+      name: r'code',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _referralReasonsEstimateSize,
+  serialize: _referralReasonsSerialize,
+  deserialize: _referralReasonsDeserialize,
+  deserializeProp: _referralReasonsDeserializeProp,
+);
+
+int _referralReasonsEstimateSize(
+  ReferralReasons object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.code.length * 3;
+  bytesCount += 3 + object.name.length * 3;
+  return bytesCount;
+}
+
+void _referralReasonsSerialize(
+  ReferralReasons object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeBool(offsets[0], object.active);
+  writer.writeString(offsets[1], object.code);
+  writer.writeString(offsets[2], object.name);
+}
+
+ReferralReasons _referralReasonsDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = ReferralReasons();
+  object.active = reader.readBool(offsets[0]);
+  object.code = reader.readString(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  return object;
+}
+
+P _referralReasonsDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension ReferralReasonsQueryFilter
+    on QueryBuilder<ReferralReasons, ReferralReasons, QFilterCondition> {
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      activeEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'active',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'code',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'code',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'code',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      codeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'code',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ReferralReasons, ReferralReasons, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension ReferralReasonsQueryObject
+    on QueryBuilder<ReferralReasons, ReferralReasons, QFilterCondition> {}

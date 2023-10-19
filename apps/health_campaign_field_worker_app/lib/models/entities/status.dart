@@ -8,6 +8,7 @@ enum Status {
   @MappableValue("VISITED") visited,
   @MappableValue("NOT_VISITED") notVisited,
   @MappableValue("BENEFICIARY_REFUSED") beneficiaryRefused,
+  @MappableValue("BENEFICIARY_REFERRED") beneficiaryReferred,
   @MappableValue("ADMINISTERED_SUCCESS") administeredSuccess,
   @MappableValue("ADMINISTERED_FAILED") administeredFailed,
   @MappableValue("IN_COMPLETE") inComplete,
