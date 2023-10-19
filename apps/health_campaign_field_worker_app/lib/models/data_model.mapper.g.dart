@@ -4744,24 +4744,26 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
 
   @override  AdditionalFieldsType decode(dynamic value) {
     switch (value) {
-      case "DeliveryStrategy": return AdditionalFieldsType.deliveryStrategy;
+      case "deliveryStrategy": return AdditionalFieldsType.deliveryStrategy;
       case "cycleIndex": return AdditionalFieldsType.cycleIndex;
       case "doseIndex": return AdditionalFieldsType.doseIndex;
       case "dateOfVerification": return AdditionalFieldsType.dateOfVerification;
       case "dateOfAdministration": return AdditionalFieldsType.dateOfAdministration;
       case "dateOfDelivery": return AdditionalFieldsType.dateOfDelivery;
+      case "referralComments": return AdditionalFieldsType.referralComments;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override  dynamic encode(AdditionalFieldsType self) {
     switch (self) {
-      case AdditionalFieldsType.deliveryStrategy: return "DeliveryStrategy";
+      case AdditionalFieldsType.deliveryStrategy: return "deliveryStrategy";
       case AdditionalFieldsType.cycleIndex: return "cycleIndex";
       case AdditionalFieldsType.doseIndex: return "doseIndex";
       case AdditionalFieldsType.dateOfVerification: return "dateOfVerification";
       case AdditionalFieldsType.dateOfAdministration: return "dateOfAdministration";
       case AdditionalFieldsType.dateOfDelivery: return "dateOfDelivery";
+      case AdditionalFieldsType.referralComments: return "referralComments";
     }
   }
 }
