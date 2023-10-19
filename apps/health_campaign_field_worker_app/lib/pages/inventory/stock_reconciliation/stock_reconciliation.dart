@@ -267,7 +267,7 @@ class _StockReconciliationPageState
                                     Text(
                                       localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .reconciliationPageTitle,
+                                            .spaqReconciliation,
                                       ),
                                       style: Theme.of(context)
                                           .textTheme
@@ -391,7 +391,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockReceived,
+                                              .spaqReceived,
                                         ): stockState.stockReceived
                                             .toStringAsFixed(0),
                                       },
@@ -403,7 +403,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockIssued,
+                                              .spaqIssued,
                                         ): stockState.stockIssued
                                             .toStringAsFixed(0),
                                       },
@@ -415,7 +415,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockReturned,
+                                              .spaqReturned,
                                         ): stockState.stockReturned
                                             .toStringAsFixed(0),
                                       },
@@ -439,7 +439,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockDamaged,
+                                              .spaqDamaged,
                                         ): stockState.stockDamaged
                                             .toStringAsFixed(0),
                                       },
@@ -451,7 +451,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockOnHand,
+                                              .spaqOnHand,
                                         ): stockState.stockInHand
                                             .toStringAsFixed(0),
                                       },
@@ -476,7 +476,7 @@ class _StockReconciliationPageState
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .manualCountLabel,
+                                            .manualSpaqCount,
                                       ),
                                       formControlName: _manualCountKey,
                                       keyboardType:

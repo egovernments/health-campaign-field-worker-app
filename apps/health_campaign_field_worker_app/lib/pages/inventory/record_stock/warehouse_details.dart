@@ -133,7 +133,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             children: [
                               Text(
                                 localizations.translate(
-                                  i18.warehouseDetails.warehouseDetailsLabel,
+                                  i18.warehouseDetails.usDetails,
                                 ),
                                 style: theme.textTheme.displayMedium,
                               ),
@@ -166,7 +166,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 ),
                                 isRequired: true,
                                 label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
+                                  i18.warehouseDetails
+                                      .usNameCommunitySupervisor,
                                 ),
                                 suffix: const Padding(
                                   padding: EdgeInsets.all(8.0),

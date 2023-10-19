@@ -179,8 +179,9 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         alignment: Alignment
                                                             .centerLeft,
                                                         child: Text(
-                                                          e.dataType ==
-                                                                  'SingleValueList'
+                                                          e.value != null &&
+                                                                  e.dataType ==
+                                                                      'SingleValueList'
                                                               ? localizations
                                                                   .translate(
                                                                   'CORE_COMMON_${e.value.toString().toUpperCase()}',
@@ -189,7 +190,9 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    e.additionalDetails != ''
+                                                    e.additionalDetails != '' &&
+                                                            e.additionalDetails !=
+                                                                null
                                                         ? Container(
                                                             margin:
                                                                 const EdgeInsets

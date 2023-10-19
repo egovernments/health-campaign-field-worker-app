@@ -556,11 +556,15 @@ class WarehouseDetails {
 
   String get warehouseDetailsLabel => 'WAREHOUSE_DETAILS_LABEL';
 
+  String get usDetails => 'US_DETAILS';
+
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
+
+  String get usNameCommunitySupervisor => 'US_NAME_COMMUNITY_SUPERVISOR';
 }
 
 class StockDetails {
@@ -628,6 +632,12 @@ class StockDetails {
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
 
   String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
+
+  String get receivedSpaqDetails => 'RECEIVED_SPAQ_DETAILS';
+  String get selectSpaqVariant => 'SELECT_SPAQ_VARIANT';
+  String get issuedSpaqDetails => 'ISSUED_SPAQ_DETAILS';
+  String get returnedSpaqDetails => 'RETURNED_SPAQ_DETAILS';
+  String get damagedSpaqDetails => 'DAMAGED_SPAQ_DETAILS';
 }
 
 class StockReconciliationDetails {
@@ -681,6 +691,17 @@ class StockReconciliationDetails {
   String get noProjectSelected => 'NO_PROJECT_SELECTED';
 
   String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
+
+  String get facilityNameCommunitySupervisor =>
+      'FACILITY_NAME_COMMUNITY_SUPERVISOR';
+
+  String get spaqReconciliation => 'SPAQ_RECONCILIATION';
+  String get spaqReceived => 'SPAQ_RECEIVED';
+  String get spaqIssued => 'SPAQ_ISSUED';
+  String get spaqReturned => 'SPAQ_RETURNED';
+  String get spaqDamaged => 'SPAQ_DAMAGED';
+  String get spaqOnHand => 'SPAQ_ON_HAND';
+  String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
 }
 
 class ManageStock {
@@ -715,6 +736,15 @@ class ManageStock {
 
   String get recordStockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+
+  String get recordSpaqReceipt => 'RECORD_SPAQ_RECEIPT';
+  String get recordSpaqReceivedAtFacility => 'RECORD_SPAQ_RECEIVED_AT_FACILITY';
+  String get recordSpaqIssued => 'RECORD_SPAQ_ISSUED';
+  String get spaqSentFromFacility => 'SPAQ_SENT_FROM_FACILITY';
+  String get recordSpaqReturned => 'RECORD_SPAQ_RETURNED';
+  String get recordSpaqReturnedToFacility => 'RECORD_SPAQ_RETURNED_TO_FACILITY';
+  String get recordSpaqDamaged => 'RECORD_SPAQ_DAMAGED';
+  String get recordListOfSpaqDamaged => 'RECORD_LIST_OF_SPAQ_DAMAGED';
 }
 
 class Complaints {

@@ -3,9 +3,11 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../blocs/localization/app_localization.dart';
 import '../../models/entities/facility.dart';
 import '../../router/app_router.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 class FacilitySelectionPage extends StatelessWidget {
   final List<FacilityModel> facilities;
@@ -20,6 +22,8 @@ class FacilitySelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
     return ReactiveFormBuilder(
       form: _form,
       builder: (context, form, child) {
@@ -39,11 +43,14 @@ class FacilitySelectionPage extends StatelessWidget {
               return ScrollableContent(
                 header: const BackNavigationHelpHeaderWidget(),
                 slivers: [
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: DigitTextFormField(
-                        label: 'Facility Search Text',
+                        label: localizations.translate(
+                          i18.stockReconciliationDetails
+                              .facilityNameCommunitySupervisor,
+                        ),
                         formControlName: _facilityName,
                       ),
                     ),

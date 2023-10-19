@@ -46,9 +46,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               Column(children: [
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordStockReceiptLabel),
+                      .translate(i18.manageStock.recordSpaqReceipt),
                   description: localizations
-                      .translate(i18.manageStock.recordStockReceiptDescription),
+                      .translate(i18.manageStock.recordSpaqReceivedAtFacility),
                   prefixIcon: Icons.file_download_outlined,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -58,10 +58,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
+                  title:
+                      localizations.translate(i18.manageStock.recordSpaqIssued),
                   description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
+                      .translate(i18.manageStock.spaqSentFromFacility),
                   prefixIcon: Icons.file_upload_outlined,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
@@ -72,9 +72,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordStockReturnedLabel),
+                      .translate(i18.manageStock.recordSpaqReturned),
                   description: localizations.translate(
-                    i18.manageStock.recordStockReturnedDescription,
+                    i18.manageStock.recordSpaqReturnedToFacility,
                   ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
@@ -86,29 +86,15 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
                 DigitListView(
                   title: localizations
-                      .translate(i18.manageStock.recordStockDamagedLabel),
+                      .translate(i18.manageStock.recordSpaqDamaged),
                   description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
+                    i18.manageStock.recordListOfSpaqDamaged,
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
                     RecordStockWrapperRoute(
                       type: StockRecordEntryType.damaged,
-                    ),
-                  ),
-                ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockLossLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.loss,
                     ),
                   ),
                 ),

@@ -96,19 +96,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
               switch (entryType) {
                 case StockRecordEntryType.receipt:
-                  pageTitle = module.receivedPageTitle;
+                  pageTitle = module.receivedSpaqDetails;
                   transactionPartyLabel = module.selectTransactingPartyReceived;
                   quantityCountLabel = module.quantityReceivedLabel;
                   transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.dispatch:
-                  pageTitle = module.issuedPageTitle;
+                  pageTitle = module.issuedSpaqDetails;
                   transactionPartyLabel = module.selectTransactingPartyIssued;
                   quantityCountLabel = module.quantitySentLabel;
                   transactionType = TransactionType.dispatched;
                   break;
                 case StockRecordEntryType.returned:
-                  pageTitle = module.returnedPageTitle;
+                  pageTitle = module.returnedSpaqDetails;
                   transactionPartyLabel = module.selectTransactingPartyReturned;
                   quantityCountLabel = module.quantityReturnedLabel;
                   transactionType = TransactionType.received;
@@ -126,7 +126,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   ];
                   break;
                 case StockRecordEntryType.damaged:
-                  pageTitle = module.damagedPageTitle;
+                  pageTitle = module.damagedSpaqDetails;
                   transactionPartyLabel =
                       module.selectTransactingPartyReceivedFromDamaged;
                   quantityCountLabel = module.quantityDamagedLabel;
@@ -376,7 +376,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         ProductVariantModel>(
                                       formControlName: _productVariantKey,
                                       label: localizations.translate(
-                                        module.selectProductLabel,
+                                        module.selectSpaqVariant,
                                       ),
                                       isRequired: true,
                                       valueMapper: (value) {
