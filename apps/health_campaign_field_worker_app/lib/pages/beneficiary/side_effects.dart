@@ -274,6 +274,8 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                               stateSetter,
                                                         ) {
                                                           return DigitCheckboxTile(
+                                                            padding:
+                                                                EdgeInsets.zero,
                                                             label: localizations
                                                                 .translate(
                                                               e.code,

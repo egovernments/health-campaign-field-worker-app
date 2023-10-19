@@ -164,8 +164,18 @@ class _BeneficiaryDetailsPageState
                                                 context,
                                                 options: DigitDialogOptions(
                                                   titlePadding:
-                                                      const EdgeInsets.all(
+                                                      const EdgeInsets.fromLTRB(
                                                     kPadding,
+                                                    kPadding,
+                                                    kPadding,
+                                                    kPadding / 2,
+                                                  ),
+                                                  contentPadding:
+                                                      const EdgeInsets.only(
+                                                    left: kPadding,
+                                                    right: kPadding,
+                                                    top: kPadding,
+                                                    bottom: 0,
                                                   ),
                                                   titleText: localizations
                                                       .translate(i18

@@ -175,9 +175,9 @@ class SideBar extends StatelessWidget {
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *
-                                        0.59 /
+                                        0.65 /
                                         languages.length) -
-                                    (4 * languages.length),
+                                    (14 * languages.length),
                               ),
                             )
                           : const Offstage();

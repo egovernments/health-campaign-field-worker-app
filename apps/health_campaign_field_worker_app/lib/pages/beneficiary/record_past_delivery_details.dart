@@ -80,12 +80,23 @@ class _RecordPastDeliveryDetailsPageState
                       DigitDialog.show<bool>(
                         context,
                         options: DigitDialogOptions(
+                          titlePadding: const EdgeInsets.fromLTRB(
+                            kPadding,
+                            kPadding,
+                            kPadding,
+                            0,
+                          ),
                           titleText: localizations.translate(i18
                               .deliverIntervention
                               .didYouObservePreviousAdvEventsTitle),
                           barrierDismissible: false,
                           enableRecordPast: true,
-                          dialogPadding: const EdgeInsets.all(8.0),
+                          dialogPadding: const EdgeInsets.fromLTRB(
+                            kPadding,
+                            kPadding,
+                            kPadding,
+                            0,
+                          ),
                           primaryAction: DigitDialogActions(
                             label: localizations.translate(
                               i18.common.coreCommonNo,

@@ -30,11 +30,13 @@ class DigitLanguageCard extends StatelessWidget {
         children: [
           appLogo ?? const SizedBox.shrink(),
           DigitRowCard(
+            spacing: 20,
+            alignment: WrapAlignment.spaceBetween,
             onChanged: onLanguageChange,
             rowItems: digitRowCardItems,
             width:
                 (MediaQuery.of(context).size.width / digitRowCardItems.length) -
-                    14 * digitRowCardItems.length,
+                    8 * digitRowCardItems.length,
           ),
           const SizedBox(
             height: 24,
