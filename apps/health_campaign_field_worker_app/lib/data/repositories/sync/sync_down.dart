@@ -8,7 +8,6 @@ import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
-
 import '../remote/pgr_service.dart';
 
 class PerformSyncDown {
