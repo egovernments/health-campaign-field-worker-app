@@ -231,6 +231,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           label: localizations.translate(
                             i18.referBeneficiary.referredByLabel,
                           ),
+                          validationMessages: {
+                            'required': (_) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                          },
                           isRequired: true,
                         ),
                         DigitTextFormField(
@@ -249,7 +254,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           readOnly: false,
                           validationMessages: {
                             'required': (_) => localizations.translate(
-                                  i18.common.corecommonRequired,
+                                  i18.referBeneficiary
+                                      .facilityValidationMessage,
                                 ),
                           },
                           onTap: () async {

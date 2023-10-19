@@ -172,12 +172,12 @@ class MemberCard extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          isBeneficiaryReferred
+                          isNotEligible
                               ? i18.householdOverView
-                                  .householdOverViewBeneficiaryReferredLabel
-                              : isNotEligible
+                                  .householdOverViewNotEligibleIconLabel
+                              : isBeneficiaryReferred
                                   ? i18.householdOverView
-                                      .householdOverViewNotEligibleIconLabel
+                                      .householdOverViewBeneficiaryReferredLabel
                                   : isBeneficiaryRefused
                                       ? Status.beneficiaryRefused.toValue()
                                       // [TODO Need to update the localization]
