@@ -5,6 +5,7 @@ class DigitCheckbox extends StatelessWidget {
   final bool value;
   final String label;
   final ValueChanged<bool?>? onChanged;
+  final EdgeInsetsGeometry padding;
 
   // Constructor for the DigitCheckbox widget with required parameters
   const DigitCheckbox({
@@ -12,6 +13,7 @@ class DigitCheckbox extends StatelessWidget {
     required this.label,
     this.onChanged,
     this.value = false,
+    this.padding = const EdgeInsets.only(top: 4),
   });
 
   @override
@@ -19,7 +21,7 @@ class DigitCheckbox extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: padding,
       child: InkWell(
         onTap: () => onChanged?.call(!value),
         child: Row(

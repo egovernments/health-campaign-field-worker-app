@@ -280,6 +280,10 @@ class _IndividualDetailsPageState
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
                             child: DigitCheckbox(
+                              padding: const EdgeInsets.only(
+                                bottom: kPadding,
+                                top: 0,
+                              ),
                               label: localizations.translate(
                                 i18.individualDetails.checkboxLabelText,
                               ),
@@ -325,7 +329,7 @@ class _IndividualDetailsPageState
                                   ).toList(),
                                   formControlName: _idTypeKey,
                                   padding:
-                                      const EdgeInsets.only(bottom: 0, top: 8),
+                                      const EdgeInsets.only(bottom: 0, top: 0),
                                 );
                               },
                             ),
