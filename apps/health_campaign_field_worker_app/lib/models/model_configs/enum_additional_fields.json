@@ -3,7 +3,7 @@
   "enumValues": [
     {
       "name": "DeliveryStrategy",
-      "value": "DeliveryStrategy"
+      "value": "deliveryStrategy"
     },
     {
       "name": "CycleIndex",
@@ -24,6 +24,10 @@
     {
       "name": "DateOfDelivery",
       "value": "dateOfDelivery"
+    },
+    {
+      "name": "ReferralComments",
+      "value": "referralComments"
     }
   ],
   "isEnum": true
