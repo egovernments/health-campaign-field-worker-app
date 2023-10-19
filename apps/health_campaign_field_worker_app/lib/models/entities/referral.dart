@@ -6,21 +6,25 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class SideEffectSearchModel extends EntitySearchModel {
+class ReferralSearchModel extends EntitySearchModel {
   final String? id;
-  final List<String>? taskClientReferenceId;
+  final List<String>? projectBeneficiaryClientReferenceId;
   final String? projectId;
-  final int? reAttempts;
-  final List<String>? symptoms;
+  final String? referrerId;
+  final String? recipientType;
+  final String? recipientId;
+  final List<String>? reasons;
   final List<String>? clientReferenceId;
   final String? tenantId;
   
-  SideEffectSearchModel({
+  ReferralSearchModel({
     this.id,
-    this.taskClientReferenceId,
+    this.projectBeneficiaryClientReferenceId,
     this.projectId,
-    this.reAttempts,
-    this.symptoms,
+    this.referrerId,
+    this.recipientType,
+    this.recipientId,
+    this.reasons,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -28,12 +32,14 @@ class SideEffectSearchModel extends EntitySearchModel {
   }):  super();
 
   @MappableConstructor()
-  SideEffectSearchModel.ignoreDeleted({
+  ReferralSearchModel.ignoreDeleted({
     this.id,
-    this.taskClientReferenceId,
+    this.projectBeneficiaryClientReferenceId,
     this.projectId,
-    this.reAttempts,
-    this.symptoms,
+    this.referrerId,
+    this.recipientType,
+    this.recipientId,
+    this.reasons,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
@@ -41,28 +47,32 @@ class SideEffectSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class SideEffectModel extends EntityModel {
+class ReferralModel extends EntityModel {
 
-  static const schemaName = 'SideEffect';
+  static const schemaName = 'Referral';
 
   final String? id;
   final String? projectId;
-  final String? taskClientReferenceId;
-  final int? reAttempts;
-  final List<String>? symptoms;
+  final String? projectBeneficiaryClientReferenceId;
+  final String? referrerId;
+  final String? recipientType;
+  final String? recipientId;
+  final List<String>? reasons;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
   final int? rowVersion;
-  final SideEffectAdditionalFields? additionalFields;
+  final ReferralAdditionalFields? additionalFields;
 
-  SideEffectModel({
+  ReferralModel({
     this.additionalFields,
     this.id,
     this.projectId,
-    this.taskClientReferenceId,
-    this.reAttempts,
-    this.symptoms,
+    this.projectBeneficiaryClientReferenceId,
+    this.referrerId,
+    this.recipientType,
+    this.recipientId,
+    this.reasons,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
@@ -71,8 +81,8 @@ class SideEffectModel extends EntityModel {
     super.isDeleted = false,
   }): super();
 
-  SideEffectCompanion get companion {
-    return SideEffectCompanion(
+  ReferralCompanion get companion {
+    return ReferralCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
@@ -85,9 +95,11 @@ class SideEffectModel extends EntityModel {
       isDeleted: Value(isDeleted),
       id: Value(id),
       projectId: Value(projectId),
-      taskClientReferenceId: Value(taskClientReferenceId),
-      reAttempts: Value(reAttempts),
-      symptoms: Value(symptoms?.toString()),
+      projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
+      referrerId: Value(referrerId),
+      recipientType: Value(recipientType),
+      recipientId: Value(recipientId),
+      reasons: Value(reasons?.toString()),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
@@ -97,9 +109,9 @@ class SideEffectModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class SideEffectAdditionalFields extends AdditionalFields {
-  SideEffectAdditionalFields({
-    super.schema = 'SideEffect',
+class ReferralAdditionalFields extends AdditionalFields {
+  ReferralAdditionalFields({
+    super.schema = 'Referral',
     required super.version,
     super.fields,
   });

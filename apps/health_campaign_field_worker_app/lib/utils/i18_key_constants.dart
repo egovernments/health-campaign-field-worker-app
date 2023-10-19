@@ -25,6 +25,7 @@ const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
+const referBeneficiary = ReferBeneficiary();
 
 class Common {
   const Common();
@@ -391,6 +392,9 @@ class HouseholdOverView {
   String get householdOverViewNotEligibleIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL';
 
+  String get householdOverViewBeneficiaryReferredLabel =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL';
+
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
@@ -436,6 +440,7 @@ class MemberCard {
 
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
+  String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
 }
 
 class DeliverIntervention {
@@ -995,4 +1000,16 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+}
+
+class ReferBeneficiary {
+  const ReferBeneficiary();
+
+  String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+  String get reasonForReferral => 'REASON_FOR_REFERRAL';
+  String get referralComments => 'REFERRAL_COMMENTS';
+  String get referralDetails => 'REFERRAL_DETAILS_HEADER';
 }
