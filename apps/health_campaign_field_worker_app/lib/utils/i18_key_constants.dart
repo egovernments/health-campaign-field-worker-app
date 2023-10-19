@@ -523,6 +523,8 @@ class DeliverIntervention {
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
 }
 
 class ProjectSelection {

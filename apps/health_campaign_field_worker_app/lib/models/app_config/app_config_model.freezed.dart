@@ -1270,6 +1270,9 @@ mixin _$AppConfig {
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
   BackendInterface get backendInterface => throw _privateConstructorUsedError;
   @JsonKey(name: 'CALL_SUPPORT')
@@ -1320,6 +1323,8 @@ abstract class $AppConfigCopyWith<$Res> {
           List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
           List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+          List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
           BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1359,6 +1364,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1424,6 +1430,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
       deliveryCommentOptions: null == deliveryCommentOptions
           ? _value.deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value.deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
@@ -1500,6 +1510,8 @@ abstract class _$$_AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Res> {
           List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
           List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+          List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
           BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1539,6 +1551,7 @@ class __$$_AppConfigCopyWithImpl<$Res>
     Object? checklistTypes = null,
     Object? idTypeOptions = null,
     Object? deliveryCommentOptions = null,
+    Object? deliveryCommentOptionsSmc = null,
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
@@ -1605,6 +1618,10 @@ class __$$_AppConfigCopyWithImpl<$Res>
           ? _value._deliveryCommentOptions
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
+      deliveryCommentOptionsSmc: null == deliveryCommentOptionsSmc
+          ? _value._deliveryCommentOptionsSmc
+          : deliveryCommentOptionsSmc // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
@@ -1657,6 +1674,8 @@ class _$_AppConfig implements _AppConfig {
           required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
           required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+          required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
           required this.backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1672,6 +1691,7 @@ class _$_AppConfig implements _AppConfig {
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _deliveryCommentOptionsSmc = deliveryCommentOptionsSmc,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes;
 
@@ -1763,6 +1783,14 @@ class _$_AppConfig implements _AppConfig {
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
 
+  final List<DeliveryCommentOptions> _deliveryCommentOptionsSmc;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentOptionsSmc);
+  }
+
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   final BackendInterface backendInterface;
@@ -1786,7 +1814,7 @@ class _$_AppConfig implements _AppConfig {
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, deliveryCommentOptionsSmc: $deliveryCommentOptionsSmc, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
   }
 
   @override
@@ -1827,6 +1855,8 @@ class _$_AppConfig implements _AppConfig {
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentOptionsSmc, _deliveryCommentOptionsSmc) &&
             (identical(other.backendInterface, backendInterface) ||
                 other.backendInterface == backendInterface) &&
             const DeepCollectionEquality()
@@ -1837,27 +1867,29 @@ class _$_AppConfig implements _AppConfig {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      networkDetection,
-      persistenceMode,
-      syncMethod,
-      syncTrigger,
-      const DeepCollectionEquality().hash(_languages),
-      tenantId,
-      maxRadius,
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      backgroundServiceConfig,
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_genderOptions),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      backendInterface,
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        networkDetection,
+        persistenceMode,
+        syncMethod,
+        syncTrigger,
+        const DeepCollectionEquality().hash(_languages),
+        tenantId,
+        maxRadius,
+        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        backgroundServiceConfig,
+        const DeepCollectionEquality()
+            .hash(_householdMemberDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_genderOptions),
+        const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptionsSmc),
+        backendInterface,
+        const DeepCollectionEquality().hash(_callSupportOptions),
+        const DeepCollectionEquality().hash(_transportTypes)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -1907,6 +1939,8 @@ abstract class _AppConfig implements AppConfig {
           required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
           required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+          required final List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
       @JsonKey(name: 'BACKEND_INTERFACE')
           required final BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
@@ -1962,6 +1996,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptionsSmc;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
   BackendInterface get backendInterface;

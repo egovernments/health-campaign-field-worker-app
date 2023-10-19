@@ -188,13 +188,39 @@ class _DeliverInterventionPageState
                                                         ) as FormArray)
                                                             .value) ??
                                                         [])
-                                                    .any((e) => e == 0)) {
+                                                    .any((e) => e == null)) {
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
                                                       localizations.translate(i18
                                                           .deliverIntervention
                                                           .resourceCannotBeZero),
+                                                      true,
+                                                      theme,
+                                                    ),
+                                                  );
+                                                } else if ((((form.control(
+                                                              _quantityDistributedKey,
+                                                            ) as FormArray)
+                                                                .value) ??
+                                                            [])
+                                                        .any((e) =>
+                                                            e != null &&
+                                                            int.parse(e
+                                                                    .toString()) >
+                                                                1) &&
+                                                    (form
+                                                            .control(
+                                                              _deliveryCommentKey,
+                                                            )
+                                                            .value as String)
+                                                        .isEmpty) {
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .deliveryCommentRequired),
                                                       true,
                                                       theme,
                                                     ),
@@ -469,7 +495,7 @@ class _DeliverInterventionPageState
 
                                                     final deliveryCommentOptions = state
                                                             .appConfiguration
-                                                            .deliveryCommentOptions ??
+                                                            .deliveryCommentOptionsSmc ??
                                                         <DeliveryCommentOptions>[];
 
                                                     return DigitReactiveDropdown<
@@ -521,7 +547,7 @@ class _DeliverInterventionPageState
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
-        .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
+        .add(FormControl<String>(validators: [Validators.required]));
   }
 
   // ignore: long-parameter-list
@@ -567,6 +593,7 @@ class _DeliverInterventionPageState
                 clientReferenceId: IdGen.i.identifier,
                 productVariantId: e?.id,
                 isDelivered: true,
+                deliveryComment: form.control(_deliveryCommentKey).value,
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
@@ -665,9 +692,9 @@ class _DeliverInterventionPageState
               )),
         ],
       ),
-      _quantityDistributedKey: FormArray<int>([
+      _quantityDistributedKey: FormArray<String>([
         ..._controllers.map(
-          (e) => FormControl<int>(value: 0, validators: [Validators.min(1)]),
+          (e) => FormControl<String>(validators: [Validators.required]),
         ),
       ]),
     });

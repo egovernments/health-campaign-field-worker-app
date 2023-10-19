@@ -258,10 +258,13 @@ class _HouseholdOverviewPageState
                                   DigitTableCard(
                                     element: {
                                       localizations.translate(i18
-                                              .householdOverView
-                                              .householdOverViewHouseholdHeadNameLabel):
-                                          state.householdMemberWrapper
-                                              .headOfHousehold.name?.givenName,
+                                          .householdOverView
+                                          .householdOverViewHouseholdHeadNameLabel): [
+                                        state.householdMemberWrapper
+                                            .headOfHousehold.name?.givenName,
+                                        state.householdMemberWrapper
+                                            .headOfHousehold.name?.familyName,
+                                      ].whereNotNull().join(' '),
                                       localizations.translate(
                                         i18.householdLocation
                                             .administrationAreaFormLabel,
@@ -520,7 +523,8 @@ class _HouseholdOverviewPageState
                                                     )
                                                   : false,
                                               // TODO Need to handle the null check
-                                              name: e.name?.givenName ?? ' - ',
+                                              name:
+                                                  '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                               years: (e.dateOfBirth == null
                                                       ? null
                                                       : DigitDateUtils

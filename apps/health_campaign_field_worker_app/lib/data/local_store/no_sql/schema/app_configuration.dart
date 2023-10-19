@@ -52,6 +52,9 @@ class AppConfiguration {
   @Name('DELIVERY_COMMENT_OPTIONS_POPULATOR')
   late List<DeliveryCommentOptions>? deliveryCommentOptions;
 
+  @Name('DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+  late List<DeliveryCommentOptions>? deliveryCommentOptionsSmc;
+
   @Name('TRANSPORT_TYPES')
   late List<TransportTypes>? transportTypes;
 

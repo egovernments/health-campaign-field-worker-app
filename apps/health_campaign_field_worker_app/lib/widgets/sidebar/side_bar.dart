@@ -25,6 +25,7 @@ class SideBar extends StatelessWidget {
         children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
+            padding: const EdgeInsets.all(kPadding),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 200,
@@ -33,7 +34,7 @@ class SideBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      value.userModel.name.toString(),
+                      value.userModel.userName.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
 

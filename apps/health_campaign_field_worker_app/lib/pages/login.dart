@@ -149,34 +149,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           );
                         },
                       ),
-                      TextButton(
-                        onPressed: () => DigitDialog.show(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(
-                              i18.forgotPassword.labelText,
-                            ),
-                            contentText: localizations.translate(
-                              i18.forgotPassword.contentText,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.forgotPassword.primaryActionLabel,
-                              ),
-                              action: (ctx) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                            ),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.forgotPassword.actionLabel,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 );

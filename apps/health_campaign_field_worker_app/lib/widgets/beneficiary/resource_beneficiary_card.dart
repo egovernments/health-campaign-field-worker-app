@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -67,14 +68,25 @@ class _ResourceBeneficiaryCardState
               );
             },
           ),
-          DigitIntegerFormPicker(
-            incrementer: true,
+          DigitTextFormField(
             formControlName: 'quantityDistributed.${widget.cardIndex}',
-            form: widget.form,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(1),
+              FilteringTextInputFormatter.allow(
+                RegExp(r'^[1-2]+$'),
+              ),
+            ],
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
-            minimum: 1,
+            validationMessages: {
+              "required": (control) {
+                return localizations.translate(
+                  i18.common.corecommonRequired,
+                );
+              },
+            },
           ),
         ],
       ),
