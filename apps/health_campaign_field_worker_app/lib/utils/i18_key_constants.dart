@@ -1069,4 +1069,5 @@ class ReferBeneficiary {
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+  String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
 }
