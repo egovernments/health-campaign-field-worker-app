@@ -41,6 +41,7 @@ class _IndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
+  static const maxLength = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +75,12 @@ class _IndividualDetailsPageState
           },
           builder: (context, state) {
             return ScrollableContent(
+              enableFixedButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
-                height: 85,
+                height: 90,
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: DigitElevatedButton(
@@ -238,6 +240,12 @@ class _IndividualDetailsPageState
               ),
               children: [
                 DigitCard(
+                  padding: const EdgeInsets.fromLTRB(
+                    kPadding,
+                    kPadding,
+                    kPadding,
+                    0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -251,17 +259,23 @@ class _IndividualDetailsPageState
                       Column(
                         children: [
                           DigitTextFormField(
-                            formControlName: 'individualName',
+                            formControlName: _individualNameKey,
                             label: localizations.translate(
                               i18.individualDetails.nameLabelText,
                             ),
-                            maxLength: 200,
                             isRequired: true,
                             validationMessages: {
                               'required': (object) => localizations.translate(
                                     '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
+                            padding: const EdgeInsets.only(
+                              bottom: 0,
+                              top: 24,
+                            ),
                           ),
                           Offstage(
                             offstage: !widget.isHeadOfHousehold,
@@ -310,6 +324,8 @@ class _IndividualDetailsPageState
                                     },
                                   ).toList(),
                                   formControlName: _idTypeKey,
+                                  padding:
+                                      const EdgeInsets.only(bottom: 0, top: 8),
                                 );
                               },
                             ),
@@ -341,7 +357,7 @@ class _IndividualDetailsPageState
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 8),
                               ],
                             ),
                           DigitDobPicker(
@@ -432,6 +448,16 @@ class _IndividualDetailsPageState
           },
         ),
       ),
+      // bottomNavigationBar: SizedBox(
+      //   child: DigitElevatedButton(
+      //     onPressed: () {},
+      //     child: Center(
+      //       child: Text(localizations.translate(
+      //         i18.searchBeneficiary.beneficiaryAddActionLabel,
+      //       )),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -542,7 +568,11 @@ class _IndividualDetailsPageState
 
     return fb.group(<String, Object>{
       _individualNameKey: FormControl<String>(
-        validators: [Validators.required, CustomValidator.requiredMin],
+        validators: [
+          Validators.required,
+          CustomValidator.requiredMin,
+          Validators.maxLength(200),
+        ],
         value: individual?.name?.givenName ?? searchQuery,
       ),
       _idTypeKey: FormControl<String>(

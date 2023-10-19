@@ -623,7 +623,7 @@ class _HouseholdOverviewPageState
           bottomNavigationBar: Offstage(
             offstage: beneficiaryType == BeneficiaryType.individual,
             child: SizedBox(
-              height: 85,
+              height: 90,
               child: BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(

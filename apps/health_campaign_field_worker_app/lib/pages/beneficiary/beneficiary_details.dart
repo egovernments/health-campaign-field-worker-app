@@ -122,6 +122,7 @@ class _BeneficiaryDetailsPageState
 
                   return Scaffold(
                     body: ScrollableContent(
+                      enableFixedButton: true,
                       header: const Column(children: [
                         BackNavigationHelpHeaderWidget(),
                       ]),
@@ -134,9 +135,13 @@ class _BeneficiaryDetailsPageState
                           return cycles != null && cycles.isNotEmpty
                               ? deliverState.hasCycleArrived
                                   ? SizedBox(
-                                      height: 100,
+                                      height: 90,
                                       child: DigitCard(
-                                        margin: const EdgeInsets.all(kPadding),
+                                        margin: const EdgeInsets.only(
+                                          left: 0,
+                                          right: 0,
+                                          top: 10,
+                                        ),
                                         child: DigitElevatedButton(
                                           onPressed: () async {
                                             final selectedCycle =
@@ -158,9 +163,9 @@ class _BeneficiaryDetailsPageState
                                               await DigitDialog.show<bool>(
                                                 context,
                                                 options: DigitDialogOptions(
-                                                  dialogPadding:
+                                                  titlePadding:
                                                       const EdgeInsets.all(
-                                                    8.0,
+                                                    kPadding,
                                                   ),
                                                   titleText: localizations
                                                       .translate(i18

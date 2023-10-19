@@ -181,7 +181,14 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 16.0),
+              padding: isCurrentCycle
+                  ? const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0)
+                  : const EdgeInsets.only(
+                      left: 0,
+                      right: 0,
+                      top: kPadding,
+                      bottom: 0,
+                    ),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

@@ -81,7 +81,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
               footer: SizedBox(
                 height: 85,
                 child: DigitCard(
-                  margin: const EdgeInsets.only(top: kPadding),
+                  margin: EdgeInsets.zero,
                   child: ValueListenableBuilder(
                     valueListenable: clickedStatus,
                     builder: (context, bool isClicked, _) {

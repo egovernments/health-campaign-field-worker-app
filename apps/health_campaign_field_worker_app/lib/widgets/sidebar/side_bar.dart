@@ -21,7 +21,13 @@ class SideBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Column(
+      return ScrollableContent(
+        footer: SizedBox(
+          height: 100,
+          child: PoweredByDigit(
+            version: Constants().version,
+          ),
+        ),
         children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
@@ -169,7 +175,7 @@ class SideBar extends StatelessWidget {
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *
-                                        0.56 /
+                                        0.59 /
                                         languages.length) -
                                     (4 * languages.length),
                               ),
@@ -189,9 +195,6 @@ class SideBar extends StatelessWidget {
               context.read<BoundaryBloc>().add(const BoundaryResetEvent());
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
-          ),
-          PoweredByDigit(
-            version: Constants().version,
           ),
         ],
       );

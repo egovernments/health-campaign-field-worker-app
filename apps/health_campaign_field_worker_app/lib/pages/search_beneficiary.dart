@@ -78,8 +78,12 @@ class _SearchBeneficiaryPageState
                                   DigitSearchBar(
                                     controller: searchController,
                                     hintText: localizations.translate(
-                                      i18.searchBeneficiary
-                                          .beneficiarySearchHintText,
+                                      context.beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? i18.searchBeneficiary
+                                              .beneficiarySearchHintText
+                                          : i18.searchBeneficiary
+                                              .beneficiaryIndividualSearchHintText,
                                     ),
                                     textCapitalization:
                                         TextCapitalization.words,
@@ -250,13 +254,11 @@ class _SearchBeneficiaryPageState
               },
             ),
             bottomNavigationBar: SizedBox(
-              height: 85,
               child: DigitCard(
                 margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                 child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
                   builder: (context, state) {
                     final router = context.router;
-
                     final searchQuery = state.searchQuery;
                     VoidCallback? onPressed;
 

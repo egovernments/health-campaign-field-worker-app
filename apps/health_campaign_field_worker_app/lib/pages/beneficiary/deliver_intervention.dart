@@ -153,11 +153,11 @@ class _DeliverInterventionPageState
                                 ),
                                 builder: (context, form, child) {
                                   return ScrollableContent(
+                                    enableFixedButton: true,
                                     footer: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                       builder: (context, state) {
                                         return SizedBox(
-                                          height: 85,
                                           child: DigitCard(
                                             margin: const EdgeInsets.only(
                                               top: 10,

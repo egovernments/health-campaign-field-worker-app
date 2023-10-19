@@ -34,7 +34,7 @@ class DigitLanguageCard extends StatelessWidget {
             rowItems: digitRowCardItems,
             width:
                 (MediaQuery.of(context).size.width / digitRowCardItems.length) -
-                    16 * digitRowCardItems.length,
+                    14 * digitRowCardItems.length,
           ),
           const SizedBox(
             height: 24,

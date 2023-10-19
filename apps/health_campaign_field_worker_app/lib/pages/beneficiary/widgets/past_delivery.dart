@@ -38,6 +38,25 @@ Widget buildTableContent(
     ),
   ];
 
+  // Calculate the height of the container based on the number of items in the table
+
+  final projectState = context.read<ProjectBloc>().state;
+  final item = projectState
+      .projectType!.cycles![currentCycle - 1].deliveries![currentDose - 1];
+  final productVariants =
+      fetchProductVariant(item, individualModel)?.productVariants;
+  final numRows = productVariants?.length ?? 0;
+  const rowHeight = 82;
+  const paddingHeight = kPadding / 2;
+  final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
+
+  //Calculate the width of the container based on the number of items in the table
+
+  // const cellWidth = 5.0;
+  // final numColumns = numRows; // Number of items in a row
+
+  // final containerWidth = numColumns * cellWidth;
+
   return Container(
     padding: const EdgeInsets.only(
       left: kPadding,
@@ -45,8 +64,7 @@ Widget buildTableContent(
       right: kPadding,
       top: kPadding / 2,
     ),
-    // [TODO - need to set the height of the card based on the number of items]
-    height: MediaQuery.of(context).size.height / 2.6,
+    height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {

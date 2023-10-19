@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -32,6 +33,7 @@ class _HouseholdLocationPageState
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
+  static const maxLength = 64;
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +67,13 @@ class _HouseholdLocationPageState
               BeneficiaryRegistrationState>(
             builder: (context, registrationState) {
               return ScrollableContent(
+                enableFixedButton: true,
                 header: const Column(
                   children: [
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),
                 footer: SizedBox(
-                  height: 85,
                   child: DigitCard(
                     margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                     child: BlocBuilder<LocationBloc, LocationState>(
@@ -210,6 +212,13 @@ class _HouseholdLocationPageState
                 ),
                 children: [
                   DigitCard(
+                    padding: const EdgeInsets.fromLTRB(
+                      kPadding,
+                      kPadding,
+                      kPadding,
+                      0,
+                    ),
+                    // padding: const EdgeInsets.fromLTRB(0, 0, 0, bottom)
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -233,6 +242,9 @@ class _HouseholdLocationPageState
                                     i18.householdLocation
                                         .administrationAreaRequiredValidation,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
                           ),
                           DigitTextFormField(
@@ -241,12 +253,15 @@ class _HouseholdLocationPageState
                               i18.householdLocation
                                   .householdAddressLine1LabelText,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
+                            padding: EdgeInsets.zero,
                           ),
                           DigitTextFormField(
                             formControlName: _addressLine2Key,
@@ -254,24 +269,30 @@ class _HouseholdLocationPageState
                               i18.householdLocation
                                   .householdAddressLine2LabelText,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
+                            padding: EdgeInsets.zero,
                           ),
                           DigitTextFormField(
                             formControlName: _landmarkKey,
                             label: localizations.translate(
                               i18.householdLocation.landmarkFormLabel,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
+                            padding: EdgeInsets.zero,
                           ),
                           DigitTextFormField(
                             keyboardType: TextInputType.text,
@@ -279,12 +300,18 @@ class _HouseholdLocationPageState
                             label: localizations.translate(
                               i18.householdLocation.postalCodeFormLabel,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            padding: EdgeInsets.zero,
                           ),
                         ]),
                         const SizedBox(height: 16),
@@ -313,18 +340,24 @@ class _HouseholdLocationPageState
       _addressLine1Key:
           FormControl<String>(value: addressModel?.addressLine1, validators: [
         CustomValidator.requiredMin,
+        Validators.maxLength(64),
       ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
-        validators: [CustomValidator.requiredMin],
+        validators: [
+          CustomValidator.requiredMin,
+          Validators.maxLength(64),
+        ],
       ),
       _landmarkKey:
           FormControl<String>(value: addressModel?.landmark, validators: [
         CustomValidator.requiredMin,
+        Validators.maxLength(64),
       ]),
       _postalCodeKey:
           FormControl<String>(value: addressModel?.pincode, validators: [
         CustomValidator.requiredMin,
+        Validators.maxLength(64),
       ]),
       _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
         CustomValidator.requiredMin,

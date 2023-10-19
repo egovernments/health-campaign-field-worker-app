@@ -93,6 +93,8 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+
+  String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 }
 
 class AdverseEvents {
@@ -222,6 +224,9 @@ class SearchBeneficiary {
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIndividualSearchHintText =>
+      'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
 
   String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
 
