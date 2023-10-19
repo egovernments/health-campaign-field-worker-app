@@ -145,7 +145,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 additionalFields: ReferralAdditionalFields(
                                   version: 1,
                                   fields: [
-                                    if (referralComment != null)
+                                    if (referralComment != null &&
+                                        referralComment
+                                            .toString()
+                                            .trim()
+                                            .isNotEmpty)
                                       AdditionalField(
                                         AdditionalFieldsType.referralComments
                                             .toValue(),
