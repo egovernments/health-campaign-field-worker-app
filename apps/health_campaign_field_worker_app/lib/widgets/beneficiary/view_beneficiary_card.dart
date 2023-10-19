@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
@@ -105,6 +106,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 element.projectBeneficiaryClientReferenceId ==
                 projectBeneficiary.first.clientReferenceId)
             .toList();
+        final referralData = householdMember.referrals
+            ?.where((element) =>
+                element.projectBeneficiaryClientReferenceId ==
+                projectBeneficiary.first.clientReferenceId)
+            .toList();
         final sideEffects = taskdata != null && taskdata.isNotEmpty
             ? householdMember.sideEffects
                 ?.where((element) =>
@@ -140,6 +146,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           sideEffects,
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
+        final isBeneficiaryReferred = checkIfBeneficiaryReferred(
+            referralData, currentCycle ?? const Cycle());
 
 // TODO need to pass the current cycle
 
@@ -155,17 +163,21 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           ),
           TableData(
             getTableCellText(
-              isNotEligible,
+              StatusKeys(
+                isNotEligible,
+                isBeneficiaryRefused,
+                isBeneficiaryReferred,
+                isStatusReset,
+              ),
               taskdata,
-              isBeneficiaryRefused,
-              isStatusReset,
             ),
             cellKey: 'delivery',
             style: TextStyle(
               color: getTableCellTextColor(
                 isNotEligible: isNotEligible,
                 taskdata: taskdata,
-                isBeneficiaryRefused: isBeneficiaryRefused,
+                isBeneficiaryRefused:
+                    isBeneficiaryRefused || isBeneficiaryReferred,
                 isStatusReset: isStatusReset,
                 theme: theme,
               ),
@@ -309,19 +321,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   }
 
   String getTableCellText(
-    bool isNotEligible,
-    List<TaskModel>? taskdata,
-    bool isBeneficiaryRefused,
-    bool isStatusReset,
+    StatusKeys statusKeys,
+    List<TaskModel>? taskData,
   ) {
-    if (isNotEligible) {
+    if (statusKeys.isNotEligible) {
       return 'Not Eligible';
-    } else if (taskdata != null) {
-      if (taskdata.isEmpty) {
+    } else if (statusKeys.isBeneficiaryReferred) {
+      return localizations.translate(Status.beneficiaryReferred.toValue());
+    } else if (taskData != null) {
+      if (taskData.isEmpty) {
         return localizations.translate(Status.notVisited.toValue());
-      } else if (isBeneficiaryRefused && !isStatusReset) {
+      } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
         return localizations.translate(Status.beneficiaryRefused.toValue());
-      } else if (isStatusReset) {
+      } else if (statusKeys.isStatusReset) {
         return localizations.translate(Status.notVisited.toValue());
       } else {
         return localizations.translate(Status.visited.toValue());
