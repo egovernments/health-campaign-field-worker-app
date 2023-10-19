@@ -3,12 +3,14 @@
 import 'package:drift/drift.dart';
 
 
-class SideEffect extends Table {
+class Referral extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
-  TextColumn get taskClientReferenceId => text().nullable()();
-  IntColumn get reAttempts => integer().nullable()();
-  TextColumn get symptoms => text().nullable()();
+  TextColumn get projectBeneficiaryClientReferenceId => text().nullable()();
+  TextColumn get referrerId => text().nullable()();
+  TextColumn get recipientType => text().nullable()();
+  TextColumn get recipientId => text().nullable()();
+  TextColumn get reasons => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
