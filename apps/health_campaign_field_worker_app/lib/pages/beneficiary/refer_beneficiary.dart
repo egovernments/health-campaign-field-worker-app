@@ -337,7 +337,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
       _referredToKey:
           FormControl<FacilityModel>(validators: [Validators.required]),
       _referralReason: FormControl<KeyValue>(value: null),
-      _referralComments: FormControl<String>(value: ''),
+      _referralComments: FormControl<String>(value: null),
     });
   }
 }
