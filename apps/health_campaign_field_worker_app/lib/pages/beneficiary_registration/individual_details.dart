@@ -360,6 +360,13 @@ class _IndividualDetailsPageState
                                       )
                                       .toList(),
                                   formControlName: _genderKey,
+                                  isRequired: true,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
+                                  },
                                 );
                               },
                             ),
@@ -528,6 +535,9 @@ class _IndividualDetailsPageState
             : null,
       ),
       _genderKey: FormControl<String>(
+        validators: [
+          Validators.required,
+        ],
         value: context.read<AppInitializationBloc>().state.maybeWhen(
               orElse: () => null,
               initialized: (appConfiguration, serviceRegistryList) {

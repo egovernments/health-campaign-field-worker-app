@@ -427,18 +427,6 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockLost,
-                                        ): stockState.stockLost
-                                            .toStringAsFixed(0),
-                                      },
-                                    ),
-                                    const DigitDivider(),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
                                               .spaqDamaged,
                                         ): stockState.stockDamaged
                                             .toStringAsFixed(0),
