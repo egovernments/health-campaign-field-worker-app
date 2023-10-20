@@ -223,7 +223,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Delivery ${e.deliveries!.indexOf(item) + 1}',
+                      '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
