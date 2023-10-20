@@ -97,6 +97,8 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
   String get min3CharsRequired => 'MIN_REQUIRED_3';
+
+  String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 }
 
 class AdverseEvents {
