@@ -84,20 +84,6 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordSpaqDamaged),
-                  description: localizations.translate(
-                    i18.manageStock.recordListOfSpaqDamaged,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.damaged,
-                    ),
-                  ),
-                ),
               ]),
               const SizedBox(height: 16),
             ],

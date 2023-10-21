@@ -32,11 +32,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _transactingPartyKey = 'transactingParty';
   static const _transactionQuantityKey = 'quantity';
-  static const _transactionReasonKey = 'transactionReason';
-  static const _waybillNumberKey = 'waybillNumber';
-  static const _waybillQuantityKey = 'waybillQuantity';
-  static const _vehicleNumberKey = 'vehicleNumber';
-  static const _typeOfTransportKey = 'typeOfTransport';
+  static const _transactionDamagedQuantityKey = 'quantityDamaged';
   static const _commentsKey = 'comments';
 
   FormGroup _form() {
@@ -53,14 +49,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionReasonKey: FormControl<TransactionReason>(),
-      _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(
-        validators: [Validators.number],
-        value: '0',
-      ),
-      _vehicleNumberKey: FormControl<String>(),
-      _typeOfTransportKey: FormControl<String>(),
+      _transactionDamagedQuantityKey: FormControl<int>(),
       _commentsKey: FormControl<String>(),
     });
   }
@@ -185,11 +174,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       case StockRecordEntryType.returned:
                                         transactionReason =
                                             TransactionReason.returned;
+                                        form
+                                            .control(
+                                          _transactionDamagedQuantityKey,
+                                        )
+                                            .setValidators(
+                                          [
+                                            Validators.number,
+                                            Validators.required,
+                                            Validators.min(0),
+                                            Validators.max(10000),
+                                          ],
+                                          updateParent: true,
+                                          autoValidate: true,
+                                        );
                                         break;
                                       default:
-                                        transactionReason = form
-                                            .control(_transactionReasonKey)
-                                            .value as TransactionReason?;
+                                        transactionReason = null;
                                         break;
                                     }
 
@@ -201,17 +202,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         .control(_transactionQuantityKey)
                                         .value;
 
-                                    final waybillNumber = form
-                                        .control(_waybillNumberKey)
-                                        .value as String?;
-
-                                    final waybillQuantity = form
-                                        .control(_waybillQuantityKey)
-                                        .value as String?;
-
-                                    final vehicleNumber = form
-                                        .control(_vehicleNumberKey)
-                                        .value as String?;
+                                    final damagedQuantity = form
+                                        .control(_transactionDamagedQuantityKey)
+                                        .value;
 
                                     final lat = locationState.latitude;
                                     final lng = locationState.longitude;
@@ -253,7 +246,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       referenceId: stockState.projectId,
                                       referenceIdType: 'PROJECT',
                                       quantity: quantity.toString(),
-                                      waybillNumber: waybillNumber,
                                       auditDetails: AuditDetails(
                                         createdBy: context.loggedInUserUuid,
                                         createdTime:
@@ -269,8 +261,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             context.millisecondsSinceEpoch(),
                                       ),
                                       additionalFields: [
-                                                waybillQuantity,
-                                                vehicleNumber,
                                                 comments,
                                               ].any((element) =>
                                                   element != null) ||
@@ -278,15 +268,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ? StockAdditionalFields(
                                               version: 1,
                                               fields: [
-                                                if (waybillQuantity != null)
+                                                if (damagedQuantity != null)
                                                   AdditionalField(
-                                                    'waybill_quantity',
-                                                    waybillQuantity,
-                                                  ),
-                                                if (vehicleNumber != null)
-                                                  AdditionalField(
-                                                    'vehicle_number',
-                                                    vehicleNumber,
+                                                    'damaged_quantity',
+                                                    damagedQuantity,
                                                   ),
                                                 if (comments != null)
                                                   AdditionalField(
@@ -394,23 +379,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 );
                               },
                             ),
-                            if ([
-                              StockRecordEntryType.loss,
-                              StockRecordEntryType.damaged,
-                            ].contains(entryType))
-                              DigitReactiveDropdown<TransactionReason>(
-                                label: localizations.translate(
-                                  transactionReasonLabel ?? 'Reason',
-                                ),
-                                menuItems: reasons ?? [],
-                                formControlName: _transactionReasonKey,
-                                valueMapper: (value) => value.name.titleCase,
-                                isRequired: true,
-                              ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
                                 final facilities = state.whenOrNull(
-                                      fetched: (_, facilities) => facilities,
+                                      fetched: (_, facilities, __) =>
+                                          facilities,
                                     ) ??
                                     [];
 
@@ -454,7 +427,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               isRequired: true,
                               validationMessages: {
                                 "number": (object) => localizations.translate(
-                                      '${quantityCountLabel}_ERROR',
+                                      '${quantityCountLabel}_VALIDATION',
                                     ),
                                 "max": (object) => localizations.translate(
                                       '${quantityCountLabel}_MAX_ERROR',
@@ -467,62 +440,31 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 quantityCountLabel,
                               ),
                             ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails.waybillNumberLabel,
-                              ),
-                              formControlName: _waybillNumberKey,
-                            ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails
-                                    .quantityOfProductIndicatedOnWaybillLabel,
-                              ),
-                              formControlName: _waybillQuantityKey,
-                              validationMessages: {
-                                "number": (object) => localizations.translate(
-                                      '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
-                                    ),
-                              },
-                            ),
-                            BlocBuilder<AppInitializationBloc,
-                                AppInitializationState>(
-                              builder: (context, state) => state.maybeWhen(
-                                orElse: () => const Offstage(),
-                                initialized: (appConfiguration, _) {
-                                  final transportTypeOptions =
-                                      appConfiguration.transportTypes ??
-                                          <TransportTypes>[];
-
-                                  return DigitReactiveDropdown<String>(
-                                    isRequired: false,
-                                    label: localizations.translate(
-                                      i18.stockDetails.transportTypeLabel,
-                                    ),
-                                    valueMapper: (e) => e,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_typeOfTransportKey);
-                                      });
-                                    },
-                                    initialValue:
-                                        transportTypeOptions.firstOrNull?.name,
-                                    menuItems: transportTypeOptions.map(
-                                      (e) {
-                                        return localizations.translate(e.name);
-                                      },
-                                    ).toList(),
-                                    formControlName: _typeOfTransportKey,
-                                  );
+                            if ([
+                              StockRecordEntryType.returned,
+                            ].contains(entryType))
+                              DigitTextFormField(
+                                formControlName: _transactionDamagedQuantityKey,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
+                                ),
+                                isRequired: true,
+                                validationMessages: {
+                                  "number": (object) => localizations.translate(
+                                        '${quantityCountLabel}_VALIDATION',
+                                      ),
+                                  "max": (object) => localizations.translate(
+                                        '${quantityCountLabel}_MAX_ERROR',
+                                      ),
+                                  "min": (object) => localizations.translate(
+                                        '${quantityCountLabel}_MIN_ERROR',
+                                      ),
                                 },
+                                label: localizations.translate(
+                                  i18.stockDetails.quantityDamagedCountLabel,
+                                ),
                               ),
-                            ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails.vehicleNumberLabel,
-                              ),
-                              formControlName: _vehicleNumberKey,
-                            ),
                             DigitTextFormField(
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,

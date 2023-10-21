@@ -28,6 +28,7 @@ class Stock extends Table {
   TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
+  IntColumn get dateOfEntry => integer().nullable()();
   IntColumn get transactionType => intEnum<TransactionType>().nullable()();
   IntColumn get transactionReason => intEnum<TransactionReason>().nullable()();
   

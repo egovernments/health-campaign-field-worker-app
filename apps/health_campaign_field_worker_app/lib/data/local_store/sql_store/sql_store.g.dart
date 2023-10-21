@@ -3738,6 +3738,7 @@ class $DocumentTable extends Document
 
 class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String id;
+  final String? name;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -3756,6 +3757,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String? additionalFields;
   FacilityData(
       {required this.id,
+      this.name,
       this.isPermanent,
       this.usage,
       this.storageCapacity,
@@ -3777,6 +3779,8 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     return FacilityData(
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
       isPermanent: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_permanent']),
       usage: const StringType()
@@ -3815,6 +3819,9 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String?>(name);
+    }
     if (!nullToAbsent || isPermanent != null) {
       map['is_permanent'] = Variable<bool?>(isPermanent);
     }
@@ -3869,6 +3876,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   FacilityCompanion toCompanion(bool nullToAbsent) {
     return FacilityCompanion(
       id: Value(id),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       isPermanent: isPermanent == null && nullToAbsent
           ? const Value.absent()
           : Value(isPermanent),
@@ -3924,6 +3932,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FacilityData(
       id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
       isPermanent: serializer.fromJson<bool?>(json['isPermanent']),
       usage: serializer.fromJson<String?>(json['usage']),
       storageCapacity: serializer.fromJson<int?>(json['storageCapacity']),
@@ -3948,6 +3957,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String?>(name),
       'isPermanent': serializer.toJson<bool?>(isPermanent),
       'usage': serializer.toJson<String?>(usage),
       'storageCapacity': serializer.toJson<int?>(storageCapacity),
@@ -3969,6 +3979,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
 
   FacilityData copyWith(
           {String? id,
+          String? name,
           bool? isPermanent,
           String? usage,
           int? storageCapacity,
@@ -3987,6 +3998,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           String? additionalFields}) =>
       FacilityData(
         id: id ?? this.id,
+        name: name ?? this.name,
         isPermanent: isPermanent ?? this.isPermanent,
         usage: usage ?? this.usage,
         storageCapacity: storageCapacity ?? this.storageCapacity,
@@ -4008,6 +4020,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   String toString() {
     return (StringBuffer('FacilityData(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('isPermanent: $isPermanent, ')
           ..write('usage: $usage, ')
           ..write('storageCapacity: $storageCapacity, ')
@@ -4031,6 +4044,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   @override
   int get hashCode => Object.hash(
       id,
+      name,
       isPermanent,
       usage,
       storageCapacity,
@@ -4052,6 +4066,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       identical(this, other) ||
       (other is FacilityData &&
           other.id == this.id &&
+          other.name == this.name &&
           other.isPermanent == this.isPermanent &&
           other.usage == this.usage &&
           other.storageCapacity == this.storageCapacity &&
@@ -4072,6 +4087,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
 
 class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<String> id;
+  final Value<String?> name;
   final Value<bool?> isPermanent;
   final Value<String?> usage;
   final Value<int?> storageCapacity;
@@ -4090,6 +4106,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<String?> additionalFields;
   const FacilityCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
     this.isPermanent = const Value.absent(),
     this.usage = const Value.absent(),
     this.storageCapacity = const Value.absent(),
@@ -4109,6 +4126,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   });
   FacilityCompanion.insert({
     required String id,
+    this.name = const Value.absent(),
     this.isPermanent = const Value.absent(),
     this.usage = const Value.absent(),
     this.storageCapacity = const Value.absent(),
@@ -4128,6 +4146,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   }) : id = Value(id);
   static Insertable<FacilityData> custom({
     Expression<String>? id,
+    Expression<String?>? name,
     Expression<bool?>? isPermanent,
     Expression<String?>? usage,
     Expression<int?>? storageCapacity,
@@ -4147,6 +4166,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
       if (isPermanent != null) 'is_permanent': isPermanent,
       if (usage != null) 'usage': usage,
       if (storageCapacity != null) 'storage_capacity': storageCapacity,
@@ -4170,6 +4190,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
 
   FacilityCompanion copyWith(
       {Value<String>? id,
+      Value<String?>? name,
       Value<bool?>? isPermanent,
       Value<String?>? usage,
       Value<int?>? storageCapacity,
@@ -4188,6 +4209,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       Value<String?>? additionalFields}) {
     return FacilityCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
       isPermanent: isPermanent ?? this.isPermanent,
       usage: usage ?? this.usage,
       storageCapacity: storageCapacity ?? this.storageCapacity,
@@ -4212,6 +4234,9 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String?>(name.value);
     }
     if (isPermanent.present) {
       map['is_permanent'] = Variable<bool?>(isPermanent.value);
@@ -4268,6 +4293,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   String toString() {
     return (StringBuffer('FacilityCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('isPermanent: $isPermanent, ')
           ..write('usage: $usage, ')
           ..write('storageCapacity: $storageCapacity, ')
@@ -4300,6 +4326,11 @@ class $FacilityTable extends Facility
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _isPermanentMeta =
       const VerificationMeta('isPermanent');
   @override
@@ -4403,6 +4434,7 @@ class $FacilityTable extends Facility
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        name,
         isPermanent,
         usage,
         storageCapacity,
@@ -4433,6 +4465,10 @@ class $FacilityTable extends Facility
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     }
     if (data.containsKey('is_permanent')) {
       context.handle(
@@ -16150,6 +16186,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
+  final int? dateOfEntry;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
   final String? additionalFields;
@@ -16176,6 +16213,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion,
+      this.dateOfEntry,
       this.transactionType,
       this.transactionReason,
       this.additionalFields});
@@ -16226,6 +16264,8 @@ class StockData extends DataClass implements Insertable<StockData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
       rowVersion: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      dateOfEntry: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_of_entry']),
       transactionType: $StockTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}transaction_type'])),
       transactionReason: $StockTable.$converter1.mapToDart(const IntType()
@@ -16301,6 +16341,9 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || dateOfEntry != null) {
+      map['date_of_entry'] = Variable<int?>(dateOfEntry);
     }
     if (!nullToAbsent || transactionType != null) {
       final converter = $StockTable.$converter0;
@@ -16382,6 +16425,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      dateOfEntry: dateOfEntry == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfEntry),
       transactionType: transactionType == null && nullToAbsent
           ? const Value.absent()
           : Value(transactionType),
@@ -16423,6 +16469,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       transactionType:
           serializer.fromJson<TransactionType?>(json['transactionType']),
       transactionReason:
@@ -16456,6 +16503,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'transactionType': serializer.toJson<TransactionType?>(transactionType),
       'transactionReason':
           serializer.toJson<TransactionReason?>(transactionReason),
@@ -16486,6 +16534,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           String? clientReferenceId,
           bool? isDeleted,
           int? rowVersion,
+          int? dateOfEntry,
           TransactionType? transactionType,
           TransactionReason? transactionReason,
           String? additionalFields}) =>
@@ -16512,6 +16561,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
         isDeleted: isDeleted ?? this.isDeleted,
         rowVersion: rowVersion ?? this.rowVersion,
+        dateOfEntry: dateOfEntry ?? this.dateOfEntry,
         transactionType: transactionType ?? this.transactionType,
         transactionReason: transactionReason ?? this.transactionReason,
         additionalFields: additionalFields ?? this.additionalFields,
@@ -16541,6 +16591,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('dateOfEntry: $dateOfEntry, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionReason: $transactionReason, ')
           ..write('additionalFields: $additionalFields')
@@ -16572,6 +16623,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         clientReferenceId,
         isDeleted,
         rowVersion,
+        dateOfEntry,
         transactionType,
         transactionReason,
         additionalFields
@@ -16602,6 +16654,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
+          other.dateOfEntry == this.dateOfEntry &&
           other.transactionType == this.transactionType &&
           other.transactionReason == this.transactionReason &&
           other.additionalFields == this.additionalFields);
@@ -16630,6 +16683,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String> clientReferenceId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<int?> dateOfEntry;
   final Value<TransactionType?> transactionType;
   final Value<TransactionReason?> transactionReason;
   final Value<String?> additionalFields;
@@ -16656,6 +16710,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.clientReferenceId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.dateOfEntry = const Value.absent(),
     this.transactionType = const Value.absent(),
     this.transactionReason = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -16683,6 +16738,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     required String clientReferenceId,
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.dateOfEntry = const Value.absent(),
     this.transactionType = const Value.absent(),
     this.transactionReason = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -16710,6 +16766,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? clientReferenceId,
     Expression<bool?>? isDeleted,
     Expression<int?>? rowVersion,
+    Expression<int?>? dateOfEntry,
     Expression<TransactionType?>? transactionType,
     Expression<TransactionReason?>? transactionReason,
     Expression<String?>? additionalFields,
@@ -16741,6 +16798,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (dateOfEntry != null) 'date_of_entry': dateOfEntry,
       if (transactionType != null) 'transaction_type': transactionType,
       if (transactionReason != null) 'transaction_reason': transactionReason,
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -16770,6 +16828,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String>? clientReferenceId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<int?>? dateOfEntry,
       Value<TransactionType?>? transactionType,
       Value<TransactionReason?>? transactionReason,
       Value<String?>? additionalFields}) {
@@ -16796,6 +16855,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      dateOfEntry: dateOfEntry ?? this.dateOfEntry,
       transactionType: transactionType ?? this.transactionType,
       transactionReason: transactionReason ?? this.transactionReason,
       additionalFields: additionalFields ?? this.additionalFields,
@@ -16872,6 +16932,9 @@ class StockCompanion extends UpdateCompanion<StockData> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int?>(rowVersion.value);
     }
+    if (dateOfEntry.present) {
+      map['date_of_entry'] = Variable<int?>(dateOfEntry.value);
+    }
     if (transactionType.present) {
       final converter = $StockTable.$converter0;
       map['transaction_type'] =
@@ -16913,6 +16976,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('dateOfEntry: $dateOfEntry, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionReason: $transactionReason, ')
           ..write('additionalFields: $additionalFields')
@@ -17058,6 +17122,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
       'row_version', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _dateOfEntryMeta =
+      const VerificationMeta('dateOfEntry');
+  @override
+  late final GeneratedColumn<int?> dateOfEntry = GeneratedColumn<int?>(
+      'date_of_entry', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _transactionTypeMeta =
       const VerificationMeta('transactionType');
   @override
@@ -17104,6 +17174,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         clientReferenceId,
         isDeleted,
         rowVersion,
+        dateOfEntry,
         transactionType,
         transactionReason,
         additionalFields
@@ -17241,6 +17312,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _rowVersionMeta,
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('date_of_entry')) {
+      context.handle(
+          _dateOfEntryMeta,
+          dateOfEntry.isAcceptableOrUnknown(
+              data['date_of_entry']!, _dateOfEntryMeta));
     }
     context.handle(_transactionTypeMeta, const VerificationResult.success());
     context.handle(_transactionReasonMeta, const VerificationResult.success());

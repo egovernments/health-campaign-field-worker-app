@@ -30,6 +30,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';
 
+  FacilityModel? facility;
+
   FormGroup buildForm() => fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
@@ -37,6 +39,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         ),
         _warehouseKey: FormControl<FacilityModel>(
           validators: [Validators.required],
+          value: facility,
         ),
       });
 
@@ -60,9 +63,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           },
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
-                  fetched: (facilities, _) => facilities,
+                  fetched: (facilities, _, __) => facilities,
                 ) ??
                 [];
+            facility = facilityState.whenOrNull(
+              fetched: (_, __, facility) => facility,
+            );
 
             return Scaffold(
               body: GestureDetector(
@@ -139,7 +145,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                               ),
                               Column(children: [
                                 DigitDateFormPicker(
-                                  isEnabled: false,
+                                  isEnabled: true,
+                                  lastDate: DateTime.now(),
                                   formControlName: _dateOfEntryKey,
                                   label: localizations.translate(
                                     i18.warehouseDetails.dateOfReceipt,

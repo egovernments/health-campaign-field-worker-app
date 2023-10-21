@@ -92,6 +92,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               facilityId: facilityModel.id,
               rowVersion: 1,
               tenantId: envConfig.variables.tenantId,
+              dateOfEntry: dateOfRecord.millisecondsSinceEpoch,
             ),
           );
 

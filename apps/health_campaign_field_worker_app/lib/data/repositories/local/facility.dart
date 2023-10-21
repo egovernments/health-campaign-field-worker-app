@@ -47,6 +47,7 @@ class FacilityLocalRepository
 
       return FacilityModel(
         id: facility.id,
+        name: facility.name,
         rowVersion: facility.rowVersion,
         tenantId: facility.tenantId,
         isDeleted: facility.isDeleted,

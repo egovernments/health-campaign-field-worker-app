@@ -25,6 +25,11 @@
       "isList": false
     },
     {
+      "name": "name",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "isPermanent",
       "type": "bool",
       "includeForQuery": true

@@ -73,14 +73,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedProject = context.selectedProject;
-    final beneficiaryType = context.beneficiaryType;
-
-    final targetModel = selectedProject.targets?.firstWhereOrNull(
-      (element) => element.beneficiaryType == beneficiaryType,
-    );
-
-    final target = targetModel?.targetNo ?? 0.0;
+    final target = 65;
 
     return ProgressIndicatorContainer(
       label: '${max(target - current, 0).round()} ${widget.label}',

@@ -55,7 +55,7 @@ class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
-
+  Map<String, FacilityModel> facilityMap = {};
 
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
@@ -181,10 +181,24 @@ class _InventoryReportDetailsPageState
                                           ),
                                           builder: (context, state) {
                                             final facilities = state.whenOrNull(
-                                                  fetched: (facilities, _) =>
-                                                      facilities,
+                                                  fetched:
+                                                      (facilities, _, __) =>
+                                                          facilities,
                                                 ) ??
                                                 [];
+                                            final allFacilities =
+                                                state.whenOrNull(
+                                                      fetched: (
+                                                        _,
+                                                        allFacilities,
+                                                        __,
+                                                      ) =>
+                                                          allFacilities,
+                                                    ) ??
+                                                    [];
+                                            for (var element in allFacilities) {
+                                              facilityMap[element.id] = element;
+                                            }
 
                                             return DigitTextFormField(
                                               valueAccessor:
@@ -298,7 +312,6 @@ class _InventoryReportDetailsPageState
                                           }
 
                                           const dateKey = 'date';
-                                          const waybillKey = 'waybillNumber';
                                           const quantityKey = 'quantity';
                                           const transactingPartyKey =
                                               'transactingParty';
@@ -315,15 +328,6 @@ class _InventoryReportDetailsPageState
                                                   ),
                                                   key: dateKey,
                                                   width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .waybillLabel,
-                                                  ),
-                                                  key: waybillKey,
-                                                  width: 150,
                                                 ),
                                                 DigitGridColumn(
                                                   label: quantityLabel,
@@ -348,14 +352,6 @@ class _InventoryReportDetailsPageState
                                                           value: entry.key,
                                                         ),
                                                         DigitGridCell(
-                                                          key: waybillKey,
-                                                          value: model
-                                                                  .waybillNumber ??
-                                                              model
-                                                                  .waybillNumber ??
-                                                              '',
-                                                        ),
-                                                        DigitGridCell(
                                                           key: quantityKey,
                                                           value:
                                                               model.quantity ??
@@ -364,8 +360,9 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key:
                                                               transactingPartyKey,
-                                                          value: model
-                                                                  .transactingPartyId ??
+                                                          value: facilityMap[model
+                                                                      .transactingPartyId]
+                                                                  ?.name ??
                                                               model
                                                                   .transactingPartyType ??
                                                               '',

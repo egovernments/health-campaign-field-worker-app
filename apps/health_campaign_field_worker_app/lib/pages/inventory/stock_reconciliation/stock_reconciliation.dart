@@ -37,6 +37,7 @@ class _StockReconciliationPageState
     extends LocalizedState<StockReconciliationPage> {
   static const _facilityKey = 'facility';
   static const _productVariantKey = 'productVariant';
+  static const _dateOfReconciliationKey = 'dateOfReconciliation';
   static const _manualCountKey = 'manualCountKey';
   static const _reconciliationCommentsKey = 'reconciliationCommentsKey';
 
@@ -45,6 +46,7 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
+      _dateOfReconciliationKey: FormControl<DateTime>(value: DateTime.now()),
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
@@ -145,6 +147,12 @@ class _StockReconciliationPageState
                                                 .control(_facilityKey)
                                                 .value as FacilityModel;
 
+                                            final dateOfReconciliation = form
+                                                .control(
+                                                  _dateOfReconciliationKey,
+                                                )
+                                                .value as DateTime;
+
                                             final productVariant = form
                                                 .control(_productVariantKey)
                                                 .value as ProductVariantModel;
@@ -163,9 +171,9 @@ class _StockReconciliationPageState
                                                 StockReconciliationModel(
                                               clientReferenceId:
                                                   IdGen.i.identifier,
-                                              dateOfReconciliation: stockState
-                                                  .dateOfReconciliation
-                                                  .millisecondsSinceEpoch,
+                                              dateOfReconciliation:
+                                                  dateOfReconciliation
+                                                      .millisecondsSinceEpoch,
                                               facilityId: facilityId.id,
                                               productVariantId:
                                                   productVariant.id,
@@ -283,7 +291,7 @@ class _StockReconciliationPageState
                                       ),
                                       builder: (context, state) {
                                         final facilities = state.whenOrNull(
-                                              fetched: (facilities, _) =>
+                                              fetched: (facilities, _, __) =>
                                                   facilities,
                                             ) ??
                                             [];
@@ -372,16 +380,29 @@ class _StockReconciliationPageState
                                         );
                                       },
                                     ),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(i18
-                                                .stockReconciliationDetails
-                                                .dateOfReconciliation):
-                                            DateFormat('dd MMMM yyyy').format(
-                                          stockState.dateOfReconciliation,
-                                        ),
+                                    DigitDateFormPicker(
+                                      isEnabled: true,
+                                      lastDate: DateTime.now(),
+                                      formControlName: _dateOfReconciliationKey,
+                                      label: localizations.translate(i18
+                                          .stockReconciliationDetails
+                                          .dateOfReconciliation),
+                                      isRequired: false,
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
+                                      ),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      onChangeOfFormControl: (control) {
+                                        final stockReconciliationBloc = context
+                                            .read<StockReconciliationBloc>();
+
+                                        stockReconciliationBloc.add(
+                                          StockReconciliationSelectDateOfReconciliationEvent(
+                                            control.value,
+                                          ),
+                                        );
                                       },
                                     ),
                                     const DigitDivider(),
@@ -417,18 +438,6 @@ class _StockReconciliationPageState
                                           i18.stockReconciliationDetails
                                               .spaqReturned,
                                         ): stockState.stockReturned
-                                            .toStringAsFixed(0),
-                                      },
-                                    ),
-                                    const DigitDivider(),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .spaqDamaged,
-                                        ): stockState.stockDamaged
                                             .toStringAsFixed(0),
                                       },
                                     ),
