@@ -80,6 +80,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                 initialValue: formControls[label]?.value,
                                 label: label,
                                 menuItems: filteredItems,
+                                isRequired: labelIndex == 0,
                                 onChanged: (value) {
                                   if (value == null) return;
 

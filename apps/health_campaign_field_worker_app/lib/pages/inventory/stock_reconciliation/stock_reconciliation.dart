@@ -51,14 +51,17 @@ class _StockReconciliationPageState
         validators: [Validators.required],
       ),
       _manualCountKey: FormControl<String>(
-        value: '0',
         validators: [
           Validators.number,
           Validators.required,
           CustomValidator.validStockCount,
         ],
       ),
-      _reconciliationCommentsKey: FormControl<String>(),
+      _reconciliationCommentsKey: FormControl<String>(
+        validators: [
+          CustomValidator.requiredMin3,
+        ],
+      ),
     });
   }
 
@@ -394,13 +397,13 @@ class _StockReconciliationPageState
                                       cancelText: localizations.translate(
                                         i18.common.coreCommonCancel,
                                       ),
-                                      onChangeOfFormControl: (control) {
+                                      onChanged: (control) {
                                         final stockReconciliationBloc = context
                                             .read<StockReconciliationBloc>();
 
                                         stockReconciliationBloc.add(
                                           StockReconciliationSelectDateOfReconciliationEvent(
-                                            control.value,
+                                            control,
                                           ),
                                         );
                                       },
@@ -494,6 +497,49 @@ class _StockReconciliationPageState
                                             .stockReconciliationDetails
                                             .manualCountMaxError,
                                       },
+                                      onChanged: (control) {
+                                        final manualStockCount = control.value;
+
+                                        final stockCount =
+                                            stockState.stockInHand.toInt();
+
+                                        if (manualStockCount !=
+                                            stockCount.toString()) {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _reconciliationCommentsKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                Validators.required,
+                                                CustomValidator.requiredMin3,
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                            form
+                                                .control(
+                                                  _reconciliationCommentsKey,
+                                                )
+                                                .touched;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _reconciliationCommentsKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                CustomValidator.requiredMin3,
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                          });
+                                        }
+                                      },
                                     ),
                                     DigitTextFormField(
                                       label: localizations.translate(
@@ -502,6 +548,16 @@ class _StockReconciliationPageState
                                       ),
                                       formControlName:
                                           _reconciliationCommentsKey,
+                                      validationMessages: {
+                                        "required": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .reconciliationCommentRequiredError),
+                                        "min3": (object) =>
+                                            localizations.translate(
+                                              i18.common.min3CharsRequired,
+                                            ),
+                                      },
                                     ),
                                   ],
                                 ),

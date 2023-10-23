@@ -95,6 +95,7 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
 }
 
 class AdverseEvents {
@@ -704,6 +705,8 @@ class StockReconciliationDetails {
   String get spaqDamaged => 'SPAQ_DAMAGED';
   String get spaqOnHand => 'SPAQ_ON_HAND';
   String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get reconciliationCommentRequiredError =>
+      'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
 class ManageStock {

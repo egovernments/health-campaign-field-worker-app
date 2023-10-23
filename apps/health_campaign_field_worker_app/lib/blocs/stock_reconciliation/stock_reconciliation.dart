@@ -24,6 +24,7 @@ class StockReconciliationBloc
   }) {
     on(_handleSelectFacility);
     on(_handleSelectProduct);
+    on(_handleSelectDateOfReconciliation);
     on(_handleCalculate);
     on(_handleCreate);
   }

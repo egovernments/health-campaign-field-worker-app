@@ -440,31 +440,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 quantityCountLabel,
                               ),
                             ),
-                            if ([
-                              StockRecordEntryType.returned,
-                            ].contains(entryType))
-                              DigitTextFormField(
-                                formControlName: _transactionDamagedQuantityKey,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                isRequired: true,
-                                validationMessages: {
-                                  "number": (object) => localizations.translate(
-                                        '${quantityCountLabel}_VALIDATION',
-                                      ),
-                                  "max": (object) => localizations.translate(
-                                        '${quantityCountLabel}_MAX_ERROR',
-                                      ),
-                                  "min": (object) => localizations.translate(
-                                        '${quantityCountLabel}_MIN_ERROR',
-                                      ),
-                                },
-                                label: localizations.translate(
-                                  i18.stockDetails.quantityDamagedCountLabel,
-                                ),
-                              ),
                             DigitTextFormField(
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,
