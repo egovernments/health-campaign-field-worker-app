@@ -96,7 +96,8 @@ class DigitRadioButtonList<T> extends StatelessWidget {
             if (radioListControl.hasErrors) {
               return Text(
                 errorMessage,
-                style: TextStyle(color: DigitTheme.instance.colorScheme.error),
+                style: TextStyle(
+                    color: DigitTheme.instance.colorScheme.error, fontSize: 12),
               );
             } else {
               return const SizedBox.shrink();

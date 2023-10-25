@@ -94,6 +94,8 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+
+  String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 }
 
 class AdverseEvents {
@@ -1012,4 +1014,5 @@ class ReferBeneficiary {
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+  String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
 }

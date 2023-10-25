@@ -89,93 +89,111 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                     valueListenable: clickedStatus,
                     builder: (context, bool isClicked, _) {
                       return DigitElevatedButton(
-                        onPressed: () {
-                          if (form.control(_referralReason).value == null) {
-                            clickedStatus.value = false;
-                            form.control(_referralReason).setErrors({'': true});
-                          }
-                          form.markAllAsTouched();
+                        onPressed: isClicked
+                            ? null
+                            : () {
+                                if (form.control(_referralReason).value ==
+                                    null) {
+                                  clickedStatus.value = false;
+                                  form
+                                      .control(_referralReason)
+                                      .setErrors({'': true});
+                                }
+                                form.markAllAsTouched();
 
-                          if (!form.valid) {
-                            return;
-                          } else {
-                            clickedStatus.value = true;
-                            final recipient = form.control(_referredToKey).value
-                                as FacilityModel;
-                            final reason =
-                                form.control(_referralReason).value as KeyValue;
-                            final recipientType =
-                                recipient.id == 'Community Health Worker'
-                                    ? 'STAFF'
-                                    : 'FACILITY';
-                            final recipientId =
-                                recipient.id == 'Community Health Worker'
-                                    ? context.loggedInUserUuid
-                                    : recipient.id;
-                            final referralComment =
-                                form.control(_referralComments).value;
+                                if (!form.valid) {
+                                  return;
+                                } else {
+                                  clickedStatus.value = true;
+                                  final recipient = form
+                                      .control(_referredToKey)
+                                      .value as FacilityModel;
+                                  final reason = form
+                                      .control(_referralReason)
+                                      .value as KeyValue;
+                                  final recipientType =
+                                      recipient.id == 'Community Health Worker'
+                                          ? 'STAFF'
+                                          : 'FACILITY';
+                                  final recipientId =
+                                      recipient.id == 'Community Health Worker'
+                                          ? context.loggedInUserUuid
+                                          : recipient.id;
+                                  final referralComment =
+                                      form.control(_referralComments).value;
 
-                            final event = context.read<ReferralBloc>();
-                            event.add(ReferralSubmitEvent(
-                              ReferralModel(
-                                clientReferenceId: IdGen.i.identifier,
-                                projectId: context.projectId,
-                                projectBeneficiaryClientReferenceId:
-                                    widget.projectBeneficiaryClientRefId,
-                                referrerId: context.loggedInUserUuid,
-                                recipientId: recipientId,
-                                recipientType: recipientType,
-                                reasons: [reason.key],
-                                tenantId: envConfig.variables.tenantId,
-                                rowVersion: 1,
-                                auditDetails: AuditDetails(
-                                  createdBy: context.loggedInUserUuid,
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy: context.loggedInUserUuid,
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
-                                clientAuditDetails: ClientAuditDetails(
-                                  createdBy: context.loggedInUserUuid,
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy: context.loggedInUserUuid,
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
-                                additionalFields: ReferralAdditionalFields(
-                                  version: 1,
-                                  fields: [
-                                    if (referralComment != null)
-                                      AdditionalField(
-                                        AdditionalFieldsType.referralComments
-                                            .toValue(),
-                                        referralComment,
+                                  final event = context.read<ReferralBloc>();
+                                  event.add(ReferralSubmitEvent(
+                                    ReferralModel(
+                                      clientReferenceId: IdGen.i.identifier,
+                                      projectId: context.projectId,
+                                      projectBeneficiaryClientReferenceId:
+                                          widget.projectBeneficiaryClientRefId,
+                                      referrerId: context.loggedInUserUuid,
+                                      recipientId: recipientId,
+                                      recipientType: recipientType,
+                                      reasons: [reason.key],
+                                      tenantId: envConfig.variables.tenantId,
+                                      rowVersion: 1,
+                                      auditDetails: AuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
                                       ),
-                                  ],
-                                ),
-                              ),
-                              false,
-                            ));
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            context.loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      additionalFields:
+                                          ReferralAdditionalFields(
+                                        version: 1,
+                                        fields: [
+                                          if (referralComment != null &&
+                                              referralComment
+                                                  .toString()
+                                                  .trim()
+                                                  .isNotEmpty)
+                                            AdditionalField(
+                                              AdditionalFieldsType
+                                                  .referralComments
+                                                  .toValue(),
+                                              referralComment,
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    false,
+                                  ));
 
-                            final reloadState =
-                                context.read<HouseholdOverviewBloc>();
+                                  final reloadState =
+                                      context.read<HouseholdOverviewBloc>();
 
-                            Future.delayed(
-                              const Duration(milliseconds: 500),
-                              () {
-                                reloadState.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
+                                  Future.delayed(
+                                    const Duration(milliseconds: 500),
+                                    () {
+                                      reloadState
+                                          .add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
+                                    },
+                                  ).then((value) => context.router.popAndPush(
+                                        HouseholdAcknowledgementRoute(
+                                          enableViewHousehold: true,
+                                        ),
+                                      ));
+                                }
                               },
-                            ).then((value) => context.router.popAndPush(
-                                  HouseholdAcknowledgementRoute(
-                                    enableViewHousehold: true,
-                                  ),
-                                ));
-                          }
-                        },
                         child: Center(
                           child: Text(
                             localizations
@@ -231,6 +249,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           label: localizations.translate(
                             i18.referBeneficiary.referredByLabel,
                           ),
+                          validationMessages: {
+                            'required': (_) => localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                          },
                           isRequired: true,
                         ),
                         DigitTextFormField(
@@ -249,7 +272,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           readOnly: false,
                           validationMessages: {
                             'required': (_) => localizations.translate(
-                                  i18.common.corecommonRequired,
+                                  i18.referBeneficiary
+                                      .facilityValidationMessage,
                                 ),
                           },
                           onTap: () async {
@@ -327,7 +351,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
       _referredToKey:
           FormControl<FacilityModel>(validators: [Validators.required]),
       _referralReason: FormControl<KeyValue>(value: null),
-      _referralComments: FormControl<String>(value: ''),
+      _referralComments: FormControl<String>(value: null),
     });
   }
 }
