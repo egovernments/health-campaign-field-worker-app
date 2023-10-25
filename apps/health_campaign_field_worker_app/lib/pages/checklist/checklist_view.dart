@@ -545,7 +545,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                           child: DigitTextField(
                             maxLength: 1000,
-                            isRequired: true,
                             controller: additionalController[index],
                             label: '${localizations.translate(
                               '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
