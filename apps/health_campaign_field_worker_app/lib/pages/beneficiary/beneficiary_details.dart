@@ -192,7 +192,7 @@ class _BeneficiaryDetailsPageState
                                           },
                                           child: Center(
                                             child: Text(
-                                              'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${(deliverState.dose).toString()}',
+                                              '${localizations.translate(i18.deliverIntervention.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${(deliverState.dose).toString()}',
                                             ),
                                           ),
                                         ),

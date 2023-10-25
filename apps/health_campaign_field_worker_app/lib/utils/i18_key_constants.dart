@@ -515,6 +515,7 @@ class DeliverIntervention {
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
   String get cycle => 'DELIVERY_CYCLE';
+  String get recordCycle => 'RECORD_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
