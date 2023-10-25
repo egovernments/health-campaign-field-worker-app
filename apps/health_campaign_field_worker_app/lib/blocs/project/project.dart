@@ -332,21 +332,21 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         projectFacility,
         createOpLog: false,
       );
+    }
 
-      /// Passing [id] as [null] is required to load all facilities associated
-      /// with the tenant
-      final facilities = await facilityRemoteRepository.search(
-        FacilitySearchModel(
-          id: null,
-        ),
+    /// Passing [id] as [null] is required to load all facilities associated
+    /// with the tenant
+    final facilities = await facilityRemoteRepository.search(
+      FacilitySearchModel(
+        id: null,
+      ),
+    );
+
+    for (final facility in facilities) {
+      await facilityLocalRepository.create(
+        facility,
+        createOpLog: false,
       );
-
-      for (final facility in facilities) {
-        await facilityLocalRepository.create(
-          facility,
-          createOpLog: false,
-        );
-      }
     }
   }
 

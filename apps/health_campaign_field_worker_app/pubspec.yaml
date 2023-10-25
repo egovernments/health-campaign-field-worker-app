@@ -59,6 +59,7 @@ dependencies:
   digit_firebase_services: ^0.0.1
   package_info_plus: ^4.1.0
   expandable: ^5.0.1
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
