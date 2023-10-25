@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -39,6 +40,8 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<String> symptomsTypes = [];
   bool stateChanged = false;
   bool symptomsSelected = true;
+  bool showOtherTextField = false;
+  final TextEditingController otherController = TextEditingController();
 
   @override
   void initState() {
@@ -104,9 +107,16 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                       i < symptomsValues.length;
                                                       i++) {
                                                     if (symptomsValues[i]) {
-                                                      symptoms.add(
-                                                        symptomsTypes[i],
-                                                      );
+                                                      if (symptomsTypes[i] ==
+                                                          'OTHER') {
+                                                        symptoms.add(
+                                                          otherController.text,
+                                                        );
+                                                      } else {
+                                                        symptoms.add(
+                                                          symptomsTypes[i],
+                                                        );
+                                                      }
                                                     }
                                                   }
 
@@ -288,6 +298,13 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                           i] =
                                                                       !symptomsValues[
                                                                           i];
+
+                                                                  setState(() {
+                                                                    showOtherTextField = symptomsValues[
+                                                                            symptomsTypes.indexOf('OTHER')]
+                                                                        ? true
+                                                                        : false;
+                                                                  });
                                                                 },
                                                               );
                                                             },
@@ -300,6 +317,11 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                             },
                                           ),
                                         ),
+                                        if (showOtherTextField)
+                                          TextField(
+                                            controller: otherController,
+                                            maxLength: 64,
+                                          ),
                                         Offstage(
                                           offstage: symptomsSelected,
                                           child: Align(
