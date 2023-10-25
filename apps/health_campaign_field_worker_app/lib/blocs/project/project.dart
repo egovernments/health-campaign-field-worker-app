@@ -342,12 +342,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
-    for (final facility in facilities) {
-      await facilityLocalRepository.create(
-        facility,
-        createOpLog: false,
-      );
-    }
+    await facilityLocalRepository.bulkCreate(facilities);
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {

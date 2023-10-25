@@ -33,7 +33,8 @@ class FacilitySelectionPage extends StatelessWidget {
               final filteredFacilities = facilities.where((element) {
                 final query = form.control(_facilityName).value as String?;
                 if (query == null || query.isEmpty) return true;
-                if (element.id.toLowerCase().contains(query.toLowerCase())) {
+                final name = element.name ?? "";
+                if (name.toLowerCase().contains(query.toLowerCase())) {
                   return true;
                 }
 
