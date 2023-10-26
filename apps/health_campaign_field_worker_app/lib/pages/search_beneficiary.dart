@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
@@ -29,6 +30,13 @@ class _SearchBeneficiaryPageState
     extends LocalizedState<SearchBeneficiaryPage> {
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +230,6 @@ class _SearchBeneficiaryPageState
                                 onOpenPressed: () async {
                                   final bloc =
                                       context.read<SearchHouseholdsBloc>();
-                                  final projectId = context.projectId;
 
                                   await context.router.push(
                                     BeneficiaryWrapperRoute(
@@ -250,39 +257,60 @@ class _SearchBeneficiaryPageState
               },
             ),
             bottomNavigationBar: SizedBox(
-              height: 85,
+              height: 150,
               child: DigitCard(
                 margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
-                  builder: (context, state) {
-                    final router = context.router;
+                child: Column(
+                  children: [
+                    BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
+                      builder: (context, state) {
+                        final router = context.router;
 
-                    final searchQuery = state.searchQuery;
-                    VoidCallback? onPressed;
+                        final searchQuery = state.searchQuery;
+                        VoidCallback? onPressed;
 
-                    onPressed = state.loading ||
-                            searchQuery == null ||
-                            searchQuery.isEmpty
-                        ? null
-                        : () {
-                            FocusManager.instance.primaryFocus?.unfocus();
+                        onPressed = state.loading ||
+                                searchQuery == null ||
+                                searchQuery.isEmpty
+                            ? null
+                            : () {
+                                FocusManager.instance.primaryFocus?.unfocus();
 
-                            router.push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: state.searchQuery,
-                              ),
-                            ));
-                          };
+                                context.read<ScannerBloc>().add(
+                                      const ScannerEvent.handleScanner([], []),
+                                    );
+                                router.push(BeneficiaryRegistrationWrapperRoute(
+                                  initialState:
+                                      BeneficiaryRegistrationCreateState(
+                                    searchQuery: state.searchQuery,
+                                  ),
+                                ));
+                              };
 
-                    return DigitElevatedButton(
-                      onPressed: onPressed,
-                      child: Center(
-                        child: Text(localizations.translate(
-                          i18.searchBeneficiary.beneficiaryAddActionLabel,
-                        )),
+                        return DigitElevatedButton(
+                          onPressed: onPressed,
+                          child: Center(
+                            child: Text(localizations.translate(
+                              i18.searchBeneficiary.beneficiaryAddActionLabel,
+                            )),
+                          ),
+                        );
+                      },
+                    ),
+                    DigitOutlineIconButton(
+                      onPressed: () {
+                        context.router.push(QRScannerRoute(
+                          quantity: 1,
+                          isGS1code: false,
+                          sinlgleValue: true,
+                        ));
+                      },
+                      icon: Icons.qr_code,
+                      label: localizations.translate(
+                        i18.deliverIntervention.scannerLabel,
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
             ),

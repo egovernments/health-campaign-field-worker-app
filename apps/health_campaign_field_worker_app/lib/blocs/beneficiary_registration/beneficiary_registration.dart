@@ -178,6 +178,8 @@ class BeneficiaryRegistrationBloc
 
           await projectBeneficiaryRepository.create(
             ProjectBeneficiaryModel(
+              // TODO Need to add a specific tag
+              tag: event.tag,
               rowVersion: 1,
               tenantId: envConfig.variables.tenantId,
               clientReferenceId: IdGen.i.identifier,
@@ -351,6 +353,8 @@ class BeneficiaryRegistrationBloc
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
+                // TODO Need to add a specific tag
+                tag: event.tag,
                 rowVersion: 1,
                 tenantId: envConfig.variables.tenantId,
                 clientReferenceId: IdGen.i.identifier,
@@ -429,6 +433,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
     required String userUuid,
     required String projectId,
+    String? tag,
     required BeneficiaryType beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
@@ -446,6 +451,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required String userUuid,
     required String projectId,
     required BoundaryModel boundary,
+    String? tag,
   }) = BeneficiaryRegistrationCreateEvent;
 }
 

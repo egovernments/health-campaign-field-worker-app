@@ -264,11 +264,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        await mdmsRepository.writeToProjectTypeDB(
-          projectTypes,
-          isar,
-        );
-
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) => element.id == projects.first.projectTypeId)
@@ -445,17 +440,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ).toJson(),
       );
 
-      await mdmsRepository.writeToProjectTypeDB(
-        projectType,
-        isar,
-      );
-
       final selectedProjectType = projectType.projectTypeWrapper?.projectTypes
           .where(
             (element) => element.id == event.model.projectTypeId,
           )
           .toList()
           .firstOrNull;
+
       final currentRunningCycle = selectedProjectType?.cycles
           ?.where(
             (e) =>

@@ -81,6 +81,20 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    QRScannerRoute.name: (routeData) {
+      final args = routeData.argsAs<QRScannerRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: QRScannerPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          quantity: args.quantity,
+          isGS1code: args.isGS1code,
+          sinlgleValue: args.sinlgleValue,
+          isEditEnabled: args.isEditEnabled,
+        ),
+      );
+    },
     BeneficiaryRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -584,6 +598,11 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
+              QRScannerRoute.name,
+              path: 'scanner',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               BeneficiaryRegistrationWrapperRoute.name,
               path: 'beneficiary-registration',
               parent: AuthenticatedRouteWrapper.name,
@@ -1031,6 +1050,60 @@ class SearchBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [QRScannerPage]
+class QRScannerRoute extends PageRouteInfo<QRScannerRouteArgs> {
+  QRScannerRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required int quantity,
+    required bool isGS1code,
+    bool sinlgleValue = false,
+    bool isEditEnabled = false,
+  }) : super(
+          QRScannerRoute.name,
+          path: 'scanner',
+          args: QRScannerRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            quantity: quantity,
+            isGS1code: isGS1code,
+            sinlgleValue: sinlgleValue,
+            isEditEnabled: isEditEnabled,
+          ),
+        );
+
+  static const String name = 'QRScannerRoute';
+}
+
+class QRScannerRouteArgs {
+  const QRScannerRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.quantity,
+    required this.isGS1code,
+    this.sinlgleValue = false,
+    this.isEditEnabled = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final int quantity;
+
+  final bool isGS1code;
+
+  final bool sinlgleValue;
+
+  final bool isEditEnabled;
+
+  @override
+  String toString() {
+    return 'QRScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, sinlgleValue: $sinlgleValue, isEditEnabled: $isEditEnabled}';
   }
 }
 

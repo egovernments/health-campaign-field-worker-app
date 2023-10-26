@@ -10,6 +10,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/scanner/scanner.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
@@ -153,13 +154,19 @@ class _IndividualDetailsPageState
                           );
 
                           if (submit ?? false) {
-                            bloc.add(
-                              BeneficiaryRegistrationCreateEvent(
-                                projectId: projectId,
-                                userUuid: userId,
-                                boundary: boundary,
-                              ),
-                            );
+                            if (context.mounted) {
+                              final scannerBloc = context.read<ScannerBloc>();
+                              bloc.add(
+                                BeneficiaryRegistrationCreateEvent(
+                                  projectId: projectId,
+                                  userUuid: userId,
+                                  boundary: boundary,
+                                  tag: scannerBloc.state.qrcodes.isNotEmpty
+                                      ? scannerBloc.state.qrcodes.first
+                                      : null,
+                                ),
+                              );
+                            }
                           }
                         },
                         editIndividual: (
@@ -210,16 +217,22 @@ class _IndividualDetailsPageState
                             form: form,
                           );
 
-                          bloc.add(
-                            BeneficiaryRegistrationAddMemberEvent(
-                              beneficiaryType: context.beneficiaryType,
-                              householdModel: householdModel,
-                              individualModel: individual,
-                              addressModel: addressModel,
-                              userUuid: userId,
-                              projectId: context.projectId,
-                            ),
-                          );
+                          if (context.mounted) {
+                            final scannerBloc = context.read<ScannerBloc>();
+                            bloc.add(
+                              BeneficiaryRegistrationAddMemberEvent(
+                                beneficiaryType: context.beneficiaryType,
+                                householdModel: householdModel,
+                                individualModel: individual,
+                                addressModel: addressModel,
+                                userUuid: userId,
+                                projectId: context.projectId,
+                                tag: scannerBloc.state.qrcodes.isNotEmpty
+                                    ? scannerBloc.state.qrcodes.first
+                                    : null,
+                              ),
+                            );
+                          }
                         },
                       );
                     },
@@ -424,6 +437,47 @@ class _IndividualDetailsPageState
                         ],
                       ),
                       const SizedBox(height: 16),
+                      BlocBuilder<ScannerBloc, ScannerState>(
+                        builder: (context, state) => state.qrcodes.isNotEmpty
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(localizations.translate(
+                                    i18.deliverIntervention.voucherCode,
+                                  )),
+                                  Text(localizations
+                                      .translate(state.qrcodes.first)),
+                                  IconButton(
+                                    color: theme.colorScheme.secondary,
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      context.router.push(QRScannerRoute(
+                                        quantity: 1,
+                                        isGS1code: false,
+                                        sinlgleValue: true,
+                                        isEditEnabled: true,
+                                      ));
+                                    },
+                                  ),
+                                ],
+
+                                // ignore: no-empty-block
+                              )
+                            : DigitOutlineIconButton(
+                                onPressed: () {
+                                  context.router.push(QRScannerRoute(
+                                    quantity: 1,
+                                    isGS1code: false,
+                                    sinlgleValue: true,
+                                  ));
+                                },
+                                icon: Icons.qr_code,
+                                label: localizations.translate(
+                                  i18.individualDetails.linkVoucherToIndividual,
+                                ),
+                              ),
+                      ),
                     ],
                   ),
                 ),
