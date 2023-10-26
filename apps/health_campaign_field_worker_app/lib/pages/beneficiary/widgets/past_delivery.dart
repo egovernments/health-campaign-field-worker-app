@@ -46,7 +46,7 @@ Widget buildTableContent(
       top: kPadding / 2,
     ),
     // [TODO - need to set the height of the card based on the number of items]
-    height: MediaQuery.of(context).size.height / 2.6,
+    height: MediaQuery.of(context).size.height / 3.6,
     width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
