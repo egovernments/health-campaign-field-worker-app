@@ -9,6 +9,7 @@ class DigitDialog extends StatelessWidget {
     required this.options,
   });
 
+
   static Future<T?> show<T>(
     BuildContext context, {
     required DigitDialogOptions options,
@@ -36,24 +37,28 @@ class DigitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+
         title: Padding(
           padding: options.dialogPadding != null
               ? options.dialogPadding!
               : const EdgeInsets.all(0),
           child: options.title,
         ),
-        content: options.content,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: options.content,
+        ),
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
           if (options.enableRecordPast == true)
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0),
               child: Row(
                 children: <Widget>[
                   if (options.secondaryAction != null)
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 3,
+                      width: 50,
                       child: DigitOutLineButton(
                         onPressed: () =>
                             options.secondaryAction!.action?.call(context),
@@ -89,9 +94,7 @@ class DigitDialog extends StatelessWidget {
               children: <Widget>[
                 if (options.primaryAction != null)
                   Padding(
-                    padding: options.dialogPadding != null
-                        ? options.dialogPadding!
-                        : const EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     child: DigitElevatedButton(
                       onPressed: () =>
                           options.primaryAction!.action?.call(context),
