@@ -223,10 +223,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 2,
                   child: Text(
                     localizations.translate(i18.complaints.inboxNumberLabel),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
@@ -251,10 +248,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 2,
                   child: Text(
                     localizations.translate(i18.complaints.inboxTypeLabel),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
@@ -277,10 +271,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 2,
                   child: Text(
                     localizations.translate(i18.complaints.inboxDateLabel),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
@@ -303,10 +294,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 2,
                   child: Text(
                     localizations.translate(i18.complaints.inboxAreaLabel),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
@@ -327,10 +315,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 2,
                   child: Text(
                     localizations.translate(i18.complaints.inboxStatusLabel),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: theme.textTheme.headlineSmall,
                   ),
                 ),
                 Expanded(
