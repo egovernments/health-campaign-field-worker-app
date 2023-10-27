@@ -13,7 +13,6 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -251,6 +250,15 @@ class KeyValue {
   String label;
   dynamic key;
   KeyValue(this.label, this.key);
+}
+
+class StatusKeys {
+  bool isNotEligible;
+  bool isBeneficiaryRefused;
+  bool isBeneficiaryReferred;
+  bool isStatusReset;
+  StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
+      this.isBeneficiaryReferred, this.isStatusReset);
 }
 
 class RequestInfoData {

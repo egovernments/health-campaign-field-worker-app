@@ -29,6 +29,7 @@ class MemberCard extends StatelessWidget {
   final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
+  final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
 
   const MemberCard({
@@ -48,6 +49,7 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
+    this.isBeneficiaryReferred = false,
     this.sideEffects,
   });
 
@@ -160,7 +162,10 @@ class MemberCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered || isNotEligible || isBeneficiaryRefused
+              child: !isDelivered ||
+                      isNotEligible ||
+                      isBeneficiaryRefused ||
+                      isBeneficiaryReferred
                   ? Align(
                       alignment: Alignment.centerLeft,
                       child: DigitIconButton(
@@ -170,11 +175,14 @@ class MemberCard extends StatelessWidget {
                           isNotEligible
                               ? i18.householdOverView
                                   .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryRefused
-                                  ? Status.beneficiaryRefused.toValue()
-                                  // [TODO Need to update the localization]
-                                  : i18.householdOverView
-                                      .householdOverViewNotDeliveredIconLabel,
+                              : isBeneficiaryReferred
+                                  ? i18.householdOverView
+                                      .householdOverViewBeneficiaryReferredLabel
+                                  : isBeneficiaryRefused
+                                      ? Status.beneficiaryRefused.toValue()
+                                      // [TODO Need to update the localization]
+                                      : i18.householdOverView
+                                          .householdOverViewNotDeliveredIconLabel,
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -203,7 +211,7 @@ class MemberCard extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  isNotEligible || isBeneficiaryRefused
+                  isNotEligible || isBeneficiaryRefused || isBeneficiaryReferred
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
@@ -268,6 +276,7 @@ class MemberCard extends StatelessWidget {
                   ),
                   (isNotEligible ||
                           isBeneficiaryRefused ||
+                          isBeneficiaryReferred ||
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
@@ -373,6 +382,39 @@ class MemberCard extends StatelessWidget {
                                         ..pop();
                                       context.router.push(
                                         AcknowledgementRoute(),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.referBeneficiaryLabel,
+                                    ),
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: theme.colorScheme.secondary,
+                                      ),
+                                      minimumSize: Size(
+                                        MediaQuery.of(context).size.width /
+                                            1.25,
+                                        50,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+                                      await context.router.push(
+                                        ReferBeneficiaryRoute(
+                                          projectBeneficiaryClientRefId:
+                                              projectBeneficiaryClientReferenceId ??
+                                                  '',
+                                        ),
                                       );
                                     },
                                   ),

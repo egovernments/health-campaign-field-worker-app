@@ -332,6 +332,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ReferBeneficiaryRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferBeneficiaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+        ),
+      );
+    },
     DoseAdministeredRoute.name: (routeData) {
       final args = routeData.argsAs<DoseAdministeredRouteArgs>(
           orElse: () => const DoseAdministeredRouteArgs());
@@ -661,6 +673,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   SideEffectsRoute.name,
                   path: 'side-effects',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferBeneficiaryRoute.name,
+                  path: 'refer-beneficiary',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1859,6 +1876,50 @@ class SideEffectsRouteArgs {
   @override
   String toString() {
     return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ReferBeneficiaryPage]
+class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
+  ReferBeneficiaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    required String projectBeneficiaryClientRefId,
+  }) : super(
+          ReferBeneficiaryRoute.name,
+          path: 'refer-beneficiary',
+          args: ReferBeneficiaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+          ),
+        );
+
+  static const String name = 'ReferBeneficiaryRoute';
+}
+
+class ReferBeneficiaryRouteArgs {
+  const ReferBeneficiaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    required this.projectBeneficiaryClientRefId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String projectBeneficiaryClientRefId;
+
+  @override
+  String toString() {
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
   }
 }
 

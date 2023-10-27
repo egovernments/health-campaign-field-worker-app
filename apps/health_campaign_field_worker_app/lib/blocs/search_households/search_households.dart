@@ -29,6 +29,7 @@ class SearchHouseholdsBloc
   final ProjectBeneficiaryDataRepository projectBeneficiary;
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
+  final ReferralDataRepository referralDataRepository;
 
   SearchHouseholdsBloc({
     required this.userUid,
@@ -41,6 +42,7 @@ class SearchHouseholdsBloc
     required this.beneficiaryType,
     required this.sideEffectDataRepository,
     required this.addressRepository,
+    required this.referralDataRepository,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -335,6 +337,11 @@ class SearchHouseholdsBloc
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
+
       // Create a container for household members and associated data.
       containers.add(
         HouseholdMemberWrapper(
@@ -344,6 +351,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
@@ -535,6 +543,10 @@ class SearchHouseholdsBloc
           await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
       ));
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
 
       // Create a container for household members and associated data.
       containers.add(
@@ -545,6 +557,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
@@ -686,5 +699,6 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,
+    List<ReferralModel>? referrals,
   }) = _HouseholdMemberWrapper;
 }
