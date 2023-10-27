@@ -209,12 +209,12 @@ class _DeliverInterventionPageState
                                                             int.parse(e
                                                                     .toString()) >
                                                                 1) &&
-                                                    (form
+                                                    form
                                                             .control(
                                                               _deliveryCommentKey,
                                                             )
-                                                            .value as String)
-                                                        .isEmpty) {
+                                                            .value ==
+                                                        null) {
                                                   await DigitToast.show(
                                                     context,
                                                     options: DigitToastOptions(
