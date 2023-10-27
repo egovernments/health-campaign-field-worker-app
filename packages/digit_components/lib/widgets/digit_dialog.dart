@@ -58,7 +58,7 @@ class DigitDialog extends StatelessWidget {
                 children: <Widget>[
                   if (options.secondaryAction != null)
                     SizedBox(
-                      width: 50,
+                      width: MediaQuery.of(context).size.width / 3,
                       child: DigitOutLineButton(
                         onPressed: () =>
                             options.secondaryAction!.action?.call(context),
@@ -94,7 +94,7 @@ class DigitDialog extends StatelessWidget {
               children: <Widget>[
                 if (options.primaryAction != null)
                   Padding(
-                    padding: const EdgeInsets.all(0),
+                    padding: options.dialogPadding != null ? options.dialogPadding! : const EdgeInsets.all(0),
                     child: DigitElevatedButton(
                       onPressed: () =>
                           options.primaryAction!.action?.call(context),
