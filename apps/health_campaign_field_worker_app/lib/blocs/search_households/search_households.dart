@@ -137,6 +137,10 @@ class SearchHouseholdsBloc
       ),
     );
 
+/* [TODO: Need to handle the Tag search based on Beneficary Type
+ current implementation is based on the individual based project
+ ] */
+
     final List<IndividualModel> individuals = await individual.search(
       IndividualSearchModel(
         clientReferenceId:

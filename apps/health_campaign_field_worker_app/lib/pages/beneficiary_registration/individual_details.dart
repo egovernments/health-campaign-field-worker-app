@@ -443,9 +443,18 @@ class _IndividualDetailsPageState
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(localizations.translate(
-                                    i18.deliverIntervention.voucherCode,
-                                  )),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: Flexible(
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        localizations.translate(
+                                          i18.deliverIntervention.voucherCode,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   Text(localizations
                                       .translate(state.qrcodes.first)),
                                   IconButton(
