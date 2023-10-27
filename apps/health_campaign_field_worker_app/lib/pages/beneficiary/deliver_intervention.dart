@@ -671,7 +671,6 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: '',
         validators: [],
       ),
       _dateOfAdministrationKey:

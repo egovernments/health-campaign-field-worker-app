@@ -114,7 +114,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 DigitTextField(
                                   autoValidation:
                                       AutovalidateMode.onUserInteraction,
-                                  isRequired: false,
+                                  isRequired: true,
                                   controller: controller[index],
                                   inputFormatter: [
                                     FilteringTextInputFormatter.allow(RegExp(
@@ -601,7 +601,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     } else if (item.dataType == 'String') {
       return DigitTextField(
         autoValidation: AutovalidateMode.onUserInteraction,
-        isRequired: false,
+        isRequired: true,
         controller: controller[index],
         inputFormatter: [
           FilteringTextInputFormatter.allow(RegExp(
