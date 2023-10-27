@@ -53,7 +53,7 @@ class DigitDialog extends StatelessWidget {
         actions: <Widget>[
           if (options.enableRecordPast == true)
             Padding(
-              padding: const EdgeInsets.all(0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: <Widget>[
                   if (options.secondaryAction != null)
