@@ -249,6 +249,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         ),
                         DigitTextFormField(
                           formControlName: _referredByKey,
+                          readOnly: true,
                           label: localizations.translate(
                             i18.referBeneficiary.referredByLabel,
                           ),
@@ -348,7 +349,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
       _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
       _referredByKey: FormControl<String>(
-        value: context.loggedInUserUuid,
+        value: context.loggedInUser.userName,
         validators: [Validators.required],
       ),
       _referredToKey:
