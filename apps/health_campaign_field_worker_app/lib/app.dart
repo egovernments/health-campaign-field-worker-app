@@ -95,7 +95,15 @@ class MainApplicationState extends State<MainApplication>
                     ),
                   ),
               ),
-              BlocProvider(create: (ctx) => ScannerBloc(const ScannerState())),
+              BlocProvider(
+                create: (ctx) => ScannerBloc(
+                  const ScannerState(),
+                  projectBeneficiaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(ctx),
+                ),
+              ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
                   const BoundaryState(),

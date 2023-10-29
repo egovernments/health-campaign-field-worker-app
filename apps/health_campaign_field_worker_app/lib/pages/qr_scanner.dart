@@ -10,8 +10,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import '../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
+import '../models/entities/scanner_type.dart';
 
 class QRScannerPage extends LocalizedStatefulWidget {
   final bool sinlgleValue;
@@ -195,6 +197,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               buildDialog();
                             } else {
                               final bloc = context.read<SearchHouseholdsBloc>();
+
                               final scannerState =
                                   context.read<ScannerBloc>().state;
 
@@ -293,21 +296,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Flexible(
-                                            child: Text(
-                                              overflow: TextOverflow.ellipsis,
-                                              widget.isGS1code
-                                                  ? state
-                                                      .barcodes[index]
-                                                      .elements
-                                                      .entries
-                                                      .last
-                                                      .value
-                                                      .data
-                                                      .toString()
-                                                  : state.qrcodes[index]
-                                                      .toString(),
-                                            ),
+                                          Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            widget.isGS1code
+                                                ? state.barcodes[index].elements
+                                                    .entries.last.value.data
+                                                    .toString()
+                                                : state.qrcodes[index]
+                                                    .toString(),
                                           ),
                                           Container(
                                             padding: const EdgeInsets.only(

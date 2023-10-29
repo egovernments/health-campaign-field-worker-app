@@ -1,0 +1,18 @@
+{
+    "name": "ScannerType",
+    "enumValues": [
+      {
+        "name": "GS1Scanner",
+        "value": "GS1_SCANNER"
+      },
+      {
+        "name": "VoucherLinkScanner",
+        "value": "VOUCHER_LINK_SCANNER"
+      },
+      {
+        "name": "VoucherSearchScanner",
+        "value": "VOUCHER_SEARCH_SCANNER"
+      }
+    ],
+    "isEnum": true
+  }

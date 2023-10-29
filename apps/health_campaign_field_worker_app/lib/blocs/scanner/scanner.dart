@@ -4,13 +4,20 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../models/entities/project_beneficiary.dart';
+import '../../utils/typedefs.dart';
 
 part 'scanner.freezed.dart';
 
 typedef ScannerEmitter = Emitter<ScannerState>;
 
 class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
-  ScannerBloc(super.initialState) {
+  final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
+
+  ScannerBloc(
+    super.initialState, {
+    required this.projectBeneficiaryRepository,
+  }) {
     on(_handleScanner);
   }
   FutureOr<void> _handleScanner(
@@ -18,6 +25,17 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
     ScannerEmitter emit,
   ) async {
     try {
+      if (event.qrcode.isNotEmpty) {
+        final projectBeneficiary = await projectBeneficiaryRepository
+            .search(ProjectBeneficiarySearchModel(tag: event.qrcode.first));
+
+        if (projectBeneficiary.isEmpty) {
+          emit(state.copyWith(duplicate: false));
+        } else {
+          emit(state.copyWith(duplicate: true));
+        }
+      }
+
       emit(state.copyWith(barcodes: event.barcode, qrcodes: event.qrcode));
     } catch (error) {
       rethrow;
@@ -41,5 +59,6 @@ class ScannerState with _$ScannerState {
     @Default([]) List<GS1Barcode> barcodes,
     @Default([]) List<String> qrcodes,
     @Default(false) bool loading,
+    @Default(false) bool duplicate,
   }) = _ScannerState;
 }

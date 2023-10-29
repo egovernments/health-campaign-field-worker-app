@@ -263,6 +263,7 @@ mixin _$ScannerState {
   List<GS1Barcode> get barcodes => throw _privateConstructorUsedError;
   List<String> get qrcodes => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
+  bool get duplicate => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ScannerStateCopyWith<ScannerState> get copyWith =>
@@ -275,7 +276,11 @@ abstract class $ScannerStateCopyWith<$Res> {
           ScannerState value, $Res Function(ScannerState) then) =
       _$ScannerStateCopyWithImpl<$Res, ScannerState>;
   @useResult
-  $Res call({List<GS1Barcode> barcodes, List<String> qrcodes, bool loading});
+  $Res call(
+      {List<GS1Barcode> barcodes,
+      List<String> qrcodes,
+      bool loading,
+      bool duplicate});
 }
 
 /// @nodoc
@@ -294,6 +299,7 @@ class _$ScannerStateCopyWithImpl<$Res, $Val extends ScannerState>
     Object? barcodes = null,
     Object? qrcodes = null,
     Object? loading = null,
+    Object? duplicate = null,
   }) {
     return _then(_value.copyWith(
       barcodes: null == barcodes
@@ -308,6 +314,10 @@ class _$ScannerStateCopyWithImpl<$Res, $Val extends ScannerState>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      duplicate: null == duplicate
+          ? _value.duplicate
+          : duplicate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -320,7 +330,11 @@ abstract class _$$_ScannerStateCopyWith<$Res>
       __$$_ScannerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<GS1Barcode> barcodes, List<String> qrcodes, bool loading});
+  $Res call(
+      {List<GS1Barcode> barcodes,
+      List<String> qrcodes,
+      bool loading,
+      bool duplicate});
 }
 
 /// @nodoc
@@ -337,6 +351,7 @@ class __$$_ScannerStateCopyWithImpl<$Res>
     Object? barcodes = null,
     Object? qrcodes = null,
     Object? loading = null,
+    Object? duplicate = null,
   }) {
     return _then(_$_ScannerState(
       barcodes: null == barcodes
@@ -351,6 +366,10 @@ class __$$_ScannerStateCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      duplicate: null == duplicate
+          ? _value.duplicate
+          : duplicate // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -361,7 +380,8 @@ class _$_ScannerState implements _ScannerState {
   const _$_ScannerState(
       {final List<GS1Barcode> barcodes = const [],
       final List<String> qrcodes = const [],
-      this.loading = false})
+      this.loading = false,
+      this.duplicate = false})
       : _barcodes = barcodes,
         _qrcodes = qrcodes;
 
@@ -384,10 +404,13 @@ class _$_ScannerState implements _ScannerState {
   @override
   @JsonKey()
   final bool loading;
+  @override
+  @JsonKey()
+  final bool duplicate;
 
   @override
   String toString() {
-    return 'ScannerState(barcodes: $barcodes, qrcodes: $qrcodes, loading: $loading)';
+    return 'ScannerState(barcodes: $barcodes, qrcodes: $qrcodes, loading: $loading, duplicate: $duplicate)';
   }
 
   @override
@@ -397,7 +420,9 @@ class _$_ScannerState implements _ScannerState {
             other is _$_ScannerState &&
             const DeepCollectionEquality().equals(other._barcodes, _barcodes) &&
             const DeepCollectionEquality().equals(other._qrcodes, _qrcodes) &&
-            (identical(other.loading, loading) || other.loading == loading));
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.duplicate, duplicate) ||
+                other.duplicate == duplicate));
   }
 
   @override
@@ -405,7 +430,8 @@ class _$_ScannerState implements _ScannerState {
       runtimeType,
       const DeepCollectionEquality().hash(_barcodes),
       const DeepCollectionEquality().hash(_qrcodes),
-      loading);
+      loading,
+      duplicate);
 
   @JsonKey(ignore: true)
   @override
@@ -418,7 +444,8 @@ abstract class _ScannerState implements ScannerState {
   const factory _ScannerState(
       {final List<GS1Barcode> barcodes,
       final List<String> qrcodes,
-      final bool loading}) = _$_ScannerState;
+      final bool loading,
+      final bool duplicate}) = _$_ScannerState;
 
   @override
   List<GS1Barcode> get barcodes;
@@ -426,6 +453,8 @@ abstract class _ScannerState implements ScannerState {
   List<String> get qrcodes;
   @override
   bool get loading;
+  @override
+  bool get duplicate;
   @override
   @JsonKey(ignore: true)
   _$$_ScannerStateCopyWith<_$_ScannerState> get copyWith =>
