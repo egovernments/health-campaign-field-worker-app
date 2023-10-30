@@ -156,12 +156,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height / 2.2,
-                      left: MediaQuery.of(context).size.width / 4,
+                      left: MediaQuery.of(context).size.width / 6,
                       width: 250,
-                      height: 250,
+                      height: 50,
                       child: SizedBox(
                         width: 150,
-                        height: 150,
+                        height: 50,
                         // [TODO: Localization need to be added]
 
                         child: TextButton(
@@ -387,7 +387,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     footer: DigitElevatedButton(
                       child: Text(localizations.translate(
-                        i18.deliverIntervention.saveScannedResource,
+                        i18.common.coreCommonSubmit,
                       )),
                       onPressed: () async {
                         final bloc = context.read<ScannerBloc>();
