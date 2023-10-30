@@ -300,6 +300,9 @@ class _SearchBeneficiaryPageState
                         );
                       },
                     ),
+                    const SizedBox(
+                      height: kPadding,
+                    ),
                     DigitOutlineIconButton(
                       onPressed: () {
                         context.router.push(QRScannerRoute(
