@@ -277,7 +277,10 @@ class _SearchBeneficiaryPageState
                                 FocusManager.instance.primaryFocus?.unfocus();
 
                                 context.read<ScannerBloc>().add(
-                                      const ScannerEvent.handleScanner([], []),
+                                      const ScannerEvent.handleScanner(
+                                        [],
+                                        [],
+                                      ),
                                     );
                                 router.push(BeneficiaryRegistrationWrapperRoute(
                                   initialState:

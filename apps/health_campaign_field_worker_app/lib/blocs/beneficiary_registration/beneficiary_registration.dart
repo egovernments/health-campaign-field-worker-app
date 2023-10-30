@@ -222,7 +222,6 @@ class BeneficiaryRegistrationBloc
             ),
           );
         } catch (error) {
-          print("---ERROR---");
           rethrow;
         } finally {
           emit(value.copyWith(loading: false));

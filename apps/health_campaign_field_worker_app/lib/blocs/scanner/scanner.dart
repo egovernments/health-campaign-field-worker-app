@@ -34,6 +34,8 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
         } else {
           emit(state.copyWith(duplicate: true));
         }
+      } else {
+        emit(state.copyWith(duplicate: false));
       }
 
       emit(state.copyWith(barcodes: event.barcode, qrcodes: event.qrcode));

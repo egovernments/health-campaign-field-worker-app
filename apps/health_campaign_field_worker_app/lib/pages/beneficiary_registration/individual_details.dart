@@ -123,6 +123,7 @@ class _IndividualDetailsPageState
                             ),
                           );
                           final scannerBloc = context.read<ScannerBloc>();
+
                           if (scannerBloc.state.duplicate) {
                             DigitToast.show(
                               context,
