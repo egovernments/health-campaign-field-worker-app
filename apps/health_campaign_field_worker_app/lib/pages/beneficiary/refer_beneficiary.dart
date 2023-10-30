@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
@@ -21,12 +22,14 @@ import '../inventory/facility_selection.dart';
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String projectBeneficiaryClientRefId;
+  final IndividualModel individual;
 
   const ReferBeneficiaryPage({
     super.key,
     super.appLocalizations,
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
+    required this.individual,
   });
   @override
   State<ReferBeneficiaryPage> createState() => _ReferBeneficiaryPageState();
@@ -176,6 +179,62 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                     ),
                                     false,
                                   ));
+
+                                  final clientReferenceId = IdGen.i.identifier;
+                                  context.read<DeliverInterventionBloc>().add(
+                                        DeliverInterventionSubmitEvent(
+                                          TaskModel(
+                                            projectBeneficiaryClientReferenceId:
+                                                widget
+                                                    .projectBeneficiaryClientRefId,
+                                            clientReferenceId:
+                                                clientReferenceId,
+                                            tenantId:
+                                                envConfig.variables.tenantId,
+                                            rowVersion: 1,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            projectId: context.projectId,
+                                            status: Status.beneficiaryReferred
+                                                .toValue(),
+                                            clientAuditDetails:
+                                                ClientAuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  context.loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalFields:
+                                                TaskAdditionalFields(
+                                              version: 1,
+                                              fields: [
+                                                AdditionalField(
+                                                  'taskStatus',
+                                                  Status.beneficiaryReferred
+                                                      .toValue(),
+                                                ),
+                                              ],
+                                            ),
+                                            address: widget
+                                                .individual.address?.first
+                                                .copyWith(
+                                              relatedClientReferenceId:
+                                                  clientReferenceId,
+                                              id: null,
+                                            ),
+                                          ),
+                                          false,
+                                          context.boundary,
+                                        ),
+                                      );
 
                                   final reloadState =
                                       context.read<HouseholdOverviewBloc>();

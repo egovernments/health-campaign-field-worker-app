@@ -183,7 +183,6 @@ class MemberCard extends StatelessWidget {
                                       .householdOverViewBeneficiaryReferredLabel
                                   : isBeneficiaryRefused
                                       ? Status.beneficiaryRefused.toValue()
-                                      // [TODO Need to update the localization]
                                       : Status.notVisited.toValue(),
                         ),
                         iconTextColor: theme.colorScheme.error,
@@ -216,11 +215,122 @@ class MemberCard extends StatelessWidget {
                   isNotEligible ||
                           isBeneficiaryIneligible ||
                           isBeneficiaryRefused ||
-                          isBeneficiaryReferred
+                          (isBeneficiaryReferred &&
+                              !checkStatus(
+                                tasks,
+                                context.selectedCycle,
+                              ))
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                if (isBeneficiaryReferred) {
+                                  final shouldSubmit =
+                                      await DigitDialog.show<bool>(
+                                    context,
+                                    options: DigitDialogOptions(
+                                      titleText: localizations.translate(
+                                        i18.referBeneficiary.dialogTitle,
+                                      ),
+                                      contentText: localizations.translate(
+                                        i18.referBeneficiary.dialogContent,
+                                      ),
+                                      secondaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.referBeneficiary.dialogCancel,
+                                        ),
+                                        action: (ctx) {
+                                          final clientReferenceId =
+                                              IdGen.i.identifier;
+                                          context
+                                              .read<DeliverInterventionBloc>()
+                                              .add(
+                                                DeliverInterventionSubmitEvent(
+                                                  TaskModel(
+                                                    projectBeneficiaryClientReferenceId:
+                                                        projectBeneficiaryClientReferenceId,
+                                                    clientReferenceId:
+                                                        clientReferenceId,
+                                                    tenantId: envConfig
+                                                        .variables.tenantId,
+                                                    rowVersion: 1,
+                                                    auditDetails: AuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    projectId:
+                                                        context.projectId,
+                                                    status: Status
+                                                        .beneficiaryReferred
+                                                        .toValue(),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                      lastModifiedBy: context
+                                                          .loggedInUserUuid,
+                                                      lastModifiedTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    additionalFields:
+                                                        TaskAdditionalFields(
+                                                      version: 1,
+                                                      fields: [
+                                                        AdditionalField(
+                                                          'taskStatus',
+                                                          Status
+                                                              .beneficiaryReferred
+                                                              .toValue(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    address: individual
+                                                        .address?.first
+                                                        .copyWith(
+                                                      relatedClientReferenceId:
+                                                          clientReferenceId,
+                                                      id: null,
+                                                    ),
+                                                  ),
+                                                  false,
+                                                  context.boundary,
+                                                ),
+                                              );
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(false);
+                                        },
+                                      ),
+                                      primaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.referBeneficiary.dialogSuccess,
+                                        ),
+                                        action: (context) => Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop(true),
+                                      ),
+                                    ),
+                                  );
+
+                                  if (!(shouldSubmit ?? false)) {
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    parent
+                                      ..pop()
+                                      ..pop();
+                                    context.router.push(
+                                      AcknowledgementRoute(),
+                                    );
+
+                                    return;
+                                  }
+                                }
                                 final bloc =
                                     context.read<HouseholdOverviewBloc>();
 
@@ -282,7 +392,11 @@ class MemberCard extends StatelessWidget {
                   (isNotEligible ||
                           isBeneficiaryRefused ||
                           isBeneficiaryIneligible ||
-                          isBeneficiaryReferred ||
+                          (isBeneficiaryReferred &&
+                              !checkStatus(
+                                tasks,
+                                context.selectedCycle,
+                              )) ||
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
@@ -427,6 +541,7 @@ class MemberCard extends StatelessWidget {
                                           projectBeneficiaryClientRefId:
                                               projectBeneficiaryClientReferenceId ??
                                                   '',
+                                          individual: individual,
                                         ),
                                       );
                                     },

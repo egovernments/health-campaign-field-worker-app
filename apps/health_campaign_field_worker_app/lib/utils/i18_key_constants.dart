@@ -276,6 +276,7 @@ class BeneficiaryDetails {
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+  String get beneficiary => 'BENEFICIARY';
 }
 
 class IndividualDetails {
@@ -1074,6 +1075,10 @@ class ReferBeneficiary {
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
   String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get dialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_TITLE';
+  String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
+  String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';
+  String get dialogCancel => 'REFERRAL_CONFIRMATION_CANCEL_LABEL';
 }
 
 class IneligibilityReasons {

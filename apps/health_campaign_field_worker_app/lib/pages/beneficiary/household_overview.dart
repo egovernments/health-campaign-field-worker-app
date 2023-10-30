@@ -388,8 +388,7 @@ class _HouseholdOverviewPageState
 
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
-                                              referralData,
-                                              currentCycle ?? Cycle(),
+                                              taskdata,
                                             );
 
                                             return MemberCard(
