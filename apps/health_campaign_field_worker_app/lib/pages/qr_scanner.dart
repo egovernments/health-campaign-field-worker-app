@@ -163,8 +163,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         width: 150,
                         height: 150,
                         // [TODO: Localization need to be added]
-                        child: GestureDetector(
-                          onTap: () {
+
+                        child: TextButton(
+                          onPressed: () {
                             setState(() {
                               manualcode = true;
                             });
@@ -296,14 +297,21 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            overflow: TextOverflow.ellipsis,
-                                            widget.isGS1code
-                                                ? state.barcodes[index].elements
-                                                    .entries.last.value.data
-                                                    .toString()
-                                                : state.qrcodes[index]
-                                                    .toString(),
+                                          Flexible(
+                                            child: Text(
+                                              overflow: TextOverflow.ellipsis,
+                                              widget.isGS1code
+                                                  ? state
+                                                      .barcodes[index]
+                                                      .elements
+                                                      .entries
+                                                      .last
+                                                      .value
+                                                      .data
+                                                      .toString()
+                                                  : state.qrcodes[index]
+                                                      .toString(),
+                                            ),
                                           ),
                                           Container(
                                             padding: const EdgeInsets.only(

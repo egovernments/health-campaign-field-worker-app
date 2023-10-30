@@ -262,21 +262,33 @@ class _IndividualDetailsPageState
                           if (context.mounted) {
                             final scannerBloc = context.read<ScannerBloc>();
 
-                            scannerBloc.state.qrcodes.first;
-
-                            bloc.add(
-                              BeneficiaryRegistrationAddMemberEvent(
-                                beneficiaryType: context.beneficiaryType,
-                                householdModel: householdModel,
-                                individualModel: individual,
-                                addressModel: addressModel,
-                                userUuid: userId,
-                                projectId: context.projectId,
-                                tag: scannerBloc.state.qrcodes.isNotEmpty
-                                    ? scannerBloc.state.qrcodes.first
-                                    : null,
-                              ),
-                            );
+                            if (scannerBloc.state.duplicate) {
+                              DigitToast.show(
+                                context,
+                                options: DigitToastOptions(
+                                  localizations.translate(
+                                    i18.deliverIntervention
+                                        .resourceAlreadyScanned,
+                                  ),
+                                  true,
+                                  theme,
+                                ),
+                              );
+                            } else {
+                              bloc.add(
+                                BeneficiaryRegistrationAddMemberEvent(
+                                  beneficiaryType: context.beneficiaryType,
+                                  householdModel: householdModel,
+                                  individualModel: individual,
+                                  addressModel: addressModel,
+                                  userUuid: userId,
+                                  projectId: context.projectId,
+                                  tag: scannerBloc.state.qrcodes.isNotEmpty
+                                      ? scannerBloc.state.qrcodes.first
+                                      : null,
+                                ),
+                              );
+                            }
                           }
                         },
                       );
@@ -492,14 +504,19 @@ class _IndividualDetailsPageState
                                     width:
                                         MediaQuery.of(context).size.width / 3,
                                     child: Text(
-                                      overflow: TextOverflow.ellipsis,
                                       localizations.translate(
                                         i18.deliverIntervention.voucherCode,
                                       ),
+                                      style: theme.textTheme.headlineSmall,
                                     ),
                                   ),
-                                  Text(localizations
-                                      .translate(state.qrcodes.first)),
+                                  Flexible(
+                                    child: Text(
+                                      overflow: TextOverflow.ellipsis,
+                                      localizations
+                                          .translate(state.qrcodes.first),
+                                    ),
+                                  ),
                                   IconButton(
                                     color: theme.colorScheme.secondary,
                                     icon: const Icon(Icons.edit),
