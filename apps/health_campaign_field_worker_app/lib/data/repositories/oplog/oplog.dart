@@ -61,6 +61,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.delete)
+        .serverGeneratedIdIsNotNull()
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)
