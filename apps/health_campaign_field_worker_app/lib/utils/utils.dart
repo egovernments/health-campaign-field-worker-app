@@ -329,6 +329,16 @@ bool checkIfBeneficiaryRefused(
   return isBeneficiaryRefused;
 }
 
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
 bool checkIfBeneficiaryReferred(
   List<ReferralModel>? referrals,
   Cycle currentCycle,

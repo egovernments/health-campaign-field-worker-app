@@ -40,6 +40,10 @@
     {
       "name": "To Administer",
       "value": "TO_ADMINISTER"
+    },
+    {
+      "name": "Beneficiary Ineligible",
+      "value": "BENEFICIARY_INELIGIBLE"
     }
   ],
   "isEnum": true

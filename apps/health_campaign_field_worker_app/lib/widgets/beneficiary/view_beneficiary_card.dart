@@ -145,7 +145,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           sideEffects,
         );
-        final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
+        final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata) &&
+            !checkStatus(taskdata, currentCycle);
+        final isBeneficiaryIneligible = checkIfBeneficiaryIneligible(
+              taskdata,
+            ) &&
+            !checkStatus(taskdata, currentCycle);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
             referralData, currentCycle ?? const Cycle());
 
@@ -166,6 +171,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               isNotEligible,
               taskdata,
               isBeneficiaryRefused,
+              isBeneficiaryIneligible,
               isBeneficiaryReferred,
               isStatusReset,
             ),
@@ -176,6 +182,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 taskdata: taskdata,
                 isBeneficiaryRefused:
                     isBeneficiaryRefused || isBeneficiaryReferred,
+                isBeneficiaryIneligible: isBeneficiaryIneligible,
                 isStatusReset: isStatusReset,
                 theme: theme,
               ),
@@ -238,7 +245,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     );
 
     final isBeneficiaryRefused =
-        checkIfBeneficiaryRefused(householdMember.tasks);
+        checkIfBeneficiaryRefused(householdMember.tasks) &&
+            !checkStatus(householdMember.tasks, currentCycle);
+
+    final isBeneficiaryIneligible = checkIfBeneficiaryIneligible(
+          householdMember.tasks,
+        ) &&
+        !checkStatus(householdMember.tasks, currentCycle);
 
     return DigitCard(
       child: Column(
@@ -264,7 +277,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   status: context.beneficiaryType != BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
-                              !isBeneficiaryRefused
+                              !isBeneficiaryRefused &&
+                              !isBeneficiaryIneligible
                           ? Status.visited.toValue()
                           : Status.notVisited.toValue()
                       : null,
@@ -322,11 +336,13 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     bool isNotEligible,
     List<TaskModel>? taskdata,
     bool isBeneficiaryRefused,
+    bool isBeneficiaryIneligible,
     bool isBeneficiaryReferred,
     bool isStatusReset,
   ) {
-    if (isNotEligible) {
-      return 'Not Eligible';
+    if (isNotEligible || isBeneficiaryIneligible) {
+      return localizations.translate(
+          i18.householdOverView.householdOverViewNotEligibleIconLabel);
     } else if (isBeneficiaryReferred) {
       return localizations.translate(Status.beneficiaryReferred.toValue());
     } else if (taskdata != null) {
@@ -349,6 +365,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     required bool isNotEligible,
     required List<TaskModel>? taskdata,
     required bool isBeneficiaryRefused,
+    required bool isBeneficiaryIneligible,
     required bool isStatusReset,
     required ThemeData theme,
   }) {
@@ -356,6 +373,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             taskdata.isNotEmpty &&
             !isBeneficiaryRefused &&
             !isNotEligible &&
+            !isBeneficiaryIneligible &&
             !isStatusReset
         ? theme.colorScheme.onSurfaceVariant
         : theme.colorScheme.error;

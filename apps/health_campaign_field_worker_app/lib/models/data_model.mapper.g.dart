@@ -4920,6 +4920,7 @@ class StatusMapper extends EnumMapper<Status> {
       case "ADMINISTERED_FAILED": return Status.administeredFailed;
       case "IN_COMPLETE": return Status.inComplete;
       case "TO_ADMINISTER": return Status.toAdminister;
+      case "BENEFICIARY_INELIGIBLE": return Status.beneficiaryIneligible;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -4936,6 +4937,7 @@ class StatusMapper extends EnumMapper<Status> {
       case Status.administeredFailed: return "ADMINISTERED_FAILED";
       case Status.inComplete: return "IN_COMPLETE";
       case Status.toAdminister: return "TO_ADMINISTER";
+      case Status.beneficiaryIneligible: return "BENEFICIARY_INELIGIBLE";
     }
   }
 }

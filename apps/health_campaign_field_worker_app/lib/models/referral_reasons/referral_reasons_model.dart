@@ -7,7 +7,7 @@ part 'referral_reasons_model.g.dart';
 class ReferralReasonsWrapperModel with _$ReferralReasonsWrapperModel {
   const factory ReferralReasonsWrapperModel({
     @JsonKey(name: 'referralReasons')
-        List<ReferralReasonType>? referralReasonList,
+    List<ReferralReasonType>? referralReasonList,
   }) = _ReferralReasonsWrapperModel;
 
   factory ReferralReasonsWrapperModel.fromJson(

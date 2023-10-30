@@ -79,6 +79,10 @@ _$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
           ? null
           : ReferralReasonsWrapperModel.fromJson(
               json['HCM-REFERRAL-REASONS'] as Map<String, dynamic>),
+      ineligibilityReasons: json['HCM-INELIGIBILITY-REASONS'] == null
+          ? null
+          : IneligibilityReasonsWrapperModel.fromJson(
+              json['HCM-INELIGIBILITY-REASONS'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
@@ -88,6 +92,7 @@ Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
       'module-version': instance.rowVersions,
       'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
       'HCM-REFERRAL-REASONS': instance.referralReasons,
+      'HCM-INELIGIBILITY-REASONS': instance.ineligibilityReasons,
     };
 
 _$_AppConfigSecondaryWrapperModel _$$_AppConfigSecondaryWrapperModelFromJson(

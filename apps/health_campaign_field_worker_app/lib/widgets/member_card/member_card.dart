@@ -29,6 +29,7 @@ class MemberCard extends StatelessWidget {
   final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
+  final bool isBeneficiaryIneligible;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
 
@@ -49,6 +50,7 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
+    this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
   });
@@ -165,6 +167,7 @@ class MemberCard extends StatelessWidget {
               child: !isDelivered ||
                       isNotEligible ||
                       isBeneficiaryRefused ||
+                      isBeneficiaryIneligible ||
                       isBeneficiaryReferred
                   ? Align(
                       alignment: Alignment.centerLeft,
@@ -172,7 +175,7 @@ class MemberCard extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          isNotEligible
+                          (isNotEligible || isBeneficiaryIneligible)
                               ? i18.householdOverView
                                   .householdOverViewNotEligibleIconLabel
                               : isBeneficiaryReferred
@@ -181,8 +184,7 @@ class MemberCard extends StatelessWidget {
                                   : isBeneficiaryRefused
                                       ? Status.beneficiaryRefused.toValue()
                                       // [TODO Need to update the localization]
-                                      : i18.householdOverView
-                                          .householdOverViewNotDeliveredIconLabel,
+                                      : Status.notVisited.toValue(),
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -211,7 +213,10 @@ class MemberCard extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  isNotEligible || isBeneficiaryRefused || isBeneficiaryReferred
+                  isNotEligible ||
+                          isBeneficiaryIneligible ||
+                          isBeneficiaryRefused ||
+                          isBeneficiaryReferred
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
@@ -276,6 +281,7 @@ class MemberCard extends StatelessWidget {
                   ),
                   (isNotEligible ||
                           isBeneficiaryRefused ||
+                          isBeneficiaryIneligible ||
                           isBeneficiaryReferred ||
                           (allDosesDelivered(
                                 tasks,
@@ -324,6 +330,8 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
+                                      final clientReferenceId =
+                                          IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
@@ -332,7 +340,7 @@ class MemberCard extends StatelessWidget {
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
-                                                    IdGen.i.identifier,
+                                                    clientReferenceId,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
                                                 rowVersion: 1,
@@ -368,8 +376,13 @@ class MemberCard extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
-                                                address:
-                                                    individual.address?.first,
+                                                address: individual
+                                                    .address?.first
+                                                    .copyWith(
+                                                  relatedClientReferenceId:
+                                                      clientReferenceId,
+                                                  id: null,
+                                                ),
                                               ),
                                               false,
                                               context.boundary,
@@ -454,6 +467,40 @@ class MemberCard extends StatelessWidget {
                                             );
                                           }
                                         : null,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.markIneligibleLabel,
+                                    ),
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: theme.colorScheme.secondary,
+                                      ),
+                                      minimumSize: Size(
+                                        MediaQuery.of(context).size.width /
+                                            1.25,
+                                        50,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+                                      await context.router.push(
+                                        IneligibilityReasonsRoute(
+                                          projectBeneficiaryClientRefId:
+                                              projectBeneficiaryClientReferenceId ??
+                                                  '',
+                                          individual: individual,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
                               ),
