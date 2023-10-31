@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -279,6 +279,16 @@ class MdmsRepository {
         ..active = e.active;
 
       return symptomTypes;
+    }).toList();
+
+    appConfiguration.referralReasons =
+        result.referralReasons?.referralReasonList?.map((e) {
+      final reasonTypes = ReferralReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
     }).toList();
 
     await isar.writeTxn(() async {
