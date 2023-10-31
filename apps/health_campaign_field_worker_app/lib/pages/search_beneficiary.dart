@@ -228,6 +228,13 @@ class _SearchBeneficiaryPageState
                                 distance: distance,
                                 householdMember: i,
                                 onOpenPressed: () async {
+                                  final scannerbloc =
+                                      context.read<ScannerBloc>();
+
+                                  scannerbloc.add(
+                                    const ScannerEvent.handleScanner([], []),
+                                  );
+
                                   final bloc =
                                       context.read<SearchHouseholdsBloc>();
 

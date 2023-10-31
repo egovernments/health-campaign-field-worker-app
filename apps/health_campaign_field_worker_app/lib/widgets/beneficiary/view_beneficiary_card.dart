@@ -147,7 +147,9 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
-            referralData, currentCycle ?? const Cycle());
+          referralData,
+          currentCycle ?? const Cycle(),
+        );
 
 // TODO need to pass the current cycle
 

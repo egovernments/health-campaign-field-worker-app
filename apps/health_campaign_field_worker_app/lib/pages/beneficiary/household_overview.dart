@@ -418,6 +418,14 @@ class _HouseholdOverviewPageState
                                               tasks: taskdata,
                                               sideEffects: sideEffectData,
                                               editMemberAction: () async {
+                                                final scannerbloc =
+                                                    context.read<ScannerBloc>();
+
+                                                scannerbloc.add(
+                                                  const ScannerEvent
+                                                      .handleScanner([], []),
+                                                );
+
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
 
