@@ -9,23 +9,25 @@ import '../../data/local_store/sql_store/sql_store.dart';
 class TaskResourceSearchModel extends EntitySearchModel {
   final String? id;
   final String? tenantId;
+  
   TaskResourceSearchModel({
     this.id,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }) : super();
+  }):  super();
 
   @MappableConstructor()
   TaskResourceSearchModel.ignoreDeleted({
     this.id,
     this.tenantId,
     super.boundaryCode,
-  }) : super(isDeleted: false);
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class TaskResourceModel extends EntityModel {
+
   static const schemaName = 'TaskResource';
 
   final String clientReferenceId;
@@ -54,10 +56,9 @@ class TaskResourceModel extends EntityModel {
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,
-    super.clientAuditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
-  }) : super();
+  }): super();
 
   TaskResourceCompanion get companion {
     return TaskResourceCompanion(
@@ -82,7 +83,7 @@ class TaskResourceModel extends EntityModel {
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-    );
+      );
   }
 }
 

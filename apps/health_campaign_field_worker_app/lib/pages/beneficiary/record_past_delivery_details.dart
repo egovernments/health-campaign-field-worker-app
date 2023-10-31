@@ -255,7 +255,8 @@ class _RecordPastDeliveryDetailsPageState
                                       )} ${localizations.translate(
                                         i18.beneficiaryDetails.beneficiaryDose,
                                       )} ${doseNumber - 1} ? *",
-                                      labelStyle: theme.textTheme.displayMedium,
+                                      labelStyle: DigitTheme.instance
+                                          .mobileTheme.textTheme.headlineSmall,
                                       formControlName:
                                           "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
                                       valueMapper: (val) =>

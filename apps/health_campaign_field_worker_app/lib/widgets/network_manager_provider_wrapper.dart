@@ -14,7 +14,6 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -27,6 +26,7 @@ import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/referral.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/side_effect.dart';
@@ -50,6 +50,7 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
@@ -203,6 +204,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => TaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
+        create: (_) => ReferralLocalRepository(
+          sql,
+          ReferralOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -391,6 +398,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.referral)
+          RepositoryProvider<
+              RemoteRepository<ReferralModel, ReferralSearchModel>>(
+            create: (_) => ReferralRemoteRepository(
               dio,
               actionMap: actions,
             ),

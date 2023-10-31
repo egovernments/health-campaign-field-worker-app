@@ -54,8 +54,9 @@ class DigitRadioButtonList<T> extends StatelessWidget {
                         child: Text(
                       labelText + (isRequired ? ' * ' : ''),
                       textAlign: TextAlign.left,
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.headlineMedium,
+                      style: labelStyle ??
+                          DigitTheme
+                              .instance.mobileTheme.textTheme.headlineMedium,
                     )),
                   ]),
                 ),
@@ -95,7 +96,8 @@ class DigitRadioButtonList<T> extends StatelessWidget {
             if (radioListControl.hasErrors) {
               return Text(
                 errorMessage,
-                style: TextStyle(color: DigitTheme.instance.colorScheme.error),
+                style: TextStyle(
+                    color: DigitTheme.instance.colorScheme.error, fontSize: 12),
               );
             } else {
               return const SizedBox.shrink();

@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class DigitCheckboxTile extends StatelessWidget {
@@ -21,24 +22,22 @@ class DigitCheckboxTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: margin ?? const EdgeInsets.all(8.0),
+      padding: padding ?? const EdgeInsets.all(0),
       child: InkWell(
         onTap: () => onChanged?.call(!value),
         child: Padding(
-          padding: padding ??
-              const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 8,
-              ),
+          padding: const EdgeInsets.only(left: 0, bottom: kPadding*2),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
                 value
                     ? Icons.check_box_outlined
                     : Icons.check_box_outline_blank_sharp,
                 color: theme.colorScheme.secondary,
+                size: kPadding*3,
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: kPadding*2),
               Expanded(
                 child: Text(
                   label,

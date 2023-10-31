@@ -229,11 +229,10 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                             ),
                                           ],
                                         ),
-                                        const DigitDivider(),
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8),
+                                            padding: const EdgeInsets.only(left: 0, right: kPadding, top: kPadding*2, bottom: kPadding*2),
                                             child: Text(
                                               '${localizations.translate(
                                                 i18.adverseEvents

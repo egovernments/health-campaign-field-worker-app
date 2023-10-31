@@ -33,7 +33,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? const EdgeInsets.only(top: 16),
+      padding: padding ?? const EdgeInsets.only(top: kPadding*2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,7 +41,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
             '$label${isRequired ? ' *' : ''}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: kPadding),
           Container(
             color: isDisabled
                 ? const DigitColors().seaShellGray
@@ -59,7 +59,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
               validationMessages: validationMessages,
               formControlName: formControlName,
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(16, 12, 0, 12),
+                contentPadding: EdgeInsets.fromLTRB(kPadding*2, 12, kPadding, 12),
               ),
               items: menuItems
                   .map(

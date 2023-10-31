@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:path/path.dart';
 
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
@@ -22,6 +21,7 @@ class HouseholdOverviewBloc
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
+  final ReferralDataRepository referralDataRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -31,6 +31,7 @@ class HouseholdOverviewBloc
     required this.householdMemberRepository,
     required this.taskDataRepository,
     required this.sideEffectDataRepository,
+    required this.referralDataRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -160,6 +161,13 @@ class HouseholdOverviewBloc
           tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
     ));
 
+    final referrals = await referralDataRepository.search(ReferralSearchModel(
+      projectBeneficiaryClientReferenceId: projectBeneficiaries
+          .map((e) => e.clientReferenceId)
+          .whereNotNull()
+          .toList(),
+    ));
+
     // Update the state with the loaded data and stop loading.
     emit(
       state.copyWith(
@@ -170,6 +178,7 @@ class HouseholdOverviewBloc
           tasks: tasks.isEmpty ? null : tasks,
           projectBeneficiaries: projectBeneficiaries,
           sideEffects: sideEffects,
+          referrals: referrals,
         ),
         loading: false,
       ),

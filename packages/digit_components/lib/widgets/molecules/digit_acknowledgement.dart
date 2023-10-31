@@ -70,8 +70,8 @@ class DigitAcknowledgement extends StatelessWidget {
                     textAlign: TextAlign.center,
                     label,
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w400,
+                      fontSize: theme.textTheme.displayMedium?.fontSize,
+                      fontWeight: theme.textTheme.displayMedium?.fontWeight,
                       color: theme.colorScheme.onPrimary,
                     ),
                   ),
@@ -88,8 +88,8 @@ class DigitAcknowledgement extends StatelessWidget {
                       textAlign: TextAlign.center,
                       subLabel!,
                       style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
+                        fontSize: theme.textTheme.headlineLarge?.fontSize,
+                        fontWeight: theme.textTheme.headlineLarge?.fontWeight,
                         color: theme.colorScheme.onPrimary,
                       ),
                     )

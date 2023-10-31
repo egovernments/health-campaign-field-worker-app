@@ -6,7 +6,6 @@ import 'package:isar/isar.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/app_exception.dart';
 import '../../../utils/environment_config.dart';
-
 import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 
 abstract class OpLogManager<T extends EntityModel> {
@@ -559,6 +558,31 @@ class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
 
   @override
   bool? getNonRecoverableError(SideEffectModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class ReferralOpLogManager extends OpLogManager<ReferralModel> {
+  ReferralOpLogManager(super.isar);
+
+  @override
+  ReferralModel applyServerGeneratedIdToEntity(
+    ReferralModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(ReferralModel entity) => entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(ReferralModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(ReferralModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(ReferralModel entity) =>
       entity.nonRecoverableError;
 }
 

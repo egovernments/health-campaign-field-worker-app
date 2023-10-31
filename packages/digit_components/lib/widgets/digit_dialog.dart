@@ -9,6 +9,7 @@ class DigitDialog extends StatelessWidget {
     required this.options,
   });
 
+
   static Future<T?> show<T>(
     BuildContext context, {
     required DigitDialogOptions options,
@@ -36,13 +37,17 @@ class DigitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+
         title: Padding(
           padding: options.dialogPadding != null
               ? options.dialogPadding!
               : const EdgeInsets.all(0),
           child: options.title,
         ),
-        content: options.content,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: options.content,
+        ),
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[

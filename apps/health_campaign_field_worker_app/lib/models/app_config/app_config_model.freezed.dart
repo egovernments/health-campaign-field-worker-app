@@ -661,6 +661,9 @@ mixin _$AppConfigPrimaryWrapperModel {
   @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
   SymptomsTypesSecondaryWrapperModel? get symptomsTypes =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'HCM-REFERRAL-REASONS')
+  ReferralReasonsWrapperModel? get referralReasons =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -682,11 +685,14 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'module-version')
           RowVersionWrapperModel? rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          SymptomsTypesSecondaryWrapperModel? symptomsTypes});
+          SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+      @JsonKey(name: 'HCM-REFERRAL-REASONS')
+          ReferralReasonsWrapperModel? referralReasons});
 
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
   $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
+  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -706,6 +712,7 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
     Object? appConfig = freezed,
     Object? rowVersions = freezed,
     Object? symptomsTypes = freezed,
+    Object? referralReasons = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: freezed == appConfig
@@ -720,6 +727,10 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
           ? _value.symptomsTypes
           : symptomsTypes // ignore: cast_nullable_to_non_nullable
               as SymptomsTypesSecondaryWrapperModel?,
+      referralReasons: freezed == referralReasons
+          ? _value.referralReasons
+          : referralReasons // ignore: cast_nullable_to_non_nullable
+              as ReferralReasonsWrapperModel?,
     ) as $Val);
   }
 
@@ -760,6 +771,19 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(symptomsTypes: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons {
+    if (_value.referralReasons == null) {
+      return null;
+    }
+
+    return $ReferralReasonsWrapperModelCopyWith<$Res>(_value.referralReasons!,
+        (value) {
+      return _then(_value.copyWith(referralReasons: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -777,7 +801,9 @@ abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
       @JsonKey(name: 'module-version')
           RowVersionWrapperModel? rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          SymptomsTypesSecondaryWrapperModel? symptomsTypes});
+          SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+      @JsonKey(name: 'HCM-REFERRAL-REASONS')
+          ReferralReasonsWrapperModel? referralReasons});
 
   @override
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
@@ -785,6 +811,8 @@ abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
   @override
   $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
+  @override
+  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -803,6 +831,7 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
     Object? appConfig = freezed,
     Object? rowVersions = freezed,
     Object? symptomsTypes = freezed,
+    Object? referralReasons = freezed,
   }) {
     return _then(_$_AppConfigPrimaryWrapperModel(
       appConfig: freezed == appConfig
@@ -817,6 +846,10 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
           ? _value.symptomsTypes
           : symptomsTypes // ignore: cast_nullable_to_non_nullable
               as SymptomsTypesSecondaryWrapperModel?,
+      referralReasons: freezed == referralReasons
+          ? _value.referralReasons
+          : referralReasons // ignore: cast_nullable_to_non_nullable
+              as ReferralReasonsWrapperModel?,
     ));
   }
 }
@@ -827,7 +860,8 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   const _$_AppConfigPrimaryWrapperModel(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
       @JsonKey(name: 'module-version') this.rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes});
+      @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
+      @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons});
 
   factory _$_AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =>
       _$$_AppConfigPrimaryWrapperModelFromJson(json);
@@ -841,10 +875,13 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   @override
   @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
   final SymptomsTypesSecondaryWrapperModel? symptomsTypes;
+  @override
+  @JsonKey(name: 'HCM-REFERRAL-REASONS')
+  final ReferralReasonsWrapperModel? referralReasons;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes)';
+    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons)';
   }
 
   @override
@@ -857,13 +894,15 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
             (identical(other.rowVersions, rowVersions) ||
                 other.rowVersions == rowVersions) &&
             (identical(other.symptomsTypes, symptomsTypes) ||
-                other.symptomsTypes == symptomsTypes));
+                other.symptomsTypes == symptomsTypes) &&
+            (identical(other.referralReasons, referralReasons) ||
+                other.referralReasons == referralReasons));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, appConfig, rowVersions, symptomsTypes);
+  int get hashCode => Object.hash(
+      runtimeType, appConfig, rowVersions, symptomsTypes, referralReasons);
 
   @JsonKey(ignore: true)
   @override
@@ -888,7 +927,9 @@ abstract class _AppConfigPrimaryWrapperModel
           @JsonKey(name: 'module-version')
               final RowVersionWrapperModel? rowVersions,
           @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-              final SymptomsTypesSecondaryWrapperModel? symptomsTypes}) =
+              final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+          @JsonKey(name: 'HCM-REFERRAL-REASONS')
+              final ReferralReasonsWrapperModel? referralReasons}) =
       _$_AppConfigPrimaryWrapperModel;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -903,6 +944,9 @@ abstract class _AppConfigPrimaryWrapperModel
   @override
   @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
   SymptomsTypesSecondaryWrapperModel? get symptomsTypes;
+  @override
+  @JsonKey(name: 'HCM-REFERRAL-REASONS')
+  ReferralReasonsWrapperModel? get referralReasons;
   @override
   @JsonKey(ignore: true)
   _$$_AppConfigPrimaryWrapperModelCopyWith<_$_AppConfigPrimaryWrapperModel>

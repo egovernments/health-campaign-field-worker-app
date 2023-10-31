@@ -3,19 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/referral_management/referral_management.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
-import '../../models/entities/household.dart';
-import '../../models/entities/household_member.dart';
-import '../../models/entities/individual.dart';
-import '../../models/entities/project_beneficiary.dart';
-import '../../models/entities/service.dart';
-import '../../models/entities/service_definition.dart';
-import '../../models/entities/side_effect.dart';
-import '../../models/entities/task.dart';
+import '../../models/data_model.dart';
 import '../../utils/extensions/extensions.dart';
 
 class BeneficiaryWrapperPage extends StatelessWidget {
@@ -47,6 +42,12 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final service = context.repository<ServiceModel, ServiceSearchModel>();
     final sideEffect =
         context.repository<SideEffectModel, SideEffectSearchModel>();
+    final facilityRepository =
+        context.repository<FacilityModel, FacilitySearchModel>();
+
+    final projectFacilityRepository =
+        context.repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
+    final referral = context.repository<ReferralModel, ReferralSearchModel>();
 
     return MultiBlocProvider(
       providers: [
@@ -55,6 +56,16 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             const ServiceEmptyState(),
             serviceDataRepository: service,
           ),
+        ),
+        BlocProvider(
+          create: (_) => FacilityBloc(
+            facilityDataRepository: facilityRepository,
+            projectFacilityDataRepository: projectFacilityRepository,
+          )..add(
+              FacilityLoadForProjectEvent(
+                projectId: context.selectedProject.id,
+              ),
+            ),
         ),
         BlocProvider(
           create: (_) => ServiceDefinitionBloc(
@@ -73,6 +84,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             projectBeneficiaryRepository: projectBeneficiary,
             taskDataRepository: task,
             sideEffectDataRepository: sideEffect,
+            referralDataRepository: referral,
           ),
         ),
         BlocProvider(
@@ -81,6 +93,14 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               isEditing: isEditing,
             ),
             taskRepository: task,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ReferralBloc(
+            ReferralState(
+              isEditing: isEditing,
+            ),
+            referralRepository: referral,
           ),
         ),
         BlocProvider(
@@ -109,18 +129,32 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               ))),
             child: BlocProvider(
               lazy: false,
-              create: (_) => SideEffectsBloc(
-                SideEffectsState(
+              create: (_) => ReferralBloc(
+                ReferralState(
                   isEditing: isEditing,
                 ),
-                sideEffectRepository: sideEffect,
-              )..add(SideEffectsSearchEvent(SideEffectSearchModel(
-                  taskClientReferenceId: houseHoldOverviewState
-                      .householdMemberWrapper.tasks
-                      ?.map((e) => e.clientReferenceId)
+                referralRepository: referral,
+              )..add(ReferralSearchEvent(ReferralSearchModel(
+                  projectBeneficiaryClientReferenceId: houseHoldOverviewState
+                      .householdMemberWrapper.projectBeneficiaries
+                      .map((e) => e.clientReferenceId)
                       .toList(),
                 ))),
-              child: const AutoRouter(),
+              child: BlocProvider(
+                lazy: false,
+                create: (_) => SideEffectsBloc(
+                  SideEffectsState(
+                    isEditing: isEditing,
+                  ),
+                  sideEffectRepository: sideEffect,
+                )..add(SideEffectsSearchEvent(SideEffectSearchModel(
+                    taskClientReferenceId: houseHoldOverviewState
+                        .householdMemberWrapper.tasks
+                        ?.map((e) => e.clientReferenceId)
+                        .toList(),
+                  ))),
+                child: const AutoRouter(),
+              ),
             ),
           );
         },

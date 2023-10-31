@@ -34,6 +34,7 @@ import 'tables/project_product_variant.dart';
 import 'tables/project_resource.dart';
 import 'tables/project_staff.dart';
 import 'tables/project_type.dart';
+import 'tables/referral.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
@@ -66,6 +67,7 @@ part 'sql_store.g.dart';
   ProjectResource,
   ProjectStaff,
   ProjectType,
+  Referral,
   Stock,
   StockReconciliation,
   Target,
