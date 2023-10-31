@@ -56,6 +56,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.service:
               case DataModelType.complaints:
               case DataModelType.sideEffect:
+              case DataModelType.referral:
                 return true;
               default:
                 return false;
@@ -76,6 +77,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.stockReconciliation:
               case DataModelType.complaints:
               case DataModelType.sideEffect:
+              case DataModelType.referral:
                 return true;
               default:
                 return false;

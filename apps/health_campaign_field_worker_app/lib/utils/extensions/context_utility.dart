@@ -30,7 +30,14 @@ extension ContextUtilityExtensions on BuildContext {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
-    final selectedCycle = projectState.selectedCycle;
+    final selectedCycle = projectState.projectType?.cycles
+        ?.where(
+          (e) =>
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+          // Return null when no matching cycle is found
+        )
+        .firstOrNull;
 
     if (selectedCycle == null) {
       return const Cycle();
@@ -38,8 +45,6 @@ extension ContextUtilityExtensions on BuildContext {
 
     return selectedCycle;
   }
-
-
 
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
