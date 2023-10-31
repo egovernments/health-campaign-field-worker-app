@@ -149,7 +149,7 @@ class HouseholdMemberLocalRepository
       );
     });
 
-    return super.delete(updated);
+    return super.delete(updated, createOpLog: createOpLog);
   }
 
   @override
