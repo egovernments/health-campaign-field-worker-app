@@ -45,6 +45,7 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
@@ -216,6 +217,8 @@ class Constants {
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)
           SideEffectRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.referral)
+          ReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
